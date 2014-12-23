@@ -1,8 +1,4 @@
-/*	SCCS Id: @(#)config.h	3.4	2003/12/06	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
-#ifndef CONFIG_H /* make sure the compiler does not see the typedefs twice */
+#ifndef CONFIG_H
 #define CONFIG_H
 
 
@@ -16,23 +12,6 @@
 
 #define UNIX		/* delete if no fork(), exec() available */
 
-/* #define MSDOS */	/* in case it's not auto-detected */
-
-/* #define OS2 */	/* define for OS/2 */
-
-/* #define TOS */	/* define for Atari ST/TT */
-
-/* #define MINIMAL_TERM */
-			/* if a terminal handles highlighting or tabs poorly,
-			   try this define, used in pager.c and termcap.c */
-/* #define ULTRIX_CC20 */
-			/* define only if using cc v2.0 on a DECstation */
-/* #define ULTRIX_PROTO */
-			/* define for Ultrix 4.0 (or higher) on a DECstation;
-			 * if you get compiler errors, don't define this. */
-			/* Hint: if you're not developing code, don't define
-			   ULTRIX_PROTO. */
-
 #include "config1.h"	/* should auto-detect MSDOS, MAC, and WIN32 */
 
 
@@ -43,22 +22,11 @@
 
 #ifndef LISP_GRAPHICS
 #define TTY_GRAPHICS	/* good old tty based graphics */
-/* #define X11_GRAPHICS */	/* X11 interface */
-/* #define QT_GRAPHICS */	/* Qt interface */
-/* #define GNOME_GRAPHICS */	/* Gnome interface */
-/* #define MSWIN_GRAPHICS */	/* Windows NT, CE, Graphics */
 
 /* Debian default window system is always tty; they have to set their
  * own if they want another one (or just use the scripts */
 #define DEFAULT_WINDOW_SYS "tty"
 #endif
-
-/*
- * Define the default window system.  This should be one that is compiled
- * into your system (see defines above).  Known window systems are:
- *
- *	tty, X11, mac, amii, BeOS, Qt, Gem, Gnome
- */
 
 /* MAC also means MAC windows */
 #ifdef MAC
@@ -67,58 +35,9 @@
 # endif
 #endif
 
-/* Atari supports GEM_GRAPHICS and/or TTY_GRAPHICS */
-#ifdef TOS
-# define GEM_GRAPHICS			/* Atari GEM interface (optional) */
-# define DEFAULT_WINDOW_SYS "Gem"	/* "Gem" or "tty" */
-#endif
-
-#ifdef QT_GRAPHICS
-# define USER_SOUNDS		/* Use sounds */
-# define USE_XPM		/* Use XPM format for images (required) */
-# define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.ppm) */
-# ifndef DEFAULT_WINDOW_SYS
-#  define DEFAULT_WINDOW_SYS "Qt"
-# endif
-#endif
-
-#ifdef GNOME_GRAPHICS
-# define USE_XPM		/* Use XPM format for images (required) */
-# define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.ppm) */
-# ifndef DEFAULT_WINDOW_SYS
-#  define DEFAULT_WINDOW_SYS "Gnome"
-# endif
-#endif
-
-#ifdef MSWIN_GRAPHICS
-# ifdef TTY_GRAPHICS
-# undef TTY_GRAPHICS
-# endif
-# ifndef DEFAULT_WINDOW_SYS
-#  define DEFAULT_WINDOW_SYS "mswin"
-# endif
-# define HACKDIR "\\nethack"
-#endif
-
 #ifndef DEFAULT_WINDOW_SYS
 # define DEFAULT_WINDOW_SYS "tty"
 #endif
-
-#ifdef X11_GRAPHICS
-/*
- * There are two ways that X11 tiles may be defined.  (1) using a custom
- * format loaded by NetHack code, or (2) using the XPM format loaded by
- * the free XPM library.  The second option allows you to then use other
- * programs to generate tiles files.  For example, the PBMPlus tools
- * would allow:
- *  xpmtoppm <x11tiles.xpm | pnmscale 1.25 | ppmquant 90 >x11tiles_big.xpm
- */
-# define USE_XPM		/* Disable if you do not have the XPM library */
-# ifdef USE_XPM
-#  define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.xpm) */
-# endif
-#endif
-
 
 /*
  * Section 2:	Some global parameters and filenames.
@@ -164,51 +83,11 @@
 #endif
 
 /*
- *	Data librarian.  Defining DLB places most of the support files into
- *	a tar-like file, thus making a neater installation.  See *conf.h
- *	for detailed configuration.
- */
-#define DLB  /* not supported on all platforms */
-
-/*
  *	Defining INSURANCE slows down level changes, but allows games that
  *	died due to program or system crashes to be resumed from the point
  *	of the last level change, after running a utility program.
  */
 #define INSURANCE	/* allow crashed game recovery */
-
-#ifndef MAC
-# define CHDIR		/* delete if no chdir() available */
-#endif
-
-#ifdef CHDIR
-/*
- * If you define HACKDIR, then this will be the default playground;
- * otherwise it will be the current directory.
- */
-# ifndef HACKDIR
-#  define HACKDIR "run"
-# endif
-
-/*
- * Some system administrators are stupid enough to make Hack suid root
- * or suid daemon, where daemon has other powers besides that of reading or
- * writing Hack files.	In such cases one should be careful with chdir's
- * since the user might create files in a directory of his choice.
- * Of course SECURE is meaningful only if HACKDIR is defined.
- */
-#define SECURE 	/* do setuid(getuid()) after chdir() */
-#define PIXMAPDIR "/usr/share/pixmaps/nethack/"
-#define SIMPLE_MAIL
-
-/*
- * If it is desirable to limit the number of people that can play Hack
- * simultaneously, define HACKDIR, SECURE and MAX_NR_OF_PLAYERS.
- * #define MAX_NR_OF_PLAYERS 6
- */
-#endif /* CHDIR */
-
-
 
 /*
  * Section 3:	Definitions that may vary with system type.

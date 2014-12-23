@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)decl.h	3.4	2001/12/10	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef DECL_H
 #define DECL_H
 
@@ -363,17 +359,8 @@ extern const char * const monexplain[], invisexplain[], * const objexplain[], * 
 #define FQN_MAX_FILENAME 512
 # endif
 
-#if defined(NOCWD_ASSUMPTIONS) || defined(VAR_PLAYGROUND)
-/* the bare-bones stuff is unconditional above to simplify coding; for
- * ports that actually use prefixes, add some more localized things
- */
-#define PREFIXES_IN_USE
-#endif
-
 extern char *fqn_prefix[PREFIX_COUNT];
-#ifdef PREFIXES_IN_USE
 extern char *fqn_prefix_names[PREFIX_COUNT];
-#endif
 
 #ifdef AUTOPICKUP_EXCEPTIONS
 struct autopickup_exception {

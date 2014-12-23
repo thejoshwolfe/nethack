@@ -742,9 +742,7 @@ static const char *build_opts[] = {
 		"user sounds via pmatch",
 # endif
 #endif
-#ifdef PREFIXES_IN_USE
 		"variable playground",
-#endif
 #ifdef VISION_TABLES
 		"vision tables",
 #endif
@@ -762,33 +760,10 @@ static const char *window_opts[] = {
 #ifdef TTY_GRAPHICS
 		"traditional tty-based graphics",
 #endif
-#ifdef X11_GRAPHICS
-		"X11",
-#endif
-#ifdef QT_GRAPHICS
-		"Qt",
-#endif
-#ifdef GNOME_GRAPHICS
-		"Gnome",
-#endif
-#ifdef MAC
-		"Mac",
-#endif
-#ifdef GEM_GRAPHICS
-		"Gem",
-#endif
-#ifdef MSWIN_GRAPHICS
-		"mswin",
-#endif
-#ifdef BEOS_GRAPHICS
-		"BeOS InterfaceKit",
-#endif
 		0
 	};
 
-void
-do_options()
-{
+void do_options(void) {
 	register int i, length;
 	register const char *str, *indent = "    ";
 

@@ -1422,14 +1422,6 @@ extern char *FDECL(dowhatdoes_core,(CHAR_P, char *));
 extern int NDECL(dohelp);
 extern int NDECL(dohistory);
 
-/* ### pcmain.c ### */
-
-#if defined(MICRO) || defined(WIN32)
-# ifdef CHDIR
-extern void FDECL(chdirx, (char *,BOOLEAN_P));
-# endif /* CHDIR */
-#endif /* MICRO || WIN32 */
-
 /* ### pcsys.c ### */
 
 #if defined(MICRO) || defined(WIN32)
@@ -2176,16 +2168,10 @@ extern char *FDECL(vms_basename, (const char *));
 extern unsigned long NDECL(init_broadcast_trapping);
 extern unsigned long NDECL(enable_broadcast_trapping);
 extern unsigned long NDECL(disable_broadcast_trapping);
-# if 0
-extern struct mail_info *NDECL(parse_next_broadcast);
-# endif /*0*/
 
 /* ### vmsmain.c ### */
 
 extern int FDECL(main, (int, char **));
-# ifdef CHDIR
-extern void FDECL(chdirx, (const char *,BOOLEAN_P));
-# endif /* CHDIR */
 
 /* ### vmsmisc.c ### */
 
@@ -2215,7 +2201,7 @@ extern boolean FDECL(file_is_stmlf, (int));
 extern int FDECL(vms_define, (const char *,const char *,int));
 extern int FDECL(vms_putenv, (const char *));
 extern char *NDECL(verify_termcap);
-# if defined(CHDIR) || defined(SHELL) || defined(SECURE)
+# if defined(SHELL) || defined(SECURE)
 extern void NDECL(privoff);
 extern void NDECL(privon);
 # endif

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)pcmain.c	3.4	2002/08/22	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* main.c - MSDOS, OS/2, ST, and NT NetHack */
 
 #include "hack.h"
@@ -117,9 +113,7 @@ char *argv[];
 #if defined(WIN32)
 	char fnamebuf[BUFSZ], encodedfnamebuf[BUFSZ];
 #endif
-#ifdef NOCWD_ASSUMPTIONS
 	char failbuf[BUFSZ];
-#endif
 
 #if defined(__BORLANDC__) && !defined(_WIN32)
 	startup();
@@ -157,7 +151,6 @@ char *argv[];
 	if (dir != (char *)0) {
 		(void) strncpy(hackdir, dir, PATHLEN - 1);
 		hackdir[PATHLEN-1] = '\0';
-#ifdef NOCWD_ASSUMPTIONS
 		{
 		    int prefcnt;
 
@@ -167,20 +160,14 @@ char *argv[];
 		    for (prefcnt = 1; prefcnt < PREFIX_COUNT; prefcnt++)
 			fqn_prefix[prefcnt] = fqn_prefix[0];
 		}
-#endif
-#ifdef CHDIR
-		chdirx (dir, 1);
-#endif
 	}
 	initoptions();
 
-#ifdef NOCWD_ASSUMPTIONS
 	if (!validate_prefix_locations(failbuf)) {
 		raw_printf("Some invalid directory locations were specified:\n\t%s\n",
 				failbuf);
 		 nethack_exit(EXIT_FAILURE);
 	}
-#endif
 
 #if defined(TOS) && defined(TEXTCOLOR)
 	if (iflags.BIOS && iflags.use_color)
@@ -218,9 +205,6 @@ char *argv[];
 		 */
 		if (!strncmp(argv[1], "-s", 2)) {
 #if !defined(MSWIN_GRAPHICS)
-# if defined(CHDIR) && !defined(NOCWD_ASSUMPTIONS)
-			chdirx(hackdir,0);
-# endif
 			prscore(argc, argv);
 #else
 			raw_printf("-s is not supported for the Graphical Interface\n");
@@ -251,13 +235,6 @@ char *argv[];
 #endif
 	u.uhp = 1;	/* prevent RIP on early quits */
 	u.ux = 0;	/* prevent flush_screen() */
-
-	/* chdir shouldn't be called before this point to keep the
-	 * code parallel to other ports.
-	 */
-#if defined(CHDIR) && !defined(NOCWD_ASSUMPTIONS)
-	chdirx(hackdir,1);
-#endif
 
 #ifdef MSDOS
 	process_options(argc, argv);
@@ -588,27 +565,6 @@ nhusage()
 #undef ADD_USAGE
 }
 
-#ifdef CHDIR
-void
-chdirx(dir, wr)
-char *dir;
-boolean wr;
-{
-	static char thisdir[] = ".";
-	if(dir && chdir(dir) < 0) {
-		error("Cannot chdir to %s.", dir);
-	}
-
-	/* Change the default drive as well.
-	 */
-	chdrive(dir);
-
-	/* warn the player if we can't write the record file */
-	/* perhaps we should also test whether . is writable */
-	/* unfortunately the access system-call is worthless */
-	if (wr) check_recordfile(dir ? dir : thisdir);
-}
-#endif /* CHDIR */
 #endif /*OVL1*/
 #ifdef OVLB
 

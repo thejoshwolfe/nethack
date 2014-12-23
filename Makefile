@@ -69,7 +69,7 @@ DATNODLB = $(VARDATND) license
 DATDLB = $(DATHELP) dungeon $(SPEC_LEVS) $(QUEST_LEVS) $(VARDATD)
 DAT = $(DATNODLB) $(DATDLB)
 
-all:	$(GAME) recover $(VARDAT) dungeon spec_levs check-dlb
+all:	$(GAME) recover $(VARDAT) dungeon spec_levs dlb
 	@echo "Done."
 
 $(GAME):
@@ -142,9 +142,6 @@ GEM_RSC.RSC:
 title.img:
 	( cd dat && $(MAKE) title.img )
 
-check-dlb: options
-	@if egrep -s librarian dat/options ; then $(MAKE) dlb ; else true ; fi
-
 dlb:
 	( cd util && $(MAKE) dlb )
 	( cd dat && ../util/dlb cf nhdat $(DATDLB) )
@@ -177,21 +174,6 @@ dofiles:
 	-$(CHOWN) $(GAMEUID) $(SHELLDIR)/$(GAME)
 	$(CHGRP) $(GAMEGRP) $(SHELLDIR)/$(GAME)
 	chmod $(EXEPERM) $(SHELLDIR)/$(GAME)
-
-dofiles-dlb: check-dlb
-	( cd dat ; cp nhdat $(DATNODLB) $(GAMEDIR) )
-# set up their permissions
-	-( cd $(GAMEDIR) ; $(CHOWN) $(GAMEUID) nhdat $(DATNODLB) ; \
-			$(CHGRP) $(GAMEGRP) nhdat $(DATNODLB) ; \
-			chmod $(FILEPERM) nhdat $(DATNODLB) )
-
-dofiles-nodlb:
-# copy over the game files
-	( cd dat ; cp $(DAT) $(GAMEDIR) )
-# set up their permissions
-	-( cd $(GAMEDIR) ; $(CHOWN) $(GAMEUID) $(DAT) ; \
-			$(CHGRP) $(GAMEGRP) $(DAT) ; \
-			chmod $(FILEPERM) $(DAT) )
 
 update: $(GAME) recover $(VARDAT) dungeon spec_levs
 #	(don't yank the old version out from under people who're playing it)

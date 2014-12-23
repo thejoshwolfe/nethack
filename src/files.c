@@ -16,45 +16,13 @@
 #endif
 
 #include <errno.h>
-#ifdef _MSC_VER	/* MSC 6.0 defines errno quite differently */
-# if (_MSC_VER >= 600)
-#  define SKIP_ERRNO
-# endif
-#else
-# ifdef NHSTDC
-#  define SKIP_ERRNO
-# endif
-#endif
-#ifndef SKIP_ERRNO
-# ifdef _DCC
-const
-# endif
-extern int errno;
-#endif
 
-#if defined(UNIX) && defined(QT_GRAPHICS)
-#include <dirent.h>
-#endif
-
-#if defined(UNIX) || defined(VMS)
-#include <signal.h>
-#endif
-
-#if defined(MSDOS) || defined(OS2) || defined(TOS) || defined(WIN32)
-# ifndef GNUDOS
-#include <sys\stat.h>
-# else
-#include <sys/stat.h>
-# endif
-#endif
 #ifndef O_BINARY	/* used for micros, no-op for others */
 # define O_BINARY 0
 #endif
 
-#ifdef PREFIXES_IN_USE
 #define FQN_NUMBUF 4
 static char fqn_filename_buffer[FQN_NUMBUF][FQN_MAX_FILENAME];
-#endif
 
 #if !defined(MFLOPPY) && !defined(VMS) && !defined(WIN32)
 char bones[] = "bonesnn.xxx";
@@ -142,9 +110,7 @@ STATIC_DCL char *FDECL(make_lockname, (const char *,char *));
 STATIC_DCL FILE *FDECL(fopen_config_file, (const char *));
 STATIC_DCL int FDECL(get_uchars, (FILE *,char *,char *,uchar *,BOOLEAN_P,int,const char *));
 int FDECL(parse_config_line, (FILE *,char *,char *,char *));
-#ifdef NOCWD_ASSUMPTIONS
 STATIC_DCL void FDECL(adjust_prefix, (char *, int));
-#endif
 #ifdef SELF_RECOVER
 STATIC_DCL boolean FDECL(copy_bytes, (int, int));
 #endif
@@ -258,17 +224,7 @@ int bufsz;
 	return callerbuf;
 }
 
-#ifndef PREFIXES_IN_USE
-/*ARGSUSED*/
-#endif
-const char *
-fqname(basename, whichprefix, buffnum)
-const char *basename;
-int whichprefix, buffnum;
-{
-#ifndef PREFIXES_IN_USE
-	return basename;
-#else
+const char * fqname(const char * basename, int whichprefix, int buffnum) {
 	if (!basename || whichprefix < 0 || whichprefix >= PREFIX_COUNT)
 		return basename;
 	if (!fqn_prefix[whichprefix])
@@ -286,7 +242,6 @@ int whichprefix, buffnum;
 	}
 	Strcpy(fqn_filename_buffer[buffnum], fqn_prefix[whichprefix]);
 	return strcat(fqn_filename_buffer[buffnum], basename);
-#endif
 }
 
 /* reasonbuf must be at least BUFSZ, supplied by caller */
@@ -295,7 +250,6 @@ int
 validate_prefix_locations(reasonbuf)
 char *reasonbuf;
 {
-#if defined(NOCWD_ASSUMPTIONS)
 	FILE *fp;
 	const char *filename;
 	int prefcnt, failcount = 0;
@@ -316,10 +270,8 @@ char *reasonbuf;
 			}
 			/* the paniclog entry gets the value of errno as well */
 			Sprintf(panicbuf1,"Invalid %s", fqn_prefix_names[prefcnt]);
-#if defined (NHSTDC) && !defined(NOTSTDC)
 			if (!(details = strerror(errno)))
-#endif
-			details = "";
+                details = "";
 			Sprintf(panicbuf2,"\"%s\", (%d) %s",
 				fqn_prefix[prefcnt], errno, details);
 			paniclog(panicbuf1, panicbuf2);
@@ -329,17 +281,12 @@ char *reasonbuf;
 	if (failcount)
 		return 0;
 	else
-#endif
 	return 1;
 }
 
 /* fopen a file, with OS-dependent bells and whistles */
 /* NOTE: a simpler version of this routine also exists in util/dlb_main.c */
-FILE *
-fopen_datafile(filename, mode, prefix)
-const char *filename, *mode;
-int prefix;
-{
+FILE * fopen_datafile(const char *filename, const char *mode, int prefix) {
 	FILE *fp;
 
 	filename = fqname(filename, prefix, prefix == TROUBLEPREFIX ? 3 : 0);
@@ -1616,7 +1563,6 @@ gi_error:
     /*NOTREACHED*/
 }
 
-#ifdef NOCWD_ASSUMPTIONS
 STATIC_OVL void
 adjust_prefix(bufp, prefixid)
 char *bufp;
@@ -1633,7 +1579,6 @@ int prefixid;
 		append_slash(fqn_prefix[prefixid]);
 	}
 }
-#endif
 
 #define match_varname(INP,NAM,LEN) match_optname(INP, NAM, LEN, TRUE)
 
@@ -1686,7 +1631,6 @@ char		*tmp_levels;
 	} else if (match_varname(buf, "AUTOPICKUP_EXCEPTION", 5)) {
 		add_autopickup_exception(bufp);
 #endif
-#ifdef NOCWD_ASSUMPTIONS
 	} else if (match_varname(buf, "HACKDIR", 4)) {
 		adjust_prefix(bufp, HACKPREFIX);
 	} else if (match_varname(buf, "LEVELDIR", 4) ||
@@ -1706,43 +1650,6 @@ char		*tmp_levels;
 		adjust_prefix(bufp, CONFIGPREFIX);
 	} else if (match_varname(buf, "TROUBLEDIR", 4)) {
 		adjust_prefix(bufp, TROUBLEPREFIX);
-#else /*NOCWD_ASSUMPTIONS*/
-# ifdef MICRO
-	} else if (match_varname(buf, "HACKDIR", 4)) {
-		(void) strncpy(hackdir, bufp, PATHLEN-1);
-#  ifdef MFLOPPY
-	} else if (match_varname(buf, "RAMDISK", 3)) {
-				/* The following ifdef is NOT in the wrong
-				 * place.  For now, we accept and silently
-				 * ignore RAMDISK */
-		(void) strncpy(tmp_ramdisk, bufp, PATHLEN-1);
-#  endif
-	} else if (match_varname(buf, "LEVELS", 4)) {
-		(void) strncpy(tmp_levels, bufp, PATHLEN-1);
-
-	} else if (match_varname(buf, "SAVE", 4)) {
-#  ifdef MFLOPPY
-		extern	int saveprompt;
-#  endif
-		char *ptr;
-		if ((ptr = index(bufp, ';')) != 0) {
-			*ptr = '\0';
-#  ifdef MFLOPPY
-			if (*(ptr+1) == 'n' || *(ptr+1) == 'N') {
-				saveprompt = FALSE;
-			}
-#  endif
-		}
-# ifdef	MFLOPPY
-		else
-		    saveprompt = flags.asksavedisk;
-# endif
-
-		(void) strncpy(SAVEP, bufp, SAVESIZE-1);
-		append_slash(SAVEP);
-# endif /* MICRO */
-#endif /*NOCWD_ASSUMPTIONS*/
-
 	} else if (match_varname(buf, "NAME", 4)) {
 	    (void) strncpy(plname, bufp, PL_NSIZ-1);
 	    plnamesuffix();
@@ -1873,20 +1780,6 @@ const char *filename;
 	/* turn off detection of duplicate configfile options */
 	set_duplicate_opt_detection(0);
 
-#if defined(MICRO) && !defined(NOCWD_ASSUMPTIONS)
-	/* should be superseded by fqn_prefix[] */
-# ifdef MFLOPPY
-	Strcpy(permbones, tmp_levels);
-	if (tmp_ramdisk[0]) {
-		Strcpy(levels, tmp_ramdisk);
-		if (strcmp(permbones, levels))		/* if not identical */
-			ramdisk = TRUE;
-	} else
-		Strcpy(levels, tmp_levels);
-
-	Strcpy(bones, levels);
-# endif /* MFLOPPY */
-#endif /* MICRO */
 	return;
 }
 

@@ -138,10 +138,6 @@
 # ifdef PCMUSIC
 #define TIMED_DELAY	/* need it anyway */
 # endif
-#define NOCWD_ASSUMPTIONS	/* Allow paths to be specified for HACKDIR,
-				   LEVELDIR, SAVEDIR, BONESDIR, DATADIR,
-				   SCOREDIR, LOCKDIR, CONFIGDIR, and TROUBLEDIR. */
-
 #endif /* MSDOS configuration stuff */
 
 #define PATHLEN		64	/* maximum pathlength */

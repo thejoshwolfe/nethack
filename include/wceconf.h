@@ -1,7 +1,3 @@
-/* Copyright (C) 2001 by Alex Kompel <shurikk@pacbell.net> */
-/* Copyright (c) NetHack PC Development Team 1993, 1994.  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef WCECONF_H
 #define WCECONF_H
 
@@ -55,11 +51,6 @@
 #undef MICRO			/* never define this! */
 #endif
 
-#define NOCWD_ASSUMPTIONS	/* Always define this. There are assumptions that
-                                   it is defined for WIN32.
-				   Allow paths to be specified for HACKDIR,
-				   LEVELDIR, SAVEDIR, BONESDIR, DATADIR,
-				   SCOREDIR, LOCKDIR, CONFIGDIR, and TROUBLEDIR */
 #define NO_TERMS
 #define ASCIIGRAPH
 

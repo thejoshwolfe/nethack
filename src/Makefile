@@ -57,7 +57,7 @@ CC = gcc
 
 #CFLAGS = -O -DXCURSES -I../include -I/usr/local/include/pdcurses
 # Compile against system curses library, such as ncurses
-CFLAGS = -O -I../include
+CFLAGS = -I../include -g
 
 
 # Only used for the Gnome interface.
@@ -72,16 +72,6 @@ GNOMEINC=-I/usr/lib/glib/include -I/usr/lib/gnome-libs/include -I../win/gnome
 
 #CFLAGS = -O -I../include
 #LFLAGS = 
-
-# The Qt and Be window systems are written in C++, while the rest of
-# NetHack is standard C.  If using Qt, uncomment the LINK line here to get
-# the C++ libraries linked in.
-CXXFLAGS = $(CFLAGS) -I. -I$(QTDIR)/include
-CXX=g++
-#LINK=g++
-#	For cross-compiling, eg. with gcc on Linux (see also CC further up):
-#CXX=arm-linux-g++
-#LINK=arm-linux-gcc
 
 # Set the WINSRC, WINOBJ, and WINLIB lines to correspond to your desired
 # combination of windowing systems.  Also set windowing systems in config.h.
@@ -164,14 +154,9 @@ GENCSRC = monstr.c vis_tab.c	#tile.c
 
 # all windowing-system-dependent .c (for dependencies and such)
 WINCSRC = $(WINTTYSRC) $(WINX11SRC) $(WINGNOMESRC) $(WINGEMSRC) $(WINLISPSRC)
-# all windowing-system-dependent .cpp (for dependencies and such)
-WINCXXSRC = $(WINQTSRC) $(WINBESRC)
 
 # .c files for this version (for date.h)
 VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(GENCSRC)
-
-# .c files for all versions using this Makefile (for lint and tags)
-CSOURCES = $(HACKCSRC) $(SYSSRC) $(WINCSRC) $(GENCSRC)
 
 
 # all .h files except date.h, onames.h, pm.h, and vis_tab.h which would
@@ -237,16 +222,6 @@ objects.o:
 	$(CC) $(CFLAGS) -c objects.c
 	@rm -f $(MAKEDEFS)
 
-# Qt windowport meta-object-compiler output
-qt_kde0.moc: ../include/qt_kde0.h
-	$(QTDIR)/bin/moc -o qt_kde0.moc ../include/qt_kde0.h
-
-qt_win.moc: ../include/qt_win.h
-	$(QTDIR)/bin/moc -o qt_win.moc ../include/qt_win.h
-
-qttableview.moc: ../include/qttableview.h
-	$(QTDIR)/bin/moc -o qttableview.moc ../include/qttableview.h
-
 $(MAKEDEFS): ../util/makedefs.c  $(CONFIG_H) ../include/permonst.h \
 		../include/objclass.h ../include/monsym.h \
 		../include/artilist.h ../include/dungeon.h ../include/obj.h \
@@ -280,22 +255,6 @@ tile.c: ../win/share/tilemap.c $(HACK_H)
 #	up to date before being executed
 ../include/date.h:	$(VERSOURCES) $(HACK_H)
 	../util/makedefs -v
-
-
-lint:
-# lint cannot have -p here because (i) capitals are meaningful:
-# [Ww]izard, (ii) identifiers may coincide in the first six places:
-# doweararm() versus dowearring().
-# _flsbuf comes from <stdio.h>, a bug in the system libraries.
-	@echo lint -axbh -DLINT ...
-	@lint -axbh -I../include -DLINT $(CSOURCES) | sed '/_flsbuf/d'
-
-
-tags: $(CSOURCES)
-	@echo ctags -tw ...
-	@ctags -tw $(CSOURCES)
-	@( cd ../include ; ctags -tw $(HSOURCES) )
-	@( cd ../util ; $(MAKE) tags )
 
 clean:
 	-rm -f *.o $(HACK_H) $(CONFIG_H)
@@ -465,15 +424,6 @@ winlisp.o: ../win/lisp/winlisp.c $(HACK_H) ../include/winlisp.h \
 		../include/func_tab.h ../include/dlb.h ../include/patchlevel.h
 	$(CC) $(CFLAGS) -c ../win/lisp/winlisp.c
 tile.o: tile.c $(HACK_H)
-qt_win.o: ../win/Qt/qt_win.cpp $(HACK_H) ../include/func_tab.h \
-		../include/dlb.h ../include/patchlevel.h ../include/tile2x11.h \
-		../include/qt_win.h ../include/qt_clust.h ../include/qt_kde0.h \
-		../include/qt_xpms.h qt_win.moc qt_kde0.moc qttableview.moc
-	$(CXX) $(CXXFLAGS) -c ../win/Qt/qt_win.cpp
-qt_clust.o: ../win/Qt/qt_clust.cpp ../include/qt_clust.h
-	$(CXX) $(CXXFLAGS) -c ../win/Qt/qt_clust.cpp
-qttableview.o: ../win/Qt/qttableview.cpp ../include/qttableview.h
-	$(CXX) $(CXXFLAGS) -c ../win/Qt/qttableview.cpp
 monstr.o: monstr.c $(CONFIG_H)
 vis_tab.o: vis_tab.c $(CONFIG_H) ../include/vis_tab.h
 allmain.o: allmain.c $(HACK_H)

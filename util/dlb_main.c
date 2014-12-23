@@ -1,8 +1,4 @@
-/*	SCCS Id: @(#)dlb_main.c 3.4	1998/08/16	*/
-/* Copyright (c) Kenneth Lorber, Bethesda, Maryland, 1993. */
-/* NetHack may be freely redistributed.  See license for details. */
-
-/* data librarian; only useful if you are making the library version, DLBLIB */
+// data librarian
 
 #include "config.h"
 #include "dlb.h"
@@ -14,9 +10,6 @@
 #endif
 
 static void FDECL(xexit, (int));
-
-#ifdef DLB
-#ifdef DLBLIB
 
 #define DLB_DIRECTORY "Directory"	/* name of lib directory */
 #define LIBLISTFILE "dlb.lst"		/* default list file */
@@ -168,16 +161,11 @@ const char *filename, *mode;
     return fopen(filename, mode);
 }
 
-#endif	/* DLBLIB */
-#endif	/* DLB */
-
 int
 main(argc, argv)
     int argc;
     char **argv;
 {
-#ifdef DLB
-#ifdef DLBLIB
     int i, r;
     int ap=2;				/* argument pointer */
     int cp;				/* command pointer */
@@ -467,16 +455,11 @@ main(argc, argv)
 	xexit(EXIT_SUCCESS);
 	}
     }
-#endif	/* DLBLIB */
-#endif	/* DLB */
 
     xexit(EXIT_SUCCESS);
     /*NOTREACHED*/
     return 0;
 }
-
-#ifdef DLB
-#ifdef DLBLIB
 
 static void
 write_dlb_directory(out, nfiles, ld, slen, dir_size, flen)
@@ -509,13 +492,6 @@ long slen, dir_size, flen;
     }
 }
 
-#endif	/* DLBLIB */
-#endif	/* DLB */
-
-static void
-xexit(retcd)
-    int retcd;
-{
+static void xexit(int retcd) {
     exit(retcd);
 }
-
