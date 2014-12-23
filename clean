@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -f .gitignore
+git clean -fd
+git checkout .gitignore
