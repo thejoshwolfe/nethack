@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)ntconf.h	3.4	2002/03/10	*/
-/* Copyright (c) NetHack PC Development Team 1993, 1994.  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef NTCONF_H
 #define NTCONF_H
 
@@ -29,7 +25,6 @@
  *  The remaining code shouldn't need modification.
  * -----------------------------------------------------------------
  */
-/* #define SHORT_FILENAMES	/* All NT filesystems support long names now */
 
 #ifdef MICRO
 #undef MICRO			/* never define this! */
@@ -113,7 +108,6 @@ extern void FDECL(interject, (int));
 
 #ifndef M
 #define M(c)		((char) (0x80 | (c)))
-/* #define M(c)		((c) - 128) */
 #endif
 
 #ifndef C

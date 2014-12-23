@@ -209,12 +209,6 @@ typedef xchar	boolean;		/* 0 or 1 */
 # endif
 #endif
 
-#if defined(MICRO)
-#if !defined(TOS) && !defined(OS2_HPFS)
-#define SHORT_FILENAMES		/* filenames are 8.3 */
-#endif
-#endif
-
 #ifdef VMS
 /* vms_exit() (sys/vms/vmsmisc.c) expects the non-VMS EXIT_xxx values below.
  * these definitions allow all systems to be treated uniformly, provided
