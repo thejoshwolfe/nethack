@@ -3,5 +3,5 @@
 ## Install
 
 ```
-sh build
+make
 ```

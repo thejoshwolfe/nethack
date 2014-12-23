@@ -84,11 +84,11 @@ DATNODLB = $(VARDATND) license
 DATDLB = $(DATHELP) dungeon $(SPEC_LEVS) $(QUEST_LEVS) $(VARDATD)
 DAT = $(DATNODLB) $(DATDLB)
 
-$(GAME):
-	( cd src ; $(MAKE) )
-
 all:	$(GAME) recover $(VARDAT) dungeon spec_levs check-dlb
 	@echo "Done."
+
+$(GAME):
+	( cd src ; $(MAKE) )
 
 # Note: many of the dependencies below are here to allow parallel make
 # to generate valid output
