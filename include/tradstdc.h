@@ -121,50 +121,11 @@
 #  define VDECL(f,p)	f()
 # endif
 
-/* generic pointer, always a macro; genericptr_t is usually a typedef */
-# define genericptr	void *
-
-# if (defined(ULTRIX_PROTO) && !defined(__GNUC__)) || defined(OS2_CSET2)
-/* Cover for Ultrix on a DECstation with 2.0 compiler, which coredumps on
- *   typedef void * genericptr_t;
- *   extern void a(void(*)(int, genericptr_t));
- * Using the #define is OK for other compiler versions too.
- */
-/* And IBM CSet/2.  The redeclaration of free hoses the compile. */
-#  define genericptr_t	genericptr
-# else
-#  if !defined(NHSTDC) && !defined(MAC)
-#   define const
-#   define signed
-#   define volatile
-#  endif
-# endif
-
-/*
- * Suppress `const' if necessary and not handled elsewhere.
- * Don't use `#if defined(xxx) && !defined(const)'
- * because some compilers choke on `defined(const)'.
- * This has been observed with Lattice, MPW, and High C.
- */
-# if (defined(ULTRIX_PROTO) && !defined(NHSTDC)) || defined(apollo)
-	/* the system header files don't use `const' properly */
-#  ifndef const
-#   define const
-#  endif
-# endif
-
 #else /* NHSTDC */	/* a "traditional" C  compiler */
 
 # define NDECL(f)	f()
 # define FDECL(f,p)	f()
 # define VDECL(f,p)	f()
-
-# if defined(HPUX) || defined(POSIX_TYPES) || defined(__DECC) || defined(__BORLANDC__)
-#  define genericptr	void *
-# endif
-# ifndef genericptr
-#  define genericptr	char *
-# endif
 
 /*
  * Traditional C compilers don't have "signed", "const", or "volatile".
@@ -174,11 +135,6 @@
 # define volatile
 
 #endif /* NHSTDC */
-
-
-#ifndef genericptr_t
-typedef genericptr genericptr_t;	/* (void *) or (char *) */
-#endif
 
 
 /*

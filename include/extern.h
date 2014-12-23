@@ -7,7 +7,7 @@
 
 /* ### alloc.c ### */
 
-extern char *FDECL(fmt_ptr, (const genericptr,char *));
+extern char *FDECL(fmt_ptr, (const void *,char *));
 
 /* This next pre-processor directive covers almost the entire file,
  * interrupted only occasionally to pick up specific functions as needed. */
@@ -41,7 +41,7 @@ extern boolean FDECL(catch_lit, (struct obj *));
 extern void FDECL(use_unicorn_horn, (struct obj *));
 extern boolean FDECL(tinnable, (struct obj *));
 extern void NDECL(reset_trapset);
-extern void FDECL(fig_transform, (genericptr_t, long));
+extern void FDECL(fig_transform, (void *, long));
 extern int FDECL(unfixable_trouble_count,(BOOLEAN_P));
 
 /* ### artifact.c ### */
@@ -215,8 +215,8 @@ extern void NDECL(do_mapping);
 extern void NDECL(do_vicinity_map);
 extern void FDECL(cvt_sdoor_to_door, (struct rm *));
 #ifdef USE_TRAMPOLI
-extern void FDECL(findone, (int,int,genericptr_t));
-extern void FDECL(openone, (int,int,genericptr_t));
+extern void FDECL(findone, (int,int,void *));
+extern void FDECL(openone, (int,int,void *));
 #endif
 extern int NDECL(findit);
 extern int NDECL(openit);
@@ -243,8 +243,8 @@ extern void NDECL(zap_dig);
 extern struct obj *FDECL(bury_an_obj, (struct obj *));
 extern void FDECL(bury_objs, (int,int));
 extern void FDECL(unearth_objs, (int,int));
-extern void FDECL(rot_organic, (genericptr_t, long));
-extern void FDECL(rot_corpse, (genericptr_t, long));
+extern void FDECL(rot_organic, (void *, long));
+extern void FDECL(rot_corpse, (void *, long));
 
 /* ### display.c ### */
 
@@ -310,7 +310,7 @@ extern void FDECL(schedule_goto, (d_level *,BOOLEAN_P,BOOLEAN_P,int,
 			     const char *,const char *));
 extern void NDECL(deferred_goto);
 extern boolean FDECL(revive_corpse, (struct obj *));
-extern void FDECL(revive_mon, (genericptr_t, long));
+extern void FDECL(revive_mon, (void *, long));
 extern int NDECL(donull);
 extern int NDECL(dowipe);
 extern void FDECL(set_wounded_legs, (long,int));
@@ -344,7 +344,7 @@ extern const char *NDECL(rndcolor);
 extern const char *NDECL(roguename);
 #endif
 extern struct obj *FDECL(realloc_obj,
-		(struct obj *, int, genericptr_t, int, const char *));
+		(struct obj *, int, void *, int, const char *));
 extern char *FDECL(coyotename, (struct monst *,char *));
 
 /* ### do_wear.c ### */
@@ -417,7 +417,7 @@ extern int FDECL(dog_nutrition, (struct monst *,struct obj *));
 extern int FDECL(dog_eat, (struct monst *,struct obj *,int,int,BOOLEAN_P));
 extern int FDECL(dog_move, (struct monst *,int));
 #ifdef USE_TRAMPOLI
-extern void FDECL(wantdoor, (int,int,genericptr_t));
+extern void FDECL(wantdoor, (int,int,void *));
 #endif
 
 /* ### dokick.c ### */
@@ -443,8 +443,8 @@ extern int FDECL(thitmonst, (struct monst *,struct obj *));
 extern int FDECL(hero_breaks, (struct obj *,XCHAR_P,XCHAR_P,BOOLEAN_P));
 extern int FDECL(breaks, (struct obj *,XCHAR_P,XCHAR_P));
 extern boolean FDECL(breaktest, (struct obj *));
-extern boolean FDECL(walk_path, (coord *, coord *, boolean (*)(genericptr_t,int,int), genericptr_t));
-extern boolean FDECL(hurtle_step, (genericptr_t, int, int));
+extern boolean FDECL(walk_path, (coord *, coord *, boolean (*)(void *,int,int), void *));
+extern boolean FDECL(hurtle_step, (void *, int, int));
 
 /* ### drawing.c ### */
 #endif /* !MAKEDEFS_C && !LEV_LEX_C */
@@ -666,7 +666,7 @@ extern void NDECL(really_close);
 extern void FDECL(floating_above, (const char *));
 extern void FDECL(dogushforth, (int));
 # ifdef USE_TRAMPOLI
-extern void FDECL(gush, (int,int,genericptr_t));
+extern void FDECL(gush, (int,int,void *));
 # endif
 extern void FDECL(dryup, (XCHAR_P,XCHAR_P, BOOLEAN_P));
 extern void NDECL(drinkfountain);
@@ -831,8 +831,8 @@ extern int NDECL(dosuspend);
 
 /* ### light.c ### */
 
-extern void FDECL(new_light_source, (XCHAR_P, XCHAR_P, int, int, genericptr_t));
-extern void FDECL(del_light_source, (int, genericptr_t));
+extern void FDECL(new_light_source, (XCHAR_P, XCHAR_P, int, int, void *));
+extern void FDECL(del_light_source, (int, void *));
 extern void FDECL(do_light_sources, (char **));
 extern struct monst *FDECL(find_mid, (unsigned, unsigned));
 extern void FDECL(save_light_sources, (int, int, int));
@@ -989,7 +989,7 @@ extern int NDECL(lminion);
 /* ### mklev.c ### */
 
 #ifdef USE_TRAMPOLI
-extern int FDECL(do_comp, (genericptr_t,genericptr_t));
+extern int FDECL(do_comp, (void *,void *));
 #endif
 extern void NDECL(sort_rooms);
 extern void FDECL(add_room, (int,int,int,int,BOOLEAN_P,SCHAR_P,BOOLEAN_P));
@@ -1650,7 +1650,7 @@ extern void NDECL(forget_traps);
 extern void FDECL(forget_map, (int));
 extern int FDECL(seffects, (struct obj *));
 #ifdef USE_TRAMPOLI
-extern void FDECL(set_lit, (int,int,genericptr_t));
+extern void FDECL(set_lit, (int,int,void *));
 #endif
 extern void FDECL(litroom, (BOOLEAN_P,struct obj *));
 extern void FDECL(do_genocide, (int));
@@ -1692,9 +1692,9 @@ extern void FDECL(getlev, (int,int,XCHAR_P,BOOLEAN_P));
 extern void NDECL(minit);
 extern boolean FDECL(lookup_id_mapping, (unsigned, unsigned *));
 #ifdef ZEROCOMP
-extern int FDECL(mread, (int,genericptr_t,unsigned int));
+extern int FDECL(mread, (int,void *,unsigned int));
 #else
-extern void FDECL(mread, (int,genericptr_t,unsigned int));
+extern void FDECL(mread, (int,void *,unsigned int));
 #endif
 
 /* ### rip.c ### */
@@ -1769,7 +1769,7 @@ extern void FDECL(savelev, (int,XCHAR_P,int));
 extern void FDECL(bufon, (int));
 extern void FDECL(bufoff, (int));
 extern void FDECL(bflush, (int));
-extern void FDECL(bwrite, (int,genericptr_t,unsigned int));
+extern void FDECL(bwrite, (int,void *,unsigned int));
 extern void FDECL(bclose, (int));
 extern void FDECL(savefruitchn, (int,int));
 extern void NDECL(free_dungeons);
@@ -1967,14 +1967,14 @@ extern void FDECL(fall_asleep, (int, BOOLEAN_P));
 extern void FDECL(attach_egg_hatch_timeout, (struct obj *));
 extern void FDECL(attach_fig_transform_timeout, (struct obj *));
 extern void FDECL(kill_egg, (struct obj *));
-extern void FDECL(hatch_egg, (genericptr_t, long));
+extern void FDECL(hatch_egg, (void *, long));
 extern void FDECL(learn_egg_type, (int));
-extern void FDECL(burn_object, (genericptr_t, long));
+extern void FDECL(burn_object, (void *, long));
 extern void FDECL(begin_burn, (struct obj *, BOOLEAN_P));
 extern void FDECL(end_burn, (struct obj *, BOOLEAN_P));
 extern void NDECL(do_storms);
-extern boolean FDECL(start_timer, (long, SHORT_P, SHORT_P, genericptr_t));
-extern long FDECL(stop_timer, (SHORT_P, genericptr_t));
+extern boolean FDECL(start_timer, (long, SHORT_P, SHORT_P, void *));
+extern long FDECL(stop_timer, (SHORT_P, void *));
 extern void NDECL(run_timers);
 extern void FDECL(obj_move_timers, (struct obj *, struct obj *));
 extern void FDECL(obj_split_timers, (struct obj *, struct obj *));
@@ -2157,7 +2157,7 @@ extern void FDECL(block_point, (int,int));
 extern void FDECL(unblock_point, (int,int));
 extern boolean FDECL(clear_path, (int,int,int,int));
 extern void FDECL(do_clear_area, (int,int,int,
-			     void (*)(int,int,genericptr_t),genericptr_t));
+			     void (*)(int,int,void *),void *));
 
 #ifdef VMS
 

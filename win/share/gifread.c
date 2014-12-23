@@ -28,7 +28,7 @@ extern long *FDECL(alloc, (unsigned int));
 #define LOCALCOLORMAP	0x80
 #define BitSet(byte, bit)	(((byte) & (bit)) == (bit))
 
-#define	ReadOK(file,buffer,len)	(fread((genericptr_t)buffer, (int)len, 1, file) != 0)
+#define	ReadOK(file,buffer,len)	(fread((void *)buffer, (int)len, 1, file) != 0)
 
 #define LM_to_uint(a,b)			(((b)<<8)|(a))
 
@@ -200,7 +200,7 @@ FILE	*fd;
 		exit(EXIT_FAILURE);
 	}
 
-	if (strncmp((genericptr_t)buf,"GIF",3) != 0) {
+	if (strncmp((void *)buf,"GIF",3) != 0) {
 		Fprintf(stderr, "not a GIF file\n");
 		exit(EXIT_FAILURE);
 	}
@@ -646,14 +646,14 @@ fclose_gif_file()
 
 	if (GifScreen.Interlace) {
 		for (i = 0; i < GifScreen.Height; i++) {
-			free((genericptr_t)image[i]);
+			free((void *)image[i]);
 		}
-		free((genericptr_t)image);
+		free((void *)image);
 	} else {
 		for (i = 0; i < TILE_Y; i++) {
-			free((genericptr_t)image[i]);
+			free((void *)image[i]);
 		}
-		free((genericptr_t)image);
+		free((void *)image);
 	}
 	return(fclose(gif_file));
 }

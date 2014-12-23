@@ -269,7 +269,7 @@ init_tiles(wp)
     map_info = wp->map_information;
     tile_info = map_info->mtype.tile_map =
 	    (struct tile_map_info_t *) alloc(sizeof(struct tile_map_info_t));
-    (void) memset((genericptr_t) tile_info, 0,
+    (void) memset((void *) tile_info, 0,
 				sizeof(struct tile_map_info_t));
 
 #ifdef USE_XPM
@@ -479,7 +479,7 @@ init_tiles(wp)
 	    for (x = 0; x < image_width; x++)
 		XPutPixel(tile_image, x, y, expanded_row[x]);
 	}
-	free((genericptr_t)expanded_row);
+	free((void *)expanded_row);
 
     } else {
 
@@ -523,9 +523,9 @@ init_tiles(wp)
 tiledone:
 #ifndef USE_XPM
     if (fp) (void) fclose(fp);
-    if (colormap) free((genericptr_t)colormap);
-    if (tile_bytes) free((genericptr_t)tile_bytes);
-    if (colors) free((genericptr_t)colors);
+    if (colormap) free((void *)colormap);
+    if (tile_bytes) free((void *)tile_bytes);
+    if (colors) free((void *)colors);
 #endif
 
     if (result) {				/* succeeded */
@@ -536,7 +536,7 @@ tiledone:
 	tile_info->image_width = image_width;
 	tile_info->image_height = image_height;
     } else {
-	if (tile_info) free((genericptr_t)tile_info);
+	if (tile_info) free((void *)tile_info);
 	tile_info = 0;
     }
 
@@ -888,18 +888,18 @@ clear_map_window(wp)
 	map_all_stone(map_info);
     } else {
 	/* Fill text with spaces, and update */
-	(void) memset((genericptr_t) map_info->mtype.text_map->text, ' ',
+	(void) memset((void *) map_info->mtype.text_map->text, ' ',
 			sizeof(map_info->mtype.text_map->text));
 #ifdef TEXTCOLOR
-	(void) memset((genericptr_t) map_info->mtype.text_map->colors, NO_COLOR,
+	(void) memset((void *) map_info->mtype.text_map->colors, NO_COLOR,
 			sizeof(map_info->mtype.text_map->colors));
 #endif
     }
 
     /* force a full update */
-    (void) memset((genericptr_t) map_info->t_start, (char) 0,
+    (void) memset((void *) map_info->t_start, (char) 0,
 			sizeof(map_info->t_start));
-    (void) memset((genericptr_t) map_info->t_stop, (char) COLNO-1,
+    (void) memset((void *) map_info->t_stop, (char) COLNO-1,
 			sizeof(map_info->t_stop));
     display_map_window(wp);
 }
@@ -1339,9 +1339,9 @@ init_text(wp)
     text_map = map_info->mtype.text_map =
 	(struct text_map_info_t *) alloc(sizeof(struct text_map_info_t));
 
-    (void) memset((genericptr_t) text_map->text, ' ', sizeof(text_map->text));
+    (void) memset((void *) text_map->text, ' ', sizeof(text_map->text));
 #ifdef TEXTCOLOR
-    (void) memset((genericptr_t) text_map->colors, NO_COLOR,
+    (void) memset((void *) text_map->colors, NO_COLOR,
 			sizeof(text_map->colors));
 #endif
 
@@ -1431,9 +1431,9 @@ create_map_window(wp, create_popup, parent)
     map_info->viewport_width = map_info->viewport_height = 0;
 
     /* reset the "new entry" indicators */
-    (void) memset((genericptr_t) map_info->t_start, (char) COLNO,
+    (void) memset((void *) map_info->t_start, (char) COLNO,
 			sizeof(map_info->t_start));
-    (void) memset((genericptr_t) map_info->t_stop, (char) 0,
+    (void) memset((void *) map_info->t_stop, (char) 0,
 			sizeof(map_info->t_stop));
 
     /* we probably want to restrict this to the 1st map window only */
@@ -1509,10 +1509,10 @@ destroy_map_window(wp)
 #endif
 	}
 	/* free alloc'ed text information */
-	free((genericptr_t)text_map),   map_info->mtype.text_map = 0;
+	free((void *)text_map),   map_info->mtype.text_map = 0;
 
 	/* Free malloc'ed space. */
-	free((genericptr_t)map_info),  wp->map_information = 0;
+	free((void *)map_info),  wp->map_information = 0;
     }
 
 	/* Destroy map widget. */

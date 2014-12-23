@@ -517,7 +517,7 @@ struct obj *obj;
 		set_moreluck();
 		flags.botl = 1;
 	} else if (obj->otyp == FIGURINE && obj->timed) {
-		(void) stop_timer(FIG_TRANSFORM, (genericptr_t) obj);
+		(void) stop_timer(FIG_TRANSFORM, (void *) obj);
 	}
 }
 
@@ -1499,7 +1499,7 @@ int id_limit;
 	    if (n > id_limit) n = id_limit;
 	    for (i = 0; i < n; i++, id_limit--)
 		(void) identify(pick_list[i].item.a_obj);
-	    free((genericptr_t) pick_list);
+	    free((void *) pick_list);
 	    mark_synch(); /* Before we loop to pop open another menu */
 	} else {
 	    if (n < 0) pline("That was all.");
@@ -1889,7 +1889,7 @@ nextclass:
 	if (n > 0) {
 	    ret = selected[0].item.a_char;
 	    if (out_cnt) *out_cnt = selected[0].count;
-	    free((genericptr_t)selected);
+	    free((void *)selected);
 	} else
 	    ret = !n ? '\0' : '\033';	/* cancelled */
 #ifdef DUMP_LOG
@@ -2117,7 +2117,7 @@ dotypeinv()
 		n = query_category(prompt, invent, i, &pick_list, PICK_ONE);
 		if (!n) return 0;
 		this_type = c = pick_list[0].item.a_int;
-		free((genericptr_t) pick_list);
+		free((void *) pick_list);
 	    }
 	}
 	if (traditional) {
@@ -2195,7 +2195,7 @@ dotypeinv()
 	if (query_objlist((char *) 0, invent,
 		    (flags.invlet_constant ? USE_INVLET : 0)|INVORDER_SORT,
 		    &pick_list, PICK_NONE, this_type_only) > 0)
-	    free((genericptr_t)pick_list);
+	    free((void *)pick_list);
 	return 0;
 }
 
@@ -2725,7 +2725,7 @@ boolean unpaid;
 
 	len = strlen(class_name) + (unpaid ? sizeof "unpaid_" : sizeof "");
 	if (len > invbufsiz) {
-	    if (invbuf) free((genericptr_t)invbuf);
+	    if (invbuf) free((void *)invbuf);
 	    invbufsiz = len + 10; /* add slop to reduce incremental realloc */
 	    invbuf = (char *) alloc(invbufsiz);
 	}
@@ -2739,7 +2739,7 @@ boolean unpaid;
 void
 free_invbuf()
 {
-	if (invbuf) free((genericptr_t)invbuf),  invbuf = (char *)0;
+	if (invbuf) free((void *)invbuf),  invbuf = (char *)0;
 	invbufsiz = 0;
 }
 
@@ -2863,7 +2863,7 @@ const char *hdr, *txt;
 	add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, txt, MENU_UNSELECTED);
 	end_menu(win, (char *)0);
 	if (select_menu(win, PICK_NONE, &selected) > 0)
-	    free((genericptr_t)selected);
+	    free((void *)selected);
 	destroy_nhwindow(win);
 	return;
 }
@@ -2959,7 +2959,7 @@ char *title;
 
 	if (n > 0) {
 	    ret = selected[0].item.a_obj;
-	    free((genericptr_t)selected);
+	    free((void *)selected);
 #ifndef GOLDOBJ
 	    /*
 	     * Unfortunately, we can't return a pointer to our temporary
@@ -2997,7 +2997,7 @@ register struct obj *obj;
 	}
 	if (n > 0) {
 	    ret = selected[0].item.a_obj;
-	    free((genericptr_t)selected);
+	    free((void *)selected);
 	} else
 	    ret = (struct obj *) 0;
 	return ret;
@@ -3041,7 +3041,7 @@ boolean as_if_seen;
 	    if (query_objlist("Things that are buried here:",
 			      level.buriedobjlist, INVORDER_SORT,
 			      &selected, PICK_NONE, only_here) > 0)
-		free((genericptr_t)selected);
+		free((void *)selected);
 	    only.x = only.y = 0;
 	}
 	return n;

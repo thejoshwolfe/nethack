@@ -242,7 +242,7 @@ Gem_player_selection()
 		);
 		if(pick4u=='q'){
 give_up:		/* Just quit */
-			if (selected) free((genericptr_t) selected);
+			if (selected) free((void *) selected);
 			bail((char *)0);
 			/*NOTREACHED*/
 			return;
@@ -297,7 +297,7 @@ give_up:		/* Just quit */
 			    goto give_up;		/* Selected quit */
 
 			flags.initrole = selected[0].item.a_int - 1;
-			free((genericptr_t) selected),	selected = 0;
+			free((void *) selected),	selected = 0;
 		}
 	}
 
@@ -362,7 +362,7 @@ give_up:		/* Just quit */
 				if (n != 1 || selected[0].item.a_int == any.a_int)
 				    goto give_up;		/* Selected quit */
 				k = selected[0].item.a_int - 1;
-				free((genericptr_t) selected),	selected = 0;
+				free((void *) selected),	selected = 0;
 			}
 			flags.initrace = k;
 		}
@@ -431,7 +431,7 @@ give_up:		/* Just quit */
 				if (n != 1 || selected[0].item.a_int == any.a_int)
 				    goto give_up;		/* Selected quit */
 				k = selected[0].item.a_int - 1;
-				free((genericptr_t) selected),	selected = 0;
+				free((void *) selected),	selected = 0;
 			}
 			flags.initgend = k;
 		}
@@ -502,7 +502,7 @@ give_up:		/* Just quit */
 				if (n != 1 || selected[0].item.a_int == any.a_int)
 				    goto give_up;		/* Selected quit */
 				k = selected[0].item.a_int - 1;
-				free((genericptr_t) selected),	selected = 0;
+				free((void *) selected),	selected = 0;
 			}
 			flags.initalign = k;
 		}
@@ -846,7 +846,7 @@ Gem_select_menu(window, how, menu_list)
 		*menu_list = (menu_item *) alloc(n * sizeof(menu_item));
 		for (mi = *menu_list, Gmit = mar_hol_inv(); Gmit; Gmit = Gmit->Gmi_next)
 			if (Gmit->Gmi_selected) {
-				mi->item = (anything)(genericptr_t)Gmit->Gmi_identifier;
+				mi->item = (anything)(void *)Gmit->Gmi_identifier;
 				mi->count = Gmit->Gmi_count;
 				mi++;
 			}

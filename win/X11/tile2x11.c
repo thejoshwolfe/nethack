@@ -195,7 +195,7 @@ main(argc, argv)
     }
 
     /* don't leave garbage at end of partial row */
-    (void) memset((genericptr_t)tile_bytes, 0, sizeof(tile_bytes));
+    (void) memset((void *)tile_bytes, 0, sizeof(tile_bytes));
 
     for (i = 1; i < argc; i++)
 	process_file(argv[i]);

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)termcap.c	3.4	2000/07/10	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #if defined (TTY_GRAPHICS) && !defined(NO_TERMS)
@@ -331,7 +327,7 @@ int *wid, *hgt;
 		error("NetHack needs CL.");
 	if ((int)(tbufptr - tbuf) > (int)(sizeof tbuf))
 		error("TERMCAP entry too big...\n");
-	free((genericptr_t)tptr);
+	free((void *)tptr);
 #endif /* TERMLIB */
 }
 
@@ -1010,9 +1006,9 @@ kill_hilite()
 	for (c = 0; c < CLR_MAX / 2; c++) {
 	    if (hilites[c|BRIGHT] == hilites[c])  hilites[c|BRIGHT] = 0;
 	    if (hilites[c] && (hilites[c] != nh_HI))
-		free((genericptr_t) hilites[c]),  hilites[c] = 0;
+		free((void *) hilites[c]),  hilites[c] = 0;
 	    if (hilites[c|BRIGHT] && (hilites[c|BRIGHT] != nh_HI))
-		free((genericptr_t) hilites[c|BRIGHT]),  hilites[c|BRIGHT] = 0;
+		free((void *) hilites[c|BRIGHT]),  hilites[c|BRIGHT] = 0;
 	}
 # endif
 	return;

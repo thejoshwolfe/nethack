@@ -126,9 +126,9 @@ fclose_ppm_file()
 	}
 
 	for (i = 0; i < TILE_Y; i++) {
-		free((genericptr_t)image[i]);
+		free((void *)image[i]);
 	}
-	free((genericptr_t)image);
+	free((void *)image);
 
 	PpmScreen.Height = tiles_down * TILE_Y;
 	rewind(ppm_file);

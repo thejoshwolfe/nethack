@@ -104,7 +104,7 @@ extern void FDECL(exit, (int));
 # if defined(__STDC__) || !defined(FLEX_SCANNER)
 #  ifndef OS2_CSET2
 #   ifndef MONITOR_HEAP
-extern void FDECL(free, (genericptr_t));
+extern void FDECL(free, (void *));
 #   endif
 #  endif
 # endif
@@ -116,15 +116,15 @@ extern void FDECL(perror, (const char *));
 #endif
 #ifndef NeXT
 #ifdef POSIX_TYPES
-extern void FDECL(qsort, (genericptr_t,size_t,size_t,
-		     int(*)(const genericptr,const genericptr)));
+extern void FDECL(qsort, (void *,size_t,size_t,
+		     int(*)(const void *,const void *)));
 #else
 # if defined(BSD) || defined(ULTRIX)
 extern  int qsort();
 # else
 #  if !defined(LATTICE) && !defined(AZTEC_50)
-extern   void FDECL(qsort, (genericptr_t,size_t,size_t,
-		       int(*)(const genericptr,const genericptr)));
+extern   void FDECL(qsort, (void *,size_t,size_t,
+		       int(*)(const void *,const void *)));
 #  endif
 # endif
 #endif
@@ -153,7 +153,7 @@ extern int FDECL(write, (int, const void *,unsigned));
 #   endif
 #  else
 #   ifndef __MWERKS__	/* metrowerks defines write via universal headers */
-extern int FDECL(write, (int,genericptr_t,unsigned));
+extern int FDECL(write, (int,void *,unsigned));
 #   endif
 #  endif
 # endif /* ULTRIX */
@@ -186,7 +186,7 @@ extern int FDECL(open, (const char *,int));
 #if defined(MICRO)
 extern int FDECL(close, (int));
 #ifndef __EMX__
-extern int FDECL(read, (int,genericptr_t,unsigned int));
+extern int FDECL(read, (int,void *,unsigned int));
 #endif
 extern int FDECL(open, (const char *,int,...));
 extern int FDECL(dup2, (int, int));
@@ -214,10 +214,10 @@ extern int FDECL(chdir, (const char *));
 extern int FDECL(chmod, (const char *,int));
 extern mode_t FDECL(umask, (int));
 # endif
-extern int FDECL(read, (int,genericptr_t,unsigned));
+extern int FDECL(read, (int,void *,unsigned));
 /* these aren't quite right, but this saves including lots of system files */
-extern int FDECL(stty, (int,genericptr_t));
-extern int FDECL(gtty, (int,genericptr_t));
+extern int FDECL(stty, (int,void *));
+extern int FDECL(gtty, (int,void *));
 extern int FDECL(ioctl, (int, int, char*));
 extern int FDECL(isatty, (int));	/* 1==yes, 0==no, -1==error */
 #include <sys/file.h>
@@ -251,10 +251,10 @@ extern int FDECL(fstat, ( /*_ int, stat_t * _*/ ));
 extern int FDECL(isatty, (int));	/* 1==yes, 0==no, -1==error */
 extern long FDECL(lseek, (int,long,int));
 extern int VDECL(open, (const char *,int,unsigned,...));
-extern int FDECL(read, (int,genericptr_t,unsigned));
+extern int FDECL(read, (int,void *,unsigned));
 extern int FDECL(rename, (const char *,const char *));
 extern int FDECL(stat, ( /*_ const char *,stat_t * _*/ ));
-extern int FDECL(write, (int,const genericptr,unsigned));
+extern int FDECL(write, (int,const void *,unsigned));
 #endif
 
 #endif	/* __SASC_60 */
@@ -497,7 +497,7 @@ extern char *FDECL(tgoto, (const char *,int,int));
 #endif
 
 #ifdef ALLOC_C
-extern genericptr_t FDECL(malloc, (size_t));
+extern void * FDECL(malloc, (size_t));
 #endif
 
 /* time functions */

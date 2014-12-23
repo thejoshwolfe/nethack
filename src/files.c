@@ -803,7 +803,7 @@ void
 save_savefile_name(fd)
 int fd;
 {
-	(void) write(fd, (genericptr_t) SAVEF, sizeof(SAVEF));
+	(void) write(fd, (void *) SAVEF, sizeof(SAVEF));
 }
 #endif
 
@@ -931,7 +931,7 @@ const char* filename;
     if ((fd = open_savefile()) >= 0) {
 	if (uptodate(fd, filename)) {
 	    char tplname[PL_NSIZ];
-	    mread(fd, (genericptr_t) tplname, PL_NSIZ);
+	    mread(fd, (void *) tplname, PL_NSIZ);
 	    result = strdup(tplname);
 	}
 	(void) close(fd);
@@ -1007,8 +1007,8 @@ char** saved;
 {
     if ( saved ) {
 	int i=0;
-	while (saved[i]) free((genericptr_t)saved[i++]);
-	free((genericptr_t)saved);
+	while (saved[i]) free((void *)saved[i++]);
+	free((void *)saved);
     }
 }
 
@@ -2144,22 +2144,22 @@ recover_savefile()
 	    raw_printf("%s\n", errbuf);
 	    return FALSE;
 	}
-	if (read(gfd, (genericptr_t) &hpid, sizeof hpid) != sizeof hpid) {
+	if (read(gfd, (void *) &hpid, sizeof hpid) != sizeof hpid) {
 	    raw_printf(
 "\nCheckpoint data incompletely written or subsequently clobbered. Recovery impossible.");
 	    (void)close(gfd);
 	    return FALSE;
 	}
-	if (read(gfd, (genericptr_t) &savelev, sizeof(savelev))
+	if (read(gfd, (void *) &savelev, sizeof(savelev))
 							!= sizeof(savelev)) {
 	    raw_printf("\nCheckpointing was not in effect for %s -- recovery impossible.\n",
 			lock);
 	    (void)close(gfd);
 	    return FALSE;
 	}
-	if ((read(gfd, (genericptr_t) savename, sizeof savename)
+	if ((read(gfd, (void *) savename, sizeof savename)
 		!= sizeof savename) ||
-	    (read(gfd, (genericptr_t) &version_data, sizeof version_data)
+	    (read(gfd, (void *) &version_data, sizeof version_data)
 		!= sizeof version_data)) {
 	    raw_printf("\nError reading %s -- can't recover.\n", lock);
 	    (void)close(gfd);
@@ -2189,7 +2189,7 @@ recover_savefile()
 	    return FALSE;
 	}
 
-	if (write(sfd, (genericptr_t) &version_data, sizeof version_data)
+	if (write(sfd, (void *) &version_data, sizeof version_data)
 		!= sizeof version_data) {
 	    raw_printf("\nError writing %s; recovery failed.", SAVEF);
 	    (void)close(gfd);
@@ -2225,7 +2225,7 @@ recover_savefile()
 			if (lfd >= 0) {
 				/* any or all of these may not exist */
 				levc = (xchar) lev;
-				write(sfd, (genericptr_t) &levc, sizeof(levc));
+				write(sfd, (void *) &levc, sizeof(levc));
 				if (!copy_bytes(lfd, sfd)) {
 					(void) close(lfd);
 					(void) close(sfd);
