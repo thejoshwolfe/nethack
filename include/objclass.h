@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)objclass.h 3.4	1996/06/16	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef OBJCLASS_H
 #define OBJCLASS_H
 
@@ -114,8 +110,8 @@ struct objdescr {
 	const char *oc_descr;		/* description when name unknown */
 };
 
-extern NEARDATA struct objclass objects[];
-extern NEARDATA struct objdescr obj_descr[];
+extern struct objclass objects[];
+extern struct objdescr obj_descr[];
 
 /*
  * All objects have a class. Make sure that all classes have a corresponding

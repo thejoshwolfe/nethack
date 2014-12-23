@@ -58,8 +58,6 @@
 # define NEED_VARARGS
 #endif
 
-#define NEARDATA
-
 /*
  * Atari auto-detection
  */
