@@ -21,6 +21,7 @@
 # if defined(LINUX)
 
 /* requires dynamic linking with libc */
+#define _GNU_SOURCE
 #include <dlfcn.h>
 
 static int

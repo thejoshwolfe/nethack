@@ -4,6 +4,10 @@
 /* Copyright (c) Dean Luick, 1990.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 
+#if defined(__FreeBSD_kernel__)
+#include <time.h>
+#endif
+
 #define MAKEDEFS_C	/* use to conditionally include file sections */
 /* #define DEBUG */	/* uncomment for debugging info */
 
@@ -358,7 +362,7 @@ do_rumors()
 		perror(filename);
 		exit(EXIT_FAILURE);
 	}
-	Fprintf(ofp,Dont_Edit_Data);
+	Fprintf(ofp, "%s", Dont_Edit_Data);
 
 	Sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
 	Strcat(infile, ".tru");
@@ -557,7 +561,7 @@ do_date()
 		exit(EXIT_FAILURE);
 	}
 	Fprintf(ofp,"/*\tSCCS Id: @(#)date.h\t3.4\t2002/02/03 */\n\n");
-	Fprintf(ofp,Dont_Edit_Code);
+	Fprintf(ofp, "%s", Dont_Edit_Code);
 
 #ifdef KR1ED
 	(void) time(&clocktim);
@@ -679,6 +683,13 @@ static const char *build_opts[] = {
 #ifdef MAIL
 		"mail daemon",
 #endif
+#ifdef MENU_COLOR
+# ifdef MENU_COLOR_REGEX
+		"menu colors via regular expressions",
+# else
+		"menu colors via pmatch",
+# endif
+#endif
 #ifdef GNUDOS
 		"MSDOS protected mode",
 #endif
@@ -781,6 +792,9 @@ static const char *build_opts[] = {
 static const char *window_opts[] = {
 #ifdef TTY_GRAPHICS
 		"traditional tty-based graphics",
+#endif
+#ifdef CURSES_GRAPHICS
+        "curses",
 #endif
 #ifdef X11_GRAPHICS
 		"X11",
@@ -1229,7 +1243,7 @@ do_dungeon()
 		perror(filename);
 		exit(EXIT_FAILURE);
 	}
-	Fprintf(ofp,Dont_Edit_Data);
+	Fprintf(ofp, "%s", Dont_Edit_Data);
 
 	while (fgets(in_line, sizeof in_line, ifp) != 0) {
 	    SpinCursor(3);
@@ -1351,7 +1365,7 @@ do_monstr()
 	perror(filename);
 	exit(EXIT_FAILURE);
     }
-    Fprintf(ofp,Dont_Edit_Code);
+    Fprintf(ofp,"%s", Dont_Edit_Code);
     Fprintf(ofp,"#include \"config.h\"\n");
     Fprintf(ofp,"\nconst int monstr[] = {\n");
     for (ptr = &mons[0], j = 0; ptr->mlet; ptr++) {
@@ -1392,7 +1406,7 @@ do_permonst()
 		exit(EXIT_FAILURE);
 	}
 	Fprintf(ofp,"/*\tSCCS Id: @(#)pm.h\t3.4\t2002/02/03 */\n\n");
-	Fprintf(ofp,Dont_Edit_Code);
+	Fprintf(ofp,"%s", Dont_Edit_Code);
 	Fprintf(ofp,"#ifndef PM_H\n#define PM_H\n");
 
 	if (strcmp(mons[0].mname, "playermon") != 0)
@@ -1708,7 +1722,7 @@ do_objs()
 		exit(EXIT_FAILURE);
 	}
 	Fprintf(ofp,"/*\tSCCS Id: @(#)onames.h\t3.4\t2002/02/03 */\n\n");
-	Fprintf(ofp,Dont_Edit_Code);
+	Fprintf(ofp,"%s", Dont_Edit_Code);
 	Fprintf(ofp,"#ifndef ONAMES_H\n#define ONAMES_H\n\n");
 
 	for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++) {
@@ -1863,7 +1877,7 @@ do_vision()
 	perror(filename);
 	exit(EXIT_FAILURE);
     }
-    Fprintf(ofp,Dont_Edit_Code);
+    Fprintf(ofp,"%s", Dont_Edit_Code);
     Fprintf(ofp,"#ifdef VISION_TABLES\n");
 #ifdef VISION_TABLES
     H_close_gen();
@@ -1888,7 +1902,7 @@ do_vision()
 	Unlink(filename);
 	exit(EXIT_FAILURE);
     }
-    Fprintf(ofp,Dont_Edit_Code);
+    Fprintf(ofp,"%s", Dont_Edit_Code);
     Fprintf(ofp,"#include \"config.h\"\n");
     Fprintf(ofp,"#ifdef VISION_TABLES\n");
     Fprintf(ofp,"#include \"vis_tab.h\"\n");

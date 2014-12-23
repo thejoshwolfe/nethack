@@ -55,6 +55,12 @@ pline VA_DECL(const char *, line)
 	    Vsprintf(pbuf,line,VA_ARGS);
 	    line = pbuf;
 	}
+	plines(line);
+}
+
+void
+plines(const char *line) {
+	if (!line || !*line) return;
 	if (!iflags.window_inited) {
 	    raw_print(line);
 	    return;

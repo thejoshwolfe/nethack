@@ -516,7 +516,7 @@ register char *enterstring;
 	    if (!index(empty_shops, *enterstring) &&
 		in_rooms(u.ux, u.uy, SHOPBASE) !=
 				  in_rooms(u.ux0, u.uy0, SHOPBASE))
-		pline(no_shk);
+		plines(no_shk);
 	    Strcpy(empty_shops, u.ushops);
 	    u.ushops[0] = '\0';
 	    return;
@@ -528,7 +528,7 @@ register char *enterstring;
 	    /* dump core when referenced */
 	    eshkp->bill_p = (struct bill_x *) -1000;
 	    if (!index(empty_shops, *enterstring))
-		pline(no_shk);
+		plines(no_shk);
 	    Strcpy(empty_shops, u.ushops);
 	    u.ushops[0] = '\0';
 	    return;
@@ -1345,7 +1345,7 @@ proceed:
 		    else Strcat(sbuf,
 			   "for gold picked up and the use of merchandise.");
 		} else Strcat(sbuf, "for the use of merchandise.");
-		pline(sbuf);
+		plines(sbuf);
 #ifndef GOLDOBJ
 		if (u.ugold + eshkp->credit < dtmp) {
 #else

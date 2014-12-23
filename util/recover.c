@@ -16,6 +16,12 @@
 #include "win32api.h"
 #endif
 
+#ifdef SECURE
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
+
 #ifdef VMS
 extern int FDECL(vms_creat, (const char *,unsigned));
 extern int FDECL(vms_open, (const char *,int,unsigned));
@@ -33,7 +39,7 @@ void FDECL(copy_bytes, (int,int));
 #define Fprintf	(void)nhce_message
 static void nhce_message(FILE*, const char*, ...);
 #endif
-
+#define Perror  (void)perror
 #define Close	(void)close
 
 #ifdef UNIX
@@ -59,6 +65,7 @@ extern unsigned _stklen = STKSIZ;
 #endif
 char savename[SAVESIZE]; /* holds relative path of save file from playground */
 
+const char *dir = (char*)0;
 
 int
 main(argc, argv)
@@ -66,7 +73,6 @@ int argc;
 char *argv[];
 {
 	int argno;
-	const char *dir = (char *)0;
 #ifdef AMIGA
 	char *startdir = (char *)0;
 #endif
@@ -107,14 +113,22 @@ char *argv[];
 	}
 #if defined(SECURE) && !defined(VMS)
 	if (dir
-# ifdef HACKDIR
+# ifdef VAR_PLAYGROUND
+	        && strcmp(dir, VAR_PLAYGROUND)
+# else
+#  ifdef HACKDIR
 		&& strcmp(dir, HACKDIR)
-# endif
+#  endif 
+# endif /* VAR_PLAYGROUND */
 		) {
 		(void) setgid(getgid());
 		(void) setuid(getuid());
 	}
 #endif	/* SECURE && !VMS */
+
+#ifdef VAR_PLAYGROUND
+	if (!dir) dir = VAR_PLAYGROUND;
+#endif
 
 #ifdef HACKDIR
 	if (!dir) dir = HACKDIR;
@@ -124,7 +138,8 @@ char *argv[];
 	startdir = getcwd(0,255);
 #endif
 	if (dir && chdir((char *) dir) < 0) {
-		Fprintf(stderr, "%s: cannot chdir to %s.\n", argv[0], dir);
+		Fprintf(stderr, "%s: cannot chdir:", argv[0]);
+                Perror(dir);
 		exit(EXIT_FAILURE);
 	}
 
@@ -158,17 +173,40 @@ int lev;
 #endif
 }
 
+#ifdef SECURE
+static uid_t save_uid = -1;
+#endif
+
 int
 open_levelfile(lev)
 int lev;
 {
 	int fd;
+#ifdef SECURE
+	struct stat level_stat;
+	uid_t uid;
+#endif
 
 	set_levelfile_name(lev);
 #if defined(MICRO) || defined(WIN32) || defined(MSDOS)
 	fd = open(lock, O_RDONLY | O_BINARY);
 #else
 	fd = open(lock, O_RDONLY, 0);
+#endif
+	/* Security check: does the user calling recover own the file? */
+#ifdef SECURE
+	if (fd != -1) {
+		uid = getuid();
+		if (fstat(fd, &level_stat) == -1) {
+			Fprintf(stderr, "No permission to stat level file %s.\n", lock);
+			return -1;
+		}
+		if (uid != 0 && level_stat.st_uid != uid) {
+			Fprintf(stderr, "You are not the owner of level file %s.\n", lock);
+			return -1;
+		}
+		save_uid = level_stat.st_uid;
+	}
 #endif
 	return fd;
 }
@@ -182,6 +220,13 @@ create_savefile()
 	fd = open(savename, O_WRONLY | O_BINARY | O_CREAT | O_TRUNC, FCMASK);
 #else
 	fd = creat(savename, FCMASK);
+#endif
+
+#ifdef SECURE
+	if (fchown(fd, save_uid, -1) == -1) {
+		Fprintf(stderr, "could not chown %s to %i!\n", savename, 
+			save_uid);
+	}
 #endif
 	return fd;
 }
@@ -231,7 +276,9 @@ char *basename;
 	  	Fprintf(stderr,
 			"\nTrouble accessing level 0 (errno = %d).\n", errno);
 #endif
-	    Fprintf(stderr, "Cannot open level 0 for %s.\n", basename);
+	    Fprintf(stderr, "Cannot open level 0 for %s in directory %s: ",
+                basename, dir);
+            Perror(lock);
 	    return(-1);
 	}
 	if (read(gfd, (genericptr_t) &hpid, sizeof hpid) != sizeof hpid) {
@@ -253,7 +300,8 @@ char *basename;
 		!= sizeof savename) ||
 	    (read(gfd, (genericptr_t) &version_data, sizeof version_data)
 		!= sizeof version_data)) {
-	    Fprintf(stderr, "Error reading %s -- can't recover.\n", lock);
+	    Fprintf(stderr, "Error reading, can't recover: ");
+            Perror(lock);
 	    Close(gfd);
 	    return(-1);
 	}
@@ -266,14 +314,16 @@ char *basename;
 	 */
 	sfd = create_savefile();
 	if (sfd < 0) {
-	    Fprintf(stderr, "Cannot create savefile %s.\n", savename);
+	    Fprintf(stderr, "Cannot create savefile in %s: ", dir);
+            Perror(savename);
 	    Close(gfd);
 	    return(-1);
 	}
 
 	lfd = open_levelfile(savelev);
 	if (lfd < 0) {
-	    Fprintf(stderr, "Cannot open level of save for %s.\n", basename);
+	    Fprintf(stderr, "Cannot open level of save for %s: ", basename);
+            Perror(lock);
 	    Close(gfd);
 	    Close(sfd);
 	    return(-1);
@@ -281,7 +331,8 @@ char *basename;
 
 	if (write(sfd, (genericptr_t) &version_data, sizeof version_data)
 		!= sizeof version_data) {
-	    Fprintf(stderr, "Error writing %s; recovery failed.\n", savename);
+	    Fprintf(stderr, "Error writing, recovery failed: ");
+            Perror(savename);
 	    Close(gfd);
 	    Close(sfd);
 	    return(-1);

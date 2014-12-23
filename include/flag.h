@@ -156,6 +156,9 @@ struct flag {
 
 struct instance_flags {
 	boolean  cbreak;	/* in cbreak mode, rogue format */
+#ifdef CURSES_GRAPHICS
+    boolean  cursesgraphics;    /* Use portable curses extended characters */
+#endif
 	boolean  DECgraphics;	/* use DEC VT-xxx extended character set */
 	boolean  echo;		/* 1 to echo characters */
 	boolean  IBMgraphics;	/* use IBM extended character set */
@@ -175,13 +178,21 @@ struct instance_flags {
 	uchar	bouldersym;	/* symbol for boulder display */
 	boolean travel1;	/* first travel step */
 	coord	travelcc;	/* coordinates for travel_cache */
+#ifdef SIMPLE_MAIL
+	boolean simplemail;	/* simple mail format $NAME:$MESSAGE */
+#endif
 #ifdef WIZARD
 	boolean  sanity_check;	/* run sanity checks */
 	boolean  mon_polycontrol;	/* debug: control monster polymorphs */
 #endif
 #ifdef TTY_GRAPHICS
 	char prevmsg_window;	/* type of old message window to use */
+#endif
+#if defined(TTY_GRAPHICS) || defined(CURSES_GRAPHICS)
 	boolean  extmenu;	/* extended commands use menu interface */
+#endif
+#ifdef MENU_COLOR
+	boolean use_menu_color;	/* use color in menus; only if wc_color */
 #endif
 #ifdef MFLOPPY
 	boolean  checkspace;	/* check disk space before writing files */
@@ -216,6 +227,17 @@ struct instance_flags {
 	boolean lan_mail;	/* mail is initialized */
 	boolean lan_mail_fetched; /* mail is awaiting display */
 #endif
+#ifdef SORTLOOT
+	char sortloot;          /* sort items to loot alphabetically */
+#endif
+#ifdef PARANOID
+	boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
+#endif
+
+#if defined(HPMON) && defined(TEXTCOLOR)
+        boolean use_hpmon;
+#endif
+
 /*
  * Window capability support.
  */
@@ -263,6 +285,11 @@ struct instance_flags {
 	boolean wc2_fullscreen;		/* run fullscreen */
 	boolean wc2_softkeyboard;	/* use software keyboard */
 	boolean wc2_wraptext;		/* wrap text */
+    int     wc2_term_cols;      /* terminal width, in characters */
+    int     wc2_term_rows;      /* terminal height, in characters */
+    int     wc2_windowborders;  /* display borders on NetHack windows */
+    int     wc2_petattr;        /* points to text attributes for pet */
+    boolean wc2_guicolor;       /* allow colors in GUI (outside map) */
 
 	boolean  cmdassist;	/* provide detailed assistance for some commands */
 	boolean	 obsolete;	/* obsolete options can point at this, it isn't used */

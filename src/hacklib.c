@@ -3,6 +3,10 @@
 /* Copyright (c) Robert Patrick Rankin, 1991		  */
 /* NetHack may be freely redistributed.  See license for details. */
 
+#if defined(__FreeBSD_kernel__)
+#include <time.h>
+#endif
+
 /* We could include only config.h, except for the overlay definitions... */
 #include "hack.h"
 /*=

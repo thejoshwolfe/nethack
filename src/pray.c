@@ -70,12 +70,13 @@ static int p_type; /* (-1)-3: (-1)=really naughty, 3=really good */
  * order to have the values be meaningful.
  */
 
-#define TROUBLE_STONED			13
-#define TROUBLE_SLIMED			12
-#define TROUBLE_STRANGLED		11
-#define TROUBLE_LAVA			10
-#define TROUBLE_SICK			 9
-#define TROUBLE_STARVING		 8
+#define TROUBLE_STONED			14
+#define TROUBLE_SLIMED			13
+#define TROUBLE_STRANGLED		12
+#define TROUBLE_LAVA			11
+#define TROUBLE_SICK			 10
+#define TROUBLE_STARVING		 9
+#define TROUBLE_ENGULFED		 8
 #define TROUBLE_HIT			 7
 #define TROUBLE_LYCANTHROPE		 6
 #define TROUBLE_COLLAPSING		 5
@@ -141,6 +142,7 @@ in_trouble()
 	if(u.utrap && u.utraptype == TT_LAVA) return(TROUBLE_LAVA);
 	if(Sick) return(TROUBLE_SICK);
 	if(u.uhs >= WEAK) return(TROUBLE_STARVING);
+	if(u.ustuck && u.uswallow) return(TROUBLE_ENGULFED);
 	if (Upolyd ? (u.mh <= 5 || u.mh*7 <= u.mhmax) :
 		(u.uhp <= 5 || u.uhp*7 <= u.uhpmax)) return TROUBLE_HIT;
 	if(u.ulycn >= LOW_PM) return(TROUBLE_LYCANTHROPE);
@@ -267,6 +269,7 @@ register int trouble;
 	int i;
 	struct obj *otmp = 0;
 	const char *what = (const char *)0;
+	struct monst *mtmp;
 	static NEARDATA const char leftglow[] = "left ring softly glows",
 				   rightglow[] = "right ring softly glows";
 
@@ -311,6 +314,19 @@ register int trouble;
 	    case TROUBLE_SICK:
 		    You_feel("better.");
 		    make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+		    break;
+		case TROUBLE_ENGULFED:
+		    mtmp = u.ustuck;
+		    if (is_animal(mtmp->data)) {
+			You_hear("a %s of divine fear!", growl_sound(mtmp));
+		    } else {
+			You_feel("a strange distortion in your surroundings!");
+		    }
+		    expels(mtmp, mtmp->data, TRUE);
+		    /* Make the monster who's just barfed you out run! */
+		    monflee(mtmp, rnd(10), TRUE, FALSE);
+			pline("%s looks rather %s.", Monnam(mtmp),
+				is_animal(mtmp->data) ? "nauseated" : "shook up");
 		    break;
 	    case TROUBLE_HIT:
 		    /* "fix all troubles" will keep trying if hero has
@@ -1317,7 +1333,7 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
     } /* fake Amulet */
 
     if (value == 0) {
-	pline(nothing_happens);
+	plines(nothing_happens);
 	return (1);
     }
 

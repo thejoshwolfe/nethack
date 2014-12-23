@@ -835,10 +835,6 @@ cl_eos()			/* free after Robert Viduya */
 
 #include <curses.h>
 
-#ifndef LINUX
-extern char *tparm();
-#endif
-
 #  ifdef COLOR_BLACK	/* trust include file */
 #undef COLOR_BLACK
 #  else
@@ -1164,6 +1160,11 @@ int color;
 	if (windowprocs.name != NULL &&
 	    !strcmpi(windowprocs.name, "Gem")) return TRUE;
 #endif
+#ifdef LISP_GRAPHICS
+	/* XXX has_color() should be added to windowprocs */
+	if (windowprocs.name != NULL &&
+	    !strcmpi(windowprocs.name, "lisp")) return TRUE;
+#endif
 #ifdef QT_GRAPHICS
 	/* XXX has_color() should be added to windowprocs */
 	if (windowprocs.name != NULL &&
@@ -1172,6 +1173,13 @@ int color;
 #ifdef AMII_GRAPHICS
 	/* hilites[] not used */
 	return iflags.use_color;
+#endif
+#ifdef CURSES_GRAPHICS
+    /* XXX has_color() should be added to windowprocs */
+    /* iflags.wc_color is set to false and the option disabled if the
+     terminal cannot display color */
+    if (windowprocs.name != NULL &&
+     !strcmpi(windowprocs.name, "curses")) return iflags.wc_color;
 #endif
 	return hilites[color] != (char *)0;
 }

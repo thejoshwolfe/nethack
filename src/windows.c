@@ -6,6 +6,9 @@
 #ifdef TTY_GRAPHICS
 #include "wintty.h"
 #endif
+#ifdef CURSES_GRAPHICS
+extern struct window_procs curses_procs;
+#endif
 #ifdef X11_GRAPHICS
 /* cannot just blindly include winX.h without including all of X11 stuff */
 /* and must get the order of include files right.  Don't bother */
@@ -40,6 +43,10 @@ extern struct window_procs Gnome_procs;
 #ifdef MSWIN_GRAPHICS
 extern struct window_procs mswin_procs;
 #endif
+#ifdef LISP_GRAPHICS
+#include "winlisp.h"
+extern struct window_procs lisp_procs;
+#endif
 
 STATIC_DCL void FDECL(def_raw_print, (const char *s));
 
@@ -52,6 +59,9 @@ struct win_choices {
 } winchoices[] = {
 #ifdef TTY_GRAPHICS
     { &tty_procs, win_tty_init },
+#endif
+#ifdef CURSES_GRAPHICS
+    { &curses_procs, 0 },
 #endif
 #ifdef X11_GRAPHICS
     { &X11_procs, win_X11_init },
@@ -81,6 +91,9 @@ struct win_choices {
 #ifdef MSWIN_GRAPHICS
     { &mswin_procs, 0 },
 #endif
+#ifdef LISP_GRAPHICS
+    { &lisp_procs, win_lisp_init },
+#endif
     { 0, 0 }		/* must be last */
 };
 
@@ -96,10 +109,16 @@ void
 choose_windows(s)
 const char *s;
 {
+    char *ow; const char *wt;
     register int i;
+    
+    if (!strcmp(s, DEFAULT_WINDOW_SYS) && (ow = getenv("OVERRIDEWIN")))
+      wt = ow;
+    else
+      wt = s;
 
     for(i=0; winchoices[i].procs; i++)
-	if (!strcmpi(s, winchoices[i].procs->name)) {
+	if (!strcmpi(wt, winchoices[i].procs->name)) {
 	    windowprocs = *winchoices[i].procs;
 	    if (winchoices[i].ini_routine) (*winchoices[i].ini_routine)();
 	    return;

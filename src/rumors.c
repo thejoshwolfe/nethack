@@ -152,7 +152,7 @@ int mechanism;
 	    	return;
 	    else if (Blind) {
 		if (mechanism == BY_COOKIE)
-			pline(fortune_msg);
+			plines(fortune_msg);
 		pline("What a pity that you cannot read it!");
 	    	return;
 	    }
@@ -170,7 +170,7 @@ int mechanism;
 		exercise(A_WIS, TRUE);
 		return;
 	    case BY_COOKIE:
-		pline(fortune_msg);
+		plines(fortune_msg);
 		/* FALLTHRU */
 	    case BY_PAPER:
 		pline("It reads:");

@@ -862,7 +862,7 @@ int x, y;
 	default: impossible("magic (%d) attempted on door.", otmp->otyp);
 	    break;
 	}
-	if (msg && cansee(x,y)) pline(msg);
+	if (msg && cansee(x,y)) plines(msg);
 	if (loudness > 0) {
 	    /* door was destroyed */
 	    wake_nearto(x, y, loudness);

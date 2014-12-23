@@ -19,8 +19,9 @@
  */
 
 /* define exactly one of the following four choices */
-/* #define BSD 1 */	/* define for 4.n/Free/Open/Net BSD  */
-			/* also for relatives like SunOS 4.x, DG/UX, and */
+#if defined(__FreeBSD_kernel__)
+#define BSD 1 	/* define for 4.n/Free/Open/Net BSD  */
+#endif			/* also for relatives like SunOS 4.x, DG/UX, and */
 			/* older versions of Linux */
 /* #define ULTRIX */	/* define for Ultrix v3.0 or higher (but not lower) */
 			/* Use BSD for < v3.0 */
@@ -32,12 +33,14 @@
 
 
 /* define any of the following that are appropriate */
-#define SVR4		/* use in addition to SYSV for System V Release 4 */
+/* #define SVR4	*/	/* use in addition to SYSV for System V Release 4 */
 			/* including Solaris 2+ */
 #define NETWORK		/* if running on a networked system */
 			/* e.g. Suns sharing a playground through NFS */
 /* #define SUNOS4 */	/* SunOS 4.x */
-/* #define LINUX */	/* Another Unix clone */
+#ifdef __linux__
+#define LINUX	/* Another Unix clone */
+#endif
 /* #define CYGWIN32 */	/* Unix on Win32 -- use with case sensitive defines */
 /* #define GENIX */	/* Yet Another Unix Clone */
 /* #define HISX */	/* Bull Unix for XPS Machines */
@@ -102,7 +105,7 @@
  * If you want the static parts of your playground on a read-only file
  * system, define VAR_PLAYGROUND to be where the variable parts are kept.
  */
-/* #define VAR_PLAYGROUND "/var/lib/games/nethack" */
+#define VAR_PLAYGROUND "/var/games/nethack"
 
 
 /*
@@ -132,7 +135,7 @@
  * "extra output" method is used, but not all systems provide access to
  * a fine-grained timer.
  */
-/* #define TIMED_DELAY */	/* usleep() */
+#define TIMED_DELAY	/* usleep() */
 #endif
 
 /*
@@ -166,12 +169,12 @@
 
 /* #define NO_MAILREADER */	/* have mail daemon just tell player of mail */
 
-#ifdef	MAIL
+#ifdef MAIL
 # if defined(BSD) || defined(ULTRIX)
 #  ifdef AMS
 #define AMS_MAILBOX	"/Mailbox"
 #  else
-#   if defined(__FreeBSD__) || defined(__OpenBSD__)
+#   if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__FreeBSD_kernel__)
 #define DEF_MAILREADER	"/usr/bin/mail"
 #   else
 #define DEF_MAILREADER	"/usr/ucb/Mail"
@@ -189,11 +192,11 @@
 #   endif
 #  endif
 # else
-#define DEF_MAILREADER	"/bin/mail"
+/* Debian mail reader is /usr/bin/mail, not /bin/mail */
+#define DEF_MAILREADER	"/usr/bin/mail"
 # endif
 #endif
 
-#define MAILCKFREQ	50
 #endif	/* MAIL */
 
 
