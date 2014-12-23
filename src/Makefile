@@ -23,16 +23,6 @@ LINK=$(CC)
 SYSSRC = ../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c
 SYSOBJ = ioctl.o unixmain.o unixtty.o unixunix.o unixres.o
-#
-# for Systos
-# SYSSRC = ../sys/atari/tos.c ../sys/share/pcmain.c ../sys/share/pcsys.c \
-#	../sys/share/pctty.c ../sys/share/pcunix.c
-# SYSOBJ = tos.o pcmain.o pcsys.o pctty.o pcunix.o
-#
-# for BeOS
-#SYSSRC = ../sys/be/bemain.c ../sys/share/unixtty.c ../sys/share/ioctl.c
-#SYSOBJ = bemain.o unixtty.o ioctl.o
-
 
 # if you are using gcc as your compiler:
 #	uncomment the CC definition below if it's not in your environment
@@ -144,7 +134,7 @@ HACKCSRC = allmain.c alloc.c apply.c artifact.c attrib.c ball.c bones.c \
 	   windows.c wizard.c worm.c worn.c write.c zap.c
 
 # all operating-system-dependent .c (for dependencies and such)
-SYSCSRC = ../sys/atari/tos.c ../sys/share/pcmain.c ../sys/share/pcsys.c \
+SYSCSRC = ../sys/atari/tos.c \
 	../sys/share/pctty.c ../sys/share/pcunix.c ../sys/share/random.c \
 	../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c ../sys/be/bemain.c
@@ -282,15 +272,13 @@ depend: ../sys/unix/depend.awk \
 	- diff Makefile.bak Makefile
 	@rm -f Makefile.bak
 
-# DO NOT DELETE THIS LINE OR CHANGE ANYTHING BEYOND IT
-
 # config.h timestamp
 $(CONFIG_H): ../include/config.h ../include/config1.h ../include/tradstdc.h \
 		../include/global.h ../include/coord.h ../include/vmsconf.h \
 		../include/system.h ../include/unixconf.h ../include/os2conf.h \
 		../include/micro.h ../include/pcconf.h ../include/tosconf.h \
 		../include/macconf.h ../include/beconf.h \
-		../include/wceconf.h ../include/ntconf.h ../include/nhlan.h
+		../include/nhlan.h
 	touch $(CONFIG_H)
 # hack.h timestamp
 $(HACK_H): ../include/hack.h $(CONFIG_H) ../include/align.h \
@@ -313,8 +301,6 @@ tos.o: ../sys/atari/tos.c $(HACK_H) ../include/tcap.h
 pcmain.o: ../sys/share/pcmain.c $(HACK_H) ../include/dlb.h \
 		#../include/win32api.h
 	$(CC) $(CFLAGS) -c ../sys/share/pcmain.c
-pcsys.o: ../sys/share/pcsys.c $(HACK_H)
-	$(CC) $(CFLAGS) -c ../sys/share/pcsys.c
 pctty.o: ../sys/share/pctty.c $(HACK_H)
 	$(CC) $(CFLAGS) -c ../sys/share/pctty.c
 pcunix.o: ../sys/share/pcunix.c $(HACK_H)

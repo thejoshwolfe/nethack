@@ -69,7 +69,7 @@ DATNODLB = $(VARDATND) license
 DATDLB = $(DATHELP) dungeon $(SPEC_LEVS) $(QUEST_LEVS) $(VARDATD)
 DAT = $(DATNODLB) $(DATDLB)
 
-all:	$(GAME) recover $(VARDAT) dungeon spec_levs dlb
+all:	$(GAME) recover dlb
 	@echo "Done."
 
 $(GAME):
@@ -142,7 +142,7 @@ GEM_RSC.RSC:
 title.img:
 	( cd dat && $(MAKE) title.img )
 
-dlb:
+dlb: $(GAME) $(VARDAT) dungeon spec_levs
 	( cd util && $(MAKE) dlb )
 	( cd dat && ../util/dlb cf nhdat $(DATDLB) )
 

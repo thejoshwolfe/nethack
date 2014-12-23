@@ -1422,24 +1422,6 @@ extern char *FDECL(dowhatdoes_core,(CHAR_P, char *));
 extern int NDECL(dohelp);
 extern int NDECL(dohistory);
 
-/* ### pcsys.c ### */
-
-#if defined(MICRO) || defined(WIN32)
-extern void NDECL(flushout);
-extern int NDECL(dosh);
-# ifdef MFLOPPY
-extern void FDECL(eraseall, (const char *,const char *));
-extern void FDECL(copybones, (int));
-extern void NDECL(playwoRAMdisk);
-extern int FDECL(saveDiskPrompt, (int));
-extern void NDECL(gameDiskPrompt);
-# endif
-extern void FDECL(append_slash, (char *));
-extern void FDECL(getreturn, (const char *));
-extern void VDECL(msmsg, (const char *,...));
-extern FILE *FDECL(fopenp, (const char *,const char *));
-#endif /* MICRO || WIN32 */
-
 /* ### pctty.c ### */
 
 #if defined(MICRO) || defined(WIN32)
