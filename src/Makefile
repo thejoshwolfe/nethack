@@ -93,12 +93,6 @@ LIBS =
 # make NetHack
 GAME     = nethack
 
-# if you defined RANDOM in unixconf.h/tosconf.h since your system did not come
-# with a reasonable random number generator
-# RANDOBJ = random.o
-RANDOBJ =
-
-
 # used by `make depend' to reconstruct this Makefile; you shouldn't need this
 AWK	= nawk
 
@@ -107,7 +101,7 @@ AWK	= nawk
 # Nothing below this line should have to be changed.
 #
 # Other things that have to be reconfigured are in config.h,
-# {unixconf.h, pcconf.h, tosconf.h}, and possibly system.h
+# {unixconf.h}
 
 MAKEDEFS = ../util/makedefs
 
@@ -153,14 +147,14 @@ VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(GENCSRC)
 # cause dependency loops if run through "make depend"
 # and dgn_comp.h, dgn_file.h, lev_comp.h, special level & dungeon files.
 #
-HACKINCL = align.h artifact.h artilist.h attrib.h beconf.h color.h \
+HACKINCL = align.h artifact.h artilist.h attrib.h color.h \
 	config.h config1.h coord.h decl.h def_os2.h display.h dlb.h dungeon.h \
 	edog.h emin.h engrave.h epri.h eshk.h extern.h flag.h func_tab.h \
-	global.h hack.h lev.h macconf.h mfndpos.h micro.h mkroom.h \
+	global.h hack.h lev.h mfndpos.h micro.h mkroom.h \
 	monattk.h mondata.h monflag.h monst.h monsym.h obj.h objclass.h \
-	os2conf.h patchlevel.h pcconf.h permonst.h prop.h rect.h region.h rm.h \
-	sp_lev.h spell.h system.h tcap.h timeout.h tosconf.h tradstdc.h \
-	trampoli.h trap.h unixconf.h vault.h vision.h vmsconf.h wintty.h \
+	patchlevel.h permonst.h prop.h rect.h region.h rm.h \
+	sp_lev.h spell.h tcap.h timeout.h tradstdc.h \
+	trampoli.h trap.h unixconf.h vault.h vision.h wintty.h \
 	winX.h winprocs.h wintype.h you.h youprop.h
 
 HSOURCES = $(HACKINCL) date.h onames.h pm.h vis_tab.h\
@@ -184,7 +178,7 @@ HOBJ = $(FIRSTOBJ) allmain.o alloc.o apply.o artifact.o attrib.o ball.o \
 	steal.o steed.o teleport.o timeout.o topten.o track.o trap.o u_init.o \
 	uhitm.o vault.o vision.o vis_tab.o weapon.o were.o wield.o windows.o \
 	wizard.o worm.o worn.o write.o zap.o \
-	$(RANDOBJ) $(SYSOBJ) $(WINOBJ) version.o
+	$(SYSOBJ) $(WINOBJ) version.o
 # the .o files from the HACKCSRC, SYSSRC, and WINSRC lists
 
 $(GAME):	$(SYSTEM)
@@ -274,11 +268,8 @@ depend: ../sys/unix/depend.awk \
 
 # config.h timestamp
 $(CONFIG_H): ../include/config.h ../include/config1.h ../include/tradstdc.h \
-		../include/global.h ../include/coord.h ../include/vmsconf.h \
-		../include/system.h ../include/unixconf.h ../include/os2conf.h \
-		../include/micro.h ../include/pcconf.h ../include/tosconf.h \
-		../include/macconf.h ../include/beconf.h \
-		../include/nhlan.h
+		../include/global.h ../include/coord.h \
+		../include/unixconf.h ../include/micro.h ../include/nhlan.h
 	touch $(CONFIG_H)
 # hack.h timestamp
 $(HACK_H): ../include/hack.h $(CONFIG_H) ../include/align.h \

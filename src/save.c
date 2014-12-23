@@ -14,10 +14,6 @@ long bytes_counted;
 static int count_only;
 #endif
 
-#ifdef MICRO
-int dotcnt, dotrow;	/* also used in restore */
-#endif
-
 #ifdef ZEROCOMP
 STATIC_DCL void FDECL(bputc, (int));
 #endif
@@ -200,17 +196,6 @@ int dosave0(void) {
 	for(ltmp = (xchar)1; ltmp <= maxledgerno(); ltmp++) {
 		if (ltmp == ledger_no(&uz_save)) continue;
 		if (!(level_info[ltmp].flags & LFILE_EXISTS)) continue;
-#ifdef MICRO
-		curs(WIN_MAP, 1 + dotcnt++, dotrow);
-		if (dotcnt >= (COLNO - 1)) {
-			dotrow++;
-			dotcnt = 0;
-		}
-		if (strncmpi("X11", windowprocs.name, 3)){
-		  putstr(WIN_MAP, 0, ".");
-		}
-		mark_synch();
-#endif
 		ofd = open_levelfile(ltmp, whynot);
 		if (ofd < 0) {
 		    HUP pline("%s", whynot);

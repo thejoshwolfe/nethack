@@ -283,7 +283,7 @@ int wt;
 #ifdef __linux__
 	linux_mapoff();
 #endif
-	(void) signal(SIGINT, (SIG_RET_TYPE) done1);
+	(void) signal(SIGINT, (sighandler_t) done1);
 #ifdef WIZARD
 	if(wizard) (void) signal(SIGQUIT,SIG_DFL);
 #endif

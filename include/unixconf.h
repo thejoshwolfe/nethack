@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)unixconf.h 3.4	1999/07/02	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifdef UNIX
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
@@ -231,11 +227,7 @@
 #endif
 
 
-#if defined(BSD) || defined(ULTRIX)
-#include <sys/time.h>
-#else
 #include <time.h>
-#endif
 
 #define HLOCK	"perm"	/* an empty file used for locking purposes */
 
@@ -246,14 +238,12 @@
 
 #define SHELL		/* do not delete the '!' command */
 
-#include "system.h"
-
-#if defined(POSIX_TYPES) || defined(__GNUC__)
+#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#endif
 
-#if defined(POSIX_TYPES) || defined(__GNUC__) || defined(BSD) || defined(ULTRIX)
+#if defined(POSIX_TYPES) || defined(__GNUC__)
 #include <sys/wait.h>
 #endif
 

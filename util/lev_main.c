@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)lev_main.c	3.4	2002/03/27	*/
-/*	Copyright (c) 1989 by Jean-Christophe Collet */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * This file contains the main function for the parser
  * and some useful functions needed by yacc
@@ -1544,9 +1540,6 @@ struct attribs attrmax, attrmin;
 const char *configfile;
 char lock[ARBITRARY_SIZE];
 char SAVEF[ARBITRARY_SIZE];
-# ifdef MICRO
-char SAVEP[ARBITRARY_SIZE];
-# endif
 /* termcap.c */
 struct tc_lcl_data tc_lcl_data;
 # ifdef TEXTCOLOR

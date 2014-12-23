@@ -1,4 +1,3 @@
-/* to get the malloc() prototype from system.h */
 #define ALLOC_C		/* comment line for pre-compiled headers */
 /* since this file is also used in auxiliary programs, don't include all the
  * function declarations for all of nethack
@@ -125,5 +124,3 @@ int line;
 }
 
 #endif /* MONITOR_HEAP */
-
-/*alloc.c*/

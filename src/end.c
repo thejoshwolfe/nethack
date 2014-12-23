@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)end.c	3.4	2003/03/10	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #define NEED_VARARGS	/* comment line for pre-compiled headers */
 
 #include "hack.h"
@@ -142,7 +138,7 @@ int sig_unused;
 #endif
 	if(flags.ignintr) {
 #ifndef NO_SIGNAL
-		(void) signal(SIGINT, (SIG_RET_TYPE) done1);
+		(void) signal(SIGINT, (sighandler_t) done1);
 #endif
 		clear_nhwindow(WIN_MESSAGE);
 		curs_on_u();
@@ -160,7 +156,7 @@ done2()
 {
 	if(yn("Really quit?") == 'n') {
 #ifndef NO_SIGNAL
-		(void) signal(SIGINT, (SIG_RET_TYPE) done1);
+		(void) signal(SIGINT, (sighandler_t) done1);
 #endif
 		clear_nhwindow(WIN_MESSAGE);
 		curs_on_u();
@@ -185,7 +181,7 @@ done2()
 #  endif
 # endif
 	    if ((c = ynq(tmp)) == 'y') {
-		(void) signal(SIGINT, (SIG_RET_TYPE) done1);
+		(void) signal(SIGINT, (sighandler_t) done1);
 		exit_nhwindows((char *)0);
 		NH_abort();
 	    } else if (c == 'q') done_stopprint++;
@@ -311,7 +307,7 @@ panic VA_DECL(const char *, str)
 		  !program_state.something_worth_saving ?
 		  "Program initialization has failed." :
 		  "Suddenly, the dungeon collapses.");
-#if defined(WIZARD) && !defined(MICRO)
+#if defined(WIZARD)
 # if defined(NOTIFY_NETHACK_BUGS)
 	if (!wizard)
 	    raw_printf("Report the following error to \"%s\".",
@@ -713,10 +709,10 @@ die:
 
 	if (have_windows) wait_synch();	/* flush screen output */
 #ifndef NO_SIGNAL
-	(void) signal(SIGINT, (SIG_RET_TYPE) done_intr);
+	(void) signal(SIGINT, (sighandler_t) done_intr);
 # if defined(UNIX) || defined(VMS) || defined (__EMX__)
-	(void) signal(SIGQUIT, (SIG_RET_TYPE) done_intr);
-	(void) signal(SIGHUP, (SIG_RET_TYPE) done_hangup);
+	(void) signal(SIGQUIT, (sighandler_t) done_intr);
+	(void) signal(SIGHUP, (sighandler_t) done_hangup);
 # endif
 #endif /* NO_SIGNAL */
 

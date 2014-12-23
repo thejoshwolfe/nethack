@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)version.c	3.4	2003/12/06	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "date.h"
 /*
@@ -50,15 +46,6 @@ doextversion()
 	display_file(OPTIONS_USED, TRUE);
 	return 0;
 }
-
-#ifdef MICRO
-boolean
-comp_times(filetime)
-long filetime;
-{
-	return((boolean)(filetime < BUILD_TIME));
-}
-#endif
 
 boolean
 check_version(version_data, filename, complain)

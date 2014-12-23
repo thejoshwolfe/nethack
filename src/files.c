@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)files.c	3.4	2003/11/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "dlb.h"
 
@@ -38,20 +34,9 @@ char lock[PL_NSIZ+17] = "1lock"; /* long enough for _uid+name+.99;1 */
 # endif
 #endif
 
-#if defined(UNIX) || defined(__BEOS__)
 #define SAVESIZE	(PL_NSIZ + 13)	/* save/99999player.e */
-#else
-# ifdef VMS
-#define SAVESIZE	(PL_NSIZ + 22)	/* [.save]<uid>player.e;1 */
-# else
-#define SAVESIZE	FILENAME	/* from macconf.h or pcconf.h */
-# endif
-#endif
 
 char SAVEF[SAVESIZE];	/* holds relative path of save file from playground */
-#ifdef MICRO
-char SAVEP[SAVESIZE];	/* holds path of directory for save file */
-#endif
 
 #ifdef HOLD_LOCKFILE_OPEN
 struct level_ftrack {
@@ -677,7 +662,7 @@ int fd;
 #endif
 
 
-#if defined(WIZARD) && !defined(MICRO)
+#if defined(WIZARD)
 /* change pre-existing savefile name to indicate an error savefile */
 void
 set_error_savefile()
@@ -983,7 +968,7 @@ boolean uncomp;
 	(void) signal(SIGINT, SIG_IGN);
 	(void) signal(SIGQUIT, SIG_IGN);
 	(void) wait((int *)&i);
-	(void) signal(SIGINT, (SIG_RET_TYPE) done1);
+	(void) signal(SIGINT, (sighandler_t) done1);
 # ifdef WIZARD
 	if (wizard) (void) signal(SIGQUIT, SIG_DFL);
 # endif

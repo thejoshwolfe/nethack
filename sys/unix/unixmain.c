@@ -100,9 +100,9 @@ char *argv[];
 	 * It seems you really want to play.
 	 */
 	u.uhp = 1;	/* prevent RIP on early quits */
-	(void) signal(SIGHUP, (SIG_RET_TYPE) hangup);
+	(void) signal(SIGHUP, (sighandler_t) hangup);
 #ifdef SIGXCPU
-	(void) signal(SIGXCPU, (SIG_RET_TYPE) hangup);
+	(void) signal(SIGXCPU, (sighandler_t) hangup);
 #endif
 
 	process_options(argc, argv);	/* command line options */
@@ -183,7 +183,7 @@ char *argv[];
 		const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
 		(void) chmod(fq_save,0);	/* disallow parallel restores */
-		(void) signal(SIGINT, (SIG_RET_TYPE) done1);
+		(void) signal(SIGINT, (sighandler_t) done1);
 #ifdef NEWS
 		if(iflags.news) {
 		    display_file(NEWS, FALSE);

@@ -128,81 +128,11 @@ typedef xchar	boolean;		/* 0 or 1 */
  * Please don't change the order.  It does matter.
  */
 
-#ifdef VMS
-#include "vmsconf.h"
-#endif
-
-#ifdef UNIX
 #include "unixconf.h"
-#endif
-
-#ifdef OS2
-#include "os2conf.h"
-#endif
-
-#ifdef MSDOS
-#include "pcconf.h"
-#endif
-
-#ifdef TOS
-#include "tosconf.h"
-#endif
-
-#ifdef MAC
-#include "macconf.h"
-#endif
-
-#ifdef __BEOS__
-#include "beconf.h"
-#endif
 
 /* Displayable name of this port; don't redefine if defined in *conf.h */
 #ifndef PORT_ID
-# ifdef MAC
-#  define PORT_ID	"Mac"
-# endif
-# ifdef MSDOS
-#  ifdef PC9800
-#  define PORT_ID	"PC-9800"
-#  else
-#  define PORT_ID	"PC"
-#  endif
-#  ifdef DJGPP
-#  define PORT_SUB_ID	"djgpp"
-#  else
-#   ifdef OVERLAY
-#  define PORT_SUB_ID	"overlaid"
-#   else
-#  define PORT_SUB_ID	"non-overlaid"
-#   endif
-#  endif
-# endif
-# ifdef OS2
-#  define PORT_ID	"OS/2"
-# endif
-# ifdef TOS
-#  define PORT_ID	"ST"
-# endif
-# ifdef UNIX
-#  define PORT_ID	"Unix"
-# endif
-# ifdef VMS
-#  define PORT_ID	"VMS"
-# endif
-#endif
-
-#ifdef VMS
-/* vms_exit() (sys/vms/vmsmisc.c) expects the non-VMS EXIT_xxx values below.
- * these definitions allow all systems to be treated uniformly, provided
- * main() routines do not terminate with return(), whose value is not
- * so massaged.
- */
-# ifdef EXIT_SUCCESS
-#  undef EXIT_SUCCESS
-# endif
-# ifdef EXIT_FAILURE
-#  undef EXIT_FAILURE
-# endif
+# define PORT_ID	"Unix"
 #endif
 
 #ifndef EXIT_SUCCESS

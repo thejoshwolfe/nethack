@@ -93,16 +93,7 @@ extern void FDECL(tty_startup,(int*, int*));
 #ifndef NO_TERMS
 extern void NDECL(tty_shutdown);
 #endif
-#if defined(apollo)
-/* Apollos don't widen old-style function definitions properly -- they try to
- * be smart and use the prototype, or some such strangeness.  So we have to
- * define UNWIDENDED_PROTOTYPES (in tradstdc.h), which makes CHAR_P below a
- * char.  But the tputs termcap call was compiled as if xputc's argument
- * actually would be expanded.	So here, we have to make an exception. */
-extern void FDECL(xputc, (int));
-#else
 extern void FDECL(xputc, (CHAR_P));
-#endif
 extern void FDECL(xputs, (const char *));
 #if defined(SCREEN_VGA) || defined(SCREEN_8514)
 extern void FDECL(xputg, (int, int, unsigned));
@@ -112,13 +103,6 @@ extern void NDECL(clear_screen);
 extern void NDECL(home);
 extern void NDECL(standoutbeg);
 extern void NDECL(standoutend);
-# if 0
-extern void NDECL(revbeg);
-extern void NDECL(boldbeg);
-extern void NDECL(blinkbeg);
-extern void NDECL(dimbeg);
-extern void NDECL(m_end);
-# endif
 extern void NDECL(backsp);
 extern void NDECL(graph_on);
 extern void NDECL(graph_off);

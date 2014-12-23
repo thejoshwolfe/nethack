@@ -40,11 +40,7 @@ static struct Bool_Opt
 	{"autodig", &flags.autodig, FALSE, SET_IN_GAME},
 	{"autopickup", &flags.pickup, TRUE, SET_IN_GAME},
 	{"autoquiver", &flags.autoquiver, FALSE, SET_IN_GAME},
-#if defined(MICRO)
-	{"BIOS", &iflags.BIOS, FALSE, SET_IN_FILE},
-#else
 	{"BIOS", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 #ifdef INSURANCE
 	{"checkpoint", &flags.ins_chkpt, TRUE, SET_IN_GAME},
 #else
@@ -114,11 +110,7 @@ static struct Bool_Opt
 	{"mail", (boolean *)0, TRUE, SET_IN_FILE},
 #endif
 #ifdef MENU_COLOR
-# ifdef MICRO
-	{"menucolors", &iflags.use_menu_color, TRUE,  SET_IN_GAME},
-# else
 	{"menucolors", &iflags.use_menu_color, FALSE, SET_IN_GAME},
-# endif
 #else
 	{"menucolors", (boolean *)0, FALSE, SET_IN_GAME},
 #endif
@@ -148,11 +140,7 @@ static struct Bool_Opt
 	{"prayconfirm", &flags.prayconfirm, TRUE, SET_IN_GAME},
 	{"preload_tiles", &iflags.wc_preload_tiles, TRUE, DISP_IN_GAME},	/*WC*/
 	{"pushweapon", &flags.pushweapon, FALSE, SET_IN_GAME},
-#if defined(MICRO)
-	{"rawio", &iflags.rawio, FALSE, DISP_IN_GAME},
-#else
 	{"rawio", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 	{"rest_on_space", &flags.rest_on_space, FALSE, SET_IN_GAME},
 	{"safe_pet", &flags.safe_dog, TRUE, SET_IN_GAME},
 #ifdef WIZARD
@@ -693,12 +681,8 @@ STATIC_OVL void
 rejectoption(optname)
 const char *optname;
 {
-#ifdef MICRO
-	pline("\"%s\" settable only from %s.", optname, configfile);
-#else
 	pline("%s can be set only from NETHACKOPTIONS or %s.", optname,
 			configfile);
-#endif
 }
 
 STATIC_OVL void
@@ -1142,14 +1126,6 @@ boolean tinitial, tfrom_file;
 			flags.initgend = flags.female = negated;
 		return;
 	}
-
-#if defined(MICRO)
-	/* included for compatibility with old NetHack.cnf files */
-	if (match_optname(opts, "IBM_", 4, FALSE)) {
-		iflags.BIOS = !negated;
-		return;
-	}
-#endif /* MICRO */
 
 	/* compound options */
 
@@ -3499,13 +3475,8 @@ static const char *opt_intro[] = {
 	"",
 #define CONFIG_SLOT 3	/* fill in next value at run-time */
 	(char *)0,
-#if !defined(MICRO) && !defined(MAC)
 	"or use `NETHACKOPTIONS=\"<options>\"' in your environment",
-#endif
 	"(<options> is a list of options separated by commas)",
-#ifdef VMS
-	"-- for example, $ DEFINE NETHACKOPTIONS \"noautopickup,fruit:kumquat\"",
-#endif
 	"or press \"O\" while playing and use the menu.",
 	"",
  "Boolean options (which can be negated by prefixing them with '!' or \"no\"):",

@@ -6,11 +6,6 @@
 #include "lev.h"
 #include "tcap.h" /* for TERMLIB and ASCIIGRAPH */
 
-#if defined(MICRO)
-extern int dotcnt;	/* shared with save */
-extern int dotrow;	/* shared with save */
-#endif
-
 #ifdef USE_TILES
 extern void FDECL(substitute_tiles, (d_level *));       /* from tile.c */
 #endif
@@ -574,29 +569,6 @@ register int fd;
 	u.usteed = (struct monst *)0;
 #endif
 
-#ifdef MICRO
-# ifdef AMII_GRAPHICS
-	{
-	extern struct window_procs amii_procs;
-	if(windowprocs.win_init_nhwindows== amii_procs.win_init_nhwindows){
-	    extern winid WIN_BASE;
-	    clear_nhwindow(WIN_BASE);	/* hack until there's a hook for this */
-	}
-	}
-# else
-	clear_nhwindow(WIN_MAP);
-# endif
-	clear_nhwindow(WIN_MESSAGE);
-	You("return to level %d in %s%s.",
-		depth(&u.uz), dungeons[u.uz.dnum].dname,
-		flags.debug ? " while in debug mode" :
-		flags.explore ? " while in explore mode" : "");
-	curs(WIN_MAP, 1, 1);
-	dotcnt = 0;
-	dotrow = 2;
-	if (strncmpi("X11", windowprocs.name, 3))
-    	  putstr(WIN_MAP, 0, "Restoring:");
-#endif
 	while(1) {
 #ifdef ZEROCOMP
 		if(mread(fd, (void *) &ltmp, sizeof ltmp) < 0)
@@ -605,26 +577,11 @@ register int fd;
 #endif
 			break;
 		getlev(fd, 0, ltmp, FALSE);
-#ifdef MICRO
-		curs(WIN_MAP, 1+dotcnt++, dotrow);
-		if (dotcnt >= (COLNO - 1)) {
-			dotrow++;
-			dotcnt = 0;
-		}
-		if (strncmpi("X11", windowprocs.name, 3)){
-		  putstr(WIN_MAP, 0, ".");
-		}
-		mark_synch();
-#endif
 		rtmp = restlevelfile(fd, ltmp);
 		if (rtmp < 2) return(rtmp);  /* dorecover called recursively */
 	}
 
-#ifdef BSD
-	(void) lseek(fd, 0L, 0);
-#else
 	(void) lseek(fd, (off_t)0, 0);
-#endif
 	(void) uptodate(fd, (char *)0);		/* skip version info */
 #ifdef STORE_PLNAME_IN_FILE
 	mread(fd, (void *) plname, PL_NSIZ);

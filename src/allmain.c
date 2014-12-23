@@ -477,7 +477,7 @@ newgame()
 	u_init();
 
 #ifndef NO_SIGNAL
-	(void) signal(SIGINT, (SIG_RET_TYPE) done1);
+	(void) signal(SIGINT, (sighandler_t) done1);
 #endif
 #ifdef NEWS
 	if(iflags.news) display_file(NEWS, FALSE);
