@@ -12,3 +12,4 @@ dat/options
 include/date.h
 src/Sysunix
 src/nethack
+run/
