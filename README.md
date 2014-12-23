@@ -49,3 +49,17 @@ Additional fun stuff maybe:
    For example, you are blind the whole game, or you are hallucinating the whole game.
  * A game mode that allows Save states, called "Practice Mode".
    The normal game should be called "Hardcore Mode".
+
+And to make this project more approachable for developers:
+
+ * Drop support for all the crazy build configurations that no one wants, like BeOS and Win32.
+ * Remove all compile-time options, like tourist and kops.
+   That should all be enabled all the time.
+ * Use modern tools where appropriate.
+   I'm not afraid to port the level compiler to python, for example.
+ * Use Git and Github
+ * Clean up C code (and Makefiles).
+   Don't use Pascal-style argument declarations.
+   Use clear identifier names (e.g. replace `DGNCOMPSRC` with `DUNGEON_COMPILER_SOURCE`).
+   Etc.
+ * Abandon all hope of cleanly merging changes to the standard game into this fork.
