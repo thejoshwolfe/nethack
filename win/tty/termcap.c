@@ -790,7 +790,6 @@ cl_eos()			/* free after Robert Viduya */
 #undef delay_output
 #undef TRUE
 #undef FALSE
-#define m_move curses_m_move	/* Some curses.h decl m_move(), not used here */
 
 #include <curses.h>
 
