@@ -446,10 +446,8 @@ doforce()		/* try to force a chest with your weapon */
 	   (objects[uwep->otyp].oc_skill < P_DAGGER) ||
 	   (objects[uwep->otyp].oc_skill > P_LANCE) ||
 	   uwep->otyp == FLAIL || uwep->otyp == AKLYS
-#ifdef KOPS
-	   || uwep->otyp == RUBBER_HOSE
-#endif
-	  ) {
+	   || uwep->otyp == RUBBER_HOSE)
+    {
 	    You_cant("force anything without a %sweapon.",
 		  (uwep) ? "proper " : "");
 	    return(0);

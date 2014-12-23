@@ -1,18 +1,3 @@
-#	NetHack Makefile.
-#	SCCS Id: @(#)Makefile.top	3.4	1995/01/05
-
-# newer makes predefine $(MAKE) to 'make' and do smarter processing of
-# recursive make calls if $(MAKE) is used
-# these makes allow $(MAKE) to be overridden by the environment if someone
-# wants to (or has to) use something other than the standard make, so we do
-# not want to unconditionally set $(MAKE) here
-#
-# unfortunately, some older makes do not predefine $(MAKE); if you have one of
-# these, uncomment the following line
-# (you will know that you have one if you get complaints about unable to
-# execute things like 'data' and 'rumors')
-# MAKE = make
-
 # make NetHack
 PREFIX	 = /usr
 GAME     = nethack

@@ -1384,7 +1384,6 @@ register struct monst *mtmp;
 	if (tmp == PM_MAIL_DAEMON) mvitals[tmp].mvflags |= G_GENOD;
 #endif
 
-#ifdef KOPS
 	if (mtmp->data->mlet == S_KOP) {
 	    /* Dead Kops may come back. */
 	    switch(rnd(5)) {
@@ -1398,7 +1397,6 @@ register struct monst *mtmp;
 			break;
 	    }
 	}
-#endif
 	if(mtmp->iswiz) wizdead();
 	if(mtmp->data->msound == MS_NEMESIS) nemdead();
 	if(glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph))
@@ -1741,9 +1739,7 @@ xkilled(mtmp, dest)
 	} else if(x != u.ux || y != u.uy) {
 		/* might be here after swallowed */
 		if (!rn2(6) && !(mvitals[mndx].mvflags & G_NOCORPSE)
-#ifdef KOPS
 					&& mdat->mlet != S_KOP
-#endif
 							) {
 			int typ;
 
