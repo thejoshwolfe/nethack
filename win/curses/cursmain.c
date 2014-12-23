@@ -503,10 +503,6 @@ void curses_print_glyph(winid wid, XCHAR_P x, XCHAR_P y, int glyph)
 	{
 	    attr = A_REVERSE;
 	}
-	if (iflags.cursesgraphics)
-	{
-	    ch = curses_convert_glyph(ch, glyph);
-	}
     curses_putch(wid, x, y, ch, color, attr);
 }
 
