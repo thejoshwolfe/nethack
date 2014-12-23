@@ -22,8 +22,6 @@
 
 /* #define TOS */	/* define for Atari ST/TT */
 
-/* #define STUPID */	/* avoid some complicated expressions if
-			   your C compiler chokes on them */
 /* #define MINIMAL_TERM */
 			/* if a terminal handles highlighting or tabs poorly,
 			   try this define, used in pager.c and termcap.c */
@@ -217,13 +215,6 @@
  *		For example, both schar and uchar should be short ints on
  *		the AT&T 3B2/3B5/etc. family.
  */
-
-/*
- * Uncomment the following line if your compiler doesn't understand the
- * 'void' type (and thus would give all sorts of compile errors without
- * this definition).
- */
-/* #define NOVOID */			/* define if no "void" data type. */
 
 /*
  * Uncomment the following line if your compiler falsely claims to be
