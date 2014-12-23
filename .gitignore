@@ -37,3 +37,6 @@
 /util/recover
 
 /perm
+/dumps/
+/logfile
+/record
