@@ -280,37 +280,23 @@ topl_putsym(c)
 	ttyDisplay->curx = 0;
 	ttyDisplay->cury++;
 	cw->cury = ttyDisplay->cury;
-#ifdef WIN32CON
-    (void) putchar(c);
-#endif
 	break;
     default:
 	if(ttyDisplay->curx == CO-1)
 	    topl_putsym('\n'); /* 1 <= curx <= CO; avoid CO */
-#ifdef WIN32CON
-    (void) putchar(c);
-#endif
 	ttyDisplay->curx++;
     }
     cw->curx = ttyDisplay->curx;
     if(cw->curx == 0) cl_end();
-#ifndef WIN32CON
-    (void) putchar(c);
-#endif
+    putchar(c);
 }
 
-void
-putsyms(str)
-    const char *str;
-{
+void putsyms(const char *str) {
     while(*str)
 	topl_putsym(*str++);
 }
 
-STATIC_OVL void
-removetopl(n)
-register int n;
-{
+STATIC_OVL void removetopl(int n) {
     /* assume addtopl() has been done, so ttyDisplay->toplin is already set */
     while (n-- > 0) putsyms("\b \b");
 }

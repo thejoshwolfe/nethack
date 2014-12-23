@@ -4,17 +4,6 @@
 #include "wintty.h"
 
 #include	<sys/stat.h>
-#if defined(WIN32) || defined(MSDOS)
-#include	<errno.h>
-#endif
-
-#if defined(WIN32) || defined(MSDOS)
-extern char orgdir[];
-# ifdef WIN32
-extern void NDECL(backsp);
-# endif
-extern void NDECL(clear_screen);
-#endif
 
 #ifdef OVLB
 
@@ -72,7 +61,7 @@ getlock()
 	fq_lock = fqname(lock, LEVELPREFIX, 1);
 	if((fd = open(fq_lock,0)) == -1) {
 		if(errno == ENOENT) goto gotlock;    /* no such file */
-# if defined(WIN32) || defined(HOLD_LOCKFILE_OPEN)
+# if defined(HOLD_LOCKFILE_OPEN)
 #  if defined(HOLD_LOCKFILE_OPEN)
  		if(errno == EACCES) {
 #define OOPS_BUFSZ 512
@@ -139,9 +128,6 @@ getlock()
 	if(c == 'y' || c == 'Y')
 # ifndef SELF_RECOVER
 		if(eraseoldlocks()) {
-#  if defined(WIN32CON)
-			clear_screen();		/* display gets fouled up otherwise */
-#  endif
 			goto gotlock;
 		} else {
 			unlock_file(HLOCK);
@@ -149,9 +135,6 @@ getlock()
 		}
 # else /*SELF_RECOVER*/
 		if(recover_savefile()) {
-#  if defined(WIN32CON)
-			clear_screen();		/* display gets fouled up otherwise */
-#  endif
 			goto gotlock;
 		} else {
 			unlock_file(HLOCK);
@@ -168,13 +151,7 @@ gotlock:
 	if (fd == -1) ern = errno;
 	unlock_file(HLOCK);
 	if(fd == -1) {
-# if defined(WIN32)
-		error("cannot creat file (%s.)\n%s\n%s\"%s\" exists?\n", 
-				fq_lock, strerror(ern), " Are you sure that the directory",
-				fqn_prefix[LEVELPREFIX]);
-# else
 		error("cannot creat file (%s.)", fq_lock);
-# endif
 	} else {
 		if(write(fd, (char *) &hackpid, sizeof(hackpid))
 		    != sizeof(hackpid)){
@@ -190,15 +167,11 @@ gotlock:
 }	
 #endif /* PC_LOCKING */
 
-# ifndef WIN32
-void
-regularize(s)
+void regularize(char *s) {
 /*
  * normalize file name - we don't like .'s, /'s, spaces, and
  * lots of other things
  */
-register char *s;
-{
 	register char *lp;
 
 	for (lp = s; *lp; lp++)
@@ -210,7 +183,6 @@ register char *s;
 		    *lp == '|' || *lp >= 127 || (*lp >= '[' && *lp <= ']'))
                         *lp = '_';
 }
-# endif /* WIN32 */
 #endif /* OVLB */
 
 

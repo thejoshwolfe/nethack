@@ -116,9 +116,6 @@ static const char * const shktools[] = {
 #ifdef OVERLAY
     "Erreip", "Nehpets", "Mron", "Snivek", "Lapu", "Kahztiy",
 #endif
-#ifdef WIN32
-    "Lechaim", "Lexa", "Niod",
-#endif
 #ifdef MAC
     "Nhoj-lee", "Evad\'kh", "Ettaw-noj", "Tsew-mot", "Ydna-s",
     "Yao-hang", "Tonbar", "Kivenhoug",

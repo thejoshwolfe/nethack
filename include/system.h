@@ -43,7 +43,7 @@ typedef long	off_t;
  * impossible to get right automatically.
  * This is the type of signal handling functions.
  */
-#if !defined(OS2) && (defined(_MSC_VER) || defined(__TURBOC__) || defined(__SC__) || defined(WIN32))
+#if !defined(OS2) && (defined(_MSC_VER) || defined(__TURBOC__) || defined(__SC__))
 # define SIG_RET_TYPE void (__cdecl *)(int)
 #endif
 #ifndef SIG_RET_TYPE
@@ -311,24 +311,6 @@ extern void *FDECL(memset, (char*,int,int));
 #endif
 #endif /* POSIX_TYPES */
 
-#if defined(MICRO) && !defined(LATTICE)
-# if defined(TOS) && defined(__GNUC__)
-extern int FDECL(memcmp, (const void *,const void *,size_t));
-extern void *FDECL(memcpy, (void *,const void *,size_t));
-extern void *FDECL(memset, (void *,int,size_t));
-# else
-#  if defined(AZTEC_50) || defined(NHSTDC) || defined(WIN32)
-extern int  FDECL(memcmp, (const void *, const void *, size_t));
-extern void *FDECL(memcpy, (void *, const void *, size_t));
-extern void *FDECL(memset, (void *, int, size_t));
-#  else
-extern int FDECL(memcmp, (char *,char *,unsigned int));
-extern char *FDECL(memcpy, (char *,char *,unsigned int));
-extern char *FDECL(memset, (char*,int,int));
-#  endif /* AZTEC_50 || NHSTDC */
-# endif /* TOS */
-#endif /* MICRO */
-
 #if defined(BSD) && defined(ultrix)	/* i.e., old versions of Ultrix */
 extern void sleep();
 #endif
@@ -430,7 +412,7 @@ extern char	*FDECL(rindex, (const char *,int));
  * If your system defines sprintf, et al, in stdio.h, add to the initial
  * #if.
  */
-#if defined(ULTRIX) || defined(__DECC) || defined(__SASC_60) || defined(WIN32)
+#if defined(ULTRIX) || defined(__DECC) || defined(__SASC_60)
 #define SPRINTF_PROTO
 #endif
 #if (defined(SUNOS4) && defined(__STDC__)) || defined(_AIX32)

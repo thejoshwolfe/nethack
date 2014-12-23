@@ -1,43 +1,6 @@
-/*	SCCS Id: @(#)windows.c	3.4	1996/05/19	*/
-/* Copyright (c) D. Cohrs, 1993. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #ifdef TTY_GRAPHICS
 #include "wintty.h"
-#endif
-#ifdef X11_GRAPHICS
-/* cannot just blindly include winX.h without including all of X11 stuff */
-/* and must get the order of include files right.  Don't bother */
-extern struct window_procs X11_procs;
-extern void NDECL(win_X11_init);
-#endif
-#ifdef QT_GRAPHICS
-extern struct window_procs Qt_procs;
-#endif
-#ifdef GEM_GRAPHICS
-#include "wingem.h"
-#endif
-#ifdef MAC
-extern struct window_procs mac_procs;
-#endif
-#ifdef BEOS_GRAPHICS
-extern struct window_procs beos_procs;
-extern void NDECL(be_win_init);
-#endif
-#ifdef WIN32_GRAPHICS
-extern struct window_procs win32_procs;
-#endif
-#ifdef GNOME_GRAPHICS
-#include "winGnome.h"
-extern struct window_procs Gnome_procs;
-#endif
-#ifdef MSWIN_GRAPHICS
-extern struct window_procs mswin_procs;
-#endif
-#ifdef LISP_GRAPHICS
-#include "winlisp.h"
-extern struct window_procs lisp_procs;
 #endif
 
 STATIC_DCL void FDECL(def_raw_print, (const char *s));
@@ -52,48 +15,14 @@ struct win_choices {
 #ifdef TTY_GRAPHICS
     { &tty_procs, win_tty_init },
 #endif
-#ifdef X11_GRAPHICS
-    { &X11_procs, win_X11_init },
-#endif
-#ifdef QT_GRAPHICS
-    { &Qt_procs, 0 },
-#endif
-#ifdef GEM_GRAPHICS
-    { &Gem_procs, win_Gem_init },
-#endif
-#ifdef MAC
-    { &mac_procs, 0 },
-#endif
-#ifdef BEOS_GRAPHICS
-    { &beos_procs, be_win_init },
-#endif
-#ifdef WIN32_GRAPHICS
-    { &win32_procs, 0 },
-#endif
-#ifdef GNOME_GRAPHICS
-    { &Gnome_procs, 0 },
-#endif
-#ifdef MSWIN_GRAPHICS
-    { &mswin_procs, 0 },
-#endif
-#ifdef LISP_GRAPHICS
-    { &lisp_procs, win_lisp_init },
-#endif
     { 0, 0 }		/* must be last */
 };
 
-STATIC_OVL
-void
-def_raw_print(s)
-const char *s;
-{
+STATIC_OVL void def_raw_print(const char *s) {
     puts(s);
 }
 
-void
-choose_windows(s)
-const char *s;
-{
+void choose_windows(const char *s) {
     char *ow; const char *wt;
     register int i;
     

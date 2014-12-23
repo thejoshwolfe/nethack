@@ -631,7 +631,7 @@ extern void NDECL(set_savefile_name);
 #ifdef INSURANCE
 extern void FDECL(save_savefile_name, (int));
 #endif
-#if defined(WIZARD) && !defined(MICRO)
+#if defined(WIZARD)
 extern void NDECL(set_error_savefile);
 #endif
 extern int NDECL(create_savefile);
@@ -1216,57 +1216,6 @@ extern struct monst *FDECL(mk_mplayer, (struct permonst *,XCHAR_P,
 extern void FDECL(create_mplayers, (int,BOOLEAN_P));
 extern void FDECL(mplayer_talk, (struct monst *));
 
-#if defined(MICRO) || defined(WIN32)
-
-/* ### msdos.c,os2.c,tos.c,winnt.c ### */
-
-#  ifndef WIN32
-extern int NDECL(tgetch);
-#  endif
-#  ifndef TOS
-extern char NDECL(switchar);
-#  endif
-# ifndef __GO32__
-extern long FDECL(freediskspace, (char *));
-#  ifdef MSDOS
-extern int FDECL(findfirst_file, (char *));
-extern int NDECL(findnext_file);
-extern long FDECL(filesize_nh, (char *));
-#  else
-extern int FDECL(findfirst, (char *));
-extern int NDECL(findnext);
-extern long FDECL(filesize, (char *));
-#  endif /* MSDOS */
-extern char *NDECL(foundfile_buffer);
-# endif /* __GO32__ */
-extern void FDECL(chdrive, (char *));
-# ifndef TOS
-extern void NDECL(disable_ctrlP);
-extern void NDECL(enable_ctrlP);
-# endif
-# if defined(MICRO) && !defined(WINNT)
-extern void NDECL(get_scr_size);
-#  ifndef TOS
-extern void FDECL(gotoxy, (int,int));
-#  endif
-# endif
-# ifdef TOS
-extern int FDECL(_copyfile, (char *,char *));
-extern int NDECL(kbhit);
-extern void NDECL(set_colors);
-extern void NDECL(restore_colors);
-#  ifdef SUSPEND
-extern int NDECL(dosuspend);
-#  endif
-# endif /* TOS */
-# ifdef WIN32
-extern char *FDECL(get_username, (int *));
-extern void FDECL(nt_regularize, (char *));
-extern int NDECL((*nt_kbhit));
-extern void FDECL(Delay, (int));
-# endif /* WIN32 */
-#endif /* MICRO || WIN32 */
-
 /* ### mthrowu.c ### */
 
 extern int FDECL(thitu, (int,int,struct obj *,const char *));
@@ -1316,19 +1265,6 @@ extern void NDECL(lan_mail_init);
 extern void NDECL(lan_mail_finish);
 extern void NDECL(lan_mail_terminate);
 # endif
-#endif
-
-/* ### nttty.c ### */
-
-#ifdef WIN32CON
-extern void NDECL(get_scr_size);
-extern int NDECL(nttty_kbhit);
-extern void NDECL(nttty_open);
-extern void NDECL(nttty_rubout);
-extern int NDECL(tgetch);
-extern int FDECL(ntposkey,(int *, int *, int *));
-extern void FDECL(set_output_mode, (int));
-extern void NDECL(synch_cursor);
 #endif
 
 /* ### o_init.c ### */
@@ -1422,23 +1358,8 @@ extern char *FDECL(dowhatdoes_core,(CHAR_P, char *));
 extern int NDECL(dohelp);
 extern int NDECL(dohistory);
 
-/* ### pctty.c ### */
-
-#if defined(MICRO) || defined(WIN32)
-extern void NDECL(gettty);
-extern void FDECL(settty, (const char *));
-extern void NDECL(setftty);
-extern void VDECL(error, (const char *,...));
-#if defined(TIMED_DELAY) && defined(_MSC_VER)
-extern void FDECL(msleep, (unsigned));
-#endif
-#endif /* MICRO || WIN32 */
-
 /* ### pcunix.c ### */
 
-#if defined(MICRO)
-extern void FDECL(regularize, (char *));
-#endif /* MICRO */
 #if defined(PC_LOCKING)
 extern void NDECL(getlock);
 #endif
@@ -1726,7 +1647,7 @@ extern int FDECL(doconsult, (struct monst *));
 /* ### save.c ### */
 
 extern int NDECL(dosave);
-#if defined(UNIX) || defined(VMS) || defined(__EMX__) || defined(WIN32)
+#if defined(UNIX) || defined(VMS) || defined(__EMX__)
 extern void FDECL(hangup, (int));
 #endif
 extern int NDECL(dosave0);
@@ -2089,9 +2010,6 @@ extern char *FDECL(version_string, (char *));
 extern char *FDECL(getversionstring, (char *));
 extern int NDECL(doversion);
 extern int NDECL(doextversion);
-#ifdef MICRO
-extern boolean FDECL(comp_times, (long));
-#endif
 extern boolean FDECL(check_version, (struct version_info *,
 				const char *,BOOLEAN_P));
 extern unsigned long FDECL(get_feature_notice_ver, (char *));

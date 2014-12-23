@@ -41,14 +41,6 @@
 #ifdef __linux__
 #define LINUX	/* Another Unix clone */
 #endif
-/* #define CYGWIN32 */	/* Unix on Win32 -- use with case sensitive defines */
-/* #define GENIX */	/* Yet Another Unix Clone */
-/* #define HISX */	/* Bull Unix for XPS Machines */
-/* #define BOS */	/* Bull Open Software - Unix for DPX/2 Machines */
-/* #define UNIXPC */	/* use in addition to SYSV for AT&T 7300/3B1 */
-/* #define AIX_31 */	/* In AIX 3.1 (IBM RS/6000) use BSD ioctl's to gain
-			 * job control (note that AIX is SYSV otherwise)
-			 * Also define this for AIX 3.2 */
 
 #define TERMINFO	/* uses terminfo rather than termcap */
 			/* Should be defined for most SYSV, SVR4 (including
@@ -68,27 +60,6 @@
 			 * For example, platforms using the GNU libraries,
 			 * Linux, Solaris 2.x
 			 */
-
-/* #define OPENWINBUG */	/* avoid a problem using OpenWindows 3.0 for
-				   X11 on SunOS 4.1.x, x>= 2.  Do not define
-				   for other X11 implementations. */
-/* #define PYRAMID_BUG */	/* avoid a bug on the Pyramid */
-/* #define BSD_43_BUG */	/* for real 4.3BSD cc's without schain botch fix */
-/* #define MICROPORT_BUG */	/* problems with large arrays in structs */
-/* #define MICROPORT_286_BUG */ /* changes needed in termcap.c to get it to
-				   run with Microport Sys V/AT version 2.4.
-				   By Jay Maynard */
-/* #define AIXPS_2BUG */	/* avoid a problem with little_to_big() optimization */
-
-/* #define RANDOM */		/* if neither random/srandom nor lrand48/srand48
-				   is available from your system */
-
-/* see sys/unix/snd86unx.shr for more information on these */
-/* #define UNIX386MUSIC */	/* play real music through speaker on systems
-				   with music driver installed */
-/* #define VPIX_MUSIC */	/* play real music through speaker on systems
-				   with built-in VPIX support */
-
 
 /*
  * The next two defines are intended mainly for the Andrew File System,
@@ -304,7 +275,7 @@
 #endif
 
 /* Use the high quality random number routines. */
-#if defined(BSD) || defined(LINUX) || defined(ULTRIX) || defined(CYGWIN32) || defined(RANDOM) || defined(__APPLE__)
+#if defined(BSD) || defined(LINUX) || defined(ULTRIX) || defined(RANDOM) || defined(__APPLE__)
 #define Rand()	random()
 #else
 #define Rand()	lrand48()

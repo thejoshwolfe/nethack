@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)save.c	3.4	2003/11/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "lev.h"
 #include "quest.h"
@@ -42,11 +38,7 @@ static long nulls[10];
 #define nulls nul
 #endif
 
-#if defined(UNIX) || defined(VMS) || defined(__EMX__) || defined(WIN32)
 #define HUP	if (!program_state.done_hup)
-#else
-#define HUP
-#endif
 
 #ifdef MENU_COLOR
 extern struct menucoloring *menu_colorings;
@@ -81,27 +73,16 @@ dosave()
 }
 
 
-#if defined(UNIX) || defined(VMS) || defined (__EMX__) || defined(WIN32)
-/*ARGSUSED*/
-void
-hangup(sig_unused)  /* called as signal() handler, so sent at least one arg */
-int sig_unused;
-{
+// called as signal() handler, so sent at least one arg
+void hangup(int sig_unused) {
 # ifdef NOSAVEONHANGUP
 	(void) signal(SIGINT, SIG_IGN);
 	clearlocks();
-#  ifndef VMS
 	terminate(EXIT_FAILURE);
-#  endif
 # else	/* SAVEONHANGUP */
 	if (!program_state.done_hup++) {
 	    if (program_state.something_worth_saving)
 		(void) dosave0();
-#  ifdef VMS
-	    /* don't call exit when already within an exit handler;
-	       that would cancel any other pending user-mode handlers */
-	    if (!program_state.exiting)
-#  endif
 	    {
 		clearlocks();
 		terminate(EXIT_FAILURE);
@@ -110,12 +91,9 @@ int sig_unused;
 # endif
 	return;
 }
-#endif
 
 /* returns 1 if save successful */
-int
-dosave0()
-{
+int dosave0(void) {
 	const char *fq_save;
 	register int fd, ofd;
 	xchar ltmp;
@@ -126,15 +104,9 @@ dosave0()
 		return 0;
 	fq_save = fqname(SAVEF, SAVEPREFIX, 1);	/* level files take 0 */
 
-#if defined(UNIX) || defined(VMS)
 	(void) signal(SIGHUP, SIG_IGN);
-#endif
 #ifndef NO_SIGNAL
 	(void) signal(SIGINT, SIG_IGN);
-#endif
-
-#if defined(MICRO) && defined(MFLOPPY)
-	if (!saveDiskPrompt(0)) return 0;
 #endif
 
 	HUP if (iflags.window_inited) {
@@ -171,13 +143,6 @@ dosave0()
 	if(iflags.window_inited)
 	    HUP clear_nhwindow(WIN_MESSAGE);
 
-#ifdef MICRO
-	dotcnt = 0;
-	dotrow = 2;
-	curs(WIN_MAP, 1, 1);
-	if (strncmpi("X11", windowprocs.name, 3))
-	  putstr(WIN_MAP, 0, "Saving:");
-#endif
 #ifdef MFLOPPY
 	/* make sure there is enough disk space */
 	if (iflags.checkspace) {

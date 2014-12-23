@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)micro.h	3.4	1990/02/22	*/
-/* micro.h - function declarations for various microcomputers */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef MICRO_H
 #define MICRO_H
 

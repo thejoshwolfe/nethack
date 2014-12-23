@@ -154,9 +154,6 @@
 #if defined(__MWERKS__) && defined(__BEOS__)
 #define UNWIDENED_PROTOTYPES
 #endif
-#if defined(WIN32)
-#define UNWIDENED_PROTOTYPES
-#endif
 
 #if defined(ULTRIX_PROTO) && defined(ULTRIX_CC20)
 #define UNWIDENED_PROTOTYPES

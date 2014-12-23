@@ -1,6 +1,3 @@
-/*	SCCS Id: @(#)tilemap.c	3.4	2000/06/04	*/
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  *	This source file is compiled twice:
  *	once without TILETEXT defined to make tilemap.{o,obj},
@@ -12,13 +9,6 @@
 const char * FDECL(tilename, (int, int));
 void NDECL(init_tilemap);
 void FDECL(process_substitutions, (FILE *));
-
-#if defined(MICRO) || defined(WIN32)
-#undef exit
-#if !defined(MSDOS) && !defined(WIN32)
-extern void FDECL(exit, (int));
-#endif
-#endif
 
 #define MON_GLYPH 1
 #define OBJ_GLYPH 2

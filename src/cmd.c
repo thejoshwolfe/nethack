@@ -49,9 +49,6 @@ STATIC_PTR int NDECL(wiz_show_seenv);
 STATIC_PTR int NDECL(wiz_show_vision);
 STATIC_PTR int NDECL(wiz_mon_polycontrol);
 STATIC_PTR int NDECL(wiz_show_wmodes);
-#if defined(__BORLANDC__) && !defined(_WIN32)
-extern void FDECL(show_borlandc_stats, (winid));
-#endif
 #ifdef DEBUG_MIGRATING_MONS
 STATIC_PTR int NDECL(wiz_migrate_mons);
 #endif
@@ -2056,10 +2053,6 @@ wiz_show_stats()
 	Sprintf(buf, template, "Total", total_mon_count, total_mon_size);
 	putstr(win, 0, buf);
 
-#if defined(__BORLANDC__) && !defined(_WIN32)
-	show_borlandc_stats(win);
-#endif
-
 	display_nhwindow(win, FALSE);
 	destroy_nhwindow(win);
 	return 0;
@@ -2782,14 +2775,8 @@ dotravel()
 }
 
 #ifdef PORT_DEBUG
-# ifdef WIN32CON
-extern void NDECL(win32con_debug_keystrokes);
-extern void NDECL(win32con_handler_info);
-# endif
 
-int
-wiz_port_debug()
-{
+int wiz_port_debug(void) {
 	int n, k;
 	winid win;
 	anything any;
@@ -2799,10 +2786,6 @@ wiz_port_debug()
 		char *menutext;
 		void NDECL((*fn));
 	} menu_selections[] = {
-#ifdef WIN32CON
-		{"test win32 keystrokes", win32con_debug_keystrokes},
-		{"show keystroke handler information", win32con_handler_info},
-#endif
 		{(char *)0, (void NDECL((*)))0}		/* array terminator */
 	};
 

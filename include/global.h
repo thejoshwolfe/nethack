@@ -189,16 +189,6 @@ typedef xchar	boolean;		/* 0 or 1 */
 # ifdef VMS
 #  define PORT_ID	"VMS"
 # endif
-# ifdef WIN32
-#  define PORT_ID	"Windows"
-#  ifndef PORT_SUB_ID
-#   ifdef MSWIN_GRAPHICS
-#    define PORT_SUB_ID	"graphical"
-#   else
-#    define PORT_SUB_ID	"tty"
-#   endif
-#  endif
-# endif
 #endif
 
 #ifdef VMS

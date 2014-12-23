@@ -46,11 +46,7 @@
 # define O_BINARY 0
 #endif
 
-#if defined(MICRO) || defined(WIN32)
-# define OMASK FCMASK
-#else
-# define OMASK 0644
-#endif
+#define OMASK 0644
 
 #define ERR		(-1)
 
@@ -58,9 +54,6 @@
 #define Free(ptr)		if(ptr) free((void *) (ptr))
 #define Write(fd, item, size)	if (write(fd, (void *)(item), size) != size) return FALSE;
 
-#if defined(__BORLANDC__) && !defined(_WIN32)
-extern unsigned _stklen = STKSIZ;
-#endif
 #define MAX_ERRORS	25
 
 extern int  NDECL (yyparse);

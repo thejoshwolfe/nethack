@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)recover.c	3.4	1999/10/23	*/
-/*	Copyright (c) Janet Walz, 1992.				  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  *  Utility for reconstructing NetHack save file from a set of individual
  *  level files.  Requires that the `checkpoint' option be enabled at the
@@ -10,10 +6,6 @@
 #include "config.h"
 #if !defined(O_WRONLY) && !defined(LSC) && !defined(AZTEC_C)
 #include <fcntl.h>
-#endif
-#ifdef WIN32
-#include <errno.h>
-#include "win32api.h"
 #endif
 
 #ifdef SECURE
@@ -42,27 +34,12 @@ static void nhce_message(FILE*, const char*, ...);
 #define Perror  (void)perror
 #define Close	(void)close
 
-#ifdef UNIX
 #define SAVESIZE	(PL_NSIZ + 13)	/* save/99999player.e */
-#else
-# ifdef VMS
-#define SAVESIZE	(PL_NSIZ + 22)	/* [.save]<uid>player.e;1 */
-# else
-#  ifdef WIN32
-#define SAVESIZE	(PL_NSIZ + 40)  /* username-player.NetHack-saved-game */
-#  else
-#define SAVESIZE	FILENAME	/* from macconf.h or pcconf.h */
-#  endif
-# endif
-#endif
 
 #if defined(EXEPATH)
 char *FDECL(exepath, (char *));
 #endif
 
-#if defined(__BORLANDC__) && !defined(_WIN32)
-extern unsigned _stklen = STKSIZ;
-#endif
 char savename[SAVESIZE]; /* holds relative path of save file from playground */
 
 const char *dir = (char*)0;
@@ -83,12 +60,6 @@ char *argv[];
 	if (argc == 1 || (argc == 2 && !strcmp(argv[1], "-"))) {
 	    Fprintf(stderr,
 		"Usage: %s [ -d directory ] base1 [ base2 ... ]\n", argv[0]);
-#if defined(WIN32) || defined(MSDOS)
-	    if (dir) {
-	    	Fprintf(stderr, "\t(Unless you override it with -d, recover will look \n");
-	    	Fprintf(stderr, "\t in the %s directory on your system)\n", dir);
-	    }
-#endif
 	    exit(EXIT_FAILURE);
 	}
 
@@ -179,11 +150,7 @@ int lev;
 #endif
 
 	set_levelfile_name(lev);
-#if defined(MICRO) || defined(WIN32) || defined(MSDOS)
-	fd = open(lock, O_RDONLY | O_BINARY);
-#else
 	fd = open(lock, O_RDONLY, 0);
-#endif
 	/* Security check: does the user calling recover own the file? */
 #ifdef SECURE
 	if (fd != -1) {
@@ -207,11 +174,7 @@ create_savefile()
 {
 	int fd;
 
-#if defined(MICRO) || defined(WIN32) || defined(MSDOS)
-	fd = open(savename, O_WRONLY | O_BINARY | O_CREAT | O_TRUNC, FCMASK);
-#else
 	fd = creat(savename, FCMASK);
-#endif
 
 #ifdef SECURE
 	if (fchown(fd, save_uid, -1) == -1) {
@@ -257,16 +220,6 @@ char *basename;
 	(void) strcpy(lock, basename);
 	gfd = open_levelfile(0);
 	if (gfd < 0) {
-#if defined(WIN32) && !defined(WIN_CE)
- 	    if(errno == EACCES) {
-	  	Fprintf(stderr,
-			"\nThere are files from a game in progress under your name.");
-		Fprintf(stderr,"\nThe files are locked or inaccessible.");
-		Fprintf(stderr,"\nPerhaps the other game is still running?\n");
-	    } else
-	  	Fprintf(stderr,
-			"\nTrouble accessing level 0 (errno = %d).\n", errno);
-#endif
 	    Fprintf(stderr, "Cannot open level 0 for %s in directory %s: ",
                 basename, dir);
             Perror(lock);
@@ -379,39 +332,9 @@ char *str;
 	if (!str) return (char *)0;
 	bsize = EXEPATHBUFSZ;
 	tmp = exepathbuf;
-#if !defined(WIN32)
 	strcpy (tmp, str);
-#else
-# if defined(WIN_CE)
-	{
-	  TCHAR wbuf[EXEPATHBUFSZ];
-	  GetModuleFileName((HANDLE)0, wbuf, EXEPATHBUFSZ);
-	  NH_W2A(wbuf, tmp, bsize);
-	}
-# else
-	*(tmp + GetModuleFileName((HANDLE)0, tmp, bsize)) = '\0';
-# endif
-#endif
 	tmp2 = strrchr(tmp, PATH_SEPARATOR);
 	if (tmp2) *tmp2 = '\0';
 	return tmp;
 }
 #endif /* EXEPATH */
-
-
-#ifdef WIN_CE
-void nhce_message(FILE* f, const char* str, ...)
-{
-    va_list ap;
-	TCHAR wbuf[NHSTR_BUFSIZE];
-	char buf[NHSTR_BUFSIZE];
-
-    va_start(ap, str);
-	vsprintf(buf, str, ap);
-    va_end(ap);
-
-	MessageBox(NULL, NH_A2W(buf, wbuf, NHSTR_BUFSIZE), TEXT("Recover"), MB_OK);
-}
-#endif
-
-/*recover.c*/

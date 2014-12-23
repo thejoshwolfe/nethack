@@ -56,11 +56,7 @@ static struct Bool_Opt
 	{"checkspace", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
 	{"cmdassist", &iflags.cmdassist, TRUE, SET_IN_GAME},
-# if defined(MICRO) || defined(WIN32)
-	{"color",         &iflags.wc_color,TRUE, SET_IN_GAME},		/*WC*/
-# else	/* systems that support multiple terminals, many monochrome */
 	{"color",         &iflags.wc_color, FALSE, SET_IN_GAME},	/*WC*/
-# endif
 	{"confirm",&flags.confirm, TRUE, SET_IN_GAME},
 	{"cursesgraphics", (boolean *)0, FALSE, SET_IN_FILE},
 #if defined(TERMLIB) && !defined(MAC_GRAPHICS_ENV)
@@ -192,11 +188,7 @@ static struct Bool_Opt
 	{"tombstone",&flags.tombstone, TRUE, SET_IN_GAME},
 	{"toptenwin",&flags.toptenwin, FALSE, SET_IN_GAME},
 	{"travel", &iflags.travelcmd, TRUE, SET_IN_GAME},
-#ifdef WIN32CON
-	{"use_inverse",   &iflags.wc_inverse, TRUE, SET_IN_GAME},		/*WC*/
-#else
 	{"use_inverse",   &iflags.wc_inverse, FALSE, SET_IN_GAME},		/*WC*/
-#endif
 	{"verbose", &flags.verbose, TRUE, SET_IN_GAME},
 	{"wraptext", &iflags.wc2_wraptext, FALSE, SET_IN_GAME},
 	{(char *)0, (boolean *)0, FALSE, 0}
@@ -342,9 +334,6 @@ static struct Comp_Opt
 						40, DISP_IN_GAME },
 	{ "videoshades", "gray shades to map to black/gray/white",
 						32, DISP_IN_GAME },
-#endif
-#ifdef WIN32CON
-	{"subkeyvalue", "override keystroke value", 7, SET_IN_FILE},
 #endif
 	{ "windowcolors",  "the foreground/background colors of windows",	/*WC*/
 						80, DISP_IN_GAME },
@@ -1685,10 +1674,6 @@ goodfruit:
 	if (match_optname(opts, fullname, 4, TRUE)) {
 		if (negated) bad_negation(fullname, FALSE);
 		else if ((op = string_for_opt(opts, negated))) {
-#ifdef WIN32CON
-		    (void)strncpy(iflags.altkeyhandler, op, MAX_ALTKEYHANDLER - 5);
-		    load_keyboard_handler();
-#endif
 		}
 		return;
 	}
@@ -2134,13 +2119,8 @@ goodfruit:
 	}
 	fullname = "subkeyvalue";
 	if (match_optname(opts, fullname, 5, TRUE)) {
-		if (negated) bad_negation(fullname, FALSE);
-		else {
-#if defined(WIN32CON)
-			op = string_for_opt(opts, 0);
-			map_subkeyvalue(op);
-#endif
-		}
+		if (negated)
+            bad_negation(fullname, FALSE);
 		return;
 	}
 	/* WINCAP
@@ -2535,11 +2515,7 @@ map_menu_cmd(ch)
 }
 
 
-#if defined(MICRO) || defined(MAC) || defined(WIN32)
-# define OPTIONS_HEADING "OPTIONS"
-#else
-# define OPTIONS_HEADING "NETHACKOPTIONS"
-#endif
+#define OPTIONS_HEADING "NETHACKOPTIONS"
 
 static char fmtstr_doset_add_menu[] = "%s%-15s [%s]   "; 
 static char fmtstr_doset_add_menu_tab[] = "%s\t[%s]";
@@ -3145,11 +3121,6 @@ char *buf;
 				   defopt);
 	else if (!strcmp(optname,"align"))
 		Sprintf(buf, "%s", rolestring(flags.initalign, aligns, adj));
-#ifdef WIN32CON
-	else if (!strcmp(optname,"altkeyhandler"))
-		Sprintf(buf, "%s", iflags.altkeyhandler[0] ?
-			iflags.altkeyhandler : "default");
-#endif
 	else if (!strcmp(optname, "boulder"))
 		Sprintf(buf, "%c", iflags.bouldersym ?
 			iflags.bouldersym : oc_syms[(int)objects[BOULDER].oc_class]);

@@ -12,7 +12,7 @@
 
 #define UNIX		/* delete if no fork(), exec() available */
 
-#include "config1.h"	/* should auto-detect MSDOS, MAC, and WIN32 */
+#include "config1.h"	/* should auto-detect MSDOS, MAC */
 
 
 /* Windowing systems...

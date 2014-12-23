@@ -76,31 +76,6 @@
 # endif
 #endif
 
-/*
- * Windows NT Autodetection
- */
-#ifdef _WIN32_WCE
-#define WIN_CE
-# ifndef WIN32
-# define WIN32
-# endif
-#endif
-
-#ifdef WIN32
-# undef UNIX
-# undef MSDOS
-# define NHSTDC
-# define USE_STDARG
-# define NEED_VARARGS
-
-#ifndef WIN_CE
-# define STRNCMPI
-# define STRCMPI
-#endif
-
-#endif
-
-
 #if defined(__linux__) && defined(__GNUC__) && !defined(_GNU_SOURCE)
 /* ensure _GNU_SOURCE is defined before including any system headers */
 # define _GNU_SOURCE

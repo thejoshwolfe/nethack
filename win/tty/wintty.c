@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)wintty.c	3.4	2002/09/27	*/
-/* Copyright (c) David Cohrs, 1991				  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * Neither a standard out nor character-based control codes should be
  * part of the "tty look" windowing implementation.
@@ -41,9 +37,6 @@ struct window_procs tty_procs = {
     "tty",
 #ifdef MSDOS
     WC_TILED_MAP|WC_ASCII_MAP|
-#endif
-#if defined(WIN32CON)
-    WC_MOUSE_SUPPORT|
 #endif
     WC_COLOR|WC_HILITE_PET|WC_INVERSE|WC_EIGHT_BIT_IN,
     0L,
@@ -100,11 +93,7 @@ struct window_procs tty_procs = {
     tty_start_screen,
     tty_end_screen,
     genl_outrip,
-#if defined(WIN32CON)
-    nttty_preference_update,
-#else
     genl_preference_update,
-#endif
 };
 
 static int maxwin = 0;			/* number of windows in use */
@@ -145,12 +134,7 @@ boolean GFlag = FALSE;
 boolean HE_resets_AS;	/* see termcap.c */
 #endif
 
-#if defined(MICRO) || defined(WIN32CON)
-static const char to_continue[] = "to continue";
-#define getret() getreturn(to_continue)
-#else
 STATIC_DCL void NDECL(getret);
-#endif
 STATIC_DCL void FDECL(erase_menu_or_text, (winid, struct WinDesc *, BOOLEAN_P));
 STATIC_DCL void FDECL(free_window_info, (struct WinDesc *, BOOLEAN_P));
 STATIC_DCL void FDECL(dmore,(struct WinDesc *, const char *));
@@ -679,29 +663,13 @@ tty_askname()
 	while((c = tty_nhgetch()) != '\n') {
 		if(c == EOF) error("End of input\n");
 		if (c == '\033') { ct = 0; break; }  /* continue outer loop */
-#if defined(WIN32CON)
-		if (c == '\003') bail("^C abort.\n");
-#endif
 		/* some people get confused when their erase char is not ^H */
 		if (c == '\b' || c == '\177') {
-			if(ct) {
+			if (ct) {
 				ct--;
-#ifdef WIN32CON
-				ttyDisplay->curx--;
-#endif
-#if defined(MICRO) || defined(WIN32CON)
-# if defined(WIN32CON) || defined(MSDOS)
-				backsp();       /* \b is visible on NT */
-				(void) putchar(' ');
-				backsp();
-# else
-				msmsg("\b \b");
-# endif
-#else
-				(void) putchar('\b');
-				(void) putchar(' ');
-				(void) putchar('\b');
-#endif
+				putchar('\b');
+				putchar(' ');
+				putchar('\b');
 			}
 			continue;
 		}
@@ -710,20 +678,8 @@ tty_askname()
 		if(c < 'A' || (c > 'Z' && c < 'a') || c > 'z') c = '_';
 #endif
 		if (ct < (int)(sizeof plname) - 1) {
-#if defined(MICRO)
-# if defined(MSDOS)
-			if (iflags.grmode) {
-				(void) putchar(c);
-			} else
-# endif
-			msmsg("%c", c);
-#else
-			(void) putchar(c);
-#endif
+			putchar(c);
 			plname[ct++] = c;
-#ifdef WIN32CON
-			ttyDisplay->curx++;
-#endif
 		}
 	}
 	plname[ct] = 0;
@@ -739,10 +695,7 @@ tty_get_nh_event()
     return;
 }
 
-#if !defined(MICRO) && !defined(WIN32CON)
-STATIC_OVL void
-getret()
-{
+STATIC_OVL void getret(void) {
 	xputs("\n");
 	if(flags.standout)
 		standoutbeg();
@@ -753,28 +706,19 @@ getret()
 		standoutend();
 	xwaitforspace(" ");
 }
-#endif
 
-void
-tty_suspend_nhwindows(str)
-    const char *str;
-{
+void tty_suspend_nhwindows(const char *str) {
     settty(str);		/* calls end_screen, perhaps raw_print */
     if (!str) tty_raw_print("");	/* calls fflush(stdout) */
 }
 
-void
-tty_resume_nhwindows()
-{
+void tty_resume_nhwindows(void) {
     gettty();
     setftty();			/* calls start_screen */
     docrt();
 }
 
-void
-tty_exit_nhwindows(str)
-    const char *str;
-{
+void tty_exit_nhwindows(const char *str) {
     winid i;
 
     tty_suspend_nhwindows(str);
@@ -1254,13 +1198,8 @@ struct WinDesc *cw;
 #endif
 		    term_start_attr(curr->attr);
 		    for (n = 0, cp = curr->str;
-#ifndef WIN32CON
 			  *cp && (int) ++ttyDisplay->curx < (int) ttyDisplay->cols;
 			  cp++, n++)
-#else
-			  *cp && (int) ttyDisplay->curx < (int) ttyDisplay->cols;
-			  cp++, n++, ttyDisplay->curx++)
-#endif
 			if (n == 2 && curr->identifier.a_void != 0 &&
 							curr->selected) {
 			    if (curr->count == -1L)
@@ -1502,13 +1441,8 @@ struct WinDesc *cw;
 	    }
 	    term_start_attr(attr);
 	    for (cp = &cw->data[i][1];
-#ifndef WIN32CON
 		    *cp && (int) ++ttyDisplay->curx < (int) ttyDisplay->cols;
 		    cp++)
-#else
-		    *cp && (int) ttyDisplay->curx < (int) ttyDisplay->cols;
-		    cp++, ttyDisplay->curx++)
-#endif
 		(void) putchar(*cp);
 	    term_end_attr(attr);
 	}
@@ -1814,9 +1748,6 @@ tty_putstr(window, attr, str)
     switch(cw->type) {
     case NHW_MESSAGE:
 	/* really do this later */
-#if defined(USER_SOUNDS) && defined(WIN32CON)
-	play_sound_for_message(str);
-#endif
 	update_topl(str);
 	break;
 
@@ -2359,11 +2290,7 @@ end_glyphout()
 #endif
 }
 
-#ifndef WIN32
-void
-g_putch(in_ch)
-int in_ch;
-{
+void g_putch(int in_ch) {
     register char ch = (char)in_ch;
 
 # if defined(ASCIIGRAPH) && !defined(NO_TERMS)
@@ -2391,7 +2318,6 @@ int in_ch;
 
     return;
 }
-#endif /* !WIN32 */
 
 #ifdef CLIPPING
 void
@@ -2513,36 +2439,19 @@ tty_print_glyph(window, x, y, glyph)
     ttyDisplay->curx++;		/* the real cursor moved too */
 }
 
-void
-tty_raw_print(str)
-    const char *str;
-{
+void tty_raw_print(const char *str) {
     if(ttyDisplay) ttyDisplay->rawprint++;
-#if defined(MICRO) || defined(WIN32CON)
-    msmsg("%s\n", str);
-#else
-    puts(str); (void) fflush(stdout);
-#endif
+    puts(str);
+    fflush(stdout);
 }
 
-void
-tty_raw_print_bold(str)
-    const char *str;
-{
+void tty_raw_print_bold(const char *str) {
     if(ttyDisplay) ttyDisplay->rawprint++;
     term_start_raw_bold();
-#if defined(MICRO) || defined(WIN32CON)
-    msmsg("%s", str);
-#else
     (void) fputs(str, stdout);
-#endif
     term_end_raw_bold();
-#if defined(MICRO) || defined(WIN32CON)
-    msmsg("\n");
-#else
     puts("");
     (void) fflush(stdout);
-#endif
 }
 
 int
@@ -2587,37 +2496,11 @@ tty_nhgetch()
  * Since normal tty's don't have mice, just return a key.
  */
 /*ARGSUSED*/
-int
-tty_nh_poskey(x, y, mod)
-    int *x, *y, *mod;
-{
-# if defined(WIN32CON)
-    int i;
-    (void) fflush(stdout);
-    /* Note: if raw_print() and wait_synch() get called to report terminal
-     * initialization problems, then wins[] and ttyDisplay might not be
-     * available yet.  Such problems will probably be fatal before we get
-     * here, but validate those pointers just in case...
-     */
-    if (WIN_MESSAGE != WIN_ERR && wins[WIN_MESSAGE])
-	    wins[WIN_MESSAGE]->flags &= ~WIN_STOP;
-    i = ntposkey(x, y, mod);
-    if (!i && mod && *mod == 0)
-    	i = '\033'; /* map NUL to ESC since nethack doesn't expect NUL */
-    if (ttyDisplay && ttyDisplay->toplin == 1)
-		ttyDisplay->toplin = 2;
-    return i;
-# else
+int tty_nh_poskey(int *x, int *y, int *mod) {
     return tty_nhgetch();
-# endif
 }
 
-void
-win_tty_init()
-{
-# if defined(WIN32CON)
-    nttty_open();
-# endif
+void win_tty_init(void) {
     return;
 }
 

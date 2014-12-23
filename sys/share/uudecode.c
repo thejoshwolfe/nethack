@@ -35,25 +35,11 @@
  * 
  * Modified 13 April 1991 by Gary Mussar to be forgiving of systems that
  * appear to be stripping trailing blanks.
- *
- * Modified 28 February 2002 for use on WIN32 systems with Microsoft C.
  */
 
 #ifndef lint
 static char sccsid[] = "@(#)uudecode.c	5.5 (Berkeley) 7/6/88";
 #endif /* not lint */
-
-#ifdef __MSDOS__        /* For Turbo C */
-#define MSDOS 1
-#endif
-
-#ifdef _WIN32
-#undef MSDOS
-#undef __MSDOS__
-#ifndef WIN32
-#define WIN32
-#endif
-#endif
 
 /*
  * uudecode [input]
@@ -63,18 +49,11 @@ static char sccsid[] = "@(#)uudecode.c	5.5 (Berkeley) 7/6/88";
  */
 #include <stdio.h>
 
-#ifdef VMS
-#  include <types.h>
-#  include <stat.h>
-#else
-#  if !defined(MSDOS) && !defined(WIN32)
-#    include <pwd.h>
-#  endif
-#  include <sys/types.h>   /* MSDOS, WIN32, or UNIX */
-#  include <sys/stat.h>
-#  include <string.h>
-#  include <stdlib.h>
-#endif
+#include <pwd.h>
+#include <sys/types.h> // UNIX
+#include <sys/stat.h>
+#include <string.h>
+#include <stdlib.h>
 
 static void decode(FILE *, FILE *);
 static void outdec(char *, FILE *, int);
@@ -117,7 +96,6 @@ char **argv;
 	}
 	(void)sscanf(buf, "begin %o %s", &mode, dest);
 
-#if !defined(MSDOS) && !defined(VMS) && !defined(WIN32)
 	/* handle ~user/file format */
 	if (dest[0] == '~') {
 		char *sl;
@@ -141,21 +119,14 @@ char **argv;
 		strcat(dnbuf, sl);
 		strcpy(dest, dnbuf);
 	}
-#endif	/* !defined(MSDOS) && !defined(VMS) */
 
 	/* create output file */
-#if defined(MSDOS) || defined(WIN32)
-	out = fopen(dest, "wb");	/* Binary file */
-#else
 	out = fopen(dest, "w");
-#endif
 	if (out == NULL) {
 		perror(dest);
 		exit(4);
 	}
-#if !defined(MSDOS) && !defined(VMS) && !defined(WIN32)	/* i.e., UNIX */
 	chmod(dest, mode);
-#endif
 
 	decode(in, out);
 
@@ -228,25 +199,15 @@ int n;
 		putc(c3, f);
 }
 
-#if !defined(MSDOS) && !defined(VMS) && !defined(WIN32)
 /*
  * Return the ptr in sp at which the character c appears;
  * NULL if not found
  */
 
-#ifndef NULL
-#define	NULL	0
-#endif
-
-char *
-index(sp, c)
-register char *sp, c;
-{
+char * index(char *sp, char c) {
 	do {
 		if (*sp == c)
 			return(sp);
 	} while (*sp++);
 	return(NULL);
 }
-#endif
-

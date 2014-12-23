@@ -188,11 +188,6 @@ static char *FDECL(eos, (char *));
 /* input, output, tmp */
 static FILE *ifp, *ofp, *tfp;
 
-#if defined(__BORLANDC__) && !defined(_WIN32)
-extern unsigned _stklen = STKSIZ;
-#endif
-
-
 #ifdef MACsansMPWTOOL
 int
 main(void)
@@ -704,11 +699,6 @@ static const char *build_opts[] = {
 # ifdef SCREEN_VGA
 		"screen control via VGA graphics",
 # endif
-# ifndef MSWIN_GRAPHICS
-#  ifdef WIN32CON
-		"screen control via WIN32 console I/O",
-#  endif
-# endif
 #endif
 #ifdef SEDUCE
 		"seduction",
@@ -725,7 +715,7 @@ static const char *build_opts[] = {
 #ifdef TERMINFO
 		"terminal info library",
 #else
-# if defined(TERMLIB) || ((!defined(MICRO) && !defined(WIN32)) && defined(TTY_GRAPHICS))
+# if defined(TERMLIB) || defined(TTY_GRAPHICS)
 		"terminal capability library",
 # endif
 #endif

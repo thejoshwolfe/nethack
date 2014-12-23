@@ -24,7 +24,7 @@
 #define FQN_NUMBUF 4
 static char fqn_filename_buffer[FQN_NUMBUF][FQN_MAX_FILENAME];
 
-#if !defined(MFLOPPY) && !defined(VMS) && !defined(WIN32)
+#if !defined(MFLOPPY) && !defined(VMS)
 char bones[] = "bonesnn.xxx";
 char lock[PL_NSIZ+14] = "1lock"; /* long enough for uid+name+.99 */
 #else
@@ -36,10 +36,6 @@ char lock[FILENAME];		/* pathname of level files */
 char bones[] = "bonesnn.xxx;1";
 char lock[PL_NSIZ+17] = "1lock"; /* long enough for _uid+name+.99;1 */
 # endif
-# if defined(WIN32)
-char bones[] = "bonesnn.xxx";
-char lock[PL_NSIZ+25];		/* long enough for username+-+name+.99 */
-# endif
 #endif
 
 #if defined(UNIX) || defined(__BEOS__)
@@ -48,11 +44,7 @@ char lock[PL_NSIZ+25];		/* long enough for username+-+name+.99 */
 # ifdef VMS
 #define SAVESIZE	(PL_NSIZ + 22)	/* [.save]<uid>player.e;1 */
 # else
-#  if defined(WIN32)
-#define SAVESIZE	(PL_NSIZ + 40)	/* username-player.NetHack-saved-game */
-#  else
 #define SAVESIZE	FILENAME	/* from macconf.h or pcconf.h */
-#  endif
 # endif
 #endif
 
@@ -68,26 +60,12 @@ int fd;					/* file descriptor for level file     */
 int oflag;				/* open flags                         */
 boolean nethack_thinks_it_is_open;	/* Does NetHack think it's open?       */
 } lftrack;
-# if defined(WIN32)
-#include <share.h>
-# endif
 #endif /*HOLD_LOCKFILE_OPEN*/
 
 #ifdef WIZARD
 #define WIZKIT_MAX 128
 static char wizkit[WIZKIT_MAX];
 STATIC_DCL FILE *NDECL(fopen_wizkit_file);
-#endif
-
-#if defined(WIN32) || defined(MSDOS)
-static int lockptr;
-# ifdef MSDOS
-#define Delay(a) msleep(a)
-# endif
-#define Close close
-#ifndef WIN_CE
-#define DeleteFile unlink
-#endif
 #endif
 
 #ifdef MAC
@@ -360,24 +338,7 @@ char errbuf[];
 	set_levelfile_name(lock, lev);
 	fq_lock = fqname(lock, LEVELPREFIX, 0);
 
-#if defined(MICRO) || defined(WIN32)
-	/* Use O_TRUNC to force the file to be shortened if it already
-	 * exists and is currently longer.
-	 */
-# ifdef HOLD_LOCKFILE_OPEN
-	if (lev == 0)
-		fd = open_levelfile_exclusively(fq_lock, lev,
-				O_WRONLY |O_CREAT | O_TRUNC | O_BINARY);
-	else
-# endif
-	fd = open(fq_lock, O_WRONLY |O_CREAT | O_TRUNC | O_BINARY, FCMASK);
-#else
-# ifdef MAC
-	fd = maccreat(fq_lock, LEVL_TYPE);
-# else
-	fd = creat(fq_lock, FCMASK);
-# endif
-#endif /* MICRO || WIN32 */
+    fd = creat(fq_lock, FCMASK);
 
 	if (fd >= 0)
 	    level_info[lev].flags |= LFILE_EXISTS;
@@ -591,18 +552,11 @@ char errbuf[];
 	file = set_bonestemp_name();
 	file = fqname(file, BONESPREFIX, 0);
 
-#if defined(MICRO) || defined(WIN32)
-	/* Use O_TRUNC to force the file to be shortened if it already
-	 * exists and is currently longer.
-	 */
-	fd = open(file, O_WRONLY |O_CREAT | O_TRUNC | O_BINARY, FCMASK);
-#else
 # ifdef MAC
 	fd = maccreat(file, BONE_TYPE);
 # else
 	fd = creat(file, FCMASK);
 # endif
-#endif
 	if (fd < 0 && errbuf) /* failure explanation */
 	    Sprintf(errbuf,
 		    "Cannot create bones \"%s\", id %s (errno %d).",
@@ -697,9 +651,7 @@ d_level *lev;
 
 /* assume we're compressing the recently read or created bonesfile, so the
  * file name is already set properly */
-void
-compress_bonesfile()
-{
+void compress_bonesfile(void) {
 	compress(fqname(bones, BONESPREFIX, 0));
 }
 
@@ -710,39 +662,9 @@ compress_bonesfile()
 
 /* set savefile name in OS-dependent manner from pre-existing plname,
  * avoiding troublesome characters */
-void
-set_savefile_name()
-{
-#if defined(WIN32)
-	char fnamebuf[BUFSZ], encodedfnamebuf[BUFSZ];
-#endif
-#ifdef VMS
-	Sprintf(SAVEF, "[.save]%d%s", getuid(), plname);
-	regularize(SAVEF+7);
-	Strcat(SAVEF, ";1");
-#else
-# if defined(MICRO)
-	Strcpy(SAVEF, SAVEP);
-	{
-		int i = strlen(SAVEP);
-		(void)strncat(SAVEF, plname, 8);
-		regularize(SAVEF+i);
-	}
-	Strcat(SAVEF, ".sav");
-# else
-#  if defined(WIN32)
-	/* Obtain the name of the logged on user and incorporate
-	 * it into the name. */
-	Sprintf(fnamebuf, "%s-%s", get_username(0), plname);
-	(void)fname_encode("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-.",
-				'%', fnamebuf, encodedfnamebuf, BUFSZ);
-	Sprintf(SAVEF, "%s.NetHack-saved-game", encodedfnamebuf);
-#  else
+void set_savefile_name(void) {
 	Sprintf(SAVEF, "save/%d%s", (int)getuid(), plname);
 	regularize(SAVEF+5);	/* avoid . or / in name */
-#  endif /* WIN32 */
-# endif	/* MICRO */
-#endif /* VMS   */
 }
 
 #ifdef INSURANCE
@@ -778,60 +700,30 @@ set_error_savefile()
 
 
 /* create save file, overwriting one if it already exists */
-int
-create_savefile()
-{
+int create_savefile(void) {
 	const char *fq_save;
 	int fd;
 
 	fq_save = fqname(SAVEF, SAVEPREFIX, 0);
-#if defined(MICRO) || defined(WIN32)
-	fd = open(fq_save, O_WRONLY | O_BINARY | O_CREAT | O_TRUNC, FCMASK);
-#else
-# ifdef MAC
-	fd = maccreat(fq_save, SAVE_TYPE);
-# else
 	fd = creat(fq_save, FCMASK);
-# endif
-# if defined(VMS) && !defined(SECURE)
-	/*
-	   Make sure the save file is owned by the current process.  That's
-	   the default for non-privileged users, but for priv'd users the
-	   file will be owned by the directory's owner instead of the user.
-	 */
-#  ifdef getuid	/*(see vmsunix.c)*/
-#   undef getuid
-#  endif
-	(void) chown(fq_save, getuid(), getgid());
-# endif /* VMS && !SECURE */
-#endif	/* MICRO */
-
 	return fd;
 }
 
 
 /* open savefile for reading */
-int
-open_savefile()
-{
+int open_savefile(void) {
 	const char *fq_save;
 	int fd;
 
 	fq_save = fqname(SAVEF, SAVEPREFIX, 0);
-#ifdef MAC
-	fd = macopen(fq_save, O_RDONLY | O_BINARY, SAVE_TYPE);
-#else
 	fd = open(fq_save, O_RDONLY | O_BINARY, 0);
-#endif
 	return fd;
 }
 
 
 /* delete savefile */
-int
-delete_savefile()
-{
-	(void) unlink(fqname(SAVEF, SAVEPREFIX, 0));
+int delete_savefile(void) {
+	unlink(fqname(SAVEF, SAVEPREFIX, 0));
 	return 0;	/* for restore_saved_game() (ex-xxxmain.c) test */
 }
 
@@ -1180,7 +1072,7 @@ char *lockname;
 # pragma unused(filename,lockname)
 	return (char*)0;
 #else
-# if defined(UNIX) || defined(VMS) || defined(WIN32) || defined(MSDOS)
+# if defined(UNIX)
 #  ifdef NO_FILE_LINKS
 	Strcpy(lockname, LOCKDIR);
 	Strcat(lockname, "/");
@@ -1188,20 +1080,12 @@ char *lockname;
 #  else
 	Strcpy(lockname, filename);
 #  endif
-#  ifdef VMS
-      {
-	char *semi_colon = rindex(lockname, ';');
-	if (semi_colon) *semi_colon = '\0';
-      }
-	Strcat(lockname, ".lock;1");
-#  else
 	Strcat(lockname, "_lock");
-#  endif
 	return lockname;
 # else
 	lockname[0] = '\0';
 	return (char*)0;
-# endif  /* UNIX || VMS || WIN32 || MSDOS */
+# endif  /* UNIX */
 #endif
 }
 
@@ -1286,47 +1170,12 @@ int retryct;
 	}
 #endif  /* UNIX || VMS */
 
-#if defined(WIN32) || defined(MSDOS)
-#define OPENFAILURE(fd) (fd < 0)
-    lockptr = -1;
-    while (--retryct && OPENFAILURE(lockptr)) {
-# if defined(WIN32) && !defined(WIN_CE)
-	lockptr = sopen(lockname, O_RDWR|O_CREAT, SH_DENYRW, S_IWRITE);
-# else
-	(void)DeleteFile(lockname); /* in case dead process was here first */
-	lockptr = open(lockname, O_RDWR|O_CREAT|O_EXCL, S_IWRITE);
-# endif
-	if (OPENFAILURE(lockptr)) {
-	    raw_printf("Waiting for access to %s.  (%d retries left).",
-			filename, retryct);
-	    Delay(50);
-	}
-    }
-    if (!retryct) {
-	raw_printf("I give up.  Sorry.");
-	nesting--;
-	return FALSE;
-    }
-#endif /* WIN32 || MSDOS */
 	return TRUE;
 }
 
 
-#ifdef VMS	/* for unlock_file, use the unlink() routine in vmsunix.c */
-# ifdef unlink
-#  undef unlink
-# endif
-# define unlink(foo) vms_unlink(foo)
-#endif
-
 /* unlock file, which must be currently locked by lock_file */
-void
-unlock_file(filename)
-const char *filename;
-#if defined(macintosh) && (defined(__SC__) || defined(__MRC__))
-# pragma unused(filename)
-#endif
-{
+void unlock_file(const char *filename) {
 	char locknambuf[BUFSZ];
 	const char *lockname;
 
@@ -1336,20 +1185,15 @@ const char *filename;
 		lockname = fqname(lockname, LOCKPREFIX, 2);
 #endif
 
-#if defined(UNIX) || defined(VMS)
+#if defined(UNIX)
 		if (unlink(lockname) < 0)
 			HUP raw_printf("Can't unlink %s.", lockname);
 # ifdef NO_FILE_LINKS
-		(void) close(lockfd);
+		close(lockfd);
 # endif
 
 #endif  /* UNIX || VMS */
 
-#if defined(WIN32) || defined(MSDOS)
-		if (lockptr) Close(lockptr);
-		DeleteFile(lockname);
-		lockptr = 0;
-#endif /* WIN32 || MSDOS */
 	}
 
 	nesting--;
@@ -1360,51 +1204,20 @@ const char *filename;
 
 /* ----------  BEGIN CONFIG FILE HANDLING ----------- */
 
-const char *configfile =
-#ifdef UNIX
-			".nethackrc";
-#else
-# if defined(MAC) || defined(__BEOS__)
-			"NetHack Defaults";
-# else
-#  if defined(MSDOS) || defined(WIN32)
-			"defaults.nh";
-#  else
-			"NetHack.cnf";
-#  endif
-# endif
-#endif
-
-
-#ifdef MSDOS
-/* conflict with speed-dial under windows
- * for XXX.cnf file so support of NetHack.cnf
- * is for backward compatibility only.
- * Preferred name (and first tried) is now defaults.nh but
- * the game will try the old name if there
- * is no defaults.nh.
- */
-const char *backward_compat_configfile = "nethack.cnf"; 
-#endif
+const char *configfile = ".nethackrc";
 
 #ifndef MFLOPPY
 #define fopenp fopen
 #endif
 
-STATIC_OVL FILE *
-fopen_config_file(filename)
-const char *filename;
-{
+STATIC_OVL FILE * fopen_config_file(const char *filename) {
 	FILE *fp;
-#if defined(UNIX) || defined(VMS)
 	char	tmp_config[BUFSZ];
 	char *envp;
-#endif
 
 	/* "filename" is an environment variable, so it should hang around */
 	/* if set, it is expected to be a full path name (if relevant) */
 	if (filename) {
-#ifdef UNIX
 		if (access(filename, 4) == -1) {
 			/* 4 is R_OK on newer systems */
 			/* nasty sneaky attempt to read file through
@@ -1417,51 +1230,19 @@ const char *filename;
 			wait_synch();
 			/* fall through to standard names */
 		} else
-#endif
 		if ((fp = fopenp(filename, "r")) != (FILE *)0) {
 		    configfile = filename;
 		    return(fp);
-#if defined(UNIX) || defined(VMS)
 		} else {
 		    /* access() above probably caught most problems for UNIX */
 		    raw_printf("Couldn't open requested config file %s (%d).",
 					filename, errno);
 		    wait_synch();
 		    /* fall through to standard names */
-#endif
 		}
 	}
 
-#if defined(MICRO) || defined(MAC) || defined(__BEOS__) || defined(WIN32)
-	if ((fp = fopenp(fqname(configfile, CONFIGPREFIX, 0), "r"))
-								!= (FILE *)0)
-		return(fp);
-# ifdef MSDOS
-	else if ((fp = fopenp(fqname(backward_compat_configfile,
-					CONFIGPREFIX, 0), "r")) != (FILE *)0)
-		return(fp);
-# endif
-#else
 	/* constructed full path names don't need fqname() */
-# ifdef VMS
-	if ((fp = fopenp(fqname("nethackini", CONFIGPREFIX, 0), "r"))
-								!= (FILE *)0) {
-		configfile = "nethackini";
-		return(fp);
-	}
-	if ((fp = fopenp("sys$login:nethack.ini", "r")) != (FILE *)0) {
-		configfile = "nethack.ini";
-		return(fp);
-	}
-
-	envp = nh_getenv("HOME");
-	if (!envp)
-		Strcpy(tmp_config, "NetHack.cnf");
-	else
-		Sprintf(tmp_config, "%s%s", envp, "NetHack.cnf");
-	if ((fp = fopenp(tmp_config, "r")) != (FILE *)0)
-		return(fp);
-# else	/* should be only UNIX left */
 	envp = nh_getenv("HOME");
 	if (!envp)
 		Strcpy(tmp_config, configfile);
@@ -1469,33 +1250,18 @@ const char *filename;
 		Sprintf(tmp_config, "%s/%s", envp, configfile);
 	if ((fp = fopenp(tmp_config, "r")) != (FILE *)0)
 		return(fp);
-# if defined(__APPLE__)
-	/* try an alternative */
-	if (envp) {
-		Sprintf(tmp_config, "%s/%s", envp, "Library/Preferences/NetHack Defaults");
-		if ((fp = fopenp(tmp_config, "r")) != (FILE *)0)
-			return(fp);
-		Sprintf(tmp_config, "%s/%s", envp, "Library/Preferences/NetHack Defaults.txt");
-		if ((fp = fopenp(tmp_config, "r")) != (FILE *)0)
-			return(fp);
-	}
-# endif
 	if (errno != ENOENT) {
 	    char *details;
 
 	    /* e.g., problems when setuid NetHack can't search home
 	     * directory restricted to user */
 
-#if defined (NHSTDC) && !defined(NOTSTDC)
 	    if ((details = strerror(errno)) == 0)
-#endif
-		details = "";
+            details = "";
 	    raw_printf("Couldn't open default config file %s %s(%d).",
 		       tmp_config, details, errno);
 	    wait_synch();
 	}
-# endif
-#endif
 	return (FILE *)0;
 
 }
@@ -1747,25 +1513,11 @@ const char *filename;
 #define tmp_levels	(char *)0
 #define tmp_ramdisk	(char *)0
 
-#if defined(MICRO) || defined(WIN32)
-#undef tmp_levels
-	char	tmp_levels[PATHLEN];
-# ifdef MFLOPPY
-#undef tmp_ramdisk
-	char	tmp_ramdisk[PATHLEN];
-# endif
-#endif
 	char	buf[4*BUFSZ];
 	FILE	*fp;
 
 	if (!(fp = fopen_config_file(filename))) return;
 
-#if defined(MICRO) || defined(WIN32)
-# ifdef MFLOPPY
-	tmp_ramdisk[0] = 0;
-# endif
-	tmp_levels[0] = 0;
-#endif
 	/* begin detection of duplicate configfile options */
 	set_duplicate_opt_detection(1);
 
@@ -1788,16 +1540,13 @@ STATIC_OVL FILE *
 fopen_wizkit_file()
 {
 	FILE *fp;
-#if defined(VMS) || defined(UNIX)
 	char	tmp_wizkit[BUFSZ];
-#endif
 	char *envp;
 
 	envp = nh_getenv("WIZKIT");
 	if (envp && *envp) (void) strncpy(wizkit, envp, WIZKIT_MAX - 1);
 	if (!wizkit[0]) return (FILE *)0;
 
-#ifdef UNIX
 	if (access(wizkit, 4) == -1) {
 		/* 4 is R_OK on newer systems */
 		/* nasty sneaky attempt to read file through
@@ -1810,32 +1559,15 @@ fopen_wizkit_file()
 		wait_synch();
 		/* fall through to standard names */
 	} else
-#endif
 	if ((fp = fopenp(wizkit, "r")) != (FILE *)0) {
 	    return(fp);
-#if defined(UNIX) || defined(VMS)
 	} else {
 	    /* access() above probably caught most problems for UNIX */
 	    raw_printf("Couldn't open requested config file %s (%d).",
 				wizkit, errno);
 	    wait_synch();
-#endif
 	}
 
-#if defined(MICRO) || defined(MAC) || defined(__BEOS__) || defined(WIN32)
-	if ((fp = fopenp(fqname(wizkit, CONFIGPREFIX, 0), "r"))
-								!= (FILE *)0)
-		return(fp);
-#else
-# ifdef VMS
-	envp = nh_getenv("HOME");
-	if (envp)
-		Sprintf(tmp_wizkit, "%s%s", envp, wizkit);
-	else
-		Sprintf(tmp_wizkit, "%s%s", "sys$login:", wizkit);
-	if ((fp = fopenp(tmp_wizkit, "r")) != (FILE *)0)
-		return(fp);
-# else	/* should be only UNIX left */
 	envp = nh_getenv("HOME");
 	if (envp)
 		Sprintf(tmp_wizkit, "%s/%s", envp, wizkit);
@@ -1849,8 +1581,6 @@ fopen_wizkit_file()
 					tmp_wizkit, errno);
 		wait_synch();
 	}
-# endif
-#endif
 	return (FILE *)0;
 }
 
@@ -1898,90 +1628,26 @@ read_wizkit()
 /* ----------  BEGIN SCOREBOARD CREATION ----------- */
 
 /* verify that we can write to the scoreboard file; if not, try to create one */
-void
-check_recordfile(dir)
-const char *dir;
-{
-#if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
-# pragma unused(dir)
-#endif
+void check_recordfile(const char *dir) {
 	const char *fq_record;
 	int fd;
 
-#if defined(UNIX) || defined(VMS)
 	fq_record = fqname(RECORD, SCOREPREFIX, 0);
 	fd = open(fq_record, O_RDWR, 0);
 	if (fd >= 0) {
-# ifdef VMS	/* must be stream-lf to use UPDATE_RECORD_IN_PLACE */
-		if (!file_is_stmlf(fd)) {
-		    raw_printf(
-		  "Warning: scoreboard file %s is not in stream_lf format",
-				fq_record);
-		    wait_synch();
-		}
-# endif
 	    (void) close(fd);	/* RECORD is accessible */
 	} else if ((fd = open(fq_record, O_CREAT|O_RDWR, FCMASK)) >= 0) {
 	    (void) close(fd);	/* RECORD newly created */
-# if defined(VMS) && !defined(SECURE)
-	    /* Re-protect RECORD with world:read+write+execute+delete access. */
-	    (void) chmod(fq_record, FCMASK | 007);
-# endif /* VMS && !SECURE */
 	} else {
 	    raw_printf("Warning: cannot write scoreboard file %s: %s", fq_record, strerror(errno));
 	    wait_synch();
 	}
-#endif  /* !UNIX && !VMS */
-#if defined(MICRO) || defined(WIN32)
-	char tmp[PATHLEN];
-
-# ifdef OS2_CODEVIEW   /* explicit path on opening for OS/2 */
-	/* how does this work when there isn't an explicit path or fopenp
-	 * for later access to the file via fopen_datafile? ? */
-	(void) strncpy(tmp, dir, PATHLEN - 1);
-	tmp[PATHLEN-1] = '\0';
-	if ((strlen(tmp) + 1 + strlen(RECORD)) < (PATHLEN - 1)) {
-		append_slash(tmp);
-		Strcat(tmp, RECORD);
-	}
-	fq_record = tmp;
-# else
-	Strcpy(tmp, RECORD);
-	fq_record = fqname(RECORD, SCOREPREFIX, 0);
-# endif
-
-	if ((fd = open(fq_record, O_RDWR)) < 0) {
-	    /* try to create empty record */
-# if defined(AZTEC_C) || defined(_DCC)
-	    /* Aztec doesn't use the third argument */
-	    /* DICE doesn't like it */
-	    if ((fd = open(fq_record, O_CREAT|O_RDWR)) < 0) {
-# else
-	    if ((fd = open(fq_record, O_CREAT|O_RDWR, S_IREAD|S_IWRITE)) < 0) {
-# endif
-	raw_printf("Warning: cannot write record %s", tmp);
-		wait_synch();
-	    } else
-		(void) close(fd);
-	} else		/* open succeeded */
-	    (void) close(fd);
-#else /* MICRO || WIN32*/
-
-# ifdef MAC
-	/* Create the "record" file, if necessary */
-	fq_record = fqname(RECORD, SCOREPREFIX, 0);
-	fd = macopen (fq_record, O_RDWR | O_CREAT, TEXT_TYPE);
-	if (fd != -1) macclose (fd);
-# endif /* MAC */
-
-#endif /* MICRO || WIN32*/
 }
 
 /* ----------  END SCOREBOARD CREATION ----------- */
 
 /* ----------  BEGIN PANIC/IMPOSSIBLE LOG ----------- */
 
-/*ARGSUSED*/
 void
 paniclog(type, reason)
 const char *type;	/* panic, impossible, trickery */
@@ -2011,9 +1677,7 @@ const char *reason;	/* explanation */
 #ifdef SELF_RECOVER
 
 /* ----------  BEGIN INTERNAL RECOVER ----------- */
-boolean
-recover_savefile()
-{
+boolean recover_savefile(void) {
 	int gfd, lfd, sfd;
 	int lev, savelev, hpid;
 	xchar levc;

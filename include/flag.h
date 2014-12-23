@@ -196,29 +196,10 @@ struct instance_flags {
 				/* (in iflags to allow restore after moving
 				 * to >2GB partition) */
 #endif
-#ifdef MICRO
-	boolean  BIOS;		/* use IBM or ST BIOS calls when appropriate */
-#endif
-#if defined(MICRO) || defined(WIN32)
-	boolean  rawio;		/* whether can use rawio (IOCTL call) */
-#endif
 #ifdef MAC_GRAPHICS_ENV
 	boolean  MACgraphics;	/* use Macintosh extended character set, as
 				   as defined in the special font HackFont */
 	unsigned  use_stone;		/* use the stone ppats */
-#endif
-#if defined(MSDOS) || defined(WIN32)
-	boolean hassound;	/* has a sound card */
-	boolean usesound;	/* use the sound card */
-	boolean usepcspeaker;	/* use the pc speaker */
-	boolean tile_view;
-	boolean over_view;
-	boolean traditional_view;
-#endif
-#ifdef MSDOS
-	boolean hasvga;		/* has a vga adapter */
-	boolean usevga;		/* use the vga adapter */
-	boolean grmode;		/* currently in graphics mode */
 #endif
 #ifdef LAN_FEATURES
 	boolean lan_mail;	/* mail is initialized */
@@ -299,10 +280,6 @@ struct instance_flags {
 	struct autopickup_exception *autopickup_exceptions[2];
 #define AP_LEAVE 0
 #define AP_GRAB	 1
-#endif
-#ifdef WIN32CON
-#define MAX_ALTKEYHANDLER 25
-	char	 altkeyhandler[MAX_ALTKEYHANDLER];
 #endif
 };
 

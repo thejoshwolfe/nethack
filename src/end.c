@@ -49,23 +49,11 @@ STATIC_DCL void FDECL(list_genocided, (CHAR_P,BOOLEAN_P));
 #endif /* DUMP_LOG */
 STATIC_DCL boolean FDECL(should_query_disclose_option, (int,char *));
 
-#if defined(__BEOS__) || defined(MICRO) || defined(WIN32) || defined(OS2)
-extern void FDECL(nethack_exit,(int));
-#else
 #define nethack_exit exit
-#endif
 
 #define done_stopprint program_state.stopprint
 
-#ifdef SYSV
-#define NH_abort()	(void) abort()
-#else
-# ifdef WIN32
-#define NH_abort()	win32_abort()
-# else
 #define NH_abort()	abort()
-# endif
-#endif
 
 /*
  * The order of these needs to match the macros in hack.h.
@@ -302,10 +290,6 @@ register struct monst *mtmp;
 	return;
 }
 
-#if defined(WIN32)
-#define NOTIFY_NETHACK_BUGS
-#endif
-
 /*VARARGS1*/
 void
 panic VA_DECL(const char *, str)
@@ -356,10 +340,7 @@ panic VA_DECL(const char *, str)
 	    raw_print(buf);
 	    paniclog("panic", buf);
 	}
-#ifdef WIN32
-	interject(INTERJECT_PANIC);
-#endif
-#if defined(WIZARD) && (defined(UNIX) || defined(VMS) || defined(LATTICE) || defined(WIN32))
+#if defined(WIZARD)
 	if (wizard)
 	    NH_abort();	/* generate core dump */
 #endif

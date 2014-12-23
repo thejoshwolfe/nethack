@@ -1,11 +1,4 @@
-/*	SCCS Id: @(#)nhlan.c	3.4	1999/11/21	*/
-/* Copyright (c) Michael Allison, 1997                  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
- * Currently shared by the following ports:
- *	WIN32
- *
  * The code in here is used to take advantage of added features
  * that might be available in a Local Area Network environment.
  *
@@ -173,4 +166,3 @@ void lan_mail_terminate()
 # endif /*LAN_MAIL*/
 
 #endif /*LAN_FEATURES*/
-/*nhlan.c*/
