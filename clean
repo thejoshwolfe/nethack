@@ -1,5 +1,5 @@
 #!/bin/sh
 
 rm -f .gitignore
-git clean -fd
+git clean -fdq
 git checkout .gitignore
