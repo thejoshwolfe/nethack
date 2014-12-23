@@ -156,9 +156,6 @@ struct flag {
 
 struct instance_flags {
 	boolean  cbreak;	/* in cbreak mode, rogue format */
-#ifdef CURSES_GRAPHICS
-    boolean  cursesgraphics;    /* Use portable curses extended characters */
-#endif
 	boolean  DECgraphics;	/* use DEC VT-xxx extended character set */
 	boolean  echo;		/* 1 to echo characters */
 	boolean  IBMgraphics;	/* use IBM extended character set */
@@ -188,7 +185,7 @@ struct instance_flags {
 #ifdef TTY_GRAPHICS
 	char prevmsg_window;	/* type of old message window to use */
 #endif
-#if defined(TTY_GRAPHICS) || defined(CURSES_GRAPHICS)
+#if defined(TTY_GRAPHICS)
 	boolean  extmenu;	/* extended commands use menu interface */
 #endif
 #ifdef MENU_COLOR

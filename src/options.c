@@ -23,10 +23,6 @@ NEARDATA struct instance_flags iflags;	/* provide linkage */
 #define PREFER_TILED FALSE
 #endif
 
-#ifdef CURSES_GRAPHICS
-extern int curses_read_attrs(char *attrs);
-#endif
-
 /*
  *  NOTE:  If you add (or delete) an option, please update the short
  *  options help (option_help()), the long options help (dat/opthelp),
@@ -73,24 +69,20 @@ static struct Bool_Opt
 	{"checkspace", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
 	{"cmdassist", &iflags.cmdassist, TRUE, SET_IN_GAME},
-# if defined(MICRO) || defined(WIN32) || defined(CURSES_GRAPHICS)
+# if defined(MICRO) || defined(WIN32)
 	{"color",         &iflags.wc_color,TRUE, SET_IN_GAME},		/*WC*/
 # else	/* systems that support multiple terminals, many monochrome */
 	{"color",         &iflags.wc_color, FALSE, SET_IN_GAME},	/*WC*/
 # endif
 	{"confirm",&flags.confirm, TRUE, SET_IN_GAME},
-#ifdef CURSES_GRAPHICS
-	{"cursesgraphics", &iflags.cursesgraphics, TRUE, SET_IN_GAME},
-#else
 	{"cursesgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 #if defined(TERMLIB) && !defined(MAC_GRAPHICS_ENV)
 	{"DECgraphics", &iflags.DECgraphics, FALSE, SET_IN_GAME},
 #else
 	{"DECgraphics", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
 	{"eight_bit_tty", &iflags.wc_eight_bit_input, FALSE, SET_IN_GAME},	/*WC*/
-#if defined(TTY_GRAPHICS) || defined(CURSES_GRAPHICS)
+#if defined(TTY_GRAPHICS)
 	{"extmenu", &iflags.extmenu, FALSE, SET_IN_GAME},
 #else
 	{"extmenu", (boolean *)0, FALSE, SET_IN_FILE},
@@ -153,11 +145,7 @@ static struct Bool_Opt
 #else
 	{"menu_tab_sep", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
-#ifdef CURSES_GRAPHICS
-	{"mouse_support", &iflags.wc_mouse_support, FALSE, DISP_IN_GAME},	/*WC*/
-#else
 	{"mouse_support", &iflags.wc_mouse_support, TRUE, DISP_IN_GAME},	/*WC*/
-#endif
 #ifdef NEWS
 	{"news", &iflags.news, TRUE, DISP_IN_GAME},
 #else
@@ -2267,22 +2255,6 @@ goodfruit:
 	}
 
 
-#ifdef CURSES_GRAPHICS
-	/* WINCAP2
-	 * petattr:string */
-	fullname = "petattr";
-	if (match_optname(opts, fullname, sizeof("petattr")-1, TRUE)) {
-		op = string_for_opt(opts, negated);
-		if (op && !negated) {
-		    iflags.wc2_petattr = curses_read_attrs(op);
-		    if (!curses_read_attrs(op))
-		    	badoption(opts);
-		} else if (negated) bad_negation(fullname, TRUE);
-		return;
-	}
-#endif // CURSES_GRAPHICS
-
-
 	/* WINCAP2
 	 * windowborders:n */
 	fullname = "windowborders";
@@ -2411,7 +2383,7 @@ goodfruit:
 
 			duplicate_opt_detection(boolopt[i].name, 0);
 
-#if defined(TERMLIB) || defined(ASCIIGRAPH) || defined(MAC_GRAPHICS_ENV) || defined(CURSES_GRAPHICS)
+#if defined(TERMLIB) || defined(ASCIIGRAPH) || defined(MAC_GRAPHICS_ENV)
 			if (FALSE
 # ifdef TERMLIB
 				 || (boolopt[i].addr) == &iflags.DECgraphics
@@ -2421,9 +2393,6 @@ goodfruit:
 # endif
 # ifdef MAC_GRAPHICS_ENV
 				 || (boolopt[i].addr) == &iflags.MACgraphics
-# endif
-# ifdef CURSES_GRAPHICS
-				 || (boolopt[i].addr) == &iflags.cursesgraphics
 # endif
 				) {
 # ifdef REINCARNATION
@@ -2445,11 +2414,6 @@ goodfruit:
 			    if ((boolopt[i].addr) == &iflags.MACgraphics)
 				switch_graphics(iflags.MACgraphics ?
 						MAC_GRAPHICS : ASCII_GRAPHICS);
-# endif
-# ifdef CURSES_GRAPHICS
-			    if ((boolopt[i].addr) == &iflags.cursesgraphics)
-				switch_graphics(iflags.cursesgraphics ?
-						CURS_GRAPHICS : ASCII_GRAPHICS);
 # endif
 # ifdef REINCARNATION
 			    if (!initial && Is_rogue_level(&u.uz))
@@ -2497,11 +2461,6 @@ goodfruit:
 					(boolopt[i].addr) == &iflags.wc2_guicolor) {
 			    need_redraw = TRUE;
 			}
-#ifdef CURSES_GRAPHICS
-			else if ((boolopt[i].addr) == &iflags.cursesgraphics) {
-			    need_redraw = TRUE;
-			}
-#endif
 #ifdef TEXTCOLOR
 			else if ((boolopt[i].addr) == &iflags.use_color) {
 			    need_redraw = TRUE;
