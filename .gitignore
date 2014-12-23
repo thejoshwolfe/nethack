@@ -1,5 +1,4 @@
 *.o
-Makefile
 include/onames.h
 include/pm.h
 include/vis_tab.h

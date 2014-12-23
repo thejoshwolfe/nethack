@@ -87,93 +87,87 @@ DAT = $(DATNODLB) $(DATDLB)
 $(GAME):
 	( cd src ; $(MAKE) )
 
-all:	$(GAME) recover Guidebook $(VARDAT) dungeon spec_levs check-dlb
+all:	$(GAME) recover $(VARDAT) dungeon spec_levs check-dlb
 	@echo "Done."
 
 # Note: many of the dependencies below are here to allow parallel make
 # to generate valid output
 
-Guidebook:
-	( cd doc ; $(MAKE) Guidebook )
-
-manpages:
-	( cd doc ; $(MAKE) manpages )
-
 data: $(GAME)
-	( cd dat ; $(MAKE) data )
+	( cd dat && $(MAKE) data )
 
 rumors: $(GAME)
-	( cd dat ; $(MAKE) rumors )
+	( cd dat && $(MAKE) rumors )
 
 oracles: $(GAME)
-	( cd dat ; $(MAKE) oracles )
+	( cd dat && $(MAKE) oracles )
 
 #	Note: options should have already been made with make, but...
 options: $(GAME)
-	( cd dat ; $(MAKE) options )
+	( cd dat && $(MAKE) options )
 
 quest.dat: $(GAME)
-	( cd dat ; $(MAKE) quest.dat )
+	( cd dat && $(MAKE) quest.dat )
 
 spec_levs: dungeon
-	( cd util ; $(MAKE) lev_comp )
-	( cd dat ; $(MAKE) spec_levs )
-	( cd dat ; $(MAKE) quest_levs )
+	( cd util && $(MAKE) lev_comp )
+	( cd dat && $(MAKE) spec_levs )
+	( cd dat && $(MAKE) quest_levs )
 
 dungeon: $(GAME)
-	( cd util ; $(MAKE) dgn_comp )
-	( cd dat ; $(MAKE) dungeon )
+	( cd util && $(MAKE) dgn_comp )
+	( cd dat && $(MAKE) dungeon )
 
 nhtiles.bmp: $(GAME)
-	( cd dat ; $(MAKE) nhtiles.bmp )
+	( cd dat && $(MAKE) nhtiles.bmp )
 
 x11tiles: $(GAME)
-	( cd util ; $(MAKE) tile2x11 )
-	( cd dat ; $(MAKE) x11tiles )
+	( cd util && $(MAKE) tile2x11 )
+	( cd dat && $(MAKE) x11tiles )
 
 beostiles: $(GAME)
-	( cd util ; $(MAKE) tile2beos )
-	( cd dat ; $(MAKE) beostiles )
+	( cd util && $(MAKE) tile2beos )
+	( cd dat && $(MAKE) beostiles )
 
 NetHack.ad: $(GAME)
-	( cd dat ; $(MAKE) NetHack.ad )
+	( cd dat && $(MAKE) NetHack.ad )
 
 pet_mark.xbm:
-	( cd dat ; $(MAKE) pet_mark.xbm )
+	( cd dat && $(MAKE) pet_mark.xbm )
 
 rip.xpm:
-	( cd dat ; $(MAKE) rip.xpm )
+	( cd dat && $(MAKE) rip.xpm )
 
 mapbg.xpm:
-	(cd dat ; $(MAKE) mapbg.xpm )
+	(cd dat && $(MAKE) mapbg.xpm )
 
 nhsplash.xpm:
-	( cd dat ; $(MAKE) nhsplash.xpm )
+	( cd dat && $(MAKE) nhsplash.xpm )
 
 nh16.img: $(GAME)
-	( cd util ; $(MAKE) tile2img.ttp )
-	( cd dat ; $(MAKE) nh16.img )
+	( cd util && $(MAKE) tile2img.ttp )
+	( cd dat && $(MAKE) nh16.img )
 
 rip.img:
-	( cd util ; $(MAKE) xpm2img.ttp )
-	( cd dat ; $(MAKE) rip.img )
+	( cd util && $(MAKE) xpm2img.ttp )
+	( cd dat && $(MAKE) rip.img )
 GEM_RSC.RSC:
-	( cd dat ; $(MAKE) GEM_RSC.RSC )
+	( cd dat && $(MAKE) GEM_RSC.RSC )
 
 title.img:
-	( cd dat ; $(MAKE) title.img )
+	( cd dat && $(MAKE) title.img )
 
 check-dlb: options
 	@if egrep -s librarian dat/options ; then $(MAKE) dlb ; else true ; fi
 
 dlb:
-	( cd util ; $(MAKE) dlb )
-	( cd dat ; ../util/dlb cf nhdat $(DATDLB) )
+	( cd util && $(MAKE) dlb )
+	( cd dat && ../util/dlb cf nhdat $(DATDLB) )
 
 # recover can be used when INSURANCE is defined in include/config.h
 # and the checkpoint option is true
 recover: $(GAME)
-	( cd util ; $(MAKE) recover )
+	( cd util && $(MAKE) recover )
 
 dofiles:
 	target=`sed -n					\

@@ -1,4 +1,0 @@
-#!/bin/sh
-
-(cd sys/unix/ && sh setup.sh)
-make $@
