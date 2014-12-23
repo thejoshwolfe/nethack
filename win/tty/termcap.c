@@ -87,10 +87,6 @@ int *wid, *hgt;
 	register char *tptr;
 	char *tbufptr, *pc;
 
-# ifdef VMS
-	term = verify_termcap();
-	if (!term)
-# endif
 		term = getenv("TERM");
 
 # if defined(TOS) && defined(__GNUC__)

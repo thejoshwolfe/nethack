@@ -1,11 +1,5 @@
-/*	SCCS Id: @(#)shk.c	3.4	2003/12/04	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "eshk.h"
-
-/*#define DEBUG*/
 
 #define PAY_SOME    2
 #define PAY_BUY     1
@@ -3494,12 +3488,7 @@ boolean cant_mollify;
 		    You_hear("an angry voice:");
 		    verbalize("Out of my way, scum!");
 		    wait_synch();
-#if defined(UNIX) || defined(VMS)
-# if defined(SYSV) || defined(ULTRIX) || defined(VMS)
-		    (void)
-# endif
 			sleep(1);
-#endif
 		}
 	    }
 	    (void) mnearto(shkp, x, y, TRUE);

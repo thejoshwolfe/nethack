@@ -6,9 +6,7 @@ extern int NDECL((*afternmv));
 
 extern const char *hname;
 extern int hackpid;
-#if defined(UNIX) || defined(VMS)
 extern int locknum;
-#endif
 #ifdef DEF_PAGER
 extern char *catmore;
 #endif	/* DEF_PAGER */
@@ -132,15 +130,10 @@ extern struct linfo level_info[MAXLINFO];
 extern struct sinfo {
 	int gameover;		/* self explanatory? */
 	int stopprint;		/* inhibit further end of game disclosure */
-#if defined(UNIX) || defined(VMS) || defined (__EMX__)
 	int done_hup;		/* SIGHUP or moral equivalent received
 				 * -- no more screen output */
-#endif
 	int something_worth_saving;	/* in case of panic */
 	int panicking;		/* `panic' is in progress */
-#if defined(VMS)
-	int exiting;		/* an exit handler is executing */
-#endif
 	int in_impossible;
 #ifdef PANICLOG
 	int in_paniclog;

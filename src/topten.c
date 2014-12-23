@@ -1,16 +1,6 @@
-/*	SCCS Id: @(#)topten.c	3.4	2000/01/21	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "dlb.h"
 #include "patchlevel.h"
-
-#ifdef VMS
- /* We don't want to rewrite the whole file, because that entails	 */
- /* creating a new version which requires that the old one be deletable. */
-# define UPDATE_RECORD_IN_PLACE
-#endif
 
 /*
  * Updating in place can leave junk at the end of the file in some
@@ -258,15 +248,8 @@ int how;
 	    toptenwin = create_nhwindow(NHW_TEXT);
 	}
 
-#if defined(UNIX) || defined(VMS) || defined(__EMX__)
 #define HUP	if (!program_state.done_hup)
-#else
-#define HUP
-#endif
 
-#ifdef TOS
-	restore_colors();	/* make sure the screen is black on white */
-#endif
 	/* create a new 'topten' entry */
 	t0_used = FALSE;
 	t0 = newttentry();

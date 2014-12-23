@@ -20,17 +20,13 @@
 #define FQN_NUMBUF 4
 static char fqn_filename_buffer[FQN_NUMBUF][FQN_MAX_FILENAME];
 
-#if !defined(MFLOPPY) && !defined(VMS)
+#if !defined(MFLOPPY)
 char bones[] = "bonesnn.xxx";
 char lock[PL_NSIZ+14] = "1lock"; /* long enough for uid+name+.99 */
 #else
 # if defined(MFLOPPY)
 char bones[FILENAME];		/* pathname of bones files */
 char lock[FILENAME];		/* pathname of level files */
-# endif
-# if defined(VMS)
-char bones[] = "bonesnn.xxx;1";
-char lock[PL_NSIZ+17] = "1lock"; /* long enough for _uid+name+.99;1 */
 # endif
 #endif
 
@@ -253,17 +249,7 @@ FILE * fopen_datafile(const char *filename, const char *mode, int prefix) {
 	FILE *fp;
 
 	filename = fqname(filename, prefix, prefix == TROUBLEPREFIX ? 3 : 0);
-#ifdef VMS	/* essential to have punctuation, to avoid logical names */
-    {
-	char tmp[BUFSIZ];
-
-	if (!index(filename, '.') && !index(filename, ';'))
-		filename = strcat(strcpy(tmp, filename), ";0");
-	fp = fopen(filename, mode, "mbc=16");
-    }
-#else
 	fp = fopen(filename, mode);
-#endif
 	return fp;
 }
 
@@ -305,9 +291,6 @@ int lev;
 	tf = rindex(file, '.');
 	if (!tf) tf = eos(file);
 	Sprintf(tf, ".%d", lev);
-#ifdef VMS
-	Strcat(tf, ";1");
-#endif
 	return;
 }
 
@@ -404,9 +387,7 @@ clearlocks()
 #else
 	register int x;
 
-# if defined(UNIX) || defined(VMS)
-	(void) signal(SIGHUP, SIG_IGN);
-# endif
+	signal(SIGHUP, SIG_IGN);
 	/* can't access maxledgerno() before dungeons are created -dlc */
 	for (x = (n_dgns ? maxledgerno() : 0); x >= 0; x--)
 		delete_levelfile(x);	/* not all levels need be present */
@@ -497,9 +478,6 @@ d_level *lev;
 	    Sprintf(dptr, ".%c", sptr->boneid);
 	else
 	    Sprintf(dptr, ".%d", lev->dlevel);
-#ifdef VMS
-	Strcat(dptr, ";1");
-#endif
 	return(dptr-2);
 }
 
@@ -517,9 +495,6 @@ set_bonestemp_name()
 	tf = rindex(lock, '.');
 	if (!tf) tf = eos(lock);
 	Sprintf(tf, ".bn");
-#ifdef VMS
-	Strcat(tf, ";1");
-#endif
 	return lock;
 }
 
@@ -546,18 +521,6 @@ char errbuf[];
 	    Sprintf(errbuf,
 		    "Cannot create bones \"%s\", id %s (errno %d).",
 		    lock, *bonesid, errno);
-
-# if defined(VMS) && !defined(SECURE)
-	/*
-	   Re-protect bones file with world:read+write+execute+delete access.
-	   umask() doesn't seem very reliable; also, vaxcrtl won't let us set
-	   delete access without write access, which is what's really wanted.
-	   Can't simply create it with the desired protection because creat
-	   ANDs the mask with the user's default protection, which usually
-	   denies some or all access to world.
-	 */
-	(void) chmod(file, FCMASK | 007);  /* allow other users full access */
-# endif /* VMS && !SECURE */
 
 	return fd;
 }
@@ -664,22 +627,8 @@ int fd;
 
 #if defined(WIZARD)
 /* change pre-existing savefile name to indicate an error savefile */
-void
-set_error_savefile()
-{
-# ifdef VMS
-      {
-	char *semi_colon = rindex(SAVEF, ';');
-	if (semi_colon) *semi_colon = '\0';
-      }
-	Strcat(SAVEF, ".e;1");
-# else
-#  ifdef MAC
-	Strcat(SAVEF, "-e");
-#  else
+void set_error_savefile(void) {
 	Strcat(SAVEF, ".e");
-#  endif
-# endif
 }
 #endif
 
@@ -1100,7 +1049,6 @@ int retryct;
 	lockname = fqname(lockname, LOCKPREFIX, 2);
 #endif
 
-#if defined(UNIX) || defined(VMS)
 # ifdef NO_FILE_LINKS
 	while ((lockfd = open(lockname, O_RDWR|O_CREAT|O_EXCL, 0666)) == -1) {
 # else
@@ -1114,9 +1062,6 @@ int retryct;
 		    HUP raw_printf(
 			    "Waiting for access to %s.  (%d retries left).",
 			    filename, retryct);
-# if defined(SYSV) || defined(ULTRIX) || defined(VMS)
-		    (void)
-# endif
 			sleep(1);
 		} else {
 		    HUP (void) raw_print("I give up.  Sorry.");
@@ -1135,14 +1080,6 @@ int retryct;
 		HUP raw_printf("No write permission to lock %s!", filename);
 		nesting--;
 		return FALSE;
-# ifdef VMS			/* c__translate(vmsfiles.c) */
-	    case EPERM:
-		/* could be misleading, but usually right */
-		HUP raw_printf("Can't lock %s due to directory protection.",
-			       filename);
-		nesting--;
-		return FALSE;
-# endif
 	    default:
 		HUP perror(lockname);
 		HUP raw_printf(
@@ -1153,7 +1090,6 @@ int retryct;
 	    }
 
 	}
-#endif  /* UNIX || VMS */
 
 	return TRUE;
 }
@@ -1170,14 +1106,11 @@ void unlock_file(const char *filename) {
 		lockname = fqname(lockname, LOCKPREFIX, 2);
 #endif
 
-#if defined(UNIX)
 		if (unlink(lockname) < 0)
 			HUP raw_printf("Can't unlink %s.", lockname);
 # ifdef NO_FILE_LINKS
 		close(lockfd);
 # endif
-
-#endif  /* UNIX || VMS */
 
 	}
 

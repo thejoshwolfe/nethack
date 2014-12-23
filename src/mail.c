@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)mail.c	3.4	2002/01/13	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #ifdef MAIL
@@ -41,10 +37,6 @@ int mailckfreq = 0;
 extern char *viz_rmin, *viz_rmax;	/* line-of-sight limits (vision.c) */
 
 #ifdef OVL0
-
-# if !defined(UNIX) && !defined(VMS) && !defined(LAN_MAIL)
-int mustgetmail = -1;
-# endif
 
 #endif /* OVL0 */
 #ifdef OVLB
@@ -417,52 +409,7 @@ give_up:
 	pline("Hark!  \"%s.\"", info->display_txt);
 }
 
-# if !defined(UNIX) && !defined(VMS) && !defined(LAN_MAIL)
-
-void
-ckmailstatus()
-{
-	if (u.uswallow || !flags.biff) return;
-	if (mustgetmail < 0) {
-#if defined(MSDOS) || defined(TOS)
-	    mustgetmail=(moves<2000)?(100+rn2(2000)):(2000+rn2(3000));
-#endif
-	    return;
-	}
-	if (--mustgetmail <= 0) {
-		static struct mail_info
-			deliver = {MSG_MAIL,"I have some mail for you",0,0};
-		newmail(&deliver);
-		mustgetmail = -1;
-	}
-}
-
-/*ARGSUSED*/
-void
-readmail(otmp)
-struct obj *otmp;
-{
-    static char *junk[] = {
-    "Please disregard previous letter.",
-    "Welcome to NetHack.",
-    "Report bugs to <devteam@nethack.org>.",
-    "Invitation: Visit the NetHack web site at http://www.nethack.org!"
-    };
-
-    if (Blind) {
-	pline("Unfortunately you cannot see what it says.");
-    } else
-	pline("It reads:  \"%s\"", junk[rn2(SIZE(junk))]);
-
-}
-
-# endif /* !UNIX && !VMS && !LAN_MAIL */
-
-# ifdef UNIX
-
-void
-ckmailstatus()
-{
+void ckmailstatus(void) {
 #ifdef SIMPLE_MAIL
 	if (mailckfreq == 0)
 	  mailckfreq = (iflags.simplemail ? 5 : 10);
@@ -499,11 +446,7 @@ ckmailstatus()
 	}
 }
 
-/*ARGSUSED*/
-void
-readmail(otmp)
-struct obj *otmp;
-{
+void readmail(struct obj *otmp) {
 #ifdef DEF_MAILREADER
 	register const char *mr = 0;
 #endif /* DEF_MAILREADER */
@@ -575,9 +518,7 @@ struct obj *otmp;
 		terminate(EXIT_FAILURE);
 	}
 # else
-#  ifndef AMS				/* AMS mailboxes are directories */
 	display_file(mailbox, TRUE);
-#  endif /* AMS */
 # endif /* DEF_MAILREADER */
 
 	/* get new stat; not entirely correct: there is a small time
@@ -590,62 +531,6 @@ bail:
 	pline("It appears to be all gibberish."); /* bail out _professionally_ */
 #endif
 }
-
-# endif /* UNIX */
-
-# ifdef VMS
-
-extern NDECL(struct mail_info *parse_next_broadcast);
-
-volatile int broadcasts = 0;
-
-void
-ckmailstatus()
-{
-    struct mail_info *brdcst;
-
-    if (u.uswallow || !flags.biff) return;
-
-    while (broadcasts > 0) {	/* process all trapped broadcasts [until] */
-	broadcasts--;
-	if ((brdcst = parse_next_broadcast()) != 0) {
-	    newmail(brdcst);
-	    break;		/* only handle one real message at a time */
-	}
-    }
-}
-
-void
-readmail(otmp)
-struct obj *otmp;
-{
-#  ifdef SHELL	/* can't access mail reader without spawning subprocess */
-    const char *txt, *cmd;
-    char *p, buf[BUFSZ], qbuf[BUFSZ];
-    int len;
-
-    /* there should be a command hidden beyond the object name */
-    txt = otmp->onamelth ? ONAME(otmp) : "";
-    len = strlen(txt);
-    cmd = (len + 1 < otmp->onamelth) ? txt + len + 1 : (char *) 0;
-    if (!cmd || !*cmd) cmd = "SPAWN";
-
-    Sprintf(qbuf, "System command (%s)", cmd);
-    getlin(qbuf, buf);
-    if (*buf != '\033') {
-	for (p = eos(buf); p > buf; *p = '\0')
-	    if (*--p != ' ') break;	/* strip trailing spaces */
-	if (*buf) cmd = buf;		/* use user entered command */
-	if (!strcmpi(cmd, "SPAWN") || !strcmp(cmd, "!"))
-	    cmd = (char *) 0;		/* interactive escape */
-
-	vms_doshell(cmd, TRUE);
-	(void) sleep(1);
-    }
-#  endif /* SHELL */
-}
-
-# endif /* VMS */
 
 # ifdef LAN_MAIL
 

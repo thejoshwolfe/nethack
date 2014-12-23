@@ -81,8 +81,8 @@ Boolean option if TEXTCOLOR and MENU_COLOR were set at compile time:
 menucolors use different colors for menus               [TRUE for micros]
 
 Boolean option if TIMED_DELAY was set at compile time (tty interface only):
-timed_delay    on unix and VMS, use a timer instead of sending
-               extra screen output when attempting to pause for
+timed_delay    on unix, use a timer instead of sending extra
+               screen output when attempting to pause for
                display effect.  on MSDOS without the termcap
                lib, whether or not to pause for visual effect.    [TRUE]
 

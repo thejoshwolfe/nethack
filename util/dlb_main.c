@@ -21,11 +21,6 @@ extern void FDECL(close_library,(library *));
 char *FDECL(eos, (char *));	/* also used by dlb.c */
 FILE *FDECL(fopen_datafile, (const char *,const char *));
 
-#ifdef VMS
-extern char *FDECL(vms_basename, (const char *));
-extern int FDECL(vms_open, (const char *,int,unsigned int));
-#endif
-
 static void FDECL(Write, (int,char *,long));
 static void NDECL(usage);
 static void NDECL(verbose_help);
@@ -139,20 +134,6 @@ eos(s)
 }
 
 
-#ifdef VMS	/* essential to have punctuation, to avoid logical names */
-static FILE *
-vms_fopen(filename, mode)
-const char *filename, *mode;
-{
-    char tmp[BUFSIZ];
-
-    if (!index(filename, '.') && !index(filename, ';'))
-	filename = strcat(strcpy(tmp, filename), ";0");
-    return fopen(filename, mode, "mbc=16");
-}
-#define fopen vms_fopen
-#endif	/* VMS */
-
 /* open_library(dlb.c) needs this (which normally comes from src/files.c) */
 FILE *
 fopen_datafile(filename, mode)
@@ -174,9 +155,6 @@ main(argc, argv)
     library lib;
 
     if (argc > 0 && argv[0] && *argv[0]) progname = argv[0];
-#ifdef VMS
-    progname = vms_basename(progname);
-#endif
 
     if (argc<2) {
 	usage();

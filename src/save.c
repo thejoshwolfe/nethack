@@ -53,9 +53,7 @@ dosave()
 	} else {
 		clear_nhwindow(WIN_MESSAGE);
 		pline("Saving...");
-#if defined(UNIX) || defined(VMS) || defined(__EMX__)
 		program_state.done_hup = 0;
-#endif
 		if(dosave0()) {
 			program_state.something_worth_saving = 0;
 			u.uhp = -1;		/* universal game's over indicator */
@@ -586,11 +584,9 @@ register int fd;
 
     if (outbufp) {
 	if (write(fd, outbuf, outbufp) != outbufp) {
-#if defined(UNIX) || defined(VMS) || defined(__EMX__)
 	    if (program_state.done_hup)
 		terminate(EXIT_FAILURE);
 	    else
-#endif
 		bclose(fd);	/* panic (outbufp != 0) */
 	}
 	outbufp = 0;
@@ -611,11 +607,9 @@ register unsigned num;
 	if (count_only) return;
 #endif
 	if ((unsigned) write(fd, loc, num) != num) {
-#if defined(UNIX) || defined(VMS) || defined(__EMX__)
 	    if (program_state.done_hup)
 		terminate(EXIT_FAILURE);
 	    else
-#endif
 		panic("cannot write %u bytes to file #%d", num, fd);
 	}
     } else {
@@ -716,11 +710,9 @@ register unsigned num;
 	}
 
 	if (failed) {
-#if defined(UNIX) || defined(VMS) || defined(__EMX__)
 	    if (program_state.done_hup)
 		terminate(EXIT_FAILURE);
 	    else
-#endif
 		panic("cannot write %u bytes to file #%d", num, fd);
 	}
 }

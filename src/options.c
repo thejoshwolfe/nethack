@@ -550,7 +550,6 @@ initoptions()
 # endif
 	}
 #endif /* UNIX && TTY_GRAPHICS */
-#if defined(UNIX) || defined(VMS)
 # ifdef TTY_GRAPHICS
 	/* detect whether a "vt" terminal can handle alternate charsets */
 	if ((opts = nh_getenv("TERM")) &&
@@ -559,7 +558,6 @@ initoptions()
 		switch_graphics(DEC_GRAPHICS);
 	}
 # endif
-#endif /* UNIX || VMS */
 
 #ifdef MAC_GRAPHICS_ENV
 	switch_graphics(MAC_GRAPHICS);

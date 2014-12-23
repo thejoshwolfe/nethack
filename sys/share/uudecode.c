@@ -15,28 +15,6 @@
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-/*
- * Modified 12 April 1990 by Mark Adler for use on MSDOS systems with
- * Microsoft C and Turbo C.
- *
- * Modifed 13 February 1991 by Greg Roelofs for use on VMS systems.  As
- * with the MS-DOS version, the setting of the file mode has been disabled.
- * Compile and link normally (but note that the shared-image link option
- * produces a binary only 6 blocks long, as opposed to the 137-block one
- * produced by an ordinary link).  To set up the VMS symbol to run the
- * program ("run uudecode filename" won't work), do:
- *		uudecode :== "$disk:[directory]uudecode.exe"
- * and don't forget the leading "$" or it still won't work.  The binaries
- * produced by this program are in VMS "stream-LF" format; this makes no
- * difference to VMS when running decoded executables, nor to VMS unzip,
- * but other programs such as zoo or arc may or may not require the file
- * to be "BILFed" (or "unBILFed" or whatever).  Also, unlike the other
- * flavors, VMS files don't get overwritten (a higher version is created).
- * 
- * Modified 13 April 1991 by Gary Mussar to be forgiving of systems that
- * appear to be stripping trailing blanks.
- */
-
 #ifndef lint
 static char sccsid[] = "@(#)uudecode.c	5.5 (Berkeley) 7/6/88";
 #endif /* not lint */

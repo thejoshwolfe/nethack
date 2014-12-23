@@ -26,9 +26,7 @@ static struct val_list { struct valuable_data *list; int size; } valuables[] = {
 
 #ifndef NO_SIGNAL
 STATIC_PTR void FDECL(done_intr, (int));
-# if defined(UNIX) || defined(VMS) || defined (__EMX__)
 static void FDECL(done_hangup, (int));
-# endif
 #endif
 STATIC_DCL void FDECL(disclose,(int,BOOLEAN_P));
 STATIC_DCL void FDECL(get_valuables, (struct obj *));
@@ -168,18 +166,14 @@ done2()
 		}
 		return 0;
 	}
-#if defined(WIZARD) && (defined(UNIX) || defined(VMS) || defined(LATTICE))
+#if defined(WIZARD)
 	if(wizard) {
 	    int c;
-# ifdef VMS
-	    const char *tmp = "Enter debugger?";
-# else
 #  ifdef LATTICE
 	    const char *tmp = "Create SnapShot?";
 #  else
 	    const char *tmp = "Dump core?";
 #  endif
-# endif
 	    if ((c = ynq(tmp)) == 'y') {
 		(void) signal(SIGINT, (sighandler_t) done1);
 		exit_nhwindows((char *)0);
@@ -200,24 +194,18 @@ done_intr(sig_unused) /* called as signal() handler, so sent at least one arg */
 int sig_unused;
 {
 	done_stopprint++;
-	(void) signal(SIGINT, SIG_IGN);
-# if defined(UNIX) || defined(VMS)
-	(void) signal(SIGQUIT, SIG_IGN);
-# endif
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	return;
 }
 
-# if defined(UNIX) || defined(VMS) || defined(__EMX__)
-static void
-done_hangup(sig)	/* signal() handler */
-int sig;
-{
+// signal() handler
+static void done_hangup(int sig) {
 	program_state.done_hup++;
 	(void)signal(SIGHUP, SIG_IGN);
 	done_intr(sig);
 	return;
 }
-# endif
 #endif /* NO_SIGNAL */
 
 void
@@ -710,10 +698,8 @@ die:
 	if (have_windows) wait_synch();	/* flush screen output */
 #ifndef NO_SIGNAL
 	(void) signal(SIGINT, (sighandler_t) done_intr);
-# if defined(UNIX) || defined(VMS) || defined (__EMX__)
 	(void) signal(SIGQUIT, (sighandler_t) done_intr);
 	(void) signal(SIGHUP, (sighandler_t) done_hangup);
-# endif
 #endif /* NO_SIGNAL */
 
 	bones_ok = (how < GENOCIDED) && can_make_bones();

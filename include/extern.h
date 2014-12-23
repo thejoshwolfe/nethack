@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)extern.h	3.4	2003/03/10	*/
-/* Copyright (c) Steve Creps, 1988.				  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef EXTERN_H
 #define EXTERN_H
 
@@ -1647,9 +1643,7 @@ extern int FDECL(doconsult, (struct monst *));
 /* ### save.c ### */
 
 extern int NDECL(dosave);
-#if defined(UNIX) || defined(VMS) || defined(__EMX__)
 extern void FDECL(hangup, (int));
-#endif
 extern int NDECL(dosave0);
 #ifdef INSURANCE
 extern void NDECL(savestateinlock);
@@ -2050,72 +2044,6 @@ extern void FDECL(unblock_point, (int,int));
 extern boolean FDECL(clear_path, (int,int,int,int));
 extern void FDECL(do_clear_area, (int,int,int,
 			     void (*)(int,int,void *),void *));
-
-#ifdef VMS
-
-/* ### vmsfiles.c ### */
-
-extern int FDECL(vms_link, (const char *,const char *));
-extern int FDECL(vms_unlink, (const char *));
-extern int FDECL(vms_creat, (const char *,unsigned int));
-extern int FDECL(vms_open, (const char *,int,unsigned int));
-extern boolean FDECL(same_dir, (const char *,const char *));
-extern int FDECL(c__translate, (int));
-extern char *FDECL(vms_basename, (const char *));
-
-/* ### vmsmail.c ### */
-
-extern unsigned long NDECL(init_broadcast_trapping);
-extern unsigned long NDECL(enable_broadcast_trapping);
-extern unsigned long NDECL(disable_broadcast_trapping);
-
-/* ### vmsmain.c ### */
-
-extern int FDECL(main, (int, char **));
-
-/* ### vmsmisc.c ### */
-
-extern void NDECL(vms_abort);
-extern void FDECL(vms_exit, (int));
-
-/* ### vmstty.c ### */
-
-extern int NDECL(vms_getchar);
-extern void NDECL(gettty);
-extern void FDECL(settty, (const char *));
-extern void FDECL(shuttty, (const char *));
-extern void NDECL(setftty);
-extern void NDECL(intron);
-extern void NDECL(introff);
-extern void VDECL(error, (const char *,...)) PRINTF_F(1,2);
-#ifdef TIMED_DELAY
-extern void FDECL(msleep, (unsigned));
-#endif
-
-/* ### vmsunix.c ### */
-
-extern void NDECL(getlock);
-extern void FDECL(regularize, (char *));
-extern int NDECL(vms_getuid);
-extern boolean FDECL(file_is_stmlf, (int));
-extern int FDECL(vms_define, (const char *,const char *,int));
-extern int FDECL(vms_putenv, (const char *));
-extern char *NDECL(verify_termcap);
-# if defined(SHELL) || defined(SECURE)
-extern void NDECL(privoff);
-extern void NDECL(privon);
-# endif
-# ifdef SHELL
-extern int NDECL(dosh);
-# endif
-# if defined(SHELL) || defined(MAIL)
-extern int FDECL(vms_doshell, (const char *,BOOLEAN_P));
-# endif
-# ifdef SUSPEND
-extern int NDECL(dosuspend);
-# endif
-
-#endif /* VMS */
 
 /* ### weapon.c ### */
 

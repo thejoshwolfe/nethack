@@ -1,8 +1,4 @@
 %{
-/*	SCCS Id: @(#)dgn_lex.c	3.4	2002/03/27	*/
-/*	Copyright (c) 1989 by Jean-Christophe Collet */
-/*	Copyright (c) 1990 by M. Stephenson	     */
-/* NetHack may be freely redistributed.  See license for details. */
 
 #define DGN_COMP
 
@@ -36,7 +32,7 @@ int NDECL(yylex);
 #  define VOIDYYPUT
 # endif
 # if !defined(VOIDYYPUT) && defined(POSIX_TYPES)
-#  if !defined(BOS) && !defined(HISX) && !defined(_M_UNIX) && !defined(VMS)
+#  if !defined(BOS) && !defined(HISX) && !defined(_M_UNIX)
 #   define VOIDYYPUT
 #  endif
 # endif

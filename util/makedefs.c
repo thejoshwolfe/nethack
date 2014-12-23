@@ -1,13 +1,3 @@
-/*	SCCS Id: @(#)makedefs.c	3.4	2002/08/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* Copyright (c) M. Stephenson, 1990, 1991.			  */
-/* Copyright (c) Dean Luick, 1990.				  */
-/* NetHack may be freely redistributed.  See license for details. */
-
-#if defined(__FreeBSD_kernel__)
-#include <time.h>
-#endif
-
 #define MAKEDEFS_C	/* use to conditionally include file sections */
 /* #define DEBUG */	/* uncomment for debugging info */
 
@@ -354,17 +344,8 @@ do_rumors()
 	}
 
 	/* get size of true rumors file */
-#ifndef VMS
 	(void) fseek(ifp, 0L, SEEK_END);
 	true_rumor_size = ftell(ifp);
-#else
-	/* seek+tell is only valid for stream format files; since rumors.%%%
-	   might be in record format, count the actual data bytes instead.
-	 */
-	true_rumor_size = 0;
-	while (fgets(in_line, sizeof in_line, ifp) != 0)
-		true_rumor_size += strlen(in_line);	/* includes newline */
-#endif /* VMS */
 	Fprintf(ofp,"%06lx\n", true_rumor_size);
 	(void) fseek(ifp, 0L, SEEK_SET);
 
@@ -1075,23 +1056,10 @@ do_oracles()
 	if (ok) {
 	    Sprintf(in_line, "data rewrite of \"%s\"", filename);
 	    for (i = 0; i <= oracle_cnt; i++) {
-#ifndef VMS	/* alpha/vms v1.0; this fflush seems to confuse ftell */
 		if (!(ok = (fflush(ofp) == 0))) break;
-#endif
 		if (!(ok = (fpos = ftell(ofp)) >= 0)) break;
 		if (!(ok = (fseek(ofp, fpos, SEEK_SET) >= 0))) break;
 		if (!(ok = (fscanf(ofp, "%5lx", &offset) == 1))) break;
-#ifdef MAC
-# ifdef __MWERKS__
-		/*
-		MetroWerks CodeWarrior Pro 1's (AKA CW12) version of MSL
-		(ANSI C Libraries) needs this rewind or else the fprintf
-		stops working.  This may also be true for CW11, but has
-		never been checked.
-		*/
-		rewind(ofp);
-# endif
-#endif
 		if (!(ok = (fseek(ofp, fpos, SEEK_SET) >= 0))) break;
 		if (!(ok = (fprintf(ofp, "%05lx\n", offset + txt_offset) >= 0)))
 		    break;

@@ -14,11 +14,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef VMS
-extern int FDECL(vms_creat, (const char *,unsigned));
-extern int FDECL(vms_open, (const char *,int,unsigned));
-#endif	/* VMS */
-
 int FDECL(restore_savefile, (char *));
 void FDECL(set_levelfile_name, (int));
 int FDECL(open_levelfile, (int));
@@ -79,7 +74,7 @@ char *argv[];
 		}
 		argno++;
 	}
-#if defined(SECURE) && !defined(VMS)
+#if defined(SECURE)
 	if (dir
 # ifdef VAR_PLAYGROUND
 	        && strcmp(dir, VAR_PLAYGROUND)
@@ -92,7 +87,7 @@ char *argv[];
 		(void) setgid(getgid());
 		(void) setuid(getuid());
 	}
-#endif	/* SECURE && !VMS */
+#endif	/* SECURE */
 
 #ifdef VAR_PLAYGROUND
 	if (!dir) dir = VAR_PLAYGROUND;
@@ -129,10 +124,7 @@ int lev;
 
 	tf = rindex(lock, '.');
 	if (!tf) tf = lock + strlen(lock);
-	(void) sprintf(tf, ".%d", lev);
-#ifdef VMS
-	(void) strcat(tf, ";1");
-#endif
+	sprintf(tf, ".%d", lev);
 }
 
 #ifdef SECURE
