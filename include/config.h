@@ -81,14 +81,6 @@
 # define DEFAULT_WINDOW_SYS "Gem"	/* "Gem" or "tty" */
 #endif
 
-#ifdef __BEOS__
-#define BEOS_GRAPHICS /* (optional) */
-#define DEFAULT_WINDOW_SYS "BeOS"  /* "tty" */
-#ifndef HACKDIR	/* override the default hackdir below */
-# define HACKDIR "/boot/apps/NetHack"
-#endif
-#endif
-
 #ifdef QT_GRAPHICS
 # define USER_SOUNDS		/* Use sounds */
 # define USE_XPM		/* Use XPM format for images (required) */
@@ -203,7 +195,7 @@
  * otherwise it will be the current directory.
  */
 # ifndef HACKDIR
-#  define HACKDIR "/usr/lib/games/nethack"
+#  define HACKDIR "run"
 # endif
 
 /*
@@ -368,7 +360,7 @@ typedef unsigned char	uchar;
 /*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
 #define AUTOPICKUP_EXCEPTIONS  /* exceptions to autopickup */
 #define DUMP_LOG
-#define DUMP_FN "/var/games/nethack/dumps/%n.lastgame.txt"
+#define DUMP_FN "run/dumps/%n.lastgame.txt"
 
 /* End of Section 5 */
 

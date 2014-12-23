@@ -89,6 +89,7 @@ eraseoldlocks()
 void
 getlock()
 {
+  if (1) return;
 	register int i = 0, fd, c;
 	const char *fq_lock;
 
