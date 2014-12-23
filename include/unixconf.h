@@ -1,4 +1,3 @@
-#ifdef UNIX
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
@@ -15,13 +14,6 @@
  */
 
 /* define exactly one of the following four choices */
-#if defined(__FreeBSD_kernel__)
-#define BSD 1 	/* define for 4.n/Free/Open/Net BSD  */
-#endif			/* also for relatives like SunOS 4.x, DG/UX, and */
-			/* older versions of Linux */
-/* #define ULTRIX */	/* define for Ultrix v3.0 or higher (but not lower) */
-			/* Use BSD for < v3.0 */
-			/* "ULTRIX" not to be confused with "ultrix" */
 #define SYSV		/* define for System V, Solaris 2.x, newer versions */
 			/* of Linux */
 /* #define HPUX */	/* Hewlett-Packard's Unix, version 6.5 or higher */
@@ -49,13 +41,6 @@
 			/* and/or X11 color */
 #define POSIX_JOB_CONTROL /* use System V / Solaris 2.x / POSIX job control */
 			/* (e.g., VSUSP) */
-#define POSIX_TYPES	/* use POSIX types for system calls and termios */
-			/* Define for many recent OS releases, including
-			 * those with specific defines (since types are
-			 * changing toward the standard from earlier chaos).
-			 * For example, platforms using the GNU libraries,
-			 * Linux, Solaris 2.x
-			 */
 
 /*
  * The next two defines are intended mainly for the Andrew File System,
@@ -115,27 +100,6 @@
 
 #define MAIL			/* Deliver mail during the game */
 
-/* The Andrew Message System does mail a little differently from normal
- * UNIX.  Mail is deposited in the user's own directory in ~/Mailbox
- * (another directory).  MAILBOX is the element that will be added on to
- * the user's home directory path to generate the Mailbox path - just in
- * case other Andrew sites do it differently from CMU.
- *
- *		dan lovinger
- *		dl2n+@andrew.cmu.edu (dec 19 1989)
- */
-
-/* #define AMS */		/* use Andrew message system for mail */
-
-/* NO_MAILREADER is for kerberos authenticating filesystems where it is
- * essentially impossible to securely exec child processes, like mail
- * readers, when the game is running under a special token.
- *
- *	       dan
- */
-
-/* #define NO_MAILREADER */	/* have mail daemon just tell player of mail */
-
 #ifdef MAIL
 # if defined(BSD) || defined(ULTRIX)
 #  ifdef AMS
@@ -194,9 +158,6 @@
 #endif /* _AUX_SOURCE */
 
 #if defined(LINUX) || defined(bsdi)
-# ifndef POSIX_TYPES
-#  define POSIX_TYPES
-# endif
 # ifndef POSIX_JOB_CONTROL
 #  define POSIX_JOB_CONTROL
 # endif
@@ -242,10 +203,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#if defined(POSIX_TYPES) || defined(__GNUC__)
 #include <sys/wait.h>
-#endif
 
 #if defined(BSD) || defined(ULTRIX)
 # if !defined(DGUX) && !defined(SUNOS4)
@@ -312,4 +270,3 @@
 #endif	/* GNOME_GRAPHICS */
 
 #endif /* UNIXCONF_H */
-#endif /* UNIX */

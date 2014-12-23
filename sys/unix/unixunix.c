@@ -1,16 +1,10 @@
-/*	SCCS Id: @(#)unixunix.c	3.4	1994/11/07	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* This file collects some Unix dependencies */
 
 #include "hack.h"	/* mainly for index() which depends on BSD */
 
 #include <errno.h>
 #include <sys/stat.h>
-#if defined(NO_FILE_LINKS) || defined(SUNOS4) || defined(POSIX_TYPES)
 #include <fcntl.h>
-#endif
 #include <signal.h>
 
 #ifdef _M_UNIX
@@ -39,11 +33,7 @@ int fd;
 #ifndef INSURANCE
 	if(buf.st_size != sizeof(int)) return(0);	/* not an xlock file */
 #endif
-#if defined(BSD) && !defined(POSIX_TYPES)
-	(void) time((long *)(&date));
-#else
-	(void) time(&date);
-#endif
+	time(&date);
 	if(date - buf.st_mtime < 3L*24L*60L*60L) {	/* recent */
 		int lockedpid;	/* should be the same size as hackpid */
 

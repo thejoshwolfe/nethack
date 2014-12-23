@@ -1,12 +1,3 @@
-/*	SCCS Id: @(#)hacklib.c	3.4	2002/12/13	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* Copyright (c) Robert Patrick Rankin, 1991		  */
-/* NetHack may be freely redistributed.  See license for details. */
-
-#if defined(__FreeBSD_kernel__)
-#include <time.h>
-#endif
-
 /* We could include only config.h, except for the overlay definitions... */
 #include "hack.h"
 /*=
@@ -458,9 +449,7 @@ fuzzymatch(s1, s2, ignore_chars, caseblind)
 
 static struct tm *NDECL(getlt);
 
-void
-setrandom()
-{
+void setrandom(void) {
 	/* the types are different enough here that sweeping the different
 	 * routine names into one via #defines is even more confusing
 	 */
@@ -468,35 +457,18 @@ setrandom()
 	srandom((unsigned int) time((time_t *)0));
 #else
 # if defined(__APPLE__) || defined(BSD) || defined(LINUX) || defined(ULTRIX) /* system srandom() */
-#  if defined(BSD) && !defined(POSIX_TYPES)
-#   if defined(SUNOS4)
-	(void)
-#   endif
-		srandom((int) time((long *)0));
-#  else
-		srandom((int) time((time_t *)0));
-#  endif
+    srandom((int) time((time_t *)0));
 # else
-#  ifdef UNIX	/* system srand48() */
 	srand48((long) time((time_t *)0));
-#  else		/* poor quality system routine */
-	srand((int) time((time_t *)0));
-#  endif
 # endif
 #endif
 }
 
-static struct tm *
-getlt()
-{
+static struct tm * getlt(void) {
 	time_t date;
 
-#if defined(BSD) && !defined(POSIX_TYPES)
-	(void) time((long *)(&date));
-#else
-	(void) time(&date);
-#endif
-#if (defined(ULTRIX) && !(defined(ULTRIX_PROTO) || defined(NHSTDC))) || (defined(BSD) && !defined(POSIX_TYPES))
+	time(&date);
+#if defined(ULTRIX) && !(defined(ULTRIX_PROTO) || defined(NHSTDC))
 	return(localtime((long *)(&date)));
 #else
 	return(localtime(&date));
@@ -519,7 +491,7 @@ time_t date;
 	if (date == 0)
 		lt = getlt();
 	else
-#if (defined(ULTRIX) && !(defined(ULTRIX_PROTO) || defined(NHSTDC))) || (defined(BSD) && !defined(POSIX_TYPES))
+#if defined(ULTRIX) && !(defined(ULTRIX_PROTO) || defined(NHSTDC))
 		lt = localtime((long *)(&date));
 #else
 		lt = localtime(&date);

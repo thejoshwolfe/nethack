@@ -442,7 +442,7 @@ int NDECL(yylex);
 # if defined(NeXT) || defined(SVR4) || defined(_AIX32)
 #  define VOIDYYPUT
 # endif
-# if !defined(VOIDYYPUT) && defined(POSIX_TYPES)
+# if !defined(VOIDYYPUT)
 #  if !defined(BOS) && !defined(HISX) && !defined(_M_UNIX)
 #   define VOIDYYPUT
 #  endif

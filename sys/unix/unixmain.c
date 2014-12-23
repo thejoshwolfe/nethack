@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)unixmain.c	3.4	1997/01/22	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* main.c - Unix NetHack */
 
 #include "hack.h"
@@ -16,11 +12,7 @@
 
 #if !defined(_BULL_SOURCE) && !defined(__sgi) && !defined(_M_UNIX)
 # if !defined(SUNOS4) && !(defined(ULTRIX) && defined(__GNUC__))
-#  if defined(POSIX_TYPES) || defined(SVR4) || defined(HPUX)
 extern struct passwd *FDECL(getpwuid,(uid_t));
-#  else
-extern struct passwd *FDECL(getpwuid,(int));
-#  endif
 # endif
 #endif
 extern struct passwd *FDECL(getpwnam,(const char *));

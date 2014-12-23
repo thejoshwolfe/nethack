@@ -48,11 +48,7 @@ extern char *viz_rmin, *viz_rmax;	/* line-of-sight limits (vision.c) */
 #  if !defined(_BULL_SOURCE) && !defined(__sgi) && !defined(_M_UNIX)
 #   if !defined(SUNOS4) && !(defined(ULTRIX) && defined(__GNUC__))
 /* DO trust all SVR4 to typedef uid_t in <sys/types.h> (probably to a long) */
-#    if defined(POSIX_TYPES) || defined(SVR4) || defined(HPUX)
 extern struct passwd *FDECL(getpwuid,(uid_t));
-#    else
-extern struct passwd *FDECL(getpwuid,(int));
-#    endif
 #   endif
 #  endif
 static struct stat omstat,nmstat;

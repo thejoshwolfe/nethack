@@ -1154,17 +1154,7 @@ specialmaze *maze;
 	    for(j=0;j<pt->ysize;j++) {
 		if(!maze->init_lev.init_present ||
 		   pt->xsize > 1 || pt->ysize > 1) {
-#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 			Write(fd, pt->map[j], pt->xsize * sizeof *pt->map[j]);
-#else
-			/*
-			 * On MSVC and Borland C compilers the Write macro above caused:
-			 * warning '!=' : signed/unsigned mismatch
-			 */
-			unsigned reslt, sz = pt->xsize * sizeof *pt->map[j];
-			reslt = write(fd, (void *)(pt->map[j]), sz);
-			if (reslt != sz) return FALSE;
-#endif
 		}
 		Free(pt->map[j]);
 	    }
