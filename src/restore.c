@@ -507,9 +507,6 @@ xchar ltmp;
 		/* Remove levels and bones that may have been created.
 		 */
 		(void) close(nfd);
-# ifdef AMIGA
-		clearlocks();
-# else
 		eraseall(levels, alllevels);
 		eraseall(levels, allbones);
 
@@ -526,12 +523,9 @@ xchar ltmp;
 			(void) uptodate(fd, (char *)0);	/* skip version */
 			return dorecover(fd);	/* 0 or 1 */
 		} else {
-# endif
 			pline("Be seeing you...");
 			terminate(EXIT_SUCCESS);
-# ifndef AMIGA
 		}
-# endif
 	}
 #endif
 	bufon(nfd);
