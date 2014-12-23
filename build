@@ -1,0 +1,4 @@
+#!/bin/bash
+
+(cd sys/unix/ && sh setup.sh please)
+make -j$(cat /proc/cpuinfo | grep processor | wc -l)
