@@ -1,0 +1,10 @@
+*.o
+Makefile
+include/onames.h
+include/pm.h
+include/vis_tab.h
+src/config.h-t
+src/hack.h-t
+src/monstr.c
+src/vis_tab.c
+util/makedefs
