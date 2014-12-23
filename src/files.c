@@ -1266,7 +1266,6 @@ const char *filename;
 int whichprefix;
 int retryct;
 {
-  if (1) return 1;
 #if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
 # pragma unused(filename, retryct)
 #endif
@@ -2010,7 +2009,6 @@ void
 check_recordfile(dir)
 const char *dir;
 {
-  if (1) return;
 #if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
 # pragma unused(dir)
 #endif
@@ -2037,7 +2035,7 @@ const char *dir;
 	    (void) chmod(fq_record, FCMASK | 007);
 # endif /* VMS && !SECURE */
 	} else {
-	    raw_printf("Warning: cannot write scoreboard file %s", fq_record);
+	    raw_printf("Warning: cannot write scoreboard file %s: %s", fq_record, strerror(errno));
 	    wait_synch();
 	}
 #endif  /* !UNIX && !VMS */
