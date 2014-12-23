@@ -30,21 +30,6 @@ STATIC_DCL void FDECL(kill_eggs, (struct obj *));
 #endif
 
 
-#if 0
-/* part of the original warning code which was replaced in 3.3.1 */
-#ifdef OVL1
-#define warnDelay 10
-long lastwarntime;
-int lastwarnlev;
-
-const char *warnings[] = {
-	"white", "pink", "red", "ruby", "purple", "black"
-};
-
-STATIC_DCL void NDECL(warn_effects);
-#endif /* OVL1 */
-#endif /* 0 */
-
 #ifndef OVLB
 STATIC_VAR short cham_to_pm[];
 #else
@@ -70,9 +55,6 @@ int mndx;
 	case PM_ELF_MUMMY:	mndx = PM_ELF;  break;
 	case PM_VAMPIRE:
 	case PM_VAMPIRE_LORD:
-#if 0	/* DEFERRED */
-	case PM_VAMPIRE_MAGE:
-#endif
 	case PM_HUMAN_ZOMBIE:
 	case PM_HUMAN_MUMMY:	mndx = PM_HUMAN;  break;
 	case PM_GIANT_ZOMBIE:
@@ -178,9 +160,6 @@ register struct monst *mtmp;
 	switch(mndx) {
 	    case PM_GRAY_DRAGON:
 	    case PM_SILVER_DRAGON:
-#if 0	/* DEFERRED */
-	    case PM_SHIMMERING_DRAGON:
-#endif
 	    case PM_RED_DRAGON:
 	    case PM_ORANGE_DRAGON:
 	    case PM_WHITE_DRAGON:
@@ -325,56 +304,6 @@ register struct monst *mtmp;
 #endif /* OVLB */
 #ifdef OVL1
 
-#if 0
-/* part of the original warning code which was replaced in 3.3.1 */
-STATIC_OVL void
-warn_effects()
-{
-    if (warnlevel == 100) {
-	if(!Blind && uwep &&
-	    (warnlevel > lastwarnlev || moves > lastwarntime + warnDelay)) {
-	    Your("%s %s!", aobjnam(uwep, "glow"),
-		hcolor(NH_LIGHT_BLUE));
-	    lastwarnlev = warnlevel;
-	    lastwarntime = moves;
-	}
-	warnlevel = 0;
-	return;
-    }
-
-    if (warnlevel >= SIZE(warnings))
-	warnlevel = SIZE(warnings)-1;
-    if (!Blind &&
-	    (warnlevel > lastwarnlev || moves > lastwarntime + warnDelay)) {
-	const char *which, *what, *how;
-	long rings = (EWarning & (LEFT_RING|RIGHT_RING));
-
-	if (rings) {
-	    what = Hallucination ? "mood ring" : "ring";
-	    how = "glows";	/* singular verb */
-	    if (rings == LEFT_RING) {
-		which = "left ";
-	    } else if (rings == RIGHT_RING) {
-		which = "right ";
-	    } else {		/* both */
-		which = "";
-		what = (const char *) makeplural(what);
-		how = "glow";	/* plural verb */
-	    }
-	    Your("%s%s %s %s!", which, what, how, hcolor(warnings[warnlevel]));
-	} else {
-	    if (Hallucination)
-		Your("spider-sense is tingling...");
-	    else
-		You_feel("apprehensive as you sense a %s flash.",
-		    warnings[warnlevel]);
-	}
-
-	lastwarntime = moves;
-	lastwarnlev = warnlevel;
-    }
-}
-#endif /* 0 */
 
 /* check mtmp and water/lava for compatibility, 0 (survived), 1 (died) */
 int
@@ -555,10 +484,6 @@ movemon()
 {
     register struct monst *mtmp, *nmtmp;
     register boolean somebody_can_move = FALSE;
-#if 0
-    /* part of the original warning code which was replaced in 3.3.1 */
-    warnlevel = 0;
-#endif
 
     /*
     Some of you may remember the former assertion here that
@@ -623,11 +548,6 @@ movemon()
 	if(dochugw(mtmp))		/* otherwise just move the monster */
 	    continue;
     }
-#if 0
-    /* part of the original warning code which was replaced in 3.3.1 */
-    if(warnlevel > 0)
-	warn_effects();
-#endif
 
     if (any_light_source())
 	vision_full_recalc = 1;	/* in case a mon moved with a light source */
@@ -1624,9 +1544,6 @@ register struct monst *mdef;
 			setmnotwielded(mdef,obj);
 		    obj->owornmask = 0L;
 		    if (obj->otyp == BOULDER ||
-#if 0				/* monsters don't carry statues */
-     (obj->otyp == STATUE && mons[obj->corpsenm].msize >= mdef->data->msize) ||
-#endif
 				obj_resists(obj, 0, 0)) {
 			if (flooreffects(obj, x, y, "fall")) continue;
 			place_object(obj, x, y);
@@ -2650,14 +2567,6 @@ struct obj *obj_list;
 		     */
 		    kill_egg(otmp);
 		}
-#if 0	/* not used */
-	    } else if (otmp->otyp == TIN) {
-		if (dead_species(otmp->corpsenm, FALSE))
-		    otmp->corpsenm = NON_PM;	/* empty tin */
-	    } else if (otmp->otyp == CORPSE) {
-		if (dead_species(otmp->corpsenm, FALSE))
-		    ;		/* not yet implemented... */
-#endif
 	    } else if (Has_contents(otmp)) {
 		kill_eggs(otmp->cobj);
 	    }

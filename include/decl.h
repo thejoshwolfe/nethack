@@ -5,46 +5,41 @@
 #ifndef DECL_H
 #define DECL_H
 
-#define E extern
+extern int NDECL((*occupation));
+extern int NDECL((*afternmv));
 
-E int NDECL((*occupation));
-E int NDECL((*afternmv));
-
-E const char *hname;
-E int hackpid;
+extern const char *hname;
+extern int hackpid;
 #if defined(UNIX) || defined(VMS)
-E int locknum;
+extern int locknum;
 #endif
 #ifdef DEF_PAGER
-E char *catmore;
+extern char *catmore;
 #endif	/* DEF_PAGER */
 
-E char SAVEF[];
+extern char SAVEF[];
 #ifdef MICRO
-E char SAVEP[];
+extern char SAVEP[];
 #endif
 
-E NEARDATA int bases[MAXOCLASSES];
+extern NEARDATA int bases[MAXOCLASSES];
 
-E NEARDATA int multi;
-#if 0
-E NEARDATA int warnlevel;
-#endif
-E NEARDATA int nroom;
-E NEARDATA int nsubroom;
-E NEARDATA int occtime;
+extern NEARDATA int multi;
+extern NEARDATA int nroom;
+extern NEARDATA int nsubroom;
+extern NEARDATA int occtime;
 
 #define WARNCOUNT 6			/* number of different warning levels */
-E uchar warnsyms[WARNCOUNT];
+extern uchar warnsyms[WARNCOUNT];
 
-E int x_maze_max, y_maze_max;
-E int otg_temp;
+extern int x_maze_max, y_maze_max;
+extern int otg_temp;
 
 #ifdef REDO
-E NEARDATA int in_doagain;
+extern NEARDATA int in_doagain;
 #endif
 
-E struct dgn_topology {		/* special dungeon levels for speed */
+extern struct dgn_topology {		/* special dungeon levels for speed */
     d_level	d_oracle_level;
     d_level	d_bigroom_level;	/* unused */
 #ifdef REINCARNATION
@@ -105,43 +100,43 @@ E struct dgn_topology {		/* special dungeon levels for speed */
 #define nemesis_level		(dungeon_topology.d_nemesis_level)
 #define knox_level		(dungeon_topology.d_knox_level)
 
-E NEARDATA stairway dnstair, upstair;		/* stairs up and down */
+extern NEARDATA stairway dnstair, upstair;		/* stairs up and down */
 #define xdnstair	(dnstair.sx)
 #define ydnstair	(dnstair.sy)
 #define xupstair	(upstair.sx)
 #define yupstair	(upstair.sy)
 
-E NEARDATA stairway dnladder, upladder;		/* ladders up and down */
+extern NEARDATA stairway dnladder, upladder;		/* ladders up and down */
 #define xdnladder	(dnladder.sx)
 #define ydnladder	(dnladder.sy)
 #define xupladder	(upladder.sx)
 #define yupladder	(upladder.sy)
 
-E NEARDATA stairway sstairs;
+extern NEARDATA stairway sstairs;
 
-E NEARDATA dest_area updest, dndest;	/* level-change destination areas */
+extern NEARDATA dest_area updest, dndest;	/* level-change destination areas */
 
-E NEARDATA coord inv_pos;
-E NEARDATA dungeon dungeons[];
-E NEARDATA s_level *sp_levchn;
+extern NEARDATA coord inv_pos;
+extern NEARDATA dungeon dungeons[];
+extern NEARDATA s_level *sp_levchn;
 #define dunlev_reached(x)	(dungeons[(x)->dnum].dunlev_ureached)
 
 #include "quest.h"
-E struct q_score quest_status;
+extern struct q_score quest_status;
 
-E NEARDATA char pl_character[PL_CSIZ];
-E NEARDATA char pl_race;		/* character's race */
+extern NEARDATA char pl_character[PL_CSIZ];
+extern NEARDATA char pl_race;		/* character's race */
 
-E NEARDATA char pl_fruit[PL_FSIZ];
-E NEARDATA int current_fruit;
-E NEARDATA struct fruit *ffruit;
+extern NEARDATA char pl_fruit[PL_FSIZ];
+extern NEARDATA int current_fruit;
+extern NEARDATA struct fruit *ffruit;
 
-E NEARDATA char tune[6];
+extern NEARDATA char tune[6];
 
 #define MAXLINFO (MAXDUNGEON * MAXLEVEL)
-E struct linfo level_info[MAXLINFO];
+extern struct linfo level_info[MAXLINFO];
 
-E NEARDATA struct sinfo {
+extern NEARDATA struct sinfo {
 	int gameover;		/* self explanatory? */
 	int stopprint;		/* inhibit further end of game disclosure */
 #if defined(UNIX) || defined(VMS) || defined (__EMX__) || defined(WIN32)
@@ -159,53 +154,53 @@ E NEARDATA struct sinfo {
 #endif
 } program_state;
 
-E boolean restoring;
+extern boolean restoring;
 
-E const char quitchars[];
-E const char vowels[];
-E const char ynchars[];
-E const char ynqchars[];
-E const char ynaqchars[];
-E const char ynNaqchars[];
-E NEARDATA long yn_number;
+extern const char quitchars[];
+extern const char vowels[];
+extern const char ynchars[];
+extern const char ynqchars[];
+extern const char ynaqchars[];
+extern const char ynNaqchars[];
+extern NEARDATA long yn_number;
 
-E const char disclosure_options[];
+extern const char disclosure_options[];
 
-E NEARDATA int smeq[];
-E NEARDATA int doorindex;
-E NEARDATA char *save_cm;
+extern NEARDATA int smeq[];
+extern NEARDATA int doorindex;
+extern NEARDATA char *save_cm;
 #define KILLED_BY_AN	 0
 #define KILLED_BY	 1
 #define NO_KILLER_PREFIX 2
-E NEARDATA int killer_format;
-E const char *killer;
-E const char *delayed_killer;
+extern NEARDATA int killer_format;
+extern const char *killer;
+extern const char *delayed_killer;
 #ifdef GOLDOBJ
-E long done_money;
+extern long done_money;
 #endif
-E char killer_buf[BUFSZ];
+extern char killer_buf[BUFSZ];
 #ifdef DUMP_LOG
-E char dump_fn[];		/* dumpfile name (dump patch) */
+extern char dump_fn[];		/* dumpfile name (dump patch) */
 #endif
-E const char *configfile;
-E NEARDATA char plname[PL_NSIZ];
-E NEARDATA char dogname[];
-E NEARDATA char catname[];
-E NEARDATA char horsename[];
-E char preferred_pet;
-E const char *occtxt;			/* defined when occupation != NULL */
-E const char *nomovemsg;
-E const char nul[];
-E char lock[];
+extern const char *configfile;
+extern NEARDATA char plname[PL_NSIZ];
+extern NEARDATA char dogname[];
+extern NEARDATA char catname[];
+extern NEARDATA char horsename[];
+extern char preferred_pet;
+extern const char *occtxt;			/* defined when occupation != NULL */
+extern const char *nomovemsg;
+extern const char nul[];
+extern char lock[];
 
-E const char sdir[], ndir[];
-E const schar xdir[], ydir[], zdir[];
+extern const char sdir[], ndir[];
+extern const schar xdir[], ydir[], zdir[];
 
-E NEARDATA schar tbx, tby;		/* set in mthrowu.c */
+extern NEARDATA schar tbx, tby;		/* set in mthrowu.c */
 
-E NEARDATA struct multishot { int n, i; short o; boolean s; } m_shot;
+extern NEARDATA struct multishot { int n, i; short o; boolean s; } m_shot;
 
-E NEARDATA struct dig_info {		/* apply.c, hack.c */
+extern NEARDATA struct dig_info {		/* apply.c, hack.c */
 	int	effort;
 	d_level level;
 	coord	pos;
@@ -213,34 +208,34 @@ E NEARDATA struct dig_info {		/* apply.c, hack.c */
 	boolean down, chew, warned, quiet;
 } digging;
 
-E NEARDATA long moves, monstermoves;
-E NEARDATA long wailmsg;
+extern NEARDATA long moves, monstermoves;
+extern NEARDATA long wailmsg;
 
-E NEARDATA boolean in_mklev;
-E NEARDATA boolean stoned;
-E NEARDATA boolean unweapon;
-E NEARDATA boolean mrg_to_wielded;
-E NEARDATA struct obj *current_wand;
+extern NEARDATA boolean in_mklev;
+extern NEARDATA boolean stoned;
+extern NEARDATA boolean unweapon;
+extern NEARDATA boolean mrg_to_wielded;
+extern NEARDATA struct obj *current_wand;
 
-E NEARDATA boolean in_steed_dismounting;
+extern NEARDATA boolean in_steed_dismounting;
 
-E const int shield_static[];
+extern const int shield_static[];
 
 #include "spell.h"
-E NEARDATA struct spell spl_book[];	/* sized in decl.c */
+extern NEARDATA struct spell spl_book[];	/* sized in decl.c */
 
 #include "color.h"
 #ifdef TEXTCOLOR
-E const int zapcolors[];
+extern const int zapcolors[];
 #endif
 
-E const char def_oc_syms[MAXOCLASSES];	/* default class symbols */
-E uchar oc_syms[MAXOCLASSES];		/* current class symbols */
-E const char def_monsyms[MAXMCLASSES];	/* default class symbols */
-E uchar monsyms[MAXMCLASSES];		/* current class symbols */
+extern const char def_oc_syms[MAXOCLASSES];	/* default class symbols */
+extern uchar oc_syms[MAXOCLASSES];		/* current class symbols */
+extern const char def_monsyms[MAXMCLASSES];	/* default class symbols */
+extern uchar monsyms[MAXMCLASSES];		/* current class symbols */
 
 #include "obj.h"
-E NEARDATA struct obj *invent,
+extern NEARDATA struct obj *invent,
 	*uarm, *uarmc, *uarmh, *uarms, *uarmg, *uarmf,
 #ifdef TOURIST
 	*uarmu,				/* under-wear, so to speak */
@@ -248,30 +243,30 @@ E NEARDATA struct obj *invent,
 	*uskin, *uamul, *uleft, *uright, *ublindf,
 	*uwep, *uswapwep, *uquiver;
 
-E NEARDATA struct obj *uchain;		/* defined only when punished */
-E NEARDATA struct obj *uball;
-E NEARDATA struct obj *migrating_objs;
-E NEARDATA struct obj *billobjs;
-E NEARDATA struct obj zeroobj;		/* init'd and defined in decl.c */
+extern NEARDATA struct obj *uchain;		/* defined only when punished */
+extern NEARDATA struct obj *uball;
+extern NEARDATA struct obj *migrating_objs;
+extern NEARDATA struct obj *billobjs;
+extern NEARDATA struct obj zeroobj;		/* init'd and defined in decl.c */
 
 #include "you.h"
-E NEARDATA struct you u;
+extern NEARDATA struct you u;
 
 #include "onames.h"
 #ifndef PM_H		/* (pm.h has already been included via youprop.h) */
 #include "pm.h"
 #endif
 
-E NEARDATA struct monst youmonst;	/* init'd and defined in decl.c */
-E NEARDATA struct monst *mydogs, *migrating_mons;
+extern NEARDATA struct monst youmonst;	/* init'd and defined in decl.c */
+extern NEARDATA struct monst *mydogs, *migrating_mons;
 
-E NEARDATA struct mvitals {
+extern NEARDATA struct mvitals {
 	uchar	born;
 	uchar	died;
 	uchar	mvflags;
 } mvitals[NUMMONS];
 
-E NEARDATA struct c_color_names {
+extern NEARDATA struct c_color_names {
     const char	*const c_black, *const c_amber, *const c_golden,
 		*const c_light_blue,*const c_red, *const c_green,
 		*const c_silver, *const c_blue, *const c_purple,
@@ -289,9 +284,9 @@ E NEARDATA struct c_color_names {
 #define NH_WHITE		c_color_names.c_white
 
 /* The names of the colors used for gems, etc. */
-E const char *c_obj_colors[];
+extern const char *c_obj_colors[];
 
-E struct c_common_strings {
+extern struct c_common_strings {
     const char	*const c_nothing_happens, *const c_thats_enough_tries,
 		*const c_silly_thing_to, *const c_shudder_for_moment,
 		*const c_something, *const c_Something,
@@ -311,7 +306,7 @@ E struct c_common_strings {
 #define the_your	   c_common_strings.c_the_your
 
 /* material strings */
-E const char *materialnm[];
+extern const char *materialnm[];
 
 /* Monster name articles */
 #define ARTICLE_NONE	0
@@ -327,15 +322,15 @@ E const char *materialnm[];
 #define EXACT_NAME		0x0F
 
 /* Vision */
-E NEARDATA boolean vision_full_recalc;	/* TRUE if need vision recalc */
-E NEARDATA char **viz_array;		/* could see/in sight row pointers */
+extern NEARDATA boolean vision_full_recalc;	/* TRUE if need vision recalc */
+extern NEARDATA char **viz_array;		/* could see/in sight row pointers */
 
 /* Window system stuff */
-E NEARDATA winid WIN_MESSAGE, WIN_STATUS;
-E NEARDATA winid WIN_MAP, WIN_INVEN;
-E char toplines[];
+extern NEARDATA winid WIN_MESSAGE, WIN_STATUS;
+extern NEARDATA winid WIN_MAP, WIN_INVEN;
+extern char toplines[];
 #ifndef TCAP_H
-E struct tc_gbl_data {	/* also declared in tcap.h */
+extern struct tc_gbl_data {	/* also declared in tcap.h */
     char *tc_AS, *tc_AE;	/* graphics start and end (tty font swapping) */
     int   tc_LI,  tc_CO;	/* lines and columns */
 } tc_gbl_data;
@@ -346,7 +341,7 @@ E struct tc_gbl_data {	/* also declared in tcap.h */
 #endif
 
 /* xxxexplain[] is in drawing.c */
-E const char * const monexplain[], invisexplain[], * const objexplain[], * const oclass_names[];
+extern const char * const monexplain[], invisexplain[], * const objexplain[], * const oclass_names[];
 
 /* Some systems want to use full pathnames for some subsets of file names,
  * rather than assuming that they're all in the current directory.  This
@@ -375,9 +370,9 @@ E const char * const monexplain[], invisexplain[], * const objexplain[], * const
 #define PREFIXES_IN_USE
 #endif
 
-E char *fqn_prefix[PREFIX_COUNT];
+extern char *fqn_prefix[PREFIX_COUNT];
 #ifdef PREFIXES_IN_USE
-E char *fqn_prefix_names[PREFIX_COUNT];
+extern char *fqn_prefix_names[PREFIX_COUNT];
 #endif
 
 #ifdef AUTOPICKUP_EXCEPTIONS
@@ -389,9 +384,7 @@ struct autopickup_exception {
 #endif /* AUTOPICKUP_EXCEPTIONS */
 
 #ifdef SIMPLE_MAIL
-E int mailckfreq;
+extern int mailckfreq;
 #endif
-
-#undef E
 
 #endif /* DECL_H */

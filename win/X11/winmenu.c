@@ -550,12 +550,6 @@ sync_selected(menu_info, num_selected, items)
 		found = True;
 		break;
 	    }
-#if 0
-	if (curr->selected && !found)
-	    printf("sync: deselecting %s\n", curr->str);
-	else if (!curr->selected && found)
-	    printf("sync: selecting %s\n", curr->str);
-#endif
 	curr->selected = found ? TRUE : FALSE;
     }
 }

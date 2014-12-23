@@ -197,15 +197,11 @@ typedef __mode_t mode_t;
 #endif	/* _DECC_V4_SOURCE */
 
 #include <time.h>
-#if 0	/* <file.h> is missing for old gcc versions; skip it to save time */
-#include <file.h>
-#else	/* values needed from missing include file */
-# define O_RDONLY 0
-# define O_WRONLY 1
-# define O_RDWR   2
-# define O_CREAT 0x200
-# define O_TRUNC 0x400
-#endif
+#define O_RDONLY 0
+#define O_WRONLY 1
+#define O_RDWR   2
+#define O_CREAT 0x200
+#define O_TRUNC 0x400
 
 #ifndef REDO
 # define Getchar nhgetch

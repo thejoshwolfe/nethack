@@ -184,24 +184,6 @@ CreateDialog(parent, name, okay_callback, cancel_callback)
     return form;
 }
 
-#if 0
-/* get the prompt from the dialog box.  Used a startup time to
- * save away the initial prompt */
-String
-GetDialogPrompt(w)
-    Widget w;
-{
-    Arg args[1];
-    Widget label;
-    String s;
-
-    label = XtNameToWidget(w, "prompt");
-    XtSetArg(args[0], XtNlabel, &s);
-    XtGetValues(label, args, ONE);
-    return XtNewString(s);
-}
-#endif
-
 /* set the prompt.  This is used to put error information in the prompt */
 void
 SetDialogPrompt(w, newprompt)
@@ -259,22 +241,6 @@ SetDialogResponse(w, s)
     XtSetValues(response, args, TWO);
     XawTextSetInsertionPoint(response, strlen(s));
 }
-
-#if 0
-/* clear the response */
-void
-ClearDialogResponse(w)
-    Widget w;
-{
-    Arg args[2];
-    Widget response;
-
-    response = XtNameToWidget(w, "response");
-    XtSetArg(args[0], XtNstring, "");
-    XtSetArg(args[1], XtNwidth, 100);
-    XtSetValues(response, args, TWO);
-}
-#endif
 
 
 /* Not a part of the original dialogs.c from ghostview --------------------- */

@@ -198,13 +198,6 @@ ghack_image_from_glyph( int glyph, gboolean force )
 
   if (!ghack_tiles[tile] || force) {
       int src_x, src_y;
-#if 0
-      fprintf( stderr, "crop_and_clone: glyph=%d, tile=%d, ptr=%p, x=%d, y=%d, w=%d, h=%d\n", glyph, tile,
-	      (void*)&(ghack_tiles[tile]), 0,
-	      tile * ghack_glyphs.width,
-	      ghack_glyphs.height,
-	      ghack_glyphs.width);
-#endif
       if (ghack_glyphs.im->pixmap == NULL)
 	  g_warning( "Aiiee!  ghack_glyphs.im->pixmap==NULL!!!!\n");
       src_x = (tile % TILES_PER_ROW) * ghack_glyphs.width;

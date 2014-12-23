@@ -64,21 +64,6 @@ char *lan_username()
 }
 
 # ifdef LAN_MAIL
-#if 0
-static void
-mail_by_pline(msg)
-struct lan_mail_struct *msg;
-{
-	long	size;
-
-	for (size = 0; size < qt_msg->size; size += (long)strlen(in_line)) {
-	    (void) dlb_fgets(in_line, 80, msg_file);
-	    convert_line();
-	    pline(out_line);
-	}
-
-}
-#endif /* 0 */
 
 static void
 mail_by_window(msg)

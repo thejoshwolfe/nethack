@@ -124,10 +124,6 @@ extern void FDECL(interject, (int));
 #define FILENAME_CMP  stricmp		      /* case insensitive */
 #endif
 
-#if 0
-extern char levels[], bones[], permbones[],
-#endif /* 0 */
-
 /* this was part of the MICRO stuff in the past */
 extern const char *alllevels, *allbones;
 extern char hackdir[];

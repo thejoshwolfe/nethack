@@ -643,15 +643,6 @@ parse_args (int argc, char *argv[])
 
   /* SM stuff */
   session_id = gnome_client_new ();
-#if 0
-  session_id = gnome_client_new (
-  	/* callback to save the state and parameter for it */
-  	save_state, argv[0], 
-  	/* callback to die and parameter for it */
-    	NULL, NULL,
-	/* id from the previous session if restarted, NULL otherwise */
-       	id);
-#endif
   /* set the program name */
   gnome_client_set_program (session_id, argv[0]);
   g_free(id);
@@ -733,9 +724,6 @@ void ghack_init_main_window( int argc, char** argv)
     parse_args (argc, argv);
 
     /* Initialize the i18n stuff (not that gnomehack supperts it yet...) */
-#if 0
-    textdomain (PACKAGE);
-#endif
     gdk_imlib_init();
 
     /* Main window */

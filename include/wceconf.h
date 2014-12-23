@@ -160,10 +160,6 @@
 #define FILENAME_CMP  _stricmp		      /* case insensitive */
 #endif
 
-#if 0
-extern char levels[], bones[], permbones[],
-#endif /* 0 */
-
 /* this was part of the MICRO stuff in the past */
 extern const char *alllevels, *allbones;
 extern char hackdir[];
@@ -186,10 +182,6 @@ extern void NDECL(toggle_mouse_support);
 #endif
 
 #ifdef _MSC_VER
-#if 0
-#pragma warning(disable:4018)	/* signed/unsigned mismatch */
-#pragma warning(disable:4305)	/* init, conv from 'const int' to 'char' */
-#endif
 #pragma warning(disable:4761)	/* integral size mismatch in arg; conv supp*/
 #ifdef YYPREFIX
 #pragma warning(disable:4102)	/* unreferenced label */

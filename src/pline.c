@@ -317,13 +317,8 @@ register struct monst *mtmp;
 				  Strcat(info, ", blind");
 	if (mtmp->mstun)	  Strcat(info, ", stunned");
 	if (mtmp->msleeping)	  Strcat(info, ", asleep");
-#if 0	/* unfortunately mfrozen covers temporary sleep and being busy
-	   (donning armor, for instance) as well as paralysis */
-	else if (mtmp->mfrozen)	  Strcat(info, ", paralyzed");
-#else
 	else if (mtmp->mfrozen || !mtmp->mcanmove)
 				  Strcat(info, ", can't move");
-#endif
 				  /* [arbitrary reason why it isn't moving] */
 	else if (mtmp->mstrategy & STRAT_WAITMASK)
 				  Strcat(info, ", meditating");

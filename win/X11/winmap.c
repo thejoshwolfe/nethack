@@ -1372,9 +1372,6 @@ create_map_window(wp, create_popup, parent)
     Arg args[16];
     Cardinal num_args;
     Dimension rows, columns;
-#if 0
-    int screen_width, screen_height;
-#endif
 
     wp->type = NHW_MAP;
 
@@ -1462,33 +1459,6 @@ create_map_window(wp, create_popup, parent)
     /* Don't bother with windows larger than ROWNOxCOLNO. */
     if (columns > COLNO) columns = COLNO;
     if (rows    > ROWNO) rows = ROWNO;
-
-#if 0 /* This is insufficient.  We now resize final window in winX.c */
-    /*
-     * Check for overrunning the size of the screen.  This does an ad hoc
-     * job.
-     *
-     * Width:	We expect that there is nothing but borders on either side
-     *		of the map window.  Use some arbitrary width to decide
-     *		when to shrink.
-     *
-     * Height:	if the map takes up more than 1/2 of the screen height, start
-     *		reducing its size.
-     */
-    screen_height = HeightOfScreen(XtScreen(wp->w));
-    screen_width  = WidthOfScreen(XtScreen(wp->w));
-
-#define WOFF 50
-    if ((int)(columns*map_info->square_width) > screen_width-WOFF) {
-	columns = (screen_width-WOFF) / map_info->square_width;
-	if (columns == 0) columns = 1;
-    }
-
-    if ((int)(rows*map_info->square_height) > screen_height/2) {
-	rows = screen_height / (2*map_info->square_height);
-	if (rows == 0) rows = 1;
-    }
-#endif
 
     set_map_size(wp, columns, rows);
 

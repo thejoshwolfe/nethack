@@ -1577,11 +1577,6 @@ Xget_from_file:
 X	if ((file = infile) == NULL)
 X	    return (EOF_CHAR);
 Xnewline:
-X#if 0
-X	printf("get(%s), recursion %d, line %d, bptr = %d, buffer \"%s\"\n",
-X	    file->filename, recursion, line,
-X	    file->bptr - file->buffer, file->buffer);
-X#endif
 X	/*
 X	 * Read a character from the current input line or macro.
 X	 * At EOS, either finish the current macro (freeing temp.

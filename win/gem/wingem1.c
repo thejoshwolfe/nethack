@@ -998,12 +998,6 @@ loadimg:
 	if(planes>=4){
 		if(tile_image.planes>1)
 			img_set_colors(x_handle, tile_image.palette, tile_image.planes);
-#if 0
-		else{
-			int mypalette[]={};
-			img_set_colors(x_handle, mypalette, 4);
-		}
-#endif
 	}
 
 	mfdb(&Tile_bilder, (int *)tile_image.addr, tile_image.img_w, tile_image.img_h, 1, tile_image.planes);

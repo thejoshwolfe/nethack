@@ -254,11 +254,6 @@ ghack_handle_key_press(GtkWidget *widget, GdkEventKey *event, gpointer data)
     int alt = GDK_MOD1_MASK;
 
     /* Turn this on to debug key events */
-#if 0
-    g_message("I got a \"%s\" key (%d) %s%s", 
-	      gdk_keyval_name (event->keyval), event->keyval, 
-	      (event->state&ctl)? "+CONTROL":"", (event->state&alt)? "+ALT":"");
-#endif
 
     switch (event->keyval) {
 	/* special keys to do stuff with */

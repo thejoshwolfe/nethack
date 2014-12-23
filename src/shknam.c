@@ -221,27 +221,6 @@ const struct shclass shtypes[] = {
 	{(char *)0, 0, 0, 0, {{0, 0}, {0, 0}, {0, 0}}, 0}
 };
 
-#if 0
-/* validate shop probabilities; otherwise incorrect local changes could
-   end up provoking infinite loops or wild subscripts fetching garbage */
-void
-init_shop_selection()
-{
-	register int i, j, item_prob, shop_prob;
-
-	for (shop_prob = 0, i = 0; i < SIZE(shtypes); i++) {
-		shop_prob += shtypes[i].prob;
-		for (item_prob = 0, j = 0; j < SIZE(shtypes[0].iprobs); j++)
-			item_prob += shtypes[i].iprobs[j].iprob;
-		if (item_prob != 100)
-			panic("item probabilities total to %d for %s shops!",
-				item_prob, shtypes[i].name);
-	}
-	if (shop_prob != 100)
-		panic("shop probabilities total to %d!", shop_prob);
-}
-#endif /*0*/
-
 STATIC_OVL void
 mkshobj_at(shp, sx, sy)
 /* make an object of the appropriate type for a shop square */

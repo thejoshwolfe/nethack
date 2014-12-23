@@ -21,20 +21,6 @@
 /* resources */
 #define PLAYER_NAME_RES_ID	1001
 
-/* fake some things if we don't have universal headers.. */
-#if 0  /*ndef NewUserItemProc*/
-typedef pascal void (*UserItemProcPtr)(WindowPtr theWindow, short itemNo);
-typedef UserItemProcPtr UserItemUPP;
-#define NewUserItemProc(p)	(UserItemUPP)(p)
-
-typedef pascal void (*ControlActionProcPtr)(ControlHandle theControl, short partCode);
-typedef ControlActionProcPtr ControlActionUPP;
-#define NewControlActionProc(p) (ControlActionUPP)(p)
-
-typedef ModalFilterProcPtr ModalFilterUPP;
-#define DisposeRoutineDescriptor(p)
-#endif
-
 /* misc */
 #ifdef __MWERKS__
 # define ResumeProcPtr long		/* for call to InitDialogs */

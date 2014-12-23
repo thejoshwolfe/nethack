@@ -21,9 +21,6 @@ int ghack_yes_no_dialog( const char *question,
 	gnome_dialog_append_button ( GNOME_DIALOG(box), GNOME_STOCK_BUTTON_OK);
 	gnome_dialog_set_default( GNOME_DIALOG(box), 0);
 	gnome_dialog_set_accelerator( GNOME_DIALOG(box), 0, 'o', 0);
-#if 0
-	g_print("Setting accelerator '%c' for button %d\n", 'o', 0);
-#endif
     }
     else {
 	for( ; choices[i]!='\0'; i++) {
@@ -42,17 +39,8 @@ int ghack_yes_no_dialog( const char *question,
 		gnome_dialog_set_default( GNOME_DIALOG(box), i);
 	    gnome_dialog_append_button ( GNOME_DIALOG(box), button_name);
 	    gnome_dialog_set_accelerator( GNOME_DIALOG(box), i, choices[i], 0);
-#if 0
-	    g_print("Setting accelerator '%c' for button %d\n", choices[i], i);
-#endif
 	}
     }
-#if 0
-    /* Perhaps add in a quit game button, like this... */
-    gnome_dialog_append_button ( GNOME_DIALOG(box), GNOME_STOCK_BUTTON_CLOSE);
-    gnome_dialog_set_accelerator( GNOME_DIALOG(box), i, choices[i], 0);
-    g_print("Setting accelerator '%c' for button %d\n", 'Q', i);
-#endif
 
     gnome_dialog_set_close(GNOME_DIALOG (box), TRUE);
     mainWnd = ghack_get_main_window ();
@@ -64,10 +52,6 @@ int ghack_yes_no_dialog( const char *question,
     }
 
     ret=gnome_dialog_run_and_close ( GNOME_DIALOG (box));
-    
-#if 0
-    g_print("You selected button %d\n", ret);
-#endif
     
     if (ret==-1)
 	return( '\033');

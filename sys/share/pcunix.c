@@ -22,10 +22,6 @@ extern void NDECL(clear_screen);
 
 #ifdef OVLB
 
-#if 0
-static struct stat buf;
-#endif
-
 # ifdef WANT_GETHDATE
 static struct stat hbuf;
 # endif
@@ -34,44 +30,6 @@ static struct stat hbuf;
 static int NDECL(eraseoldlocks);
 #endif
 
-#if 0
-int
-uptodate(fd)
-int fd;
-{
-# ifdef WANT_GETHDATE
-    if(fstat(fd, &buf)) {
-	pline("Cannot get status of saved level? ");
-	return(0);
-    }
-    if(buf.st_mtime < hbuf.st_mtime) {
-	pline("Saved level is out of date. ");
-	return(0);
-    }
-# else
-#  if (defined(MICRO) || defined(WIN32)) && !defined(NO_FSTAT)
-    if(fstat(fd, &buf)) {
-	if(moves > 1) pline("Cannot get status of saved level? ");
-	else pline("Cannot get status of saved game.");
-	return(0);
-    } 
-    if(comp_times(buf.st_mtime)) { 
-	if(moves > 1) pline("Saved level is out of date.");
-	else pline("Saved game is out of date. ");
-	/* This problem occurs enough times we need to give the player
-	 * some more information about what causes it, and how to fix.
-	 */
-#  ifdef MSDOS
-	    pline("Make sure that your system's date and time are correct.");
-	    pline("They must be more current than NetHack.EXE's date/time stamp.");
-#  endif /* MSDOS */
-	return(0);
-    }
-#  endif  /* MICRO */
-# endif /* WANT_GETHDATE */
-    return(1);
-}
-#endif
 
 #ifdef PC_LOCKING
 static int
