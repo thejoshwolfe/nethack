@@ -1,7 +1,5 @@
 # make NetHack
-PREFIX	 = /usr
 GAME     = nethack
-# GAME     = nethack.prg
 GAMEUID  = games
 GAMEGRP  = bin
 
@@ -12,28 +10,7 @@ FILEPERM = 0644
 EXEPERM  = 0755
 DIRPERM  = 0755
 
-# GAMEDIR also appears in config.h as "HACKDIR".
-# VARDIR may also appear in unixconf.h as "VAR_PLAYGROUND" else GAMEDIR
-#
-# note that 'make install' believes in creating a nice tidy GAMEDIR for
-# installation, free of debris from previous NetHack versions --
-# therefore there should not be anything in GAMEDIR that you want to keep
-# (if there is, you'll have to do the installation by hand or modify the
-# instructions)
-GAMEDIR  = $(PREFIX)/games/lib/$(GAME)dir
-VARDIR  = $(GAMEDIR)
-SHELLDIR = $(PREFIX)/games
-
-# per discussion in Install.X11 and Install.Qt
 VARDATND = 
-# VARDATND = x11tiles NetHack.ad pet_mark.xbm
-# VARDATND = x11tiles NetHack.ad pet_mark.xbm rip.xpm
-# for Atari/Gem
-# VARDATND = nh16.img title.img GEM_RSC.RSC rip.img
-# for BeOS
-# VARDATND = beostiles
-# for Gnome
-# VARDATND = x11tiles pet_mark.xbm rip.xpm mapbg.xpm
 
 VARDATD = data oracles options quest.dat rumors
 VARDAT = $(VARDATD) $(VARDATND)
@@ -150,78 +127,3 @@ dlb: $(GAME) $(VARDAT) dungeon spec_levs
 # and the checkpoint option is true
 recover: $(GAME)
 	( cd util && $(MAKE) recover )
-
-dofiles:
-	target=`sed -n					\
-		-e '/librarian/{' 			\
-		-e	's/.*/dlb/p' 			\
-		-e	'q' 				\
-		-e '}' 					\
-	  	-e '$$s/.*/nodlb/p' < dat/options` ;	\
-	$(MAKE) dofiles-$${target-nodlb}
-	cp src/$(GAME) $(GAMEDIR)
-	cp util/recover $(GAMEDIR)
-	-rm -f $(SHELLDIR)/$(GAME)
-	sed -e 's;/usr/games/lib/nethackdir;$(GAMEDIR);' \
-		-e 's;HACKDIR/nethack;HACKDIR/$(GAME);' \
-		< sys/unix/nethack.sh \
-		> $(SHELLDIR)/$(GAME)
-# set up their permissions
-	-( cd $(GAMEDIR) ; $(CHOWN) $(GAMEUID) $(GAME) recover ; \
-			$(CHGRP) $(GAMEGRP) $(GAME) recover )
-	chmod $(GAMEPERM) $(GAMEDIR)/$(GAME)
-	chmod $(EXEPERM) $(GAMEDIR)/recover
-	-$(CHOWN) $(GAMEUID) $(SHELLDIR)/$(GAME)
-	$(CHGRP) $(GAMEGRP) $(SHELLDIR)/$(GAME)
-	chmod $(EXEPERM) $(SHELLDIR)/$(GAME)
-
-update: $(GAME) recover $(VARDAT) dungeon spec_levs
-#	(don't yank the old version out from under people who're playing it)
-	-mv $(GAMEDIR)/$(GAME) $(GAMEDIR)/$(GAME).old
-#	quest.dat is also kept open and has the same problems over NFS
-#	(quest.dat may be inside nhdat if dlb is in use)
-	-mv $(GAMEDIR)/quest.dat $(GAMEDIR)/quest.dat.old
-	-mv $(GAMEDIR)/nhdat $(GAMEDIR)/nhdat.old
-# set up new versions of the game files
-	( $(MAKE) dofiles )
-# touch time-sensitive files
-	-touch -c $(VARDIR)/bones* $(VARDIR)/?lock* $(VARDIR)/wizard*
-	-touch -c $(VARDIR)/save/*
-	touch $(VARDIR)/perm $(VARDIR)/record
-# and a reminder
-	@echo You may also want to install the man pages via the doc Makefile.
-
-install: $(GAME) recover $(VARDAT) dungeon spec_levs
-# set up the directories
-# not all mkdirs have -p; those that don't will create a -p directory
-	-mkdir -p $(SHELLDIR)
-	-rm -rf $(GAMEDIR) $(VARDIR)
-	-mkdir -p $(GAMEDIR) $(VARDIR) $(VARDIR)/save
-	-rmdir ./-p
-	-$(CHOWN) $(GAMEUID) $(GAMEDIR) $(VARDIR) $(VARDIR)/save
-	$(CHGRP) $(GAMEGRP) $(GAMEDIR) $(VARDIR) $(VARDIR)/save
-	chmod $(DIRPERM) $(GAMEDIR) $(VARDIR) $(VARDIR)/save
-# set up the game files
-	( $(MAKE) dofiles )
-# set up some additional files
-	touch $(VARDIR)/perm $(VARDIR)/record $(VARDIR)/logfile
-	-( cd $(VARDIR) ; $(CHOWN) $(GAMEUID) perm record logfile ; \
-			$(CHGRP) $(GAMEGRP) perm record logfile ; \
-			chmod $(FILEPERM) perm record logfile )
-# and a reminder
-	@echo You may also want to reinstall the man pages via the doc Makefile.
-
-
-# 'make clean' removes all the .o files, but leaves around all the executables
-# and compiled data files
-clean:
-	( cd src ; $(MAKE) clean )
-	( cd util ; $(MAKE) clean )
-
-# 'make spotless' returns the source tree to near-distribution condition.
-# it removes .o files, executables, and compiled data files
-spotless:
-	( cd src ; $(MAKE) spotless )
-	( cd util ; $(MAKE) spotless )
-	( cd dat ; $(MAKE) spotless )
-	( cd doc ; $(MAKE) spotless )
