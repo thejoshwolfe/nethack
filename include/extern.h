@@ -857,46 +857,6 @@ extern boolean FDECL(doorlock, (struct obj *,int,int));
 extern int NDECL(doopen);
 extern int NDECL(doclose);
 
-#ifdef MAC
-/* These declarations are here because the main code calls them. */
-
-/* ### macfile.c ### */
-
-extern int FDECL(maccreat, (const char *,long));
-extern int FDECL(macopen, (const char *,int,long));
-extern int FDECL(macclose, (int));
-extern int FDECL(macread, (int,void *,unsigned));
-extern int FDECL(macwrite, (int,void *,unsigned));
-extern long FDECL(macseek, (int,long,short));
-extern int FDECL(macunlink, (const char *));
-
-/* ### macsnd.c ### */
-
-extern void FDECL(mac_speaker, (struct obj *,char *));
-
-/* ### macunix.c ### */
-
-extern void FDECL(regularize, (char *));
-extern void NDECL(getlock);
-
-/* ### macwin.c ### */
-
-extern void FDECL(lock_mouse_cursor, (Boolean));
-extern int NDECL(SanePositions);
-
-/* ### mttymain.c ### */
-
-extern void FDECL(getreturn, (char *));
-extern void VDECL(msmsg, (const char *,...));
-extern void NDECL(gettty);
-extern void NDECL(setftty);
-extern void FDECL(settty, (const char *));
-extern int NDECL(tgetch);
-extern void FDECL(cmov, (int x, int y));
-extern void FDECL(nocmov, (int x, int y));
-
-#endif /* MAC */
-
 /* ### mail.c ### */
 
 #ifdef MAIL

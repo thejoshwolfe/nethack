@@ -47,32 +47,11 @@ static	const char	SCCS_Id[] = "@(#)makedefs.c\t3.4\t2002/02/03";
 #define VIS_TAB_H	"vis_tab.h"
 #define VIS_TAB_C	"vis_tab.c"
 	/* locations for those files */
-#if defined(MAC) && !defined(__MACH__)
-   /* MacOS 9 or earlier */
-#  define INCLUDE_TEMPLATE	":include:%s"
-#  define SOURCE_TEMPLATE	":src:%s"
-#  define DGN_TEMPLATE		":dat:%s"  /* where dungeon.pdf file goes */
-# if __SC__ || __MRC__
-#  define DATA_TEMPLATE	":Dungeon:%s"
-# else
-#  define DATA_TEMPLATE	":lib:%s"
-# endif /* __SC__ || __MRC__ */
-#  define DATA_IN_TEMPLATE	":dat:%s"
-#else /* not MAC */
-# ifdef OS2
-#  define INCLUDE_TEMPLATE	"..\\include\\%s"
-#  define SOURCE_TEMPLATE	"..\\src\\%s"
-#  define DGN_TEMPLATE		"..\\dat\\%s"  /* where dungeon.pdf file goes */
-#  define DATA_TEMPLATE	"..\\dat\\%s"
-#  define DATA_IN_TEMPLATE	"..\\dat\\%s"
-# else /* not MAC or OS2 */
-#  define INCLUDE_TEMPLATE	"../include/%s"
-#  define SOURCE_TEMPLATE	"../src/%s"
-#  define DGN_TEMPLATE		"../dat/%s"  /* where dungeon.pdf file goes */
-#  define DATA_TEMPLATE	"../dat/%s"
-#  define DATA_IN_TEMPLATE	"../dat/%s"
-# endif /* else !OS2 */
-#endif /* else !MAC */
+#define INCLUDE_TEMPLATE	"../include/%s"
+#define SOURCE_TEMPLATE	"../src/%s"
+#define DGN_TEMPLATE		"../dat/%s"  /* where dungeon.pdf file goes */
+#define DATA_TEMPLATE	"../dat/%s"
+#define DATA_IN_TEMPLATE	"../dat/%s"
 
 static const char
     *Dont_Edit_Code =
@@ -108,11 +87,7 @@ static char	in_line[256], filename[60];
 char *file_prefix="";
 #endif
 
-#ifdef MACsansMPWTOOL
-int FDECL(main, (void));
-#else
 int FDECL(main, (int,char **));
-#endif
 void FDECL(do_makedefs, (char *));
 void NDECL(do_objs);
 void NDECL(do_data);
@@ -627,9 +602,6 @@ static const char *build_opts[] = {
 		"screen clipping",
 #endif
 #ifdef NO_TERMS
-# ifdef MAC
-		"screen control via mactty",
-# endif
 # ifdef SCREEN_BIOS
 		"screen control via BIOS",
 # endif

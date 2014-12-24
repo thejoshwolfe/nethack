@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)allmain.c	3.4	2003/04/02	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* various code that was replicated in *main.c */
 
 #include "hack.h"
@@ -420,24 +416,11 @@ stop_occupation()
 #endif /* OVL1 */
 #ifdef OVLB
 
-void
-display_gamewindows()
-{
+void display_gamewindows(void) {
     WIN_MESSAGE = create_nhwindow(NHW_MESSAGE);
     WIN_STATUS = create_nhwindow(NHW_STATUS);
     WIN_MAP = create_nhwindow(NHW_MAP);
     WIN_INVEN = create_nhwindow(NHW_MENU);
-
-#ifdef MAC
-    /*
-     * This _is_ the right place for this - maybe we will
-     * have to split display_gamewindows into create_gamewindows
-     * and show_gamewindows to get rid of this ifdef...
-     */
-	if ( ! strcmp ( windowprocs . name , "mac" ) ) {
-	    SanePositions ( ) ;
-	}
-#endif
 
     /*
      * The mac port is not DEPENDENT on the order of these

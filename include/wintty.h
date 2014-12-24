@@ -183,10 +183,6 @@ extern void FDECL(tty_number_pad, (int));
 extern void NDECL(tty_delay_output);
 #ifdef CHANGE_COLOR
 extern void FDECL(tty_change_color,(int color,long rgb,int reverse));
-#ifdef MAC
-extern void FDECL(tty_change_background,(int white_or_black));
-extern short FDECL(set_tty_font_name, (winid, char *));
-#endif
 extern char * NDECL(tty_get_color_string);
 #endif
 
@@ -195,20 +191,5 @@ extern void NDECL(tty_start_screen);
 extern void NDECL(tty_end_screen);
 
 extern void FDECL(genl_outrip, (winid,int));
-
-#ifdef NO_TERMS
-# ifdef MAC
-#  ifdef putchar
-#   undef putchar
-#   undef putc
-#  endif
-#  define putchar term_putc
-#  define fflush term_flush
-#  define puts term_puts
-extern int FDECL(term_putc, (int c));
-extern int FDECL(term_flush, (void *desc));
-extern int FDECL(term_puts, (const char *str));
-# endif /* MAC */
-#endif/*NO_TERMS*/
 
 #endif /* WINTTY_H */

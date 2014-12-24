@@ -74,10 +74,6 @@ struct window_procs tty_procs = {
     tty_delay_output,
 #ifdef CHANGE_COLOR	/* the Mac uses a palette device */
     tty_change_color,
-#ifdef MAC
-    tty_change_background,
-    set_tty_font_name,
-#endif
     tty_get_color_string,
 #endif
 

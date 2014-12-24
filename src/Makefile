@@ -5,7 +5,7 @@ SYSSRC = ../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c
 SYSOBJ = ioctl.o unixmain.o unixtty.o unixunix.o unixres.o
 
-CC = gcc
+CC = clang
 CFLAGS = -I../include -g
 
 # files for a straight tty port using no native windowing system
@@ -58,7 +58,7 @@ VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(GENCSRC)
 # and dgn_comp.h, dgn_file.h, lev_comp.h, special level & dungeon files.
 #
 HACKINCL = align.h artifact.h artilist.h attrib.h color.h \
-	config.h config1.h coord.h decl.h def_os2.h display.h dlb.h dungeon.h \
+	config.h coord.h decl.h def_os2.h display.h dlb.h dungeon.h \
 	edog.h emin.h engrave.h epri.h eshk.h extern.h flag.h func_tab.h \
 	global.h hack.h lev.h mfndpos.h micro.h mkroom.h \
 	monattk.h mondata.h monflag.h monst.h monsym.h obj.h objclass.h \
@@ -145,7 +145,7 @@ tile.c: ../win/share/tilemap.c $(HACK_H)
 
 
 # config.h timestamp
-$(CONFIG_H): ../include/config.h ../include/config1.h ../include/tradstdc.h \
+$(CONFIG_H): ../include/config.h ../include/tradstdc.h \
 		../include/global.h ../include/coord.h \
 		../include/unixconf.h ../include/micro.h ../include/nhlan.h
 	touch $(CONFIG_H)

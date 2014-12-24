@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)shknam.c	3.4	2003/01/09	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* shknam.c -- initialize a shop */
 
 #include "hack.h"
@@ -115,13 +111,6 @@ static const char * const shktools[] = {
     "Corsh", "Aned",
 #ifdef OVERLAY
     "Erreip", "Nehpets", "Mron", "Snivek", "Lapu", "Kahztiy",
-#endif
-#ifdef MAC
-    "Nhoj-lee", "Evad\'kh", "Ettaw-noj", "Tsew-mot", "Ydna-s",
-    "Yao-hang", "Tonbar", "Kivenhoug",
-#endif
-#ifdef TOS
-    "Nivram",
 #endif
     0
 };

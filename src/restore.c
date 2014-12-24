@@ -695,10 +695,6 @@ boolean ghostly;
 		uchar	len;
 		struct rm r;
 		
-#if defined(MAC)
-		/* Suppress warning about used before set */
-		(void) memset((void *) &r, 0, sizeof(r));
-#endif
 		i = 0; j = 0; len = 0;
 		while(i < ROWNO) {
 		    while(j < COLNO) {

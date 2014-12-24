@@ -1124,13 +1124,7 @@ boolean identified, all_containers, want_dump;
 
 
 /* should be called with either EXIT_SUCCESS or EXIT_FAILURE */
-void
-terminate(status)
-int status;
-{
-#ifdef MAC
-	getreturn("to exit");
-#endif
+void terminate(int status) {
 	/* don't bother to try to release memory if we're in panic mode, to
 	   avoid trouble in case that happens to be due to memory problems */
 	if (!program_state.panicking) {

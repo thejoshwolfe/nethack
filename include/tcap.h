@@ -6,10 +6,8 @@
 #define TERMLIB	/* include termcap code */
 
 /* might display need graphics code? */
-#if !defined(TOS) && !defined(MAC)
-# if defined(TERMLIB) || defined(OS2) || defined(MSDOS)
-#  define ASCIIGRAPH
-# endif
+#if defined(TERMLIB)
+# define ASCIIGRAPH
 #endif
 
 #ifndef DECL_H

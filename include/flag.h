@@ -54,9 +54,6 @@ struct flag {
 	boolean  nap;		/* `timed_delay' option for display effects */
 	boolean  nopick;	/* do not pickup objects (as when running) */
 	boolean  null;		/* OK to send nulls to the terminal */
-#ifdef MAC
-	boolean  page_wait;	/* put up a --More-- after a page of messages */
-#endif
 	boolean  perm_invent;	/* keep full inventories up until dismissed */
 	boolean  pickup;	/* whether you pickup or move and look */
 
@@ -191,11 +188,6 @@ struct instance_flags {
 	boolean  checkspace;	/* check disk space before writing files */
 				/* (in iflags to allow restore after moving
 				 * to >2GB partition) */
-#endif
-#ifdef MAC_GRAPHICS_ENV
-	boolean  MACgraphics;	/* use Macintosh extended character set, as
-				   as defined in the special font HackFont */
-	unsigned  use_stone;		/* use the stone ppats */
 #endif
 #ifdef LAN_FEATURES
 	boolean lan_mail;	/* mail is initialized */

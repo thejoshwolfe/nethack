@@ -51,11 +51,7 @@ static struct Bool_Opt
 	{"color",         &iflags.wc_color, FALSE, SET_IN_GAME},	/*WC*/
 	{"confirm",&flags.confirm, TRUE, SET_IN_GAME},
 	{"cursesgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#if defined(TERMLIB) && !defined(MAC_GRAPHICS_ENV)
 	{"DECgraphics", &iflags.DECgraphics, FALSE, SET_IN_GAME},
-#else
-	{"DECgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 	{"eight_bit_tty", &iflags.wc_eight_bit_input, FALSE, SET_IN_GAME},	/*WC*/
 #if defined(TTY_GRAPHICS)
 	{"extmenu", &iflags.extmenu, FALSE, SET_IN_GAME},
@@ -86,20 +82,12 @@ static struct Bool_Opt
 #else
 	{"IBMgraphics", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
-#ifndef MAC
 	{"ignintr", &flags.ignintr, FALSE, SET_IN_GAME},
-#else
-	{"ignintr", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 	{"large_font", &iflags.obsolete, FALSE, SET_IN_FILE},	/* OBSOLETE */
 	{"legacy", &flags.legacy, TRUE, DISP_IN_GAME},
 	{"lit_corridor", &flags.lit_corridor, FALSE, SET_IN_GAME},
 	{"lootabc", &iflags.lootabc, FALSE, SET_IN_GAME},
-#ifdef MAC_GRAPHICS_ENV
-	{"Macgraphics", &iflags.MACgraphics, TRUE, SET_IN_GAME},
-#else
-	{"Macgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
+	{"Macgraphics", NULL, FALSE, SET_IN_FILE},
 #ifdef MAIL
 	{"mail", &flags.biff, TRUE, SET_IN_GAME},
 #else
@@ -123,11 +111,7 @@ static struct Bool_Opt
 	{"news", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
 	{"null", &flags.null, TRUE, SET_IN_GAME},
-#ifdef MAC
-	{"page_wait", &flags.page_wait, TRUE, SET_IN_GAME},
-#else
 	{"page_wait", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 #ifdef PARANOID
 	{"paranoid_hit", &iflags.paranoid_hit, FALSE, SET_IN_GAME},
 #endif
@@ -272,10 +256,6 @@ static struct Comp_Opt
 #ifdef CHANGE_COLOR
 	{ "palette",  "palette (00c/880/-fff is blue/yellow/reverse white)",
 						15 , SET_IN_GAME },
-# if defined(MAC)
-	{ "hicolor",  "same as palette, only order is reversed",
-						15, SET_IN_FILE },
-# endif
 #endif
 	{ "petattr",  "attributes for highlighting pets", 12, SET_IN_FILE },
 	{ "pettype",  "your preferred initial pet type", 4, DISP_IN_GAME },
@@ -469,9 +449,7 @@ const char *ev;
 void
 initoptions()
 {
-#ifndef MAC
 	char *opts;
-#endif
 	int i;
 
 	/* initialize the random number generator */
@@ -679,9 +657,6 @@ const char *opts;
 		pline("Bad syntax: %s.  Enter \"?g\" for help.", opts);
 	    return;
 	}
-#ifdef MAC
-	else return;
-#endif
 
 	if(from_file)
 	    raw_printf("Bad syntax in OPTIONS in %s: %s.", configfile, opts);
@@ -898,13 +873,6 @@ const char *opts;
 int bool_or_comp;	/* 0 == boolean option, 1 == compound */
 {
 	int i, *optptr;
-#if defined(MAC)
-	/* the Mac has trouble dealing with the output of messages while
-	 * processing the config file.  That should get fixed one day.
-	 * For now just return.
-	 */
-	return;
-#endif
 	if ((bool_or_comp == 0) && iflags.opt_booldup && initial && from_file) {
 	    for (i = 0; boolopt[i].name; i++) {
 		if (match_optname(opts, boolopt[i].name, 3, FALSE)) {
@@ -1345,40 +1313,21 @@ boolean tinitial, tfrom_file;
 		if (wintype > 0 &&
 		    (op = string_for_opt(opts, FALSE)) != 0) {
 			wc_set_font_name(wintype, op);
-#ifdef MAC
-			set_font_name (wintype, op);
-#endif
 			return;
 		} else if (negated) bad_negation(fullname, TRUE);
 		return;
 	}
 #ifdef CHANGE_COLOR
 	if (match_optname(opts, "palette", 3, TRUE)
-# ifdef MAC
-	    || match_optname(opts, "hicolor", 3, TRUE)
-# endif
 							) {
 	    int color_number, color_incr;
 
-# ifdef MAC
-	    if (match_optname(opts, "hicolor", 3, TRUE)) {
-		if (negated) {
-		    bad_negation("hicolor", FALSE);
-		    return;
-		}
-		color_number = CLR_MAX + 4;	/* HARDCODED inverse number */
-		color_incr = -1;
-	    } else {
-# endif
 		if (negated) {
 		    bad_negation("palette", FALSE);
 		    return;
 		}
 		color_number = 0;
 		color_incr = 1;
-# ifdef MAC
-	    }
-# endif
 	    if ((op = string_for_opt(opts, FALSE)) != (char *)0) {
 		char *pt = op;
 		int cnt, tmp, reverse;
@@ -2298,16 +2247,10 @@ goodfruit:
 
 			duplicate_opt_detection(boolopt[i].name, 0);
 
-#if defined(TERMLIB) || defined(ASCIIGRAPH) || defined(MAC_GRAPHICS_ENV)
 			if (FALSE
-# ifdef TERMLIB
 				 || (boolopt[i].addr) == &iflags.DECgraphics
-# endif
 # ifdef ASCIIGRAPH
 				 || (boolopt[i].addr) == &iflags.IBMgraphics
-# endif
-# ifdef MAC_GRAPHICS_ENV
-				 || (boolopt[i].addr) == &iflags.MACgraphics
 # endif
 				) {
 # ifdef REINCARNATION
@@ -2315,27 +2258,19 @@ goodfruit:
 				assign_rogue_graphics(FALSE);
 # endif
 			    need_redraw = TRUE;
-# ifdef TERMLIB
 			    if ((boolopt[i].addr) == &iflags.DECgraphics)
 				switch_graphics(iflags.DECgraphics ?
 						DEC_GRAPHICS : ASCII_GRAPHICS);
-# endif
 # ifdef ASCIIGRAPH
 			    if ((boolopt[i].addr) == &iflags.IBMgraphics)
 				switch_graphics(iflags.IBMgraphics ?
 						IBM_GRAPHICS : ASCII_GRAPHICS);
-# endif
-# ifdef MAC_GRAPHICS_ENV
-			    if ((boolopt[i].addr) == &iflags.MACgraphics)
-				switch_graphics(iflags.MACgraphics ?
-						MAC_GRAPHICS : ASCII_GRAPHICS);
 # endif
 # ifdef REINCARNATION
 			    if (!initial && Is_rogue_level(&u.uz))
 				assign_rogue_graphics(TRUE);
 # endif
 			}
-#endif /* TERMLIB || ASCIIGRAPH || MAC_GRAPHICS_ENV */
 
 			/* only do processing below if setting with doset() */
 			if (initial) return;
