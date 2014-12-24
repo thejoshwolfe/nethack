@@ -46,9 +46,6 @@ getlock()
 	register int fd, c, ci, ct, ern;
 	char tbuf[BUFSZ];
 	const char *fq_lock;
-# if defined(MSDOS) && defined(NO_TERMS)
-	int grmode = iflags.grmode;
-# endif
 	/* we ignore QUIT and INT at this point */
 	if (!lock_file(HLOCK, LOCKPREFIX, 10)) {
 		wait_synch();
@@ -97,10 +94,6 @@ getlock()
 	  c = yn("Do you want to destroy the old game?");
 # endif
 	} else {
-# if defined(MSDOS) && defined(NO_TERMS)
-		grmode = iflags.grmode;
-		if (grmode) gr_finish();
-# endif
 		c = 'n';
 		ct = 0;
 # ifdef SELF_RECOVER
@@ -161,9 +154,6 @@ gotlock:
 			error("cannot close lock (%s)", fq_lock);
 		}
 	}
-# if defined(MSDOS) && defined(NO_TERMS)
-	if (grmode) gr_init();
-# endif
 }	
 #endif /* PC_LOCKING */
 

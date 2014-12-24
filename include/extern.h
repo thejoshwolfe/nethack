@@ -1707,12 +1707,6 @@ extern int FDECL(add_sound_mapping, (const char *));
 extern void FDECL(play_sound_for_message, (const char *));
 #endif
 
-/* ### sys/msdos/sound.c ### */
-
-#ifdef MSDOS
-extern int FDECL(assign_soundcard, (char *));
-#endif
-
 /* ### sp_lev.c ### */
 
 extern boolean FDECL(check_room, (xchar *,xchar *,xchar *,xchar *,BOOLEAN_P));
@@ -1969,14 +1963,6 @@ extern void FDECL(append_port_id, (char *));
 
 /* ### video.c ### */
 
-#ifdef MSDOS
-extern int FDECL(assign_video, (char *));
-# ifdef NO_TERMS
-extern void NDECL(gr_init);
-extern void NDECL(gr_finish);
-# endif
-extern void FDECL(tileview,(BOOLEAN_P));
-#endif
 #ifdef VIDEOSHADES
 extern int FDECL(assign_videoshades, (char *));
 extern int FDECL(assign_videocolors, (char *));

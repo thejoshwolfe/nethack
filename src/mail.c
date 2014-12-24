@@ -22,9 +22,6 @@
  *	- Do something to the text when the scroll is enchanted or cancelled.
  *	- Make the daemon always appear at a stairwell, and have it find a
  *	  path to the hero.
- *
- * Note by Paul Winner:  The MSDOS port also 'fakes' the mail daemon at
- *			 random intervals.
  */
 
 STATIC_DCL boolean FDECL(md_start,(coord *));

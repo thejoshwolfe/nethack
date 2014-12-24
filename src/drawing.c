@@ -668,11 +668,7 @@ boolean is_rlevel;
 	for (i = 0; i < MAXMCLASSES; i++)
 	    monsyms[i] = def_monsyms[i];
 # if defined(ASCIIGRAPH) && !defined(MSWIN_GRAPHICS)
-	if (iflags.IBMgraphics
-#  if defined(USE_TILES) && defined(MSDOS)
-		&& !iflags.grmode
-#  endif
-		)
+	if (iflags.IBMgraphics)
 	    monsyms[S_HUMAN] = 0x01; /* smiley face */
 # endif
 	for (i = 0; i < MAXPCHARS; i++)
@@ -685,11 +681,7 @@ boolean is_rlevel;
  */
 
 # ifdef ASCIIGRAPH
-	if (!iflags.IBMgraphics
-#  if defined(USE_TILES) && defined(MSDOS)
-		|| iflags.grmode
-#  endif
-				) {
+	if (!iflags.IBMgraphics) {
 # endif
 	    showsyms[S_vodoor]  = showsyms[S_hodoor]  = showsyms[S_ndoor] = '+';
 	    showsyms[S_upstair] = showsyms[S_dnstair] = '%';
@@ -744,31 +736,16 @@ boolean is_rlevel;
 
 	for (i = 0; i < MAXOCLASSES; i++) {
 #ifdef ASCIIGRAPH
-	    if (iflags.IBMgraphics
-# if defined(USE_TILES) && defined(MSDOS)
-		&& !iflags.grmode
-# endif
-		)
+	    if (iflags.IBMgraphics)
 		oc_syms[i] = IBM_r_oc_syms[i];
 	    else
 #endif /* ASCIIGRAPH */
 		oc_syms[i] = r_oc_syms[i];
 	}
-#if defined(MSDOS) && defined(USE_TILES)
-	if (iflags.grmode) tileview(FALSE);
-#endif
     } else {
-	(void) memcpy((void *)showsyms,
-		      (void *)save_showsyms, sizeof showsyms);
-	(void) memcpy((void *)oc_syms,
-		      (void *)save_oc_syms, sizeof oc_syms);
-	(void) memcpy((void *)monsyms,
-		      (void *)save_monsyms, sizeof monsyms);
-#if defined(MSDOS) && defined(USE_TILES)
-	if (iflags.grmode) tileview(TRUE);
-#endif
+        memcpy((void *)showsyms, (void *)save_showsyms, sizeof showsyms);
+        memcpy((void *)oc_syms, (void *)save_oc_syms, sizeof oc_syms);
+        memcpy((void *)monsyms, (void *)save_monsyms, sizeof monsyms);
     }
 }
 #endif /* REINCARNATION */
-
-/*drawing.c*/
