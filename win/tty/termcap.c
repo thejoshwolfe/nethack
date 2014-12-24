@@ -1,9 +1,5 @@
 #include "hack.h"
-
-#if defined (TTY_GRAPHICS) && !defined(NO_TERMS)
-
 #include "wintty.h"
-
 #include "tcap.h"
 
 
@@ -14,12 +10,10 @@ static char * FDECL(e_atr2str, (int));
 
 void FDECL(cmov, (int, int));
 void FDECL(nocmov, (int, int));
-#if defined(TERMLIB)
 # ifdef OVLB
 static void NDECL(init_hilite);
 static void NDECL(kill_hilite);
 # endif /* OVLB */
-#endif
 
 #ifdef OVLB
 	/* (see tcap.h) -- nh_CM, nh_ND, nh_CD, nh_HI,nh_HE, nh_US,nh_UE,
@@ -31,7 +25,6 @@ STATIC_VAR char *HO, *CL, *CE, *UP, *XD, *BC, *SO, *SE, *TI, *TE;
 STATIC_VAR char *VS, *VE;
 STATIC_VAR char *ME;
 STATIC_VAR char *MR;
-#ifdef TERMLIB
 STATIC_VAR char *MD;
 STATIC_VAR int SG;
 #ifdef OVLB
@@ -40,7 +33,6 @@ STATIC_OVL char PC = '\0';
 STATIC_DCL char PC;
 #endif /* OVLB */
 STATIC_VAR char tbuf[512];
-#endif
 
 char *hilites[CLR_MAX]; /* terminal escapes for the various colors */
 
@@ -49,73 +41,27 @@ static char *KS = (char *)0, *KE = (char *)0;	/* keypad sequences */
 static char nullstr[] = "";
 #endif /* OVLB */
 
-#if defined(ASCIIGRAPH) && !defined(NO_TERMS)
 extern boolean HE_resets_AS;
-#endif
-
-#ifndef TERMLIB
-STATIC_VAR char tgotobuf[20];
-# ifdef TOS
-#define tgoto(fmt, x, y)	(Sprintf(tgotobuf, fmt, y+' ', x+' '), tgotobuf)
-# else
-#define tgoto(fmt, x, y)	(Sprintf(tgotobuf, fmt, y+1, x+1), tgotobuf)
-# endif
-#endif /* TERMLIB */
 
 #ifdef OVLB
 
-void
-tty_startup(wid, hgt)
-int *wid, *hgt;
-{
+void tty_startup(int *wid, int *hgt) {
 	register int i;
-#ifdef TERMLIB
 	register const char *term;
 	register char *tptr;
 	char *tbufptr, *pc;
 
 		term = getenv("TERM");
 
-# if defined(TOS) && defined(__GNUC__)
 	if (!term)
-		term = "builtin";		/* library has a default */
-# endif
-	if (!term)
-#endif
 #ifndef ANSI_DEFAULT
 		error("Can't get TERM.");
 #else
-# ifdef TOS
-	{
-		CO = 80; LI = 25;
-		TI = VS = VE = TE = nullstr;
-		HO = "\033H";
-		CE = "\033K";		/* the VT52 termcap */
-		UP = "\033A";
-		nh_CM = "\033Y%c%c";	/* used with function tgoto() */
-		nh_ND = "\033C";
-		XD = "\033B";
-		BC = "\033D";
-		SO = "\033p";
-		SE = "\033q";
-	/* HI and HE will be updated in init_hilite if we're using color */
-		nh_HI = "\033p";
-		nh_HE = "\033q";
-		*wid = CO;
-		*hgt = LI;
-		CL = "\033E";		/* last thing set */
-		return;
-	}
-# else /* TOS */
 	{
 		HO = "\033[H";
 /*		nh_CD = "\033[J"; */
 		CE = "\033[K";		/* the ANSI termcap */
-#  ifndef TERMLIB
-		nh_CM = "\033[%d;%dH";
-#  else
 		nh_CM = "\033[%i%d;%dH";
-#  endif
 		UP = "\033[A";
 		nh_ND = "\033[C";
 		XD = "\033[B";
@@ -145,10 +91,8 @@ int *wid, *hgt;
 		CL = "\033[2J";		/* last thing set */
 		return;
 	}
-# endif /* TOS */
 #endif /* ANSI_DEFAULT */
 
-#ifdef TERMLIB
 	tptr = (char *) alloc(1024);
 
 	tbufptr = tbuf;
@@ -243,15 +187,12 @@ int *wid, *hgt;
 	if ((int)(tbufptr - tbuf) > (int)(sizeof tbuf))
 		error("TERMCAP entry too big...\n");
 	free((void *)tptr);
-#endif /* TERMLIB */
 }
 
 /* note: at present, this routine is not part of the formal window interface */
 /* deallocate resources prior to final termination */
 void tty_shutdown(void) {
-#if defined(TERMLIB)
 	kill_hilite();
-#endif
 	/* we don't attempt to clean up individual termcap variables [yet?] */
 	return;
 }
@@ -273,7 +214,6 @@ int state;
 	}
 }
 
-#ifdef TERMLIB
 extern void NDECL((*decgraphics_mode_callback));    /* defined in drawing.c */
 static void NDECL(tty_decgraphics_termcap_fixup);
 
@@ -307,7 +247,6 @@ tty_decgraphics_termcap_fixup()
 	init_hilite();
 #endif
 
-#if defined(ASCIIGRAPH) && !defined(NO_TERMS)
 	/* some termcaps suffer from the bizarre notion that resetting
 	   video attributes should also reset the chosen character set */
     {
@@ -330,11 +269,9 @@ tty_decgraphics_termcap_fixup()
 	    ++nh_he, --he_limit;
 	}
     }
-#endif
 }
-#endif	/* TERMLIB */
 
-#if defined(ASCIIGRAPH) && defined(PC9800)
+#if defined(PC9800)
 extern void NDECL((*ibmgraphics_mode_callback));    /* defined in drawing.c */
 #endif
 
@@ -359,9 +296,7 @@ tty_ascgraphics_hilite_fixup()
 }
 #endif /* PC9800 */
 
-void
-tty_start_screen()
-{
+void tty_start_screen(void) {
 	xputs(TI);
 	xputs(VS);
 #ifdef PC9800
@@ -369,24 +304,18 @@ tty_start_screen()
 	    tty_ascgraphics_hilite_fixup();
     /* set up callback in case option is not set yet but toggled later */
     ascgraphics_mode_callback = tty_ascgraphics_hilite_fixup;
-# ifdef ASCIIGRAPH
     if (iflags.IBMgraphics) init_hilite();
     /* set up callback in case option is not set yet but toggled later */
     ibmgraphics_mode_callback = init_hilite;
-# endif
 #endif /* PC9800 */
 
-#ifdef TERMLIB
 	if (iflags.DECgraphics) tty_decgraphics_termcap_fixup();
 	/* set up callback in case option is not set yet but toggled later */
 	decgraphics_mode_callback = tty_decgraphics_termcap_fixup;
-#endif
 	if (iflags.num_pad) tty_number_pad(1);	/* make keypad send digits */
 }
 
-void
-tty_end_screen()
-{
+void tty_end_screen(void) {
 	clear_screen();
 	xputs(VE);
 	xputs(TE);
@@ -472,20 +401,14 @@ char c;
 }
 
 void xputs(const char *s) {
-# ifndef TERMLIB
-	(void) fputs(s, stdout);
-# else
 #  if defined(NHSTDC)
 	tputs(s, 1, (int (*)())xputc);
 #  else
 	tputs(s, 1, xputc);
 #  endif
-# endif
 }
 
-void
-cl_end()
-{
+void cl_end(void) {
 	if(CE)
 		xputs(CE);
 	else {	/* no-CE fix - free after Harold Rynes */
@@ -564,17 +487,13 @@ tty_nhbell()
 #endif /* OVLB */
 #ifdef OVL0
 
-#ifdef ASCIIGRAPH
-void
-graph_on() {
+void graph_on(void) {
 	if (AS) xputs(AS);
 }
 
-void
-graph_off() {
+void graph_off(void) {
 	if (AE) xputs(AE);
 }
-#endif
 
 #endif /* OVL0 */
 #ifdef OVL1
@@ -584,9 +503,7 @@ static const short tmspc10[] = {		/* from termcap */
 };
 
 /* delay 50 ms */
-void
-tty_delay_output()
-{
+void tty_delay_output(void) {
 #ifdef TIMED_DELAY
 	if (flags.nap) {
 		(void) fflush(stdout);
@@ -620,9 +537,9 @@ tty_delay_output()
 #endif /* OVL1 */
 #ifdef OVLB
 
-void
-cl_eos()			/* free after Robert Viduya */
-{				/* must only be called with curx = 1 */
+void cl_eos(void) {
+    /* free after Robert Viduya */
+    /* must only be called with curx = 1 */
 
 	if(nh_CD)
 		xputs(nh_CD);
@@ -639,7 +556,6 @@ cl_eos()			/* free after Robert Viduya */
 	}
 }
 
-#if defined(TERMLIB)
 /*
  * Sets up color highlighting, using terminfo(4) escape sequences.
  *
@@ -748,7 +664,6 @@ kill_hilite()
 # endif
 	return;
 }
-#endif /* TERMLIB */
 
 
 static char nulstr[] = "";
@@ -762,9 +677,7 @@ int n;
 		    if(nh_US) return nh_US;
 	    case ATR_BOLD:
 	    case ATR_BLINK:
-#if defined(TERMLIB)
 		    if (MD) return MD;
-#endif
 		    return nh_HI;
 	    case ATR_INVERSE:
 		    return MR;
@@ -841,4 +754,3 @@ int has_color(int color) {
 
 #endif /* OVLB */
 
-#endif /* TTY_GRAPHICS */

@@ -27,7 +27,7 @@ int explcolors[] = {
 #define pet_color(n)  color = iflags.use_color ? mons[n].mcolor : NO_COLOR
 #define warn_color(n) color = iflags.use_color ? def_warnsyms[n].color : NO_COLOR
 #define explode_color(n) color = iflags.use_color ? explcolors[n] : NO_COLOR
-# if defined(REINCARNATION) && defined(ASCIIGRAPH)
+# if defined(REINCARNATION)
 #  define ROGUE_COLOR
 # endif
 
@@ -185,11 +185,7 @@ void mapglyph(int glyph, int *ochar, int *ocolor, unsigned *ospecial, int x, int
 
     /* Turn off color if no color defined, or rogue level w/o PC graphics. */
 # ifdef REINCARNATION
-#  ifdef ASCIIGRAPH
     if (!has_color(color) || (Is_rogue_level(&u.uz) && !HAS_ROGUE_IBM_GRAPHICS))
-#  else
-    if (!has_color(color) || Is_rogue_level(&u.uz))
-#  endif
 # else
     if (!has_color(color))
 # endif

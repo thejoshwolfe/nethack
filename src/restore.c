@@ -1,6 +1,5 @@
 #include "hack.h"
 #include "lev.h"
-#include "tcap.h" /* for TERMLIB and ASCIIGRAPH */
 
 #ifdef USE_TILES
 extern void FDECL(substitute_tiles, (d_level *));       /* from tile.c */

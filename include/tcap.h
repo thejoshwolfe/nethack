@@ -3,13 +3,6 @@
 #ifndef TCAP_H
 #define TCAP_H
 
-#define TERMLIB	/* include termcap code */
-
-/* might display need graphics code? */
-#if defined(TERMLIB)
-# define ASCIIGRAPH
-#endif
-
 #ifndef DECL_H
 extern struct tc_gbl_data {   /* also declared in decl.h; defined in decl.c */
     char *tc_AS, *tc_AE;	/* graphics start and end (tty font swapping) */

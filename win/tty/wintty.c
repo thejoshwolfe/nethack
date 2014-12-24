@@ -8,11 +8,8 @@
 #include "dlb.h"
 #include "patchlevel.h"
 
-#ifdef TTY_GRAPHICS
 
-#ifndef NO_TERMS
 #include "tcap.h"
-#endif
 
 #include "wintty.h"
 
@@ -103,10 +100,8 @@ static int clipx = 0, clipxmax = 0;
 static int clipy = 0, clipymax = 0;
 #endif /* CLIPPING */
 
-#if defined(ASCIIGRAPH) && !defined(NO_TERMS)
 boolean GFlag = FALSE;
 boolean HE_resets_AS;	/* see termcap.c */
-#endif
 
 STATIC_DCL void NDECL(getret);
 STATIC_DCL void FDECL(erase_menu_or_text, (winid, struct WinDesc *, BOOLEAN_P));
@@ -701,9 +696,7 @@ void tty_exit_nhwindows(const char *str) {
 #endif
 	    wins[i] = 0;
 	}
-#ifndef NO_TERMS		/*(until this gets added to the window interface)*/
     tty_shutdown();		/* cleanup termcap/terminfo/whatever */
-#endif
     iflags.window_inited = 0;
 }
 
@@ -1600,25 +1593,21 @@ register int x, y;	/* not xchar: perhaps xchar is unsigned and
     if(cw->type == NHW_MAP)
 	end_glyphout();
 
-#ifndef NO_TERMS
     if(!nh_ND && (cx != x || x <= 3)) { /* Extremely primitive */
 	cmov(x, y); /* bunker!wtm */
 	return;
     }
-#endif
 
     if((cy -= y) < 0) cy = -cy;
     if((cx -= x) < 0) cx = -cx;
     if(cy <= 3 && cx <= 3) {
 	nocmov(x, y);
-#ifndef NO_TERMS
     } else if ((x <= 3 && cy <= 3) || (!nh_CM && x < cx)) {
 	(void) putchar('\r');
 	ttyDisplay->curx = 0;
 	nocmov(x, y);
     } else if (!nh_CM) {
 	nocmov(x, y);
-#endif
     } else
 	cmov(x, y);
 
@@ -1872,9 +1861,7 @@ boolean complain;
 	    boolean empty = TRUE;
 
 	    if(complain
-#ifndef NO_TERMS
 		&& nh_CD
-#endif
 	    ) {
 		/* attempt to scroll text below map window if there's room */
 		wins[datawin]->offy = wins[WIN_STATUS]->offy+3;
@@ -2228,12 +2215,10 @@ docorner(xmin, ymax)
 void
 end_glyphout()
 {
-#if defined(ASCIIGRAPH) && !defined(NO_TERMS)
     if (GFlag) {
 	GFlag = FALSE;
 	graph_off();
     }
-#endif
     if(ttyDisplay->color != NO_COLOR) {
         term_end_color();
         ttyDisplay->color = NO_COLOR;
@@ -2243,7 +2228,6 @@ end_glyphout()
 void g_putch(int in_ch) {
     register char ch = (char)in_ch;
 
-# if defined(ASCIIGRAPH) && !defined(NO_TERMS)
     if (iflags.IBMgraphics || iflags.eight_bit_tty) {
 	/* IBM-compatible displays don't need other stuff */
 	(void) putchar(ch);
@@ -2261,10 +2245,6 @@ void g_putch(int in_ch) {
 	(void) putchar(ch);
     }
 
-#else
-    (void) putchar(ch);
-
-#endif	/* ASCIIGRAPH && !NO_TERMS */
 
     return;
 }
@@ -2343,12 +2323,10 @@ tty_print_glyph(window, x, y, glyph)
     /* Move the cursor. */
     tty_curs(window, x,y);
 
-#ifndef NO_TERMS
     if (ul_hack && ch == '_') {		/* non-destructive underscore */
 	(void) putchar((char) ' ');
 	backsp();
     }
-#endif
 
     if (color != ttyDisplay->color) {
 	if(ttyDisplay->color != NO_COLOR)
@@ -2462,5 +2440,3 @@ copy_of(s)
     if (!s) s = "";
     return strcpy((char *) alloc((unsigned) (strlen(s) + 1)), s);
 }
-
-#endif /* TTY_GRAPHICS */

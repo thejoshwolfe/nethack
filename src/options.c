@@ -77,11 +77,7 @@ static struct Bool_Opt
 	{"guicolor", &iflags.wc2_guicolor, TRUE, SET_IN_GAME},
 	{"help", &flags.help, TRUE, SET_IN_GAME},
 	{"hilite_pet",    &iflags.wc_hilite_pet, FALSE, SET_IN_GAME},	/*WC*/
-#ifdef ASCIIGRAPH
 	{"IBMgraphics", &iflags.IBMgraphics, FALSE, SET_IN_GAME},
-#else
-	{"IBMgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 	{"ignintr", &flags.ignintr, FALSE, SET_IN_GAME},
 	{"large_font", &iflags.obsolete, FALSE, SET_IN_FILE},	/* OBSOLETE */
 	{"legacy", &flags.legacy, TRUE, DISP_IN_GAME},
@@ -2211,9 +2207,7 @@ goodfruit:
 
 			if (FALSE
 				 || (boolopt[i].addr) == &iflags.DECgraphics
-# ifdef ASCIIGRAPH
 				 || (boolopt[i].addr) == &iflags.IBMgraphics
-# endif
 				) {
 # ifdef REINCARNATION
 			    if (!initial && Is_rogue_level(&u.uz))
@@ -2223,11 +2217,9 @@ goodfruit:
 			    if ((boolopt[i].addr) == &iflags.DECgraphics)
 				switch_graphics(iflags.DECgraphics ?
 						DEC_GRAPHICS : ASCII_GRAPHICS);
-# ifdef ASCIIGRAPH
 			    if ((boolopt[i].addr) == &iflags.IBMgraphics)
 				switch_graphics(iflags.IBMgraphics ?
 						IBM_GRAPHICS : ASCII_GRAPHICS);
-# endif
 # ifdef REINCARNATION
 			    if (!initial && Is_rogue_level(&u.uz))
 				assign_rogue_graphics(TRUE);

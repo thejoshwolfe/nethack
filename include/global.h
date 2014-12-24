@@ -127,18 +127,6 @@ typedef xchar	boolean;		/* 0 or 1 */
 # define EXIT_FAILURE 1
 #endif
 
-#if defined(X11_GRAPHICS) || defined(QT_GRAPHICS) || defined(GNOME_GRAPHICS) || defined(MSWIN_GRAPHICS)
-# ifndef USE_TILES
-#  define USE_TILES		/* glyph2tile[] will be available */
-# endif
-#endif
-#if defined(AMII_GRAPHICS) || defined(GEM_GRAPHICS)
-# ifndef USE_TILES
-#  define USE_TILES
-# endif
-#endif
-
-
 #define Sprintf  (void) sprintf
 #define Strcat   (void) strcat
 #define Strcpy   (void) strcpy

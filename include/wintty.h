@@ -88,9 +88,7 @@ extern void FDECL(xwaitforspace, (const char *));
 /* ### termcap.c, video.c ### */
 
 extern void FDECL(tty_startup,(int*, int*));
-#ifndef NO_TERMS
 extern void NDECL(tty_shutdown);
-#endif
 extern void FDECL(xputc, (CHAR_P));
 extern void FDECL(xputs, (const char *));
 #if defined(SCREEN_VGA) || defined(SCREEN_8514)
