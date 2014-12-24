@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  * This file contains the various functions that are related to the special
  * levels.

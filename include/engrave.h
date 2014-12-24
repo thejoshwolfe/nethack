@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef ENGRAVE_H
 #define ENGRAVE_H
 

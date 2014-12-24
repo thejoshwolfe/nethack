@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef DGN_FILE_H
 #define DGN_FILE_H
 

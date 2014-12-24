@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  * Entry points:
  *	mkroom() -- make and stock a room of a given type

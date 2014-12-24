@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*	attrib.h - Header file for character class processing. */
 
 #ifndef ATTRIB_H

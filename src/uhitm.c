@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
 STATIC_DCL boolean FDECL(known_hitum, (struct monst *,int *,struct attack *));

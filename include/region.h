@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef REGION_H
 #define REGION_H
 

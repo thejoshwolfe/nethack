@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef FUNC_TAB_H
 #define FUNC_TAB_H
 

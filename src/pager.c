@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* This file contains the command routines dowhatis() and dohelp() and */
 /* a few other help related facilities */
 

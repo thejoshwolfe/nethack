@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #define VERSION_MAJOR    3
 #define VERSION_MINOR    4
 #define PATCHLEVEL       3

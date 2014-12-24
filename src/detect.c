@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  * Detection routines, including crystal ball, magic mapping, and search
  * command.

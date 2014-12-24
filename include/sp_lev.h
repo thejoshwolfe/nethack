@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef SP_LEV_H
 #define SP_LEV_H
 

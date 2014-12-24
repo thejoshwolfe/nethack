@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef MONSYM_H
 #define MONSYM_H
 

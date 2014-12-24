@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* Contains code for 'd', 'D' (drop), '>', '<' (up, down) */
 
 #include "hack.h"

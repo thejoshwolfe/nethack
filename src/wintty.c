@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  * Neither a standard out nor character-based control codes should be
  * part of the "tty look" windowing implementation.

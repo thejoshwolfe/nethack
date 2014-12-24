@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef YOUPROP_H
 #define YOUPROP_H
 

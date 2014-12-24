@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #define NEED_VARARGS /* Uses ... */	/* comment line for pre-compiled headers */
 #include "hack.h"
 #include "epri.h"

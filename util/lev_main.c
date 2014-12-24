@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  * This file contains the main function for the parser
  * and some useful functions needed by yacc

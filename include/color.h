@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef COLOR_H
 #define COLOR_H
 

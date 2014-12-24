@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* main.c - Unix NetHack */
 
 #include "hack.h"

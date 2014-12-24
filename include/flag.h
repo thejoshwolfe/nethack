@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* If you change the flag structure make sure you increment EDITLEVEL in   */
 /* patchlevel.h if needed.  Changing the instance_flags structure does	   */
 /* not require incrementing EDITLEVEL.					   */

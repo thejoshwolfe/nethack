@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef EXTERN_H
 #define EXTERN_H
 

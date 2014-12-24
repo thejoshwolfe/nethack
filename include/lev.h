@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*	Common include file for save and restore routines */
 
 #ifndef LEV_H

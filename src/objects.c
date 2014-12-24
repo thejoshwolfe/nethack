@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef OBJECTS_PASS_2_
 /* first pass */
 struct monst { struct monst *dummy; };	/* lint: struct obj's union */

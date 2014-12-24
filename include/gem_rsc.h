@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* resource set indices for GEM_RSC */
 
 #define MENU               0 /* menu */

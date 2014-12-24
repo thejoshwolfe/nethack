@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* This cannot be part of hack.tty.c (as it was earlier) since on some
    systems (e.g. MUNIX) the include files <termio.h> and <sgtty.h>
    define the same constants, and the C preprocessor complains. */

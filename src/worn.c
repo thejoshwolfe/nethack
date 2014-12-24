@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
 STATIC_DCL void FDECL(m_lose_armor, (struct monst *,struct obj *));

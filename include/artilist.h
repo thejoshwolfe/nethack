@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifdef MAKEDEFS_C
 /* in makedefs.c, all we care about is the list of names */
 

@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #define BUILD_DATE "Wed Dec 24 11:10:17 2014"
 #define BUILD_TIME (1419444617L)
 

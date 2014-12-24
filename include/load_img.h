@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 
 /* ------------------------------------------- */
 #define XIMG      0x58494D47

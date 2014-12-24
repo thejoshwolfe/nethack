@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  *	This module contains code for calculation of "to hit" and damage
  *	bonuses for any given weapon used, as well as weapons selection

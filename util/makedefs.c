@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #define MAKEDEFS_C	/* use to conditionally include file sections */
 /* #define DEBUG */	/* uncomment for debugging info */
 

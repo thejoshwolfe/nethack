@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* This file collects some Unix dependencies */
 
 #include "hack.h"	/* mainly for index() which depends on BSD */

@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* various code that was replicated in *main.c */
 
 #include "hack.h"

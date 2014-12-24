@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* wizard code - inspired by rogue code from Merlyn Leroy (digi-g!brian) */
 /*	       - heavily modified to give the wiz balls.  (genat!mike)   */
 /*	       - dewimped and given some maledictions. -3. */

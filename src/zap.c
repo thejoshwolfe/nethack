@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
 /* Disintegration rays have special treatment; corpses are never left.

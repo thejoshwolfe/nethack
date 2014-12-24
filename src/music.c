@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  * This file contains the different functions designed to manipulate the
  * musical instruments and their various effects.

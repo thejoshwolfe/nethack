@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "func_tab.h"
 /* #define DEBUG */	/* uncomment for debugging */

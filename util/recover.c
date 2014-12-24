@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  *  Utility for reconstructing NetHack save file from a set of individual
  *  level files.  Requires that the `checkpoint' option be enabled at the

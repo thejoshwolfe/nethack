@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* shknam.c -- initialize a shop */
 
 #include "hack.h"

@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #if defined(TTY_GRAPHICS)
 #include "wintty.h"	/* for prototype of has_color() only */

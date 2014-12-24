@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "config.h"
 
 #ifdef GETRES_SUPPORT

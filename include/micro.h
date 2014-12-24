@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #ifndef MICRO_H
 #define MICRO_H
 

@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
 /* KMH -- Copied from pray.c; this really belongs in a header file */

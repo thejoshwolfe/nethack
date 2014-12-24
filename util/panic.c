@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  *	This code was adapted from the code in end.c to run in a standalone
  *	mode for the makedefs / drg code.

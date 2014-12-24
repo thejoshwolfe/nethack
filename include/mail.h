@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* used by ckmailstatus() to pass information to the mail-daemon in newmail() */
 
 #ifndef MAIL_H

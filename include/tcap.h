@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* not named termcap.h because it may conflict with a system header */
 
 #ifndef TCAP_H

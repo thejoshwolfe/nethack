@@ -1,1 +1,19 @@
-See dat/license
+This project is a fork of the original NetHack project.
+For the original license, see dat/license.
+
+See below for how this project complies with the original license's
+section 2.a requirements for a changelog.
+
+
+How to get a changelog of a file:
+
+These instructions assume you are familiar with how to use a command line.
+Make sure you have Git installed (like from git-scm.com).
+Clone this repository, if you haven't already, from the command line like this:
+
+    git clone https://github.com/thejoshwolfe/nethack.git
+    cd nethack
+
+Then get a changelog for a particular file like this:
+
+    git log -p path/to/file

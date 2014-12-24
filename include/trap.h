@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /* note for 3.1.0 and later: no longer manipulated by 'makedefs' */
 
 #ifndef TRAP_H

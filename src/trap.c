@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
 extern const char * const destroy_strings[];	/* from zap.c */

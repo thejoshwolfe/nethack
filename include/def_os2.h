@@ -1,3 +1,4 @@
+/* See LICENSE in the root of this project for change info */
 /*
  *	Only a small portion of all OS/2 defines are needed, so the
  *	actual include files often need not be used.  In fact,
