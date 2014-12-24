@@ -29,10 +29,6 @@
 /* #define USE_VARARGS */	/* use <varargs.h> instead of <stdarg.h> */
 /* #define USE_OLDARGS */	/* don't use any variable argument facilites */
 
-#if defined(apollo)		/* Apollos have stdarg(3) but not stdarg.h */
-# define USE_VARARGS
-#endif
-
 #if defined(NHSTDC)
 # if !defined(USE_VARARGS) && !defined(USE_OLDARGS) && !defined(USE_STDARG)
 #   define USE_STDARG

@@ -20,12 +20,7 @@ int FDECL(open_levelfile, (int));
 int NDECL(create_savefile);
 void FDECL(copy_bytes, (int,int));
 
-#ifndef WIN_CE
 #define Fprintf	(void)fprintf
-#else
-#define Fprintf	(void)nhce_message
-static void nhce_message(FILE*, const char*, ...);
-#endif
 #define Perror  (void)perror
 #define Close	(void)close
 

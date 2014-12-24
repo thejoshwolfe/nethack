@@ -32,21 +32,11 @@ STATIC_DCL void FDECL(charm_monsters,(int));
 STATIC_DCL void FDECL(do_earthquake,(int));
 STATIC_DCL int FDECL(do_improvisation,(struct obj *));
 
-#ifdef UNIX386MUSIC
-STATIC_DCL int NDECL(atconsole);
-STATIC_DCL void FDECL(speaker,(struct obj *,char *));
-#endif
-#ifdef PCMUSIC
-void FDECL( pc_speaker, ( struct obj *, char * ) );
-#endif
-
 /*
  * Wake every monster in range...
  */
 
-STATIC_OVL void 
-awaken_monsters (int distance)
-{
+STATIC_OVL void awaken_monsters (int distance) {
 	register struct monst *mtmp = fmon;
 	register int distm;
 
@@ -330,22 +320,8 @@ do_pit:		    chasm = maketrap(x,y,PIT);
  * The player is trying to extract something from his/her instrument.
  */
 
-STATIC_OVL int 
-do_improvisation (struct obj *instr)
-{
+STATIC_OVL int do_improvisation (struct obj *instr) {
 	int damage, do_spec = !Confusion;
-#if defined (PCMUSIC)
-	struct obj itmp;
-
-	itmp = *instr;
-	/* if won't yield special effect, make sound of mundane counterpart */
-	if (!do_spec || instr->spe <= 0)
-	    while (objects[itmp.otyp].oc_magic) itmp.otyp -= 1;
-#ifdef PCMUSIC
-	  pc_speaker ( &itmp, "C");
-#endif
-#endif /* PCMUSIC */
-
 	if (!do_spec)
 	    pline("What you produce is quite far from music...");
 	else
@@ -470,14 +446,6 @@ do_play_instrument (struct obj *instr)
 	    }
 	}
 	You("extract a strange sound from %s!", the(xname(instr)));
-#ifdef UNIX386MUSIC
-	/* if user is at the console, play through the console speaker */
-	if (atconsole())
-	    speaker(instr, buf);
-#endif
-#ifdef PCMUSIC
-	pc_speaker ( instr, buf );
-#endif
 	/* Check if there was the Stronghold drawbridge near
 	 * and if the tune conforms to what we're waiting for.
 	 */
@@ -552,67 +520,3 @@ do_play_instrument (struct obj *instr)
     } else
 	    return do_improvisation(instr);
 }
-
-#ifdef UNIX386MUSIC
-/*
- * Play audible music on the machine's speaker if appropriate.
- */
-
-STATIC_OVL int 
-atconsole (void)
-{
-    /*
-     * Kluge alert: This code assumes that your [34]86 has no X terminals
-     * attached and that the console tty type is AT386 (this is always true
-     * under AT&T UNIX for these boxen). The theory here is that your remote
-     * ttys will have terminal type `ansi' or something else other than
-     * `AT386' or `xterm'. We'd like to do better than this, but testing
-     * to see if we're running on the console physical terminal is quite
-     * difficult given the presence of virtual consoles and other modern
-     * UNIX impedimenta...
-     */
-    char	*termtype = nh_getenv("TERM");
-
-     return(!strcmp(termtype, "AT386") || !strcmp(termtype, "xterm"));
-}
-
-STATIC_OVL void 
-speaker (struct obj *instr, char *buf)
-{
-    /*
-     * For this to work, you need to have installed the PD speaker-control
-     * driver for PC-compatible UNIX boxes that I (esr@snark.thyrsus.com)
-     * posted to comp.sources.unix in Feb 1990.  A copy should be included
-     * with your nethack distribution.
-     */
-    int	fd;
-
-    if ((fd = open("/dev/speaker", 1)) != -1)
-    {
-	/* send a prefix to modify instrumental `timbre' */
-	switch (instr->otyp)
-	{
-	case WOODEN_FLUTE:
-	case MAGIC_FLUTE:
-	    (void) write(fd, ">ol", 1); /* up one octave & lock */
-	    break;
-	case TOOLED_HORN:
-	case FROST_HORN:
-	case FIRE_HORN:
-	    (void) write(fd, "<<ol", 2); /* drop two octaves & lock */
-	    break;
-	case BUGLE:
-	    (void) write(fd, "ol", 2); /* octave lock */
-	    break;
-	case WOODEN_HARP:
-	case MAGIC_HARP:
-	    (void) write(fd, "l8mlol", 4); /* fast, legato, octave lock */
-	    break;
-	}
-	(void) write(fd, buf, strlen(buf));
-	(void) close(fd);
-    }
-}
-#endif /* UNIX386MUSIC */
-
-/*music.c*/
