@@ -1,5 +1,4 @@
 /* See LICENSE in the root of this project for change info */
-#define NEED_VARARGS
 #include "hack.h"
 
 #include <termios.h>
@@ -249,17 +248,13 @@ sco_mapoff (void)
 # endif
 }
 
-void 
-check_sco_console (void)
-{
+void check_sco_console (void) {
 	if (isatty(0) && ioctl(0,CONS_GET,0) != -1) {
 		sco_flag_console = 1;
 	}
 }
 
-void 
-init_sco_cons (void)
-{
+void init_sco_cons (void) {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && sco_flag_console) {
 		atexit(sco_mapon);
@@ -313,9 +308,7 @@ check_linux_console (void)
 	}
 }
 
-void 
-init_linux_cons (void)
-{
+void init_linux_cons (void) {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
 		atexit(linux_mapon);
@@ -328,18 +321,14 @@ init_linux_cons (void)
 #endif	/* __linux__ */
 
 
-#ifndef __begui__	/* the Be GUI will define its own error proc */
 /* fatal error */
-/*VARARGS1*/
-void
-error VA_DECL(const char *,s)
-	VA_START(s);
-	VA_INIT(s, const char *);
+void error (const char * s, ...) {
+    va_list the_args;
+	va_start(the_args, s);
 	if(settty_needed)
 		settty((char *)0);
-	Vprintf(s,VA_ARGS);
+	Vprintf(s,the_args);
 	(void) putchar('\n');
-	VA_END();
+    va_end(the_args);
 	exit(EXIT_FAILURE);
 }
-#endif /* !__begui__ */

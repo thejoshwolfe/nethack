@@ -385,11 +385,7 @@ void xputc (char c) {
 }
 
 void xputs(const char *s) {
-#  if defined(NHSTDC)
 	tputs(s, 1, (int (*)())xputc);
-#  else
-	tputs(s, 1, xputc);
-#  endif
 }
 
 void cl_end(void) {
@@ -499,11 +495,7 @@ void tty_delay_output(void) {
 	   then this looks terrible. */
 	if(flags.null)
 		/* cbosgd!cbcephus!pds for SYS V R2 */
-#  ifdef NHSTDC
 		tputs("$<50>", 1, (int (*)())xputc);
-#  else
-		tputs("$<50>", 1, xputc);
-#  endif
 
 	else if(ospeed > 0 && ospeed < SIZE(tmspc10) && nh_CM) {
 		/* delay by sending cm(here) an appropriate number of times */

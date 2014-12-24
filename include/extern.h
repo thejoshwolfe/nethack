@@ -536,7 +536,7 @@ extern void FDECL(done_intr, (int));
 #endif
 extern void FDECL(done_in_by, (struct monst *));
 #endif /* !MAKEDEFS_C && !LEV_LEX_C */
-extern void VDECL(panic, (const char *,...)) PRINTF_F(1,2);
+extern void VDECL(panic, (const char *,...));
 #if !defined(MAKEDEFS_C) && !defined(LEV_LEX_C)
 extern void FDECL(done, (int));
 extern void FDECL(container_contents, (struct obj *,boolean,boolean));
@@ -1330,20 +1330,20 @@ extern boolean FDECL(is_autopickup_exception, (struct obj *, boolean));
 
 /* ### pline.c ### */
 
-extern void VDECL(pline, (const char *,...)) PRINTF_F(1,2);
+extern void VDECL(pline, (const char *,...));
 extern void FDECL(plines, (const char *));
-extern void VDECL(Norep, (const char *,...)) PRINTF_F(1,2);
+extern void VDECL(Norep, (const char *,...));
 extern void NDECL(free_youbuf);
-extern void VDECL(You, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(Your, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(You_feel, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(You_cant, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(You_hear, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(pline_The, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(There, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(verbalize, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(raw_printf, (const char *,...)) PRINTF_F(1,2);
-extern void VDECL(impossible, (const char *,...)) PRINTF_F(1,2);
+extern void VDECL(You, (const char *,...));
+extern void VDECL(Your, (const char *,...));
+extern void VDECL(You_feel, (const char *,...));
+extern void VDECL(You_cant, (const char *,...));
+extern void VDECL(You_hear, (const char *,...));
+extern void VDECL(pline_The, (const char *,...));
+extern void VDECL(There, (const char *,...));
+extern void VDECL(verbalize, (const char *,...));
+extern void VDECL(raw_printf, (const char *,...));
+extern void VDECL(impossible, (const char *,...));
 extern const char *FDECL(align_str, (aligntyp));
 extern void FDECL(mstatusline, (struct monst *));
 extern void NDECL(ustatusline);
@@ -1873,7 +1873,7 @@ extern void FDECL(settty, (const char *));
 extern void NDECL(setftty);
 extern void NDECL(intron);
 extern void NDECL(introff);
-extern void VDECL(error, (const char *,...)) PRINTF_F(1,2);
+extern void VDECL(error, (const char *,...));
 #endif /* UNIX || __BEOS__ */
 
 /* ### unixunix.c ### */

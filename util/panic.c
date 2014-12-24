@@ -4,7 +4,7 @@
  *	mode for the makedefs / drg code.
  */
 
-#define NEED_VARARGS
+#include <stdarg.h>
 #include "config.h"
 
 #ifdef AZTEC
@@ -15,18 +15,17 @@
 boolean panicking;
 void VDECL(panic, (char *,...));
 
-void
-panic VA_DECL(char *,str)
-	VA_START(str);
-	VA_INIT(str, char *);
+void panic (char * str, ...) {
+    va_list the_args;
+	va_start(the_args, str);
 	if(panicking++)
     abort();    /* avoid loops - this should never happen*/
 
 	(void) fputs(" ERROR:  ", stderr);
-	Vfprintf(stderr, str, VA_ARGS);
+	Vfprintf(stderr, str, the_args);
 	(void) fflush(stderr);
     abort();	/* generate core dump */
-	VA_END();
+    va_end(the_args);
 	exit(EXIT_FAILURE);		/* redundant */
 	return;
 }
@@ -37,11 +36,7 @@ panic VA_DECL(char *,str)
  * have it then just use malloc() instead.  This may not work on some
  * systems, but they should either use yacc or get a real alloca routine.
  */
-long *alloca(cnt)
-unsigned cnt;
-{
+long *alloca(unsigned cnt) {
 	return cnt ? alloc(cnt) : (long *)0;
 }
 #endif
-
-/*panic.c*/

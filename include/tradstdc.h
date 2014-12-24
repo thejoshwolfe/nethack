@@ -3,79 +3,6 @@
 #define TRADSTDC_H
 
 /*
- * Borland C provides enough ANSI C compatibility in its Borland C++
- * mode to warrant this.  But it does not set __STDC__ unless it compiles
- * in its ANSI keywords only mode, which prevents use of <dos.h> and
- * far pointer use.
- */
-#if (defined(__STDC__) || defined(__TURBOC__)) && !defined(NOTSTDC)
-#define NHSTDC
-#endif
-
-/*
- * ANSI X3J11 detection.
- * Makes substitutes for compatibility with the old C standard.
- */
-
-/* Decide how to handle variable parameter lists:
- * USE_STDARG means use the ANSI <stdarg.h> facilities (only ANSI compilers
- * should do this, and only if the library supports it).
- * USE_VARARGS means use the <varargs.h> facilities.  Again, this should only
- * be done if the library supports it.	ANSI is *not* required for this.
- * Otherwise, the kludgy old methods are used.
- * The defaults are USE_STDARG for ANSI compilers, and USE_OLDARGS for
- * others.
- */
-
-/* #define USE_VARARGS */	/* use <varargs.h> instead of <stdarg.h> */
-/* #define USE_OLDARGS */	/* don't use any variable argument facilites */
-
-#if defined(NHSTDC)
-# if !defined(USE_VARARGS) && !defined(USE_OLDARGS) && !defined(USE_STDARG)
-#   define USE_STDARG
-# endif
-#endif
-
-#ifdef NEED_VARARGS		/* only define these if necessary */
-#ifdef USE_STDARG
-#include <stdarg.h>
-# define VA_DECL(typ1,var1)	(typ1 var1, ...) { va_list the_args;
-# define VA_DECL2(typ1,var1,typ2,var2)	\
-	(typ1 var1, typ2 var2, ...) { va_list the_args;
-# define VA_INIT(var1,typ1)
-# define VA_NEXT(var1,typ1)	var1 = va_arg(the_args, typ1)
-# define VA_ARGS		the_args
-# define VA_START(x)		va_start(the_args, x)
-# define VA_END()		va_end(the_args)
-#else
-# ifdef USE_VARARGS
-#include <varargs.h>
-#  define VA_DECL(typ1,var1)	(va_alist) va_dcl {\
-		va_list the_args; typ1 var1;
-#  define VA_DECL2(typ1,var1,typ2,var2) (va_alist) va_dcl {\
-		va_list the_args; typ1 var1; typ2 var2;
-#  define VA_ARGS		the_args
-#  define VA_START(x)		va_start(the_args)
-#  define VA_INIT(var1,typ1)	var1 = va_arg(the_args, typ1)
-#  define VA_NEXT(var1,typ1)	var1 = va_arg(the_args,typ1)
-#  define VA_END()		va_end(the_args)
-# else
-#   define VA_ARGS	arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9
-#   define VA_DECL(typ1,var1)  (var1,VA_ARGS) typ1 var1; \
-	char *arg1,*arg2,*arg3,*arg4,*arg5,*arg6,*arg7,*arg8,*arg9; {
-#   define VA_DECL2(typ1,var1,typ2,var2)  (var1,var2,VA_ARGS) \
-	typ1 var1; typ2 var2;\
-	char *arg1,*arg2,*arg3,*arg4,*arg5,*arg6,*arg7,*arg8,*arg9; {
-#   define VA_START(x)
-#   define VA_INIT(var1,typ1)
-#   define VA_END()
-# endif
-#endif
-#endif /* NEED_VARARGS */
-
-#if defined(NHSTDC)
-
-/*
  * Used for robust ANSI parameter forward declarations:
  * int VDECL(sprintf, (char *, const char *, ...));
  *
@@ -87,43 +14,11 @@
  * trampoli.* mechanism conflicts with the ANSI <<f(void)>> syntax.
  */
 
-# define NDECL(f)	f(void) /* overridden later if USE_TRAMPOLI set */
+#define NDECL(f)	f(void) /* overridden later if USE_TRAMPOLI set */
 
-# define FDECL(f,p)	f p
+#define FDECL(f,p)	f p
 
-# if defined(USE_STDARG)
-#  define VDECL(f,p)	f p
-# else
-#  define VDECL(f,p)	f()
-# endif
+#define VDECL(f,p)	f p
 
-#else /* NHSTDC */	/* a "traditional" C  compiler */
-
-# define NDECL(f)	f()
-# define FDECL(f,p)	f()
-# define VDECL(f,p)	f()
-
-/*
- * Traditional C compilers don't have "signed", "const", or "volatile".
- */
-# define signed
-# define const
-# define volatile
-
-#endif /* NHSTDC */
-
-
-/*
- * Allow gcc2 to check parameters of printf-like calls with -Wformat;
- * append this to a prototype declaration (see pline() in extern.h).
- */
-#ifdef __GNUC__
-# if __GNUC__ >= 2
-#define PRINTF_F(f,v) __attribute__ ((format (printf, f, v)))
-# endif
-#endif
-#ifndef PRINTF_F
-#define PRINTF_F(f,v)
-#endif
 
 #endif /* TRADSTDC_H */
