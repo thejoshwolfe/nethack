@@ -104,14 +104,16 @@ dat/dungeon.pdf: util/makedefs dat/dungeon.def
 	cd dat && ../util/makedefs -e
 
 util/dgn_yacc.c: util/dgn_comp.y
-	cd util && yacc -d ../util/dgn_comp.y
-	mv util/y.tab.c util/dgn_yacc.c
-	mv util/y.tab.h include/dgn_comp.h
+	mkdir -p util/dgn_yacc.tmp
+	cd util/dgn_yacc.tmp && yacc -d ../dgn_comp.y
+	mv util/dgn_yacc.tmp/y.tab.c util/dgn_yacc.c
+	mv util/dgn_yacc.tmp/y.tab.h include/dgn_comp.h
 
 util/lev_yacc.c: util/lev_comp.y
-	cd util && yacc -d ../util/lev_comp.y
-	mv util/y.tab.c util/lev_yacc.c
-	mv util/y.tab.h include/lev_comp.h
+	mkdir -p util/lev_yacc.tmp
+	cd util/lev_yacc.tmp && yacc -d ../lev_comp.y
+	mv util/lev_yacc.tmp/y.tab.c util/lev_yacc.c
+	mv util/lev_yacc.tmp/y.tab.h include/lev_comp.h
 
 
 include/dgn_comp.h: util/dgn_yacc.c
