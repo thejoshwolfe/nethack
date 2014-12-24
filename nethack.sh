@@ -1,6 +1,7 @@
 #!/bin/sh
 
 mkdir -p dumps
+mkdir -p save
 
 # see files.c lock_file()
 touch perm
