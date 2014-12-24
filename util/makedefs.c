@@ -656,13 +656,7 @@ static const char *build_opts[] = {
 #ifdef SUSPEND
 		"suspend command",
 #endif
-#ifdef TERMINFO
 		"terminal info library",
-#else
-# if defined(TERMLIB) || defined(TTY_GRAPHICS)
-		"terminal capability library",
-# endif
-#endif
 #ifdef TIMED_DELAY
 		"timed wait for display effects",
 #endif

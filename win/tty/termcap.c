@@ -16,11 +16,6 @@ void FDECL(cmov, (int, int));
 void FDECL(nocmov, (int, int));
 #if defined(TEXTCOLOR) && defined(TERMLIB)
 # ifdef OVLB
-#  if !defined(UNIX) || !defined(TERMINFO)
-#   ifndef TOS
-static void FDECL(analyze_seq, (char *, int *, int *));
-#   endif
-#  endif
 static void NDECL(init_hilite);
 static void NDECL(kill_hilite);
 # endif /* OVLB */
@@ -180,19 +175,7 @@ int *wid, *hgt;
 		PC = *pc;
 
 	if(!(BC = Tgetstr("le")))	/* both termcap and terminfo use le */
-# ifdef TERMINFO
 	    error("Terminal must backspace.");
-# else
-	    if(!(BC = Tgetstr("bc"))) {	/* termcap also uses bc/bs */
-#  ifndef MINIMAL_TERM
-		if(!tgetflag("bs"))
-			error("Terminal must backspace.");
-#  endif
-		BC = tbufptr;
-		tbufptr += 2;
-		*BC = '\b';
-	    }
-# endif
 
 # ifdef MINIMAL_TERM
 	HO = (char *)0;
@@ -238,17 +221,10 @@ int *wid, *hgt;
 	TI = Tgetstr("ti");
 	TE = Tgetstr("te");
 	VS = VE = nullstr;
-# ifdef TERMINFO
 	VS = Tgetstr("eA");	/* enable graphics */
-# endif
 	KS = Tgetstr("ks");	/* keypad start (special mode) */
 	KE = Tgetstr("ke");	/* keypad end (ordinary mode [ie, digits]) */
 	MR = Tgetstr("mr");	/* reverse */
-# if 0
-	MB = Tgetstr("mb");	/* blink */
-	MD = Tgetstr("md");	/* boldface */
-	MH = Tgetstr("mh");	/* dim */
-# endif
 	ME = Tgetstr("me");	/* turn off all attributes */
 	if (!ME || (SE == nullstr)) ME = SE;	/* default to SE value */
 
@@ -647,20 +623,12 @@ tty_delay_output()
 	/* BUG: if the padding character is visible, as it is on the 5620
 	   then this looks terrible. */
 	if(flags.null)
-# ifdef TERMINFO
 		/* cbosgd!cbcephus!pds for SYS V R2 */
 #  ifdef NHSTDC
 		tputs("$<50>", 1, (int (*)())xputc);
 #  else
 		tputs("$<50>", 1, xputc);
 #  endif
-# else
-#  if defined(NHSTDC) || defined(ULTRIX_PROTO)
-		tputs("50", 1, (int (*)())xputc);
-#  else
-		tputs("50", 1, xputc);
-#  endif
-# endif
 
 	else if(ospeed > 0 && ospeed < SIZE(tmspc10) && nh_CM) {
 		/* delay by sending cm(here) an appropriate number of times */
@@ -698,7 +666,6 @@ cl_eos()			/* free after Robert Viduya */
 }
 
 #if defined(TEXTCOLOR) && defined(TERMLIB)
-# if defined(UNIX) && defined(TERMINFO)
 /*
  * Sets up color highlighting, using terminfo(4) escape sequences.
  *
@@ -790,127 +757,6 @@ init_hilite()
 	}
 }
 
-# else /* UNIX && TERMINFO */
-
-#  ifndef TOS
-/* find the foreground and background colors set by nh_HI or nh_HE */
-static void
-analyze_seq (str, fg, bg)
-char *str;
-int *fg, *bg;
-{
-	register int c, code;
-	int len;
-
-	*fg = *bg = NO_COLOR;
-
-	c = (str[0] == '\233') ? 1 : 2;	 /* index of char beyond esc prefix */
-	len = strlen(str) - 1;		 /* length excluding attrib suffix */
-	if ((c != 1 && (str[0] != '\033' || str[1] != '[')) ||
-	    (len - c) < 1 || str[len] != 'm')
-		return;
-
-	while (c < len) {
-	    if ((code = atoi(&str[c])) == 0) { /* reset */
-		/* this also catches errors */
-		*fg = *bg = NO_COLOR;
-	    } else if (code == 1) { /* bold */
-		*fg |= BRIGHT;
-	    } else if (code == 7 || code == 27) { /* reverse */
-		code = *fg & ~BRIGHT;
-		*fg = *bg | (*fg & BRIGHT);
-		*bg = code;
-	    } else if (code >= 30 && code <= 37) { /* hi_foreground RGB */
-		*fg = code - 30;
-	    } else if (code >= 40 && code <= 47) { /* hi_background RGB */
-		*bg = code - 40;
-	    }
-	    while (digit(str[++c]));
-	    c++;
-	}
-}
-#  endif
-
-/*
- * Sets up highlighting sequences, using ANSI escape sequences (highlight code
- * found in print.c).  The nh_HI and nh_HE sequences (usually from SO) are
- * scanned to find foreground and background colors.
- */
-
-static void
-init_hilite()
-{
-	register int c;
-#  ifdef TOS
-	extern unsigned long tos_numcolors;	/* in tos.c */
-	static char NOCOL[] = "\033b0", COLHE[] = "\033q\033b0";
-
-	if (tos_numcolors <= 2) {
-		return;
-	}
-/* Under TOS, the "bright" and "dim" colors are reversed. Moreover,
- * on the Falcon the dim colors are *really* dim; so we make most
- * of the colors the bright versions, with a few exceptions where
- * the dim ones look OK.
- */
-	hilites[0] = NOCOL;
-	for (c = 1; c < SIZE(hilites); c++) {
-		char *foo;
-		foo = (char *) alloc(sizeof("\033b0"));
-		if (tos_numcolors > 4)
-			Sprintf(foo, "\033b%c", (c&~BRIGHT)+'0');
-		else
-			Strcpy(foo, "\033b0");
-		hilites[c] = foo;
-	}
-
-	if (tos_numcolors == 4) {
-		TI = "\033b0\033c3\033E\033e";
-		TE = "\033b3\033c0\033J";
-		nh_HE = COLHE;
-		hilites[CLR_GREEN] = hilites[CLR_GREEN|BRIGHT] = "\033b2";
-		hilites[CLR_RED] = hilites[CLR_RED|BRIGHT] = "\033b1";
-	} else {
-		sprintf(hilites[CLR_BROWN], "\033b%c", (CLR_BROWN^BRIGHT)+'0');
-		sprintf(hilites[CLR_GREEN], "\033b%c", (CLR_GREEN^BRIGHT)+'0');
-
-		TI = "\033b0\033c\017\033E\033e";
-		TE = "\033b\017\033c0\033J";
-		nh_HE = COLHE;
-		hilites[CLR_WHITE] = hilites[CLR_BLACK] = NOCOL;
-		hilites[NO_COLOR] = hilites[CLR_GRAY];
-	}
-
-#  else /* TOS */
-
-	int backg, foreg, hi_backg, hi_foreg;
-
-	for (c = 0; c < SIZE(hilites); c++)
-	    hilites[c] = nh_HI;
-	hilites[CLR_GRAY] = hilites[NO_COLOR] = (char *)0;
-
-	analyze_seq(nh_HI, &hi_foreg, &hi_backg);
-	analyze_seq(nh_HE, &foreg, &backg);
-
-	for (c = 0; c < SIZE(hilites); c++)
-	    /* avoid invisibility */
-	    if ((backg & ~BRIGHT) != c) {
-		if (c == foreg)
-		    hilites[c] = (char *)0;
-		else if (c != hi_foreg || backg != hi_backg) {
-		    hilites[c] = (char *) alloc(sizeof("\033[%d;3%d;4%dm"));
-		    Sprintf(hilites[c], "\033[%d", !!(c & BRIGHT));
-		    if ((c | BRIGHT) != (foreg | BRIGHT))
-			Sprintf(eos(hilites[c]), ";3%d", c & ~BRIGHT);
-		    if (backg != CLR_BLACK)
-			Sprintf(eos(hilites[c]), ";4%d", backg & ~BRIGHT);
-		    Strcat(hilites[c], "m");
-		}
-	    }
-
-#  endif /* TOS */
-}
-# endif /* UNIX */
 
 static void
 kill_hilite()
