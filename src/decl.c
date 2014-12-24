@@ -69,14 +69,6 @@ long yn_number = 0L;
 const char disclosure_options[] = "iavgc";
 
 
-#ifdef MFLOPPY
-char permbones[PATHLEN];	/* where permanent copy of bones go */
-int ramdisk = FALSE;		/* whether to copy bones to levels or not */
-int saveprompt = TRUE;
-const char *alllevels = "levels.*";
-const char *allbones = "bones*.*";
-#endif
-
 struct linfo level_info[MAXLINFO];
 
 struct sinfo program_state;

@@ -432,14 +432,8 @@ void display_gamewindows(void) {
     display_nhwindow(WIN_MAP, FALSE);
 }
 
-void
-newgame()
-{
+void newgame(void) {
 	int i;
-
-#ifdef MFLOPPY
-	gameDiskPrompt();
-#endif
 
 	flags.ident = 1;
 
