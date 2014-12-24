@@ -25,8 +25,8 @@ static int rect_cnt;
  * new level to be build...
  */
 
-void
-init_rect()
+void 
+init_rect (void)
 {
 	rect_cnt = 1;
 	rect[0].lx = rect[0].ly = 0;
@@ -39,9 +39,8 @@ init_rect()
  *
  */
 
-int
-get_rect_ind(r)
-NhRect *r;
+int 
+get_rect_ind (NhRect *r)
 {
 	register NhRect *rectp;
 	register int lx, ly, hx, hy;
@@ -61,8 +60,7 @@ NhRect *r;
  */
 
 NhRect *
-get_rect(r)
-NhRect *r;
+get_rect (NhRect *r)
 {
 	register NhRect *rectp;
 	register int lx, ly, hx, hy;
@@ -82,7 +80,7 @@ NhRect *r;
  */
 
 NhRect *
-rnd_rect()
+rnd_rect (void)
 {
 	    return rect_cnt > 0 ? &rect[rn2(rect_cnt)] : 0;
 }
@@ -115,9 +113,8 @@ NhRect *r1, *r2, *r3;
  * Remove a rectangle from the list of free NhRect.
  */
 
-void
-remove_rect(r)
-NhRect *r;
+void 
+remove_rect (NhRect *r)
 {
 	int ind;
 
@@ -130,9 +127,8 @@ NhRect *r;
  * Add a NhRect to the list.
  */
 
-void
-add_rect(r)
-NhRect *r;
+void 
+add_rect (NhRect *r)
 {
 	if (rect_cnt >= MAXRECT) {
 #ifdef WIZARD
@@ -154,9 +150,8 @@ NhRect *r;
  * then remove it.
  */
 
-void
-split_rects(r1, r2)
-NhRect *r1, *r2;
+void 
+split_rects (NhRect *r1, NhRect *r2)
 {
 	NhRect r, old_r;
 	int i;

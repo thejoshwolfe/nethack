@@ -76,8 +76,8 @@ void getwindowsz(void) {
 #endif
 }
 
-void
-getioctls()
+void 
+getioctls (void)
 {
 #ifdef BSD_JOB_CONTROL
 	(void) ioctl(fileno(stdin), (int) TIOCGLTC, (char *) &ltchars);

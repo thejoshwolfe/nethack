@@ -106,8 +106,8 @@ timed_occupation()
  *			Picking Locks / Forcing Chests.
  *			Setting traps.
  */
-void
-reset_occupations()
+void 
+reset_occupations (void)
 {
 	reset_remarm();
 	reset_pick();
@@ -117,11 +117,8 @@ reset_occupations()
 /* If a time is given, use it to timeout this function, otherwise the
  * function times out by its own means.
  */
-void
-set_occupation(fn, txt, xtime)
-int NDECL((*fn));
-const char *txt;
-int xtime;
+void 
+set_occupation (int NDECL ((*fn)), const char *txt, int xtime)
 {
 	if (xtime) {
 		occupation = timed_occupation;
@@ -147,8 +144,8 @@ static char NDECL(popch);
 static char pushq[BSIZE], saveq[BSIZE];
 static int phead, ptail, shead, stail;
 
-static char
-popch() {
+static char 
+popch (void) {
 	/* If occupied, return '\0', letting tgetch know a character should
 	 * be read from the keyboard.  If the character read is not the
 	 * ABORT character (as checked in pcmain.c), that character will be
@@ -159,8 +156,8 @@ popch() {
 	else		return(char)((phead != ptail) ? pushq[ptail++] : '\0');
 }
 
-char
-pgetchar() {		/* curtesy of aeb@cwi.nl */
+char 
+pgetchar (void) {		/* curtesy of aeb@cwi.nl */
 	register int ch;
 
 	if(!(ch = popch()))
@@ -169,9 +166,8 @@ pgetchar() {		/* curtesy of aeb@cwi.nl */
 }
 
 /* A ch == 0 resets the pushq */
-void
-pushch(ch)
-char ch;
+void 
+pushch (char ch)
 {
 	if (!ch)
 		phead = ptail = 0;
@@ -183,9 +179,8 @@ char ch;
 /* A ch == 0 resets the saveq.	Only save keystrokes when not
  * replaying a previous command.
  */
-void
-savech(ch)
-char ch;
+void 
+savech (char ch)
 {
 	if (!in_doagain) {
 		if (!ch)
@@ -245,8 +240,8 @@ doextlist()	/* here after #? - now list all full-word commands */
  * This is currently used only by the tty port and is
  * controlled via runtime option 'extmenu'
  */
-int
-extcmd_via_menu()	/* here after # - now show pick-list of possible commands */
+int 
+extcmd_via_menu (void)	/* here after # - now show pick-list of possible commands */
 {
     const struct ext_func_tab *efp;
     menu_item *pick_list = (menu_item *)0;
@@ -496,8 +491,8 @@ wiz_level_tele()
 }
 
 /* #monpolycontrol command - choose new form for shapechangers, polymorphees */
-STATIC_PTR int
-wiz_mon_polycontrol()
+STATIC_PTR int 
+wiz_mon_polycontrol (void)
 {
     iflags.mon_polycontrol = !iflags.mon_polycontrol;
     pline("Monster polymorph control is %s.",
@@ -506,8 +501,8 @@ wiz_mon_polycontrol()
 }
 
 /* #levelchange command - adjust hero's experience level */
-STATIC_PTR int
-wiz_level_change()
+STATIC_PTR int 
+wiz_level_change (void)
 {
     char buf[BUFSZ];
     int newlevel;
@@ -546,8 +541,8 @@ wiz_level_change()
 }
 
 /* #panic command - test program's panic handling */
-STATIC_PTR int
-wiz_panic()
+STATIC_PTR int 
+wiz_panic (void)
 {
 	if (yn("Do you want to call panic() and end your game?") == 'y')
 		panic("crash test.");
@@ -555,16 +550,16 @@ wiz_panic()
 }
 
 /* #polyself command - change hero's form */
-STATIC_PTR int
-wiz_polyself()
+STATIC_PTR int 
+wiz_polyself (void)
 {
         polyself(TRUE);
         return 0;
 }
 
 /* #seenv command */
-STATIC_PTR int
-wiz_show_seenv()
+STATIC_PTR int 
+wiz_show_seenv (void)
 {
 	winid win;
 	int x, y, v, startx, stopx, curx;
@@ -605,8 +600,8 @@ wiz_show_seenv()
 }
 
 /* #vision command */
-STATIC_PTR int
-wiz_show_vision()
+STATIC_PTR int 
+wiz_show_vision (void)
 {
 	winid win;
 	int x, y, v;
@@ -642,8 +637,8 @@ wiz_show_vision()
 }
 
 /* #wmode command */
-STATIC_PTR int
-wiz_show_wmodes()
+STATIC_PTR int 
+wiz_show_wmodes (void)
 {
 	winid win;
 	int x,y;
@@ -696,9 +691,8 @@ static const char
 #define you_have_never(badthing) enl_msg(You_,have_never,never,badthing)
 #define you_have_X(something)	enl_msg(You_,have,(const char *)"",something)
 
-static void
-enlght_line(start, middle, end)
-const char *start, *middle, *end;
+static void 
+enlght_line (const char *start, const char *middle, const char *end)
 {
 	char buf[BUFSZ];
 
@@ -708,10 +702,7 @@ const char *start, *middle, *end;
 
 /* format increased damage or chance to hit */
 static char *
-enlght_combatinc(inctyp, incamt, final, outbuf)
-const char *inctyp;
-int incamt, final;
-char *outbuf;
+enlght_combatinc (const char *inctyp, int incamt, int final, char *outbuf)
 {
 	char numbuf[24];
 	const char *modif, *bonus;
@@ -743,9 +734,10 @@ char *outbuf;
 	return outbuf;
 }
 
-void
-enlightenment(final)
-int final;	/* 0 => still in progress; 1 => over, survived; 2 => dead */
+void 
+enlightenment (
+    int final	/* 0 => still in progress; 1 => over, survived; 2 => dead */
+)
 {
 	int ltmp;
 	char buf[BUFSZ];
@@ -1038,9 +1030,8 @@ int final;	/* 0 => still in progress; 1 => over, survived; 2 => dead */
 }
 
 #ifdef DUMP_LOG
-void
-dump_enlightenment(final)
-int final;
+void 
+dump_enlightenment (int final)
 {
 	int ltmp;
 	char buf[BUFSZ];
@@ -1435,8 +1426,8 @@ minimal_enlightenment()
 	return (n != -1);
 }
 
-STATIC_PTR int
-doattributes()
+STATIC_PTR int 
+doattributes (void)
 {
 	if (!minimal_enlightenment())
 		return 0;
@@ -1448,16 +1439,15 @@ doattributes()
 /* KMH, #conduct
  * (shares enlightenment's tense handling)
  */
-STATIC_PTR int
-doconduct()
+STATIC_PTR int 
+doconduct (void)
 {
 	show_conduct(0);
 	return 0;
 }
 
-void
-show_conduct(final)
-int final;
+void 
+show_conduct (int final)
 {
 	char buf[BUFSZ];
 	int ngenocided;
@@ -1547,9 +1537,8 @@ int final;
 }
 
 #ifdef DUMP_LOG
-void
-dump_conduct(final)
-int final;
+void 
+dump_conduct (int final)
 {
 	char buf[BUFSZ];
 	int ngenocided;
@@ -1856,8 +1845,8 @@ static const struct ext_func_tab debug_extcmdlist[] = {
  * You must add entries in ext_func_tab every time you add one to the
  * debug_extcmdlist().
  */
-void
-add_debug_extended_commands()
+void 
+add_debug_extended_commands (void)
 {
 	int i, j, k, n;
 
@@ -1905,13 +1894,8 @@ count_obj(chain, total_count, total_size, top, recurse)
 	*total_size += size;
 }
 
-STATIC_OVL void
-obj_chain(win, src, chain, total_count, total_size)
-	winid win;
-	const char *src;
-	struct obj *chain;
-	long *total_count;
-	long *total_size;
+STATIC_OVL void 
+obj_chain (winid win, const char *src, struct obj *chain, long *total_count, long *total_size)
 {
 	char buf[BUFSZ];
 	long count = 0, size = 0;
@@ -1923,13 +1907,8 @@ obj_chain(win, src, chain, total_count, total_size)
 	putstr(win, 0, buf);
 }
 
-STATIC_OVL void
-mon_invent_chain(win, src, chain, total_count, total_size)
-	winid win;
-	const char *src;
-	struct monst *chain;
-	long *total_count;
-	long *total_size;
+STATIC_OVL void 
+mon_invent_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
 {
 	char buf[BUFSZ];
 	long count = 0, size = 0;
@@ -1943,12 +1922,8 @@ mon_invent_chain(win, src, chain, total_count, total_size)
 	putstr(win, 0, buf);
 }
 
-STATIC_OVL void
-contained(win, src, total_count, total_size)
-	winid win;
-	const char *src;
-	long *total_count;
-	long *total_size;
+STATIC_OVL void 
+contained (winid win, const char *src, long *total_count, long *total_size)
 {
 	char buf[BUFSZ];
 	long count = 0, size = 0;
@@ -1970,13 +1945,8 @@ contained(win, src, total_count, total_size)
 	putstr(win, 0, buf);
 }
 
-STATIC_OVL void
-mon_chain(win, src, chain, total_count, total_size)
-	winid win;
-	const char *src;
-	struct monst *chain;
-	long *total_count;
-	long *total_size;
+STATIC_OVL void 
+mon_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
 {
 	char buf[BUFSZ];
 	long count, size;
@@ -1995,8 +1965,8 @@ mon_chain(win, src, chain, total_count, total_size)
 /*
  * Display memory usage of all monsters and objects on the level.
  */
-static int
-wiz_show_stats()
+static int 
+wiz_show_stats (void)
 {
 	char buf[BUFSZ];
 	winid win;
@@ -2049,16 +2019,16 @@ wiz_show_stats()
 	return 0;
 }
 
-void
-sanity_check()
+void 
+sanity_check (void)
 {
 	obj_sanity_check();
 	timer_sanity_check();
 }
 
 #ifdef DEBUG_MIGRATING_MONS
-static int
-wiz_migrate_mons()
+static int 
+wiz_migrate_mons (void)
 {
 	int mcount = 0;
 	char inbuf[BUFSZ];
@@ -2091,9 +2061,8 @@ wiz_migrate_mons()
 #define unmeta(c)	(0x7f & (c))
 
 
-void
-rhack(cmd)
-register char *cmd;
+void 
+rhack (register char *cmd)
 {
 	boolean do_walk, do_rush, prefix_seen, bad_command,
 		firsttime = (cmd == 0);
@@ -2292,9 +2261,11 @@ register char *cmd;
 	return;
 }
 
-int
-xytod(x, y)	/* convert an x,y pair into a direction code */
-signed char x, y;
+int 
+xytod (	/* convert an x,y pair into a direction code */
+    signed char x,
+    signed char y
+)
 {
 	register int dd;
 
@@ -2304,19 +2275,21 @@ signed char x, y;
 	return -1;
 }
 
-void
-dtoxy(cc,dd)	/* convert a direction code into an x,y pair */
-coord *cc;
-register int dd;
+void 
+dtoxy (	/* convert a direction code into an x,y pair */
+    coord *cc,
+    register int dd
+)
 {
 	cc->x = xdir[dd];
 	cc->y = ydir[dd];
 	return;
 }
 
-int
-movecmd(sym)	/* also sets u.dz, but returns false for <> */
-char sym;
+int 
+movecmd (	/* also sets u.dz, but returns false for <> */
+    char sym
+)
 {
 	register const char *dp;
 	register const char *sdp;
@@ -2344,10 +2317,8 @@ char sym;
  *
  * Returns non-zero if coordinates in cc are valid.
  */
-int get_adjacent_loc(prompt,emsg,x,y,cc)
-const char *prompt, *emsg;
-signed char x,y;
-coord *cc;
+int 
+get_adjacent_loc (const char *prompt, const char *emsg, signed char x, signed char y, coord *cc)
 {
 	signed char new_x, new_y;
 	if (!getdir(prompt)) {
@@ -2366,9 +2337,8 @@ coord *cc;
 	return 1;
 }
 
-int
-getdir(s)
-const char *s;
+int 
+getdir (const char *s)
 {
 	char dirsym;
 
@@ -2482,8 +2452,8 @@ const char *msg;
 #endif /* OVL1 */
 #ifdef OVLB
 
-void
-confdir()
+void 
+confdir (void)
 {
 	register int x = (u.umonnum == PM_GRID_BUG) ? 2*rn2(4) : rn2(8);
 	u.dx = xdir[x];
@@ -2494,9 +2464,8 @@ confdir()
 #endif /* OVLB */
 #ifdef OVL0
 
-int
-isok(x,y)
-register int x, y;
+int 
+isok (register int x, register int y)
 {
 	/* x corresponds to curx, so x==1 is the first column. Ach. %% */
 	return x >= 1 && x <= COLNO-1 && y >= 0 && y <= ROWNO-1;
@@ -2508,8 +2477,7 @@ static int last_multi;
  * convert a MAP window position into a movecmd
  */
 const char *
-click_to_cmd(x, y, mod)
-    int x, y, mod;
+click_to_cmd (int x, int y, int mod)
 {
     int dir;
     static char cmd[4];
@@ -2608,7 +2576,7 @@ click_to_cmd(x, y, mod)
 }
 
 STATIC_OVL char *
-parse()
+parse (void)
 {
 #ifdef LINT	/* static char in_line[COLNO]; */
 	char in_line[COLNO];
@@ -2678,9 +2646,8 @@ parse()
 #ifdef OVLB
 
 #ifdef UNIX
-static
-void
-end_of_input()
+static void 
+end_of_input (void)
 {
 #ifndef NOSAVEONHANGUP
 	if (!program_state.done_hup++ && program_state.something_worth_saving)
@@ -2695,8 +2662,8 @@ end_of_input()
 #endif /* OVLB */
 #ifdef OVL0
 
-char
-readchar()
+char 
+readchar (void)
 {
 	register int sym;
 	int x = u.ux, y = u.uy, mod = 0;
@@ -2737,8 +2704,8 @@ readchar()
 	return((char) sym);
 }
 
-STATIC_PTR int
-dotravel()
+STATIC_PTR int 
+dotravel (void)
 {
 	/* Keyboard travel command */
 	static char cmd[2];
@@ -2812,10 +2779,8 @@ int wiz_port_debug(void) {
  *   the core from sending too long a prompt string to the
  *   window port causing a buffer overflow there.
  */
-char
-yn_function(query,resp, def)
-const char *query,*resp;
-char def;
+char 
+yn_function (const char *query, const char *resp, char def)
 {
 	char qbuf[QBUFSZ];
 	unsigned truncspot, reduction = sizeof(" [N]  ?") + 1;

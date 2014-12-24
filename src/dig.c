@@ -126,10 +126,8 @@ register boolean rockit;
 }
 
 /* When digging into location <x,y>, what are you actually digging into? */
-STATIC_OVL int
-dig_typ(otmp, x, y)
-struct obj *otmp;
-signed char x, y;
+STATIC_OVL int 
+dig_typ (struct obj *otmp, signed char x, signed char y)
 {
 	boolean ispick = is_pick(otmp);
 
@@ -429,8 +427,8 @@ cleanup:
 }
 
 /* When will hole be finished? Very rough indication used by shopkeeper. */
-int
-holetime()
+int 
+holetime (void)
 {
 	if(occupation != dig || !*u.ushops) return(-1);
 	return ((250 - digging.effort) / 20);
@@ -467,11 +465,8 @@ STATIC_OVL signed char fillholetyp(int x,int y) {
 	return ROOM;
 }
 
-void
-digactualhole(x, y, madeby, ttyp)
-register int	x, y;
-struct monst	*madeby;
-int ttyp;
+void 
+digactualhole (register int x, register int y, struct monst *madeby, int ttyp)
 {
 	struct obj *oldobjs, *newobjs;
 	register struct trap *ttmp;
@@ -753,8 +748,8 @@ boolean pit_only;
 	return FALSE;
 }
 
-STATIC_OVL void
-dig_up_grave()
+STATIC_OVL void 
+dig_up_grave (void)
 {
 	struct obj *otmp;
 
@@ -799,9 +794,8 @@ dig_up_grave()
 	return;
 }
 
-int
-use_pick_axe(obj)
-struct obj *obj;
+int 
+use_pick_axe (struct obj *obj)
 {
 	boolean ispick;
 	char dirsyms[12];
@@ -852,9 +846,8 @@ struct obj *obj;
 /*       the "In what direction do you want to dig?" query.        */
 /*       use_pick_axe2() uses the existing u.dx, u.dy and u.dz    */
 
-int
-use_pick_axe2(obj) 
-struct obj *obj;
+int 
+use_pick_axe2 (struct obj *obj)
 {
 	register int rx, ry;
 	register struct rm *lev;
@@ -1273,8 +1266,7 @@ void zap_dig(void) {
 /* move objects from fobj/nexthere lists to buriedobjlist, keeping position */
 /* information */
 struct obj *
-bury_an_obj(otmp)
-	struct obj *otmp;
+bury_an_obj (struct obj *otmp)
 {
 	struct obj *otmp2;
 	boolean under_ice;
@@ -1326,9 +1318,8 @@ bury_an_obj(otmp)
 	return(otmp2);
 }
 
-void
-bury_objs(x, y)
-int x, y;
+void 
+bury_objs (int x, int y)
 {
 	struct obj *otmp, *otmp2;
 
@@ -1345,9 +1336,8 @@ int x, y;
 }
 
 /* move objects from buriedobjlist to fobj/nexthere lists */
-void
-unearth_objs(x, y)
-int x, y;
+void 
+unearth_objs (int x, int y)
 {
 	struct obj *otmp, *otmp2;
 
@@ -1378,10 +1368,11 @@ int x, y;
  * away, any contents become newly buried objects.
  */
 /* ARGSUSED */
-void
-rot_organic(arg, timeout)
-void * arg;
-long timeout;	/* unused */
+void 
+rot_organic (
+    void *arg,
+    long timeout	/* unused */
+)
 {
 	struct obj *obj = (struct obj *) arg;
 
@@ -1401,10 +1392,11 @@ long timeout;	/* unused */
 /*
  * Called when a corpse has rotted completely away.
  */
-void
-rot_corpse(arg, timeout)
-void * arg;
-long timeout;	/* unused */
+void 
+rot_corpse (
+    void *arg,
+    long timeout	/* unused */
+)
 {
 	signed char x = 0, y = 0;
 	struct obj *obj = (struct obj *) arg;
@@ -1444,8 +1436,8 @@ long timeout;	/* unused */
 
 
 #ifdef DEBUG
-int
-wiz_debug_cmd() /* in this case, bury everything at your loc and around */
+int 
+wiz_debug_cmd (void) /* in this case, bury everything at your loc and around */
 {
 	int x, y;
 

@@ -68,9 +68,8 @@ const char * const killed_by_prefix[] = {
 
 static winid toptenwin = WIN_ERR;
 
-STATIC_OVL void
-topten_print(x)
-const char *x;
+STATIC_OVL void 
+topten_print (const char *x)
 {
 	if (toptenwin == WIN_ERR)
 	    raw_print(x);
@@ -78,9 +77,8 @@ const char *x;
 	    putstr(toptenwin, ATR_NONE, x);
 }
 
-STATIC_OVL void
-topten_print_bold(x)
-const char *x;
+STATIC_OVL void 
+topten_print_bold (const char *x)
 {
 	if (toptenwin == WIN_ERR)
 	    raw_print_bold(x);
@@ -88,9 +86,8 @@ const char *x;
 	    putstr(toptenwin, ATR_BOLD, x);
 }
 
-STATIC_OVL signed char
-observable_depth(lev)
-d_level *lev;
+STATIC_OVL signed char 
+observable_depth (d_level *lev)
 {
 	    return depth(lev);
 }
@@ -199,9 +196,8 @@ struct toptenentry *tt;
 #endif
 }
 
-STATIC_OVL void
-free_ttlist(tt)
-struct toptenentry *tt;
+STATIC_OVL void 
+free_ttlist (struct toptenentry *tt)
 {
 	struct toptenentry *ttnext;
 
@@ -213,9 +209,8 @@ struct toptenentry *tt;
 	dealloc_ttentry(tt);
 }
 
-void
-topten(how)
-int how;
+void 
+topten (int how)
 {
 	int uid = getuid();
 	int rank, rank0 = -1, rank1 = 0;
@@ -528,8 +523,8 @@ int how;
 	}
 }
 
-STATIC_OVL void
-outheader()
+STATIC_OVL void 
+outheader (void)
 {
 	char linebuf[BUFSZ];
 	register char *bp;
@@ -745,10 +740,8 @@ int uid;
  * argc >= 2, with argv[0] untrustworthy (directory names, et al.),
  * and argv[1] starting with "-s".
  */
-void
-prscore(argc,argv)
-int argc;
-char **argv;
+void 
+prscore (int argc, char **argv)
 {
 	const char **players;
 	int playerct, rank;
@@ -895,8 +888,7 @@ classmon(plch, fem)
  * and attach them to an object (for statues or morgue corpses).
  */
 struct obj *
-tt_oname(otmp)
-struct obj *otmp;
+tt_oname (struct obj *otmp)
 {
 	int rank;
 	register int i;
@@ -944,16 +936,14 @@ pickentry:
 /* Lattice scanf isn't up to reading the scorefile.  What */
 /* follows deals with that; I admit it's ugly. (KL) */
 /* Now generally available (KL) */
-STATIC_OVL void
-nsb_mung_line(p)
-	char *p;
+STATIC_OVL void 
+nsb_mung_line (char *p)
 {
 	while ((p = index(p, ' ')) != 0) *p = '|';
 }
 
-STATIC_OVL void
-nsb_unmung_line(p)
-	char *p;
+STATIC_OVL void 
+nsb_unmung_line (char *p)
 {
 	while ((p = index(p, '|')) != 0) *p = ' ';
 }

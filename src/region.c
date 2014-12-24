@@ -67,9 +67,7 @@ int x, y;
  * Create a region. It does not activate it.
  */
 NhRegion *
-create_region(rects, nrect)
-NhRect *rects;
-int nrect;
+create_region (NhRect *rects, int nrect)
 {
     int i;
     NhRegion *reg;
@@ -121,10 +119,8 @@ int nrect;
 /*
  * Add rectangle to region.
  */
-void
-add_rect_to_reg(reg, rect)
-NhRegion *reg;
-NhRect *rect;
+void 
+add_rect_to_reg (NhRegion *reg, NhRect *rect)
 {
     NhRect *tmp_rect;
 
@@ -151,10 +147,8 @@ NhRect *rect;
 /*
  * Add a monster to the region
  */
-void
-add_mon_to_reg(reg, mon)
-NhRegion *reg;
-struct monst *mon;
+void 
+add_mon_to_reg (NhRegion *reg, struct monst *mon)
 {
     int i;
     unsigned *tmp_m;
@@ -176,10 +170,8 @@ struct monst *mon;
 /*
  * Remove a monster from the region list (it left or died...)
  */
-void
-remove_mon_from_reg(reg, mon)
-NhRegion *reg;
-struct monst *mon;
+void 
+remove_mon_from_reg (NhRegion *reg, struct monst *mon)
 {
     register int i;
 
@@ -213,9 +205,8 @@ struct monst *mon;
 /*
  * Free mem from region.
  */
-void
-free_region(reg)
-NhRegion *reg;
+void 
+free_region (NhRegion *reg)
 {
     if (reg) {
 	if (reg->rects)
@@ -230,9 +221,8 @@ NhRegion *reg;
  * Add a region to the list.
  * This actually activates the region.
  */
-void
-add_region(reg)
-NhRegion *reg;
+void 
+add_region (NhRegion *reg)
 {
     NhRegion **tmp_reg;
     int i, j;
@@ -270,9 +260,8 @@ NhRegion *reg;
 /*
  * Remove a region from the list & free it.
  */
-void
-remove_region(reg)
-NhRegion *reg;
+void 
+remove_region (NhRegion *reg)
 {
     register int i, x, y;
 
@@ -299,8 +288,8 @@ NhRegion *reg;
  * Remove all regions and clear all related data (This must be down
  * when changing level, for instance).
  */
-void
-clear_regions()
+void 
+clear_regions (void)
 {
     register int i;
 
@@ -318,8 +307,8 @@ clear_regions()
  * It makes the regions age, if necessary and calls the appropriate
  * callbacks when needed.
  */
-void
-run_regions()
+void 
+run_regions (void)
 {
     register int i, j, k;
     int f_indx;
@@ -463,8 +452,8 @@ signed char x, y;
 /*
  * Checks player's regions after a teleport for instance.
  */
-void
-update_player_regions()
+void 
+update_player_regions (void)
 {
     register int i;
 
@@ -478,9 +467,8 @@ update_player_regions()
 /*
  * Ditto for a specified monster.
  */
-void
-update_monster_region(mon)
-struct monst *mon;
+void 
+update_monster_region (struct monst *mon)
 {
     register int i;
 
@@ -501,8 +489,7 @@ struct monst *mon;
  * Returns NULL if not, otherwise returns region.
  */
 NhRegion *
-visible_region_at(x, y)
-signed char x, y;
+visible_region_at (signed char x, signed char y)
 {
     register int i;
 
@@ -513,10 +500,8 @@ signed char x, y;
     return (NhRegion *) 0;
 }
 
-void
-show_region(reg, x, y)
-NhRegion *reg;
-signed char x, y;
+void 
+show_region (NhRegion *reg, signed char x, signed char y)
 {
     show_glyph(x, y, reg->glyph);
 }
@@ -524,10 +509,8 @@ signed char x, y;
 /**
  * save_regions :
  */
-void
-save_regions(fd, mode)
-int fd;
-int mode;
+void 
+save_regions (int fd, int mode)
 {
     int i, j;
     unsigned n;
@@ -663,9 +646,8 @@ boolean ghostly; /* If a bones file restore */
 }
 
 /* update monster IDs for region being loaded from bones; `ghostly' implied */
-static void
-reset_region_mids(reg)
-NhRegion *reg;
+static void 
+reset_region_mids (NhRegion *reg)
 {
     int i = 0, n = reg->n_monst;
     unsigned *mid_list = reg->monsters;
@@ -769,10 +751,7 @@ void * p2;
 }
 
 NhRegion *
-create_gas_cloud(x, y, radius, damage)
-signed char x, y;
-int radius;
-int damage;
+create_gas_cloud (signed char x, signed char y, int radius, int damage)
 {
     NhRegion *cloud;
     int i, nrect;

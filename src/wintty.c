@@ -140,9 +140,8 @@ static const char default_menu_cmds[] = {
 
 
 /* clean up and quit */
-STATIC_OVL void
-bail(mesg)
-const char *mesg;
+STATIC_OVL void 
+bail (const char *mesg)
 {
     clearlocks();
     tty_exit_nhwindows(mesg);
@@ -955,11 +954,13 @@ STATIC_OVL void invert_all_on_page(winid window, tty_menu_item *page_start,
  * Invert all entries that match the give group accelerator (or all if
  * zero).
  */
-STATIC_OVL void
-invert_all(window, page_start, page_end, acc)
-    winid window;
-    tty_menu_item *page_start, *page_end;
-    char acc;	/* group accelerator, 0 => all */
+STATIC_OVL void 
+invert_all (
+    winid window,
+    tty_menu_item *page_start,
+    tty_menu_item *page_end,
+    char acc	/* group accelerator, 0 => all */
+)
 {
     tty_menu_item *curr;
     boolean on_curr_page;

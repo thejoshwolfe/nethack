@@ -346,8 +346,8 @@ boolean allow_drag;
 		return FALSE;
 }
 
-STATIC_OVL void
-vault_tele()
+STATIC_OVL void 
+vault_tele (void)
 {
 	register struct mkroom *croom = search_special(VAULT);
 	coord c;
@@ -390,8 +390,8 @@ boolean force_it;
 	return TRUE;
 }
 
-void
-tele()
+void 
+tele (void)
 {
 	coord cc;
 
@@ -556,8 +556,8 @@ dotele()
 }
 
 
-void
-level_tele()
+void 
+level_tele (void)
 {
 	register int newlev;
 	d_level newlevel;
@@ -801,9 +801,8 @@ level_tele()
 	if (u.utotype && !flags.mon_moving) deferred_goto();
 }
 
-void
-domagicportal(ttmp)
-register struct trap *ttmp;
+void 
+domagicportal (register struct trap *ttmp)
 {
 	struct d_level target_level;
 
@@ -833,9 +832,8 @@ register struct trap *ttmp;
 		      (char *)0);
 }
 
-void
-tele_trap(trap)
-struct trap *trap;
+void 
+tele_trap (struct trap *trap)
 {
 	if (In_endgame(&u.uz) || Antimagic) {
 		if (Antimagic)
@@ -851,9 +849,8 @@ struct trap *trap;
 		tele();
 }
 
-void
-level_tele_trap(trap)
-struct trap *trap;
+void 
+level_tele_trap (struct trap *trap)
 {
 	You("%s onto a level teleport trap!",
 		      Levitation ? (const char *)"float" :
@@ -927,10 +924,8 @@ struct monst *mtmp;
  * migrating_mon.  Worm tails are always placed randomly around the head of
  * the worm.
  */
-void
-rloc_to(mtmp, x, y)
-struct monst *mtmp;
-register int x, y;
+void 
+rloc_to (struct monst *mtmp, register int x, register int y)
 {
 	register int oldx = mtmp->mx, oldy = mtmp->my;
 	boolean resident_shk = mtmp->isshk && inhishop(mtmp);
@@ -1025,9 +1020,8 @@ boolean suppress_impossible;
 	return TRUE;
 }
 
-STATIC_OVL void
-mvault_tele(mtmp)
-struct monst *mtmp;
+STATIC_OVL void 
+mvault_tele (struct monst *mtmp)
 {
 	register struct mkroom *croom = search_special(VAULT);
 	coord c;
@@ -1053,11 +1047,8 @@ struct monst *mon;
 	return FALSE;
 }
 
-void
-mtele_trap(mtmp, trap, in_sight)
-struct monst *mtmp;
-struct trap *trap;
-int in_sight;
+void 
+mtele_trap (struct monst *mtmp, struct trap *trap, int in_sight)
 {
 	char *monname;
 
@@ -1154,9 +1145,8 @@ int in_sight;
 }
 
 
-void
-rloco(obj)
-register struct obj *obj;
+void 
+rloco (register struct obj *obj)
 {
 	register signed char tx, ty, otx, oty;
 	boolean restricted_fall;
@@ -1203,8 +1193,8 @@ register struct obj *obj;
 }
 
 /* Returns an absolute depth */
-int
-random_teleport_level()
+int 
+random_teleport_level (void)
 {
 	int nlev, max_depth, min_depth,
 	    cur_depth = (int)depth(&u.uz);

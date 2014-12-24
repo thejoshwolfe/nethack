@@ -356,9 +356,8 @@ struct obj *otmp;
 	return 0;
 }
 
-void
-probe_monster(mtmp)
-struct monst *mtmp;
+void 
+probe_monster (struct monst *mtmp)
 {
 	struct obj *otmp;
 

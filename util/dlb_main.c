@@ -64,8 +64,8 @@ static const char *list_file = LIBLISTFILE;
  *  C dir	chdir to dir (used ONCE, not like tar's -C)
  */
 
-static void
-usage()
+static void 
+usage (void)
 {
     (void) printf("Usage: %s [ctxCIfv] arguments... [files...]\n", progname);
     (void) printf("  default library is %s\n", library_file);
@@ -73,8 +73,8 @@ usage()
     xexit(EXIT_FAILURE);
 }
 
-static void
-verbose_help()
+static void 
+verbose_help (void)
 {
     static const char *long_help[] = {
 	"",
@@ -100,11 +100,8 @@ verbose_help()
     usage();
 }
 
-static void
-Write(out,buf,len)
-    int out;
-    char *buf;
-    long len;
+static void 
+Write (int out, char *buf, long len)
 {
     if (write(out,buf,len) != len) {
         printf("Write Error in '%s'\n",library_file);
@@ -114,8 +111,7 @@ Write(out,buf,len)
 
 
 char *
-eos(s)
-    char *s;
+eos (char *s)
 {
     while (*s) s++;
     return s;
@@ -130,10 +126,8 @@ const char *filename, *mode;
     return fopen(filename, mode);
 }
 
-int
-main(argc, argv)
-    int argc;
-    char **argv;
+int 
+main (int argc, char **argv)
 {
     int i, r;
     int ap=2;				/* argument pointer */
@@ -427,11 +421,8 @@ main(argc, argv)
     return 0;
 }
 
-static void
-write_dlb_directory(out, nfiles, ld, slen, dir_size, flen)
-int out, nfiles;
-libdir *ld;
-long slen, dir_size, flen;
+static void 
+write_dlb_directory (int out, int nfiles, libdir *ld, long slen, long dir_size, long flen)
 {
     char buf[BUFSIZ];
     int i;

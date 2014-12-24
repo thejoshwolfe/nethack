@@ -18,9 +18,7 @@ STATIC_PTR void FDECL(openone,(int,int,void *));
 
 /* Recursively search obj for an object in class oclass and return 1st found */
 struct obj *
-o_in(obj, oclass)
-struct obj* obj;
-char oclass;
+o_in (struct obj *obj, char oclass)
 {
     register struct obj* otmp;
     struct obj *temp;
@@ -38,9 +36,7 @@ char oclass;
 
 /* Recursively search obj for an object made of specified material and return 1st found */
 struct obj *
-o_material(obj, material)
-struct obj* obj;
-unsigned material;
+o_material (struct obj *obj, unsigned material)
 {
     register struct obj* otmp;
     struct obj *temp;
@@ -56,9 +52,8 @@ unsigned material;
     return (struct obj *) 0;
 }
 
-STATIC_OVL void
-do_dknown_of(obj)
-struct obj *obj;
+STATIC_OVL void 
+do_dknown_of (struct obj *obj)
 {
     struct obj *otmp;
 
@@ -155,9 +150,8 @@ unsigned material;
 }
 
 /* look for gold, on the floor or in monsters' possession */
-int
-gold_detect(sobj)
-register struct obj *sobj;
+int 
+gold_detect (register struct obj *sobj)
 {
     register struct obj *obj;
     register struct monst *mtmp;

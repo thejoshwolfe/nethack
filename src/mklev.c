@@ -209,8 +209,8 @@ boolean special;
 	nsubroom++;
 }
 
-STATIC_OVL void
-makerooms()
+STATIC_OVL void 
+makerooms (void)
 {
 	boolean tried_vault = FALSE;
 
@@ -303,8 +303,8 @@ boolean nxcor;
 		smeq[a] = smeq[b];
 }
 
-void
-makecorridors()
+void 
+makecorridors (void)
 {
 	int a, b, i;
 	boolean any = TRUE;
@@ -333,10 +333,8 @@ makecorridors()
 	    }
 }
 
-void
-add_door(x,y,aroom)
-register int x, y;
-register struct mkroom *aroom;
+void 
+add_door (register int x, register int y, register struct mkroom *aroom)
 {
 	register struct mkroom *broom;
 	register int tmp;
@@ -432,9 +430,8 @@ static const char *trap_engravings[TRAPNUM] = {
 			(char *)0,
 };
 
-STATIC_OVL void
-makeniche(trap_type)
-int trap_type;
+STATIC_OVL void 
+makeniche (int trap_type)
 {
 	register struct mkroom *aroom;
 	register struct rm *rm;
@@ -483,8 +480,8 @@ int trap_type;
 	}
 }
 
-STATIC_OVL void
-make_niches()
+STATIC_OVL void 
+make_niches (void)
 {
 	register int ct = rnd((nroom>>1) + 1), dep = depth(&u.uz);
 
@@ -502,8 +499,8 @@ make_niches()
 	}
 }
 
-STATIC_OVL void
-makevtele()
+STATIC_OVL void 
+makevtele (void)
 {
 	makeniche(TELEP_TRAP);
 }
@@ -513,8 +510,8 @@ makevtele()
  * special) but it's easier to put it all in one place than make sure
  * each type initializes what it needs to separately.
  */
-STATIC_OVL void
-clear_level_structures()
+STATIC_OVL void 
+clear_level_structures (void)
 {
 	static struct rm zerorm = { cmap_to_glyph(S_stone),
 						0, 0, 0, 0, 0, 0, 0, 0 };
@@ -568,8 +565,8 @@ clear_level_structures()
 	clear_regions();
 }
 
-STATIC_OVL void
-makelevel()
+STATIC_OVL void 
+makelevel (void)
 {
 	register struct mkroom *croom, *troom;
 	register int tryct;
@@ -805,8 +802,8 @@ skip0:
  *	surrounding the rooms on the map.
  *	Also place kelp in water.
  */
-STATIC_OVL void
-mineralize()
+STATIC_OVL void 
+mineralize (void)
 {
 	s_level *sp;
 	struct obj *otmp;
@@ -885,8 +882,8 @@ mineralize()
 	    }
 }
 
-void
-mklev()
+void 
+mklev (void)
 {
 	struct mkroom *croom;
 
@@ -914,12 +911,9 @@ mklev()
 
 void
 #ifdef SPECIALIZATION
-topologize(croom, do_ordinary)
-register struct mkroom *croom;
-boolean do_ordinary;
+topologize(struct mkroom *croom, boolean do_ordinary)
 #else
-topologize(croom)
-register struct mkroom *croom;
+topologize (struct mkroom *croom)
 #endif
 {
 	register int x, y, roomno = (croom - rooms) + ROOMOFFSET;
@@ -981,8 +975,7 @@ register struct mkroom *croom;
 
 /* Find an unused room for a branch location. */
 STATIC_OVL struct mkroom *
-find_branch_room(mp)
-    coord *mp;
+find_branch_room (coord *mp)
 {
     struct mkroom *croom = 0;
 
@@ -1021,10 +1014,12 @@ STATIC_OVL struct mkroom * pos_to_room(signed char x, signed char y) {
 
 
 /* If given a branch, randomly place a special stair or portal. */
-void
-place_branch(br, x, y)
-branch *br;	/* branch to place */
-signed char x, y;	/* location */
+void 
+place_branch (
+    branch *br,	/* branch to place */
+    signed char x,
+    signed char y	/* location */
+)
 {
 	coord	      m;
 	d_level	      *dest;
@@ -1102,9 +1097,8 @@ STATIC_OVL boolean bydoor(signed char x, signed char y) {
 }
 
 /* see whether it is allowable to create a door at [x,y] */
-int
-okdoor(x,y)
-register signed char x, y;
+int 
+okdoor (register signed char x, register signed char y)
 {
 	register boolean near_door = bydoor(x, y);
 
@@ -1112,10 +1106,8 @@ register signed char x, y;
 			doorindex < DOORMAX && !near_door);
 }
 
-void
-dodoor(x,y,aroom)
-register int x, y;
-register struct mkroom *aroom;
+void 
+dodoor (register int x, register int y, register struct mkroom *aroom)
 {
 	if(doorindex >= DOORMAX) {
 		impossible("DOORMAX exceeded?");
@@ -1139,11 +1131,8 @@ register signed char x, y;
 
 /* make a trap somewhere (in croom if mazeflag = 0 && !tm) */
 /* if tm != null, make trap at that location */
-void
-mktrap(num, mazeflag, croom, tm)
-register int num, mazeflag;
-register struct mkroom *croom;
-coord *tm;
+void 
+mktrap (register int num, register int mazeflag, register struct mkroom *croom, coord *tm)
 {
 	register int kind;
 	coord m;
@@ -1258,11 +1247,8 @@ void mkstairs(signed char x, signed char y, char up, struct mkroom *croom) {
 	levl[x][y].ladder = up ? LA_UP : LA_DOWN;
 }
 
-STATIC_OVL
-void
-mkfount(mazeflag,croom)
-register int mazeflag;
-register struct mkroom *croom;
+STATIC_OVL void 
+mkfount (register int mazeflag, register struct mkroom *croom)
 {
 	coord m;
 	register int tryct = 0;
@@ -1285,9 +1271,8 @@ register struct mkroom *croom;
 }
 
 #ifdef SINKS
-STATIC_OVL void
-mksink(croom)
-register struct mkroom *croom;
+STATIC_OVL void 
+mksink (register struct mkroom *croom)
 {
 	coord m;
 	register int tryct = 0;
@@ -1306,9 +1291,8 @@ register struct mkroom *croom;
 #endif /* SINKS */
 
 
-STATIC_OVL void
-mkaltar(croom)
-register struct mkroom *croom;
+STATIC_OVL void 
+mkaltar (register struct mkroom *croom)
 {
 	coord m;
 	register int tryct = 0;
@@ -1330,9 +1314,8 @@ register struct mkroom *croom;
 	levl[m.x][m.y].altarmask = Align2amask( al );
 }
 
-static void
-mkgrave(croom)
-struct mkroom *croom;
+static void 
+mkgrave (struct mkroom *croom)
 {
 	coord m;
 	register int tryct = 0;
@@ -1379,8 +1362,8 @@ struct mkroom *croom;
  * which is guaranteed for normal play due to the fact that sight is needed
  * to read the Book of the Dead.
  */
-void
-mkinvokearea()
+void 
+mkinvokearea (void)
 {
     int dist;
     signed char xmin = inv_pos.x, xmax = inv_pos.x;

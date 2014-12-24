@@ -43,7 +43,7 @@ int x, y;
 
 /* produce an occupation string appropriate for the current activity */
 STATIC_OVL const char *
-lock_action()
+lock_action (void)
 {
 	/* "unlocking"+2 == "locking" */
 	static const char *actions[] = {
@@ -211,8 +211,8 @@ forcelock()	/* try to force a locked chest */
 #endif /* OVLB */
 #ifdef OVL0
 
-void
-reset_pick()
+void 
+reset_pick (void)
 {
 	xlock.usedtime = xlock.chance = xlock.picktyp = 0;
 	xlock.door = 0;
@@ -222,9 +222,10 @@ reset_pick()
 #endif /* OVL0 */
 #ifdef OVLB
 
-int
-pick_lock(pick) /* pick a lock with a given object */
-	register struct	obj	*pick;
+int 
+pick_lock ( /* pick a lock with a given object */
+    register struct obj *pick
+)
 {
 	int picktyp, c, ch;
 	coord cc;
@@ -875,9 +876,8 @@ int x, y;
 	return res;
 }
 
-STATIC_OVL void
-chest_shatter_msg(otmp)
-struct obj *otmp;
+STATIC_OVL void 
+chest_shatter_msg (struct obj *otmp)
 {
 	const char *disposition;
 	const char *thing;

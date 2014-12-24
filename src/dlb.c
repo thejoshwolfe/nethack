@@ -203,9 +203,8 @@ boolean open_library(const char *lib_name, library *lp) {
     return status;
 }
 
-void
-close_library(lp)
-    library *lp;
+void 
+close_library (library *lp)
 {
     (void) fclose(lp->fdata);
     free((void *) lp->dir);
@@ -261,19 +260,15 @@ lib_dlb_fopen(dp, name, mode)
     return FALSE;    /* failed */
 }
 
-static int
-lib_dlb_fclose(dp)
-    dlb *dp;
+static int 
+lib_dlb_fclose (dlb *dp)
 {
     /* nothing needs to be done */
     return 0;
 }
 
-static int
-lib_dlb_fread(buf, size, quan, dp)
-    char *buf;
-    int size, quan;
-    dlb *dp;
+static int 
+lib_dlb_fread (char *buf, int size, int quan, dlb *dp)
 {
     long pos, nread, nbytes;
 
@@ -296,11 +291,8 @@ lib_dlb_fread(buf, size, quan, dp)
     return nread;
 }
 
-static int
-lib_dlb_fseek(dp, pos, whence)
-    dlb *dp;
-    long pos;
-    int whence;
+static int 
+lib_dlb_fseek (dlb *dp, long pos, int whence)
 {
     long curpos;
 
@@ -317,10 +309,7 @@ lib_dlb_fseek(dp, pos, whence)
 }
 
 static char *
-lib_dlb_fgets(buf, len, dp)
-    char *buf;
-    int len;
-    dlb *dp;
+lib_dlb_fgets (char *buf, int len, dlb *dp)
 {
     int i;
     char *bp, c = 0;
@@ -341,9 +330,8 @@ lib_dlb_fgets(buf, len, dp)
     return buf;
 }
 
-static int
-lib_dlb_fgetc(dp)
-    dlb *dp;
+static int 
+lib_dlb_fgetc (dlb *dp)
 {
     char c;
 
@@ -352,9 +340,8 @@ lib_dlb_fgetc(dp)
 }
 
 
-static long
-lib_dlb_ftell(dp)
-    dlb *dp;
+static long 
+lib_dlb_ftell (dlb *dp)
 {
     return dp->mark;
 }

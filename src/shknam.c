@@ -200,11 +200,13 @@ const struct shclass shtypes[] = {
 	{(char *)0, 0, 0, 0, {{0, 0}, {0, 0}, {0, 0}}, 0}
 };
 
-STATIC_OVL void
-mkshobj_at(shp, sx, sy)
+STATIC_OVL void 
+mkshobj_at (
 /* make an object of the appropriate type for a shop square */
-const struct shclass *shp;
-int sx, sy;
+    const struct shclass *shp,
+    int sx,
+    int sy
+)
 {
 	struct monst *mtmp;
 	int atype;
@@ -228,10 +230,8 @@ int sx, sy;
 }
 
 /* extract a shopkeeper name for the given shop type */
-STATIC_OVL void
-nameshk(shk, nlp)
-struct monst *shk;
-const char * const *nlp;
+STATIC_OVL void 
+nameshk (struct monst *shk, const char *const *nlp)
 {
 	int i, trycnt, names_avail;
 	const char *shname = 0;
@@ -289,10 +289,11 @@ const char * const *nlp;
 	ESHK(shk)->shknam[PL_NSIZ-1] = 0;
 }
 
-STATIC_OVL int
-shkinit(shp, sroom)	/* create a new shopkeeper in the given room */
-const struct shclass	*shp;
-struct mkroom	*sroom;
+STATIC_OVL int 
+shkinit (	/* create a new shopkeeper in the given room */
+    const struct shclass *shp,
+    struct mkroom *sroom
+)
 {
 	register int sh, sx, sy;
 	struct monst *shk;
@@ -379,10 +380,8 @@ struct mkroom	*sroom;
 }
 
 /* stock a newly-created room with objects */
-void
-stock_room(shp_indx, sroom)
-int shp_indx;
-register struct mkroom *sroom;
+void 
+stock_room (int shp_indx, register struct mkroom *sroom)
 {
     /*
      * Someday soon we'll dispatch on the shdist field of shclass to do
@@ -469,9 +468,8 @@ struct obj *obj;
 }
 
 /* positive value: class; negative value: specific object type */
-int
-get_shop_item(type)
-int type;
+int 
+get_shop_item (int type)
 {
 	const struct shclass *shp = shtypes+type;
 	register int i,j;

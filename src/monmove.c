@@ -41,9 +41,8 @@ register struct monst *mtmp;
 #endif /* OVLB */
 #ifdef OVL0
 
-STATIC_OVL void
-watch_on_duty(mtmp)
-register struct monst *mtmp;
+STATIC_OVL void 
+watch_on_duty (register struct monst *mtmp)
 {
 	int	x, y;
 
@@ -75,9 +74,8 @@ register struct monst *mtmp;
 #endif /* OVL0 */
 #ifdef OVL1
 
-int
-dochugw(mtmp)
-	register struct monst *mtmp;
+int 
+dochugw (register struct monst *mtmp)
 {
 	register int x = mtmp->mx, y = mtmp->my;
 	boolean already_saw_mon = !occupation ? 0 : canspotmon(mtmp);
@@ -145,9 +143,8 @@ boolean digest_meal;
  * Possibly awaken the given monster.  Return a 1 if the monster has been
  * jolted awake.
  */
-STATIC_OVL int
-disturb(mtmp)
-	register struct monst *mtmp;
+STATIC_OVL int 
+disturb (register struct monst *mtmp)
 {
 	/*
 	 * + Ettins are hard to surprise.
@@ -213,10 +210,8 @@ boolean fleemsg;
 	}
 }
 
-STATIC_OVL void
-distfleeck(mtmp,inrange,nearby,scared)
-register struct monst *mtmp;
-int *inrange, *nearby, *scared;
+STATIC_OVL void 
+distfleeck (register struct monst *mtmp, int *inrange, int *nearby, int *scared)
 {
 	int seescaryx, seescaryy;
 
@@ -253,9 +248,8 @@ int *inrange, *nearby, *scared;
 
 /* perform a special one-time action for a monster; returns -1 if nothing
    special happened, 0 if monster uses up its turn, 1 if monster is killed */
-STATIC_OVL int
-m_arrival(mon)
-struct monst *mon;
+STATIC_OVL int 
+m_arrival (struct monst *mon)
 {
 	mon->mstrategy &= ~STRAT_ARRIVE;	/* always reset */
 
@@ -266,9 +260,8 @@ struct monst *mon;
 /* The whole dochugw/m_move/distfleeck/mfndpos section is serious spaghetti
  * code. --KAA
  */
-int
-dochug(mtmp)
-register struct monst *mtmp;
+int 
+dochug (register struct monst *mtmp)
 {
 	register struct permonst *mdat;
 	register int tmp=0;
@@ -566,10 +559,8 @@ register struct monst *mtmp;
  * 2: monster died.
  * 3: did not move, and can't do anything else either.
  */
-int
-m_move(mtmp, after)
-register struct monst *mtmp;
-register int after;
+int 
+m_move (register struct monst *mtmp, register int after)
 {
 	register int appr;
 	signed char gx,gy,nix,niy,chcnt;
@@ -1212,9 +1203,8 @@ register int x, y;
 #ifdef OVL0
 
 /* decide where the monster thinks you are standing */
-void
-set_apparxy(mtmp)
-register struct monst *mtmp;
+void 
+set_apparxy (register struct monst *mtmp)
 {
 	boolean notseen, gotu;
 	register int disp, mx = mtmp->mux, my = mtmp->muy;

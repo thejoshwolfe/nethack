@@ -45,9 +45,8 @@ static int lastinvnr = 51;	/* 0 ... 51 (never saved&restored) */
 static char venom_inv[] = { VENOM_CLASS, 0 };	/* (constant) */
 #endif
 
-void
-assigninvlet(otmp)
-register struct obj *otmp;
+void 
+assigninvlet (register struct obj *otmp)
 {
 	boolean inuse[52];
 	register int i;
@@ -87,8 +86,8 @@ register struct obj *otmp;
 #define inv_rank(o) ((o)->invlet ^ 040)
 
 /* sort the inventory; used by addinv() and doorganize() */
-STATIC_OVL void
-reorder_invent()
+STATIC_OVL void 
+reorder_invent (void)
 {
 	struct obj *otmp, *prev, *next;
 	boolean need_more_sorting;
@@ -122,8 +121,7 @@ reorder_invent()
    one of them; used in pickup.c when all 52 inventory slots are in use,
    to figure out whether another object could still be picked up */
 struct obj *
-merge_choice(objlist, obj)
-struct obj *objlist, *obj;
+merge_choice (struct obj *objlist, struct obj *obj)
 {
 	struct monst *shkp;
 	int save_nocharge;
@@ -155,9 +153,8 @@ struct obj *objlist, *obj;
 }
 
 /* merge obj with otmp and delete obj if types agree */
-int
-merged(potmp, pobj)
-struct obj **potmp, **pobj;
+int 
+merged (struct obj **potmp, struct obj **pobj)
 {
 	register struct obj *otmp = *potmp, *obj = *pobj;
 
@@ -230,9 +227,8 @@ in-place.
 
 It may be valid to merge this code with with addinv_core2().
 */
-void
-addinv_core1(obj)
-struct obj *obj;
+void 
+addinv_core1 (struct obj *obj)
 {
 	if (obj->oclass == COIN_CLASS) {
 #ifndef GOLDOBJ
@@ -272,9 +268,8 @@ This is called when adding objects to the hero's inventory normally (via
 addinv) or when an object in the hero's inventory has been polymorphed
 in-place.
 */
-void
-addinv_core2(obj)
-struct obj *obj;
+void 
+addinv_core2 (struct obj *obj)
 {
 	if (confers_luck(obj)) {
 		/* new luckstone must be in inventory by this point
@@ -288,8 +283,7 @@ Add obj to the hero's inventory.  Make sure the object is "free".
 Adjust hero attributes as necessary.
 */
 struct obj *
-addinv(obj)
-struct obj *obj;
+addinv (struct obj *obj)
 {
 	struct obj *otmp, *prev;
 
@@ -335,9 +329,8 @@ added:
  * has been added to the hero's or monster's inventory,
  * and after hero's intrinsics have been updated.
  */
-void
-carry_obj_effects(obj)
-struct obj *obj;
+void 
+carry_obj_effects (struct obj *obj)
 {
 	/* Cursed figurines can spontaneously transform
 	   when carried. */
@@ -361,9 +354,7 @@ struct obj *obj;
  * touch_artifact will print its own messages if they are warranted.
  */
 struct obj *
-hold_another_object(obj, drop_fmt, drop_arg, hold_msg)
-struct obj *obj;
-const char *drop_fmt, *drop_arg, *hold_msg;
+hold_another_object (struct obj *obj, const char *drop_fmt, const char *drop_arg, const char *hold_msg)
 {
 	char buf[BUFSZ];
 
@@ -429,18 +420,16 @@ const char *drop_fmt, *drop_arg, *hold_msg;
 }
 
 /* useup() all of an item regardless of its quantity */
-void
-useupall(obj)
-struct obj *obj;
+void 
+useupall (struct obj *obj)
 {
 	setnotworn(obj);
 	freeinv(obj);
 	obfree(obj, (struct obj *)0);	/* deletes contents also */
 }
 
-void
-useup(obj)
-register struct obj *obj;
+void 
+useup (register struct obj *obj)
 {
 	/*  Note:  This works correctly for containers because they */
 	/*	   (containers) don't merge.			    */
@@ -475,9 +464,8 @@ where we are polymorphing an object already in the hero's inventory.
 
 Should think of a better name...
 */
-void
-freeinv_core(obj)
-struct obj *obj;
+void 
+freeinv_core (struct obj *obj)
 {
 	if (obj->oclass == COIN_CLASS) {
 #ifndef GOLDOBJ
@@ -518,18 +506,16 @@ struct obj *obj;
 }
 
 /* remove an object from the hero's inventory */
-void
-freeinv(obj)
-register struct obj *obj;
+void 
+freeinv (register struct obj *obj)
 {
 	extract_nobj(obj, &invent);
 	freeinv_core(obj);
 	update_inventory();
 }
 
-void
-delallobj(x, y)
-int x, y;
+void 
+delallobj (int x, int y)
 {
 	struct obj *otmp, *otmp2;
 
@@ -548,9 +534,8 @@ int x, y;
 #ifdef OVL2
 
 /* destroy object in fobj chain (if unpaid, it remains on the bill) */
-void
-delobj(obj)
-register struct obj *obj;
+void 
+delobj (register struct obj *obj)
 {
 	boolean update_map;
 
@@ -575,8 +560,7 @@ register struct obj *obj;
 #ifdef OVL0
 
 struct obj *
-sobj_at(n,x,y)
-register int n, x, y;
+sobj_at (register int n, register int x, register int y)
 {
 	register struct obj *otmp;
 
@@ -590,8 +574,7 @@ register int n, x, y;
 #ifdef OVLB
 
 struct obj *
-carrying(type)
-register int type;
+carrying (register int type)
 {
 	register struct obj *otmp;
 
@@ -602,8 +585,7 @@ register int type;
 }
 
 const char *
-currency(amount)
-long amount;
+currency (long amount)
 {
 	if (amount == 1L) return "zorkmid";
 	else return "zorkmids";
@@ -621,9 +603,7 @@ have_lizard()
 }
 
 struct obj *
-o_on(id, objchn)
-unsigned int id;
-register struct obj *objchn;
+o_on (unsigned int id, register struct obj *objchn)
 {
 	struct obj *temp;
 
@@ -652,8 +632,7 @@ int x, y;
 #ifdef OVL2
 
 struct obj *
-g_at(x,y)
-register int x, y;
+g_at (register int x, register int y)
 {
 	register struct obj *obj = level.objects[x][y];
 	while(obj) {
@@ -668,8 +647,7 @@ register int x, y;
 #ifndef GOLDOBJ
 /* Make a gold object from the hero's gold. */
 struct obj *
-mkgoldobj(q)
-register long q;
+mkgoldobj (register long q)
 {
 	register struct obj *otmp;
 
@@ -684,9 +662,8 @@ register long q;
 #endif /* OVLB */
 #ifdef OVL1
 
-STATIC_OVL void
-compactify(buf)
-register char *buf;
+STATIC_OVL void 
+compactify (register char *buf)
 /* compact a string of inventory letters by dashing runs of letters */
 {
 	register int i1 = 1, i2 = 1;
@@ -741,8 +718,7 @@ const char *action;
 #endif
  */
 struct obj *
-getobj(let,word)
-register const char *let,*word;
+getobj (register const char *let, register const char *word)
 {
 	register struct obj *otmp;
 	register char ilet;

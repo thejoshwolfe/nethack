@@ -256,14 +256,14 @@ uid_t *ruid, *euid, *suid;
     return nh_getresuid(ruid, euid, suid);
 }
 
-uid_t
-(getuid)()
+int 
+uid_t (int getuid)(void)
 {
     return nh_getuid();
 }
 
-uid_t
-(geteuid)()
+int 
+uid_t (int geteuid)(void)
 {
     return nh_geteuid();
 }
@@ -275,14 +275,14 @@ gid_t *rgid, *egid, *sgid;
     return nh_getresgid(rgid, egid, sgid);
 }
 
-gid_t
-(getgid)()
+int 
+gid_t (int getgid)(void)
 {
     return nh_getgid();
 }
 
-gid_t
-(getegid)()
+int 
+gid_t (int getegid)(void)
 {
     return nh_getegid();
 }

@@ -148,9 +148,8 @@ doread()
 	return(1);
 }
 
-static void
-stripspe(obj)
-register struct obj *obj;
+static void 
+stripspe (register struct obj *obj)
 {
 	if (obj->blessed) plines(nothing_happens);
 	else {
@@ -163,18 +162,15 @@ register struct obj *obj;
 	}
 }
 
-static void
-p_glow1(otmp)
-register struct obj	*otmp;
+static void 
+p_glow1 (register struct obj *otmp)
 {
 	Your("%s %s briefly.", xname(otmp),
 	     otense(otmp, Blind ? "vibrate" : "glow"));
 }
 
-static void
-p_glow2(otmp,color)
-register struct obj	*otmp;
-register const char *color;
+static void 
+p_glow2 (register struct obj *otmp, register const char *color)
 {
 	Your("%s %s%s%s for a moment.",
 		xname(otmp),
@@ -205,10 +201,8 @@ struct obj *obj;
  * recharge an object; curse_bless is -1 if the recharging implement
  * was cursed, +1 if blessed, 0 otherwise.
  */
-void
-recharge(obj, curse_bless)
-struct obj *obj;
-int curse_bless;
+void 
+recharge (struct obj *obj, int curse_bless)
 {
 	register int n;
 	boolean is_cursed, is_blessed;
@@ -424,9 +418,8 @@ int curse_bless;
 
 
 /* Forget known information about this object class. */
-static void
-forget_single_object(obj_id)
-	int obj_id;
+static void 
+forget_single_object (int obj_id)
 {
 	objects[obj_id].oc_name_known = 0;
 	objects[obj_id].oc_pre_discovered = 0;	/* a discovery when relearned */
@@ -442,10 +435,8 @@ forget_single_object(obj_id)
 
 
 /* randomize the given list of numbers  0 <= i < count */
-static void
-randomize(indices, count)
-	int *indices;
-	int count;
+static void 
+randomize (int *indices, int count)
 {
 	int i, iswap, temp;
 
@@ -459,9 +450,8 @@ randomize(indices, count)
 
 
 /* Forget % of known objects. */
-void
-forget_objects(percent)
-	int percent;
+void 
+forget_objects (int percent)
 {
 	int i, count;
 	int indices[NUM_OBJECTS];
@@ -487,9 +477,8 @@ forget_objects(percent)
 
 
 /* Forget some or all of map (depends on parameters). */
-void
-forget_map(howmuch)
-	int howmuch;
+void 
+forget_map (int howmuch)
 {
 	register int zx, zy;
 
@@ -507,8 +496,8 @@ forget_map(howmuch)
 }
 
 /* Forget all traps on the level. */
-void
-forget_traps()
+void 
+forget_traps (void)
 {
 	register struct trap *trap;
 
@@ -522,9 +511,8 @@ forget_traps()
  * Forget given % of all levels that the hero has visited and not forgotten,
  * except this one.
  */
-void
-forget_levels(percent)
-	int percent;
+void 
+forget_levels (int percent)
 {
 	int i, count;
 	signed char  maxl, this_lev;
@@ -579,9 +567,8 @@ forget_levels(percent)
  *	howmuch & ALL_MAP	= forget whole map
  *	howmuch & ALL_SPELLS	= forget all spells
  */
-static void
-forget(howmuch)
-int howmuch;
+static void 
+forget (int howmuch)
 {
 
 	if (Punished) u.bc_felt = 0;	/* forget felt ball&chain */
@@ -610,10 +597,8 @@ int howmuch;
 }
 
 /* monster is hit by scroll of taming's effect */
-static void
-maybe_tame(mtmp, sobj)
-struct monst *mtmp;
-struct obj *sobj;
+static void 
+maybe_tame (struct monst *mtmp, struct obj *sobj)
 {
 	if (sobj->cursed) {
 	    setmangry(mtmp);
@@ -625,9 +610,8 @@ struct obj *sobj;
 	}
 }
 
-int
-seffects(sobj)
-register struct obj	*sobj;
+int 
+seffects (register struct obj *sobj)
 {
 	register int cval;
 	register boolean confused = (Confusion != 0);
@@ -1283,9 +1267,8 @@ register struct obj	*sobj;
 	return(0);
 }
 
-static void
-wand_explode(obj)
-register struct obj *obj;
+static void 
+wand_explode (register struct obj *obj)
 {
     obj->in_use = TRUE;	/* in case losehp() is fatal */
     Your("%s vibrates violently, and explodes!",xname(obj));
@@ -1406,8 +1389,8 @@ do_it:
 	vision_full_recalc = 1;	/* delayed vision recalculation */
 }
 
-static void
-do_class_genocide()
+static void 
+do_class_genocide (void)
 {
 	int i, j, immunecnt, gonecnt, goodcnt, class, feel_dead = 0;
 	char buf[BUFSZ];
@@ -1562,9 +1545,8 @@ do_class_genocide()
 #define REALLY 1
 #define PLAYER 2
 #define ONTHRONE 4
-void
-do_genocide(how)
-int how;
+void 
+do_genocide (int how)
 /* 0 = no genocide; create monsters (cursed scroll) */
 /* 1 = normal genocide */
 /* 3 = forced genocide of player */
@@ -1711,9 +1693,8 @@ int how;
 	}
 }
 
-void
-punish(sobj)
-register struct obj	*sobj;
+void 
+punish (register struct obj *sobj)
 {
 	/* KMH -- Punishment is still okay when you are riding */
 	You("are being punished for your misbehavior!");
@@ -1742,8 +1723,8 @@ register struct obj	*sobj;
 	}
 }
 
-void
-unpunish()
+void 
+unpunish (void)
 {	    /* remove the ball and chain */
 	struct obj *savechain = uchain;
 

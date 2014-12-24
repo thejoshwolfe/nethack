@@ -78,8 +78,8 @@ long	    wgrowtime[MAX_NUM_WORMS] = DUMMY;
  *
  *  Implementation is left to the interested hacker.
  */
-int
-get_wormno()
+int 
+get_wormno (void)
 {
     register int new_wormno = 1;
 
@@ -103,10 +103,8 @@ get_wormno()
  *  If the worm has no tail (ie get_wormno() fails) then this function need
  *  not be called.
  */
-void
-initworm(worm, wseg_count)
-    struct monst *worm;
-    int wseg_count;
+void 
+initworm (struct monst *worm, int wseg_count)
 {
     register struct wseg *seg, *new_tail = create_worm_tail(wseg_count);
     register int wnum = worm->wormno;
@@ -166,10 +164,10 @@ toss_wsegs(curr, display_update)
  *
  *  Remove the tail segment of the worm (the starting segment of the list).
  */
-STATIC_OVL
-void
-shrink_worm(wnum)
-    int wnum;	/* worm number */
+STATIC_OVL void 
+shrink_worm (
+    int wnum	/* worm number */
+)
 {
     struct wseg *seg;
 
@@ -188,9 +186,8 @@ shrink_worm(wnum)
  *
  *  Move the worm.  Maybe grow.
  */
-void
-worm_move(worm)
-    struct monst *worm;
+void 
+worm_move (struct monst *worm)
 {
     register struct wseg *seg, *new_seg;	/* new segment */
     register int	 wnum = worm->wormno;	/* worm number */
@@ -236,9 +233,8 @@ worm_move(worm)
  *
  *  The worm don't move so it should shrink.
  */
-void
-worm_nomove(worm)
-    register struct monst *worm;
+void 
+worm_nomove (register struct monst *worm)
 {
     shrink_worm((int) worm->wormno);	/* shrink */
 
@@ -255,9 +251,8 @@ worm_nomove(worm)
  *
  *  Kill a worm tail.
  */
-void
-wormgone(worm)
-    register struct monst *worm;
+void 
+wormgone (register struct monst *worm)
 {
     register int wnum = worm->wormno;
 
@@ -280,9 +275,8 @@ wormgone(worm)
  *
  *  If the hero is near any part of the worm, the worm will try to attack.
  */
-void
-wormhitu(worm)
-    register struct monst *worm;
+void 
+wormhitu (register struct monst *worm)
 {
     register int wnum = worm->wormno;
     register struct wseg *seg;
@@ -307,11 +301,8 @@ wormhitu(worm)
  *  there is a chance that the worm will be cut in half, and a chance
  *  that both halves will survive.
  */
-void
-cutworm(worm, x, y, weap)
-    struct monst *worm;
-    signed char x,y;
-    struct obj *weap;
+void 
+cutworm (struct monst *worm, signed char x, signed char y, struct obj *weap)
 {
     register struct wseg  *curr, *new_tail;
     register struct monst *new_worm;
@@ -412,9 +403,8 @@ cutworm(worm, x, y, weap)
  *  from see_monster() in display.c or when a monster goes minvis.  It
  *  is located here for modularity.
  */
-void
-see_wsegs(worm)
-    struct monst *worm;
+void 
+see_wsegs (struct monst *worm)
 {
     struct wseg *curr = wtails[worm->wormno];
 
@@ -457,9 +447,8 @@ detect_wsegs(worm, use_detection_glyph)
  *  Save the worm information for later use.  The count is the number
  *  of segments, including the dummy.  Called from save.c.
  */
-void
-save_worm(fd, mode)
-    int fd, mode;
+void 
+save_worm (int fd, int mode)
 {
     int i;
     int count;
@@ -503,9 +492,8 @@ save_worm(fd, mode)
  *
  *  Restore the worm information from the save file.  Called from restore.c
  */
-void
-rest_worm(fd)
-    int fd;
+void 
+rest_worm (int fd)
 {
     int i, j, count;
     struct wseg *curr, *temp;
@@ -536,9 +524,8 @@ rest_worm(fd)
  *
  *  Place the segments of the given worm.  Called from restore.c
  */
-void
-place_wsegs(worm)
-    struct monst *worm;
+void 
+place_wsegs (struct monst *worm)
 {
     struct wseg *curr = wtails[worm->wormno];
 
@@ -558,9 +545,8 @@ place_wsegs(worm)
  *  It does not get rid of (dealloc) the worm tail structures, and it does
  *  not remove the mon from the fmon chain.
  */
-void
-remove_worm(worm)
-    register struct monst *worm;
+void 
+remove_worm (register struct monst *worm)
 {
     register struct wseg *curr = wtails[worm->wormno];
 
@@ -582,10 +568,8 @@ remove_worm(worm)
  *  x, and y are most likely the worm->mx, and worm->my, but don't *need* to
  *  be, if somehow the head is disjoint from the tail.
  */
-void
-place_worm_tail_randomly(worm, x, y)
-    struct monst *worm;
-    signed char x, y;
+void 
+place_worm_tail_randomly (struct monst *worm, signed char x, signed char y)
 {
     int wnum = worm->wormno;
     struct wseg *curr = wtails[wnum];
@@ -669,9 +653,8 @@ STATIC_OVL void random_dir(signed char x, signed char y, signed char *nx, signed
  *  the number of visible segments that a worm has.
  */
 
-int
-count_wsegs(mtmp)
-    struct monst *mtmp;
+int 
+count_wsegs (struct monst *mtmp)
 {
     register int i=0;
     register struct wseg *curr = (wtails[mtmp->wormno])->nseg;
@@ -690,10 +673,8 @@ count_wsegs(mtmp)
  *
  *  will create a worm tail chain of (num_segs + 1) and return a pointer to it.
  */
-STATIC_OVL
-struct wseg *
-create_worm_tail(num_segs)
-    int num_segs;
+STATIC_OVL struct wseg *
+create_worm_tail (int num_segs)
 {
     register int i=0;
     register struct wseg *new_tail, *curr;

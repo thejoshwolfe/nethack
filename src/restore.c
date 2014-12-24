@@ -55,8 +55,8 @@ static long omoves;
 #define Is_IceBox(o) ((o)->otyp == ICE_BOX ? TRUE : FALSE)
 
 /* Recalculate level.objects[x][y], since this info was not saved. */
-STATIC_OVL void
-find_lev_obj()
+STATIC_OVL void 
+find_lev_obj (void)
 {
 	register struct obj *fobjtmp = (struct obj *)0;
 	register struct obj *otmp;
@@ -114,9 +114,8 @@ boolean quietly;
 	}
 }
 
-STATIC_OVL void
-restlevchn(fd)
-register int fd;
+STATIC_OVL void 
+restlevchn (register int fd)
 {
 	int cnt;
 	s_level	*tmplev, *x;
@@ -300,8 +299,7 @@ boolean ghostly;
 }
 
 STATIC_OVL struct fruit *
-loadfruitchn(fd)
-int fd;
+loadfruitchn (int fd)
 {
 	register struct fruit *flist, *fnext;
 
@@ -316,9 +314,8 @@ int fd;
 	return flist;
 }
 
-STATIC_OVL void
-freefruitchn(flist)
-register struct fruit *flist;
+STATIC_OVL void 
+freefruitchn (register struct fruit *flist)
 {
 	register struct fruit *fnext;
 
@@ -329,9 +326,8 @@ register struct fruit *flist;
 	}
 }
 
-STATIC_OVL void
-ghostfruit(otmp)
-register struct obj *otmp;
+STATIC_OVL void 
+ghostfruit (register struct obj *otmp)
 {
 	register struct fruit *oldf;
 
@@ -444,9 +440,11 @@ unsigned int *stuckid, *steedid;	/* STEED */
 /* update game state pointers to those valid for the current level (so we
  * don't dereference a wild u.ustuck when saving the game state, for instance)
  */
-STATIC_OVL void
-restlevelstate(stuckid, steedid)
-unsigned int stuckid, steedid;	/* STEED */
+STATIC_OVL void 
+restlevelstate (
+    unsigned int stuckid,
+    unsigned int steedid	/* STEED */
+)
 {
 	register struct monst *mtmp;
 
@@ -483,9 +481,8 @@ STATIC_OVL int restlevelfile(int fd, signed char ltmp) {
 	return(2);
 }
 
-int
-dorecover(fd)
-register int fd;
+int 
+dorecover (register int fd)
 {
 	unsigned int stuckid = 0, steedid = 0;	/* not a register */
 	signed char ltmp;
@@ -583,9 +580,8 @@ register int fd;
 	return(1);
 }
 
-void
-trickery(reason)
-char *reason;
+void 
+trickery (char *reason)
 {
 	pline("Strange, this map is not as I remember it.");
 	pline("Somebody is trying some trickery here...");
@@ -792,8 +788,8 @@ boolean ghostly;
 
 
 /* Clear all structures for object and monster ID mapping. */
-STATIC_OVL void
-clear_id_mapping()
+STATIC_OVL void 
+clear_id_mapping (void)
 {
     struct bucket *curr;
 
@@ -805,9 +801,8 @@ clear_id_mapping()
 }
 
 /* Add a mapping to the ID map. */
-STATIC_OVL void
-add_id_mapping(gid, nid)
-    unsigned gid, nid;
+STATIC_OVL void 
+add_id_mapping (unsigned gid, unsigned nid)
 {
     int idx;
 
@@ -894,8 +889,8 @@ static unsigned short inbufsz = 0;
 static short inrunlength = -1;
 static int mreadfd;
 
-static int
-mgetc()
+static int 
+mgetc (void)
 {
     if (inbufp >= inbufsz) {
 	inbufsz = read(mreadfd, (void *)inbuf, sizeof inbuf);
@@ -910,19 +905,16 @@ mgetc()
     return inbuf[inbufp++];
 }
 
-void
-minit()
+void 
+minit (void)
 {
     inbufsz = 0;
     inbufp = 0;
     inrunlength = -1;
 }
 
-int
-mread(fd, buf, len)
-int fd;
-void * buf;
-register unsigned len;
+int 
+mread (int fd, void *buf, register unsigned len)
 {
     /*register int readlen = 0;*/
     if (fd < 0) error("Restore error; mread attempting to read file %d.", fd);

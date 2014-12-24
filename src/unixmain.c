@@ -33,10 +33,8 @@ static void NDECL(wd_message);
 static boolean wiz_error_flag = FALSE;
 #endif
 
-int
-main(argc,argv)
-int argc;
-char *argv[];
+int 
+main (int argc, char *argv[])
 {
 	register int fd;
 	boolean exact_username;
@@ -218,10 +216,8 @@ not_recovered:
 	return(0);
 }
 
-static void
-process_options(argc, argv)
-int argc;
-char *argv[];
+static void 
+process_options (int argc, char *argv[])
 {
 	int i;
 
@@ -360,8 +356,8 @@ whoami() {
 }
 
 #ifdef PORT_HELP
-void
-port_help()
+void 
+port_help (void)
 {
 	/*
 	 * Display unix-specific help.   Just show contents of the helpfile
@@ -371,8 +367,8 @@ port_help()
 }
 #endif
 
-static void
-wd_message()
+static void 
+wd_message (void)
 {
 #ifdef WIZARD
 	if (wiz_error_flag) {
@@ -393,9 +389,8 @@ wd_message()
  * Add a slash to any name not ending in /. There must
  * be room for the /
  */
-void
-append_slash(name)
-char *name;
+void 
+append_slash (char *name)
 {
 	char *ptr;
 

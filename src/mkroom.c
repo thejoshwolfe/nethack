@@ -39,10 +39,11 @@ register struct mkroom *sroom;
 	return((boolean)( area > 20 ));
 }
 
-void
-mkroom(roomtype)
+void 
+mkroom (
 /* make and stock a room of a given type */
-int	roomtype;
+    int roomtype
+)
 {
     if (roomtype >= SHOPBASE)
 	mkshop();	/* someday, we should be able to specify shop type */
@@ -61,8 +62,8 @@ int	roomtype;
     }
 }
 
-STATIC_OVL void
-mkshop()
+STATIC_OVL void 
+mkshop (void)
 {
 	register struct mkroom *sroom;
 	int i = -1;
@@ -203,9 +204,8 @@ register boolean strict;
 	return (struct mkroom *)0;
 }
 
-STATIC_OVL void
-mkzoo(type)
-int type;
+STATIC_OVL void 
+mkzoo (int type)
 {
 	register struct mkroom *sroom;
 
@@ -215,9 +215,8 @@ int type;
 	}
 }
 
-void
-fill_zoo(sroom)
-struct mkroom *sroom;
+void 
+fill_zoo (struct mkroom *sroom)
 {
 	struct monst *mon;
 	register int sx,sy,i;
@@ -406,7 +405,7 @@ int mm_flags;
 }
 
 STATIC_OVL struct permonst *
-morguemon()
+morguemon (void)
 {
 	register int i = rn2(100), hd = rn2(level_difficulty());
 
@@ -421,7 +420,7 @@ morguemon()
 }
 
 STATIC_OVL struct permonst *
-antholemon()
+antholemon (void)
 {
 	int mtyp;
 
@@ -435,8 +434,8 @@ antholemon()
 			(struct permonst *)0 : &mons[mtyp]);
 }
 
-STATIC_OVL void
-mkswamp()	/* Michiel Huisjes & Fred de Wilde */
+STATIC_OVL void 
+mkswamp (void)	/* Michiel Huisjes & Fred de Wilde */
 {
 	register struct mkroom *sroom;
 	register int sx,sy,i,eelct = 0;
@@ -473,8 +472,7 @@ mkswamp()	/* Michiel Huisjes & Fred de Wilde */
 }
 
 STATIC_OVL coord *
-shrine_pos(roomno)
-int roomno;
+shrine_pos (int roomno)
 {
 	static coord buf;
 	struct mkroom *troom = &rooms[roomno - ROOMOFFSET];
@@ -484,8 +482,8 @@ int roomno;
 	return(&buf);
 }
 
-STATIC_OVL void
-mktemple()
+STATIC_OVL void 
+mktemple (void)
 {
 	register struct mkroom *sroom;
 	coord *shrine_spot;
@@ -548,16 +546,14 @@ register struct mkroom *sroom;
 #endif /* OVLB */
 #ifdef OVL0
 
-int
-somex(croom)
-register struct mkroom *croom;
+int 
+somex (register struct mkroom *croom)
 {
 	return rn2(croom->hx-croom->lx+1) + croom->lx;
 }
 
-int
-somey(croom)
-register struct mkroom *croom;
+int 
+somey (register struct mkroom *croom)
 {
 	return rn2(croom->hy-croom->ly+1) + croom->ly;
 }
@@ -630,8 +626,7 @@ you_lose:	;
  */
 
 struct mkroom *
-search_special(type)
-signed char type;
+search_special (signed char type)
 {
 	register struct mkroom *croom;
 
@@ -652,7 +647,7 @@ signed char type;
 #ifdef OVLB
 
 struct permonst *
-courtmon()
+courtmon (void)
 {
 	int     i = rn2(60) + rn2(3*level_difficulty());
 	if (i > 100)		return(mkclass(S_DRAGON,0));
@@ -676,7 +671,7 @@ static struct {
 };
 
 STATIC_OVL struct permonst *
-squadmon()		/* return soldier types. */
+squadmon (void)		/* return soldier types. */
 {
 	int sel_prob, i, cpro, mndx;
 
@@ -701,10 +696,8 @@ gotone:
  * (if any).
  */
 
-STATIC_OVL void
-save_room(fd, r)
-int	fd;
-struct mkroom *r;
+STATIC_OVL void 
+save_room (int fd, struct mkroom *r)
 {
 	short i;
 	/*
@@ -721,9 +714,8 @@ struct mkroom *r;
  * save_rooms : Save all the rooms on disk!
  */
 
-void
-save_rooms(fd)
-int fd;
+void 
+save_rooms (int fd)
 {
 	short i;
 
@@ -733,10 +725,8 @@ int fd;
 	    save_room(fd, &rooms[i]);
 }
 
-STATIC_OVL void
-rest_room(fd, r)
-int fd;
-struct mkroom *r;
+STATIC_OVL void 
+rest_room (int fd, struct mkroom *r)
 {
 	short i;
 
@@ -753,9 +743,8 @@ struct mkroom *r;
  * the disk.
  */
 
-void
-rest_rooms(fd)
-int	fd;
+void 
+rest_rooms (int fd)
 {
 	short i;
 

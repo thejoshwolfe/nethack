@@ -395,8 +395,8 @@ void moveloop(void) {
 #endif /* OVL0 */
 #ifdef OVL1
 
-void
-stop_occupation()
+void 
+stop_occupation (void)
 {
 	if(occupation) {
 		if (!maybe_finished_meal(TRUE))
@@ -521,8 +521,8 @@ void welcome(boolean new_game) {
 }
 
 #ifdef POSITIONBAR
-STATIC_DCL void
-do_positionbar()
+STATIC_DCL void 
+do_positionbar (void)
 {
 	static char pbar[COLNO];
 	char *p;

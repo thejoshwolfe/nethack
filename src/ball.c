@@ -5,8 +5,8 @@
 STATIC_DCL int NDECL(bc_order);
 STATIC_DCL void NDECL(litter);
 
-void
-ballfall()
+void 
+ballfall (void)
 {
 	boolean gets_hit;
 
@@ -91,8 +91,8 @@ ballfall()
  *
  *  Should not be called while swallowed.
  */
-void
-placebc()
+void 
+placebc (void)
 {
     if (!uchain || !uball) {
 	impossible("Where are your ball and chain?");
@@ -117,8 +117,8 @@ placebc()
     newsym(u.ux,u.uy);
 }
 
-void
-unplacebc()
+void 
+unplacebc (void)
 {
     if (u.uswallow) return;	/* ball&chain not placed while swallowed */
 
@@ -142,8 +142,8 @@ unplacebc()
  *  Return the stacking of the hero's ball & chain.  This assumes that the
  *  hero is being punished.
  */
-STATIC_OVL int
-bc_order()
+STATIC_OVL int 
+bc_order (void)
 {
     struct obj *obj;
 
@@ -165,9 +165,8 @@ bc_order()
  *  The hero is either about to go blind or already blind and just punished.
  *  Set up the ball and chain variables so that the ball and chain are "felt".
  */
-void
-set_bc(already_blind)
-int already_blind;
+void 
+set_bc (int already_blind)
 {
     int ball_on_floor = !carried(uball);
 
@@ -223,10 +222,15 @@ int already_blind;
  *
  *  Should not be called while swallowed.
  */
-void
-move_bc(before, control, ballx, bally, chainx, chainy)
-int   before, control;
-signed char ballx, bally, chainx, chainy;	/* only matter !before */
+void 
+move_bc (
+    int before,
+    int control,
+    signed char ballx,
+    signed char bally,
+    signed char chainx,
+    signed char chainy	/* only matter !before */
+)
 {
     if (Blind) {
 	/*
@@ -635,9 +639,8 @@ drag:
  *
  *  Should not be called while swallowed.
  */
-void
-drop_ball(x, y)
-signed char x, y;
+void 
+drop_ball (signed char x, signed char y)
 {
     if (Blind) {
 	u.bc_order = bc_order();			/* get the order */
@@ -720,8 +723,8 @@ signed char x, y;
 }
 
 
-STATIC_OVL void
-litter()
+STATIC_OVL void 
+litter (void)
 {
 	struct obj *otmp = invent, *nextobj;
 	int capacity = weight_cap();

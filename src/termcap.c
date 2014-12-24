@@ -224,9 +224,7 @@ static void NDECL(tty_decgraphics_termcap_fixup);
    call xputs() from the option setting or graphics assigning routines,
    so this is a convenient hook.
  */
-static void
-tty_decgraphics_termcap_fixup()
-{
+static void tty_decgraphics_termcap_fixup (void) {
 	static char ctrlN[]   = "\016";
 	static char ctrlO[]   = "\017";
 	static char appMode[] = "\033=";
@@ -279,9 +277,7 @@ extern void NDECL((*ibmgraphics_mode_callback));    /* defined in drawing.c */
 extern void NDECL((*ascgraphics_mode_callback));    /* defined in drawing.c */
 static void NDECL(tty_ascgraphics_hilite_fixup);
 
-static void
-tty_ascgraphics_hilite_fixup()
-{
+static void tty_ascgraphics_hilite_fixup (void) {
     register int c;
 
     for (c = 0; c < CLR_MAX / 2; c++)
@@ -332,10 +328,7 @@ void tty_end_screen(void) {
    and or xputc() is taken out of the ROOT overlay, then action must be taken
    in trampoli.[ch]. */
 
-void
-nocmov(x, y)
-int x,y;
-{
+void nocmov (int x, int y) {
 	if ((int) ttyDisplay->cury > y) {
 		if(UP) {
 			while ((int) ttyDisplay->cury > y) {	/* Go up. */
@@ -379,24 +372,14 @@ int x,y;
 	}
 }
 
-void
-cmov(x, y)
-register int x, y;
-{
+void cmov (register int x, register int y) {
 	xputs(tgoto(nh_CM, x, y));
 	ttyDisplay->cury = y;
 	ttyDisplay->curx = x;
 }
 
 /* See note at OVLx ifdef above.   xputc() is a special function. */
-void
-xputc(c)
-#if defined(apollo)
-int c;
-#else
-char c;
-#endif
-{
+void xputc (char c) {
 	(void) putchar(c);
 }
 
@@ -428,8 +411,8 @@ void cl_end(void) {
 #endif /* OVL0 */
 #ifdef OVLB
 
-void
-clear_screen()
+void 
+clear_screen (void)
 {
 	/* note: if CL is null, then termcap initialization failed,
 		so don't attempt screen-oriented I/O during final cleanup.
@@ -443,8 +426,8 @@ clear_screen()
 #endif /* OVLB */
 #ifdef OVL0
 
-void
-home()
+void 
+home (void)
 {
 	if(HO)
 		xputs(HO);
@@ -455,14 +438,14 @@ home()
 	ttyDisplay->curx = ttyDisplay->cury = 0;
 }
 
-void
-standoutbeg()
+void 
+standoutbeg (void)
 {
 	if(SO) xputs(SO);
 }
 
-void
-standoutend()
+void 
+standoutend (void)
 {
 	if(SE) xputs(SE);
 }
@@ -470,8 +453,8 @@ standoutend()
 #endif /* OVL0 */
 #ifdef OVLB
 
-void
-backsp()
+void 
+backsp (void)
 {
 	xputs(BC);
 }
@@ -617,8 +600,8 @@ const int ti_map[8] = {
 	COLOR_BLACK, COLOR_RED, COLOR_GREEN, COLOR_YELLOW,
 	COLOR_BLUE, COLOR_MAGENTA, COLOR_CYAN, COLOR_WHITE };
 
-static void
-init_hilite()
+static void 
+init_hilite (void)
 {
 	register int c;
 	char *setf, *scratch;
@@ -679,8 +662,7 @@ static char * s_atr2str(int n) {
 }
 
 static char *
-e_atr2str(n)
-int n;
+e_atr2str (int n)
 {
     switch (n) {
 	    case ATR_ULINE:
@@ -695,9 +677,8 @@ int n;
 }
 
 
-void
-term_start_attr(attr)
-int attr;
+void 
+term_start_attr (int attr)
 {
 	if (attr) {
 		xputs(s_atr2str(attr));
@@ -705,9 +686,8 @@ int attr;
 }
 
 
-void
-term_end_attr(attr)
-int attr;
+void 
+term_end_attr (int attr)
 {
 	if(attr) {
 		xputs(e_atr2str(attr));
@@ -715,15 +695,15 @@ int attr;
 }
 
 
-void
-term_start_raw_bold()
+void 
+term_start_raw_bold (void)
 {
 	xputs(nh_HI);
 }
 
 
-void
-term_end_raw_bold()
+void 
+term_end_raw_bold (void)
 {
 	xputs(nh_HE);
 }

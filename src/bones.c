@@ -32,9 +32,8 @@ d_level *lev;
  * ID is positive instead of negative).  This way, when we later save the
  * chain of fruit types, we know to only save the types that exist.
  */
-STATIC_OVL void
-goodfruit(id)
-int id;
+STATIC_OVL void 
+goodfruit (int id)
 {
 	register struct fruit *f;
 
@@ -111,10 +110,8 @@ boolean restore;
 	}
 }
 
-STATIC_OVL void
-drop_upon_death(mtmp, cont)
-struct monst *mtmp;
-struct obj *cont;
+STATIC_OVL void 
+drop_upon_death (struct monst *mtmp, struct obj *cont)
 {
 	struct obj *otmp;
 
@@ -182,9 +179,8 @@ can_make_bones()
 }
 
 /* save bones and possessions of a deceased adventurer */
-void
-savebones(corpse)
-struct obj *corpse;
+void 
+savebones (struct obj *corpse)
 {
 	int fd, x, y;
 	struct trap *ttmp;

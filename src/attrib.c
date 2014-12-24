@@ -156,10 +156,8 @@ adjattrib(ndx, incr, msgflg)
 	return TRUE;
 }
 
-void
-gainstr(otmp, incr)
-	register struct obj *otmp;
-	register int incr;
+void 
+gainstr (register struct obj *otmp, register int incr)
 {
 	int num = 1;
 
@@ -171,9 +169,10 @@ gainstr(otmp, incr)
 	(void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, TRUE);
 }
 
-void
-losestr(num)	/* may kill you; cause may be poison or monster like 'a' */
-	register int num;
+void 
+losestr (	/* may kill you; cause may be poison or monster like 'a' */
+    register int num
+)
 {
 	int ustr = ABASE(A_STR) - num;
 
@@ -191,9 +190,8 @@ losestr(num)	/* may kill you; cause may be poison or monster like 'a' */
 	(void) adjattrib(A_STR, -num, TRUE);
 }
 
-void
-change_luck(n)
-	register signed char n;
+void 
+change_luck (register signed char n)
 {
 	u.uluck += n;
 	if (u.uluck < 0 && u.uluck < LUCKMIN)	u.uluck = LUCKMIN;
@@ -218,8 +216,8 @@ boolean parameter; /* So I can't think up of a good name.  So sue me. --KAA */
 }
 
 /* there has just been an inventory change affecting a luck-granting item */
-void
-set_moreluck()
+void 
+set_moreluck (void)
 {
 	int luckbon = stone_luck(TRUE);
 
@@ -231,8 +229,8 @@ set_moreluck()
 #endif /* OVLB */
 #ifdef OVL1
 
-void
-restore_attrib()
+void 
+restore_attrib (void)
 {
 	int	i;
 
@@ -298,8 +296,8 @@ boolean	inc_or_dec;
 #define FAINTED		5
 #define STARVED		6
 
-STATIC_OVL void
-exerper()
+STATIC_OVL void 
+exerper (void)
 {
 	if(!(moves % 10)) {
 		/* Hunger Checks */
@@ -359,8 +357,8 @@ exerper()
 	}
 }
 
-void
-exerchk()
+void 
+exerchk (void)
 {
 	int	i, mod_val;
 
@@ -442,16 +440,15 @@ exerchk()
 }
 
 /* next_check will otherwise have its initial 600L after a game restore */
-void
-reset_attribute_clock()
+void 
+reset_attribute_clock (void)
 {
 	if (moves > 600L) next_check = moves + rn1(50,800);
 }
 
 
-void
-init_attr(np)
-	register int	np;
+void 
+init_attr (register int np)
 {
 	register int	i, x, tryct;
 
@@ -499,8 +496,8 @@ init_attr(np)
 	}
 }
 
-void
-redist_attr()
+void 
+redist_attr (void)
 {
 	register int i, tmp;
 
@@ -518,19 +515,16 @@ redist_attr()
 	(void)encumber_msg();
 }
 
-STATIC_OVL
-void
-postadjabil(ability)
-long *ability;
+STATIC_OVL void 
+postadjabil (long *ability)
 {
 	if (!ability) return;
 	if (ability == &(HWarning) || ability == &(HSee_invisible))
 		see_monsters();
 }
 
-void
-adjabil(oldlevel,newlevel)
-int oldlevel, newlevel;
+void 
+adjabil (int oldlevel, int newlevel)
 {
 	register const struct innate *abil, *rabil;
 	long mask = FROMEXPER;
@@ -613,8 +607,8 @@ int oldlevel, newlevel;
 }
 
 
-int
-newhp()
+int 
+newhp (void)
 {
 	int	hp, conplus;
 
@@ -678,8 +672,8 @@ signed char acurr(int x) {
 
 /* condense clumsy ACURR(A_STR) value into value that fits into game formulas
  */
-signed char
-acurrstr()
+signed char 
+acurrstr (void)
 {
 	register int str = ACURR(A_STR);
 
@@ -694,9 +688,8 @@ acurrstr()
 /* avoid possible problems with alignment overflow, and provide a centralized
  * location for any future alignment limits
  */
-void
-adjalign(n)
-register int n;
+void 
+adjalign (register int n)
 {
 	register int newalign = u.ualign.record + n;
 

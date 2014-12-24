@@ -74,8 +74,8 @@ extern const char * const killed_by_prefix[];	/* from topten.c */
 FILE *dump_fp = (FILE *)0;  /* file pointer for dumps */
 /* functions dump_init, dump_exit and dump are from the dump patch */
 
-void
-dump_init ()
+void 
+dump_init (void)
 {
   if (dump_fn[0]) {
     char *p = (char *) strstr(dump_fn, "%n");
@@ -111,15 +111,15 @@ dump_init ()
   }
 }
 
-void
-dump_exit ()
+void 
+dump_exit (void)
 {
   if (dump_fp)
     fclose (dump_fp);
 }
 
-void dump (pre, str)
-     char *pre, *str;
+void 
+dump (char *pre, char *str)
 {
   if (dump_fp)
     fprintf (dump_fp, "%s%s\n", pre, str);
@@ -208,9 +208,8 @@ static void done_hangup(int sig) {
 }
 #endif /* NO_SIGNAL */
 
-void
-done_in_by(mtmp)
-register struct monst *mtmp;
+void 
+done_in_by (register struct monst *mtmp)
 {
 	char buf[BUFSZ];
 	boolean distorted = (boolean)(Hallucination && canspotmon(mtmp));
@@ -456,9 +455,8 @@ boolean taken;
 }
 
 /* try to get the player back in a viable state after being killed */
-STATIC_OVL void
-savelife(how)
-int how;
+STATIC_OVL void 
+savelife (int how)
 {
 	u.uswldtim = 0;
 	u.uhp = u.uhpmax;
@@ -486,9 +484,10 @@ int how;
  * Get valuables from the given list.  Revised code: the list always remains
  * intact.
  */
-STATIC_OVL void
-get_valuables(list)
-struct obj *list;	/* inventory or container contents */
+STATIC_OVL void 
+get_valuables (
+    struct obj *list	/* inventory or container contents */
+)
 {
     register struct obj *obj;
     register int i;
@@ -519,10 +518,11 @@ struct obj *list;	/* inventory or container contents */
  *  Sort collected valuables, most frequent to least.  We could just
  *  as easily use qsort, but we don't care about efficiency here.
  */
-STATIC_OVL void
-sort_valuables(list, size)
-struct valuable_data list[];
-int size;		/* max value is less than 20 */
+STATIC_OVL void 
+sort_valuables (
+    struct valuable_data list[],
+    int size		/* max value is less than 20 */
+)
 {
     register int i, j;
     struct valuable_data ltmp;
@@ -584,9 +584,8 @@ winid endwin;
 }
 
 /* Be careful not to call panic from here! */
-void
-done(how)
-int how;
+void 
+done (int how)
 {
 	boolean taken;
 	char kilbuf[BUFSZ], pbuf[BUFSZ];

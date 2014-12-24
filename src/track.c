@@ -12,8 +12,8 @@ STATIC_VAR coord utrack[UTSZ];
 
 #ifdef OVLB
 
-void
-initrack()
+void 
+initrack (void)
 {
 	utcnt = utpnt = 0;
 }
@@ -22,8 +22,8 @@ initrack()
 #ifdef OVL1
 
 /* add to track */
-void
-settrack()
+void 
+settrack (void)
 {
 	if(utcnt < UTSZ) utcnt++;
 	if(utpnt == UTSZ) utpnt = 0;
@@ -36,8 +36,7 @@ settrack()
 #ifdef OVL0
 
 coord *
-gettrack(x, y)
-register int x, y;
+gettrack (register int x, register int y)
 {
     register int cnt, ndist;
     register coord *tc;

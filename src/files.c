@@ -88,11 +88,7 @@ STATIC_DCL int FDECL(open_levelfile_exclusively, (const char *, int, int));
  *	    "This%20is%20a%20%25%20test%21"
  */
 char *
-fname_encode(legal, quotechar, s, callerbuf, bufsz)
-const char *legal;
-char quotechar;
-char *s, *callerbuf;
-int bufsz;
+fname_encode (const char *legal, char quotechar, char *s, char *callerbuf, int bufsz)
 {
 	char *sp, *op;
 	int cnt = 0;
@@ -134,10 +130,7 @@ int bufsz;
  *	bufsz		size of callerbuf
  */
 char *
-fname_decode(quotechar, s, callerbuf, bufsz)
-char quotechar;
-char *s, *callerbuf;
-int bufsz;
+fname_decode (char quotechar, char *s, char *callerbuf, int bufsz)
 {
 	char *sp, *op;
 	int k,calc,cnt = 0;
@@ -194,9 +187,8 @@ const char * fqname(const char * basename, int whichprefix, int buffnum) {
 
 /* reasonbuf must be at least BUFSZ, supplied by caller */
 /*ARGSUSED*/
-int
-validate_prefix_locations(reasonbuf)
-char *reasonbuf;
+int 
+validate_prefix_locations (char *reasonbuf)
 {
 	FILE *fp;
 	const char *filename;
@@ -332,10 +324,8 @@ void clearlocks(void) {
 }
 
 #ifdef HOLD_LOCKFILE_OPEN
-STATIC_OVL int
-open_levelfile_exclusively(name, lev, oflag)
-const char *name;
-int lev, oflag;
+STATIC_OVL int 
+open_levelfile_exclusively (const char *name, int lev, int oflag)
 {
 	int reslt, fd;
 	if (!lftrack.init) {
@@ -367,8 +357,8 @@ int lev, oflag;
 	return fd;
 }
 
-void
-really_close()
+void 
+really_close (void)
 {
 	int fd = lftrack.fd;
 	lftrack.nethack_thinks_it_is_open = FALSE;
@@ -378,9 +368,8 @@ really_close()
 	return;
 }
 
-int
-close(fd)
-int fd;
+int 
+close (int fd)
 {
  	if (lftrack.fd == fd) {
 		really_close();	/* close it, but reopen it to hold it */
@@ -401,9 +390,7 @@ int fd;
  * bonesid to be read/written in the bones file.
  */
 STATIC_OVL char *
-set_bonesfile_name(file, lev)
-char *file;
-d_level *lev;
+set_bonesfile_name (char *file, d_level *lev)
 {
 	s_level *sptr;
 	char *dptr;
@@ -425,7 +412,7 @@ d_level *lev;
  * the same array may be used instead of copying.)
  */
 STATIC_OVL char *
-set_bonestemp_name()
+set_bonestemp_name (void)
 {
 	char *tf;
 
@@ -435,11 +422,8 @@ set_bonestemp_name()
 	return lock;
 }
 
-int
-create_bonesfile(lev, bonesid, errbuf)
-d_level *lev;
-char **bonesid;
-char errbuf[];
+int 
+create_bonesfile (d_level *lev, char **bonesid, char errbuf[])
 {
 	const char *file;
 	int fd;
@@ -485,10 +469,8 @@ void commit_bonesfile(d_level *lev) {
 }
 
 
-int
-open_bonesfile(lev, bonesid)
-d_level *lev;
-char **bonesid;
+int 
+open_bonesfile (d_level *lev, char **bonesid)
 {
 	const char *fq_bones;
 	int fd;
@@ -501,9 +483,8 @@ char **bonesid;
 }
 
 
-int
-delete_bonesfile(lev)
-d_level *lev;
+int 
+delete_bonesfile (d_level *lev)
 {
 	(void) set_bonesfile_name(bones, lev);
 	return !(unlink(fqname(bones, BONESPREFIX, 0)) < 0);
@@ -529,9 +510,8 @@ void set_savefile_name(void) {
 }
 
 #ifdef INSURANCE
-void
-save_savefile_name(fd)
-int fd;
+void 
+save_savefile_name (int fd)
 {
 	(void) write(fd, (void *) SAVEF, sizeof(SAVEF));
 }
@@ -576,8 +556,8 @@ int delete_savefile(void) {
 
 
 /* try to open up a save file and prepare to restore it */
-int
-restore_saved_game()
+int 
+restore_saved_game (void)
 {
 	const char *fq_save;
 	int fd;
@@ -597,9 +577,8 @@ restore_saved_game()
 
 #if defined(UNIX) && defined(QT_GRAPHICS)
 /*ARGSUSED*/
-static char*
-plname_from_file(filename)
-const char* filename;
+static char *
+plname_from_file (const char *filename)
 {
 #ifdef STORE_PLNAME_IN_FILE
     int fd;
@@ -650,8 +629,8 @@ const char* filename;
 }
 #endif /* defined(UNIX) && defined(QT_GRAPHICS) */
 
-char**
-get_saved_games()
+char **
+get_saved_games (void)
 {
 #if defined(UNIX) && defined(QT_GRAPHICS)
     int myuid=getuid();
@@ -683,9 +662,8 @@ get_saved_games()
     }
 }
 
-void
-free_saved_games(saved)
-char** saved;
+void 
+free_saved_games (char **saved)
 {
     if ( saved ) {
 	int i=0;
@@ -865,9 +843,8 @@ boolean uncomp;
 #endif	/* COMPRESS */
 
 /* compress file */
-void
-compress(filename)
-const char *filename;
+void 
+compress (const char *filename)
 {
 #ifndef COMPRESS
 #if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
@@ -880,9 +857,8 @@ const char *filename;
 
 
 /* uncompress file if it exists */
-void
-uncompress(filename)
-const char *filename;
+void 
+uncompress (const char *filename)
 {
 #ifndef COMPRESS
 #if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
@@ -907,9 +883,7 @@ static int lockfd;	/* for lock_file() to pass to unlock_file() */
 #define HUP	if (!program_state.done_hup)
 
 STATIC_OVL char *
-make_lockname(filename, lockname)
-const char *filename;
-char *lockname;
+make_lockname (const char *filename, char *lockname)
 {
 #if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
 # pragma unused(filename,lockname)

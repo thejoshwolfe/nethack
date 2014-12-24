@@ -72,9 +72,8 @@ boolean undirected;
 
 /* convert a level based random selection into a specific mage spell;
    inappropriate choices will be screened out by spell_would_be_useless() */
-STATIC_OVL int
-choose_magic_spell(spellval)
-int spellval;
+STATIC_OVL int 
+choose_magic_spell (int spellval)
 {
     switch (spellval) {
     case 22:
@@ -117,9 +116,8 @@ int spellval;
 }
 
 /* convert a level based random selection into a specific cleric spell */
-STATIC_OVL int
-choose_clerical_spell(spellnum)
-int spellnum;
+STATIC_OVL int 
+choose_clerical_spell (int spellnum)
 {
     switch (spellnum) {
     case 13:
@@ -312,12 +310,8 @@ castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
    If you modify either of these, be sure to change is_undirected_spell()
    and spell_would_be_useless().
  */
-STATIC_OVL
-void
-cast_wizard_spell(mtmp, dmg, spellnum)
-struct monst *mtmp;
-int dmg;
-int spellnum;
+STATIC_OVL void 
+cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum)
 {
     if (dmg == 0 && !is_undirected_spell(AD_SPEL, spellnum)) {
 	impossible("cast directed wizard spell (%d) with dmg=0?", spellnum);
@@ -471,12 +465,8 @@ int spellnum;
     if (dmg) mdamageu(mtmp, dmg);
 }
 
-STATIC_OVL
-void
-cast_cleric_spell(mtmp, dmg, spellnum)
-struct monst *mtmp;
-int dmg;
-int spellnum;
+STATIC_OVL void 
+cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
 {
     if (dmg == 0 && !is_undirected_spell(AD_CLRC, spellnum)) {
 	impossible("cast directed cleric spell (%d) with dmg=0?", spellnum);
@@ -752,10 +742,11 @@ int spellnum;
 /* convert 1..10 to 0..9; add 10 for second group (spell casting) */
 #define ad_to_typ(k) (10 + (int)k - 1)
 
-int
-buzzmu(mtmp, mattk)		/* monster uses spell (ranged) */
-	register struct monst *mtmp;
-	register struct attack  *mattk;
+int 
+buzzmu (		/* monster uses spell (ranged) */
+    register struct monst *mtmp,
+    register struct attack *mattk
+)
 {
 	/* don't print constant stream of curse messages for 'normal'
 	   spellcasting monsters at range */

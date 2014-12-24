@@ -195,11 +195,8 @@ struct monst *victim;
 	return(TRUE);
 }
 
-void
-grease_protect(otmp,ostr,victim)
-register struct obj *otmp;
-register const char *ostr;
-struct monst *victim;
+void 
+grease_protect (register struct obj *otmp, register const char *ostr, struct monst *victim)
 {
 	static const char txt[] = "protected by the layer of grease!";
 	boolean vismon = victim && (victim != &youmonst) && canseemon(victim);
@@ -226,8 +223,7 @@ struct monst *victim;
 }
 
 struct trap *
-maketrap(x,y,typ)
-register int x, y, typ;
+maketrap (register int x, register int y, register int typ)
 {
 	register struct trap *ttmp;
 	register struct rm *lev;
@@ -394,11 +390,7 @@ boolean td;	/* td == TRUE : trap door or hole */
  * the statue's location... ???
  */
 struct monst *
-animate_statue(statue, x, y, cause, fail_reason)
-struct obj *statue;
-signed char x, y;
-int cause;
-int *fail_reason;
+animate_statue (struct obj *statue, signed char x, signed char y, int cause, int *fail_reason)
 {
 	struct permonst *mptr;
 	struct monst *mon = 0;
@@ -575,10 +567,8 @@ struct obj *objchn, *saddle;
 }
 #endif /*STEED*/
 
-void
-dotrap(trap, trflags)
-register struct trap *trap;
-unsigned trflags;
+void 
+dotrap (register struct trap *trap, unsigned trflags)
 {
 	register int ttype = trap->ttyp;
 	register struct obj *otmp;
@@ -1182,10 +1172,8 @@ glovecheck:		(void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
 }
 
 #ifdef STEED
-STATIC_OVL int
-steedintrap(trap, otmp)
-struct trap *trap;
-struct obj *otmp;
+STATIC_OVL int 
+steedintrap (struct trap *trap, struct obj *otmp)
 {
 	struct monst *mtmp = u.usteed;
 	struct permonst *mptr;
@@ -1274,9 +1262,8 @@ struct obj *otmp;
 #endif /*STEED*/
 
 /* some actions common to both player and monsters for triggered landmine */
-void
-blow_up_landmine(trap)
-struct trap *trap;
+void 
+blow_up_landmine (struct trap *trap)
 {
 	(void)scatter(trap->tx, trap->ty, 4,
 		MAY_DESTROY | MAY_HIT | MAY_FRACTURE | VIS_EFFECTS,
@@ -1302,11 +1289,8 @@ struct trap *trap;
  *        1 if an object was launched and placed somewhere.
  *        2 if an object was launched, but used up.
  */
-int
-launch_obj(otyp, x1, y1, x2, y2, style)
-short otyp;
-register int x1,y1,x2,y2;
-int style;
+int 
+launch_obj (short otyp, register int x1, register int y1, register int x2, register int y2, int style)
 {
 	register struct monst *mtmp;
 	register struct obj *otmp, *otmp2;
@@ -1537,9 +1521,8 @@ int style;
 #endif /* OVL3 */
 #ifdef OVLB
 
-void
-seetrap(trap)
-	register struct trap *trap;
+void 
+seetrap (register struct trap *trap)
 {
 	if(!trap->tseen) {
 	    trap->tseen = 1;
@@ -1628,9 +1611,8 @@ STATIC_OVL boolean isclearpath(coord *cc, int distance, signed char dx, signed c
 #endif /* OVL3 */
 #ifdef OVL1
 
-int
-mintrap(mtmp)
-register struct monst *mtmp;
+int 
+mintrap (register struct monst *mtmp)
 {
 	register struct trap *trap = t_at(mtmp->mx, mtmp->my);
 	boolean trapkilled = FALSE;
@@ -2147,9 +2129,8 @@ glovecheck:		    target = which_armor(mtmp, W_ARMG);
 #ifdef OVLB
 
 /* Combine cockatrice checks into single functions to avoid repeating code. */
-void
-instapetrify(str)
-const char *str;
+void 
+instapetrify (const char *str)
 {
 	if (Stone_resistance) return;
 	if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
@@ -2183,9 +2164,8 @@ boolean byplayer;
 	} else monstone(mon);
 }
 
-void
-selftouch(arg)
-const char *arg;
+void 
+selftouch (const char *arg)
 {
 	char kbuf[BUFSZ];
 
@@ -2224,8 +2204,8 @@ boolean byplayer;
 	}
 }
 
-void
-float_up()
+void 
+float_up (void)
 {
 	if(u.utrap) {
 		if(u.utraptype == TT_PIT) {
@@ -2272,9 +2252,8 @@ float_up()
 	return;
 }
 
-void
-fill_pit(x, y)
-int x, y;
+void 
+fill_pit (int x, int y)
 {
 	struct obj *otmp;
 	struct trap *t;
@@ -2412,9 +2391,10 @@ long hmask, emask;     /* might cancel timeout */
 	return 1;
 }
 
-STATIC_OVL void
-dofiretrap(box)
-struct obj *box;	/* null for floor trap */
+STATIC_OVL void 
+dofiretrap (
+    struct obj *box	/* null for floor trap */
+)
 {
 	boolean see_it = !Blind;
 	int num, alt;
@@ -2470,8 +2450,8 @@ struct obj *box;	/* null for floor trap */
 	    melt_ice(u.ux, u.uy);
 }
 
-STATIC_OVL void
-domagictrap()
+STATIC_OVL void 
+domagictrap (void)
 {
 	register int fate = rnd(20);
 
@@ -2946,9 +2926,8 @@ drown()
 	return(TRUE);
 }
 
-void
-drain_en(n)
-register int n;
+void 
+drain_en (register int n)
 {
 	if (!u.uenmax) return;
 	You_feel("your magical energy drain away!");
@@ -2986,9 +2965,8 @@ dountrap()	/* disarm a trap */
 #ifdef OVL2
 
 /* Probability of disabling a trap.  Helge Hafting */
-STATIC_OVL int
-untrap_prob(ttmp)
-struct trap *ttmp;
+STATIC_OVL int 
+untrap_prob (struct trap *ttmp)
 {
 	int chance = 3;
 
@@ -3009,11 +2987,8 @@ struct trap *ttmp;
 }
 
 /* Replace trap with object(s).  Helge Hafting */
-STATIC_OVL void
-cnv_trap_obj(otyp, cnt, ttmp)
-int otyp;
-int cnt;
-struct trap *ttmp;
+STATIC_OVL void 
+cnv_trap_obj (int otyp, int cnt, struct trap *ttmp)
 {
 	struct obj *otmp = mksobj(otyp, TRUE, FALSE);
 	otmp->quan=cnt;
@@ -3030,9 +3005,8 @@ struct trap *ttmp;
 }
 
 /* while attempting to disarm an adjacent trap, we've fallen into it */
-STATIC_OVL void
-move_into_trap(ttmp)
-struct trap *ttmp;
+STATIC_OVL void 
+move_into_trap (struct trap *ttmp)
 {
 	int bc;
 	signed char x = ttmp->tx, y = ttmp->ty, bx, by, cx, cy;
@@ -3143,10 +3117,8 @@ boolean force_failure;
 	return 2;
 }
 
-STATIC_OVL void
-reward_untrap(ttmp, mtmp)
-struct trap *ttmp;
-struct monst *mtmp;
+STATIC_OVL void 
+reward_untrap (struct trap *ttmp, struct monst *mtmp)
 {
 	if (!ttmp->madeby_u) {
 	    if (rnl(10) < 8 && !mtmp->mpeaceful &&
@@ -3166,9 +3138,10 @@ struct monst *mtmp;
 	}
 }
 
-STATIC_OVL int
-disarm_holdingtrap(ttmp) /* Helge Hafting */
-struct trap *ttmp;
+STATIC_OVL int 
+disarm_holdingtrap ( /* Helge Hafting */
+    struct trap *ttmp
+)
 {
 	struct monst *mtmp;
 	int fails = try_disarm(ttmp, FALSE);
@@ -3198,9 +3171,10 @@ struct trap *ttmp;
 	return 1;
 }
 
-STATIC_OVL int
-disarm_landmine(ttmp) /* Helge Hafting */
-struct trap *ttmp;
+STATIC_OVL int 
+disarm_landmine ( /* Helge Hafting */
+    struct trap *ttmp
+)
 {
 	int fails = try_disarm(ttmp, FALSE);
 
@@ -3214,9 +3188,8 @@ struct trap *ttmp;
 static const char oil[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS, 0 };
 
 /* it may not make much sense to use grease on floor boards, but so what? */
-STATIC_OVL int
-disarm_squeaky_board(ttmp)
-struct trap *ttmp;
+STATIC_OVL int 
+disarm_squeaky_board (struct trap *ttmp)
 {
 	struct obj *obj;
 	boolean bad_tool;
@@ -3248,10 +3221,8 @@ struct trap *ttmp;
 }
 
 /* removes traps that shoot arrows, darts, etc. */
-STATIC_OVL int
-disarm_shooting_trap(ttmp, otyp)
-struct trap *ttmp;
-int otyp;
+STATIC_OVL int 
+disarm_shooting_trap (struct trap *ttmp, int otyp)
 {
 	int fails = try_disarm(ttmp, FALSE);
 
@@ -3288,10 +3259,8 @@ boolean stuff;
 }
 
 /* Help trapped monster (out of a (spiked) pit) */
-STATIC_OVL int
-help_monster_out(mtmp, ttmp)
-struct monst *mtmp;
-struct trap *ttmp;
+STATIC_OVL int 
+help_monster_out (struct monst *mtmp, struct trap *ttmp)
 {
 	int wt;
 	struct obj *otmp;
@@ -3764,8 +3733,7 @@ boolean disarm;
 #ifdef OVL0
 
 struct trap *
-t_at(x,y)
-register int x, y;
+t_at (register int x, register int y)
 {
 	register struct trap *trap = ftrap;
 	while(trap) {
@@ -3778,9 +3746,8 @@ register int x, y;
 #endif /* OVL0 */
 #ifdef OVLB
 
-void
-deltrap(trap)
-register struct trap *trap;
+void 
+deltrap (register struct trap *trap)
 {
 	register struct trap *ttmp;
 
@@ -3827,10 +3794,8 @@ register struct trap *ttmp;
 }
 
 /* used for doors (also tins).  can be used for anything else that opens. */
-void
-b_trapped(item, bodypart)
-register const char *item;
-register int bodypart;
+void 
+b_trapped (register const char *item, register int bodypart)
 {
 	register int lvl = level_difficulty();
 	int dmg = rnd(5 + (lvl < 5 ? lvl : 2+lvl/2));

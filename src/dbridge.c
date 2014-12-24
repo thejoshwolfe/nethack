@@ -82,9 +82,8 @@ int x,y;
  * Return value:  the direction of the drawbridge.
  */
 
-int
-is_drawbridge_wall(x,y)
-int x,y;
+int 
+is_drawbridge_wall (int x, int y)
 {
 	struct rm *lev;
 
@@ -152,9 +151,8 @@ int *x,*y;
 /*
  * Find the drawbridge wall associated with a drawbridge.
  */
-STATIC_OVL void
-get_wall_for_db(x,y)
-int *x,*y;
+STATIC_OVL void 
+get_wall_for_db (int *x, int *y)
 {
 	switch (levl[*x][*y].drawbridgemask & DB_DIR) {
 		case DB_NORTH: (*y)--; break;
@@ -230,10 +228,8 @@ struct entity {
 
 static struct entity occupants[ENTITIES];
 
-STATIC_OVL
-struct entity *
-e_at(x, y)
-int x, y;
+STATIC_OVL struct entity *
+e_at (int x, int y)
 {
 	int entitycnt;
 
@@ -250,11 +246,8 @@ int x, y;
 	       (struct entity *)0 : &(occupants[entitycnt]));
 }
 
-STATIC_OVL void
-m_to_e(mtmp, x, y, etmp)
-struct monst *mtmp;
-int x, y;
-struct entity *etmp;
+STATIC_OVL void 
+m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp)
 {
 	etmp->emon = mtmp;
 	if (mtmp) {
@@ -268,9 +261,8 @@ struct entity *etmp;
 		etmp->edata = (struct permonst *)0;
 }
 
-STATIC_OVL void
-u_to_e(etmp)
-struct entity *etmp;
+STATIC_OVL void 
+u_to_e (struct entity *etmp)
 {
 	etmp->emon = &youmonst;
 	etmp->ex = u.ux;
@@ -278,10 +270,8 @@ struct entity *etmp;
 	etmp->edata = youmonst.data;
 }
 
-STATIC_OVL void
-set_entity(x, y, etmp)
-int x, y;
-struct entity *etmp;
+STATIC_OVL void 
+set_entity (int x, int y, struct entity *etmp)
 {
 	if ((x == u.ux) && (y == u.uy))
 		u_to_e(etmp);
@@ -302,8 +292,7 @@ struct entity *etmp;
 /* #define e_strg(etmp, func) (is_u(etmp)? (char *)0 : func(etmp->emon)) */
 
 STATIC_OVL const char *
-e_nam(etmp)
-struct entity *etmp;
+e_nam (struct entity *etmp)
 {
 	return(is_u(etmp)? "you" : mon_nam(etmp->emon));
 }
@@ -314,8 +303,7 @@ struct entity *etmp;
  */
 
 static const char *
-Enam(etmp)
-struct entity *etmp;
+Enam (struct entity *etmp)
 {
 	return(is_u(etmp)? "You" : Monnam(etmp->emon));
 }
@@ -327,9 +315,7 @@ struct entity *etmp;
  */
 
 STATIC_OVL const char *
-E_phrase(etmp, verb)
-struct entity *etmp;
-const char *verb;
+E_phrase (struct entity *etmp, const char *verb)
 {
 	static char wholebuf[80];
 
@@ -370,10 +356,8 @@ int x, y;
 	return(TRUE);
 }
 
-STATIC_OVL void
-e_died(etmp, dest, how)
-struct entity *etmp;
-int dest, how;
+STATIC_OVL void 
+e_died (struct entity *etmp, int dest, int how)
 {
 	if (is_u(etmp)) {
 		if (how == DROWNING) {
@@ -514,9 +498,8 @@ struct entity *etmp;
 	return((boolean)((tmp >= rnd(10))? TRUE : FALSE));
 }
 
-STATIC_OVL void
-do_entity(etmp)
-struct entity *etmp;
+STATIC_OVL void 
+do_entity (struct entity *etmp)
 {
 	int newx, newy, at_portcullis, oldx, oldy;
 	boolean must_jump = FALSE, relocates = FALSE, e_inview;
@@ -740,9 +723,8 @@ struct entity *etmp;
  * Close the drawbridge located at x,y
  */
 
-void
-close_drawbridge(x,y)
-int x,y;
+void 
+close_drawbridge (int x, int y)
 {
 	register struct rm *lev1, *lev2;
 	struct trap *t;
@@ -792,9 +774,8 @@ int x,y;
  * Open the drawbridge located at x,y
  */
 
-void
-open_drawbridge(x,y)
-int x,y;
+void 
+open_drawbridge (int x, int y)
 {
 	register struct rm *lev1, *lev2;
 	struct trap *t;
@@ -830,9 +811,8 @@ int x,y;
  * Let's destroy the drawbridge located at x,y
  */
 
-void
-destroy_drawbridge(x,y)
-int x,y;
+void 
+destroy_drawbridge (int x, int y)
 {
 	register struct rm *lev1, *lev2;
 	struct trap *t;

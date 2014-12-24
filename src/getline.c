@@ -171,9 +171,10 @@ getlin_hook_proc hook;
 	clear_nhwindow(WIN_MESSAGE);	/* clean up after ourselves */
 }
 
-void
-xwaitforspace(s)
-register const char *s;	/* chars allowed besides return */
+void 
+xwaitforspace (
+    register const char *s	/* chars allowed besides return */
+)
 {
     register int c, x = ttyDisplay ? (int) ttyDisplay->dismiss_more : '\n';
 

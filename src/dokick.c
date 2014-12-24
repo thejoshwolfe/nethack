@@ -327,9 +327,8 @@ register struct obj *gold;
 
 /* container is kicked, dropped, thrown or otherwise impacted by player.
  * Assumes container is on floor.  Checks contents for possible damage. */
-void
-container_impact_dmg(obj)
-struct obj *obj;
+void 
+container_impact_dmg (struct obj *obj)
 {
 	struct monst *shkp;
 	struct obj *otmp, *otmp2;
@@ -579,8 +578,7 @@ STATIC_OVL int kick_object(signed char x, signed char y) {
 }
 
 STATIC_OVL char *
-kickstr(buf)
-char *buf;
+kickstr (char *buf)
 {
 	const char *what;
 
@@ -1360,8 +1358,8 @@ boolean ship_object(struct obj *otmp, signed char x, signed char y, boolean shop
 	return(TRUE);
 }
 
-void
-obj_delivery()
+void 
+obj_delivery (void)
 {
 	register struct obj *otmp, *otmp2;
 	register int nx, ny;

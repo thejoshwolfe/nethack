@@ -7,18 +7,16 @@
 STATIC_DCL long FDECL(newuexp, (int));
 STATIC_DCL int FDECL(enermod, (int));
 
-STATIC_OVL long
-newuexp(lev)
-int lev;
+STATIC_OVL long 
+newuexp (int lev)
 {
 	if (lev < 10) return (10L * (1L << lev));
 	if (lev < 20) return (10000L * (1L << (lev - 10)));
 	return (10000000L * ((long)(lev - 19)));
 }
 
-STATIC_OVL int
-enermod(en)
-int en;
+STATIC_OVL int 
+enermod (int en)
 {
 	switch (Role_switch) {
 	case PM_PRIEST:
@@ -35,10 +33,11 @@ int en;
 	}
 }
 
-int
-experience(mtmp, nk)	/* return # of exp points for mtmp after nk killed */
-	register struct	monst *mtmp;
-	register int	nk;
+int 
+experience (	/* return # of exp points for mtmp after nk killed */
+    register struct monst *mtmp,
+    register int nk
+)
 #if defined(macintosh) && (defined(__SC__) || defined(__MRC__))
 # pragma unused(nk)
 #endif
@@ -95,9 +94,8 @@ experience(mtmp, nk)	/* return # of exp points for mtmp after nk killed */
 	return(tmp);
 }
 
-void
-more_experienced(exp, rexp)
-	register int exp, rexp;
+void 
+more_experienced (register int exp, register int rexp)
 {
 	u.uexp += exp;
 	u.urexp += 4*exp + rexp;
@@ -110,9 +108,10 @@ more_experienced(exp, rexp)
 		flags.beginner = 0;
 }
 
-void
-losexp(drainer)		/* e.g., hit by drain life attack */
-const char *drainer;	/* cause of death, if drain should be fatal */
+void 
+losexp (		/* e.g., hit by drain life attack */
+    const char *drainer	/* cause of death, if drain should be fatal */
+)
 {
 	register int num;
 
@@ -170,8 +169,8 @@ const char *drainer;	/* cause of death, if drain should be fatal */
  * After all, how much real experience does one get shooting a wand of death
  * at a dragon created with a wand of polymorph??
  */
-void
-newexplevel()
+void 
+newexplevel (void)
 {
 	if (u.ulevel < MAXULEV && u.uexp >= newuexp(u.ulevel))
 	    pluslvl(TRUE);

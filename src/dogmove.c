@@ -16,8 +16,7 @@ STATIC_DCL boolean FDECL(can_reach_location,(struct monst *,signed char,signed c
 STATIC_DCL boolean FDECL(could_reach_item,(struct monst *, signed char,signed char));
 
 STATIC_OVL struct obj *
-DROPPABLES(mon)
-register struct monst *mon;
+DROPPABLES (register struct monst *mon)
 {
 	register struct obj *obj;
 	struct obj *wep = MON_WEP(mon);
@@ -64,10 +63,8 @@ int x, y;
 	return FALSE;
 }
 
-int
-dog_nutrition(mtmp, obj)
-struct monst *mtmp;
-struct obj *obj;
+int 
+dog_nutrition (struct monst *mtmp, struct obj *obj)
 {
 	int nutrit;
 
@@ -246,11 +243,8 @@ register struct edog *edog;
 /* do something with object (drop, pick up, eat) at current position
  * returns 1 if object eaten (since that counts as dog's move), 2 if died
  */
-STATIC_OVL int
-dog_invent(mtmp, edog, udist)
-register struct monst *mtmp;
-register struct edog *edog;
-int udist;
+STATIC_OVL int 
+dog_invent (register struct monst *mtmp, register struct edog *edog, int udist)
 {
 	register int omx, omy;
 	struct obj *obj;

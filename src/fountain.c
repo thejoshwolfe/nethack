@@ -8,15 +8,14 @@ STATIC_DCL void NDECL(dowaternymph);
 STATIC_PTR void FDECL(gush, (int,int,void *));
 STATIC_DCL void NDECL(dofindgem);
 
-void
-floating_above(what)
-const char *what;
+void 
+floating_above (const char *what)
 {
     You("are floating high above the %s.", what);
 }
 
-STATIC_OVL void
-dowatersnakes() /* Fountain of snakes! */
+STATIC_OVL void 
+dowatersnakes (void) /* Fountain of snakes! */
 {
     register int num = rn1(5,2);
     struct monst *mtmp;
@@ -35,9 +34,8 @@ dowatersnakes() /* Fountain of snakes! */
 	pline_The("fountain bubbles furiously for a moment, then calms.");
 }
 
-STATIC_OVL
-void
-dowaterdemon() /* Water demon */
+STATIC_OVL void 
+dowaterdemon (void) /* Water demon */
 {
     register struct monst *mtmp;
 
@@ -61,8 +59,8 @@ dowaterdemon() /* Water demon */
 	pline_The("fountain bubbles furiously for a moment, then calms.");
 }
 
-STATIC_OVL void
-dowaternymph() /* Water Nymph */
+STATIC_OVL void 
+dowaternymph (void) /* Water Nymph */
 {
 	register struct monst *mtmp;
 
@@ -82,9 +80,10 @@ dowaternymph() /* Water Nymph */
 		   You_hear("a loud pop.");
 }
 
-void
-dogushforth(drinking) /* Gushing forth along LOS from (u.ux, u.uy) */
-int drinking;
+void 
+dogushforth ( /* Gushing forth along LOS from (u.ux, u.uy) */
+    int drinking
+)
 {
 	int madepool = 0;
 
@@ -129,8 +128,8 @@ void * poolcnt;
 		newsym(x,y);
 }
 
-STATIC_OVL void
-dofindgem() /* Find a gem in the sparkling waters. */
+STATIC_OVL void 
+dofindgem (void) /* Find a gem in the sparkling waters. */
 {
 	if (!Blind) You("spot a gem in the sparkling waters!");
 	else You_feel("a gem here!");
@@ -187,8 +186,8 @@ boolean isyou;
 	}
 }
 
-void
-drinkfountain()
+void 
+drinkfountain (void)
 {
 	/* What happens when you drink from a fountain? */
 	register boolean mgkftn = (levl[u.ux][u.uy].blessedftn == 1);
@@ -343,9 +342,8 @@ drinkfountain()
 	dryup(u.ux, u.uy, TRUE);
 }
 
-void
-dipfountain(obj)
-register struct obj *obj;
+void 
+dipfountain (register struct obj *obj)
 {
 	if (Levitation) {
 		floating_above("fountain");
@@ -489,9 +487,8 @@ register struct obj *obj;
 }
 
 #ifdef SINKS
-void
-breaksink(x,y)
-int x, y;
+void 
+breaksink (int x, int y)
 {
     if(cansee(x,y) || (x == u.ux && y == u.uy))
 	pline_The("pipes break!  Water spurts out!");
@@ -502,8 +499,8 @@ int x, y;
     newsym(x,y);
 }
 
-void
-drinksink()
+void 
+drinksink (void)
 {
 	struct obj *otmp;
 	struct monst *mtmp;

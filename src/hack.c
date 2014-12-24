@@ -53,8 +53,8 @@ const char *msg;
     return (revived);
 }
 
-STATIC_OVL int
-moverock()
+STATIC_OVL int 
+moverock (void)
 {
     register signed char rx, ry, sx, sy;
     register struct obj *otmp;
@@ -425,10 +425,8 @@ STATIC_OVL int still_chewing(signed char x,signed char y) {
 #endif /* OVL2 */
 #ifdef OVLB
 
-void
-movobj(obj, ox, oy)
-register struct obj *obj;
-register signed char ox, oy;
+void 
+movobj (register struct obj *obj, register signed char ox, register signed char oy)
 {
 	/* optimize by leaving on the fobj chain? */
 	remove_object(obj);
@@ -440,8 +438,8 @@ register signed char ox, oy;
 #ifdef SINKS
 static const char fell_on_sink[] = "fell onto a sink";
 
-STATIC_OVL void
-dosinkfall()
+STATIC_OVL void 
+dosinkfall (void)
 {
 	register struct obj *obj;
 
@@ -852,8 +850,8 @@ found:
     return FALSE;
 }
 
-void
-domove()
+void 
+domove (void)
 {
 	register struct monst *mtmp;
 	register struct rm *tmpr;
@@ -1421,8 +1419,8 @@ domove()
 	}
 }
 
-void
-invocation_message()
+void 
+invocation_message (void)
 {
 	/* a special clue-msg when on the Invocation position */
 	if(invocation_pos(u.ux, u.uy) && !On_stairs(u.ux, u.uy)) {
@@ -1573,9 +1571,7 @@ int roomno;
 }
 
 char *
-in_rooms(x, y, typewanted)
-register signed char x, y;
-register int typewanted;
+in_rooms (register signed char x, register signed char y, register int typewanted)
 {
 	static char buf[5];
 	char rno, *ptr = &buf[4];
@@ -1906,8 +1902,8 @@ dopickup()
 /* stop running if we see something interesting */
 /* turn around a corner if that is the only way we can proceed */
 /* do not turn left or right twice */
-void
-lookaround()
+void 
+lookaround (void)
 {
     register int x, y, i, x0 = 0, y0 = 0, m0 = 1, i0 = 9;
     register int corrct = 0, noturn = 0;
@@ -2031,8 +2027,8 @@ stop:
 
 /* something like lookaround, but we are not running */
 /* react only to monsters that might hit us */
-int
-monster_nearby()
+int 
+monster_nearby (void)
 {
 	register int x,y;
 	register struct monst *mtmp;
@@ -2056,9 +2052,8 @@ monster_nearby()
 	return(0);
 }
 
-void
-nomul(nval)
-	register int nval;
+void 
+nomul (register int nval)
 {
 	if(multi < nval) return;	/* This is a bug fix by ab@unido */
 	u.uinvulnerable = FALSE;	/* Kludge to avoid ctrl-C bug -dlc */
@@ -2068,9 +2063,8 @@ nomul(nval)
 }
 
 /* called when a non-movement, multi-turn action has completed */
-void
-unmul(msg_override)
-const char *msg_override;
+void 
+unmul (const char *msg_override)
 {
 	multi = 0;	/* caller will usually have done this already */
 	if (msg_override) nomovemsg = msg_override;
@@ -2085,8 +2079,8 @@ const char *msg_override;
 #endif /* OVL2 */
 #ifdef OVL1
 
-STATIC_OVL void
-maybe_wail()
+STATIC_OVL void 
+maybe_wail (void)
 {
     static short powers[] = { TELEPORT, SEE_INVIS, POISON_RES, COLD_RES,
 			      SHOCK_RES, FIRE_RES, SLEEP_RES, DISINT_RES,
@@ -2147,8 +2141,8 @@ boolean k_format;
 	}
 }
 
-int
-weight_cap()
+int 
+weight_cap (void)
 {
 	register long carrcap;
 
@@ -2185,8 +2179,8 @@ static int wc;	/* current weight_cap(); valid after call to inv_weight() */
 
 /* returns how far beyond the normal capacity the player is currently. */
 /* inv_weight() is negative if the player is below normal capacity. */
-int
-inv_weight()
+int 
+inv_weight (void)
 {
 	register struct obj *otmp = invent;
 	register int wt = 0;
@@ -2218,9 +2212,8 @@ inv_weight()
  * Returns 0 if below normal capacity, or the number of "capacity units"
  * over the normal capacity the player is loaded.  Max is 5.
  */
-int
-calc_capacity(xtra_wt)
-int xtra_wt;
+int 
+calc_capacity (int xtra_wt)
 {
     int cap, wt = inv_weight() + xtra_wt;
 
@@ -2230,14 +2223,14 @@ int xtra_wt;
     return min(cap, OVERLOADED);
 }
 
-int
-near_capacity()
+int 
+near_capacity (void)
 {
     return calc_capacity(0);
 }
 
-int
-max_capacity()
+int 
+max_capacity (void)
 {
     int wt = inv_weight();
 
@@ -2261,8 +2254,8 @@ const char *str;
 #endif /* OVL1 */
 #ifdef OVLB
 
-int
-inv_cnt()
+int 
+inv_cnt (void)
 {
 	register struct obj *otmp = invent;
 	register int ct = 0;
@@ -2279,9 +2272,8 @@ inv_cnt()
 /* Intended use is for your or some monsters inventory, */
 /* now that u.gold/m.gold is gone.*/
 /* Counting money in a container might be possible too. */
-long
-money_cnt(otmp)
-struct obj *otmp;
+long 
+money_cnt (struct obj *otmp)
 {
         while(otmp) {
 	        /* Must change when silver & copper is implemented: */

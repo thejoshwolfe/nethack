@@ -223,9 +223,10 @@ const char *verb;
 #endif /* OVL0 */
 #ifdef OVLB
 
-void
-doaltarobj(obj)  /* obj is an object dropped on an altar */
-	register struct obj *obj;
+void 
+doaltarobj (  /* obj is an object dropped on an altar */
+    register struct obj *obj
+)
 {
 	if (Blind)
 		return;
@@ -246,20 +247,18 @@ doaltarobj(obj)  /* obj is an object dropped on an altar */
 }
 
 #ifdef SINKS
-STATIC_OVL
-void
-trycall(obj)
-register struct obj *obj;
+STATIC_OVL void 
+trycall (register struct obj *obj)
 {
 	if(!objects[obj->otyp].oc_name_known &&
 	   !objects[obj->otyp].oc_uname)
 	   docall(obj);
 }
 
-STATIC_OVL
-void
-dosinkring(obj)  /* obj is a ring being dropped over a kitchen sink */
-register struct obj *obj;
+STATIC_OVL void 
+dosinkring (  /* obj is a ring being dropped over a kitchen sink */
+    register struct obj *obj
+)
 {
 	register struct obj *otmp,*otmp2;
 	register boolean ideed = TRUE;
@@ -509,9 +508,8 @@ register struct obj *obj;
 
 /* Called in several places - may produce output */
 /* eg ship_object() and dropy() -> sellobj() both produce output */
-void
-dropx(obj)
-register struct obj *obj;
+void 
+dropx (register struct obj *obj)
 {
 #ifndef GOLDOBJ
 	if (obj->oclass != COIN_CLASS || obj == invent) freeinv(obj);
@@ -528,9 +526,8 @@ register struct obj *obj;
 	dropy(obj);
 }
 
-void
-dropy(obj)
-register struct obj *obj;
+void 
+dropy (register struct obj *obj)
 {
 	if (obj == uwep) setuwep((struct obj *)0);
 	if (obj == uquiver) setuqwep((struct obj *)0);
@@ -589,9 +586,8 @@ register struct obj *obj;
 
 /* things that must change when not held; recurse into containers.
    Called for both player and monsters */
-void
-obj_no_longer_held(obj)
-struct obj *obj;
+void 
+obj_no_longer_held (struct obj *obj)
 {
 	if (!obj) {
 	    return;
@@ -630,9 +626,8 @@ doddrop()
 }
 
 /* Drop things from the hero's inventory, using a menu. */
-STATIC_OVL int
-menu_drop(retry)
-int retry;
+STATIC_OVL int 
+menu_drop (int retry)
 {
     int n, i, n_dropped = 0;
     long cnt;
@@ -879,8 +874,8 @@ doup()
 d_level save_dlevel = {0, 0};
 
 /* check that we can write out the current level */
-STATIC_OVL int
-currentlevel_rewrite()
+STATIC_OVL int 
+currentlevel_rewrite (void)
 {
 	register int fd;
 	char whynot[BUFSZ];
@@ -906,8 +901,8 @@ currentlevel_rewrite()
 }
 
 #ifdef INSURANCE
-void
-save_currentstate()
+void 
+save_currentstate (void)
 {
 	int fd;
 
@@ -1327,8 +1322,8 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
 	(void) pickup(1);
 }
 
-STATIC_OVL void
-final_level()
+STATIC_OVL void 
+final_level (void)
 {
 	struct monst *mtmp;
 	struct obj *otmp;
@@ -1420,8 +1415,8 @@ const char *pre_msg, *post_msg;
 }
 
 /* handle something like portal ejection */
-void
-deferred_goto()
+void 
+deferred_goto (void)
 {
 	if (!on_level(&u.uz, &u.utolev)) {
 	    d_level dest;
@@ -1540,10 +1535,8 @@ struct obj *corpse;
 
 /* Revive the corpse via a timeout. */
 /*ARGSUSED*/
-void
-revive_mon(arg, timeout)
-void * arg;
-long timeout;
+void 
+revive_mon (void *arg, long timeout)
 {
     struct obj *body = (struct obj *) arg;
 
@@ -1602,10 +1595,8 @@ dowipe()
 	return(1);
 }
 
-void
-set_wounded_legs(side, timex)
-register long side;
-register int timex;
+void 
+set_wounded_legs (register long side, register int timex)
 {
 	/* KMH -- STEED
 	 * If you are riding, your steed gets the wounded legs instead.
@@ -1624,8 +1615,8 @@ register int timex;
 	(void)encumber_msg();
 }
 
-void
-heal_legs()
+void 
+heal_legs (void)
 {
 	if(Wounded_legs) {
 		if (ATEMP(A_DEX) < 0) {

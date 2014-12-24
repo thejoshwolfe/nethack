@@ -35,10 +35,8 @@ int c;
  * a substring of buf.  Return 1 if the string was appended, 0 otherwise.
  * It is expected that buf is of size BUFSZ.
  */
-STATIC_OVL int
-append_str(buf, new_str)
-    char *buf;
-    const char *new_str;
+STATIC_OVL int 
+append_str (char *buf, const char *new_str)
 {
     int space_left;	/* space remaining in buf */
 
@@ -55,9 +53,7 @@ append_str(buf, new_str)
  * If not hallucinating and the glyph is a monster, also monster data.
  */
 STATIC_OVL struct permonst *
-lookat(x, y, buf, monbuf)
-    int x, y;
-    char *buf, *monbuf;
+lookat (int x, int y, char *buf, char *monbuf)
 {
     register struct monst *mtmp = (struct monst *) 0;
     struct permonst *pm = (struct permonst *) 0;
@@ -792,9 +788,7 @@ doidtrap()
 }
 
 char *
-dowhatdoes_core(q, cbuf)
-char q;
-char *cbuf;
+dowhatdoes_core (char q, char *cbuf)
 {
 	dlb *fp;
 	char bufr[BUFSZ];

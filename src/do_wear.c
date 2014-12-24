@@ -56,18 +56,16 @@ STATIC_DCL int FDECL(menu_remarm, (int));
 STATIC_DCL void FDECL(already_wearing, (const char*));
 STATIC_DCL void FDECL(already_wearing2, (const char*, const char*));
 
-void
-off_msg(otmp)
-register struct obj *otmp;
+void 
+off_msg (register struct obj *otmp)
 {
 	if(flags.verbose)
 	    You("were wearing %s.", doname(otmp));
 }
 
 /* for items that involve no delay */
-STATIC_OVL void
-on_msg(otmp)
-register struct obj *otmp;
+STATIC_OVL void 
+on_msg (register struct obj *otmp)
 {
 	if (flags.verbose) {
 	    char how[BUFSZ];
@@ -189,8 +187,8 @@ Boots_off()
     return 0;
 }
 
-STATIC_OVL int
-Cloak_on()
+STATIC_OVL int 
+Cloak_on (void)
 {
     long oldprop =
 	u.uprops[objects[uarmc->otyp].oc_oprop].extrinsic & ~WORN_CLOAK;
@@ -238,8 +236,8 @@ Cloak_on()
     return 0;
 }
 
-int
-Cloak_off()
+int 
+Cloak_off (void)
 {
     int otyp = uarmc->otyp;
     long oldprop = u.uprops[objects[otyp].oc_oprop].extrinsic & ~WORN_CLOAK;
@@ -466,8 +464,8 @@ Gloves_off()
     return 0;
 }
 
-STATIC_OVL int
-Shield_on()
+STATIC_OVL int 
+Shield_on (void)
 {
 /*
     switch (uarms->otyp) {
@@ -485,8 +483,8 @@ Shield_on()
     return 0;
 }
 
-int
-Shield_off()
+int 
+Shield_off (void)
 {
     takeoff_mask &= ~W_ARMS;
 /*
@@ -507,8 +505,8 @@ Shield_off()
 }
 
 #ifdef TOURIST
-STATIC_OVL int
-Shirt_on()
+STATIC_OVL int 
+Shirt_on (void)
 {
 /*
     switch (uarmu->otyp) {
@@ -521,8 +519,8 @@ Shirt_on()
     return 0;
 }
 
-int
-Shirt_off()
+int 
+Shirt_off (void)
 {
     takeoff_mask &= ~W_ARMU;
 /*
@@ -561,8 +559,8 @@ Armor_off()
 /* The gone functions differ from the off functions in that if you die from
  * taking it off and have life saving, you still die.
  */
-int
-Armor_gone()
+int 
+Armor_gone (void)
 {
     takeoff_mask &= ~W_ARM;
     setnotworn(uarm);
@@ -570,8 +568,8 @@ Armor_gone()
     return 0;
 }
 
-STATIC_OVL void
-Amulet_on()
+STATIC_OVL void 
+Amulet_on (void)
 {
     switch(uamul->otyp) {
 	case AMULET_OF_ESP:
@@ -624,8 +622,8 @@ Amulet_on()
     }
 }
 
-void
-Amulet_off()
+void 
+Amulet_off (void)
 {
     takeoff_mask &= ~W_AMUL;
 
@@ -673,9 +671,8 @@ Amulet_off()
     return;
 }
 
-void
-Ring_on(obj)
-register struct obj *obj;
+void 
+Ring_on (register struct obj *obj)
 {
     long oldprop = u.uprops[objects[obj->otyp].oc_oprop].extrinsic;
     int old_attrib, which;
@@ -886,23 +883,20 @@ boolean gone;
     }
 }
 
-void
-Ring_off(obj)
-struct obj *obj;
+void 
+Ring_off (struct obj *obj)
 {
 	Ring_off_or_gone(obj,FALSE);
 }
 
-void
-Ring_gone(obj)
-struct obj *obj;
+void 
+Ring_gone (struct obj *obj)
 {
 	Ring_off_or_gone(obj,TRUE);
 }
 
-void
-Blindf_on(otmp)
-register struct obj *otmp;
+void 
+Blindf_on (register struct obj *otmp)
 {
 	boolean already_blind = Blind, changed = FALSE;
 
@@ -933,9 +927,8 @@ register struct obj *otmp;
 	}
 }
 
-void
-Blindf_off(otmp)
-register struct obj *otmp;
+void 
+Blindf_off (register struct obj *otmp)
 {
 	boolean was_blind = Blind, changed = FALSE;
 
@@ -969,8 +962,8 @@ register struct obj *otmp;
 }
 
 /* called in main to set intrinsics of worn start-up items */
-void
-set_wear()
+void 
+set_wear (void)
 {
 #ifdef TOURIST
 	if (uarmu) (void) Shirt_on();
@@ -1019,8 +1012,8 @@ register struct obj *otmp;
     return result;
 }
 
-void
-cancel_don()
+void 
+cancel_don (void)
 {
 	/* the piece of armor we were donning/doffing has vanished, so stop
 	 * wasting time on it (and don't dereference it when donning would
@@ -1157,9 +1150,8 @@ doremring()
 }
 
 /* Check if something worn is cursed _and_ unremovable. */
-int
-cursed(otmp)
-register struct obj *otmp;
+int 
+cursed (register struct obj *otmp)
 {
 	/* Curses, like chickens, come home to roost. */
 	if((otmp == uwep) ? welded(otmp) : (int)otmp->cursed) {
@@ -1172,9 +1164,8 @@ register struct obj *otmp;
 	return(0);
 }
 
-int
-armoroff(otmp)
-register struct obj *otmp;
+int 
+armoroff (register struct obj *otmp)
 {
 	register int delay = -objects[otmp->otyp].oc_delay;
 
@@ -1224,16 +1215,14 @@ register struct obj *otmp;
 	return(1);
 }
 
-STATIC_OVL void
-already_wearing(cc)
-const char *cc;
+STATIC_OVL void 
+already_wearing (const char *cc)
 {
 	You("are already wearing %s%c", cc, (cc == c_that_) ? '!' : '.');
 }
 
-STATIC_OVL void
-already_wearing2(cc1, cc2)
-const char *cc1, *cc2;
+STATIC_OVL void 
+already_wearing2 (const char *cc1, const char *cc2)
 {
 	You_cant("wear %s because you're wearing %s there already.", cc1, cc2);
 }
@@ -1587,8 +1576,8 @@ doputon()
 
 #ifdef OVL0
 
-void
-find_ac()
+void 
+find_ac (void)
 {
 	int uac = mons[u.umonnum].ac;
 
@@ -1615,8 +1604,8 @@ find_ac()
 #endif /* OVL0 */
 #ifdef OVLB
 
-void
-glibr()
+void 
+glibr (void)
 {
 	register struct obj *otmp;
 	int xfl = 0;
@@ -1679,8 +1668,7 @@ glibr()
 }
 
 struct obj *
-some_armor(victim)
-struct monst *victim;
+some_armor (struct monst *victim)
 {
 	register struct obj *otmph, *otmp;
 
@@ -1719,9 +1707,7 @@ boolean acid_dmg;
 
 /* used for praying to check and fix levitation trouble */
 struct obj *
-stuck_ring(ring, otyp)
-struct obj *ring;
-int otyp;
+stuck_ring (struct obj *ring, int otyp)
 {
     if (ring != uleft && ring != uright) {
 	impossible("stuck_ring: neither left nor right?");
@@ -1744,7 +1730,7 @@ int otyp;
 
 /* also for praying; find worn item that confers "Unchanging" attribute */
 struct obj *
-unchanger()
+unchanger (void)
 {
     if (uamul && uamul->otyp == AMULET_OF_UNCHANGING) return uamul;
     return 0;
@@ -1865,7 +1851,7 @@ register struct obj *otmp;
 }
 
 STATIC_OVL struct obj *
-do_takeoff()
+do_takeoff (void)
 {
 	register struct obj *otmp = (struct obj *)0;
 
@@ -2009,8 +1995,8 @@ take_off()
 }
 
 /* clear saved context to avoid inappropriate resumption of interrupted 'A' */
-void
-reset_remarm()
+void 
+reset_remarm (void)
 {
 	taking_off = takeoff_mask = 0L;
 	disrobing = nul;
@@ -2053,9 +2039,8 @@ doddoremarm()
     return 0;
 }
 
-STATIC_OVL int
-menu_remarm(retry)
-int retry;
+STATIC_OVL int 
+menu_remarm (int retry)
 {
     int n, i = 0;
     menu_item *pick_list;
@@ -2096,9 +2081,8 @@ int retry;
 }
 
 /* hit by destroy armor scroll/black dragon breath/monster spell */
-int
-destroy_arm(atmp)
-register struct obj *atmp;
+int 
+destroy_arm (register struct obj *atmp)
 {
 	register struct obj *otmp;
 #define DESTROY_ARM(o) ((otmp = (o)) != 0 && \
@@ -2154,10 +2138,8 @@ register struct obj *atmp;
 	return(1);
 }
 
-void
-adj_abon(otmp, delta)
-register struct obj *otmp;
-register signed char delta;
+void 
+adj_abon (register struct obj *otmp, register signed char delta)
 {
 	if (uarmg && uarmg == otmp && otmp->otyp == GAUNTLETS_OF_DEXTERITY) {
 		if (delta) {

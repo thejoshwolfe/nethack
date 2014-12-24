@@ -348,9 +348,8 @@ md_rush(md,tx,ty)
 
 /* Deliver a scroll of mail. */
 /*ARGSUSED*/
-STATIC_OVL void
-newmail(info)
-struct mail_info *info;
+STATIC_OVL void 
+newmail (struct mail_info *info)
 {
     struct monst *md;
     coord start, stop;
@@ -522,8 +521,8 @@ bail:
 
 # ifdef LAN_MAIL
 
-void
-ckmailstatus()
+void 
+ckmailstatus (void)
 {
 	static int laststattime = 0;
 	
@@ -547,9 +546,8 @@ ckmailstatus()
 }
 
 /*ARGSUSED*/
-void
-readmail(otmp)
-struct obj *otmp;
+void 
+readmail (struct obj *otmp)
 {
 	lan_mail_read(otmp);
 }

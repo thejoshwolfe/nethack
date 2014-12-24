@@ -5,8 +5,8 @@
 #include "hack.h"
 #include "artifact.h"
 
-void
-take_gold()
+void 
+take_gold (void)
 {
 #ifndef GOLDOBJ
 	if (u.ugold <= 0)  {
@@ -308,8 +308,8 @@ dosit()
 	return(1);
 }
 
-void
-rndcurse()			/* curse a few inventory items at random! */
+void 
+rndcurse (void)			/* curse a few inventory items at random! */
 {
 	int	nobj = 0;
 	int	cnt, onum;
@@ -382,8 +382,8 @@ rndcurse()			/* curse a few inventory items at random! */
 #endif	/*STEED*/
 }
 
-void
-attrcurse()			/* remove a random INTRINSIC ability */
+void 
+attrcurse (void)			/* remove a random INTRINSIC ability */
 {
 	switch(rnd(11)) {
 	case 1 : if (HFire_resistance & INTRINSIC) {

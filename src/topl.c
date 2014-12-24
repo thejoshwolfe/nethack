@@ -116,9 +116,8 @@ tty_doprev_message()
 #endif /* OVLB */
 #ifdef OVL1
 
-STATIC_OVL void
-redotoplin(str)
-    const char *str;
+STATIC_OVL void 
+redotoplin (const char *str)
 {
 	int otoplin = ttyDisplay->toplin;
 	home();
@@ -136,8 +135,8 @@ redotoplin(str)
 		more();
 }
 
-STATIC_OVL void
-remember_topl()
+STATIC_OVL void 
+remember_topl (void)
 {
     register struct WinDesc *cw = wins[WIN_MESSAGE];
     int idx = cw->maxrow;
@@ -153,9 +152,8 @@ remember_topl()
     cw->maxcol = cw->maxrow = (idx + 1) % cw->rows;
 }
 
-void
-addtopl(s)
-const char *s;
+void 
+addtopl (const char *s)
 {
     register struct WinDesc *cw = wins[WIN_MESSAGE];
 
@@ -168,8 +166,8 @@ const char *s;
 #endif /* OVL1 */
 #ifdef OVL2
 
-void
-more()
+void 
+more (void)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
 
@@ -206,9 +204,8 @@ more()
     ttyDisplay->inmore = 0;
 }
 
-void
-update_topl(bp)
-	register const char *bp;
+void 
+update_topl (register const char *bp)
 {
 	register char *tl, *otl;
 	register int n0;
@@ -254,10 +251,8 @@ update_topl(bp)
 	if(!(cw->flags & WIN_STOP)) redotoplin(toplines);
 }
 
-STATIC_OVL
-void
-topl_putsym(c)
-    char c;
+STATIC_OVL void 
+topl_putsym (char c)
 {
     register struct WinDesc *cw = wins[WIN_MESSAGE];
 

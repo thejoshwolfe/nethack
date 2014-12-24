@@ -283,9 +283,8 @@ struct obj *obj;
 /* List of valid menu classes for query_objlist() and allow_category callback */
 static char valid_menu_classes[MAXOCLASSES + 2];
 
-void
-add_valid_menu_class(c)
-int c;
+void 
+add_valid_menu_class (int c)
 {
 	static int vmc_count = 0;
 
@@ -359,9 +358,10 @@ register struct obj *otmp;
  * Returns 1 if tried to pick something up, whether
  * or not it succeeded.
  */
-int
-pickup(what)
-int what;		/* should be a long */
+int 
+pickup (
+    int what		/* should be a long */
+)
 {
 	int i, n, res, count, n_tried = 0, n_picked = 0;
 	menu_item *pick_list = (menu_item *) 0;
@@ -601,11 +601,12 @@ boolean grab;	 /* forced pickup, rather than forced leave behind? */
  * picked is zero, the pickup list is left alone.  The caller of this
  * function must free the pickup list.
  */
-STATIC_OVL int
-autopick(olist, follow, pick_list)
-struct obj *olist;	/* the object list */
-int follow;		/* how to follow the object list */
-menu_item **pick_list;	/* list of objects and counts to pick up */
+STATIC_OVL int 
+autopick (
+    struct obj *olist,	/* the object list */
+    int follow,		/* how to follow the object list */
+    menu_item **pick_list	/* list of objects and counts to pick up */
+)
 {
 	menu_item *pi;	/* pick item */
 	struct obj *curr;

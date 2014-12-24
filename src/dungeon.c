@@ -138,8 +138,8 @@ void save_dungeon(int fd, boolean perform_write, boolean free_data) {
 }
 
 /* Restore the dungeon structures. */
-void restore_dungeon(fd)
-    int fd;
+void 
+restore_dungeon (int fd)
 {
     branch *curr, *last;
     int    count, i;
@@ -170,10 +170,8 @@ void restore_dungeon(fd)
     mread(fd, (void *) &inv_pos, sizeof inv_pos);
 }
 
-static void Fread(ptr, size, nitems, stream)
-    void *    ptr;
-    int    size, nitems;
-    dlb    *stream;
+static void 
+Fread (void *ptr, int size, int nitems, dlb *stream)
 {
     int cnt;
 
@@ -185,8 +183,8 @@ static void Fread(ptr, size, nitems, stream)
     }
 }
 
-STATIC_OVL signed char dname_to_dnum(s)
-const char    *s;
+STATIC_OVL signed char 
+dname_to_dnum (const char *s)
 {
     signed char    i;
 
@@ -199,8 +197,7 @@ const char    *s;
 }
 
 s_level *
-find_level(s)
-    const char *s;
+find_level (const char *s)
 {
     s_level *curr;
     for(curr = sp_levchn; curr; curr = curr->next)
@@ -209,10 +206,11 @@ find_level(s)
 }
 
 /* Find the branch that links the named dungeon. */
-STATIC_OVL int
-find_branch(s, pd)
-    const char *s;        /* dungeon name */
-    struct proto_dungeon *pd;
+STATIC_OVL int 
+find_branch (
+    const char *s,        /* dungeon name */
+    struct proto_dungeon *pd
+)
 {
     int i;
 
@@ -241,10 +239,11 @@ find_branch(s, pd)
  * Find the "parent" by searching the prototype branch list for the branch
  * listing, then figuring out to which dungeon it belongs.
  */
-STATIC_OVL signed char
-parent_dnum(s, pd)
-const char       *s;    /* dungeon name */
-struct proto_dungeon *pd;
+STATIC_OVL signed char 
+parent_dnum (
+    const char *s,    /* dungeon name */
+    struct proto_dungeon *pd
+)
 {
     int    i;
     signed char    pdnum;
@@ -302,10 +301,8 @@ STATIC_OVL int level_range(signed char dgn, int base, int rand, int chain,
     return 1;
 }
 
-STATIC_OVL signed char
-parent_dlevel(s, pd)
-    const char    *s;
-    struct proto_dungeon *pd;
+STATIC_OVL signed char 
+parent_dlevel (const char *s, struct proto_dungeon *pd)
 {
     int i, j, num, base, dnum = parent_dnum(s, pd);
     branch *curr;
@@ -330,9 +327,8 @@ parent_dlevel(s, pd)
 }
 
 /* Convert from the temporary branch type to the dungeon branch type. */
-STATIC_OVL int
-correct_branch_type(tbr)
-    struct tmpbranch *tbr;
+STATIC_OVL int 
+correct_branch_type (struct tmpbranch *tbr)
 {
     switch (tbr->type) {
     case TBR_STAIR:        return BR_STAIR;
@@ -398,10 +394,7 @@ insert_branch(new_branch, extract_first)
 
 /* Add a dungeon branch to the branch list. */
 STATIC_OVL branch *
-add_branch(dgn, child_entry_level, pd)
-    int dgn;
-    int child_entry_level;
-    struct proto_dungeon *pd;
+add_branch (int dgn, int child_entry_level, struct proto_dungeon *pd)
 {
     static int branch_id = 0;
     int branch_num;
@@ -428,9 +421,8 @@ add_branch(dgn, child_entry_level, pd)
  * level that has a dungeon number less than the dungeon number of the
  * last entry.
  */
-STATIC_OVL void
-add_level(new_lev)
-    s_level *new_lev;
+STATIC_OVL void 
+add_level (s_level *new_lev)
 {
     s_level *prev, *curr;
 
@@ -450,10 +442,8 @@ add_level(new_lev)
     }
 }
 
-STATIC_OVL void
-init_level(dgn, proto_index, pd)
-    int dgn, proto_index;
-    struct proto_dungeon *pd;
+STATIC_OVL void 
+init_level (int dgn, int proto_index, struct proto_dungeon *pd)
 {
     s_level    *new_level;
     struct tmplevel *tlevel = &pd->tmplevel[proto_index];
@@ -532,9 +522,8 @@ pick_level(map, nth)
 #ifdef DDEBUG
 static void FDECL(indent,(int));
 
-static void
-indent(d)
-int d;
+static void 
+indent (int d)
 {
     while (d-- > 0) fputs("    ", stderr);
 }
@@ -866,16 +855,18 @@ void init_dungeons(void) {
 #endif
 }
 
-signed char
-dunlev(lev)    /* return the level number for lev in *this* dungeon */
-d_level    *lev;
+signed char 
+dunlev (    /* return the level number for lev in *this* dungeon */
+    d_level *lev
+)
 {
     return(lev->dlevel);
 }
 
-signed char
-dunlevs_in_dungeon(lev)    /* return the lowest level number for *this* dungeon*/
-d_level    *lev;
+signed char 
+dunlevs_in_dungeon (    /* return the lowest level number for *this* dungeon*/
+    d_level *lev
+)
 {
     return(dungeons[lev->dnum].num_dunlevs);
 }
@@ -915,9 +906,8 @@ boolean noquest;
 
 /* return a bookkeeping level number for purpose of comparisons and
  * save/restore */
-signed char
-ledger_no(lev)
-d_level    *lev;
+signed char 
+ledger_no (d_level *lev)
 {
     return((signed char)(lev->dlevel + dungeons[lev->dnum].ledger_start));
 }
@@ -932,17 +922,16 @@ d_level    *lev;
  * not be confused with deepest_lev_reached() -- which returns the lowest
  * depth visited by the player.
  */
-signed char
-maxledgerno()
+signed char 
+maxledgerno (void)
 {
     return (signed char) (dungeons[n_dgns-1].ledger_start +
                 dungeons[n_dgns-1].num_dunlevs);
 }
 
 /* return the dungeon that this ledgerno exists in */
-signed char
-ledger_to_dnum(ledgerno)
-signed char    ledgerno;
+signed char 
+ledger_to_dnum (signed char ledgerno)
 {
     register int i;
 
@@ -958,9 +947,8 @@ signed char    ledgerno;
 }
 
 /* return the level of the dungeon this ledgerno exists in */
-signed char
-ledger_to_dlev(ledgerno)
-signed char    ledgerno;
+signed char 
+ledger_to_dlev (signed char ledgerno)
 {
     return((signed char)(ledgerno - dungeons[ledger_to_dnum(ledgerno)].ledger_start));
 }
@@ -986,8 +974,7 @@ d_level    *lev1, *lev2;
 
 /* is this level referenced in the special level chain? */
 s_level *
-Is_special(lev)
-d_level    *lev;
+Is_special (d_level *lev)
 {
     s_level *levtmp;
 
@@ -1002,8 +989,7 @@ d_level    *lev;
  * branch.  Otherwise, return null.
  */
 branch *
-Is_branchlev(lev)
-    d_level    *lev;
+Is_branchlev (d_level *lev)
 {
     branch *curr;
 
@@ -1052,9 +1038,8 @@ boolean    at_stairs;
     }
 }
 
-void
-u_on_newpos(x, y)
-int x, y;
+void 
+u_on_newpos (int x, int y)
 {
     u.ux = x;
     u.uy = y;
@@ -1067,8 +1052,8 @@ int x, y;
 #endif
 }
 
-void
-u_on_sstairs() {    /* place you on the special staircase */
+void 
+u_on_sstairs (void) {    /* place you on the special staircase */
 
     if (sstairs.sx) {
         u_on_newpos(sstairs.sx, sstairs.sy);
@@ -1179,10 +1164,8 @@ d_level *lev;
  * "down" is confined to the current dungeon.  At present, level teleport
  * in dungeons that build up is confined within them.
  */
-void
-get_level(newlevel, levnum)
-d_level *newlevel;
-int levnum;
+void 
+get_level (d_level *newlevel, int levnum)
 {
     branch *br;
     signed char dgn = u.uz.dnum;
@@ -1256,8 +1239,7 @@ d_level    *lev;
  *    + Field end2 is the "child" dungeon.
  */
 branch *
-dungeon_branch(s)
-    const char *s;
+dungeon_branch (const char *s)
 {
     branch *br;
     signed char  dnum;
@@ -1339,9 +1321,10 @@ d_level    *lev;
 #endif /* OVL0 */
 #ifdef OVL1
 
-void
-find_hell(lev)    /* sets *lev to be the gateway to Gehennom... */
-d_level *lev;
+void 
+find_hell (    /* sets *lev to be the gateway to Gehennom... */
+    d_level *lev
+)
 {
     lev->dnum = valley_level.dnum;
     lev->dlevel = 1;
@@ -1357,18 +1340,22 @@ boolean    at_stairs, falling;
     goto_level(&lev, at_stairs, falling, FALSE);
 }
 
-void
-assign_level(dest, src)        /* equivalent to dest = source */
-d_level    *dest, *src;
+void 
+assign_level (        /* equivalent to dest = source */
+    d_level *dest,
+    d_level *src
+)
 {
     dest->dnum = src->dnum;
     dest->dlevel = src->dlevel;
 }
 
-void
-assign_rnd_level(dest, src, range)    /* dest = src + rn1(range) */
-d_level    *dest, *src;
-int range;
+void 
+assign_rnd_level (    /* dest = src + rn1(range) */
+    d_level *dest,
+    d_level *src,
+    int range
+)
 {
     dest->dnum = src->dnum;
     dest->dlevel = src->dlevel + ((range > 0) ? rnd(range) : -rnd(-range)) ;
@@ -1382,9 +1369,8 @@ int range;
 #endif /* OVL1 */
 #ifdef OVL0
 
-int
-induced_align(pct)
-int    pct;
+int 
+induced_align (int pct)
 {
     s_level    *lev = Is_special(&u.uz);
     aligntyp al;
@@ -1413,8 +1399,8 @@ d_level *lev;
 /* use instead of depth() wherever a degree of difficulty is made
  * dependent on the location in the dungeon (eg. monster creation).
  */
-signed char
-level_difficulty()
+signed char 
+level_difficulty (void)
 {
     if (In_endgame(&u.uz))
         return((signed char)(depth(&sanctum_level) + u.ulevel/2));
@@ -1494,8 +1480,7 @@ signed char lev_by_name(const char *nam) {
 
 /* Convert a branch type to a string usable by print_dungeon(). */
 STATIC_OVL const char *
-br_string(type)
-    int type;
+br_string (int type)
 {
     switch (type) {
     case BR_PORTAL:     return "Portal";

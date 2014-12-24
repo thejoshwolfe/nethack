@@ -23,11 +23,8 @@ STATIC_DCL void FDECL(roguejoin,(int,int,int,int,int));
 STATIC_DCL void FDECL(roguecorr,(int,int,int));
 STATIC_DCL void FDECL(miniwalk,(int,int));
 
-STATIC_OVL
-void
-roguejoin(x1,y1,x2,y2, horiz)
-int x1,y1,x2,y2;
-int horiz;
+STATIC_OVL void 
+roguejoin (int x1, int y1, int x2, int y2, int horiz)
 {
 	register int x,y,middle;
 #ifndef MAX
@@ -55,10 +52,8 @@ int horiz;
 	}
 }
 
-STATIC_OVL
-void
-roguecorr(x, y, dir)
-int x,y,dir;
+STATIC_OVL void 
+roguecorr (int x, int y, int dir)
 {
 	register int fromx, fromy, tox, toy;
 
@@ -140,10 +135,8 @@ int x,y,dir;
 }
 
 /* Modified walkfrom() from mkmaze.c */
-STATIC_OVL
-void
-miniwalk(x, y)
-int x,y;
+STATIC_OVL void 
+miniwalk (int x, int y)
 {
 	register int q, dir;
 	int dirs[4];
@@ -190,8 +183,8 @@ int x,y;
 	}
 }
 
-void
-makeroguerooms() {
+void 
+makeroguerooms (void) {
 	register int x,y;
 	/* Rogue levels are structured 3 by 3, with each section containing
 	 * a room or an intersection.  The minimum width is 2 each way.
@@ -270,9 +263,8 @@ makeroguerooms() {
 	}
 }
 
-void
-corr(x,y)
-int x, y;
+void 
+corr (int x, int y)
 {
 	if (rn2(50)) {
 		levl[x][y].typ = CORR;
@@ -281,8 +273,8 @@ int x, y;
 	}
 }
 
-void
-makerogueghost()
+void 
+makerogueghost (void)
 {
 	register struct monst *ghost;
 	struct obj *ghostobj;

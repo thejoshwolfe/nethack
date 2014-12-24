@@ -49,10 +49,8 @@ static boolean zap_oseen;
  * the item.  Returns 0 if nothing happened, 2 if the monster can't do anything
  * (i.e. it teleported) and 1 if it's dead.
  */
-STATIC_OVL int
-precheck(mon, obj)
-struct monst *mon;
-struct obj *obj;
+STATIC_OVL int 
+precheck (struct monst *mon, struct obj *obj)
 {
 	boolean vis;
 
@@ -159,10 +157,8 @@ boolean self;
 	}
 }
 
-STATIC_OVL void
-mreadmsg(mtmp, otmp)
-struct monst *mtmp;
-struct obj *otmp;
+STATIC_OVL void 
+mreadmsg (struct monst *mtmp, struct obj *otmp)
 {
 	boolean vismon = canseemon(mtmp);
 	char onambuf[BUFSZ];
@@ -198,10 +194,8 @@ struct obj *otmp;
 		  vismon ? mon_nam(mtmp) : mhe(mtmp));
 }
 
-STATIC_OVL void
-mquaffmsg(mtmp, otmp)
-struct monst *mtmp;
-struct obj *otmp;
+STATIC_OVL void 
+mquaffmsg (struct monst *mtmp, struct obj *otmp)
 {
 	if (canseemon(mtmp)) {
 		otmp->dknown = 1;
@@ -518,9 +512,8 @@ botm:	return((boolean)(!!m.has_defense));
  * after find_defensive().  Return values are 0: did something, 1: died,
  * 2: did something and can't attack again (i.e. teleported).
  */
-int
-use_defensive(mtmp)
-struct monst *mtmp;
+int 
+use_defensive (struct monst *mtmp)
 {
 	int i, fleetim, how = 0;
 	struct obj *otmp = m.defensive;
@@ -890,9 +883,8 @@ mon_tele:
 #undef m_flee
 }
 
-int
-rnd_defensive_item(mtmp)
-struct monst *mtmp;
+int 
+rnd_defensive_item (struct monst *mtmp)
 {
 	struct permonst *pm = mtmp->data;
 	int difficulty = monstr[(monsndx(pm))];
@@ -1244,9 +1236,8 @@ struct obj *obj;			/* 2nd arg to fhitm/fhito */
 /* Perform an offensive action for a monster.  Must be called immediately
  * after find_offensive().  Return values are same as use_defensive().
  */
-int
-use_offensive(mtmp)
-struct monst *mtmp;
+int 
+use_offensive (struct monst *mtmp)
 {
 	int i;
 	struct obj *otmp = m.offensive;
@@ -1452,9 +1443,8 @@ struct monst *mtmp;
 	return 0;
 }
 
-int
-rnd_offensive_item(mtmp)
-struct monst *mtmp;
+int 
+rnd_offensive_item (struct monst *mtmp)
 {
 	struct permonst *pm = mtmp->data;
 	int difficulty = monstr[(monsndx(pm))];
@@ -1612,8 +1602,7 @@ struct monst *mtmp;
 /* type of monster to polymorph into; defaults to one suitable for the
    current level rather than the totally arbitrary choice of newcham() */
 static struct permonst *
-muse_newcham_mon(mon)
-struct monst *mon;
+muse_newcham_mon (struct monst *mon)
 {
 	struct obj *m_armr;
 
@@ -1626,9 +1615,8 @@ struct monst *mon;
 	return rndmonst();
 }
 
-int
-use_misc(mtmp)
-struct monst *mtmp;
+int 
+use_misc (struct monst *mtmp)
 {
 	int i;
 	struct obj *otmp = m.misc;
@@ -1816,9 +1804,8 @@ skipmsg:
 	return 0;
 }
 
-STATIC_OVL void
-you_aggravate(mtmp)
-struct monst *mtmp;
+STATIC_OVL void 
+you_aggravate (struct monst *mtmp)
 {
 	pline("For some reason, %s presence is known to you.",
 		s_suffix(noit_mon_nam(mtmp)));
@@ -1841,9 +1828,8 @@ struct monst *mtmp;
 	    map_invisible(mtmp->mx, mtmp->my);
 }
 
-int
-rnd_misc_item(mtmp)
-struct monst *mtmp;
+int 
+rnd_misc_item (struct monst *mtmp)
 {
 	struct permonst *pm = mtmp->data;
 	int difficulty = monstr[(monsndx(pm))];

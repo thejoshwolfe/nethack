@@ -82,10 +82,8 @@ static boolean FDECL(rob_shop, (struct monst *));
     Returns the amount actually paid, so we can know
     if the monster kept the change.
  */
-long
-money2mon(mon, amount)
-struct monst *mon;
-long amount;
+long 
+money2mon (struct monst *mon, long amount)
 {
     struct obj *ygold = findgold(invent);
 
@@ -114,10 +112,8 @@ long amount;
     Used when the shopkeeper pay for items, and when
     the priest gives you money for an ale.
  */
-void
-money2u(mon, amount)
-struct monst *mon;
-long amount;
+void 
+money2u (struct monst *mon, long amount)
 {
     struct obj *mongold = findgold(mon->minvent);
 
@@ -166,15 +162,17 @@ register boolean withbill;
 }
 
 char *
-shkname(mtmp)				/* called in do_name.c */
-register struct monst *mtmp;
+shkname (				/* called in do_name.c */
+    register struct monst *mtmp
+)
 {
 	return(ESHK(mtmp)->shknam);
 }
 
-void
-shkgone(mtmp)				/* called in mon.c */
-struct monst *mtmp;
+void 
+shkgone (				/* called in mon.c */
+    struct monst *mtmp
+)
 {
 	struct eshk *eshk = ESHK(mtmp);
 	struct mkroom *sroom = &rooms[eshk->shoproom - ROOMOFFSET];
@@ -217,9 +215,8 @@ register boolean zero_out;
 		(zero_out)? (struct monst *)0 : shkp;
 }
 
-void
-replshk(mtmp,mtmp2)
-register struct monst *mtmp, *mtmp2;
+void 
+replshk (register struct monst *mtmp, register struct monst *mtmp2)
 {
 	rooms[ESHK(mtmp2)->shoproom - ROOMOFFSET].resident = mtmp2;
 	if (inhishop(mtmp) && *u.ushops == ESHK(mtmp)->shoproom) {
@@ -252,9 +249,8 @@ boolean ghostly;
 #ifdef OVL3
 
 /* Clear the unpaid bit on all of the objects in the list. */
-STATIC_OVL void
-clear_unpaid(list)
-register struct obj *list;
+STATIC_OVL void 
+clear_unpaid (register struct obj *list)
 {
     while (list) {
 	if (Has_contents(list)) clear_unpaid(list->cobj);
@@ -266,9 +262,8 @@ register struct obj *list;
 #ifdef OVLB
 
 /* either you paid or left the shop or the shopkeeper died */
-STATIC_OVL void
-setpaid(shkp)
-register struct monst *shkp;
+STATIC_OVL void 
+setpaid (register struct monst *shkp)
 {
 	register struct obj *obj;
 	register struct monst *mtmp;
@@ -297,9 +292,8 @@ register struct monst *shkp;
 	}
 }
 
-STATIC_OVL long
-addupbill(shkp)
-register struct monst *shkp;
+STATIC_OVL long 
+addupbill (register struct monst *shkp)
 {
 	register int ct = ESHK(shkp)->billct;
 	register struct bill_x *bp = ESHK(shkp)->bill_p;
@@ -367,9 +361,8 @@ register boolean nearshop;
 }
 
 /* x,y is strictly inside shop */
-char
-inside_shop(x, y)
-register signed char x, y;
+char 
+inside_shop (register signed char x, register signed char y)
 {
 	register char rno;
 
@@ -425,9 +418,8 @@ boolean newlev;
 }
 
 /* robbery from outside the shop via telekinesis or grappling hook */
-void
-remote_burglary(x, y)
-signed char x, y;
+void 
+remote_burglary (signed char x, signed char y)
 {
 	struct monst *shkp;
 	struct eshk *eshkp;
@@ -480,9 +472,8 @@ struct monst *shkp;
 	return TRUE;
 }
 
-void
-u_entered_shop(enterstring)
-register char *enterstring;
+void 
+u_entered_shop (register char *enterstring)
 {
 
 	register int rt;
@@ -635,9 +626,8 @@ struct obj *obj1, *obj2;
  * turning the `$' command into a way to discover that the current
  * level is bones data which has a shk on the warpath.
  */
-STATIC_OVL long
-shop_debt(eshkp)
-struct eshk *eshkp;
+STATIC_OVL long 
+shop_debt (struct eshk *eshkp)
 {
 	struct bill_x *bp;
 	int ct;
@@ -649,8 +639,8 @@ struct eshk *eshkp;
 }
 
 /* called in response to the `$' command */
-void
-shopper_financial_report()
+void 
+shopper_financial_report (void)
 {
 	struct monst *shkp, *this_shkp = shop_keeper(inside_shop(u.ux, u.uy));
 	struct eshk *eshkp;
@@ -687,9 +677,8 @@ shopper_financial_report()
 #endif /* OVL1 */
 #ifdef OVLB
 
-int
-inhishop(mtmp)
-register struct monst *mtmp;
+int 
+inhishop (register struct monst *mtmp)
 {
 	return(index(in_rooms(mtmp->mx, mtmp->my, SHOPBASE),
 		     ESHK(mtmp)->shoproom) &&
@@ -697,8 +686,7 @@ register struct monst *mtmp;
 }
 
 struct monst *
-shop_keeper(rmno)
-register char rmno;
+shop_keeper (register char rmno)
 {
 	struct monst *shkp = rmno >= ROOMOFFSET ?
 				rooms[rmno - ROOMOFFSET].resident : 0;
@@ -746,9 +734,8 @@ register boolean silent;
 }
 
 /* Delete the contents of the given object. */
-void
-delete_contents(obj)
-register struct obj *obj;
+void 
+delete_contents (register struct obj *obj)
 {
 	register struct obj *curr;
 
@@ -759,9 +746,8 @@ register struct obj *obj;
 }
 
 /* called with two args on merge */
-void
-obfree(obj, merge)
-register struct obj *obj, *merge;
+void 
+obfree (register struct obj *obj, register struct obj *merge)
 {
 	register struct bill_x *bp;
 	register struct bill_x *bpm;
@@ -812,10 +798,8 @@ register struct obj *obj, *merge;
 #endif /* OVLB */
 #ifdef OVL3
 
-STATIC_OVL long
-check_credit(tmp, shkp)
-long tmp;
-register struct monst *shkp;
+STATIC_OVL long 
+check_credit (long tmp, register struct monst *shkp)
 {
 	long credit = ESHK(shkp)->credit;
 
@@ -832,10 +816,8 @@ register struct monst *shkp;
 	return(tmp);
 }
 
-STATIC_OVL void
-pay(tmp,shkp)
-long tmp;
-register struct monst *shkp;
+STATIC_OVL void 
+pay (long tmp, register struct monst *shkp)
 {
 	long robbed = ESHK(shkp)->robbed;
 	long balance = ((tmp <= 0L) ? tmp : check_credit(tmp, shkp));
@@ -886,9 +868,8 @@ angry_shk_exists()
 }
 
 /* remove previously applied surcharge from all billed items */
-STATIC_OVL void
-pacify_shk(shkp)
-register struct monst *shkp;
+STATIC_OVL void 
+pacify_shk (register struct monst *shkp)
 {
 	NOTANGRY(shkp) = TRUE;	/* make peaceful */
 	if (ESHK(shkp)->surcharge) {
@@ -905,9 +886,8 @@ register struct monst *shkp;
 }
 
 /* add aggravation surcharge to all billed items */
-STATIC_OVL void
-rile_shk(shkp)
-register struct monst *shkp;
+STATIC_OVL void 
+rile_shk (register struct monst *shkp)
 {
 	NOTANGRY(shkp) = FALSE;	/* make angry */
 	if (!ESHK(shkp)->surcharge) {
@@ -983,9 +963,8 @@ register boolean silentkops;
 	}
 }
 
-void
-hot_pursuit(shkp)
-register struct monst *shkp;
+void 
+hot_pursuit (register struct monst *shkp)
 {
 	if(!shkp->isshk) return;
 
@@ -999,10 +978,8 @@ register struct monst *shkp;
  * damages something inside the shop.  these conditions
  * must be checked by the calling function.
  */
-void
-make_angry_shk(shkp, ox, oy)
-register struct monst *shkp;
-register signed char ox,oy;
+void 
+make_angry_shk (register struct monst *shkp, register signed char ox, register signed char oy)
 {
 	signed char sx, sy;
 	struct eshk *eshkp = ESHK(shkp);
@@ -1040,9 +1017,10 @@ STATIC_VAR const char not_enough_money[];
 
 #ifdef OVL3
 
-STATIC_OVL long
-cheapest_item(shkp)   /* delivers the cheapest item on the list */
-register struct monst *shkp;
+STATIC_OVL long 
+cheapest_item (   /* delivers the cheapest item on the list */
+    register struct monst *shkp
+)
 {
 	register int ct = ESHK(shkp)->billct;
 	register struct bill_x *bp = ESHK(shkp)->bill_p;

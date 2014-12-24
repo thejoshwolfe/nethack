@@ -42,9 +42,8 @@ STATIC_DCL const char *NDECL(rank);
 #ifdef OVL1
 
 /* convert experience level (1..30) to rank index (0..8) */
-int
-xlev_to_rank(xlev)
-int xlev;
+int 
+xlev_to_rank (int xlev)
 {
 	return (xlev <= 2) ? 0 : (xlev <= 30) ? ((xlev + 2) / 4) : 8;
 }
@@ -81,15 +80,13 @@ rank_of(lev, monnum, female)
 
 
 STATIC_OVL const char *
-rank()
+rank (void)
 {
 	return(rank_of(u.ulevel, Role_switch, flags.female));
 }
 
-int
-title_to_mon(str, rank_indx, title_length)
-const char *str;
-int *rank_indx, *title_length;
+int 
+title_to_mon (const char *str, int *rank_indx, int *title_length)
 {
 	register int i, j;
 
@@ -117,8 +114,8 @@ int *rank_indx, *title_length;
 #endif /* OVL1 */
 #ifdef OVLB
 
-void
-max_rank_sz()
+void 
+max_rank_sz (void)
 {
 	register int i, r, maxr = 0;
 	for (i = 0; i < 9; i++) {
@@ -133,8 +130,8 @@ max_rank_sz()
 #ifdef OVL0
 
 #ifdef SCORE_ON_BOTL
-long
-botl_score()
+long 
+botl_score (void)
 {
     int deepest = deepest_lev_reached(FALSE);
 #ifndef GOLDOBJ
@@ -211,8 +208,8 @@ bot1()
 #endif
 #ifdef DUMP_LOG
 }
-STATIC_OVL void
-bot1()
+STATIC_OVL void 
+bot1 (void)
 {
 	char newbot1[MAXCO];
 
@@ -223,9 +220,8 @@ bot1()
 }
 
 /* provide the name of the current level for display by various ports */
-int
-describe_level(buf)
-char *buf;
+int 
+describe_level (char *buf)
 {
 	int ret = 1;
 
@@ -347,8 +343,8 @@ bot2()
 		Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
 #ifdef DUMP_LOG
 }
-STATIC_OVL void
-bot2()
+STATIC_OVL void 
+bot2 (void)
 {
 	char newbot2[MAXCO];
 	bot2str(newbot2);
@@ -357,8 +353,8 @@ bot2()
 	putstr(WIN_STATUS, 0, newbot2);
 }
 
-void
-bot()
+void 
+bot (void)
 {
 	bot1();
 	bot2();

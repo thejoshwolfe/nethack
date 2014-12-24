@@ -70,8 +70,8 @@ static int speednum(speed_t speed) {
 	return 0;
 }
 
-static void
-setctty()
+static void 
+setctty (void)
 {
 	if(STTY(&curttyb) < 0 || STTY2(&curttyb2) < 0)
 		perror("NetHack (setctty)");
@@ -82,8 +82,8 @@ setctty()
  * and switch off tab expansion if necessary.
  * Called by startup() in termcap.c and after returning from ! or ^Z
  */
-void
-gettty()
+void 
+gettty (void)
 {
 	if(GTTY(&inittyb) < 0 || GTTY2(&inittyb2) < 0)
 		perror("NetHack (gettty)");
@@ -104,9 +104,8 @@ gettty()
 }
 
 /* reset terminal to original state */
-void
-settty(s)
-const char *s;
+void 
+settty (const char *s)
 {
 	end_screen();
 	if(s) raw_print(s);
@@ -180,8 +179,8 @@ register int change = 0;
 	start_screen();
 }
 
-void
-intron()		/* enable kbd interupts if enabled when game started */
+void 
+intron (void)		/* enable kbd interupts if enabled when game started */
 {
 #ifdef TTY_GRAPHICS
 	/* Ugly hack to keep from changing tty modes for non-tty games -dlc */
@@ -193,8 +192,8 @@ intron()		/* enable kbd interupts if enabled when game started */
 #endif
 }
 
-void
-introff()		/* disable kbd interrupts if required*/
+void 
+introff (void)		/* disable kbd interrupts if required*/
 {
 #ifdef TTY_GRAPHICS
 	/* Ugly hack to keep from changing tty modes for non-tty games -dlc */
@@ -223,8 +222,8 @@ void NDECL(sco_mapoff);
 void NDECL(check_sco_console);
 void NDECL(init_sco_cons);
 
-void
-sco_mapon()
+void 
+sco_mapon (void)
 {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && sco_flag_console) {
@@ -236,8 +235,8 @@ sco_mapon()
 # endif
 }
 
-void
-sco_mapoff()
+void 
+sco_mapoff (void)
 {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && sco_flag_console) {
@@ -249,16 +248,16 @@ sco_mapoff()
 # endif
 }
 
-void
-check_sco_console()
+void 
+check_sco_console (void)
 {
 	if (isatty(0) && ioctl(0,CONS_GET,0) != -1) {
 		sco_flag_console = 1;
 	}
 }
 
-void
-init_sco_cons()
+void 
+init_sco_cons (void)
 {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && sco_flag_console) {
@@ -283,8 +282,8 @@ void NDECL(linux_mapoff);
 void NDECL(check_linux_console);
 void NDECL(init_linux_cons);
 
-void
-linux_mapon()
+void 
+linux_mapon (void)
 {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
@@ -293,8 +292,8 @@ linux_mapon()
 # endif
 }
 
-void
-linux_mapoff()
+void 
+linux_mapoff (void)
 {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
@@ -303,8 +302,8 @@ linux_mapoff()
 # endif
 }
 
-void
-check_linux_console()
+void 
+check_linux_console (void)
 {
 	struct vt_mode vtm;
 
@@ -313,8 +312,8 @@ check_linux_console()
 	}
 }
 
-void
-init_linux_cons()
+void 
+init_linux_cons (void)
 {
 # ifdef TTY_GRAPHICS
 	if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
