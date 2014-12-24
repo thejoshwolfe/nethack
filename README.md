@@ -44,6 +44,10 @@ The goal of this fork is to make the game more approachable for new players.
    The game should feature an in-game encyclopedia that's unlocked as you play, and it should persist across games.
    For instance, once your brain is sucked by a master mindflayer, that ability will appear in the master mindflayer article in the encyclopedia.
    Right-clicking on a master mindflayer in-game should provide a link to the article, etc.
+ * Don't touch the balance too much.
+   No new items, monsters, roles, etc.
+   The only changes would be related to conveying information,
+   such as making the non-cursed fortune cookies more helpful.
 
 Additional fun stuff maybe:
 
