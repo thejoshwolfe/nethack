@@ -68,7 +68,7 @@ static long laststattime;
 # if !defined(MAILPATH) && (defined(BSD) || defined(ULTRIX))
 #  define MAILPATH "/usr/spool/mail/"
 # endif
-# if !defined(MAILPATH) && (defined(SYSV) || defined(HPUX))
+# if !defined(MAILPATH)
 #  define MAILPATH "/usr/mail/"
 # endif
 

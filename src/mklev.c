@@ -104,14 +104,8 @@ gotit:
 	return;
 }
 
-void
-sort_rooms()
-{
-#if defined(SYSV) || defined(DGUX)
+void sort_rooms(void) {
 	qsort((void *) rooms, (unsigned)nroom, sizeof(struct mkroom), do_comp);
-#else
-	qsort((void *) rooms, nroom, sizeof(struct mkroom), do_comp);
-#endif
 }
 
 STATIC_OVL void

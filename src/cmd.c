@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)cmd.c	3.4	2003/02/06	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "func_tab.h"
 /* #define DEBUG */	/* uncomment for debugging */
@@ -10,9 +6,7 @@
  * Some systems may have getchar() return EOF for various reasons, and
  * we should not quit before seeing at least NR_OF_EOFS consecutive EOFs.
  */
-#if defined(SYSV) || defined(DGUX) || defined(HPUX)
 #define NR_OF_EOFS	20
-#endif
 
 #define CMD_TRAVEL (char)0x90
 

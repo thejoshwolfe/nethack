@@ -187,7 +187,7 @@ register char *s;
 
 	while((lp=index(s, '.')) || (lp=index(s, '/')) || (lp=index(s,' ')))
 		*lp = '_';
-#if defined(SYSV) && !defined(AIX_31) && !defined(SVR4) && !defined(LINUX) && !defined(__APPLE__)
+#if !defined(AIX_31) && !defined(SVR4) && !defined(LINUX) && !defined(__APPLE__)
 	/* avoid problems with 14 character file name limit */
 # ifdef COMPRESS
 	/* leave room for .e from error and .Z from compress appended to
@@ -209,7 +209,7 @@ register char *s;
 #endif
 }
 
-#if defined(TIMED_DELAY) && !defined(msleep) && defined(SYSV)
+#if defined(TIMED_DELAY) && !defined(msleep)
 #include <poll.h>
 
 void
@@ -222,7 +222,7 @@ unsigned msec;				/* milliseconds */
 	if (msecs < 0) msecs = 0;	/* avoid infinite sleep */
 	(void) poll(&unused, (unsigned long)0, msecs);
 }
-#endif /* TIMED_DELAY for SYSV */
+#endif /* TIMED_DELAY */
 
 #ifdef SHELL
 int

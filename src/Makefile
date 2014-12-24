@@ -85,8 +85,7 @@ WINCURSESLIB = -lncurses
 WINLIB = $(WINCURSESLIB)
 
 # Linux NetHack uses some bsd style ioctl functions, thus it is necessary to
-# use the bsd libs.  (Only if still compiling as BSD in unixconf.h; recent
-# versions compile fine using SYSV without this.)
+# use the bsd libs.
 # LIBS = -lbsd
 LIBS =
 

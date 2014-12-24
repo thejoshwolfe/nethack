@@ -40,7 +40,7 @@
 # define curttyb2	curttyb
 
 
-#if defined(TTY_GRAPHICS) && ((!defined(SYSV) && !defined(HPUX)) || defined(UNIXPC) || defined(SVR4))
+#if defined(TTY_GRAPHICS) && (defined(UNIXPC) || defined(SVR4))
 # ifndef LINT
 extern			/* it is defined in libtermlib (libtermcap) */
 # endif
