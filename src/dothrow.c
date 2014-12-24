@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)dothrow.c	3.4	2003/12/04	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* Contains code for 't' (throw) */
 
 #include "hack.h"
@@ -12,10 +8,10 @@ STATIC_DCL void NDECL(autoquiver);
 STATIC_DCL int FDECL(gem_accept, (struct monst *, struct obj *));
 STATIC_DCL void FDECL(tmiss, (struct obj *, struct monst *));
 STATIC_DCL int FDECL(throw_gold, (struct obj *));
-STATIC_DCL void FDECL(check_shop_obj, (struct obj *,XCHAR_P,XCHAR_P,BOOLEAN_P));
-STATIC_DCL void FDECL(breakobj, (struct obj *,XCHAR_P,XCHAR_P,BOOLEAN_P,BOOLEAN_P));
-STATIC_DCL void FDECL(breakmsg, (struct obj *,BOOLEAN_P));
-STATIC_DCL boolean FDECL(toss_up,(struct obj *, BOOLEAN_P));
+STATIC_DCL void FDECL(check_shop_obj, (struct obj *,signed char,signed char,boolean));
+STATIC_DCL void FDECL(breakobj, (struct obj *,signed char,signed char,boolean,boolean));
+STATIC_DCL void FDECL(breakmsg, (struct obj *,boolean));
+STATIC_DCL boolean FDECL(toss_up,(struct obj *, boolean));
 STATIC_DCL boolean FDECL(throwing_weapon, (struct obj *));
 STATIC_DCL void FDECL(sho_obj_return_to_u, (struct obj *obj));
 STATIC_DCL boolean FDECL(mhurtle_step, (void *,int,int));
@@ -40,7 +36,7 @@ int shotlimit;
 {
 	struct obj *otmp;
 	int multishot = 1;
-	schar skill;
+	signed char skill;
 	long wep_mask;
 	boolean twoweap;
 
@@ -591,11 +587,7 @@ mhurtle_step(arg, x, y)
  * dx and dy should be the direction of the hurtle, not of the original
  * kick or throw and be only.
  */
-void
-hurtle(dx, dy, range, verbose)
-    int dx, dy, range;
-    boolean verbose;
-{
+void hurtle(int dx, int dy, int range, boolean verbose) {
     coord uc, cc;
 
     /* The chain is stretched vertically, so you shouldn't be able to move
@@ -677,12 +669,7 @@ mhurtle(mon, dx, dy, range)
 	return;
 }
 
-STATIC_OVL void
-check_shop_obj(obj, x, y, broken)
-register struct obj *obj;
-register xchar x, y;
-register boolean broken;
-{
+STATIC_OVL void check_shop_obj(struct obj *obj, signed char x, signed char y, boolean broken) {
 	struct monst *shkp = shop_keeper(*u.ushops);
 
 	if(!shkp) return;
@@ -1518,7 +1505,7 @@ nopick:
 int
 hero_breaks(obj, x, y, from_invent)
 struct obj *obj;
-xchar x, y;		/* object location (ox, oy may not be right) */
+signed char x, y;		/* object location (ox, oy may not be right) */
 boolean from_invent;	/* thrown or dropped by player; maybe on shop bill */
 {
 	boolean in_view = !Blind;
@@ -1536,7 +1523,7 @@ boolean from_invent;	/* thrown or dropped by player; maybe on shop bill */
 int
 breaks(obj, x, y)
 struct obj *obj;
-xchar x, y;		/* object location (ox, oy may not be right) */
+signed char x, y;		/* object location (ox, oy may not be right) */
 {
 	boolean in_view = Blind ? FALSE : cansee(x, y);
 
@@ -1550,12 +1537,10 @@ xchar x, y;		/* object location (ox, oy may not be right) */
  * Unconditionally break an object. Assumes all resistance checks
  * and break messages have been delivered prior to getting here.
  */
-STATIC_OVL void
-breakobj(obj, x, y, hero_caused, from_invent)
-struct obj *obj;
-xchar x, y;		/* object location (ox, oy may not be right) */
-boolean hero_caused;	/* is this the hero's fault? */
-boolean from_invent;
+/* object location (ox, oy may not be right) */
+/* is this the hero's fault? */
+STATIC_OVL void breakobj(struct obj *obj, signed char x, signed char y,
+        boolean hero_caused, boolean from_invent)
 {
 	switch (obj->oclass == POTION_CLASS ? POT_WATER : obj->otyp) {
 		case MIRROR:
@@ -1587,7 +1572,7 @@ boolean from_invent;
 		case EGG:
 			/* breaking your own eggs is bad luck */
 			if (hero_caused && obj->spe && obj->corpsenm >= LOW_PM)
-			    change_luck((schar) -min(obj->quan, 5L));
+			    change_luck((signed char) -min(obj->quan, 5L));
 			break;
 	}
 	if (hero_caused) {

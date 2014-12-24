@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)do_wear.c	3.4	2003/11/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #ifndef OVLB
@@ -52,7 +48,7 @@ STATIC_PTR int NDECL(Shield_on);
 STATIC_PTR int NDECL(Shirt_on);
 #endif
 STATIC_DCL void NDECL(Amulet_on);
-STATIC_DCL void FDECL(Ring_off_or_gone, (struct obj *, BOOLEAN_P));
+STATIC_DCL void FDECL(Ring_off_or_gone, (struct obj *, boolean));
 STATIC_PTR int FDECL(select_off, (struct obj *));
 STATIC_DCL struct obj *NDECL(do_takeoff);
 STATIC_PTR int NDECL(take_off);
@@ -1609,7 +1605,7 @@ find_ac()
 	if(uright && uright->otyp == RIN_PROTECTION) uac -= uright->spe;
 	if (HProtection & INTRINSIC) uac -= u.ublessed;
 	uac -= u.uspellprot;
-	if (uac < -128) uac = -128;	/* u.uac is an schar */
+	if (uac < -128) uac = -128;	/* u.uac is an signed char */
 	if(uac != u.uac){
 		u.uac = uac;
 		flags.botl = 1;
@@ -2161,7 +2157,7 @@ register struct obj *atmp;
 void
 adj_abon(otmp, delta)
 register struct obj *otmp;
-register schar delta;
+register signed char delta;
 {
 	if (uarmg && uarmg == otmp && otmp->otyp == GAUNTLETS_OF_DEXTERITY) {
 		if (delta) {

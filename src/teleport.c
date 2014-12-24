@@ -1,11 +1,7 @@
-/*	SCCS Id: @(#)teleport.c	3.4	2003/08/11	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 STATIC_DCL boolean FDECL(tele_jump_ok, (int,int,int,int));
-STATIC_DCL boolean FDECL(teleok, (int,int,BOOLEAN_P));
+STATIC_DCL boolean FDECL(teleok, (int,int,boolean));
 STATIC_DCL void NDECL(vault_tele);
 STATIC_DCL boolean FDECL(rloc_pos_ok, (int,int,struct monst *));
 STATIC_DCL void FDECL(mvault_tele, (struct monst *));
@@ -96,7 +92,7 @@ unsigned gpflags;
 boolean
 enexto(cc, xx, yy, mdat)
 coord *cc;
-register xchar xx, yy;
+register signed char xx, yy;
 struct permonst *mdat;
 {
 	return enexto_core(cc, xx, yy, mdat, 0);
@@ -105,7 +101,7 @@ struct permonst *mdat;
 boolean
 enexto_core(cc, xx, yy, mdat, entflags)
 coord *cc;
-register xchar xx, yy;
+register signed char xx, yy;
 struct permonst *mdat;
 unsigned entflags;
 {
@@ -291,7 +287,7 @@ boolean allow_drag;
 	if (ball_active) {
 	    if (ball_still_in_range || allow_drag) {
 		int bc_control;
-		xchar ballx, bally, chainx, chainy;
+		signed char ballx, bally, chainx, chainy;
 		boolean cause_delay;
 
 		if (drag_ball(nux, nuy, &bc_control, &ballx, &bally,
@@ -609,8 +605,8 @@ level_tele()
 		}
 #ifdef WIZARD
 		if (wizard && !strcmp(buf,"?")) {
-		    schar destlev = 0;
-		    xchar destdnum = 0;
+		    signed char destlev = 0;
+		    signed char destdnum = 0;
 
 		    if ((newlev = (int)print_dungeon(TRUE, &destlev, &destdnum))) {
 			newlevel.dnum = destdnum;
@@ -1162,7 +1158,7 @@ void
 rloco(obj)
 register struct obj *obj;
 {
-	register xchar tx, ty, otx, oty;
+	register signed char tx, ty, otx, oty;
 	boolean restricted_fall;
 	int try_limit = 4000;
 

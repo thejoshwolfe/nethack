@@ -1,21 +1,17 @@
-/*	SCCS Id: @(#)hack.c	3.4	2003/04/30	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #ifdef OVL1
 STATIC_DCL void NDECL(maybe_wail);
 #endif /*OVL1*/
 STATIC_DCL int NDECL(moverock);
-STATIC_DCL int FDECL(still_chewing,(XCHAR_P,XCHAR_P));
+STATIC_DCL int FDECL(still_chewing,(signed char,signed char));
 #ifdef SINKS
 STATIC_DCL void NDECL(dosinkfall);
 #endif
-STATIC_DCL boolean FDECL(findtravelpath, (BOOLEAN_P));
+STATIC_DCL boolean FDECL(findtravelpath, (boolean));
 STATIC_DCL boolean FDECL(monstinroom, (struct permonst *,int));
 
-STATIC_DCL void FDECL(move_update, (BOOLEAN_P));
+STATIC_DCL void FDECL(move_update, (boolean));
 
 #define IS_SHOP(x)	(rooms[x].rtype >= SHOPBASE)
 
@@ -60,7 +56,7 @@ const char *msg;
 STATIC_OVL int
 moverock()
 {
-    register xchar rx, ry, sx, sy;
+    register signed char rx, ry, sx, sy;
     register struct obj *otmp;
     register struct trap *ttmp;
     register struct monst *mtmp;
@@ -309,10 +305,7 @@ moverock()
  *  Chew on a wall, door, or boulder.  Returns TRUE if still eating, FALSE
  *  when done.
  */
-STATIC_OVL int
-still_chewing(x,y)
-    xchar x, y;
-{
+STATIC_OVL int still_chewing(signed char x,signed char y) {
     struct rm *lev = &levl[x][y];
     struct obj *boulder = sobj_at(BOULDER,x,y);
     const char *digtxt = (char *)0, *dmgtxt = (char *)0;
@@ -435,7 +428,7 @@ still_chewing(x,y)
 void
 movobj(obj, ox, oy)
 register struct obj *obj;
-register xchar ox, oy;
+register signed char ox, oy;
 {
 	/* optimize by leaving on the fobj chain? */
 	remove_object(obj);
@@ -501,7 +494,7 @@ dosinkfall()
 
 boolean
 may_dig(x,y)
-register xchar x,y;
+register signed char x,y;
 /* intended to be called only on ROCKs */
 {
     return (boolean)(!(IS_STWALL(levl[x][y].typ) &&
@@ -510,7 +503,7 @@ register xchar x,y;
 
 boolean
 may_passwall(x,y)
-register xchar x,y;
+register signed char x,y;
 {
    return (boolean)(!(IS_STWALL(levl[x][y].typ) &&
 			(levl[x][y].wall_info & W_NONPASSWALL)));
@@ -522,7 +515,7 @@ register xchar x,y;
 boolean
 bad_rock(mdat,x,y)
 struct permonst *mdat;
-register xchar x,y;
+register signed char x,y;
 {
 	return((boolean) ((In_sokoban(&u.uz) && sobj_at(BOULDER,x,y)) ||
 	       (IS_ROCK(levl[x][y].typ)
@@ -532,7 +525,7 @@ register xchar x,y;
 
 boolean
 invocation_pos(x, y)
-xchar x, y;
+signed char x, y;
 {
 	return((boolean)(Invocation_lev(&u.uz) && x == inv_pos.x && y == inv_pos.y));
 }
@@ -726,10 +719,10 @@ boolean guess;
 	flags.run = 8;
     }
     if (u.tx != u.ux || u.ty != u.uy) {
-	xchar travel[COLNO][ROWNO];
-	xchar travelstepx[2][COLNO*ROWNO];
-	xchar travelstepy[2][COLNO*ROWNO];
-	xchar tx, ty, ux, uy;
+	signed char travel[COLNO][ROWNO];
+	signed char travelstepx[2][COLNO*ROWNO];
+	signed char travelstepy[2][COLNO*ROWNO];
+	signed char tx, ty, ux, uy;
 	int n = 1;			/* max offset in travelsteps */
 	int set = 0;			/* two sets current and previous */
 	int radius = 1;			/* search radius */
@@ -864,11 +857,11 @@ domove()
 {
 	register struct monst *mtmp;
 	register struct rm *tmpr;
-	register xchar x,y;
+	register signed char x,y;
 	struct trap *trap;
 	int wtcap;
 	boolean on_ice;
-	xchar chainx, chainy, ballx, bally;	/* ball&chain new positions */
+	signed char chainx, chainy, ballx, bally;	/* ball&chain new positions */
 	int bc_control;				/* control for ball&chain */
 	boolean cause_delay = FALSE;	/* dragging ball will skip a move */
 	const char *predicament;
@@ -1581,7 +1574,7 @@ int roomno;
 
 char *
 in_rooms(x, y, typewanted)
-register xchar x, y;
+register signed char x, y;
 register int typewanted;
 {
 	static char buf[5];

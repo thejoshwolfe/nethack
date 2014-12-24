@@ -51,14 +51,14 @@ extern void FDECL(yywarning, (const char *));
 extern int NDECL(yylex);
 int NDECL(yyparse);
 
-extern int FDECL(get_floor_type, (CHAR_P));
+extern int FDECL(get_floor_type, (char));
 extern int FDECL(get_room_type, (char *));
 extern int FDECL(get_trap_type, (char *));
-extern int FDECL(get_monster_id, (char *,CHAR_P));
-extern int FDECL(get_object_id, (char *,CHAR_P));
-extern boolean FDECL(check_monster_char, (CHAR_P));
-extern boolean FDECL(check_object_char, (CHAR_P));
-extern char FDECL(what_map_char, (CHAR_P));
+extern int FDECL(get_monster_id, (char *,char));
+extern int FDECL(get_object_id, (char *,char));
+extern boolean FDECL(check_monster_char, (char));
+extern boolean FDECL(check_object_char, (char));
+extern char FDECL(what_map_char, (char));
 extern void FDECL(scan_map, (char *));
 extern void NDECL(wallify_map);
 extern boolean NDECL(check_subrooms);
@@ -129,7 +129,7 @@ static int lev_flags = 0;
 
 unsigned int max_x_map, max_y_map;
 
-static xchar in_room;
+static signed char in_room;
 
 extern int fatal_error;
 extern int want_warnings;
@@ -140,9 +140,9 @@ typedef union
 	int	i;
 	char*	map;
 	struct {
-		xchar room;
-		xchar wall;
-		xchar door;
+		signed char room;
+		signed char wall;
+		signed char door;
 	} corpos;
 } YYSTYPE;
 #define CHAR 257
@@ -1418,7 +1418,7 @@ case 68:
 break;
 case 75:
 {
-			maze.filling = (schar) yyvsp[0].i;
+			maze.filling = (signed char) yyvsp[0].i;
 			if (index(yyvsp[-2].map, '.'))
 			    yyerror("Invalid dot ('.') in level name.");
 			if ((int) strlen(yyvsp[-2].map) > 8)

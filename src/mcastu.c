@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)mcastu.c	3.4	2003/01/08	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 /* monster mage spells */
@@ -30,7 +26,7 @@
 #define CLC_FIRE_PILLAR	 8
 #define CLC_GEYSER	 9
 
-STATIC_DCL void FDECL(cursetxt,(struct monst *,BOOLEAN_P));
+STATIC_DCL void FDECL(cursetxt,(struct monst *,boolean));
 STATIC_DCL int FDECL(choose_magic_spell, (int));
 STATIC_DCL int FDECL(choose_clerical_spell, (int));
 STATIC_DCL void FDECL(cast_wizard_spell,(struct monst *, int,int));

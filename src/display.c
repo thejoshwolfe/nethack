@@ -1,8 +1,3 @@
-/*	SCCS Id: @(#)display.c	3.4	2003/02/19	*/
-/* Copyright (c) Dean Luick, with acknowledgements to Kevin Darcy */
-/* and Dave Cohrs, 1990.					  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  *			THE NEW DISPLAY CODE
  *
@@ -119,7 +114,7 @@
 #include "region.h"
 #include <assert.h>
 
-STATIC_DCL void FDECL(display_monster,(XCHAR_P,XCHAR_P,struct monst *,int,XCHAR_P));
+STATIC_DCL void FDECL(display_monster,(signed char,signed char,struct monst *,int,signed char));
 STATIC_DCL int FDECL(swallow_to_glyph, (int, int));
 STATIC_DCL void FDECL(display_warning,(struct monst *));
 
@@ -147,7 +142,7 @@ STATIC_DCL int FDECL(wall_angle, (struct rm *));
  */
 struct obj *
 vobj_at(x,y)
-    xchar x,y;
+    signed char x,y;
 {
     register struct obj *obj = level.objects[x][y];
 
@@ -167,7 +162,7 @@ vobj_at(x,y)
  */
 void
 magic_map_background(x, y, show)
-    xchar x,y;
+    signed char x,y;
     int  show;
 {
     int glyph = back_to_glyph(x,y);	/* assumes hero can see x,y */
@@ -200,7 +195,7 @@ magic_map_background(x, y, show)
  * having to create fake objects and traps.  However, I am reluctant to
  * make this change.
  */
-/* FIXME: some of these use xchars for x and y, and some use ints.  Make
+/* FIXME: some of these use signed chars for x and y, and some use ints.  Make
  * this consistent.
  */
 
@@ -212,7 +207,7 @@ magic_map_background(x, y, show)
  */
 void
 map_background(x, y, show)
-    register xchar x,y;
+    register signed char x,y;
     register int  show;
 {
     register int glyph = back_to_glyph(x,y);
@@ -271,7 +266,7 @@ map_object(obj, show)
  */
 void
 map_invisible(x, y)
-register xchar x, y;
+register signed char x, y;
 {
     if (x != u.ux || y != u.uy) { /* don't display I at hero's location */
 	if (level.flags.hero_memory)
@@ -358,11 +353,11 @@ map_location(x,y,show)
  */
 STATIC_OVL void
 display_monster(x, y, mon, sightflags, worm_tail)
-    register xchar x, y;	/* display position */
+    register signed char x, y;	/* display position */
     register struct monst *mon;	/* monster to display */
     int sightflags;		/* 1 if the monster is physically seen */
     				/* 2 if detected using Detect_monsters */
-    register xchar worm_tail;	/* mon is actually a worm tail */
+    register signed char worm_tail;	/* mon is actually a worm tail */
 {
     register boolean mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
     register int sensed = mon_mimic &&
@@ -488,7 +483,7 @@ display_warning(mon)
  */
 void
 feel_location(x, y)
-    xchar x, y;
+    signed char x, y;
 {
     struct rm *lev = &(levl[x][y]);
     struct obj *boulder;
@@ -633,7 +628,7 @@ newsym(x,y)
     register struct monst *mon;
     register struct rm *lev = &(levl[x][y]);
     register int see_it;
-    register xchar worm_tail;
+    register signed char worm_tail;
 
     if (in_mklev) return;
 
@@ -777,7 +772,7 @@ show_mem:
  */
 void
 shieldeff(x,y)
-    xchar x,y;
+    signed char x,y;
 {
     register int i;
 
@@ -922,7 +917,7 @@ void
 swallowed(first)
     int first;
 {
-    static xchar lastx, lasty;	/* last swallowed position */
+    static signed char lastx, lasty;	/* last swallowed position */
     int swallower, left_ok, rght_ok;
 
     if (first)
@@ -980,7 +975,7 @@ void
 under_water(mode)
     int mode;
 {
-    static xchar lastx, lasty;
+    static signed char lastx, lasty;
     static boolean dela;
     register int x, y;
 
@@ -1200,7 +1195,7 @@ docrt()
 /* Glyph Buffering (3rd screen) ============================================ */
 
 typedef struct {
-    xchar new;		/* perhaps move this bit into the rm strucure. */
+    signed char new;		/* perhaps move this bit into the rm strucure. */
     int   glyph;
 } gbuf_entry;
 
@@ -1373,10 +1368,10 @@ flush_screen(cursor_on_u)
 
 #ifdef DUMP_LOG
 /* D: Added to dump screen to output file */
-STATIC_PTR uchar get_glyph_char(glyph)
+STATIC_PTR unsigned char get_glyph_char(glyph)
 int glyph;
 {
-    uchar   ch;
+    unsigned char   ch;
     register int offset;
 
     assert (!(glyph >= NO_GLYPH));
@@ -1391,7 +1386,7 @@ int glyph;
 	ch = def_warnsyms[offset].sym;
     } else if ((offset = (glyph - GLYPH_SWALLOW_OFF)) >= 0) {	/* swallow */
 	/* see swallow_to_glyph() in display.c */
-	ch = (uchar) defsyms[S_sw_tl + (offset & 0x7)].sym;
+	ch = (unsigned char) defsyms[S_sw_tl + (offset & 0x7)].sym;
     } else if ((offset = (glyph - GLYPH_ZAP_OFF)) >= 0) {	/* zap beam */
 	/* see zapdir_to_glyph() in display.c */
 	ch = defsyms[S_vbeam + (offset & 0x3)].sym;
@@ -1451,7 +1446,7 @@ void dump_screen()
 	lastc = 0;
 	ptr = buf;
 	for (x = 1; x < COLNO; x++) {
-	    uchar c = get_glyph_char(gbuf[y][x].glyph);
+	    unsigned char c = get_glyph_char(gbuf[y][x].glyph);
 	    *ptr++ = c;
 	    if (c != ' ')
 		lastc = x;
@@ -1487,7 +1482,7 @@ void dump_screen()
  */
 int
 back_to_glyph(x,y)
-    xchar x,y;
+    signed char x,y;
 {
     int idx;
     struct rm *ptr = &(levl[x][y]);
@@ -1630,7 +1625,7 @@ zapdir_to_glyph(dx, dy, beam_type)
  */
 int
 glyph_at(x, y)
-    xchar x,y;
+    signed char x,y;
 {
     if(x < 0 || y < 0 || x >= COLNO || y >= ROWNO)
 	return cmap_to_glyph(S_room);			/* XXX */

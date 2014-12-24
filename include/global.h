@@ -28,15 +28,7 @@
 
 /* Assorted definitions that may depend on selections in config.h. */
 
-/*
- * type xchar: small integers in the range 0 - 127, usually coordinates
- * although they are nonnegative they must not be declared unsigned
- * since otherwise comparisons with signed quantities are done incorrectly
- */
-typedef schar	xchar;
-#ifndef SKIP_BOOLEAN
-typedef xchar	boolean;		/* 0 or 1 */
-#endif
+typedef signed char	boolean;		/* 0 or 1 */
 
 #ifndef TRUE		/* defined in some systems' native include files */
 #define TRUE	((boolean)1)
@@ -63,29 +55,7 @@ typedef xchar	boolean;		/* 0 or 1 */
 #ifdef BITFIELDS
 #define Bitfield(x,n)	unsigned x:n
 #else
-#define Bitfield(x,n)	uchar x
-#endif
-
-#ifdef UNWIDENED_PROTOTYPES
-# define CHAR_P char
-# define SCHAR_P schar
-# define UCHAR_P uchar
-# define XCHAR_P xchar
-# define SHORT_P short
-#ifndef SKIP_BOOLEAN
-# define BOOLEAN_P boolean
-#endif
-# define ALIGNTYP_P aligntyp
-#else
-# ifdef WIDENED_PROTOTYPES
-#  define CHAR_P int
-#  define SCHAR_P int
-#  define UCHAR_P int
-#  define XCHAR_P int
-#  define SHORT_P int
-#  define BOOLEAN_P int
-#  define ALIGNTYP_P int
-# endif
+#define Bitfield(x,n)	unsigned char x
 #endif
 
 #define OBJ_P struct obj*

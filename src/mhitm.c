@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)mhitm.c	3.4	2003/01/02	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "artifact.h"
 #include "edog.h"
@@ -27,7 +23,7 @@ STATIC_DCL int FDECL(mdamagem, (struct monst *,struct monst *,struct attack *));
 STATIC_DCL void FDECL(mswingsm, (struct monst *, struct monst *, struct obj *));
 STATIC_DCL void FDECL(noises,(struct monst *,struct attack *));
 STATIC_DCL void FDECL(missmm,(struct monst *,struct monst *,struct attack *));
-STATIC_DCL int FDECL(passivemm, (struct monst *, struct monst *, BOOLEAN_P, int));
+STATIC_DCL int FDECL(passivemm, (struct monst *, struct monst *, boolean, int));
 
 /* Needed for the special case of monsters wielding vorpal blades (rare).
  * If we use this a lot it should probably be a parameter to mdamagem()
@@ -489,7 +485,7 @@ gulpmm(magr, mdef, mattk)
 	register struct monst *magr, *mdef;
 	register struct	attack *mattk;
 {
-	xchar	ax, ay, dx, dy;
+	signed char	ax, ay, dx, dy;
 	int	status;
 	char buf[BUFSZ];
 	struct obj *obj;

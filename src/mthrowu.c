@@ -1,10 +1,6 @@
-/*	SCCS Id: @(#)mthrowu.c	3.4	2003/05/09	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
-STATIC_DCL int FDECL(drop_throw,(struct obj *,BOOLEAN_P,int,int));
+STATIC_DCL int FDECL(drop_throw,(struct obj *,boolean,int,int));
 
 #define URETREATING(x,y) (distmin(u.ux,u.uy,x,y) > distmin(u.ux0,u.uy0,x,y))
 
@@ -221,7 +217,7 @@ boolean verbose;  /* give message(s) even when you can't see what happened */
 	    }
 
 	    if (can_blnd((struct monst*)0, mtmp,
-		    (uchar)(otmp->otyp == BLINDING_VENOM ? AT_SPIT : AT_WEAP),
+		    (unsigned char)(otmp->otyp == BLINDING_VENOM ? AT_SPIT : AT_WEAP),
 		    otmp)) {
 		if (vis && mtmp->mcansee)
 		    pline("%s is blinded by %s.", Monnam(mtmp), the(xname(otmp)));
@@ -390,7 +386,7 @@ m_throw(mon, x, y, dx, dy, range, obj)
 		    }
 		    if(hitu &&
 		       can_blnd((struct monst*)0, &youmonst,
-				(uchar)(singleobj->otyp == BLINDING_VENOM ?
+				(unsigned char)(singleobj->otyp == BLINDING_VENOM ?
 					AT_SPIT : AT_WEAP), singleobj)) {
 			blindinc = rnd(25);
 			if(singleobj->otyp == CREAM_PIE) {
@@ -486,8 +482,8 @@ thrwmu(mtmp)
 struct monst *mtmp;
 {
 	struct obj *otmp, *mwep;
-	xchar x, y;
-	schar skill;
+	signed char x, y;
+	signed char skill;
 	int multishot;
 	const char *onm;
 
@@ -700,7 +696,7 @@ breamu(mtmp, mattk)			/* monster breathes at you (ranged) */
 
 boolean
 linedup(ax, ay, bx, by)
-register xchar ax, ay, bx, by;
+register signed char ax, ay, bx, by;
 {
 	tbx = ax - bx;	/* These two values are set for use */
 	tby = ay - by;	/* after successful return.	    */

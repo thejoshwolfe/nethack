@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)dogmove.c	3.4	2002/09/10	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #include "mfndpos.h"
@@ -16,9 +12,8 @@ STATIC_DCL int FDECL(dog_invent,(struct monst *,struct edog *,int));
 STATIC_DCL int FDECL(dog_goal,(struct monst *,struct edog *,int,int,int));
 
 STATIC_DCL struct obj *FDECL(DROPPABLES, (struct monst *));
-STATIC_DCL boolean FDECL(can_reach_location,(struct monst *,XCHAR_P,XCHAR_P,
-    XCHAR_P,XCHAR_P));
-STATIC_DCL boolean FDECL(could_reach_item,(struct monst *, XCHAR_P,XCHAR_P));
+STATIC_DCL boolean FDECL(can_reach_location,(struct monst *,signed char,signed char, signed char,signed char));
+STATIC_DCL boolean FDECL(could_reach_item,(struct monst *, signed char,signed char));
 
 STATIC_OVL struct obj *
 DROPPABLES(mon)
@@ -53,7 +48,7 @@ static const char nofetch[] = { BALL_CLASS, CHAIN_CLASS, ROCK_CLASS, 0 };
 
 STATIC_OVL boolean FDECL(cursed_object_at, (int, int));
 
-STATIC_VAR xchar gtyp, gx, gy;	/* type and position of dog's current goal */
+STATIC_VAR signed char gtyp, gx, gy;	/* type and position of dog's current goal */
 
 STATIC_PTR void FDECL(wantdoor, (int, int, void *));
 
@@ -119,13 +114,7 @@ struct obj *obj;
 }
 
 /* returns 2 if pet dies, otherwise 1 */
-int
-dog_eat(mtmp, obj, x, y, devour)
-register struct monst *mtmp;
-register struct obj * obj;
-int x, y;
-boolean devour;
-{
+int dog_eat(struct monst *mtmp, struct obj *obj, int x, int y, boolean devour) {
 	register struct edog *edog = EDOG(mtmp);
 	boolean poly = FALSE, grow = FALSE, heal = FALSE;
 	int nutrit;
@@ -336,7 +325,7 @@ int after, udist, whappr;
 	register int omx, omy;
 	boolean in_masters_sight, dog_has_minvent;
 	register struct obj *obj;
-	xchar otyp;
+	signed char otyp;
 	int appr;
 
 #ifdef STEED
@@ -485,11 +474,11 @@ register int after;	/* this is extra fast monster movement */
 	int i, j, k;
 	register struct edog *edog = EDOG(mtmp);
 	struct obj *obj = (struct obj *) 0;
-	xchar otyp;
+	signed char otyp;
 	boolean has_edog, cursemsg[9], do_eat = FALSE;
-	xchar nix, niy;		/* position mtmp is (considering) moving to */
+	signed char nix, niy;		/* position mtmp is (considering) moving to */
 	register int nx, ny;	/* temporary coordinates */
-	xchar cnt, uncursedcnt, chcnt;
+	signed char cnt, uncursedcnt, chcnt;
 	int chi = -1, nidist, ndist;
 	coord poss[9];
 	long info[9], allowflags;
@@ -792,11 +781,7 @@ dognext:
 }
 
 /* check if a monster could pick up objects from a location */
-STATIC_OVL boolean
-could_reach_item(mon, nx, ny)
-struct monst *mon;
-xchar nx, ny;
-{
+STATIC_OVL boolean could_reach_item(struct monst *mon, signed char nx, signed char ny) {
     if ((!is_pool(nx,ny) || is_swimmer(mon->data)) &&
 	(!is_lava(nx,ny) || likes_lava(mon->data)) &&
 	(!sobj_at(BOULDER,nx,ny) || throws_rocks(mon->data)))
@@ -811,10 +796,8 @@ xchar nx, ny;
  * Since the maximum food distance is 5, this should never be more than 5 calls
  * deep.
  */
-STATIC_OVL boolean
-can_reach_location(mon, mx, my, fx, fy)
-struct monst *mon;
-xchar mx, my, fx, fy;
+STATIC_OVL boolean can_reach_location(struct monst *mon,
+        signed char mx, signed char my, signed char fx, signed char fy)
 {
     int i, j;
     int dist;

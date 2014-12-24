@@ -212,13 +212,13 @@
 #define MAXEXPCHARS	9	/* number of explosion characters */
 
 struct symdef {
-    uchar sym;
+    unsigned char sym;
     const char	*explanation;
-    uchar color;
+    unsigned char color;
 };
 
 extern const struct symdef defsyms[MAXPCHARS];	/* defaults */
-extern uchar showsyms[MAXPCHARS];
+extern unsigned char showsyms[MAXPCHARS];
 extern const struct symdef def_warnsyms[WARNCOUNT];
 
 /*
@@ -327,8 +327,8 @@ extern const struct symdef def_warnsyms[WARNCOUNT];
  */
 struct rm {
 	int glyph;		/* what the hero thinks is there */
-	schar typ;		/* what is really there */
-	uchar seenv;		/* seen vector */
+	signed char typ;		/* what is really there */
+	unsigned char seenv;		/* seen vector */
 	Bitfield(flags,5);	/* extra information for typ */
 	Bitfield(horizontal,1); /* wall/door/etc is horiz. (more typ info) */
 	Bitfield(lit,1);	/* speed hack for lit rooms */
@@ -433,12 +433,12 @@ struct damage {
 	struct damage *next;
 	long when, cost;
 	coord place;
-	schar typ;
+	signed char typ;
 };
 
 struct levelflags {
-	uchar	nfountains;		/* number of fountains on level */
-	uchar	nsinks;			/* number of sinks on the level */
+	unsigned char	nfountains;		/* number of fountains on level */
+	unsigned char	nsinks;			/* number of sinks on the level */
 	/* Several flags that give hints about what's on the level */
 	Bitfield(has_shop, 1);
 	Bitfield(has_vault, 1);

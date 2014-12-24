@@ -1,8 +1,4 @@
 %{
-/*	SCCS Id: @(#)lev_yacc.c	3.4	2000/01/17	*/
-/*	Copyright (c) 1989 by Jean-Christophe Collet */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * This file contains the Level Compiler code
  * It may handle special mazes & special room-levels
@@ -42,14 +38,14 @@ extern void FDECL(yywarning, (const char *));
 extern int NDECL(yylex);
 int NDECL(yyparse);
 
-extern int FDECL(get_floor_type, (CHAR_P));
+extern int FDECL(get_floor_type, (char));
 extern int FDECL(get_room_type, (char *));
 extern int FDECL(get_trap_type, (char *));
-extern int FDECL(get_monster_id, (char *,CHAR_P));
-extern int FDECL(get_object_id, (char *,CHAR_P));
-extern boolean FDECL(check_monster_char, (CHAR_P));
-extern boolean FDECL(check_object_char, (CHAR_P));
-extern char FDECL(what_map_char, (CHAR_P));
+extern int FDECL(get_monster_id, (char *,char));
+extern int FDECL(get_object_id, (char *,char));
+extern boolean FDECL(check_monster_char, (char));
+extern boolean FDECL(check_object_char, (char));
+extern char FDECL(what_map_char, (char));
 extern void FDECL(scan_map, (char *));
 extern void NDECL(wallify_map);
 extern boolean NDECL(check_subrooms);
@@ -120,7 +116,7 @@ static int lev_flags = 0;
 
 unsigned int max_x_map, max_y_map;
 
-static xchar in_room;
+static signed char in_room;
 
 extern int fatal_error;
 extern int want_warnings;
@@ -133,9 +129,9 @@ extern const char *fname;
 	int	i;
 	char*	map;
 	struct {
-		xchar room;
-		xchar wall;
-		xchar door;
+		signed char room;
+		signed char wall;
+		signed char door;
 	} corpos;
 }
 
@@ -620,7 +616,7 @@ door_pos	: INTEGER
 
 maze_def	: MAZE_ID ':' string ',' filling
 		  {
-			maze.filling = (schar) $5;
+			maze.filling = (signed char) $5;
 			if (index($3, '.'))
 			    yyerror("Invalid dot ('.') in level name.");
 			if ((int) strlen($3) > 8)

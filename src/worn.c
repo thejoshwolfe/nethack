@@ -1,11 +1,7 @@
-/*	SCCS Id: @(#)worn.c	3.4	2003/01/08	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 STATIC_DCL void FDECL(m_lose_armor, (struct monst *,struct obj *));
-STATIC_DCL void FDECL(m_dowear_type, (struct monst *,long, BOOLEAN_P, BOOLEAN_P));
+STATIC_DCL void FDECL(m_dowear_type, (struct monst *,long, boolean, boolean));
 STATIC_DCL int FDECL(extra_pref, (struct monst *, struct obj *));
 
 const struct worn {
@@ -214,7 +210,7 @@ struct obj *obj;
 boolean on, silently;
 {
     int unseen;
-    uchar mask;
+    unsigned char mask;
     struct obj *otmp;
     int which = (int) objects[obj->otyp].oc_oprop;
 
@@ -256,7 +252,7 @@ boolean on, silently;
 	 default:
 	    if (which <= 8) {	/* 1 thru 8 correspond to MR_xxx mask values */
 		/* FIRE,COLD,SLEEP,DISINT,SHOCK,POISON,ACID,STONE */
-		mask = (uchar) (1 << (which - 1));
+		mask = (unsigned char) (1 << (which - 1));
 		mon->mintrinsics |= (unsigned short) mask;
 	    }
 	    break;
@@ -282,7 +278,7 @@ boolean on, silently;
 	 case POISON_RES:
 	 case ACID_RES:
 	 case STONE_RES:
-	    mask = (uchar) (1 << (which - 1));
+	    mask = (unsigned char) (1 << (which - 1));
 	    /* If the monster doesn't have this resistance intrinsically,
 	       check whether any other worn item confers it.  Note that
 	       we don't currently check for anything conferred via simply

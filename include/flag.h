@@ -15,9 +15,6 @@ struct flag {
 	boolean  altmeta;	/* use ALT keys as META */
 	boolean  amiflush;	/* kill typeahead */
 #endif
-#ifdef	MFLOPPY
-	boolean  asksavedisk;
-#endif
 	boolean  autodig;       /* MRKR: Automatically dig */
 	boolean  autoquiver;	/* Automatically fill quiver */
 	boolean  beginner;
@@ -160,12 +157,12 @@ struct instance_flags {
 	boolean  menu_tab_sep;	/* Use tabs to separate option menu fields */
 	boolean  menu_requested; /* Flag for overloaded use of 'm' prefix
 				  * on some non-move commands */
-	uchar num_pad_mode;
+	unsigned char num_pad_mode;
 	int	menu_headings;	/* ATR for menu headings */
 	int      purge_monsters;	/* # of dead monsters still on fmon list */
 	int *opt_booldup;	/* for duplication of boolean opts in config file */
 	int *opt_compdup;	/* for duplication of compound opts in config file */
-	uchar	bouldersym;	/* symbol for boulder display */
+	unsigned char	bouldersym;	/* symbol for boulder display */
 	boolean travel1;	/* first travel step */
 	coord	travelcc;	/* coordinates for travel_cache */
 #ifdef SIMPLE_MAIL
@@ -183,11 +180,6 @@ struct instance_flags {
 #endif
 #ifdef MENU_COLOR
 	boolean use_menu_color;	/* use color in menus; only if wc_color */
-#endif
-#ifdef MFLOPPY
-	boolean  checkspace;	/* check disk space before writing files */
-				/* (in iflags to allow restore after moving
-				 * to >2GB partition) */
 #endif
 #ifdef LAN_FEATURES
 	boolean lan_mail;	/* mail is initialized */

@@ -96,8 +96,8 @@
 
 /* The hero's skill in various weapons. */
 struct skills {
-	xchar skill;
-	xchar max_skill;
+	signed char skill;
+	signed char max_skill;
 	unsigned short advance;
 };
 
@@ -110,8 +110,8 @@ struct skills {
 
 /* Initial skill matrix structure; used in u_init.c and weapon.c */
 struct def_skill {
-	xchar skill;
-	xchar skmax;
+	signed char skill;
+	signed char skmax;
 };
 
 #endif  /* SKILLS_H */

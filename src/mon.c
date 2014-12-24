@@ -915,10 +915,10 @@ mfndpos(mon, poss, info, flag)
 	long flag;
 {
 	struct permonst *mdat = mon->data;
-	register xchar x,y,nx,ny;
+	register signed char x,y,nx,ny;
 	register int cnt = 0;
-	register uchar ntyp;
-	uchar nowtyp;
+	register unsigned char ntyp;
+	unsigned char nowtyp;
 	boolean wantpool,poolok,lavaok,nodiag;
 	boolean rockok = FALSE, treeok = FALSE, thrudoor;
 	int maxx, maxy;
@@ -1508,7 +1508,7 @@ monstone(mdef)
 register struct monst *mdef;
 {
 	struct obj *otmp, *obj, *oldminvent;
-	xchar x = mdef->mx, y = mdef->my;
+	signed char x = mdef->mx, y = mdef->my;
 	boolean wasinside = FALSE;
 
 	/* we have to make the statue before calling mondead, to be able to
@@ -1857,11 +1857,11 @@ mnexto(mtmp)	/* Make monster mtmp next to you (if possible) */
 boolean
 mnearto(mtmp,x,y,move_other)
 register struct monst *mtmp;
-xchar x, y;
+signed char x, y;
 boolean move_other;	/* make sure mtmp gets to x, y! so move m_at(x, y) */
 {
 	struct monst *othermon = (struct monst *)0;
-	xchar newx, newy;
+	signed char newx, newy;
 	coord mm;
 
 	if ((mtmp->mx == x) && (mtmp->my == y)) return(FALSE);
@@ -2090,7 +2090,7 @@ seemimic(mtmp)
 register struct monst *mtmp;
 {
 	unsigned old_app = mtmp->mappearance;
-	uchar old_ap_type = mtmp->m_ap_type;
+	unsigned char old_ap_type = mtmp->m_ap_type;
 
 	mtmp->m_ap_type = M_AP_NOTHING;
 	mtmp->mappearance = 0;
@@ -2432,7 +2432,7 @@ boolean msg;		/* "The oldmon turns into a newmon!" */
 	newsym(mtmp->mx,mtmp->my);
 
 	if (msg) {
-	    uchar save_mnamelth = mtmp->mnamelth;
+	    unsigned char save_mnamelth = mtmp->mnamelth;
 	    mtmp->mnamelth = 0;
 	    pline("%s turns into %s!", oldname,
 		  mdat == &mons[PM_GREEN_SLIME] ? "slime" :

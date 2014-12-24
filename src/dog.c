@@ -48,7 +48,7 @@ pet_type()
 struct monst *
 make_familiar(otmp,x,y,quietly)
 register struct obj *otmp;
-xchar x, y;
+signed char x, y;
 boolean quietly;
 {
 	struct permonst *pm;
@@ -221,7 +221,7 @@ struct monst *mtmp;
 boolean with_you;
 {
 	struct trap *t;
-	xchar xlocale, ylocale, xyloc, xyflags, wander;
+	signed char xlocale, ylocale, xyloc, xyflags, wander;
 	int num_segs;
 
 	mtmp->nmon = fmon;
@@ -286,7 +286,7 @@ boolean with_you;
 	    mtmp->mlstmv = monstermoves - 1L;
 
 	    /* let monster move a bit on new level (see placement code below) */
-	    wander = (xchar) min(nmv, 8);
+	    wander = (signed char) min(nmv, 8);
 	} else
 	    wander = 0;
 
@@ -584,13 +584,13 @@ boolean pets_only;	/* true for ascension or final escape */
 void
 migrate_to_level(mtmp, tolev, xyloc, cc)
 	register struct monst *mtmp;
-	xchar tolev;	/* destination level */
-	xchar xyloc;	/* MIGR_xxx destination xy location: */
+	signed char tolev;	/* destination level */
+	signed char xyloc;	/* MIGR_xxx destination xy location: */
 	coord *cc;	/* optional destination coordinates */
 {
 	register struct obj *obj;
 	d_level new_lev;
-	xchar xyflags;
+	signed char xyflags;
 	int num_segs = 0;	/* count of worm segments */
 
 	if (mtmp->isshk)
@@ -620,8 +620,8 @@ migrate_to_level(mtmp, tolev, xyloc, cc)
 	migrating_mons = mtmp;
 	newsym(mtmp->mx,mtmp->my);
 
-	new_lev.dnum = ledger_to_dnum((xchar)tolev);
-	new_lev.dlevel = ledger_to_dlev((xchar)tolev);
+	new_lev.dnum = ledger_to_dnum((signed char)tolev);
+	new_lev.dlevel = ledger_to_dlev((signed char)tolev);
 	/* overload mtmp->[mx,my], mtmp->[mux,muy], and mtmp->mtrack[] as */
 	/* destination codes (setup flag bits before altering mx or my) */
 	xyflags = (depth(&new_lev) < depth(&u.uz));	/* 1 => up */

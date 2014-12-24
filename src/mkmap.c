@@ -1,22 +1,18 @@
-/*	SCCS Id: @(#)mkmap.c	3.4	1996/05/23	*/
-/* Copyright (c) J. C. Collet, M. Stephenson and D. Cohrs, 1992   */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "sp_lev.h"
 
 #define HEIGHT	(ROWNO - 1)
 #define WIDTH	(COLNO - 2)
 
-STATIC_DCL void FDECL(init_map,(SCHAR_P));
-STATIC_DCL void FDECL(init_fill,(SCHAR_P,SCHAR_P));
-STATIC_DCL schar FDECL(get_map,(int,int,SCHAR_P));
-STATIC_DCL void FDECL(pass_one,(SCHAR_P,SCHAR_P));
-STATIC_DCL void FDECL(pass_two,(SCHAR_P,SCHAR_P));
-STATIC_DCL void FDECL(pass_three,(SCHAR_P,SCHAR_P));
+STATIC_DCL void FDECL(init_map,(signed char));
+STATIC_DCL void FDECL(init_fill,(signed char,signed char));
+STATIC_DCL signed char FDECL(get_map,(int,int,signed char));
+STATIC_DCL void FDECL(pass_one,(signed char,signed char));
+STATIC_DCL void FDECL(pass_two,(signed char,signed char));
+STATIC_DCL void FDECL(pass_three,(signed char,signed char));
 STATIC_DCL void NDECL(wallify_map);
-STATIC_DCL void FDECL(join_map,(SCHAR_P,SCHAR_P));
-STATIC_DCL void FDECL(finish_map,(SCHAR_P,SCHAR_P,XCHAR_P,XCHAR_P));
+STATIC_DCL void FDECL(join_map,(signed char,signed char));
+STATIC_DCL void FDECL(finish_map,(signed char,signed char,boolean,boolean));
 STATIC_DCL void FDECL(remove_room,(unsigned));
 void FDECL(mkmap, (lev_init *));
 
@@ -26,7 +22,7 @@ static int n_loc_filled;
 
 STATIC_OVL void
 init_map(bg_typ)
-	schar	bg_typ;
+	signed char	bg_typ;
 {
 	register int i,j;
 
@@ -37,7 +33,7 @@ init_map(bg_typ)
 
 STATIC_OVL void
 init_fill(bg_typ, fg_typ)
-	schar	bg_typ, fg_typ;
+	signed char	bg_typ, fg_typ;
 {
 	register int i,j;
 	long limit, count;
@@ -54,10 +50,10 @@ init_fill(bg_typ, fg_typ)
 	}
 }
 
-STATIC_OVL schar
+STATIC_OVL signed char
 get_map(col,row, bg_typ)
 	int col,row;
-	schar	bg_typ;
+	signed char	bg_typ;
 {
 	if (col <= 0 || row < 0 || col > WIDTH || row >= HEIGHT)
 		return bg_typ;
@@ -71,7 +67,7 @@ static int dirs[16] = {
 
 STATIC_OVL void
 pass_one(bg_typ, fg_typ)
-	schar	bg_typ, fg_typ;
+	signed char	bg_typ, fg_typ;
 {
 	register int i,j;
 	short count, dr;
@@ -105,7 +101,7 @@ pass_one(bg_typ, fg_typ)
 
 STATIC_OVL void
 pass_two(bg_typ, fg_typ)
-	schar	bg_typ, fg_typ;
+	signed char	bg_typ, fg_typ;
 {
 	register int i,j;
 	short count, dr;
@@ -129,7 +125,7 @@ pass_two(bg_typ, fg_typ)
 
 STATIC_OVL void
 pass_three(bg_typ, fg_typ)
-	schar	bg_typ, fg_typ;
+	signed char	bg_typ, fg_typ;
 {
 	register int i,j;
 	short count, dr;
@@ -167,7 +163,7 @@ flood_fill_rm(sx, sy, rmno, lit, anyroom)
 {
     register int i;
     int nx;
-    schar fg_typ = levl[sx][sy].typ;
+    signed char fg_typ = levl[sx][sy].typ;
 
     /* back up to find leftmost uninitialized location */
     while (sx > 0 &&
@@ -264,10 +260,7 @@ wallify_map()
 	    }
 }
 
-STATIC_OVL void
-join_map(bg_typ, fg_typ)
-	schar	bg_typ, fg_typ;
-{
+STATIC_OVL void join_map(signed char bg_typ, signed char fg_typ) {
     register struct mkroom *croom, *croom2;
 
     register int i, j;
@@ -335,11 +328,7 @@ joinm:
     }
 }
 
-STATIC_OVL void
-finish_map(fg_typ, bg_typ, lit, walled)
-	schar	fg_typ, bg_typ;
-	boolean	lit, walled;
-{
+STATIC_OVL void finish_map(signed char fg_typ, signed char bg_typ, boolean lit, boolean walled) {
 	int	i, j;
 
 	if(walled) wallify_map();
@@ -438,11 +427,11 @@ void
 mkmap(init_lev)
 	lev_init	*init_lev;
 {
-	schar	bg_typ = init_lev->bg,
+	signed char	bg_typ = init_lev->bg,
 		fg_typ = init_lev->fg;
 	boolean smooth = init_lev->smoothed,
 		join = init_lev->joined;
-	xchar   lit = init_lev->lit,
+	signed char   lit = init_lev->lit,
 		walled = init_lev->walled;
 	int i;
 

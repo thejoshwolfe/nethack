@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)tile2bmp.c	3.4	2002/03/14	*/
-/*   Copyright (c) NetHack PC Development Team 1995                 */
-/*   NetHack may be freely redistributed.  See license for details. */
-
 /*
  * Edit History:
  *
@@ -122,10 +118,9 @@ struct tagBMP{
     RGBQUAD          bmaColors[RGBQUAD_COUNT];
 #endif
 #if (COLORS_IN_USE==16)
-    uchar            packtile[MAX_Y][MAX_X];
+    unsigned char            packtile[MAX_Y][MAX_X];
 #else
-    uchar            packtile[MAX_Y][MAX_X];
-/*    uchar            packtile[TILE_Y][TILE_X]; */
+    unsigned char            packtile[MAX_Y][MAX_X];
 #endif
 } PACK bmp;
 #pragma pack()
@@ -209,7 +204,7 @@ char *argv[];
 		    build_bmih(&bmp.bmih);
 		    for (i = 0; i < MAX_Y; ++i)
 		    	for (j = 0; j < MAX_X; ++j)
-		    		bmp.packtile[i][j] = (uchar)0;
+		    		bmp.packtile[i][j] = (unsigned char)0;
 		    for (i = 0; i < num_colors; i++) {
 			    bmp.bmaColors[i].rgbRed = ColorMap[CM_RED][i];
 			    bmp.bmaColors[i].rgbGreen = ColorMap[CM_GREEN][i];
@@ -329,11 +324,11 @@ pixel (*pixels)[TILE_X];
 #if BITCOUNT==4
 	  x = (cur_x / 2) + xoffset;
 	  bmp.packtile[y][x] = cur_x%2 ?
-		(uchar)(bmp.packtile[y][x] | cur_color) :
-		(uchar)(cur_color<<4);
+		(unsigned char)(bmp.packtile[y][x] | cur_color) :
+		(unsigned char)(cur_color<<4);
 #else
 	  x = cur_x + xoffset;
-	  bmp.packtile[y][x] = (uchar)cur_color;
+	  bmp.packtile[y][x] = (unsigned char)cur_color;
 #endif
 	 }
 	}

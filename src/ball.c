@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)ball.c	3.4	2003/02/03	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* Ball & Chain =============================================================*/
 
 #include "hack.h"
@@ -230,7 +226,7 @@ int already_blind;
 void
 move_bc(before, control, ballx, bally, chainx, chainy)
 int   before, control;
-xchar ballx, bally, chainx, chainy;	/* only matter !before */
+signed char ballx, bally, chainx, chainy;	/* only matter !before */
 {
     if (Blind) {
 	/*
@@ -359,9 +355,9 @@ xchar ballx, bally, chainx, chainy;	/* only matter !before */
 boolean
 drag_ball(x, y, bc_control, ballx, bally, chainx, chainy, cause_delay,
     allow_drag)
-xchar x, y;
+signed char x, y;
 int *bc_control;
-xchar *ballx, *bally, *chainx, *chainy;
+signed char *ballx, *bally, *chainx, *chainy;
 boolean *cause_delay;
 boolean allow_drag;
 {
@@ -382,7 +378,7 @@ boolean allow_drag;
 
 	/* only need to move the chain? */
 	if (carried(uball) || distmin(x, y, uball->ox, uball->oy) <= 2) {
-	    xchar oldchainx = uchain->ox, oldchainy = uchain->oy;
+	    signed char oldchainx = uchain->ox, oldchainy = uchain->oy;
 	    *bc_control = BC_CHAIN;
 	    move_bc(1, *bc_control, *ballx, *bally, *chainx, *chainy);
 	    if (carried(uball)) {
@@ -429,7 +425,7 @@ boolean allow_drag;
 		 *    0
 		 */
 		case 5: {
-		    xchar tempx, tempy, tempx2, tempy2;
+		    signed char tempx, tempy, tempx2, tempy2;
 
 		    /* find position closest to current position of chain */
 		    /* no effect if current position is already OK */
@@ -641,7 +637,7 @@ drag:
  */
 void
 drop_ball(x, y)
-xchar x, y;
+signed char x, y;
 {
     if (Blind) {
 	u.bc_order = bc_order();			/* get the order */
@@ -743,11 +739,9 @@ litter()
 	}
 }
 
-void
-drag_down()
-{
+void drag_down(void) {
 	boolean forward;
-	uchar dragchance = 3;
+	unsigned char dragchance = 3;
 
 	/*
 	 *	Assume that the ball falls forward if:
@@ -786,5 +780,3 @@ drag_down()
 		}
 	}
 }
-
-/*ball.c*/

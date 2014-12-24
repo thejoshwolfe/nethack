@@ -8,9 +8,9 @@
 #define PAY_BROKE (-2)
 
 STATIC_DCL void FDECL(makekops, (coord *));
-STATIC_DCL void FDECL(call_kops, (struct monst *,BOOLEAN_P));
+STATIC_DCL void FDECL(call_kops, (struct monst *,boolean));
 #ifdef OVLB
-STATIC_DCL void FDECL(kops_gone, (BOOLEAN_P));
+STATIC_DCL void FDECL(kops_gone, (boolean));
 #endif /* OVLB */
 
 #define IS_SHOP(x)	(rooms[x].rtype >= SHOPBASE)
@@ -23,8 +23,8 @@ STATIC_VAR long int followmsg;	/* last time of follow message */
 STATIC_DCL void FDECL(setpaid, (struct monst *));
 STATIC_DCL long FDECL(addupbill, (struct monst *));
 STATIC_DCL void FDECL(pacify_shk, (struct monst *));
-STATIC_DCL struct bill_x *FDECL(onbill, (struct obj *, struct monst *, BOOLEAN_P));
-STATIC_DCL struct monst *FDECL(next_shkp, (struct monst *, BOOLEAN_P));
+STATIC_DCL struct bill_x *FDECL(onbill, (struct obj *, struct monst *, boolean));
+STATIC_DCL struct monst *FDECL(next_shkp, (struct monst *, boolean));
 STATIC_DCL long FDECL(shop_debt, (struct eshk *));
 STATIC_DCL char *FDECL(shk_owns, (char *,struct obj *));
 STATIC_DCL char *FDECL(mon_owns, (char *,struct obj *));
@@ -34,13 +34,13 @@ STATIC_DCL void FDECL(pay, (long, struct monst *));
 STATIC_DCL long FDECL(get_cost, (struct obj *, struct monst *));
 STATIC_DCL long FDECL(set_cost, (struct obj *, struct monst *));
 STATIC_DCL const char *FDECL(shk_embellish, (struct obj *, long));
-STATIC_DCL long FDECL(cost_per_charge, (struct monst *,struct obj *,BOOLEAN_P));
+STATIC_DCL long FDECL(cost_per_charge, (struct monst *,struct obj *,boolean));
 STATIC_DCL long FDECL(cheapest_item, (struct monst *));
 STATIC_DCL int FDECL(dopayobj, (struct monst *, struct bill_x *,
-			    struct obj **, int, BOOLEAN_P));
+			    struct obj **, int, boolean));
 STATIC_DCL long FDECL(stolen_container, (struct obj *, struct monst *, long,
-				     BOOLEAN_P));
-STATIC_DCL long FDECL(getprice, (struct obj *,BOOLEAN_P));
+				     boolean));
+STATIC_DCL long FDECL(getprice, (struct obj *,boolean));
 STATIC_DCL void FDECL(shk_names_obj,
 		 (struct monst *,struct obj *,const char *,long,const char *));
 STATIC_DCL struct obj *FDECL(bp_to_obj, (struct bill_x *));
@@ -48,14 +48,14 @@ STATIC_DCL boolean FDECL(inherits, (struct monst *,int,int));
 STATIC_DCL void FDECL(set_repo_loc, (struct eshk *));
 STATIC_DCL boolean NDECL(angry_shk_exists);
 STATIC_DCL void FDECL(rile_shk, (struct monst *));
-STATIC_DCL void FDECL(rouse_shk, (struct monst *,BOOLEAN_P));
-STATIC_DCL void FDECL(remove_damage, (struct monst *, BOOLEAN_P));
+STATIC_DCL void FDECL(rouse_shk, (struct monst *,boolean));
+STATIC_DCL void FDECL(remove_damage, (struct monst *, boolean));
 STATIC_DCL void FDECL(sub_one_frombill, (struct obj *, struct monst *));
-STATIC_DCL void FDECL(add_one_tobill, (struct obj *, BOOLEAN_P));
+STATIC_DCL void FDECL(add_one_tobill, (struct obj *, boolean));
 STATIC_DCL void FDECL(dropped_container, (struct obj *, struct monst *,
-				      BOOLEAN_P));
+				      boolean));
 STATIC_DCL void FDECL(add_to_billobjs, (struct obj *));
-STATIC_DCL void FDECL(bill_box_content, (struct obj *, BOOLEAN_P, BOOLEAN_P,
+STATIC_DCL void FDECL(bill_box_content, (struct obj *, boolean, boolean,
 				     struct monst *));
 #ifdef OVL1
 static boolean FDECL(rob_shop, (struct monst *));
@@ -369,7 +369,7 @@ register boolean nearshop;
 /* x,y is strictly inside shop */
 char
 inside_shop(x, y)
-register xchar x, y;
+register signed char x, y;
 {
 	register char rno;
 
@@ -427,7 +427,7 @@ boolean newlev;
 /* robbery from outside the shop via telekinesis or grappling hook */
 void
 remote_burglary(x, y)
-xchar x, y;
+signed char x, y;
 {
 	struct monst *shkp;
 	struct eshk *eshkp;
@@ -863,7 +863,7 @@ home_shk(shkp, killkops)
 register struct monst *shkp;
 register boolean killkops;
 {
-	register xchar x = ESHK(shkp)->shk.x, y = ESHK(shkp)->shk.y;
+	register signed char x = ESHK(shkp)->shk.x, y = ESHK(shkp)->shk.y;
 
 	(void) mnearto(shkp, x, y, TRUE);
 	level.flags.has_shop = 1;
@@ -1002,9 +1002,9 @@ register struct monst *shkp;
 void
 make_angry_shk(shkp, ox, oy)
 register struct monst *shkp;
-register xchar ox,oy;
+register signed char ox,oy;
 {
-	xchar sx, sy;
+	signed char sx, sy;
 	struct eshk *eshkp = ESHK(shkp);
 
 	/* all pending shop transactions are now "past due" */
@@ -1715,7 +1715,7 @@ STATIC_OVL void
 set_repo_loc(eshkp)
 struct eshk *eshkp;
 {
-	register xchar ox, oy;
+	register signed char ox, oy;
 
 	/* if you're not in this shk's shop room, or if you're in its doorway
 	    or entry spot, then your gear gets dumped all the way inside */
@@ -2400,7 +2400,7 @@ register boolean ininv;
 long
 stolen_value(obj, x, y, peaceful, silent)
 register struct obj *obj;
-register xchar x, y;
+register signed char x, y;
 register boolean peaceful, silent;
 {
 	register long value = 0L, gvalue = 0L;
@@ -2497,7 +2497,7 @@ int deliberate;
 void
 sellobj(obj, x, y)
 register struct obj *obj;
-xchar x, y;
+signed char x, y;
 {
 	register struct monst *shkp;
 	register struct eshk *eshkp;
@@ -2841,7 +2841,7 @@ boolean shk_buying;
 struct monst *
 shkcatch(obj, x, y)
 register struct obj *obj;
-register xchar x, y;
+register signed char x, y;
 {
 	register struct monst *shkp;
 
@@ -2874,7 +2874,7 @@ register xchar x, y;
 
 void
 add_damage(x, y, cost)
-register xchar x, y;
+register signed char x, y;
 long cost;
 {
 	struct damage *tmp_dam;
@@ -2929,12 +2929,12 @@ register boolean croaked;
 	register boolean did_repair = FALSE, saw_door = FALSE;
 	register boolean saw_floor = FALSE, stop_picking = FALSE;
 	register boolean saw_untrap = FALSE;
-	uchar saw_walls = 0;
+	unsigned char saw_walls = 0;
 
 	tmp_dam = level.damagelist;
 	tmp2_dam = 0;
 	while (tmp_dam) {
-	    register xchar x = tmp_dam->place.x, y = tmp_dam->place.y;
+	    register signed char x = tmp_dam->place.x, y = tmp_dam->place.y;
 	    char shops[5];
 	    int disposition;
 
@@ -3021,8 +3021,8 @@ register struct monst *shkp;
 register struct damage *tmp_dam;
 boolean catchup;	/* restoring a level */
 {
-	register xchar x, y, i;
-	xchar litter[9];
+	register signed char x, y, i;
+	signed char litter[9];
 	register struct monst *mtmp;
 	register struct obj *otmp;
 	register struct trap *ttmp;
@@ -3151,9 +3151,9 @@ int
 shk_move(shkp)
 register struct monst *shkp;
 {
-	register xchar gx,gy,omx,omy;
+	register signed char gx,gy,omx,omy;
 	register int udist;
-	register schar appr;
+	register signed char appr;
 	register struct eshk *eshkp = ESHK(shkp);
 	int z;
 	boolean uondoor = FALSE, satdoor, avoid = FALSE, badinv;
@@ -3395,7 +3395,7 @@ boolean cant_mollify;
 	char shops_affected[5];
 	register boolean uinshp = (*u.ushops != '\0');
 	char qbuf[80];
-	register xchar x, y;
+	register signed char x, y;
 	boolean dugwall = !strcmp(dmgstr, "dig into") ||	/* wand */
 			  !strcmp(dmgstr, "damage");		/* pick-axe */
 	struct damage *tmp_dam, *appear_here = 0;
@@ -3542,7 +3542,7 @@ getcad:
 /* called in dokick.c when we kick an object that might be in a store */
 boolean
 costly_spot(x, y)
-register xchar x, y;
+register signed char x, y;
 {
 	register struct monst *shkp;
 
@@ -3561,7 +3561,7 @@ register xchar x, y;
    contains shop goods and shopkeeper is willing & able to speak */
 struct obj *
 shop_object(x, y)
-register xchar x, y;
+register signed char x, y;
 {
     register struct obj *otmp;
     register struct monst *shkp;
@@ -3867,7 +3867,7 @@ struct obj *otmp;
 
 void
 costly_gold(x, y, amount)
-register xchar x, y;
+register signed char x, y;
 register long amount;
 {
 	register long delta;
@@ -3904,7 +3904,7 @@ register long amount;
 /* x,y should always be a door */
 boolean
 block_door(x,y)
-register xchar x, y;
+register signed char x, y;
 {
 	register int roomno = *in_rooms(x, y, SHOPBASE);
 	register struct monst *shkp;
@@ -3936,9 +3936,9 @@ register xchar x, y;
 /* u.ux, u.uy should always be a door */
 boolean
 block_entry(x,y)
-register xchar x, y;
+register signed char x, y;
 {
-	register xchar sx, sy;
+	register signed char sx, sy;
 	register int roomno;
 	register struct monst *shkp;
 
@@ -4000,7 +4000,7 @@ char *buf;
 struct obj *obj;
 {
 	struct monst *shkp;
-	xchar x, y;
+	signed char x, y;
 
 	if (get_obj_location(obj, &x, &y, 0) &&
 	    (obj->unpaid ||

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)engrave.c	3.4	2001/11/04	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "lev.h"
 #include <ctype.h>
@@ -207,7 +203,7 @@ register int x, y;
 
 struct engr *
 engr_at(x, y)
-xchar x, y;
+signed char x, y;
 {
 	register struct engr *ep = head_engr;
 
@@ -227,7 +223,7 @@ xchar x, y;
 int
 sengr_at(s, x, y)
 	const char *s;
-	xchar x, y;
+	signed char x, y;
 {
 	register struct engr *ep = engr_at(x,y);
 
@@ -252,7 +248,7 @@ register int cnt;
 
 void
 wipe_engr_at(x,y,cnt)
-register xchar x,y,cnt;
+register signed char x,y,cnt;
 {
 	register struct engr *ep = engr_at(x,y);
 
@@ -356,7 +352,7 @@ make_engr_at(x,y,s,e_time,e_type)
 register int x,y;
 register const char *s;
 register long e_time;
-register xchar e_type;
+register signed char e_type;
 {
 	register struct engr *ep;
 
@@ -444,7 +440,7 @@ doengrave()
 	boolean ptext = TRUE;	/* TRUE if we must prompt for engrave text */
 	boolean teleengr =FALSE;/* TRUE if we move the old engraving */
 	boolean zapwand = FALSE;/* TRUE if we remove a wand charge */
-	xchar type = DUST;	/* Type of engraving made */
+	signed char type = DUST;	/* Type of engraving made */
 	char buf[BUFSZ];	/* Buffer for final/poly engraving text */
 	char ebuf[BUFSZ];	/* Buffer for initial engraving text */
 	char qbuf[QBUFSZ];	/* Buffer for query text */
@@ -641,7 +637,7 @@ doengrave()
 		    case WAN_POLYMORPH:
 			if(oep)  {
 			    if (!Blind) {
-				type = (xchar)0;	/* random */
+				type = (signed char)0;	/* random */
 				(void) random_engraving(buf);
 			    }
 			    dengr = TRUE;

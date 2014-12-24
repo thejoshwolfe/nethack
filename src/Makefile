@@ -145,7 +145,7 @@ SYSSRC = ../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c
 SYSOBJ = ioctl.o unixmain.o unixtty.o unixunix.o unixres.o
 
-CC = clang
+CC = gcc
 CFLAGS = -I../include -g
 
 # files for a straight tty port using no native windowing system

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)monmove.c	3.4	2002/04/06	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "mfndpos.h"
 #include "artifact.h"
@@ -576,8 +572,8 @@ register struct monst *mtmp;
 register int after;
 {
 	register int appr;
-	xchar gx,gy,nix,niy,chcnt;
-	int chi;	/* could be schar except for stupid Sun-2 compiler */
+	signed char gx,gy,nix,niy,chcnt;
+	int chi;	/* could be signed char except for stupid Sun-2 compiler */
 	boolean likegold=0, likegems=0, likeobjs=0, likemagic=0, conceals=0;
 	boolean likerock=0, can_tunnel=0;
 	boolean can_open=0, can_unlock=0, doorbuster=0;
@@ -585,7 +581,7 @@ register int after;
 	boolean avoid=FALSE;
 	struct permonst *ptr;
 	struct monst *mtoo;
-	schar mmoved = 0;	/* not strictly nec.: chi >= 0 will do */
+	signed char mmoved = 0;	/* not strictly nec.: chi >= 0 will do */
 	long info[9];
 	long flag;
 	int  omx = mtmp->mx, omy = mtmp->my;
@@ -643,7 +639,7 @@ register int after;
 
 	/* and the acquisitive monsters get special treatment */
 	if(is_covetous(ptr)) {
-	    xchar tx = STRAT_GOALX(mtmp->mstrategy),
+	    signed char tx = STRAT_GOALX(mtmp->mstrategy),
 		  ty = STRAT_GOALY(mtmp->mstrategy);
 	    struct monst *intruder = m_at(tx, ty);
 	    /*

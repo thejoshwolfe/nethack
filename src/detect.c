@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)detect.c	3.4	2003/08/13	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * Detection routines, including crystal ball, magic mapping, and search
  * command.
@@ -13,9 +9,9 @@
 extern boolean known;	/* from read.c */
 
 STATIC_DCL void FDECL(do_dknown_of, (struct obj *));
-STATIC_DCL boolean FDECL(check_map_spot, (int,int,CHAR_P,unsigned));
-STATIC_DCL boolean FDECL(clear_stale_map, (CHAR_P,unsigned));
-STATIC_DCL void FDECL(sense_trap, (struct trap *,XCHAR_P,XCHAR_P,int));
+STATIC_DCL boolean FDECL(check_map_spot, (int,int,char,unsigned));
+STATIC_DCL boolean FDECL(clear_stale_map, (char,unsigned));
+STATIC_DCL void FDECL(sense_trap, (struct trap *,signed char,signed char,int));
 STATIC_DCL void FDECL(show_map_spot, (int,int));
 STATIC_PTR void FDECL(findone,(int,int,void *));
 STATIC_PTR void FDECL(openone,(int,int,void *));
@@ -644,7 +640,7 @@ int mclass;			/* monster class, 0 for all */
 STATIC_OVL void
 sense_trap(trap, x, y, src_cursed)
 struct trap *trap;
-xchar x, y;
+signed char x, y;
 int src_cursed;
 {
     if (Hallucination || src_cursed) {
@@ -748,7 +744,7 @@ const char *
 level_distance(where)
 d_level *where;
 {
-    register schar ll = depth(&u.uz) - depth(where);
+    register signed char ll = depth(&u.uz) - depth(where);
     register boolean indun = (u.uz.dnum == where->dnum);
 
     if (ll < 0) {
@@ -1165,9 +1161,9 @@ register int aflag;
    #define GCC_BUG in *conf.h (or adding -DGCC_BUG to CFLAGS in the
    makefile).
  */
-	volatile xchar x, y;
+	volatile signed char x, y;
 #else
-	register xchar x, y;
+	register signed char x, y;
 #endif
 	register struct trap *trap;
 	register struct monst *mtmp;

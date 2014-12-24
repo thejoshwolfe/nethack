@@ -7,11 +7,11 @@
 static boolean did_dig_msg;
 
 STATIC_DCL boolean NDECL(rm_waslit);
-STATIC_DCL void FDECL(mkcavepos, (XCHAR_P,XCHAR_P,int,BOOLEAN_P,BOOLEAN_P));
-STATIC_DCL void FDECL(mkcavearea, (BOOLEAN_P));
-STATIC_DCL int FDECL(dig_typ, (struct obj *,XCHAR_P,XCHAR_P));
+STATIC_DCL void FDECL(mkcavepos, (signed char,signed char,int,boolean,boolean));
+STATIC_DCL void FDECL(mkcavearea, (boolean));
+STATIC_DCL int FDECL(dig_typ, (struct obj *,signed char,signed char));
 STATIC_DCL int NDECL(dig);
-STATIC_DCL schar FDECL(fillholetyp, (int, int));
+STATIC_DCL signed char FDECL(fillholetyp, (int, int));
 STATIC_DCL void NDECL(dig_up_grave);
 
 /* Indices returned by dig_typ() */
@@ -26,7 +26,7 @@ STATIC_DCL void NDECL(dig_up_grave);
 STATIC_OVL boolean
 rm_waslit()
 {
-    register xchar x, y;
+    register signed char x, y;
 
     if(levl[u.ux][u.uy].typ == ROOM && levl[u.ux][u.uy].waslit)
 	return(TRUE);
@@ -42,7 +42,7 @@ rm_waslit()
  */
 STATIC_OVL void
 mkcavepos(x, y, dist, waslit, rockit)
-    xchar x,y;
+    signed char x,y;
     int dist;
     boolean waslit, rockit;
 {
@@ -84,9 +84,9 @@ mkcavearea(rockit)
 register boolean rockit;
 {
     int dist;
-    xchar xmin = u.ux, xmax = u.ux;
-    xchar ymin = u.uy, ymax = u.uy;
-    register xchar i;
+    signed char xmin = u.ux, xmax = u.ux;
+    signed char ymin = u.uy, ymax = u.uy;
+    register signed char i;
     register boolean waslit = rm_waslit();
 
     if(rockit) pline("Crash!  The ceiling collapses around you!");
@@ -129,7 +129,7 @@ register boolean rockit;
 STATIC_OVL int
 dig_typ(otmp, x, y)
 struct obj *otmp;
-xchar x, y;
+signed char x, y;
 {
 	boolean ispick = is_pick(otmp);
 
@@ -206,7 +206,7 @@ STATIC_OVL int
 dig()
 {
 	register struct rm *lev;
-	register xchar dpx = digging.pos.x, dpy = digging.pos.y;
+	register signed char dpx = digging.pos.x, dpy = digging.pos.y;
 	register boolean ispick = uwep && is_pick(uwep);
 	const char *verb =
 	    (!uwep || is_pick(uwep)) ? "dig into" : "chop through";
@@ -437,11 +437,7 @@ holetime()
 }
 
 /* Return typ of liquid to fill a hole with, or ROOM, if no liquid nearby */
-STATIC_OVL
-schar
-fillholetyp(x,y)
-int x, y;
-{
+STATIC_OVL signed char fillholetyp(int x,int y) {
     register int x1, y1;
     int lo_x = max(1,x-1), hi_x = min(x+1,COLNO-1),
 	lo_y = max(0,y-1), hi_y = min(y+1,ROWNO-1);
@@ -648,7 +644,7 @@ boolean pit_only;
 	register struct trap *ttmp = t_at(u.ux, u.uy);
 	struct rm *lev = &levl[u.ux][u.uy];
 	struct obj *boulder_here;
-	schar typ;
+	signed char typ;
 	boolean nohole = !Can_dig_down(&u.uz);
 
 	if ((ttmp && (ttmp->ttyp == MAGIC_PORTAL || nohole)) ||
@@ -1012,7 +1008,7 @@ struct obj *obj;
 void
 watch_dig(mtmp, x, y, zap)
     struct monst *mtmp;
-    xchar x, y;
+    signed char x, y;
     boolean zap;
 {
 	struct rm *lev = &levl[x][y];
@@ -1410,7 +1406,7 @@ rot_corpse(arg, timeout)
 void * arg;
 long timeout;	/* unused */
 {
-	xchar x = 0, y = 0;
+	signed char x = 0, y = 0;
 	struct obj *obj = (struct obj *) arg;
 	boolean on_floor = obj->where == OBJ_FLOOR,
 		in_invent = obj->where == OBJ_INVENT;

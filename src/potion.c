@@ -1521,13 +1521,11 @@ register struct obj *obj;
 	return FALSE;
 }
 
-int
-dodip()
-{
+int dodip(void) {
 	register struct obj *potion, *obj;
 	struct obj *singlepotion;
 	const char *tmp;
-	uchar here;
+	unsigned char here;
 	char allowall[2];
 	short mixture;
 	char qbuf[QBUFSZ], Your_buf[BUFSZ];

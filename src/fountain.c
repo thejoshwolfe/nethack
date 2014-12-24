@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)fountain.c	3.4	2003/03/23	*/
-/*	Copyright Scott R. Turner, srt@ucla, 10/27/86 */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* Code for drinking from fountains. */
 
 #include "hack.h"
@@ -147,7 +143,7 @@ dofindgem() /* Find a gem in the sparkling waters. */
 
 void
 dryup(x, y, isyou)
-xchar x, y;
+signed char x, y;
 boolean isyou;
 {
 	if (IS_FOUNTAIN(levl[x][y].typ) &&

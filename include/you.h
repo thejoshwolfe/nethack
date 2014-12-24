@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)you.h	3.4	2000/05/21	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef YOU_H
 #define YOU_H
 
@@ -21,9 +17,9 @@ struct RoleName {
 
 struct RoleAdvance {
 	/* "fix" is the fixed amount, "rnd" is the random amount */
-	xchar infix, inrnd;	/* at character initialization */
-	xchar lofix, lornd;	/* gained per level <  urole.xlev */
-	xchar hifix, hirnd;	/* gained per level >= urole.xlev */
+	signed char infix, inrnd;	/* at character initialization */
+	signed char lofix, lornd;	/* gained per level <  urole.xlev */
+	signed char hifix, hirnd;	/* gained per level >= urole.xlev */
 };
 
 struct u_have {
@@ -108,12 +104,12 @@ struct Role {
 #define ROLE_CHAOTIC	AM_CHAOTIC
 
 	/*** Attributes (from attrib.c and exper.c) ***/
-	xchar attrbase[A_MAX];	/* lowest initial attributes */
-	xchar attrdist[A_MAX];	/* distribution of initial attributes */
+	signed char attrbase[A_MAX];	/* lowest initial attributes */
+	signed char attrdist[A_MAX];	/* distribution of initial attributes */
 	struct RoleAdvance hpadv; /* hit point advancement */
 	struct RoleAdvance enadv; /* energy advancement */
-	xchar xlev;		/* cutoff experience level */
-	xchar initrecord;	/* initial alignment record */
+	signed char xlev;		/* cutoff experience level */
+	signed char initrecord;	/* initial alignment record */
 
 	/*** Spell statistics (from spell.c) ***/
 	int spelbase;		/* base spellcasting penalty */
@@ -170,8 +166,8 @@ struct Race {
 	      hatemask;		/* bit mask of always hostile */
 
 	/*** Attributes ***/
-	xchar attrmin[A_MAX];	/* minimum allowable attribute */
-	xchar attrmax[A_MAX];	/* maximum allowable attribute */
+	signed char attrmin[A_MAX];	/* minimum allowable attribute */
+	signed char attrmax[A_MAX];	/* maximum allowable attribute */
 	struct RoleAdvance hpadv; /* hit point advancement */
 	struct RoleAdvance enadv; /* energy advancement */
 
@@ -226,14 +222,14 @@ extern const struct Align aligns[];	/* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
-	xchar ux, uy;
-	schar dx, dy, dz;	/* direction of move (or zap or ... ) */
-	schar di;		/* direction of FF */
-	xchar tx, ty;		/* destination of travel */
-	xchar ux0, uy0;		/* initial position FF */
+	signed char ux, uy;
+	signed char dx, dy, dz;	/* direction of move (or zap or ... ) */
+	signed char di;		/* direction of FF */
+	signed char tx, ty;		/* destination of travel */
+	signed char ux0, uy0;		/* initial position FF */
 	d_level uz, uz0;	/* your level on this and the previous turn */
 	d_level utolev;		/* level monster teleported you to, or uz */
-	uchar utotype;		/* bitmask of goto_level() flags for utolev */
+	unsigned char utotype;		/* bitmask of goto_level() flags for utolev */
 	boolean umoved;		/* changed map location (post-move) */
 	int last_str_turn;	/* 0: none, 1: half turn, 2: full turn */
 				/* +: turn right, -: turn left */
@@ -316,17 +312,17 @@ struct you {
 #define A_ORIGINAL	1
 #define A_CURRENT	0
 	aligntyp ualignbase[CONVERT];	/* for ualign conversion record */
-	schar uluck, moreluck;		/* luck and luck bonus */
+	signed char uluck, moreluck;		/* luck and luck bonus */
 #define Luck	(u.uluck + u.moreluck)
 #define LUCKADD		3	/* added value when carrying luck stone */
 #define LUCKMAX		10	/* on moonlit nights 11 */
 #define LUCKMIN		(-10)
-	schar	uhitinc;
-	schar	udaminc;
-	schar	uac;
-	uchar	uspellprot;		/* protection by SPE_PROTECTION */
-	uchar	usptime;		/* #moves until uspellprot-- */
-	uchar	uspmtime;		/* #moves between uspellprot-- */
+	signed char	uhitinc;
+	signed char	udaminc;
+	signed char	uac;
+	unsigned char	uspellprot;		/* protection by SPE_PROTECTION */
+	unsigned char	usptime;		/* #moves until uspellprot-- */
+	unsigned char	uspmtime;		/* #moves between uspellprot-- */
 	int	uhp,uhpmax;
 	int	uen, uenmax;		/* magical energy - M. Stephenson */
 	int ugangr;			/* if the gods are angry at you */
@@ -353,7 +349,7 @@ struct you {
 
 	int	weapon_slots;		/* unused skill slots */
 	int	skills_advanced;		/* # of advances made so far */
-	xchar	skill_record[P_SKILL_LIMIT];	/* skill advancements */
+	signed char	skill_record[P_SKILL_LIMIT];	/* skill advancements */
 	struct skills weapon_skills[P_NUM_SKILLS];
 	boolean twoweap;		/* KMH -- Using two-weapon combat */
 

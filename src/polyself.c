@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)polyself.c	3.4	2003/01/08	*/
-/*	Copyright (C) 1987, 1988, 1989 by Ken Arromdee */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * Polymorph self routine.
  *
@@ -913,14 +909,12 @@ dosummon()
 	return(1);
 }
 
-int
-dogaze()
-{
+int dogaze(void) {
 	register struct monst *mtmp;
 	int looked = 0;
 	char qbuf[QBUFSZ];
 	int i;
-	uchar adtyp = 0;
+	unsigned char adtyp = 0;
 
 	for (i = 0; i < NATTK; i++) {
 	    if(youmonst.data->mattk[i].aatyp == AT_GAZE) {

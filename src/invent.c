@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)invent.c	3.4	2003/12/02	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #define NOINVSYM	'#'
@@ -21,9 +17,9 @@ STATIC_PTR int FDECL(ckunpaid,(struct obj *));
 STATIC_PTR int FDECL(ckvalidcat,(struct obj *));
 #ifdef DUMP_LOG
 static char FDECL(display_pickinv,
-		 (const char *,BOOLEAN_P, long *, BOOLEAN_P));
+		 (const char *,boolean, long *, boolean));
 #else
-static char FDECL(display_pickinv, (const char *,BOOLEAN_P, long *));
+static char FDECL(display_pickinv, (const char *,boolean, long *));
 #endif /* DUMP_LOG */
 #ifdef OVLB
 STATIC_DCL boolean FDECL(this_type_only, (struct obj *));
@@ -754,7 +750,7 @@ register const char *let,*word;
 	char lets[BUFSZ], altlets[BUFSZ], *ap;
 	register int foo = 0;
 	register char *bp = buf;
-	xchar allowcnt = 0;	/* 0, 1 or 2 */
+	signed char allowcnt = 0;	/* 0, 1 or 2 */
 #ifndef GOLDOBJ
 	boolean allowgold = FALSE;	/* can't use gold because they don't have any */
 #endif
@@ -762,7 +758,7 @@ register const char *let,*word;
 	boolean allowall = FALSE;
 	boolean allownone = FALSE;
 	boolean useboulder = FALSE;
-	xchar foox = 0;
+	signed char foox = 0;
 	long cnt;
 	boolean prezero = FALSE;
 	long dummymask;
@@ -1463,7 +1459,7 @@ fully_identify_obj(otmp)
 struct obj *otmp;
 {
     makeknown(otmp->otyp);
-    if (otmp->oartifact) discover_artifact((xchar)otmp->oartifact);
+    if (otmp->oartifact) discover_artifact((signed char)otmp->oartifact);
     otmp->known = otmp->dknown = otmp->bknown = otmp->rknown = 1;
     if (otmp->otyp == EGG && otmp->corpsenm != NON_PM)
 	learn_egg_type(otmp->corpsenm);

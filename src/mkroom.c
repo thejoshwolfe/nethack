@@ -13,7 +13,7 @@
 
 #ifdef OVLB
 STATIC_DCL boolean FDECL(isbig, (struct mkroom *));
-STATIC_DCL struct mkroom * FDECL(pick_room,(BOOLEAN_P));
+STATIC_DCL struct mkroom * FDECL(pick_room,(boolean));
 STATIC_DCL void NDECL(mkshop), FDECL(mkzoo,(int)), NDECL(mkswamp);
 STATIC_DCL void NDECL(mktemple);
 STATIC_DCL coord * FDECL(shrine_pos, (int));
@@ -242,7 +242,7 @@ struct mkroom *sroom;
 		do {	/* don't place throne on top of stairs */
 			(void) somexy(sroom, &mm);
 			tx = mm.x; ty = mm.y;
-		} while (occupied((xchar)tx, (xchar)ty) && --i > 0);
+		} while (occupied((signed char)tx, (signed char)ty) && --i > 0);
 	    throne_placed:
 		/* TODO: try to ensure the enthroned monster is an M2_PRINCE */
 		break;
@@ -565,7 +565,7 @@ register struct mkroom *croom;
 boolean
 inside_room(croom, x, y)
 struct mkroom *croom;
-xchar x, y;
+signed char x, y;
 {
 	return((boolean)(x >= croom->lx-1 && x <= croom->hx+1 &&
 		y >= croom->ly-1 && y <= croom->hy+1));
@@ -631,7 +631,7 @@ you_lose:	;
 
 struct mkroom *
 search_special(type)
-schar type;
+signed char type;
 {
 	register struct mkroom *croom;
 

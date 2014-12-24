@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)artifact.h 3.4	1995/05/31	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef ARTIFACT_H
 #define ARTIFACT_H
 
@@ -43,7 +39,7 @@ struct artifact {
 	unsigned long cspfx;	/* special effect just from carrying obj */
 	unsigned long mtype;	/* monster type, symbol, or flag */
 	struct attack attk, defn, cary;
-	uchar	    inv_prop;	/* property obtained by invoking artifact */
+	unsigned char	    inv_prop;	/* property obtained by invoking artifact */
 	aligntyp    alignment;	/* alignment of bequeathing gods */
 	short	    role;	/* character role associated with */
 	short	    race;	/* character race associated with */

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)light.c	3.4	1997/04/10	*/
-/* Copyright (c) Dean Luick, 1994					*/
-/* NetHack may be freely redistributed.  See license for details.	*/
-
 #include "hack.h"
 #include "lev.h"	/* for checking save modes */
 
@@ -47,7 +43,7 @@
 static light_source *light_base = 0;
 
 STATIC_DCL void FDECL(write_ls, (int, light_source *));
-STATIC_DCL int FDECL(maybe_write_ls, (int, int, BOOLEAN_P));
+STATIC_DCL int FDECL(maybe_write_ls, (int, int, boolean));
 
 /* imported from vision.c, for small circles */
 extern char circle_data[];
@@ -57,7 +53,7 @@ extern char circle_start[];
 /* Create a new light source.  */
 void
 new_light_source(x, y, range, type, id)
-    xchar x, y;
+    signed char x, y;
     int range, type;
     void * id;
 {

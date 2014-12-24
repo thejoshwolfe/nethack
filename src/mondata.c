@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)mondata.c	3.4	2003/06/02	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "eshk.h"
 #include "epri.h"
@@ -131,13 +127,9 @@ struct monst *mon;
 
 /* TRUE iff monster can be blinded by the given attack */
 /* Note: may return TRUE when mdef is blind (e.g. new cream-pie attack) */
-boolean
-can_blnd(magr, mdef, aatyp, obj)
-struct monst *magr;		/* NULL == no specific aggressor */
-struct monst *mdef;
-uchar aatyp;
-struct obj *obj;		/* aatyp == AT_WEAP, AT_SPIT */
-{
+/* NULL == no specific aggressor */
+/* aatyp == AT_WEAP, AT_SPIT */
+boolean can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, struct obj *obj) {
 	boolean is_you = (mdef == &youmonst);
 	boolean check_visor = FALSE;
 	struct obj *o;
@@ -352,7 +344,7 @@ max_passive_dmg(mdef, magr)
     register struct monst *mdef, *magr;
 {
     int	i, dmg = 0;
-    uchar adtyp;
+    unsigned char adtyp;
 
     for(i = 0; i < NATTK; i++)
 	if(mdef->data->mattk[i].aatyp == AT_NONE ||

@@ -21,7 +21,7 @@ extern int nsubroom;
 extern int occtime;
 
 #define WARNCOUNT 6			/* number of different warning levels */
-extern uchar warnsyms[WARNCOUNT];
+extern unsigned char warnsyms[WARNCOUNT];
 
 extern int x_maze_max, y_maze_max;
 extern int otg_temp;
@@ -53,9 +53,9 @@ extern struct dgn_topology {		/* special dungeon levels for speed */
     d_level	d_fire_level;
     d_level	d_air_level;
     d_level	d_astral_level;
-    xchar	d_tower_dnum;
-    xchar	d_sokoban_dnum;
-    xchar	d_mines_dnum, d_quest_dnum;
+    signed char	d_tower_dnum;
+    signed char	d_sokoban_dnum;
+    signed char	d_mines_dnum, d_quest_dnum;
     d_level	d_qstart_level, d_qlocate_level, d_nemesis_level;
     d_level	d_knox_level;
 } dungeon_topology;
@@ -180,9 +180,9 @@ extern const char nul[];
 extern char lock[];
 
 extern const char sdir[], ndir[];
-extern const schar xdir[], ydir[], zdir[];
+extern const signed char xdir[], ydir[], zdir[];
 
-extern schar tbx, tby;		/* set in mthrowu.c */
+extern signed char tbx, tby;		/* set in mthrowu.c */
 
 extern struct multishot { int n, i; short o; boolean s; } m_shot;
 
@@ -214,9 +214,9 @@ extern struct spell spl_book[];	/* sized in decl.c */
 extern const int zapcolors[];
 
 extern const char def_oc_syms[MAXOCLASSES];	/* default class symbols */
-extern uchar oc_syms[MAXOCLASSES];		/* current class symbols */
+extern unsigned char oc_syms[MAXOCLASSES];		/* current class symbols */
 extern const char def_monsyms[MAXMCLASSES];	/* default class symbols */
-extern uchar monsyms[MAXMCLASSES];		/* current class symbols */
+extern unsigned char monsyms[MAXMCLASSES];		/* current class symbols */
 
 #include "obj.h"
 extern struct obj *invent,
@@ -245,9 +245,9 @@ extern struct monst youmonst;	/* init'd and defined in decl.c */
 extern struct monst *mydogs, *migrating_mons;
 
 extern struct mvitals {
-	uchar	born;
-	uchar	died;
-	uchar	mvflags;
+	unsigned char	born;
+	unsigned char	died;
+	unsigned char	mvflags;
 } mvitals[NUMMONS];
 
 extern struct c_color_names {

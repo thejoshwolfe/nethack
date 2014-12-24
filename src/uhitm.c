@@ -240,11 +240,11 @@ struct monst *mtmp;
 	}
 }
 
-schar
+signed char
 find_roll_to_hit(mtmp)
 register struct monst *mtmp;
 {
-	schar tmp;
+	signed char tmp;
 	int tmp2;
 
 	tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc +
@@ -307,7 +307,7 @@ boolean
 attack(mtmp)
 register struct monst *mtmp;
 {
-	schar tmp;
+	signed char tmp;
 	register struct permonst *mdat = mtmp->data;
 
 	/* This section of code provides protection against accidentally
@@ -766,7 +766,7 @@ int thrown;
 			if (obj == uwep) unweapon = TRUE;
 			if (obj->spe && obj->corpsenm >= LOW_PM) {
 			    if (obj->quan < 5)
-				change_luck((schar) -(obj->quan));
+				change_luck((signed char) -(obj->quan));
 			    else
 				change_luck(-5);
 			}
@@ -821,7 +821,7 @@ int thrown;
 		    case CREAM_PIE:
 		    case BLINDING_VENOM:
 			mon->msleeping = 0;
-			if (can_blnd(&youmonst, mon, (uchar)
+			if (can_blnd(&youmonst, mon, (unsigned char)
 				    (obj->otyp == BLINDING_VENOM
 				     ? AT_SPIT : AT_WEAP), obj)) {
 			    if (Blind) {
@@ -2139,13 +2139,7 @@ use_weapon:
 
 /*	Special (passive) attacks on you by monsters done here.		*/
 
-int
-passive(mon, mhit, malive, aatyp)
-register struct monst *mon;
-register boolean mhit;
-register int malive;
-uchar aatyp;
-{
+int passive(struct monst *mon, boolean mhit, int malive, unsigned char aatyp) {
 	register struct permonst *ptr = mon->data;
 	register int i, tmp;
 

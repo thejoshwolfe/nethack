@@ -19,9 +19,9 @@ typedef struct tty_mi {
 /* descriptor for tty-based windows */
 struct WinDesc {
     int flags;			/* window flags */
-    xchar type;			/* type of window */
+    signed char type;			/* type of window */
     boolean active;		/* true if window is active */
-    uchar offx, offy;		/* offset from topleft of display */
+    unsigned char offx, offy;		/* offset from topleft of display */
     short rows, cols;		/* dimensions */
     short curx, cury;		/* current cursor position */
     short maxrow, maxcol;	/* the maximum size used -- for MENU wins */
@@ -45,8 +45,8 @@ struct WinDesc {
 
 /* descriptor for tty-based displays -- all the per-display data */
 struct DisplayDesc {
-    uchar rows, cols;		/* width and height of tty display */
-    uchar curx, cury;		/* current cursor position on the screen */
+    unsigned char rows, cols;		/* width and height of tty display */
+    unsigned char curx, cury;		/* current cursor position on the screen */
     int color;			/* current color */
     int attrs;			/* attributes in effect */
     int toplin;			/* flag for topl stuff */
@@ -89,7 +89,7 @@ extern void FDECL(xwaitforspace, (const char *));
 
 extern void FDECL(tty_startup,(int*, int*));
 extern void NDECL(tty_shutdown);
-extern void FDECL(xputc, (CHAR_P));
+extern void FDECL(xputc, (char));
 extern void FDECL(xputs, (const char *));
 #if defined(SCREEN_VGA) || defined(SCREEN_8514)
 extern void FDECL(xputg, (int, int, unsigned));
@@ -146,18 +146,18 @@ extern void FDECL(tty_suspend_nhwindows, (const char *));
 extern void NDECL(tty_resume_nhwindows);
 extern winid FDECL(tty_create_nhwindow, (int));
 extern void FDECL(tty_clear_nhwindow, (winid));
-extern void FDECL(tty_display_nhwindow, (winid, BOOLEAN_P));
+extern void FDECL(tty_display_nhwindow, (winid, boolean));
 extern void FDECL(tty_dismiss_nhwindow, (winid));
 extern void FDECL(tty_destroy_nhwindow, (winid));
 extern void FDECL(tty_curs, (winid,int,int));
 extern void FDECL(tty_putstr, (winid, int, const char *));
-extern void FDECL(tty_display_file, (const char *, BOOLEAN_P));
+extern void FDECL(tty_display_file, (const char *, boolean));
 extern void FDECL(tty_start_menu, (winid));
 extern void FDECL(tty_add_menu, (winid,int,const ANY_P *,
-			CHAR_P,CHAR_P,int,const char *, BOOLEAN_P));
+			char,char,int,const char *, boolean));
 extern void FDECL(tty_end_menu, (winid, const char *));
 extern int FDECL(tty_select_menu, (winid, int, MENU_ITEM_P **));
-extern char FDECL(tty_message_menu, (CHAR_P,int,const char *));
+extern char FDECL(tty_message_menu, (char,int,const char *));
 extern void NDECL(tty_update_inventory);
 extern void NDECL(tty_mark_synch);
 extern void NDECL(tty_wait_synch);
@@ -167,14 +167,14 @@ extern void FDECL(tty_cliparound, (int, int));
 #ifdef POSITIONBAR
 extern void FDECL(tty_update_positionbar, (char *));
 #endif
-extern void FDECL(tty_print_glyph, (winid,XCHAR_P,XCHAR_P,int));
+extern void FDECL(tty_print_glyph, (winid,signed char,signed char,int));
 extern void FDECL(tty_raw_print, (const char *));
 extern void FDECL(tty_raw_print_bold, (const char *));
 extern int NDECL(tty_nhgetch);
 extern int FDECL(tty_nh_poskey, (int *, int *, int *));
 extern void NDECL(tty_nhbell);
 extern int NDECL(tty_doprev_message);
-extern char FDECL(tty_yn_function, (const char *, const char *, CHAR_P));
+extern char FDECL(tty_yn_function, (const char *, const char *, char));
 extern void FDECL(tty_getlin, (const char *,char *));
 extern int NDECL(tty_get_ext_cmd);
 extern void FDECL(tty_number_pad, (int));

@@ -10,16 +10,16 @@ static int NDECL(mgetc);
 #endif
 STATIC_DCL void NDECL(find_lev_obj);
 STATIC_DCL void FDECL(restlevchn, (int));
-STATIC_DCL void FDECL(restdamage, (int,BOOLEAN_P));
-STATIC_DCL struct obj *FDECL(restobjchn, (int,BOOLEAN_P,BOOLEAN_P));
-STATIC_DCL struct monst *FDECL(restmonchn, (int,BOOLEAN_P));
+STATIC_DCL void FDECL(restdamage, (int,boolean));
+STATIC_DCL struct obj *FDECL(restobjchn, (int,boolean,boolean));
+STATIC_DCL struct monst *FDECL(restmonchn, (int,boolean));
 STATIC_DCL struct fruit *FDECL(loadfruitchn, (int));
 STATIC_DCL void FDECL(freefruitchn, (struct fruit *));
 STATIC_DCL void FDECL(ghostfruit, (struct obj *));
 STATIC_DCL boolean FDECL(restgamestate, (int, unsigned int *, unsigned int *));
 STATIC_DCL void FDECL(restlevelstate, (unsigned int, unsigned int));
-STATIC_DCL int FDECL(restlevelfile, (int,XCHAR_P));
-STATIC_DCL void FDECL(reset_oattached_mids, (BOOLEAN_P));
+STATIC_DCL int FDECL(restlevelfile, (int,signed char));
+STATIC_DCL void FDECL(reset_oattached_mids, (boolean));
 
 /*
  * Save a mapping of IDs from ghost levels to the current level.  This
@@ -467,15 +467,7 @@ unsigned int stuckid, steedid;	/* STEED */
 #endif
 }
 
-/*ARGSUSED*/	/* fd used in MFLOPPY only */
-STATIC_OVL int
-restlevelfile(fd, ltmp)
-register int fd;
-xchar ltmp;
-#if defined(macintosh) && (defined(__SC__) || defined(__MRC__))
-# pragma unused(fd)
-#endif
-{
+STATIC_OVL int restlevelfile(int fd, signed char ltmp) {
 	register int nfd;
 	char whynot[BUFSZ];
 
@@ -529,7 +521,7 @@ dorecover(fd)
 register int fd;
 {
 	unsigned int stuckid = 0, steedid = 0;	/* not a register */
-	xchar ltmp;
+	signed char ltmp;
 	int rtmp;
 	struct obj *otmp;
 
@@ -538,7 +530,7 @@ register int fd;
 #endif
 
 	restoring = TRUE;
-	getlev(fd, 0, (xchar)0, FALSE);
+	getlev(fd, 0, (signed char)0, FALSE);
 	if (!restgamestate(fd, &stuckid, &steedid)) {
 		display_nhwindow(WIN_MESSAGE, TRUE);
 		savelev(-1, 0, FREE_SAVE);	/* discard current level */
@@ -581,7 +573,7 @@ register int fd;
 #ifdef STORE_PLNAME_IN_FILE
 	mread(fd, (void *) plname, PL_NSIZ);
 #endif
-	getlev(fd, 0, (xchar)0, FALSE);
+	getlev(fd, 0, (signed char)0, FALSE);
 	(void) close(fd);
 
 	if (!wizard && !discover)
@@ -641,14 +633,14 @@ char *reason;
 void
 getlev(fd, pid, lev, ghostly)
 int fd, pid;
-xchar lev;
+signed char lev;
 boolean ghostly;
 {
 	register struct trap *trap;
 	register struct monst *mtmp;
 	branch *br;
 	int hpid;
-	xchar dlvl;
+	signed char dlvl;
 	int x, y;
 #ifdef TOS
 	short tlev;
@@ -688,7 +680,7 @@ boolean ghostly;
 #ifdef RLECOMP
 	{
 		short	i, j;
-		uchar	len;
+		unsigned char	len;
 		struct rm r;
 		
 		i = 0; j = 0; len = 0;
@@ -699,7 +691,7 @@ boolean ghostly;
 			    len -= 1;
 			    j += 1;
 			} else {
-			    mread(fd, (void *)&len, sizeof(uchar));
+			    mread(fd, (void *)&len, sizeof(unsigned char));
 			    mread(fd, (void *)&r, sizeof(struct rm));
 			}
 		    }

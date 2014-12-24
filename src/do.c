@@ -19,7 +19,6 @@ STATIC_DCL int FDECL(menu_drop, (int));
 #ifdef OVL2
 STATIC_DCL int NDECL(currentlevel_rewrite);
 STATIC_DCL void NDECL(final_level);
-/* static boolean FDECL(badspot, (XCHAR_P,XCHAR_P)); */
 #endif
 
 #ifdef OVLB
@@ -63,7 +62,7 @@ boolean pushing;
 	else if (!Is_waterlevel(&u.uz) && (is_pool(rx,ry) || is_lava(rx,ry))) {
 	    boolean lava = is_lava(rx,ry), fills_up;
 	    const char *what = waterbody_name(rx,ry);
-	    schar ltyp = levl[rx][ry].typ;
+	    signed char ltyp = levl[rx][ry].typ;
 	    int chance = rn2(10);		/* water: 90%; lava: 10% */
 	    fills_up = lava ? chance == 0 : chance != 0;
 
@@ -935,23 +934,9 @@ save_currentstate()
 }
 #endif
 
-/*
-static boolean
-badspot(x, y)
-register xchar x, y;
-{
-	return((levl[x][y].typ != ROOM && levl[x][y].typ != AIR &&
-			 levl[x][y].typ != CORR) || MON_AT(x, y));
-}
-*/
-
-void
-goto_level(newlevel, at_stairs, falling, portal)
-d_level *newlevel;
-boolean at_stairs, falling, portal;
-{
+void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean portal) {
 	int fd, l_idx;
-	xchar new_ledger;
+	signed char new_ledger;
 	boolean cant_go_back,
 		up = (depth(newlevel) < depth(&u.uz)),
 		newdungeon = (u.uz.dnum != newlevel->dnum),
@@ -1130,7 +1115,7 @@ boolean at_stairs, falling, portal;
 		} else {
 		    if (newdungeon) {
 			if (Is_stronghold(&u.uz)) {
-			    register xchar x, y;
+			    register signed char x, y;
 
 			    do {
 				x = (COLNO - 2 - rnd(5));
@@ -1484,7 +1469,7 @@ struct obj *corpse;
 {
     struct monst *mtmp, *mcarry;
     boolean is_uwep, chewed;
-    xchar where;
+    signed char where;
     char *cname, cname_buf[BUFSZ];
     struct obj *container = (struct obj *)0;
     int container_where = 0;

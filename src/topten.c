@@ -45,15 +45,15 @@ struct toptenentry {
 
 STATIC_DCL void FDECL(topten_print, (const char *));
 STATIC_DCL void FDECL(topten_print_bold, (const char *));
-STATIC_DCL xchar FDECL(observable_depth, (d_level *));
+STATIC_DCL signed char FDECL(observable_depth, (d_level *));
 STATIC_DCL void NDECL(outheader);
-STATIC_DCL void FDECL(outentry, (int,struct toptenentry *,BOOLEAN_P));
+STATIC_DCL void FDECL(outentry, (int,struct toptenentry *,boolean));
 STATIC_DCL void FDECL(readentry, (FILE *,struct toptenentry *));
 STATIC_DCL void FDECL(writeentry, (FILE *,struct toptenentry *));
 STATIC_DCL void FDECL(free_ttlist, (struct toptenentry *));
-STATIC_DCL int FDECL(classmon, (char *,BOOLEAN_P));
+STATIC_DCL int FDECL(classmon, (char *,boolean));
 STATIC_DCL int FDECL(score_wanted,
-		(BOOLEAN_P, int,struct toptenentry *,int,const char **,int));
+		(boolean, int,struct toptenentry *,int,const char **,int));
 #ifdef NO_SCAN_BRACK
 STATIC_DCL void FDECL(nsb_mung_line,(char*));
 STATIC_DCL void FDECL(nsb_unmung_line,(char*));
@@ -88,7 +88,7 @@ const char *x;
 	    putstr(toptenwin, ATR_BOLD, x);
 }
 
-STATIC_OVL xchar
+STATIC_OVL signed char
 observable_depth(lev)
 d_level *lev;
 {

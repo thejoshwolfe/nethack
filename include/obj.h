@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)obj.h	3.4	2002/01/07	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef OBJ_H
 #define OBJ_H
 
@@ -23,12 +19,12 @@ struct obj {
 
 	struct obj *cobj;	/* contents list for containers */
 	unsigned o_id;
-	xchar ox,oy;
+	signed char ox,oy;
 	short otyp;		/* object class number */
 	unsigned owt;
 	long quan;		/* number of items */
 
-	schar spe;		/* quality of weapon, armor or ring (+ or -)
+	signed char spe;		/* quality of weapon, armor or ring (+ or -)
 				   number of charges for wand ( >= -1 )
 				   marks your eggs, spinach tins
 				   royal coffers for a court ( == 2)
@@ -42,7 +38,7 @@ struct obj {
 	char	invlet;		/* designation in inventory */
 	char	oartifact;	/* artifact array index */
 
-	xchar where;		/* where the object thinks it is */
+	signed char where;		/* where the object thinks it is */
 #define OBJ_FREE	0		/* object not attached to anything */
 #define OBJ_FLOOR	1		/* object on floor */
 #define OBJ_CONTAINED	2		/* object in a container */
@@ -52,7 +48,7 @@ struct obj {
 #define OBJ_BURIED	6		/* object buried */
 #define OBJ_ONBILL	7		/* object on shk bill */
 #define NOBJ_STATES	8
-	xchar timed;		/* # of fuses (timers) attached to this obj */
+	signed char timed;		/* # of fuses (timers) attached to this obj */
 
 	Bitfield(cursed,1);
 	Bitfield(blessed,1);
@@ -100,7 +96,7 @@ struct obj {
 	unsigned oeaten;	/* nutrition left in food, if partly eaten */
 	long age;		/* creation date */
 
-	uchar onamelth;		/* length of name (following oxlth) */
+	unsigned char onamelth;		/* length of name (following oxlth) */
 	short oxlth;		/* length of following data */
 	/* in order to prevent alignment problems oextra should
 	   be (or follow) a long int */

@@ -2,7 +2,7 @@
 
 STATIC_DCL const char *NDECL(dev_name);
 STATIC_DCL void FDECL(get_mplname, (struct monst *, char *));
-STATIC_DCL void FDECL(mk_mplayer_armor, (struct monst *, SHORT_P));
+STATIC_DCL void FDECL(mk_mplayer_armor, (struct monst *, short));
 
 /* These are the names of those who
  * contributed to the development of NetHack 3.2/3.3/3.4.
@@ -107,7 +107,7 @@ short typ;
 struct monst *
 mk_mplayer(ptr, x, y, special)
 register struct permonst *ptr;
-xchar x, y;
+signed char x, y;
 register boolean special;
 {
 	register struct monst *mtmp;
@@ -306,7 +306,7 @@ boolean special;
 		/* if pos not found in 50 tries, don't bother to continue */
 		if(tryct > 50) return;
 
-		(void) mk_mplayer(&mons[pm], (xchar)x, (xchar)y, special);
+		(void) mk_mplayer(&mons[pm], (signed char)x, (signed char)y, special);
 		num--;
 	}
 }

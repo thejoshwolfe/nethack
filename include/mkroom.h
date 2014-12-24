@@ -1,19 +1,15 @@
-/*	SCCS Id: @(#)mkroom.h	3.4	1992/11/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef MKROOM_H
 #define MKROOM_H
 
 /* mkroom.h - types and structures for room and shop initialization */
 
 struct mkroom {
-	schar lx,hx,ly,hy;	/* usually xchar, but hx may be -1 */
-	schar rtype;		/* type of room (zoo, throne, etc...) */
-	schar rlit;		/* is the room lit ? */
-	schar doorct;		/* door count */
-	schar fdoor;		/* index for the first door of the room */
-	schar nsubrooms;	/* number of subrooms */
+	signed char lx,hx,ly,hy;	/* usually signed char, but hx may be -1 */
+	signed char rtype;		/* type of room (zoo, throne, etc...) */
+	signed char rlit;		/* is the room lit ? */
+	signed char doorct;		/* door count */
+	signed char fdoor;		/* index for the first door of the room */
+	signed char nsubrooms;	/* number of subrooms */
 	boolean irregular;	/* true if room is non-rectangular */
 	struct mkroom *sbrooms[MAX_SUBROOMS];  /* Subrooms pointers */
 	struct monst *resident; /* priest/shopkeeper/guard for this room */
@@ -23,7 +19,7 @@ struct shclass {
 	const char *name;	/* name of the shop type */
 	char	symb;		/* this identifies the shop type */
 	int	prob;		/* the shop type probability in % */
-	schar	shdist;		/* object placement type */
+	signed char	shdist;		/* object placement type */
 #define D_SCATTER	0	/* normal placement */
 #define D_SHOP		1	/* shop-like placement */
 #define D_TEMPLE	2	/* temple-like placement */

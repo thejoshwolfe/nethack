@@ -104,19 +104,19 @@ boolean GFlag = FALSE;
 boolean HE_resets_AS;	/* see termcap.c */
 
 STATIC_DCL void NDECL(getret);
-STATIC_DCL void FDECL(erase_menu_or_text, (winid, struct WinDesc *, BOOLEAN_P));
-STATIC_DCL void FDECL(free_window_info, (struct WinDesc *, BOOLEAN_P));
+STATIC_DCL void FDECL(erase_menu_or_text, (winid, struct WinDesc *, boolean));
+STATIC_DCL void FDECL(free_window_info, (struct WinDesc *, boolean));
 STATIC_DCL void FDECL(dmore,(struct WinDesc *, const char *));
 STATIC_DCL void FDECL(set_item_state, (winid, int, tty_menu_item *));
 STATIC_DCL void FDECL(set_all_on_page, (winid,tty_menu_item *,tty_menu_item *));
 STATIC_DCL void FDECL(unset_all_on_page, (winid,tty_menu_item *,tty_menu_item *));
-STATIC_DCL void FDECL(invert_all_on_page, (winid,tty_menu_item *,tty_menu_item *, CHAR_P));
-STATIC_DCL void FDECL(invert_all, (winid,tty_menu_item *,tty_menu_item *, CHAR_P));
+STATIC_DCL void FDECL(invert_all_on_page, (winid,tty_menu_item *,tty_menu_item *, char));
+STATIC_DCL void FDECL(invert_all, (winid,tty_menu_item *,tty_menu_item *, char));
 STATIC_DCL void FDECL(process_menu_window, (winid,struct WinDesc *));
 STATIC_DCL void FDECL(process_text_window, (winid,struct WinDesc *));
 STATIC_DCL tty_menu_item *FDECL(reverse, (tty_menu_item *));
 const char * FDECL(compress_str, (const char *));
-STATIC_DCL void FDECL(tty_putsym, (winid, int, int, CHAR_P));
+STATIC_DCL void FDECL(tty_putsym, (winid, int, int, char));
 static char *FDECL(copy_of, (const char *));
 STATIC_DCL void FDECL(bail, (const char *));	/* __attribute__((noreturn)) */
 
@@ -151,9 +151,7 @@ const char *mesg;
 }
 
 #if defined(SIGWINCH) && defined(CLIPPING)
-STATIC_OVL void
-winch()
-{
+STATIC_OVL void winch(void) {
     int oldLI = LI, oldCO = CO, i;
     register struct WinDesc *cw;
 
@@ -207,11 +205,7 @@ winch()
 #endif
 
 /*ARGSUSED*/
-void
-tty_init_nhwindows(argcp,argv)
-int* argcp;
-char** argv;
-{
+void tty_init_nhwindows(int *argcp, char **argv) {
     int wid, hgt;
 
     /*
@@ -263,9 +257,7 @@ char** argv;
     tty_display_nhwindow(BASE_WINDOW, FALSE);
 }
 
-void
-tty_player_selection()
-{
+void tty_player_selection(void) {
 	int i, k, n;
 	char pick4u = 'n', thisch, lastch = 0;
 	char pbuf[QBUFSZ], plbuf[QBUFSZ];
@@ -606,9 +598,7 @@ give_up:	/* Quit */
  * It may still contain a suffix denoting the role, etc.
  * Always called after init_nhwindows() and before display_gamewindows().
  */
-void
-tty_askname()
-{
+void tty_askname(void) {
     static char who_are_you[] = "Who are you? ";
     register int c, ct, tryct = 0;
 
@@ -652,9 +642,7 @@ tty_askname()
     tty_curs(BASE_WINDOW, 1, wins[BASE_WINDOW]->cury + 1);
 }
 
-void
-tty_get_nh_event()
-{
+void tty_get_nh_event(void) {
     return;
 }
 
@@ -700,10 +688,7 @@ void tty_exit_nhwindows(const char *str) {
     iflags.window_inited = 0;
 }
 
-winid
-tty_create_nhwindow(type)
-    int type;
-{
+winid tty_create_nhwindow(int type) {
     struct WinDesc* newwin;
     int i;
     int newid;
@@ -804,12 +789,7 @@ tty_create_nhwindow(type)
     return newid;
 }
 
-STATIC_OVL void
-erase_menu_or_text(window, cw, clear)
-    winid window;
-    struct WinDesc *cw;
-    boolean clear;
-{
+STATIC_OVL void erase_menu_or_text(winid window, struct WinDesc *cw, boolean clear) {
     if(cw->offx == 0)
 	if(cw->offy) {
 	    tty_curs(window, 1, 0);
@@ -822,11 +802,7 @@ erase_menu_or_text(window, cw, clear)
 	docorner((int)cw->offx, cw->maxrow+1);
 }
 
-STATIC_OVL void
-free_window_info(cw, free_data)
-    struct WinDesc *cw;
-    boolean free_data;
-{
+STATIC_OVL void free_window_info(struct WinDesc *cw, boolean free_data) {
     int i;
 
     if (cw->data) {
@@ -866,10 +842,7 @@ free_window_info(cw, free_data)
     }
 }
 
-void
-tty_clear_nhwindow(window)
-    winid window;
-{
+void tty_clear_nhwindow(winid window) {
     register struct WinDesc *cw = 0;
 
     if(window == WIN_ERR || (cw = wins[window]) == (struct WinDesc *) 0)
@@ -909,11 +882,8 @@ tty_clear_nhwindow(window)
     cw->curx = cw->cury = 0;
 }
 
-STATIC_OVL void
-dmore(cw, s)
-    register struct WinDesc *cw;
-    const char *s;			/* valid responses */
-{
+/* valid responses */
+STATIC_OVL void dmore(struct WinDesc *cw, const char *s) {
     const char *prompt = cw->morestr ? cw->morestr : defmorestr;
     int offset = (cw->type == NHW_TEXT) ? 1 : 2;
 
@@ -929,12 +899,7 @@ dmore(cw, s)
     xwaitforspace(s);
 }
 
-STATIC_OVL void
-set_item_state(window, lineno, item)
-    winid window;
-    int lineno;
-    tty_menu_item *item;
-{
+STATIC_OVL void set_item_state(winid window, int lineno, tty_menu_item *item) {
     char ch = item->selected ? (item->count == -1L ? '+' : '#') : '-';
     tty_curs(window, 4, lineno);
     term_start_attr(item->attr);
@@ -943,11 +908,7 @@ set_item_state(window, lineno, item)
     term_end_attr(item->attr);
 }
 
-STATIC_OVL void
-set_all_on_page(window, page_start, page_end)
-    winid window;
-    tty_menu_item *page_start, *page_end;
-{
+STATIC_OVL void set_all_on_page(winid window, tty_menu_item *page_start, tty_menu_item *page_end) {
     tty_menu_item *curr;
     int n;
 
@@ -958,10 +919,8 @@ set_all_on_page(window, page_start, page_end)
 	}
 }
 
-STATIC_OVL void
-unset_all_on_page(window, page_start, page_end)
-    winid window;
-    tty_menu_item *page_start, *page_end;
+STATIC_OVL void unset_all_on_page(winid window, tty_menu_item *page_start,
+        tty_menu_item *page_end)
 {
     tty_menu_item *curr;
     int n;
@@ -974,11 +933,9 @@ unset_all_on_page(window, page_start, page_end)
 	}
 }
 
-STATIC_OVL void
-invert_all_on_page(window, page_start, page_end, acc)
-    winid window;
-    tty_menu_item *page_start, *page_end;
-    char acc;	/* group accelerator, 0 => all */
+/* group accelerator, 0 => all */
+STATIC_OVL void invert_all_on_page(winid window, tty_menu_item *page_start,
+        tty_menu_item *page_end, char acc)
 {
     tty_menu_item *curr;
     int n;
@@ -1455,8 +1412,8 @@ tty_display_nhwindow(window, blocking)
 	/*FALLTHRU*/
     case NHW_MENU:
 	cw->active = 1;
-	/* avoid converting to uchar before calculations are finished */
-	cw->offx = (uchar) (int)
+	/* avoid converting to unsigned char before calculations are finished */
+	cw->offx = (unsigned char) (int)
 	    max((int) 10, (int) (ttyDisplay->cols - cw->maxcol - 1));
 	if(cw->type == NHW_MENU)
 	    cw->offy = 0;
@@ -1549,7 +1506,7 @@ tty_destroy_nhwindow(window)
 void
 tty_curs(window, x, y)
 winid window;
-register int x, y;	/* not xchar: perhaps xchar is unsigned and
+register int x, y;	/* not signed char: perhaps signed char is unsigned and
 			   curx-x would be unsigned as well */
 {
     struct WinDesc *cw = 0;
@@ -2300,12 +2257,7 @@ int x, y;
  *  position and glyph are always correct (checked there)!
  */
 
-void
-tty_print_glyph(window, x, y, glyph)
-    winid window;
-    xchar x, y;
-    int glyph;
-{
+void tty_print_glyph(winid window, signed char x, signed char y, int glyph) {
     int ch;
     boolean reverse_on = FALSE;
     int	    color;

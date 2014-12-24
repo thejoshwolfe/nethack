@@ -208,7 +208,7 @@ void moveloop(void) {
 
 		    if(!u.uinvulnerable) {
 			if(Teleportation && !rn2(85)) {
-			    xchar old_ux = u.ux, old_uy = u.uy;
+			    signed char old_ux = u.ux, old_uy = u.uy;
 			    tele();
 			    if (u.ux != old_ux || u.uy != old_uy) {
 				if (!next_to_u()) {
@@ -499,10 +499,8 @@ newgame()
 }
 
 /* show "welcome [back] to nethack" message at program startup */
-void
-welcome(new_game)
-boolean new_game;	/* false => restoring an old game */
-{
+/* false => restoring an old game */
+void welcome(boolean new_game) {
     char buf[BUFSZ];
     boolean currentgend = Upolyd ? u.mfemale : flags.female;
 

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)wizard.c	3.4	2003/02/18	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* wizard code - inspired by rogue code from Merlyn Leroy (digi-g!brian) */
 /*	       - heavily modified to give the wiz balls.  (genat!mike)   */
 /*	       - dewimped and given some maledictions. -3. */
@@ -16,9 +12,9 @@ extern const int monstr[];
 #ifdef OVLB
 
 STATIC_DCL short FDECL(which_arti, (int));
-STATIC_DCL boolean FDECL(mon_has_arti, (struct monst *,SHORT_P));
-STATIC_DCL struct monst *FDECL(other_mon_has_arti, (struct monst *,SHORT_P));
-STATIC_DCL struct obj *FDECL(on_ground, (SHORT_P));
+STATIC_DCL boolean FDECL(mon_has_arti, (struct monst *,short));
+STATIC_DCL struct monst *FDECL(other_mon_has_arti, (struct monst *,short));
+STATIC_DCL struct obj *FDECL(on_ground, (short));
 STATIC_DCL boolean FDECL(you_have, (int));
 STATIC_DCL long FDECL(target_on, (int,struct monst *));
 STATIC_DCL long FDECL(strategy, (struct monst *));
@@ -327,7 +323,7 @@ tactics(mtmp)
 	    default:		/* kill, maim, pillage! */
 	    {
 		long  where = (strat & STRAT_STRATMASK);
-		xchar tx = STRAT_GOALX(strat),
+		signed char tx = STRAT_GOALX(strat),
 		      ty = STRAT_GOALY(strat);
 		int   targ = strat & STRAT_GOAL;
 		struct obj *otmp;

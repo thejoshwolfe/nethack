@@ -31,28 +31,19 @@ char *buf;
 	return buf;
 }
 
-int
-doversion()
-{
+int doversion(void) {
 	char buf[BUFSZ];
 
 	pline("%s", getversionstring(buf));
 	return 0;
 }
 
-int
-doextversion()
-{
+int doextversion(void) {
 	display_file(OPTIONS_USED, TRUE);
 	return 0;
 }
 
-boolean
-check_version(version_data, filename, complain)
-struct version_info *version_data;
-const char *filename;
-boolean complain;
-{
+boolean check_version(struct version_info *version_data, const char *filename, boolean complain) {
 	if (
 #ifdef VERSION_COMPATIBILITY
 	    version_data->incarnation < VERSION_COMPATIBILITY ||

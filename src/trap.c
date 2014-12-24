@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)trap.c	3.4	2003/10/20	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 extern const char * const destroy_strings[];	/* from zap.c */
@@ -12,18 +8,17 @@ STATIC_DCL boolean FDECL(emergency_disrobe,(boolean *));
 STATIC_DCL int FDECL(untrap_prob, (struct trap *ttmp));
 STATIC_DCL void FDECL(cnv_trap_obj, (int, int, struct trap *));
 STATIC_DCL void FDECL(move_into_trap, (struct trap *));
-STATIC_DCL int FDECL(try_disarm, (struct trap *,BOOLEAN_P));
+STATIC_DCL int FDECL(try_disarm, (struct trap *,boolean));
 STATIC_DCL void FDECL(reward_untrap, (struct trap *, struct monst *));
 STATIC_DCL int FDECL(disarm_holdingtrap, (struct trap *));
 STATIC_DCL int FDECL(disarm_landmine, (struct trap *));
 STATIC_DCL int FDECL(disarm_squeaky_board, (struct trap *));
 STATIC_DCL int FDECL(disarm_shooting_trap, (struct trap *, int));
-STATIC_DCL int FDECL(try_lift, (struct monst *, struct trap *, int, BOOLEAN_P));
+STATIC_DCL int FDECL(try_lift, (struct monst *, struct trap *, int, boolean));
 STATIC_DCL int FDECL(help_monster_out, (struct monst *, struct trap *));
-STATIC_DCL boolean FDECL(thitm, (int,struct monst *,struct obj *,int,BOOLEAN_P));
-STATIC_DCL int FDECL(mkroll_launch,
-			(struct trap *,XCHAR_P,XCHAR_P,SHORT_P,long));
-STATIC_DCL boolean FDECL(isclearpath,(coord *, int, SCHAR_P, SCHAR_P));
+STATIC_DCL boolean FDECL(thitm, (int,struct monst *,struct obj *,int,boolean));
+STATIC_DCL int FDECL(mkroll_launch, (struct trap *,signed char,signed char,short,long));
+STATIC_DCL boolean FDECL(isclearpath,(coord *, int, signed char, signed char));
 #ifdef STEED
 STATIC_OVL int FDECL(steedintrap, (struct trap *, struct obj *));
 STATIC_OVL boolean FDECL(keep_saddle_with_steedcorpse,
@@ -401,7 +396,7 @@ boolean td;	/* td == TRUE : trap door or hole */
 struct monst *
 animate_statue(statue, x, y, cause, fail_reason)
 struct obj *statue;
-xchar x, y;
+signed char x, y;
 int cause;
 int *fail_reason;
 {
@@ -522,7 +517,7 @@ int *fail_reason;
 struct monst *
 activate_statue_trap(trap, x, y, shatter)
 struct trap *trap;
-xchar x, y;
+signed char x, y;
 boolean shatter;
 {
 	struct monst *mtmp = (struct monst *)0;
@@ -562,7 +557,7 @@ struct obj *objchn, *saddle;
 			struct monst *mtmp = (struct monst *)objchn->oextra;
 			if (mtmp->m_id == steed_mid) {
 				/* move saddle */
-				xchar x,y;
+				signed char x,y;
 				if (get_obj_location(objchn, &x, &y, 0)) {
 					obj_extract_self(saddle);
 					place_object(saddle, x, y);
@@ -1555,16 +1550,12 @@ seetrap(trap)
 #endif /* OVLB */
 #ifdef OVL3
 
-STATIC_OVL int
-mkroll_launch(ttmp, x, y, otyp, ocount)
-struct trap *ttmp;
-xchar x,y;
-short otyp;
-long ocount;
+STATIC_OVL int mkroll_launch(struct trap *ttmp, signed char x, signed char y,
+        short otyp, long ocount)
 {
 	struct obj *otmp;
 	register int tmp;
-	schar dx,dy;
+	signed char dx,dy;
 	int distance;
 	coord cc;
 	coord bcc;
@@ -1617,14 +1608,9 @@ long ocount;
 	return 1;
 }
 
-STATIC_OVL boolean
-isclearpath(cc,distance,dx,dy)
-coord *cc;
-int distance;
-schar dx,dy;
-{
-	uchar typ;
-	xchar x, y;
+STATIC_OVL boolean isclearpath(coord *cc, int distance, signed char dx, signed char dy) {
+	unsigned char typ;
+	signed char x, y;
 
 	x = cc->x;
 	y = cc->y;
@@ -2588,7 +2574,7 @@ int
 fire_damage(chain, force, here, x, y)
 struct obj *chain;
 boolean force, here;
-xchar x, y;
+signed char x, y;
 {
     int chance;
     struct obj *obj, *otmp, *nobj, *ncobj;
@@ -3049,7 +3035,7 @@ move_into_trap(ttmp)
 struct trap *ttmp;
 {
 	int bc;
-	xchar x = ttmp->tx, y = ttmp->ty, bx, by, cx, cy;
+	signed char x = ttmp->tx, y = ttmp->ty, bx, by, cx, cy;
 	boolean unused;
 
 	/* we know there's no monster in the way, and we're not trapped */
@@ -3644,7 +3630,7 @@ boolean disarm;
 			  struct monst *shkp = 0;
 			  long loss = 0L;
 			  boolean costly, insider;
-			  register xchar ox = obj->ox, oy = obj->oy;
+			  register signed char ox = obj->ox, oy = obj->oy;
 
 			  /* the obj location need not be that of player */
 			  costly = (costly_spot(ox, oy) &&

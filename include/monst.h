@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)monst.h	3.4	1999/01/04	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef MONST_H
 #define MONST_H
 
@@ -43,23 +39,23 @@ struct monst {
 	unsigned m_id;
 	short mnum;		/* permanent monster index number */
 	short movement;		/* movement points (derived from permonst definition and added effects */
-	uchar m_lev;		/* adjusted difficulty level of monster */
+	unsigned char m_lev;		/* adjusted difficulty level of monster */
 	aligntyp malign;	/* alignment of this monster, relative to the
 				   player (positive = good to kill) */
-	xchar mx, my;
-	xchar mux, muy;		/* where the monster thinks you are */
+	signed char mx, my;
+	signed char mux, muy;		/* where the monster thinks you are */
 #define MTSZ	4
 	coord mtrack[MTSZ];	/* monster track */
 	int mhp, mhpmax;
 	unsigned mappearance;	/* for undetected mimics and the wiz */
-	uchar	 m_ap_type;	/* what mappearance is describing: */
+	unsigned char	 m_ap_type;	/* what mappearance is describing: */
 #define M_AP_NOTHING	0	/* mappearance is unused -- monster appears
 				   as itself */
 #define M_AP_FURNITURE	1	/* stairs, a door, an altar, etc. */
 #define M_AP_OBJECT	2	/* an object */
 #define M_AP_MONSTER	3	/* a monster */
 
-	schar mtame;		/* level of tameness, implies peaceful */
+	signed char mtame;		/* level of tameness, implies peaceful */
 	unsigned short mintrinsics;	/* low 8 correspond to mresists */
 	int mspec_used;		/* monster's special ability attack timeout */
 
@@ -125,8 +121,8 @@ struct monst {
 #define STRAT_XMASK	0x00ff0000L
 #define STRAT_YMASK	0x0000ff00L
 #define STRAT_GOAL	0x000000ffL
-#define STRAT_GOALX(s)	((xchar)((s & STRAT_XMASK) >> 16))
-#define STRAT_GOALY(s)	((xchar)((s & STRAT_YMASK) >> 8))
+#define STRAT_GOALX(s)	((signed char)((s & STRAT_XMASK) >> 16))
+#define STRAT_GOALY(s)	((signed char)((s & STRAT_YMASK) >> 8))
 
 	long mtrapseen;		/* bitmap of traps we've been trapped in */
 	long mlstmv;		/* for catching up with lost time */
@@ -137,9 +133,9 @@ struct monst {
 
 	struct obj *mw;
 	long misc_worn_check;
-	xchar weapon_check;
+	signed char weapon_check;
 
-	uchar mnamelth;		/* length of name (following mxlth) */
+	unsigned char mnamelth;		/* length of name (following mxlth) */
 	short mxlth;		/* length of following data */
 	/* in order to prevent alignment problems mextra should
 	   be (or follow) a long int */

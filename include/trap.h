@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)trap.h	3.4	2000/08/30	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* note for 3.1.0 and later: no longer manipulated by 'makedefs' */
 
 #ifndef TRAP_H
@@ -14,7 +10,7 @@ union vlaunchinfo {
 
 struct trap {
 	struct trap *ntrap;
-	xchar tx,ty;
+	signed char tx,ty;
 	d_level dst;	/* destination for portals */
 	coord launch;
 	Bitfield(ttyp,5);

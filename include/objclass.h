@@ -73,7 +73,7 @@ struct objclass {
 #define is_damageable(otmp) (is_rustprone(otmp) || is_flammable(otmp) || \
 				is_rottable(otmp) || is_corrodeable(otmp))
 
-	schar	oc_subtyp;
+	signed char	oc_subtyp;
 #define oc_skill	oc_subtyp   /* Skills of weapons, spellbooks, tools, gems */
 #define oc_armcat	oc_subtyp   /* for armor */
 #define ARM_SHIELD	1	/* needed for special wear function */
@@ -84,18 +84,18 @@ struct objclass {
 #define ARM_SHIRT	6
 #define ARM_SUIT	0
 
-	uchar	oc_oprop;		/* property (invis, &c.) conveyed */
+	unsigned char	oc_oprop;		/* property (invis, &c.) conveyed */
 	char	oc_class;		/* object class */
-	schar	oc_delay;		/* delay when using such an object */
-	uchar	oc_color;		/* color of the object */
+	signed char	oc_delay;		/* delay when using such an object */
+	unsigned char	oc_color;		/* color of the object */
 
 	short	oc_prob;		/* probability, used in mkobj() */
 	unsigned short	oc_weight;	/* encumbrance (1 cn = 0.1 lb.) */
 	short	oc_cost;		/* base cost in shops */
 /* Check the AD&D rules!  The FIRST is small monster damage. */
 /* for weapons, and tools, rocks, and gems useful as weapons */
-	schar	oc_wsdam, oc_wldam;	/* max small/large monster damage */
-	schar	oc_oc1, oc_oc2;
+	signed char	oc_wsdam, oc_wldam;	/* max small/large monster damage */
+	signed char	oc_oc1, oc_oc2;
 #define oc_hitbon	oc_oc1		/* weapons: "to hit" bonus */
 
 #define a_ac		oc_oc1	/* armor class, used in ARM_BONUS in do.c */

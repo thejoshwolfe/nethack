@@ -75,7 +75,7 @@
 
 /*
  * Section 3:	Definitions that may vary with system type.
- *		For example, both schar and uchar should be short ints on
+ *		For example, both signed char and unsigned char should be short ints on
  *		the AT&T 3B2/3B5/etc. family.
  */
 
@@ -87,35 +87,6 @@
 /* #define NOTSTDC */			/* define for lying compilers */
 
 #include "tradstdc.h"
-
-/*
- * type schar: small signed integers (8 bits suffice) (eg. TOS)
- *
- *	typedef char	schar;
- *
- *	will do when you have signed characters; otherwise use
- *
- *	typedef short int schar;
- */
-#ifdef AZTEC
-# define schar	char
-#else
-typedef signed char	schar;
-#endif
-
-/*
- * type uchar: small unsigned integers (8 bits suffice - but 7 bits do not)
- *
- *	typedef unsigned char	uchar;
- *
- *	will be satisfactory if you have an "unsigned char" type;
- *	otherwise use
- *
- *	typedef unsigned short int uchar;
- */
-#ifndef _AIX32		/* identical typedef in system file causes trouble */
-typedef unsigned char	uchar;
-#endif
 
 /*
  * Various structures have the option of using bitfields to save space.

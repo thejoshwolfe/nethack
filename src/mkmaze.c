@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)mkmaze.c	3.4	2002/04/04	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "sp_lev.h"
 #include "lev.h"	/* save & restore info */
@@ -17,8 +13,8 @@ STATIC_DCL boolean FDECL(is_solid,(int,int));
 STATIC_DCL int FDECL(extend_spine, (int [3][3], int, int, int));
 STATIC_DCL boolean FDECL(okay,(int,int,int));
 STATIC_DCL void FDECL(maze0xy,(coord *));
-STATIC_DCL boolean FDECL(put_lregion_here,(XCHAR_P,XCHAR_P,XCHAR_P,
-	XCHAR_P,XCHAR_P,XCHAR_P,XCHAR_P,BOOLEAN_P,d_level *));
+STATIC_DCL boolean FDECL(put_lregion_here,(signed char,signed char,signed char,
+	signed char,signed char,signed char,signed char,boolean,d_level *));
 STATIC_DCL void NDECL(fixup_special);
 STATIC_DCL void FDECL(move, (int *,int *,int));
 STATIC_DCL void NDECL(setup_waterlevel);
@@ -121,7 +117,7 @@ void
 wallification(x1, y1, x2, y2)
 int x1, y1, x2, y2;
 {
-	uchar type;
+	unsigned char type;
 	register int x,y;
 	struct rm *lev;
 	int bits;
@@ -131,7 +127,7 @@ int x1, y1, x2, y2;
 	 * so even though this table says VWALL, we actually leave whatever
 	 * typ was there alone.
 	 */
-	static xchar spine_array[16] = {
+	static signed char spine_array[16] = {
 	    VWALL,	HWALL,		HWALL,		HWALL,
 	    VWALL,	TRCORNER,	TLCORNER,	TDWALL,
 	    VWALL,	BRCORNER,	BLCORNER,	TUWALL,
@@ -223,8 +219,8 @@ maze0xy(cc)	/* find random starting point for maze generation */
  */
 boolean
 bad_location(x, y, lx, ly, hx, hy)
-    xchar x, y;
-    xchar lx, ly, hx, hy;
+    signed char x, y;
+    signed char lx, ly, hx, hy;
 {
     return((boolean)(occupied(x, y) ||
 	   within_bounded_area(x,y, lx,ly, hx,hy) ||
@@ -236,14 +232,14 @@ bad_location(x, y, lx, ly, hx, hy)
 /* and place something (based on rtype) in that region */
 void
 place_lregion(lx, ly, hx, hy, nlx, nly, nhx, nhy, rtype, lev)
-    xchar	lx, ly, hx, hy;
-    xchar	nlx, nly, nhx, nhy;
-    xchar	rtype;
+    signed char	lx, ly, hx, hy;
+    signed char	nlx, nly, nhx, nhy;
+    signed char	rtype;
     d_level	*lev;
 {
     int trycnt;
     boolean oneshot;
-    xchar x, y;
+    signed char x, y;
 
     if(!lx) { /* default to whole level */
 	/*
@@ -280,13 +276,9 @@ place_lregion(lx, ly, hx, hy, nlx, nly, nhx, nhy, rtype, lev)
     impossible("Couldn't place lregion type %d!", rtype);
 }
 
-STATIC_OVL boolean
-put_lregion_here(x,y,nlx,nly,nhx,nhy,rtype,oneshot,lev)
-xchar x, y;
-xchar nlx, nly, nhx, nhy;
-xchar rtype;
-boolean oneshot;
-d_level *lev;
+STATIC_OVL boolean put_lregion_here(signed char x, signed char y,
+        signed char nlx, signed char nly, signed char nhx,
+        signed char nhy,signed char rtype, boolean oneshot,d_level *lev)
 {
     if (bad_location(x, y, nlx, nly, nhx, nhy)) {
 	if (!oneshot) {
@@ -825,7 +817,7 @@ bound_digging()
 
 void
 mkportal(x, y, todnum, todlevel)
-register xchar x, y, todnum, todlevel;
+register signed char x, y, todnum, todlevel;
 {
 	/* a portal "trap" must be matched by a */
 	/* portal in the destination dungeon/dlevel */
@@ -871,7 +863,7 @@ static int xmin, ymin, xmax, ymax;	/* level boundaries */
 
 STATIC_DCL void NDECL(set_wportal);
 STATIC_DCL void FDECL(mk_bubble, (int,int,int));
-STATIC_DCL void FDECL(mv_bubble, (struct bubble *,int,int,BOOLEAN_P));
+STATIC_DCL void FDECL(mv_bubble, (struct bubble *,int,int,boolean));
 
 void
 movebubbles()
@@ -1088,10 +1080,10 @@ register int fd;
 }
 
 const char *waterbody_name(x, y)
-xchar x,y;
+signed char x,y;
 {
 	register struct rm *lev;
-	schar ltyp;
+	signed char ltyp;
 
 	if (!isok(x,y))
 		return "drink";		/* should never happen */
@@ -1178,7 +1170,7 @@ register int x, y, n;
 	 * in situ, either.  The first two elements tell the dimensions of
 	 * the bubble's bounding box.
 	 */
-	static uchar
+	static unsigned char
 		bm2[] = {2,1,0x3},
 		bm3[] = {3,2,0x7,0x7},
 		bm4[] = {4,3,0x6,0xf,0x6},

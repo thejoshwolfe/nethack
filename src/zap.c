@@ -22,7 +22,7 @@ STATIC_DCL void FDECL(polyuse, (struct obj*, int, int));
 STATIC_DCL void FDECL(create_polymon, (struct obj *, int));
 STATIC_DCL boolean FDECL(zap_updown, (struct obj *));
 STATIC_DCL int FDECL(zhitm, (struct monst *,int,int,struct obj **));
-STATIC_DCL void FDECL(zhitu, (int,int,const char *,XCHAR_P,XCHAR_P));
+STATIC_DCL void FDECL(zhitu, (int,int,const char *,signed char,signed char));
 STATIC_DCL void FDECL(revive_egg, (struct obj *));
 #ifdef STEED
 STATIC_DCL boolean FDECL(zap_steed, (struct obj *));
@@ -395,7 +395,7 @@ struct monst *mtmp;
 boolean
 get_obj_location(obj, xp, yp, locflags)
 struct obj *obj;
-xchar *xp, *yp;
+signed char *xp, *yp;
 int locflags;
 {
 	switch (obj->where) {
@@ -433,7 +433,7 @@ int locflags;
 boolean
 get_mon_location(mon, xp, yp, locflags)
 struct monst *mon;
-xchar *xp, *yp;
+signed char *xp, *yp;
 int locflags;	/* non-zero means get location even if monster is buried */
 {
 	if (mon == &youmonst) {
@@ -563,12 +563,12 @@ register struct obj *obj;
 	register struct monst *mtmp = (struct monst *)0;
 	struct obj *container = (struct obj *)0;
 	int container_nesting = 0;
-	schar savetame = 0;
+	signed char savetame = 0;
 	boolean recorporealization = FALSE;
 	boolean in_container = FALSE;
 	if(obj->otyp == CORPSE) {
 		int montype = obj->corpsenm;
-		xchar x, y;
+		signed char x, y;
 
 		if (obj->where == OBJ_CONTAINED) {
 			/* deal with corpses in [possibly nested] containers */
@@ -1200,7 +1200,7 @@ poly_obj(obj, id)
 	int id;
 {
 	struct obj *otmp;
-	xchar ox, oy;
+	signed char ox, oy;
 	boolean can_merge = (id == STRANGE_OBJECT);
 	int obj_location = obj->where;
 
@@ -1442,7 +1442,7 @@ bhito(obj, otmp)
 struct obj *obj, *otmp;
 {
 	int res = 1;	/* affected object by default */
-	xchar refresh_x, refresh_y;
+	signed char refresh_x, refresh_y;
 
 	if (obj->bypass) {
 		/* The bypass bit is currently only used as follows:
@@ -1609,7 +1609,7 @@ struct obj *obj, *otmp;
 			    obj = poly_obj(obj, HUGE_CHUNK_OF_MEAT);
 			    goto smell;
 			} else if (obj->otyp == STATUE) {
-			    xchar oox, ooy;
+			    signed char oox, ooy;
 
 			    (void) get_obj_location(obj, &oox, &ooy, 0);
 			    refresh_x = oox; refresh_y = ooy;
@@ -1645,7 +1645,7 @@ makecorpse:			if (mons[obj->corpsenm].geno &
 		    case TOOL_CLASS:	/* figurine */
 		    {
 			struct monst *mon;
-			xchar oox, ooy;
+			signed char oox, ooy;
 
 			if (obj->otyp != FIGURINE) {
 			    res = 0;
@@ -2401,7 +2401,7 @@ struct obj *obj;	/* wand or spell */
 		case WAN_POLYMORPH:
 		case SPE_POLYMORPH:
 		    del_engr(e);
-		    make_engr_at(x, y, random_engraving(buf), moves, (xchar)0);
+		    make_engr_at(x, y, random_engraving(buf), moves, (signed char)0);
 		    break;
 		case WAN_CANCELLATION:
 		case SPE_CANCELLATION:
@@ -2617,7 +2617,7 @@ int FDECL((*fhitm), (MONST_P, OBJ_P)),	/* fns called when mon/obj hit */
 struct obj *obj;			/* object tossed/used */
 {
 	struct monst *mtmp;
-	uchar typ;
+	unsigned char typ;
 	boolean shopdoor = FALSE, point_blank = TRUE;
 
 	if (weapon == KICKED_WEAPON) {
@@ -3058,12 +3058,7 @@ struct obj **ootmp;	/* to return worn armor for caller to disintegrate */
 	return(tmp);
 }
 
-STATIC_OVL void
-zhitu(type, nd, fltxt, sx, sy)
-int type, nd;
-const char *fltxt;
-xchar sx, sy;
-{
+STATIC_OVL void zhitu(int type, int nd, const char *fltxt, signed char sx, signed char sy) {
 	int dam = 0;
 
 	switch (abs(type) % 10) {
@@ -3266,12 +3261,12 @@ int type;	/* either hero cast spell type or 0 */
 void
 buzz(type,nd,sx,sy,dx,dy)
 register int type, nd;
-register xchar sx,sy;
+register signed char sx,sy;
 register int dx,dy;
 {
     int range, abstype = abs(type) % 10;
     struct rm *lev;
-    register xchar lsx, lsy;
+    register signed char lsx, lsy;
     struct monst *mon;
     coord save_bhitpos;
     boolean shopdamage = FALSE;
@@ -3465,7 +3460,7 @@ register int dx,dy;
 
 	if(!ZAP_POS(lev->typ) || (closed_door(sx, sy) && (range >= 0))) {
 	    int bounce;
-	    uchar rmn;
+	    unsigned char rmn;
 
  make_bounce:
 	    if (type == ZT_SPELL(ZT_FIRE)) {
@@ -3516,7 +3511,7 @@ register int dx,dy;
 
 void
 melt_ice(x, y)
-xchar x, y;
+signed char x, y;
 {
 	struct rm *lev = &levl[x][y];
 	struct obj *otmp;
@@ -3553,7 +3548,7 @@ xchar x, y;
  */
 int
 zap_over_floor(x, y, type, shopdamage)
-xchar x, y;
+signed char x, y;
 int type;
 boolean *shopdamage;
 {

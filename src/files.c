@@ -20,15 +20,8 @@
 #define FQN_NUMBUF 4
 static char fqn_filename_buffer[FQN_NUMBUF][FQN_MAX_FILENAME];
 
-#if !defined(MFLOPPY)
 char bones[] = "bonesnn.xxx";
 char lock[PL_NSIZ+14] = "1lock"; /* long enough for uid+name+.99 */
-#else
-# if defined(MFLOPPY)
-char bones[FILENAME];		/* pathname of bones files */
-char lock[FILENAME];		/* pathname of level files */
-# endif
-#endif
 
 #define SAVESIZE	(PL_NSIZ + 13)	/* save/99999player.e */
 
@@ -58,12 +51,12 @@ extern int n_dgns;		/* from dungeon.c */
 STATIC_DCL char *FDECL(set_bonesfile_name, (char *,d_level*));
 STATIC_DCL char *NDECL(set_bonestemp_name);
 #ifdef COMPRESS
-STATIC_DCL void FDECL(redirect, (const char *,const char *,FILE *,BOOLEAN_P));
-STATIC_DCL void FDECL(docompress_file, (const char *,BOOLEAN_P));
+STATIC_DCL void FDECL(redirect, (const char *,const char *,FILE *,boolean));
+STATIC_DCL void FDECL(docompress_file, (const char *,boolean));
 #endif
 STATIC_DCL char *FDECL(make_lockname, (const char *,char *));
 STATIC_DCL FILE *FDECL(fopen_config_file, (const char *));
-STATIC_DCL int FDECL(get_uchars, (FILE *,char *,char *,uchar *,BOOLEAN_P,int,const char *));
+STATIC_DCL int FDECL(get_uchars, (FILE *,char *,char *,unsigned char *,boolean,int,const char *));
 int FDECL(parse_config_line, (FILE *,char *,char *,char *));
 STATIC_DCL void FDECL(adjust_prefix, (char *, int));
 #ifdef SELF_RECOVER
@@ -251,37 +244,13 @@ FILE * fopen_datafile(const char *filename, const char *mode, int prefix) {
 
 /* ----------  BEGIN LEVEL FILE HANDLING ----------- */
 
-#ifdef MFLOPPY
-/* Set names for bones[] and lock[] */
-void
-set_lock_and_bones()
-{
-	if (!ramdisk) {
-		Strcpy(levels, permbones);
-		Strcpy(bones, permbones);
-	}
-	append_slash(permbones);
-	append_slash(levels);
-	append_slash(bones);
-	Strcat(bones, "bonesnn.*");
-	Strcpy(lock, levels);
-	Strcat(lock, alllevels);
-	return;
-}
-#endif /* MFLOPPY */
-
-
 /* Construct a file name for a level-type file, which is of the form
  * something.level (with any old level stripped off).
  * This assumes there is space on the end of 'file' to append
  * a two digit number.  This is true for 'level'
  * but be careful if you use it for other things -dgk
  */
-void
-set_levelfile_name(file, lev)
-char *file;
-int lev;
-{
+void set_levelfile_name(char *file, int lev) {
 	char *tf;
 
 	tf = rindex(file, '.');
@@ -290,11 +259,7 @@ int lev;
 	return;
 }
 
-int
-create_levelfile(lev, errbuf)
-int lev;
-char errbuf[];
-{
+int create_levelfile(int lev, char errbuf[]) {
 	int fd;
 	const char *fq_lock;
 
@@ -315,22 +280,13 @@ char errbuf[];
 }
 
 
-int
-open_levelfile(lev, errbuf)
-int lev;
-char errbuf[];
-{
+int open_levelfile(int lev, char errbuf[]) {
 	int fd;
 	const char *fq_lock;
 
 	if (errbuf) *errbuf = '\0';
 	set_levelfile_name(lock, lev);
 	fq_lock = fqname(lock, LEVELPREFIX, 0);
-#ifdef MFLOPPY
-	/* If not currently accessible, swap it in. */
-	if (level_info[lev].where != ACTIVE)
-		swapin_file(lev);
-#endif
 # ifdef HOLD_LOCKFILE_OPEN
 	if (lev == 0)
 		fd = open_levelfile_exclusively(fq_lock, lev, O_RDONLY | O_BINARY );
@@ -350,10 +306,7 @@ char errbuf[];
 }
 
 
-void
-delete_levelfile(lev)
-int lev;
-{
+void delete_levelfile(int lev) {
 	/*
 	 * Level 0 might be created by port specific code that doesn't
 	 * call create_levfile(), so always assume that it exists.
@@ -369,21 +322,13 @@ int lev;
 }
 
 
-void
-clearlocks()
-{
-#if !defined(PC_LOCKING) && defined(MFLOPPY)
-	eraseall(levels, alllevels);
-	if (ramdisk)
-		eraseall(permbones, alllevels);
-#else
+void clearlocks(void) {
 	register int x;
 
 	signal(SIGHUP, SIG_IGN);
 	/* can't access maxledgerno() before dungeons are created -dlc */
 	for (x = (n_dgns ? maxledgerno() : 0); x >= 0; x--)
 		delete_levelfile(x);	/* not all levels need be present */
-#endif
 }
 
 #ifdef HOLD_LOCKFILE_OPEN
@@ -513,24 +458,8 @@ char errbuf[];
 	return fd;
 }
 
-#ifdef MFLOPPY
-/* remove partial bonesfile in process of creation */
-void
-cancel_bonesfile()
-{
-	const char *tempname;
-
-	tempname = set_bonestemp_name();
-	tempname = fqname(tempname, BONESPREFIX, 0);
-	(void) unlink(tempname);
-}
-#endif /* MFLOPPY */
-
 /* move completed bones file to proper name */
-void
-commit_bonesfile(lev)
-d_level *lev;
-{
+void commit_bonesfile(d_level *lev) {
 	const char *fq_bones, *tempname;
 	int ret;
 
@@ -654,10 +583,6 @@ restore_saved_game()
 	int fd;
 
 	set_savefile_name();
-#ifdef MFLOPPY
-	if (!saveDiskPrompt(1))
-	    return -1;
-#endif /* MFLOPPY */
 	fq_save = fqname(SAVEF, SAVEPREFIX, 0);
 
 	uncompress(fq_save);
@@ -1108,10 +1033,6 @@ void unlock_file(const char *filename) {
 
 const char *configfile = ".nethackrc";
 
-#ifndef MFLOPPY
-#define fopenp fopen
-#endif
-
 STATIC_OVL FILE * fopen_config_file(const char *filename) {
 	FILE *fp;
 	char	tmp_config[BUFSZ];
@@ -1132,7 +1053,7 @@ STATIC_OVL FILE * fopen_config_file(const char *filename) {
 			wait_synch();
 			/* fall through to standard names */
 		} else
-		if ((fp = fopenp(filename, "r")) != (FILE *)0) {
+		if ((fp = fopen(filename, "r")) != (FILE *)0) {
 		    configfile = filename;
 		    return(fp);
 		} else {
@@ -1150,7 +1071,7 @@ STATIC_OVL FILE * fopen_config_file(const char *filename) {
 		Strcpy(tmp_config, configfile);
 	else
 		Sprintf(tmp_config, "%s/%s", envp, configfile);
-	if ((fp = fopenp(tmp_config, "r")) != (FILE *)0)
+	if ((fp = fopen(tmp_config, "r")) != (FILE *)0)
 		return(fp);
 	if (errno != ENOENT) {
 	    char *details;
@@ -1170,7 +1091,7 @@ STATIC_OVL FILE * fopen_config_file(const char *filename) {
 
 
 /*
- * Retrieve a list of integers from a file into a uchar array.
+ * Retrieve a list of integers from a file into a unsigned char array.
  *
  * NOTE: zeros are inserted unless modlist is TRUE, in which case the list
  *  location is unchanged.  Callers must handle zeros if modlist is FALSE.
@@ -1180,7 +1101,7 @@ get_uchars(fp, buf, bufp, list, modlist, size, name)
     FILE *fp;		/* input file pointer */
     char *buf;		/* read buffer, must be of size BUFSZ */
     char *bufp;		/* current pointer */
-    uchar *list;	/* return list */
+    unsigned char *list;	/* return list */
     boolean modlist;	/* TRUE: list is being modified in place */
     int  size;		/* return list size */
     const char *name;		/* name of option for error message */
@@ -1262,7 +1183,7 @@ char		*tmp_levels;
 # pragma unused(tmp_ramdisk,tmp_levels)
 #endif
 	char		*bufp, *altp;
-	uchar   translate[MAXPCHARS];
+	unsigned char   translate[MAXPCHARS];
 	int   len;
 
 	if (*buf == '#')
@@ -1461,7 +1382,7 @@ fopen_wizkit_file()
 		wait_synch();
 		/* fall through to standard names */
 	} else
-	if ((fp = fopenp(wizkit, "r")) != (FILE *)0) {
+	if ((fp = fopen(wizkit, "r")) != (FILE *)0) {
 	    return(fp);
 	} else {
 	    /* access() above probably caught most problems for UNIX */
@@ -1474,7 +1395,7 @@ fopen_wizkit_file()
 	if (envp)
 		Sprintf(tmp_wizkit, "%s/%s", envp, wizkit);
 	else 	Strcpy(tmp_wizkit, wizkit);
-	if ((fp = fopenp(tmp_wizkit, "r")) != (FILE *)0)
+	if ((fp = fopen(tmp_wizkit, "r")) != (FILE *)0)
 		return(fp);
 	else if (errno != ENOENT) {
 		/* e.g., problems when setuid NetHack can't search home
@@ -1582,7 +1503,7 @@ const char *reason;	/* explanation */
 boolean recover_savefile(void) {
 	int gfd, lfd, sfd;
 	int lev, savelev, hpid;
-	xchar levc;
+	signed char levc;
 	struct version_info version_data;
 	int processed[256];
 	char savename[SAVESIZE], errbuf[BUFSZ];
@@ -1674,14 +1595,14 @@ boolean recover_savefile(void) {
 	processed[0] = 1;
 
 	for (lev = 1; lev < 256; lev++) {
-		/* level numbers are kept in xchars in save.c, so the
+		/* level numbers are kept in signed chars in save.c, so the
 		 * maximum level number (for the endlevel) must be < 256
 		 */
 		if (lev != savelev) {
 			lfd = open_levelfile(lev, (char *)0);
 			if (lfd >= 0) {
 				/* any or all of these may not exist */
-				levc = (xchar) lev;
+				levc = (signed char) lev;
 				write(sfd, (void *) &levc, sizeof(levc));
 				if (!copy_bytes(lfd, sfd)) {
 					(void) close(lfd);

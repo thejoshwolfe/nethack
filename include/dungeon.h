@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)dungeon.h	3.4	1999/07/02	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
@@ -15,8 +11,8 @@ typedef struct d_flags {	/* dungeon/level type flags */
 } d_flags;
 
 typedef struct d_level {	/* basic dungeon level element */
-	xchar	dnum;		/* dungeon number */
-	xchar	dlevel;		/* level number */
+	signed char	dnum;		/* dungeon number */
+	signed char	dlevel;		/* level number */
 } d_level;
 
 typedef struct s_level {	/* special dungeon level element */
@@ -24,12 +20,12 @@ typedef struct s_level {	/* special dungeon level element */
 	d_level dlevel;		/* dungeon & level numbers */
 	char	proto[15];	/* name of prototype file (eg. "tower") */
 	char	boneid;		/* character to id level in bones files */
-	uchar	rndlevs;	/* no. of randomly available similar levels */
+	unsigned char	rndlevs;	/* no. of randomly available similar levels */
 	d_flags flags;		/* type flags */
 } s_level;
 
 typedef struct stairway {	/* basic stairway identifier */
-	xchar	sx, sy;		/* x / y location of the stair */
+	signed char	sx, sy;		/* x / y location of the stair */
 	d_level tolev;		/* where does it go */
 	char	up;		/* what type of stairway (up/down) */
 } stairway;
@@ -44,10 +40,10 @@ typedef struct stairway {	/* basic stairway identifier */
 #define LR_DOWNTELE 6
 
 typedef struct dest_area {	/* non-stairway level change indentifier */
-	xchar	lx, ly;		/* "lower" left corner (near [0,0]) */
-	xchar	hx, hy;		/* "upper" right corner (near [COLNO,ROWNO]) */
-	xchar	nlx, nly;	/* outline of invalid area */
-	xchar	nhx, nhy;	/* opposite corner of invalid area */
+	signed char	lx, ly;		/* "lower" left corner (near [0,0]) */
+	signed char	hx, hy;		/* "upper" right corner (near [COLNO,ROWNO]) */
+	signed char	nlx, nly;	/* outline of invalid area */
+	signed char	nhx, nhy;	/* opposite corner of invalid area */
 } dest_area;
 
 typedef struct dungeon {	/* basic dungeon identifier */
@@ -55,9 +51,9 @@ typedef struct dungeon {	/* basic dungeon identifier */
 	char	proto[15];	/* name of prototype file (eg. "tower") */
 	char	boneid;		/* character to id dungeon in bones files */
 	d_flags flags;		/* dungeon flags */
-	xchar	entry_lev;	/* entry level */
-	xchar	num_dunlevs;	/* number of levels in this dungeon */
-	xchar	dunlev_ureached; /* how deep you have been in this dungeon */
+	signed char	entry_lev;	/* entry level */
+	signed char	num_dunlevs;	/* number of levels in this dungeon */
+	signed char	dunlev_ureached; /* how deep you have been in this dungeon */
 	int	ledger_start,	/* the starting depth in "real" terms */
 		depth_start;	/* the starting depth in "logical" terms */
 } dungeon;
@@ -154,16 +150,6 @@ struct linfo {
  * Note:  VISITED and LFILE_EXISTS are currently almost always set at the
  * same time.  However they _mean_ different things.
  */
-
-#ifdef MFLOPPY
-# define FROMPERM	 1	/* for ramdisk use */
-# define TOPERM		 2	/* for ramdisk use */
-# define ACTIVE		 1
-# define SWAPPED	 2
-	int	where;
-	long	time;
-	long	size;
-#endif /* MFLOPPY */
 };
 
 #endif /* DUNGEON_H */

@@ -1,10 +1,6 @@
-/*	SCCS Id: @(#)spell.c	3.4	2003/01/17	*/
-/*	Copyright (c) M. Stephenson 1988			  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
-static schar delay;		/* moves left for this spell */
+static signed char delay;		/* moves left for this spell */
 static struct obj *book;	/* last/current book being xscribed */
 
 /* spellmenu arguments; 0 thru n-1 used as spl_book[] index when swapping */
@@ -20,7 +16,7 @@ static struct obj *book;	/* last/current book being xscribed */
 #define spellet(spell)	\
 	((char)((spell < 26) ? ('a' + spell) : ('A' + spell - 26)))
 
-STATIC_DCL int FDECL(spell_let_to_idx, (CHAR_P));
+STATIC_DCL int FDECL(spell_let_to_idx, (char));
 STATIC_DCL boolean FDECL(cursed_book, (struct obj *bp));
 STATIC_DCL boolean FDECL(confused_book, (struct obj *));
 STATIC_DCL void FDECL(deadbook, (struct obj *));

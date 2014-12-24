@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)attrib.c	3.4	2002/10/07	*/
-/*	Copyright 1988, 1989, 1990, 1992, M. Stephenson		  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*  attribute modification routines. */
 
 #include "hack.h"
@@ -22,7 +18,7 @@ const char	* const plusattr[] = {
 
 static
 const struct innate {
-	schar	ulevel;
+	signed char	ulevel;
 	long	*ability;
 	const char *gainstr, *losestr;
 }	arc_abil[] = { {	 1, &(HStealth), "", "" },
@@ -197,7 +193,7 @@ losestr(num)	/* may kill you; cause may be poison or monster like 'a' */
 
 void
 change_luck(n)
-	register schar n;
+	register signed char n;
 {
 	u.uluck += n;
 	if (u.uluck < 0 && u.uluck < LUCKMIN)	u.uluck = LUCKMIN;
@@ -661,15 +657,12 @@ newhp()
 #endif /* OVLB */
 #ifdef OVL0
 
-schar
-acurr(x)
-int x;
-{
+signed char acurr(int x) {
 	register int tmp = (u.abon.a[x] + u.atemp.a[x] + u.acurr.a[x]);
 
 	if (x == A_STR) {
 		if (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER) return(125);
-		else return((schar)((tmp >= 125) ? 125 : (tmp <= 3) ? 3 : tmp));
+		else return((signed char)((tmp >= 125) ? 125 : (tmp <= 3) ? 3 : tmp));
 	} else if (x == A_CHA) {
 		if (tmp < 18 && (youmonst.data->mlet == S_NYMPH ||
 		    u.umonnum==PM_SUCCUBUS || u.umonnum == PM_INCUBUS))
@@ -680,19 +673,19 @@ int x;
 		 */
 		if (uarmh && uarmh->otyp == DUNCE_CAP) return(6);
 	}
-	return((schar)((tmp >= 25) ? 25 : (tmp <= 3) ? 3 : tmp));
+	return((signed char)((tmp >= 25) ? 25 : (tmp <= 3) ? 3 : tmp));
 }
 
 /* condense clumsy ACURR(A_STR) value into value that fits into game formulas
  */
-schar
+signed char
 acurrstr()
 {
 	register int str = ACURR(A_STR);
 
-	if (str <= 18) return((schar)str);
-	if (str <= 121) return((schar)(19 + str / 50)); /* map to 19-21 */
-	else return((schar)(str - 100));
+	if (str <= 18) return((signed char)str);
+	if (str <= 121) return((signed char)(19 + str / 50)); /* map to 19-21 */
+	else return((signed char)(str - 100));
 }
 
 #endif /* OVL0 */

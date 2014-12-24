@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)quest.c	3.4	2000/05/05	*/
-/*	Copyright 1991, M. Stephenson		  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 /*  quest dungeon branch routines. */
@@ -16,8 +12,8 @@ STATIC_DCL void NDECL(on_start);
 STATIC_DCL void NDECL(on_locate);
 STATIC_DCL void NDECL(on_goal);
 STATIC_DCL boolean NDECL(not_capable);
-STATIC_DCL int FDECL(is_pure, (BOOLEAN_P));
-STATIC_DCL void FDECL(expulsion, (BOOLEAN_P));
+STATIC_DCL int FDECL(is_pure, (boolean));
+STATIC_DCL void FDECL(expulsion, (boolean));
 STATIC_DCL void NDECL(chat_with_leader);
 STATIC_DCL void NDECL(chat_with_nemesis);
 STATIC_DCL void NDECL(chat_with_guardian);

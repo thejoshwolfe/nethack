@@ -1,13 +1,9 @@
-/*	SCCS Id: @(#)spell.h	3.4	1995/06/01	*/
-/* Copyright 1986, M. Stephenson				  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef SPELL_H
 #define SPELL_H
 
 struct spell {
     short	sp_id;			/* spell id (== object.otyp) */
-    xchar	sp_lev;			/* power level */
+    signed char	sp_lev;			/* power level */
     int		sp_know;		/* knowlege of spell */
 };
 

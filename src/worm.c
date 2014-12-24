@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)worm.c	3.4	1995/01/28	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "lev.h"
 
@@ -11,12 +7,12 @@
 /* worm segment structure */
 struct wseg {
     struct wseg *nseg;
-    xchar  wx, wy;	/* the segment's position */
+    signed char  wx, wy;	/* the segment's position */
 };
 
-STATIC_DCL void FDECL(toss_wsegs, (struct wseg *,BOOLEAN_P));
+STATIC_DCL void FDECL(toss_wsegs, (struct wseg *,boolean));
 STATIC_DCL void FDECL(shrink_worm, (int));
-STATIC_DCL void FDECL(random_dir, (XCHAR_P,XCHAR_P,xchar *,xchar *));
+STATIC_DCL void FDECL(random_dir, (signed char,signed char,signed char *,signed char *));
 STATIC_DCL struct wseg *FDECL(create_worm_tail, (int));
 
 /*  Description of long worm implementation.
@@ -314,7 +310,7 @@ wormhitu(worm)
 void
 cutworm(worm, x, y, weap)
     struct monst *worm;
-    xchar x,y;
+    signed char x,y;
     struct obj *weap;
 {
     register struct wseg  *curr, *new_tail;
@@ -477,8 +473,8 @@ save_worm(fd, mode)
 	    /* Save segment locations of the monster. */
 	    if (count) {
 		for (curr = wtails[i]; curr; curr = curr->nseg) {
-		    bwrite(fd, (void *) &(curr->wx), sizeof(xchar));
-		    bwrite(fd, (void *) &(curr->wy), sizeof(xchar));
+		    bwrite(fd, (void *) &(curr->wx), sizeof(signed char));
+		    bwrite(fd, (void *) &(curr->wy), sizeof(signed char));
 		}
 	    }
 	}
@@ -522,8 +518,8 @@ rest_worm(fd)
 	for (curr = (struct wseg *) 0, j = 0; j < count; j++) {
 	    temp = newseg();
 	    temp->nseg = (struct wseg *) 0;
-	    mread(fd, (void *) &(temp->wx), sizeof(xchar));
-	    mread(fd, (void *) &(temp->wy), sizeof(xchar));
+	    mread(fd, (void *) &(temp->wx), sizeof(signed char));
+	    mread(fd, (void *) &(temp->wy), sizeof(signed char));
 	    if (curr)
 		curr->nseg = temp;
 	    else
@@ -589,12 +585,12 @@ remove_worm(worm)
 void
 place_worm_tail_randomly(worm, x, y)
     struct monst *worm;
-    xchar x, y;
+    signed char x, y;
 {
     int wnum = worm->wormno;
     struct wseg *curr = wtails[wnum];
     struct wseg *new_tail;
-    register xchar ox = x, oy = y;
+    register signed char ox = x, oy = y;
 
 /*  if (!wnum) return;  bullet proofing */
 
@@ -610,7 +606,7 @@ place_worm_tail_randomly(worm, x, y)
     new_tail->wy = y;
 
     while(curr)  {
-	xchar nx, ny;
+	signed char nx, ny;
 	char tryct = 0;
 
 	/* pick a random direction from x, y and search for goodpos() */
@@ -642,12 +638,7 @@ place_worm_tail_randomly(worm, x, y)
  * This function, and the loop it serves, could be eliminated by coding
  * enexto() with a search radius.
  */
-STATIC_OVL
-void
-random_dir(x, y, nx, ny)
-    register xchar   x,   y;
-    register xchar *nx, *ny;
-{
+STATIC_OVL void random_dir(signed char x, signed char y, signed char *nx, signed char *ny) {
     *nx = x;
     *ny = y;
 

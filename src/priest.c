@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)priest.c	3.4	2002/11/06	*/
-/* Copyright (c) Izchak Miller, Steve Linhart, 1989.		  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "mfndpos.h"
 #include "eshk.h"
@@ -13,7 +9,7 @@
 
 #ifdef OVLB
 
-STATIC_DCL boolean FDECL(histemple_at,(struct monst *,XCHAR_P,XCHAR_P));
+STATIC_DCL boolean FDECL(histemple_at,(struct monst *,signed char,signed char));
 STATIC_DCL boolean FDECL(has_shrine,(struct monst *));
 
 /*
@@ -24,13 +20,13 @@ int
 move_special(mtmp,in_his_shop,appr,uondoor,avoid,omx,omy,gx,gy)
 register struct monst *mtmp;
 boolean in_his_shop;
-schar appr;
+signed char appr;
 boolean uondoor,avoid;
-register xchar omx,omy,gx,gy;
+register signed char omx,omy,gx,gy;
 {
-	register xchar nx,ny,nix,niy;
-	register schar i;
-	schar chcnt,cnt;
+	register signed char nx,ny,nix,niy;
+	register signed char i;
+	signed char chcnt,cnt;
 	coord poss[9];
 	long info[9];
 	long allowflags;
@@ -128,11 +124,7 @@ register char *array;
 #endif /* OVL0 */
 #ifdef OVLB
 
-STATIC_OVL boolean
-histemple_at(priest, x, y)
-register struct monst *priest;
-register xchar x, y;
-{
+STATIC_OVL boolean histemple_at(struct monst *priest, signed char x, signed char y) {
 	return((boolean)((EPRI(priest)->shroom == *in_rooms(x, y, TEMPLE)) &&
 	       on_level(&(EPRI(priest)->shrlevel), &u.uz)));
 }
@@ -144,8 +136,8 @@ int
 pri_move(priest)
 register struct monst *priest;
 {
-	register xchar gx,gy,omx,omy;
-	schar temple;
+	register signed char gx,gy,omx,omy;
+	signed char temple;
 	boolean avoid = TRUE;
 
 	omx = priest->mx;
@@ -534,7 +526,7 @@ struct monst *
 mk_roamer(ptr, alignment, x, y, peaceful)
 register struct permonst *ptr;
 aligntyp alignment;
-xchar x, y;
+signed char x, y;
 boolean peaceful;
 {
 	register struct monst *roamer;
@@ -580,7 +572,7 @@ register struct monst *roamer;
 boolean
 in_your_sanctuary(mon, x, y)
 struct monst *mon;	/* if non-null, <mx,my> overrides <x,y> */
-xchar x, y;
+signed char x, y;
 {
 	register char roomno;
 	register struct monst *priest;

@@ -7,10 +7,10 @@
 #ifdef REINCARNATION
 
 struct rogueroom {
-	xchar rlx, rly;
-	xchar dx, dy;
+	signed char rlx, rly;
+	signed char dx, dy;
 	boolean real;
-	uchar doortable;
+	unsigned char doortable;
 	int nroom; /* Only meaningful for "real" rooms */
 };
 #define UP 1

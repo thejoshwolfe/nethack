@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)topl.c	3.4	1996/10/24	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #ifdef TTY_GRAPHICS
@@ -15,7 +11,7 @@
 #endif
 
 STATIC_DCL void FDECL(redotoplin, (const char*));
-STATIC_DCL void FDECL(topl_putsym, (CHAR_P));
+STATIC_DCL void FDECL(topl_putsym, (char));
 STATIC_DCL void NDECL(remember_topl);
 STATIC_DCL void FDECL(removetopl, (int));
 

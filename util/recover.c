@@ -192,7 +192,7 @@ char *basename;
 {
 	int gfd, lfd, sfd;
 	int lev, savelev, hpid;
-	xchar levc;
+	signed char levc;
 	struct version_info version_data;
 
 	/* level 0 file contains:
@@ -276,14 +276,14 @@ char *basename;
 	(void) unlink(lock);
 
 	for (lev = 1; lev < 256; lev++) {
-		/* level numbers are kept in xchars in save.c, so the
+		/* level numbers are kept in unsigned chars in save.c, so the
 		 * maximum level number (for the endlevel) must be < 256
 		 */
 		if (lev != savelev) {
 			lfd = open_levelfile(lev);
 			if (lfd >= 0) {
 				/* any or all of these may not exist */
-				levc = (xchar) lev;
+				levc = (signed char) lev;
 				write(sfd, (void *) &levc, sizeof(levc));
 				copy_bytes(lfd, sfd);
 				Close(lfd);

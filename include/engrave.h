@@ -4,10 +4,10 @@
 struct engr {
 	struct engr *nxt_engr;
 	char *engr_txt;
-	xchar engr_x, engr_y;
+	signed char engr_x, engr_y;
 	unsigned engr_lth;	/* for save & restore; not length of text */
 	long engr_time;		/* moment engraving was (will be) finished */
-	xchar engr_type;
+	signed char engr_type;
 #define DUST	   1
 #define ENGRAVE    2
 #define BURN	   3

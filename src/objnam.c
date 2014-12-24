@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)objnam.c	3.4	2003/12/04	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
@@ -11,7 +7,7 @@
 
 STATIC_DCL char *FDECL(strprepend,(char *,const char *));
 #ifdef OVLB
-static boolean FDECL(wishymatch, (const char *,const char *,BOOLEAN_P));
+static boolean FDECL(wishymatch, (const char *,const char *,boolean));
 #endif
 static char *NDECL(nextobuf);
 static void FDECL(add_erosion_words, (struct obj *, char *));
@@ -775,7 +771,7 @@ ring:
 	}
 	if(obj->owornmask & W_QUIVER) Strcat(bp, " (in quiver)");
 	if(obj->unpaid) {
-		xchar ox, oy; 
+		signed char ox, oy; 
 		long quotedprice = unpaid_cost(obj);
 		struct monst *shkp = (struct monst *)0;
 
@@ -1943,7 +1939,7 @@ boolean from_user;
 	    }
 	}
 /*
-   otmp->spe is type schar; so we don't want spe to be any bigger or smaller.
+   otmp->spe is type signed char; so we don't want spe to be any bigger or smaller.
    also, spe should always be positive  -- some cheaters may try to confuse
    atoi()
 */

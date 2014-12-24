@@ -37,14 +37,14 @@ int  FDECL (main, (int, char **));
 void FDECL (yyerror, (const char *));
 void FDECL (yywarning, (const char *));
 int  NDECL (yywrap);
-int FDECL(get_floor_type, (CHAR_P));
+int FDECL(get_floor_type, (char));
 int FDECL(get_room_type, (char *));
 int FDECL(get_trap_type, (char *));
-int FDECL(get_monster_id, (char *,CHAR_P));
-int FDECL(get_object_id, (char *,CHAR_P));
-boolean FDECL(check_monster_char, (CHAR_P));
-boolean FDECL(check_object_char, (CHAR_P));
-char FDECL(what_map_char, (CHAR_P));
+int FDECL(get_monster_id, (char *,char));
+int FDECL(get_object_id, (char *,char));
+boolean FDECL(check_monster_char, (char));
+boolean FDECL(check_object_char, (char));
+char FDECL(what_map_char, (char));
 void FDECL(scan_map, (char *));
 void NDECL(wallify_map);
 boolean NDECL(check_subrooms);
@@ -905,7 +905,7 @@ lev_init *init;
 long flgs;
 {
 	char c;
-	uchar len;
+	unsigned char len;
 	static struct version_info version_data = {
 			VERSION_NUMBER, VERSION_FEATURES,
 			VERSION_SANITY1, VERSION_SANITY2
@@ -917,7 +917,7 @@ long flgs;
 	Write(fd, init, sizeof(lev_init));
 	Write(fd, &flgs, sizeof flgs);
 
-	len = (uchar) strlen(tmpmessage);
+	len = (unsigned char) strlen(tmpmessage);
 	Write(fd, &len, sizeof len);
 	if (len) Write(fd, tmpmessage, (int) len);
 	tmpmessage[0] = '\0';

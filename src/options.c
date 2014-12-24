@@ -371,15 +371,15 @@ STATIC_DCL void FDECL(nmcpy, (char *, const char *, int));
 STATIC_DCL void FDECL(escapes, (const char *, char *));
 STATIC_DCL void FDECL(rejectoption, (const char *));
 STATIC_DCL void FDECL(badoption, (const char *));
-STATIC_DCL char *FDECL(string_for_opt, (char *,BOOLEAN_P));
-STATIC_DCL char *FDECL(string_for_env_opt, (const char *, char *,BOOLEAN_P));
-STATIC_DCL void FDECL(bad_negation, (const char *,BOOLEAN_P));
+STATIC_DCL char *FDECL(string_for_opt, (char *,boolean));
+STATIC_DCL char *FDECL(string_for_env_opt, (const char *, char *,boolean));
+STATIC_DCL void FDECL(bad_negation, (const char *,boolean));
 STATIC_DCL int FDECL(change_inv_order, (char *));
 STATIC_DCL void FDECL(oc_to_str, (char *, char *));
 STATIC_DCL void FDECL(graphics_opts, (char *,const char *,int,int));
 STATIC_DCL int FDECL(feature_alert_opts, (char *, const char *));
 STATIC_DCL const char *FDECL(get_compopt_value, (const char *, char *));
-STATIC_DCL boolean FDECL(special_handling, (const char *, BOOLEAN_P, BOOLEAN_P));
+STATIC_DCL boolean FDECL(special_handling, (const char *, boolean, boolean));
 STATIC_DCL void FDECL(warning_opts, (char *,const char *));
 STATIC_DCL void FDECL(duplicate_opt_detection, (const char *, int));
 
@@ -469,11 +469,11 @@ initoptions()
 	flags.initalign = -1;
 
 	/* Set the default monster and object class symbols.  Don't use */
-	/* memcpy() --- sizeof char != sizeof uchar on some machines.	*/
+	/* memcpy() --- sizeof char != sizeof unsigned char on some machines.	*/
 	for (i = 0; i < MAXOCLASSES; i++)
-		oc_syms[i] = (uchar) def_oc_syms[i];
+		oc_syms[i] = (unsigned char) def_oc_syms[i];
 	for (i = 0; i < MAXMCLASSES; i++)
-		monsyms[i] = (uchar) def_monsyms[i];
+		monsyms[i] = (unsigned char) def_monsyms[i];
 	for (i = 0; i < WARNCOUNT; i++)
 		warnsyms[i] = def_warnsyms[i].sym;
 	iflags.bouldersym = 0;
@@ -750,7 +750,7 @@ register char *opts;
 const char *optype;
 int maxlen, offset;
 {
-	uchar translate[MAXPCHARS+1];
+	unsigned char translate[MAXPCHARS+1];
 	int length, i;
 
 	if (!(opts = string_for_env_opt(optype, opts, FALSE)))
@@ -761,7 +761,7 @@ int maxlen, offset;
 	if (length > maxlen) length = maxlen;
 	/* match the form obtained from PC configuration files */
 	for (i = 0; i < length; i++)
-		translate[i] = (uchar) opts[i];
+		translate[i] = (unsigned char) opts[i];
 	assign_graphics(translate, length, maxlen, offset);
 }
 
@@ -770,7 +770,7 @@ warning_opts(opts, optype)
 register char *opts;
 const char *optype;
 {
-	uchar translate[MAXPCHARS+1];
+	unsigned char translate[MAXPCHARS+1];
 	int length, i;
 
 	if (!(opts = string_for_env_opt(optype, opts, FALSE)))
@@ -782,13 +782,13 @@ const char *optype;
 	/* match the form obtained from PC configuration files */
 	for (i = 0; i < length; i++)
 	     translate[i] = (((i < WARNCOUNT) && opts[i]) ?
-			   (uchar) opts[i] : def_warnsyms[i].sym);
+			   (unsigned char) opts[i] : def_warnsyms[i].sym);
 	assign_warnings(translate);
 }
 
 void
 assign_warnings(graph_chars)
-register uchar *graph_chars;
+register unsigned char *graph_chars;
 {
 	int i;
 	for (i = 0; i < WARNCOUNT; i++)
@@ -1454,7 +1454,7 @@ goodfruit:
 		    length = MAXOCLASSES-1;	/* don't count RANDOM_OBJECT */
 
 		for (i = 0; i < length; i++)
-		    oc_syms[i+1] = (uchar) opts[i];
+		    oc_syms[i+1] = (unsigned char) opts[i];
 		return;
 	}
 
@@ -1477,7 +1477,7 @@ goodfruit:
 		    length = MAXMCLASSES-1;	/* mon class 0 unused */
 
 		for (i = 0; i < length; i++)
-		    monsyms[i+1] = (uchar) opts[i];
+		    monsyms[i+1] = (unsigned char) opts[i];
 		return;
 	}
 	fullname = "warnings";
@@ -1512,7 +1512,7 @@ goodfruit:
 			/*
 			 * Override the default boulder symbol.
 			 */
-			iflags.bouldersym = (uchar) opts[0];
+			iflags.bouldersym = (unsigned char) opts[0];
 		}
 		if (!initial) need_redraw = TRUE;
 		return;

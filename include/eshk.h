@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)eshk.h	3.4	1997/05/01	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef ESHK_H
 #define ESHK_H
 
@@ -22,8 +18,8 @@ struct eshk {
 	long debit;		/* amount of debt for using unpaid items */
 	long loan;		/* shop-gold picked (part of debit) */
 	int shoptype;		/* the value of rooms[shoproom].rtype */
-	schar shoproom;		/* index in rooms; set by inshop() */
-	schar unused;		/* to force alignment for stupid compilers */
+	signed char shoproom;		/* index in rooms; set by inshop() */
+	signed char unused;		/* to force alignment for stupid compilers */
 	boolean following;	/* following customer since he owes us sth */
 	boolean surcharge;	/* angry shk inflates prices */
 	coord shk;		/* usual position shopkeeper */

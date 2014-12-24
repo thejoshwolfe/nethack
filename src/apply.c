@@ -34,9 +34,9 @@ STATIC_DCL int FDECL(use_cream_pie, (struct obj *));
 STATIC_DCL int FDECL(use_grapple, (struct obj *));
 STATIC_DCL int FDECL(do_break_wand, (struct obj *));
 STATIC_DCL boolean FDECL(figurine_location_checks,
-				(struct obj *, coord *, BOOLEAN_P));
+				(struct obj *, coord *, boolean));
 STATIC_DCL boolean NDECL(uhave_graystone);
-STATIC_DCL void FDECL(add_class, (char *, CHAR_P));
+STATIC_DCL void FDECL(add_class, (char *, char));
 
 static const char no_elbow_room[] = "don't have enough elbow-room to maneuver.";
 
@@ -339,16 +339,11 @@ struct obj *obj;
 	}
 }
 
-boolean
-um_dist(x,y,n)
-register xchar x, y, n;
-{
+boolean um_dist(signed char x, signed char y, signed char n) {
 	return((boolean)(abs(u.ux - x) > n  || abs(u.uy - y) > n));
 }
 
-int
-number_leashed()
-{
+int number_leashed(void) {
 	register int i = 0;
 	register struct obj *obj;
 
@@ -532,7 +527,7 @@ next_to_u()
 
 void
 check_leash(x, y)
-register xchar x, y;
+register signed char x, y;
 {
 	register struct obj *otmp;
 	register struct monst *mtmp;
@@ -959,7 +954,7 @@ register struct obj *otmp;
 	if ((candle || otmp->otyp == CANDELABRUM_OF_INVOCATION) &&
 		otmp->lamplit) {
 	    char buf[BUFSZ];
-	    xchar x, y;
+	    signed char x, y;
 	    register boolean many = candle ? otmp->quan > 1L : otmp->spe > 1;
 
 	    (void) get_obj_location(otmp, &x, &y, 0);
@@ -981,7 +976,7 @@ boolean
 snuff_lit(obj)
 struct obj *obj;
 {
-	xchar x, y;
+	signed char x, y;
 
 	if (obj->lamplit) {
 	    if (obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
@@ -1003,7 +998,7 @@ boolean
 catch_lit(obj)
 struct obj *obj;
 {
-	xchar x, y;
+	signed char x, y;
 
 	if (!obj->lamplit && (obj->otyp == MAGIC_LAMP || ignitable(obj))) {
 	    if ((obj->otyp == MAGIC_LAMP ||
@@ -1658,7 +1653,7 @@ struct obj *obj;
 coord *cc;
 boolean quietly;
 {
-	xchar x,y;
+	signed char x,y;
 
 	if (carried(obj) && u.uswallow) {
 		if (!quietly)
@@ -1692,7 +1687,7 @@ use_figurine(optr)
 struct obj **optr;
 {
 	register struct obj *obj = *optr;
-	xchar x, y;
+	signed char x, y;
 	coord cc;
 
 	if (u.uswallow) {
@@ -1792,7 +1787,7 @@ struct obj *obj;
 
 static struct trapinfo {
 	struct obj *tobj;
-	xchar tx, ty;
+	signed char tx, ty;
 	int time_needed;
 	boolean force_bungle;
 } trapinfo;

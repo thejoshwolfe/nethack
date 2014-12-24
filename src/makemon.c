@@ -664,7 +664,7 @@ register struct	monst	*mtmp;
 struct monst *
 clone_mon(mon, x, y)
 struct monst *mon;
-xchar x, y;	/* clone's preferred location or 0 (near mon) */
+signed char x, y;	/* clone's preferred location or 0 (near mon) */
 {
 	coord mm;
 	struct monst *m2;
@@ -785,7 +785,7 @@ boolean tally;
 boolean ghostly;
 {
 	boolean result;
-	uchar lim = mbirth_limit(mndx);
+	unsigned char lim = mbirth_limit(mndx);
 	boolean gone = (mvitals[mndx].mvflags & G_GONE); /* genocided or extinct */
 
 	result = (((int) mvitals[mndx].born < lim) && !gone) ? TRUE : FALSE;
@@ -1601,7 +1601,7 @@ void
 set_malign(mtmp)
 struct monst *mtmp;
 {
-	schar mal = mtmp->data->maligntyp;
+	signed char mal = mtmp->data->maligntyp;
 	boolean coaligned;
 
 	if (mtmp->ispriest || mtmp->isminion) {

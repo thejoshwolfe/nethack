@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)questpgr.c	3.4	2000/05/05	*/
-/*	Copyright 1991, M. Stephenson		  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "dlb.h"
 
@@ -20,7 +16,7 @@ STATIC_DCL const char * NDECL(neminame);
 STATIC_DCL const char * NDECL(guardname);
 STATIC_DCL const char * NDECL(homebase);
 STATIC_DCL struct qtmsg * FDECL(msg_in, (struct qtmsg *,int));
-STATIC_DCL void FDECL(convert_arg, (CHAR_P));
+STATIC_DCL void FDECL(convert_arg, (char));
 STATIC_DCL void NDECL(convert_line);
 STATIC_DCL void FDECL(deliver_by_pline, (struct qtmsg *));
 STATIC_DCL void FDECL(deliver_by_window, (struct qtmsg *,int));

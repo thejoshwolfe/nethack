@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)wintype.h	3.4	1996/02/18	*/
-/* Copyright (c) David Cohrs, 1991				  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef WINTYPE_H
 #define WINTYPE_H
 
@@ -13,7 +9,7 @@ typedef union any {
     struct obj *a_obj;
     int  a_int;
     char a_char;
-    schar a_schar;
+    signed char a_schar;
     /* add types as needed */
 } anything;
 #define ANY_P union any /* avoid typedef in prototypes */

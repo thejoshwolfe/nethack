@@ -164,7 +164,7 @@ retry:
 		    startp->y = row;
 		    startp->x = viz_rmin[row];
 		
-		} else if (enexto(&testcc, (xchar)viz_rmin[row], row,
+		} else if (enexto(&testcc, (signed char)viz_rmin[row], row,
 						(struct permonst *) 0) &&
 			   !cansee(testcc.x, testcc.y) &&
 			   couldsee(testcc.x, testcc.y)) {
@@ -179,7 +179,7 @@ retry:
 		    startp->y = row;
 		    startp->x = viz_rmax[row];
 		
-		} else if (enexto(&testcc, (xchar)viz_rmax[row], row,
+		} else if (enexto(&testcc, (signed char)viz_rmax[row], row,
 						(struct permonst *) 0) &&
 			   !cansee(testcc.x,testcc.y) &&
 			   couldsee(testcc.x, testcc.y)) {

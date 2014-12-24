@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)region.c	3.4	2002/10/15	*/
-/* Copyright (c) 1996 by Jean-Christophe Collet	 */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "lev.h"
 
@@ -370,7 +366,7 @@ run_regions()
  */
 boolean
 in_out_region(x, y)
-xchar
+signed char
     x, y;
 {
     int i, f_indx;
@@ -422,7 +418,7 @@ xchar
 boolean
 m_in_out_region(mon, x, y)
 struct monst *mon;
-xchar x, y;
+signed char x, y;
 {
     int i, f_indx;
 
@@ -506,7 +502,7 @@ struct monst *mon;
  */
 NhRegion *
 visible_region_at(x, y)
-xchar x, y;
+signed char x, y;
 {
     register int i;
 
@@ -520,7 +516,7 @@ xchar x, y;
 void
 show_region(reg, x, y)
 NhRegion *reg;
-xchar x, y;
+signed char x, y;
 {
     show_glyph(x, y, reg->glyph);
 }
@@ -774,7 +770,7 @@ void * p2;
 
 NhRegion *
 create_gas_cloud(x, y, radius, damage)
-xchar x, y;
+signed char x, y;
 int radius;
 int damage;
 {

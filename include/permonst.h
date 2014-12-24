@@ -14,8 +14,8 @@
  */
 
 struct attack {
-	uchar		aatyp;
-	uchar		adtyp, damn, damd;
+	unsigned char		aatyp;
+	unsigned char		adtyp, damn, damd;
 };
 
 /*	Max # of attacks for any given monster.
@@ -37,7 +37,7 @@ struct attack {
 struct permonst {
 	const char	*mname;			/* full name */
 	char		mlet;			/* symbol */
-	schar		mlevel,			/* base monster level */
+	signed char		mlevel,			/* base monster level */
 			mmove,			/* move speed */
 			ac,			/* (base) armor class */
 			mr;			/* (base) magic resistance */
@@ -47,14 +47,14 @@ struct permonst {
 	unsigned short	cwt,			/* weight of corpse */
 			cnutrit;		/* its nutritional value */
 	short		pxlth;			/* length of extension */
-	uchar		msound;			/* noise it makes (6 bits) */
-	uchar		msize;			/* physical size (3 bits) */
-	uchar		mresists;		/* resistances */
-	uchar		mconveys;		/* conveyed by eating */
+	unsigned char		msound;			/* noise it makes (6 bits) */
+	unsigned char		msize;			/* physical size (3 bits) */
+	unsigned char		mresists;		/* resistances */
+	unsigned char		mconveys;		/* conveyed by eating */
 	unsigned long	mflags1,		/* boolean bitflags */
 			mflags2;		/* more boolean bitflags */
 	unsigned short	mflags3;		/* yet more boolean bitflags */
-	uchar		mcolor;			/* color to use */
+	unsigned char		mcolor;			/* color to use */
 };
 
 extern struct permonst

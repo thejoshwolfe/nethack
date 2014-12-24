@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)sp_lev.c	3.4	2001/09/06	*/
-/*	Copyright (c) 1989 by Jean-Christophe Collet */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * This file contains the various functions that are related to the special
  * levels.
@@ -26,10 +22,10 @@
 
 extern void FDECL(mkmap, (lev_init *));
 
-STATIC_DCL void FDECL(get_room_loc, (schar *, schar *, struct mkroom *));
-STATIC_DCL void FDECL(get_free_room_loc, (schar *, schar *, struct mkroom *));
+STATIC_DCL void FDECL(get_room_loc, (signed char *, signed char *, struct mkroom *));
+STATIC_DCL void FDECL(get_free_room_loc, (signed char *, signed char *, struct mkroom *));
 STATIC_DCL void FDECL(create_trap, (trap *, struct mkroom *));
-STATIC_DCL int FDECL(noncoalignment, (ALIGNTYP_P));
+STATIC_DCL int FDECL(noncoalignment, (aligntyp));
 STATIC_DCL void FDECL(create_monster, (monster *, struct mkroom *));
 STATIC_DCL void FDECL(create_object, (object *, struct mkroom *));
 STATIC_DCL void FDECL(create_engraving, (engraving *,struct mkroom *));
@@ -37,13 +33,13 @@ STATIC_DCL void FDECL(create_stairs, (stair *, struct mkroom *));
 STATIC_DCL void FDECL(create_altar, (altar *, struct mkroom *));
 STATIC_DCL void FDECL(create_gold, (gold *, struct mkroom *));
 STATIC_DCL void FDECL(create_feature, (int,int,struct mkroom *,int));
-STATIC_DCL boolean FDECL(search_door, (struct mkroom *, xchar *, xchar *,
-					XCHAR_P, int));
+STATIC_DCL boolean FDECL(search_door, (struct mkroom *, signed char *, signed char *,
+					signed char, int));
 STATIC_DCL void NDECL(fix_stair_rooms);
 STATIC_DCL void FDECL(create_corridor, (corridor *));
 
-STATIC_DCL boolean FDECL(create_subroom, (struct mkroom *, XCHAR_P, XCHAR_P,
-					XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P));
+STATIC_DCL boolean FDECL(create_subroom, (struct mkroom *, signed char, signed char,
+					signed char, signed char, signed char, signed char));
 
 #define LEFT	1
 #define H_LEFT	2
@@ -60,7 +56,7 @@ STATIC_DCL boolean FDECL(create_subroom, (struct mkroom *, XCHAR_P, XCHAR_P,
 #define YLIM	3
 
 #define Fread	(void)dlb_fread
-#define Fgetc	(schar)dlb_fgetc
+#define Fgetc	(signed char)dlb_fgetc
 #define New(type)		(type *) alloc(sizeof(type))
 #define NewTab(type, size)	(type **) alloc(sizeof(type *) * (unsigned)size)
 #define Free(ptr)		if(ptr) free((void *) (ptr))
@@ -71,13 +67,13 @@ extern int min_rx, max_rx, min_ry, max_ry; /* from mkmap.c */
 static char Map[COLNO][ROWNO];
 static char robjects[10], rloc_x[10], rloc_y[10], rmonst[10];
 static aligntyp	ralign[3] = { AM_CHAOTIC, AM_NEUTRAL, AM_LAWFUL };
-static xchar xstart, ystart;
+static signed char xstart, ystart;
 static char xsize, ysize;
 
-STATIC_DCL void FDECL(set_wall_property, (XCHAR_P,XCHAR_P,XCHAR_P,XCHAR_P,int));
+STATIC_DCL void FDECL(set_wall_property, (signed char,signed char,signed char,signed char,int));
 STATIC_DCL int NDECL(rnddoor);
 STATIC_DCL int NDECL(rndtrap);
-STATIC_DCL void FDECL(get_location, (schar *,schar *,int));
+STATIC_DCL void FDECL(get_location, (signed char *,signed char *,int));
 STATIC_DCL void FDECL(sp_lev_shuffle, (char *,char *,int));
 STATIC_DCL void FDECL(light_region, (region *));
 STATIC_DCL void FDECL(load_common_data, (dlb *,int));
@@ -102,10 +98,10 @@ lev_init init_lev;
 
 STATIC_OVL void
 set_wall_property(x1,y1,x2,y2, prop)
-xchar x1, y1, x2, y2;
+signed char x1, y1, x2, y2;
 int prop;
 {
-	register xchar x, y;
+	register signed char x, y;
 
 	for(y = y1; y <= y2; y++)
 	    for(x = x1; x <= x2; x++)
@@ -165,13 +161,9 @@ rndtrap()
 #define DRY	0x1
 #define WET	0x2
 
-STATIC_DCL boolean FDECL(is_ok_location, (SCHAR_P, SCHAR_P, int));
+STATIC_DCL boolean FDECL(is_ok_location, (signed char, signed char, int));
 
-STATIC_OVL void
-get_location(x, y, humidity)
-schar *x, *y;
-int humidity;
-{
+STATIC_OVL void get_location(signed char *x, signed char *y, int humidity) {
 	int cpt = 0;
 
 	if (*x >= 0) {			/* normal locations */
@@ -208,7 +200,7 @@ found_it:;
 
 STATIC_OVL boolean
 is_ok_location(x, y, humidity)
-register schar x, y;
+register signed char x, y;
 register int humidity;
 {
 	register int typ;
@@ -260,7 +252,7 @@ int n;
 
 STATIC_OVL void
 get_room_loc(x,y, croom)
-schar		*x, *y;
+signed char		*x, *y;
 struct mkroom	*croom;
 {
 	coord c;
@@ -288,10 +280,10 @@ struct mkroom	*croom;
 
 STATIC_OVL void
 get_free_room_loc(x,y, croom)
-schar		*x, *y;
+signed char		*x, *y;
 struct mkroom	*croom;
 {
-	schar try_x, try_y;
+	signed char try_x, try_y;
 	register int trycnt = 0;
 
 	do {
@@ -306,7 +298,7 @@ struct mkroom	*croom;
 
 boolean
 check_room(lowx, ddx, lowy, ddy, vault)
-xchar *lowx, *ddx, *lowy, *ddy;
+signed char *lowx, *ddx, *lowy, *ddy;
 boolean vault;
 {
 	register int x,y,hix = *lowx + *ddx, hiy = *lowy + *ddy;
@@ -361,12 +353,12 @@ chk:
 
 boolean
 create_room(x,y,w,h,xal,yal,rtype,rlit)
-xchar	x,y;
-xchar	w,h;
-xchar	xal,yal;
-xchar	rtype, rlit;
+signed char	x,y;
+signed char	w,h;
+signed char	xal,yal;
+signed char	rtype, rlit;
 {
-	xchar	xabs, yabs;
+	signed char	xabs, yabs;
 	int	wtmp, htmp, xaltmp, yaltmp, xtmp, ytmp;
 	NhRect	*r1 = 0, r2;
 	int	trycnt = 0;
@@ -395,7 +387,7 @@ xchar	rtype, rlit;
 	 * it up.
 	 */
 	do {
-		xchar xborder, yborder;
+		signed char xborder, yborder;
 		wtmp = w; htmp = h;
 		xtmp = x; ytmp = y;
 		xaltmp = xal; yaltmp = yal;
@@ -404,7 +396,7 @@ xchar	rtype, rlit;
 
 		if((xtmp < 0 && ytmp <0 && wtmp < 0 && xaltmp < 0 &&
 		   yaltmp < 0) || vault) {
-			xchar hx, hy, lx, ly, dx, dy;
+			signed char hx, hy, lx, ly, dx, dy;
 			r1 = rnd_rect(); /* Get a random rectangle */
 
 			if (!r1) { /* No more free rectangles ! */
@@ -529,14 +521,10 @@ xchar	rtype, rlit;
  * x & y are relative to the parent room.
  */
 
-STATIC_OVL boolean
-create_subroom(proom, x, y, w,  h, rtype, rlit)
-struct mkroom *proom;
-xchar x,y;
-xchar w,h;
-xchar rtype, rlit;
+STATIC_OVL boolean create_subroom(struct mkroom *proom, signed char x, signed char y,
+        signed char w,  signed char h, signed char rtype, signed char rlit)
 {
-	xchar width, height;
+	signed char width, height;
 
 	width = proom->hx - proom->lx + 1;
 	height = proom->hy - proom->ly + 1;
@@ -665,9 +653,9 @@ struct mkroom *broom;
 void
 create_secret_door(croom, walls)
     struct mkroom *croom;
-    xchar walls; /* any of W_NORTH | W_SOUTH | W_EAST | W_WEST (or W_ANY) */
+    signed char walls; /* any of W_NORTH | W_SOUTH | W_EAST | W_WEST (or W_ANY) */
 {
-    xchar sx, sy; /* location of the secret door */
+    signed char sx, sy; /* location of the secret door */
     int count;
 
     for(count = 0; count < 100; count++) {
@@ -709,7 +697,7 @@ create_trap(t,croom)
 trap	*t;
 struct mkroom	*croom;
 {
-    schar	x,y;
+    signed char	x,y;
     coord	tm;
 
     if (rn2(100) < t->chance) {
@@ -749,7 +737,7 @@ monster	*m;
 struct mkroom	*croom;
 {
     struct monst *mtmp;
-    schar x, y;
+    signed char x, y;
     char class;
     aligntyp amask;
     coord cc;
@@ -910,7 +898,7 @@ object	*o;
 struct mkroom	*croom;
 {
     struct obj *otmp;
-    schar x, y;
+    signed char x, y;
     char c;
     boolean named;	/* has a name been supplied in level description? */
 
@@ -952,7 +940,7 @@ struct mkroom	*croom;
 	}
 
 	if (o->spe != -127)	/* That means NOT RANDOM! */
-	    otmp->spe = (schar)o->spe;
+	    otmp->spe = (signed char)o->spe;
 
 	switch (o->curse_state) {
 	      case 1:	bless(otmp); break; /* BLESSED */
@@ -1047,7 +1035,7 @@ create_engraving(e, croom)
 engraving *e;
 struct mkroom *croom;
 {
-	xchar x, y;
+	signed char x, y;
 
 	x = e->x,  y = e->y;
 	if (croom)
@@ -1069,7 +1057,7 @@ create_stairs(s,croom)
 stair	*s;
 struct mkroom	*croom;
 {
-	schar		x,y;
+	signed char		x,y;
 
 	x = s->x; y = s->y;
 	get_free_room_loc(&x, &y, croom);
@@ -1085,7 +1073,7 @@ create_altar(a, croom)
 	altar		*a;
 	struct mkroom	*croom;
 {
-	schar		sproom,x,y;
+	signed char		sproom,x,y;
 	aligntyp	amask;
 	boolean		croom_is_temple = TRUE;
 	int oldtyp; 
@@ -1098,7 +1086,7 @@ create_altar(a, croom)
 		croom_is_temple = FALSE;
 	} else {
 	    get_location(&x, &y, DRY);
-	    if ((sproom = (schar) *in_rooms(x, y, TEMPLE)) != 0)
+	    if ((sproom = (signed char) *in_rooms(x, y, TEMPLE)) != 0)
 		croom = &rooms[sproom - ROOMOFFSET];
 	    else
 		croom_is_temple = FALSE;
@@ -1155,7 +1143,7 @@ create_gold(g,croom)
 gold *g;
 struct mkroom	*croom;
 {
-	schar		x,y;
+	signed char		x,y;
 
 	x = g->x; y= g->y;
 	if (croom)
@@ -1178,7 +1166,7 @@ int		fx, fy;
 struct mkroom	*croom;
 int		typ;
 {
-	schar		x,y;
+	signed char		x,y;
 	int		trycnt = 0;
 
 	x = fx;  y = fy;
@@ -1213,12 +1201,8 @@ int		typ;
  * Search for a door in a room on a specified wall.
  */
 
-STATIC_OVL boolean
-search_door(croom,x,y,wall,cnt)
-struct mkroom *croom;
-xchar *x, *y;
-xchar wall;
-int cnt;
+STATIC_OVL boolean search_door(struct mkroom *croom, signed char *x, signed char *y,
+        signed char wall, int cnt)
 {
 	int dx, dy;
 	int xx,yy;
@@ -1270,7 +1254,7 @@ boolean
 dig_corridor(org,dest,nxcor,ftyp,btyp)
 coord *org, *dest;
 boolean nxcor;
-schar ftyp, btyp;
+signed char ftyp, btyp;
 {
 	register int dx=0, dy=0, dix, diy, cct;
 	register struct rm *crm;
@@ -1598,7 +1582,7 @@ room *r, *pr;
 	boolean okroom;
 	struct mkroom	*aroom;
 	short i;
-	xchar rtype = (!r->chance || rn2(100) < r->chance) ? r->rtype : OROOM;
+	signed char rtype = (!r->chance || rn2(100) < r->chance) ? r->rtype : OROOM;
 
 	if(pr) {
 		aroom = &subrooms[nsubroom];
@@ -1706,7 +1690,7 @@ load_common_data(fd, typ)
 dlb *fd;
 int typ;
 {
-	uchar	n;
+	unsigned char	n;
 	long	lev_flags;
 	int	i;
 
@@ -1805,7 +1789,7 @@ STATIC_OVL boolean
 load_rooms(fd)
 dlb *fd;
 {
-	xchar		nrooms, ncorr;
+	signed char		nrooms, ncorr;
 	char		n;
 	short		size;
 	corridor	tmpcor;
@@ -2046,9 +2030,9 @@ int humidity;
 	    y = rn1(y_maze_max - 3, 3);
 	    if (--tryct < 0) break;	/* give up */
 	} while (!(x % 2) || !(y % 2) || Map[x][y] ||
-		 !is_ok_location((schar)x, (schar)y, humidity));
+		 !is_ok_location((signed char)x, (signed char)y, humidity));
 
-	m->x = (xchar)x,  m->y = (xchar)y;
+	m->x = (signed char)x,  m->y = (signed char)y;
 }
 
 /*
@@ -2061,12 +2045,12 @@ STATIC_OVL boolean
 load_maze(fd)
 dlb *fd;
 {
-    xchar   x, y, typ;
+    signed char   x, y, typ;
     boolean prefilled, room_not_needed;
 
     char    n, numpart = 0;
-    xchar   nwalk = 0, nwalk_sav;
-    schar   filling;
+    signed char   nwalk = 0, nwalk_sav;
+    signed char   filling;
     char    halign, valign;
 
     int     xi, dir, size;
@@ -2088,7 +2072,7 @@ dlb *fd;
     gold    tmpgold;
     fountain tmpfountain;
     engraving tmpengraving;
-    xchar   mustfill[(MAXNROFROOMS+1)*2];
+    signed char   mustfill[(MAXNROFROOMS+1)*2];
     struct trap *badtrap;
     boolean has_bounds;
 
@@ -2173,8 +2157,8 @@ dlb *fd;
 		    levl[x][y].roomno = 0;
 		    levl[x][y].edge = 0;
 		    /*
-		     * Note: Even though levl[x][y].typ is type schar,
-		     *	 lev_comp.y saves it as type char. Since schar != char
+		     * Note: Even though levl[x][y].typ is type signed char,
+		     *	 lev_comp.y saves it as type char. Since signed char != char
 		     *	 all the time we must make this exception or hack
 		     *	 through lev_comp.y to fix.
 		     */
@@ -2519,8 +2503,8 @@ dlb *fd;
 
     nwalk_sav = nwalk;
     while(nwalk--) {
-	    x = (xchar) walklist[nwalk].x;
-	    y = (xchar) walklist[nwalk].y;
+	    x = (signed char) walklist[nwalk].x;
+	    y = (signed char) walklist[nwalk].y;
 	    dir = walklist[nwalk].dir;
 
 	    /* don't use move() - it doesn't use W_NORTH, etc. */

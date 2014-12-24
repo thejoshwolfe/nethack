@@ -46,7 +46,7 @@ STATIC_PTR int NDECL(wiz_show_wmodes);
 #ifdef DEBUG_MIGRATING_MONS
 STATIC_PTR int NDECL(wiz_migrate_mons);
 #endif
-STATIC_DCL void FDECL(count_obj, (struct obj *, long *, long *, BOOLEAN_P, BOOLEAN_P));
+STATIC_DCL void FDECL(count_obj, (struct obj *, long *, long *, boolean, boolean));
 STATIC_DCL void FDECL(obj_chain, (winid, const char *, struct obj *, long *, long *));
 STATIC_DCL void FDECL(mon_invent_chain, (winid, const char *, struct monst *, long *, long *));
 STATIC_DCL void FDECL(mon_chain, (winid, const char *, struct monst *, long *, long *));
@@ -72,7 +72,7 @@ static void NDECL(end_of_input);
 static const char* readchar_queue="";
 
 STATIC_DCL char *NDECL(parse);
-STATIC_DCL boolean FDECL(help_dir, (CHAR_P,const char *));
+STATIC_DCL boolean FDECL(help_dir, (char,const char *));
 
 #ifdef OVL1
 
@@ -472,7 +472,7 @@ wiz_genesis()
 STATIC_PTR int
 wiz_where()
 {
-	if (wizard) (void) print_dungeon(FALSE, (schar *)0, (xchar *)0);
+	if (wizard) (void) print_dungeon(FALSE, (signed char *)0, (signed char *)0);
 	else	    pline("Unavailable command '^O'.");
 	return 0;
 }
@@ -2294,7 +2294,7 @@ register char *cmd;
 
 int
 xytod(x, y)	/* convert an x,y pair into a direction code */
-schar x, y;
+signed char x, y;
 {
 	register int dd;
 
@@ -2346,10 +2346,10 @@ char sym;
  */
 int get_adjacent_loc(prompt,emsg,x,y,cc)
 const char *prompt, *emsg;
-xchar x,y;
+signed char x,y;
 coord *cc;
 {
-	xchar new_x, new_y;
+	signed char new_x, new_y;
 	if (!getdir(prompt)) {
 		plines(Never_mind);
 		return 0;

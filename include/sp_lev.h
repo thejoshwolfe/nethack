@@ -40,98 +40,98 @@ typedef struct {
 	boolean init_present, padding;
 	char	fg, bg;
 	boolean smoothed, joined;
-	xchar	lit, walled;
+	signed char	lit, walled;
 } lev_init;
 
 typedef struct {
-	xchar x, y, mask;
+	signed char x, y, mask;
 } door;
 
 typedef struct {
-	xchar wall, pos, secret, mask;
+	signed char wall, pos, secret, mask;
 } room_door;
 
 typedef struct {
-	xchar x, y, chance, type;
+	signed char x, y, chance, type;
 } trap;
 
 typedef struct {
 	Str_or_Len name, appear_as;
 	short id;
 	aligntyp align;
-	xchar x, y, chance, class, appear;
-	schar peaceful, asleep;
+	signed char x, y, chance, class, appear;
+	signed char peaceful, asleep;
 } monster;
 
 typedef struct {
 	Str_or_Len name;
 	int   corpsenm;
 	short id, spe;
-	xchar x, y, chance, class, containment;
-	schar curse_state;
+	signed char x, y, chance, class, containment;
+	signed char curse_state;
 } object;
 
 typedef struct {
-	xchar		x, y;
+	signed char		x, y;
 	aligntyp	align;
-	xchar		shrine;
+	signed char		shrine;
 } altar;
 
 typedef struct {
-	xchar x, y, dir, db_open;
+	signed char x, y, dir, db_open;
 } drawbridge;
 
 typedef struct {
-	xchar x, y, dir;
+	signed char x, y, dir;
 } walk;
 
 typedef struct {
-	xchar x1, y1, x2, y2;
+	signed char x1, y1, x2, y2;
 } digpos;
 
 typedef struct {
-	xchar x, y, up;
+	signed char x, y, up;
 } lad;
 
 typedef struct {
-	xchar x, y, up;
+	signed char x, y, up;
 } stair;
 
 typedef struct {
-	xchar x1, y1, x2, y2;
-	xchar rtype, rlit, rirreg;
+	signed char x1, y1, x2, y2;
+	signed char rtype, rlit, rirreg;
 } region;
 
 /* values for rtype are defined in dungeon.h */
 typedef struct {
-	struct { xchar x1, y1, x2, y2; } inarea;
-	struct { xchar x1, y1, x2, y2; } delarea;
+	struct { signed char x1, y1, x2, y2; } inarea;
+	struct { signed char x1, y1, x2, y2; } delarea;
 	boolean in_islev, del_islev;
-	xchar rtype, padding;
+	signed char rtype, padding;
 	Str_or_Len rname;
 } lev_region;
 
 typedef struct {
-	xchar x, y;
+	signed char x, y;
 	int   amount;
 } gold;
 
 typedef struct {
-	xchar x, y;
+	signed char x, y;
 	Str_or_Len engr;
-	xchar etype;
+	signed char etype;
 } engraving;
 
 typedef struct {
-	xchar x, y;
+	signed char x, y;
 } fountain;
 
 typedef struct {
-	xchar x, y;
+	signed char x, y;
 } sink;
 
 typedef struct {
-	xchar x, y;
+	signed char x, y;
 } pool;
 
 typedef struct {
@@ -182,7 +182,7 @@ typedef struct {
 typedef struct {
 	long flags;
 	lev_init init_lev;
-	schar filling;
+	signed char filling;
 	char numpart;
 	mazepart **parts;
 } specialmaze;
@@ -190,9 +190,9 @@ typedef struct {
 typedef struct _room {
 	char  *name;
 	char  *parent;
-	xchar x, y, w, h;
-	xchar xalign, yalign;
-	xchar rtype, chance, rlit, filled;
+	signed char x, y, w, h;
+	signed char xalign, yalign;
+	signed char rtype, chance, rlit, filled;
 	char ndoor;
 	room_door **doors;
 	char ntrap;
@@ -223,9 +223,9 @@ typedef struct _room {
 
 typedef struct {
 	struct {
-		xchar room;
-		xchar wall;
-		xchar door;
+		signed char room;
+		signed char wall;
+		signed char door;
 	} src, dest;
 } corridor;
 
@@ -237,9 +237,9 @@ typedef struct {
 	char *robjects;
 	char nrmonst;
 	char *rmonst;
-	xchar nroom;
+	signed char nroom;
 	room **rooms;
-	xchar ncorr;
+	signed char ncorr;
 	corridor **corrs;
 } splev;
 

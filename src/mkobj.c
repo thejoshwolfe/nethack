@@ -1,12 +1,8 @@
-/*	SCCS Id: @(#)mkobj.c	3.4	2002/10/07	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "prop.h"
 
 STATIC_DCL void FDECL(mkbox_cnts,(struct obj *));
-STATIC_DCL void FDECL(obj_timer_checks,(struct obj *, XCHAR_P, XCHAR_P, int));
+STATIC_DCL void FDECL(obj_timer_checks,(struct obj *, signed char, signed char, int));
 #ifdef OVL1
 STATIC_DCL void FDECL(container_weight, (struct obj *));
 STATIC_DCL struct obj *FDECL(save_mtraits, (struct obj *, struct monst *));
@@ -1137,11 +1133,7 @@ int x, y;
 /* If ice was affecting any objects correct that now
  * Also used for starting ice effects too. [zap.c]
  */
-void
-obj_ice_effects(x, y, do_buried)
-int x, y;
-boolean do_buried;
-{
+void obj_ice_effects(int x, int y, boolean do_buried) {
 	struct obj *otmp;
 
 	for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere) {
@@ -1183,12 +1175,8 @@ struct obj *otmp;
     return retval;
 }
 
-STATIC_OVL void
-obj_timer_checks(otmp, x, y, force)
-struct obj *otmp;
-xchar x, y;
-int force;	/* 0 = no force so do checks, <0 = force off, >0 force on */
-{
+/* 0 = no force so do checks, <0 = force off, >0 force on */
+STATIC_OVL void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int force) {
     long tleft = 0L;
     short action = ROT_CORPSE;
     boolean restart_timer = FALSE;
@@ -1256,8 +1244,8 @@ void
 remove_object(otmp)
 register struct obj *otmp;
 {
-    xchar x = otmp->ox;
-    xchar y = otmp->oy;
+    signed char x = otmp->ox;
+    signed char y = otmp->oy;
 
     if (otmp->where != OBJ_FLOOR)
 	panic("remove_object: obj not on floor");

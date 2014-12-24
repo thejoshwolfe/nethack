@@ -71,9 +71,9 @@ typedef union
 	int	i;
 	char*	map;
 	struct {
-		xchar room;
-		xchar wall;
-		xchar door;
+		signed char room;
+		signed char wall;
+		signed char door;
 	} corpos;
 } YYSTYPE;
 extern YYSTYPE yylval;

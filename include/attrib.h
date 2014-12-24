@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)attrib.h	3.4	1990/22/02	*/
-/* Copyright 1988, Mike Stephenson				  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*	attrib.h - Header file for character class processing. */
 
 #ifndef ATTRIB_H
@@ -35,7 +31,7 @@
 #define STR19(x)	(100+(x))	/* For 19 and above */
 
 struct	attribs {
-	schar	a[A_MAX];
+	signed char	a[A_MAX];
 };
 
 #define ATTRMAX(x) ((x == A_STR && Upolyd && strongmonst(youmonst.data)) ? STR18(100) : urace.attrmax[x])

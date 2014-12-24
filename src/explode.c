@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)explode.c	3.4	2002/11/10	*/
-/*	Copyright (C) 1990 by Ken Arromdee */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #ifdef OVL0
@@ -36,7 +32,7 @@ int expltype;
 	const char *str;
 	int idamres, idamnonres;
 	struct monst *mtmp;
-	uchar adtyp;
+	unsigned char adtyp;
 	int explmask[3][3];
 		/* 0=normal explosion, 1=do shieldeff, 2=do nothing */
 	boolean shopdamage = FALSE;
@@ -232,7 +228,7 @@ int expltype;
 			uhurt = (explmask[i][j] == 1) ? 1 : 2;
 		idamres = idamnonres = 0;
 		if (type >= 0)
-		    (void)zap_over_floor((xchar)(i+x-1), (xchar)(j+y-1),
+		    (void)zap_over_floor((signed char)(i+x-1), (signed char)(j+y-1),
 		    		type, &shopdamage);
 
 		mtmp = m_at(i+x-1, j+y-1);
@@ -382,10 +378,10 @@ int expltype;
 struct scatter_chain {
 	struct scatter_chain *next;	/* pointer to next scatter item	*/
 	struct obj *obj;		/* pointer to the object	*/
-	xchar ox;			/* location of			*/
-	xchar oy;			/*	item			*/
-	schar dx;			/* direction of			*/
-	schar dy;			/*	travel			*/
+	signed char ox;			/* location of			*/
+	signed char oy;			/*	item			*/
+	signed char dx;			/* direction of			*/
+	signed char dy;			/*	travel			*/
 	int range;			/* range of object		*/
 	boolean stopped;		/* flag for in-motion/stopped	*/
 };
@@ -411,7 +407,7 @@ struct obj *obj;			/* only scatter this obj        */
 	register struct obj *otmp;
 	register int tmp;
 	int farthest = 0;
-	uchar typ;
+	unsigned char typ;
 	long qtmp;
 	boolean used_up;
 	boolean individual_object = obj ? TRUE : FALSE;
@@ -460,7 +456,7 @@ struct obj *obj;			/* only scatter this obj        */
 	    } else if ((scflags & MAY_DESTROY) && (!rn2(10)
 			|| (objects[otmp->otyp].oc_material == GLASS
 			|| otmp->otyp == EGG))) {
-		if (breaks(otmp, (xchar)sx, (xchar)sy)) used_up = TRUE;
+		if (breaks(otmp, (signed char)sx, (signed char)sy)) used_up = TRUE;
 	    }
 
 	    if (!used_up) {

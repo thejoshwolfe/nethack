@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)mhitu.c	3.4	2003/11/26	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "artifact.h"
 
@@ -22,8 +18,8 @@ STATIC_DCL void FDECL(mayberem, (struct obj *, const char *));
 STATIC_DCL boolean FDECL(diseasemu, (struct permonst *));
 STATIC_DCL int FDECL(hitmu, (struct monst *,struct attack *));
 STATIC_DCL int FDECL(gulpmu, (struct monst *,struct attack *));
-STATIC_DCL int FDECL(explmu, (struct monst *,struct attack *,BOOLEAN_P));
-STATIC_DCL void FDECL(missmu,(struct monst *,BOOLEAN_P,struct attack *));
+STATIC_DCL int FDECL(explmu, (struct monst *,struct attack *,boolean));
+STATIC_DCL void FDECL(missmu,(struct monst *,boolean,struct attack *));
 STATIC_DCL void FDECL(mswings,(struct monst *,struct obj *));
 STATIC_DCL void FDECL(wildmiss, (struct monst *,struct attack *));
 
@@ -2109,7 +2105,7 @@ struct attack *mattk;
 {
 	register struct permonst *pagr;
 	boolean agrinvis, defperc;
-	xchar genagr, gendef;
+	signed char genagr, gendef;
 
 	if (is_animal(magr->data)) return (0);
 	if(magr == &youmonst) {

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)muse.c	3.4	2002/12/23	*/
-/*	Copyright (C) 1990 by Ken Arromdee			   */
-/* NetHack may be freely redistributed.  See license for details.  */
-
 /*
  * Monster item usage routines.
  */
@@ -21,7 +17,7 @@ boolean m_using = FALSE;
 
 STATIC_DCL struct permonst *FDECL(muse_newcham_mon, (struct monst *));
 STATIC_DCL int FDECL(precheck, (struct monst *,struct obj *));
-STATIC_DCL void FDECL(mzapmsg, (struct monst *,struct obj *,BOOLEAN_P));
+STATIC_DCL void FDECL(mzapmsg, (struct monst *,struct obj *,boolean));
 STATIC_DCL void FDECL(mreadmsg, (struct monst *,struct obj *));
 STATIC_DCL void FDECL(mquaffmsg, (struct monst *,struct obj *));
 STATIC_PTR int FDECL(mbhitm, (struct monst *,struct obj *));
@@ -30,7 +26,7 @@ STATIC_DCL void FDECL(mbhit,
 	int FDECL((*),(OBJ_P,OBJ_P)),struct obj *));
 STATIC_DCL void FDECL(you_aggravate, (struct monst *));
 STATIC_DCL void FDECL(mon_consume_unstone, (struct monst *,struct obj *,
-	BOOLEAN_P,BOOLEAN_P));
+	boolean,boolean));
 
 static struct musable {
 	struct obj *offensive;
@@ -1167,7 +1163,7 @@ struct obj *obj;			/* 2nd arg to fhitm/fhito */
 {
 	register struct monst *mtmp;
 	register struct obj *otmp;
-	register uchar typ;
+	register unsigned char typ;
 	int ddx, ddy;
 
 	bhitpos.x = mon->mx;

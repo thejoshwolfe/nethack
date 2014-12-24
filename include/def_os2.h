@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)def_os2.h	3.4	1993/01/19	*/
-/* Copyright (c) Timo Hakulinen, 1990, 1991, 1992, 1993.	  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  *	Only a small portion of all OS/2 defines are needed, so the
  *	actual include files often need not be used.  In fact,
@@ -22,7 +18,6 @@
 typedef char CHAR;
 typedef void VOID;
 
-typedef unsigned char UCHAR;
 typedef unsigned short USHORT;
 typedef unsigned int UINT;
 typedef unsigned long ULONG;
@@ -87,10 +82,10 @@ typedef char * DAT PSZ;
 # pragma pack(2)
 
 typedef struct {
-	UCHAR  chChar;
-	UCHAR  chScan;
-	UCHAR  fbStatus;
-	UCHAR  bNlsShift;
+	unsigned char  chChar;
+	unsigned char  chScan;
+	unsigned char  fbStatus;
+	unsigned char  bNlsShift;
 	USHORT fsState;
 	ULONG  time;
 } KBDKEYINFO;
@@ -124,7 +119,7 @@ typedef struct {
 	ULONG cbFile;
 	ULONG cbFileAlloc;
 	ULONG attrFile;
-	UCHAR cchName;
+	unsigned char cchName;
 	CHAR  achName[CCHMAXPATHCOMP];
 } FILEFINDBUF3;
 
@@ -140,7 +135,7 @@ typedef struct {
 	ULONG  cbFile;
 	ULONG  cbFileAlloc;
 	USHORT attrFile;
-	UCHAR  cchName;
+	unsigned char  cchName;
 	CHAR   achName[CCHMAXPATHCOMP];
 } FILEFINDBUF;
 
@@ -168,14 +163,14 @@ typedef KBDINFO * DAT16 PKBDINFO;
 
 typedef struct {
 	USHORT cb;
-	UCHAR  fbType;
-	UCHAR  color;
+	unsigned char  fbType;
+	unsigned char  color;
 	USHORT col;
 	USHORT row;
 	USHORT hres;
 	USHORT vres;
-	UCHAR  fmt_ID;
-	UCHAR  attrib;
+	unsigned char  fmt_ID;
+	unsigned char  attrib;
 	ULONG  buf_addr;
 	ULONG  buf_length;
 	ULONG  full_length;

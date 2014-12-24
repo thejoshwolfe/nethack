@@ -8,7 +8,7 @@ STATIC_DCL struct monst *NDECL(findgd);
 
 #ifdef OVLB
 
-STATIC_DCL boolean FDECL(clear_fcorr, (struct monst *,BOOLEAN_P));
+STATIC_DCL boolean FDECL(clear_fcorr, (struct monst *,boolean));
 STATIC_DCL void FDECL(restfakecorr,(struct monst *));
 STATIC_DCL boolean FDECL(in_fcorridor, (struct monst *,int,int));
 STATIC_DCL void FDECL(move_gold,(struct obj *,int));
@@ -315,8 +315,8 @@ fnd:
 	    EGD(guard)->fakecorr[0].ftyp = levl[x][y].typ;
 	else { /* the initial guard location is a dug door */
 	    int vlt = EGD(guard)->vroom;
-	    xchar lowx = rooms[vlt].lx, hix = rooms[vlt].hx;
-	    xchar lowy = rooms[vlt].ly, hiy = rooms[vlt].hy;
+	    signed char lowx = rooms[vlt].lx, hix = rooms[vlt].hx;
+	    signed char lowy = rooms[vlt].ly, hiy = rooms[vlt].hy;
 
 	    if(x == lowx-1 && y == lowy-1)
 		EGD(guard)->fakecorr[0].ftyp = TLCORNER;
@@ -347,7 +347,7 @@ move_gold(gold, vroom)
 struct obj *gold;
 int vroom;
 {
-	xchar nx, ny;
+	signed char nx, ny;
 
 	remove_object(gold);
 	newsym(gold->ox, gold->oy);
@@ -365,7 +365,7 @@ struct monst *grd;
 	int x, y, typ;
 	int vlt = EGD(grd)->vroom;
 	char tmp_viz;
-	xchar lox = rooms[vlt].lx - 1, hix = rooms[vlt].hx + 1,
+	signed char lox = rooms[vlt].lx - 1, hix = rooms[vlt].hx + 1,
 	      loy = rooms[vlt].ly - 1, hiy = rooms[vlt].hy + 1;
 	struct monst *mon;
 	struct obj *gold;
@@ -432,7 +432,7 @@ register struct monst *grd;
 {
 	int x, y, nx, ny, m, n;
 	int dx, dy, gx, gy, fci;
-	uchar typ;
+	unsigned char typ;
 	struct fakecorridor *fcp;
 	register struct egd *egrd = EGD(grd);
 	register struct rm *crm;

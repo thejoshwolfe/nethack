@@ -527,7 +527,7 @@ forget_levels(percent)
 	int percent;
 {
 	int i, count;
-	xchar  maxl, this_lev;
+	signed char  maxl, this_lev;
 	int indices[MAXLINFO];
 
 	if (percent == 0) return;
@@ -649,7 +649,7 @@ register struct obj	*sobj;
 #endif
 	case SCR_ENCHANT_ARMOR:
 	    {
-		register schar s;
+		register signed char s;
 		boolean special_armor;
 		boolean same_color;
 

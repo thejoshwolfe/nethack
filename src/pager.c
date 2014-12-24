@@ -12,8 +12,8 @@ STATIC_DCL boolean FDECL(is_swallow_sym, (int));
 STATIC_DCL int FDECL(append_str, (char *, const char *));
 STATIC_DCL struct permonst * FDECL(lookat, (int, int, char *, char *));
 STATIC_DCL void FDECL(checkfile,
-		      (char *,struct permonst *,BOOLEAN_P,BOOLEAN_P));
-STATIC_DCL int FDECL(do_look, (BOOLEAN_P));
+		      (char *,struct permonst *,boolean,boolean));
+STATIC_DCL int FDECL(do_look, (boolean));
 STATIC_DCL boolean FDECL(help_menu, (int *));
 #ifdef PORT_HELP
 extern void NDECL(port_help);

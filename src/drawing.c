@@ -10,10 +10,10 @@
 
 #define g_FILLER(symbol) 0
 
-uchar oc_syms[MAXOCLASSES] = DUMMY; /* the current object  display symbols */
-uchar showsyms[MAXPCHARS]  = DUMMY; /* the current feature display symbols */
-uchar monsyms[MAXMCLASSES] = DUMMY; /* the current monster display symbols */
-uchar warnsyms[WARNCOUNT]  = DUMMY;  /* the current warning display symbols */
+unsigned char oc_syms[MAXOCLASSES] = DUMMY; /* the current object  display symbols */
+unsigned char showsyms[MAXPCHARS]  = DUMMY; /* the current feature display symbols */
+unsigned char monsyms[MAXMCLASSES] = DUMMY; /* the current monster display symbols */
+unsigned char warnsyms[WARNCOUNT]  = DUMMY;  /* the current warning display symbols */
 
 /* Default object class symbols.  See objclass.h. */
 const char def_oc_syms[MAXOCLASSES] = {
@@ -303,7 +303,7 @@ const struct symdef defsyms[MAXPCHARS] = {
 void NDECL((*ibmgraphics_mode_callback)) = 0;	/* set in tty_start_screen() */
 #endif /* PC9800 */
 
-static uchar ibm_graphics[MAXPCHARS] = {
+static unsigned char ibm_graphics[MAXPCHARS] = {
 /* 0*/	g_FILLER(S_stone),
 	0xb3,	/* S_vwall:	meta-3, vertical rule */
 	0xc4,	/* S_hwall:	meta-D, horizontal rule */
@@ -400,7 +400,7 @@ static uchar ibm_graphics[MAXPCHARS] = {
 
 void NDECL((*decgraphics_mode_callback)) = 0;  /* set in tty_start_screen() */
 
-static uchar dec_graphics[MAXPCHARS] = {
+static unsigned char dec_graphics[MAXPCHARS] = {
 /* 0*/	g_FILLER(S_stone),
 	0xf8,	/* S_vwall:	meta-x, vertical rule */
 	0xf1,	/* S_hwall:	meta-q, horizontal rule */
@@ -531,7 +531,7 @@ def_char_to_monclass(ch)
 
 void
 assign_graphics(graph_chars, glth, maxlen, offset)
-register uchar *graph_chars;
+register unsigned char *graph_chars;
 int glth, maxlen, offset;
 {
     register int i;
@@ -548,7 +548,7 @@ int gr_set_flag;
     switch (gr_set_flag) {
 	default:
 	case ASCII_GRAPHICS:
-	    assign_graphics((uchar *)0, 0, MAXPCHARS, 0);
+	    assign_graphics((unsigned char *)0, 0, MAXPCHARS, 0);
 #ifdef PC9800
 	    if (ascgraphics_mode_callback) (*ascgraphics_mode_callback)();
 #endif
@@ -587,11 +587,11 @@ int gr_set_flag;
 /*
  * saved display symbols for objects & features.
  */
-static uchar save_oc_syms[MAXOCLASSES] = DUMMY;
-static uchar save_showsyms[MAXPCHARS]  = DUMMY;
-static uchar save_monsyms[MAXPCHARS]   = DUMMY;
+static unsigned char save_oc_syms[MAXOCLASSES] = DUMMY;
+static unsigned char save_showsyms[MAXPCHARS]  = DUMMY;
+static unsigned char save_monsyms[MAXPCHARS]   = DUMMY;
 
-static const uchar r_oc_syms[MAXOCLASSES] = {
+static const unsigned char r_oc_syms[MAXOCLASSES] = {
 /* 0*/	'\0',
 	ILLOBJ_SYM,
 	WEAPON_SYM,
@@ -618,7 +618,7 @@ static const uchar r_oc_syms[MAXOCLASSES] = {
  * DOS, and a whole bunch of them under Linux.  Use the TTY Rogue characters
  * for those cases.
  */
-static const uchar IBM_r_oc_syms[MAXOCLASSES] = {	/* a la EPYX Rogue */
+static const unsigned char IBM_r_oc_syms[MAXOCLASSES] = {	/* a la EPYX Rogue */
 /* 0*/	'\0',
 	ILLOBJ_SYM,
 	')',			/* weapon  */
@@ -655,7 +655,7 @@ boolean is_rlevel;
 	(void) memcpy((void *)save_monsyms,
 		      (void *)monsyms, sizeof monsyms);
 
-	/* Use a loop: char != uchar on some machines. */
+	/* Use a loop: char != unsigned char on some machines. */
 	for (i = 0; i < MAXMCLASSES; i++)
 	    monsyms[i] = def_monsyms[i];
 	if (iflags.IBMgraphics)

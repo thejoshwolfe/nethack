@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)artifact.c 3.4	2003/08/11	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "artifact.h"
 #ifdef OVLB
@@ -24,7 +20,7 @@ extern boolean notonhead;	/* for long worms */
 STATIC_DCL int FDECL(spec_applies, (const struct artifact *,struct monst *));
 STATIC_DCL int FDECL(arti_invoke, (struct obj*));
 STATIC_DCL boolean FDECL(Mb_hit, (struct monst *magr,struct monst *mdef,
-				  struct obj *,int *,int,BOOLEAN_P,char *));
+				  struct obj *,int *,int,boolean,char *));
 
 /* The amount added to the victim's total hit points to insure that the
    victim will be killed even after damage bonus/penalty adjustments.
@@ -38,7 +34,7 @@ STATIC_DCL boolean FDECL(Mb_hit, (struct monst *magr,struct monst *mdef,
 
 #ifndef OVLB
 STATIC_DCL int spec_dbon_applies;
-STATIC_DCL xchar artidisco[NROFARTIFACTS];
+STATIC_DCL signed char artidisco[NROFARTIFACTS];
 #else	/* OVLB */
 /* coordinate effects from spec_dbon() with messages in artifact_hit() */
 STATIC_OVL int spec_dbon_applies = 0;
@@ -46,7 +42,7 @@ STATIC_OVL int spec_dbon_applies = 0;
 /* flags including which artifacts have already been created */
 static boolean artiexist[1+NROFARTIFACTS+1];
 /* and a discovery list for them (no dummy first entry here) */
-STATIC_OVL xchar artidisco[NROFARTIFACTS];
+STATIC_OVL signed char artidisco[NROFARTIFACTS];
 
 STATIC_DCL void NDECL(hack_artifacts);
 STATIC_DCL boolean FDECL(attacks, (int,struct obj *));
@@ -358,7 +354,7 @@ long wp_mask;
 {
 	long *mask = 0;
 	register const struct artifact *oart = get_artifact(otmp);
-	uchar dtyp;
+	unsigned char dtyp;
 	long spfx;
 
 	if (!oart) return;
@@ -664,7 +660,7 @@ int tmp;
 /* add identified artifact to discoveries list */
 void
 discover_artifact(m)
-xchar m;
+signed char m;
 {
     int i;
 
@@ -683,7 +679,7 @@ xchar m;
 /* used to decide whether an artifact has been fully identified */
 boolean
 undiscovered_artifact(m)
-xchar m;
+signed char m;
 {
     int i;
 
@@ -1436,7 +1432,7 @@ arti_speak(obj)
 boolean
 artifact_has_invprop(otmp, inv_prop)
 struct obj *otmp;
-uchar inv_prop;
+unsigned char inv_prop;
 {
 	const struct artifact *arti = get_artifact(otmp);
 

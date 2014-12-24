@@ -116,13 +116,6 @@
 #endif /* NHSTDC */
 
 
-#ifndef UNWIDENED_PROTOTYPES
-# if defined(NHSTDC)
-# define WIDENED_PROTOTYPES
-# endif
-#endif
-
-
 /*
  * Allow gcc2 to check parameters of printf-like calls with -Wformat;
  * append this to a prototype declaration (see pline() in extern.h).

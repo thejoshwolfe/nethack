@@ -28,18 +28,18 @@ static struct val_list { struct valuable_data *list; int size; } valuables[] = {
 STATIC_PTR void FDECL(done_intr, (int));
 static void FDECL(done_hangup, (int));
 #endif
-STATIC_DCL void FDECL(disclose,(int,BOOLEAN_P));
+STATIC_DCL void FDECL(disclose,(int,boolean));
 STATIC_DCL void FDECL(get_valuables, (struct obj *));
 STATIC_DCL void FDECL(sort_valuables, (struct valuable_data *,int));
-STATIC_DCL void FDECL(artifact_score, (struct obj *,BOOLEAN_P,winid));
+STATIC_DCL void FDECL(artifact_score, (struct obj *,boolean,winid));
 STATIC_DCL void FDECL(savelife, (int));
-STATIC_DCL void FDECL(list_vanquished, (CHAR_P,BOOLEAN_P));
+STATIC_DCL void FDECL(list_vanquished, (char,boolean));
 #ifdef DUMP_LOG
 extern void NDECL(dump_spells);
-void FDECL(do_vanquished, (int, BOOLEAN_P, BOOLEAN_P));
-STATIC_DCL void FDECL(list_genocided, (int, BOOLEAN_P, BOOLEAN_P));
+void FDECL(do_vanquished, (int, boolean, boolean));
+STATIC_DCL void FDECL(list_genocided, (int, boolean, boolean));
 #else
-STATIC_DCL void FDECL(list_genocided, (CHAR_P,BOOLEAN_P));
+STATIC_DCL void FDECL(list_genocided, (char,boolean));
 #endif /* DUMP_LOG */
 STATIC_DCL boolean FDECL(should_query_disclose_option, (int,char *));
 

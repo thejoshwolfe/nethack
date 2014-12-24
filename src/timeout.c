@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)timeout.c	3.4	2002/12/17	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "lev.h"	/* for checking save modes */
 
@@ -418,7 +414,7 @@ long timeout;
 	struct obj *egg;
 	struct monst *mon, *mon2;
 	coord cc;
-	xchar x, y;
+	signed char x, y;
 	boolean yours, silent, knows_egg = FALSE;
 	boolean cansee_hatchspot = FALSE;
 	int i, mnum, hatchcount = 0;
@@ -717,7 +713,7 @@ long timeout;
 {
 	struct obj *obj = (struct obj *) arg;
 	boolean canseeit, many, menorah, need_newsym;
-	xchar x, y;
+	signed char x, y;
 	char whose[BUFSZ];
 
 	menorah = obj->otyp == CANDELABRUM_OF_INVOCATION;
@@ -1089,7 +1085,7 @@ begin_burn(obj, already_lit)
 	}
 
 	if (obj->lamplit && !already_lit) {
-	    xchar x, y;
+	    signed char x, y;
 
 	    if (get_obj_location(obj, &x, &y, CONTAINED_TOO|BURIED_TOO))
 		new_light_source(x, y, radius, LS_OBJECT, (void *) obj);
@@ -1253,16 +1249,15 @@ do_storms()
  */
 
 #ifdef WIZARD
-STATIC_DCL const char *FDECL(kind_name, (SHORT_P));
+STATIC_DCL const char *FDECL(kind_name, (short));
 STATIC_DCL void FDECL(print_queue, (winid, timer_element *));
 #endif
 STATIC_DCL void FDECL(insert_timer, (timer_element *));
-STATIC_DCL timer_element *FDECL(remove_timer, (timer_element **, SHORT_P,
-								void *));
+STATIC_DCL timer_element *FDECL(remove_timer, (timer_element **, short, void *));
 STATIC_DCL void FDECL(write_timer, (int, timer_element *));
 STATIC_DCL boolean FDECL(mon_is_local, (struct monst *));
 STATIC_DCL boolean FDECL(timer_is_local, (timer_element *));
-STATIC_DCL int FDECL(maybe_write_timer, (int, int, BOOLEAN_P));
+STATIC_DCL int FDECL(maybe_write_timer, (int, int, boolean));
 
 /* ordered timer list */
 static timer_element *timer_base;		/* "active" */

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)dbridge.c	3.4	2003/02/08	*/
-/*	Copyright (c) 1989 by Jean-Christophe Collet		  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * This file contains the drawbridge manipulation (create, open, close,
  * destroy).
@@ -26,7 +22,7 @@ STATIC_DCL const char *FDECL(E_phrase, (struct entity *, const char *));
 STATIC_DCL boolean FDECL(e_survives_at, (struct entity *, int, int));
 STATIC_DCL void FDECL(e_died, (struct entity *, int, int));
 STATIC_DCL boolean FDECL(automiss, (struct entity *));
-STATIC_DCL boolean FDECL(e_missed, (struct entity *, BOOLEAN_P));
+STATIC_DCL boolean FDECL(e_missed, (struct entity *, boolean));
 STATIC_DCL boolean FDECL(e_jumps, (struct entity *));
 STATIC_DCL void FDECL(do_entity, (struct entity *));
 #endif /* OVLB */
@@ -37,7 +33,7 @@ boolean
 is_pool(x,y)
 int x,y;
 {
-    schar ltyp;
+    signed char ltyp;
 
     if (!isok(x,y)) return FALSE;
     ltyp = levl[x][y].typ;
@@ -51,7 +47,7 @@ boolean
 is_lava(x,y)
 int x,y;
 {
-    schar ltyp;
+    signed char ltyp;
 
     if (!isok(x,y)) return FALSE;
     ltyp = levl[x][y].typ;
@@ -65,7 +61,7 @@ boolean
 is_ice(x,y)
 int x,y;
 {
-    schar ltyp;
+    signed char ltyp;
 
     if (!isok(x,y)) return FALSE;
     ltyp = levl[x][y].typ;
