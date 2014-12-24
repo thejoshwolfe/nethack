@@ -1,4 +1,145 @@
 SHELL=/bin/sh
+YACC     = yacc
+LEX      = lex
+
+
+# these are the names of the output files from YACC/LEX.
+YTABC = ../util/y.tab.c
+YTABH = ../util/y.tab.h
+LEXYYC = ../util/lex.yy.c
+
+
+# timestamps for primary header files, matching src/Makefile
+CONFIG_H = config.h-t
+HACK_H	 = hack.h-t
+
+# files that define all monsters and objects
+OMONOBJ = monst.o objects.o
+# files that provide access to NetHack's names
+ONAMING = drawing.o decl.o $(OMONOBJ)
+# dynamic memory allocation
+OALLOC = alloc.o ../util/panic.o
+
+# object files for makedefs
+MAKEOBJS = ../util/makedefs.o $(OMONOBJ)
+
+# object files for special levels compiler
+SPLEVOBJS = ../util/lev_yacc.o ../util/lev_lex.o ../util/lev_main.o $(OALLOC) $(ONAMING)
+
+# object files for dungeon compiler
+DGNCOMPOBJS = ../util/dgn_yacc.o ../util/dgn_lex.o ../util/dgn_main.o $(OALLOC)
+
+# object files for recovery utility
+RECOVOBJS = ../util/recover.o
+
+# object files for the data librarian
+DLBOBJS = ../util/dlb_main.o dlb.o $(OALLOC)
+
+../util/makedefs:	$(MAKEOBJS)
+	$(CC) $(LFLAGS) -o $@ $(MAKEOBJS)
+
+../util/makedefs.o: ../util/makedefs.c $(CONFIG_H) ../include/permonst.h \
+		../include/objclass.h ../include/monsym.h \
+		../include/artilist.h ../include/dungeon.h ../include/obj.h \
+		../include/monst.h ../include/you.h ../include/flag.h \
+		../include/dlb.h ../include/patchlevel.h ../include/qtext.h
+
+../include/onames.h: ../util/makedefs
+	../util/./makedefs -o
+../include/pm.h: ../util/makedefs
+	../util/./makedefs -p
+monstr.c: ../util/makedefs
+	../util/./makedefs -m
+../include/vis_tab.h: ../util/makedefs
+	../util/./makedefs -z
+# makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
+vis_tab.c: ../include/vis_tab.h
+
+
+# support code used by several of the utility programs (but not makedefs)
+../util/panic.o:     ../util/panic.c $(CONFIG_H)
+
+
+../util/lev_comp:  $(SPLEVOBJS)
+	$(CC) -o $@ $(SPLEVOBJS)
+
+../util/lev_yacc.o:  ../util/lev_yacc.c $(HACK_H) ../include/sp_lev.h
+../util/lev_main.o:  ../util/lev_main.c $(HACK_H) ../include/sp_lev.h ../include/tcap.h ../include/date.h
+
+# see lev_comp.l for WEIRD_LEX discussion
+# egrep will return failure if it doesn't find anything, but we know there
+# is one "_cplusplus" inside a comment
+../util/lev_lex.o:   ../util/lev_lex.c $(HACK_H) ../include/lev_comp.h ../include/sp_lev.h
+	$(CC) -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus ../util/lev_lex.c` -o $@ ../util/lev_lex.c
+
+../include/lev_comp.h: ../util/lev_yacc.c
+
+../util/lev_yacc.c: ../util/lev_comp.y
+	(cd ../util && $(YACC) -d ../util/lev_comp.y)
+	mv $(YTABC) ../util/lev_yacc.c
+	mv $(YTABH) ../include/lev_comp.h
+
+../util/lev_lex.c: ../util/lev_comp.l
+	(cd ../util && $(LEX) ../util/lev_comp.l)
+	mv $(LEXYYC) ../util/lev_lex.c
+
+
+../util/dgn_comp:  $(DGNCOMPOBJS)
+	$(CC) $(LFLAGS) -o $@ $(DGNCOMPOBJS)
+
+../util/dgn_yacc.o:  ../util/dgn_yacc.c $(CONFIG_H) ../include/dgn_file.h ../include/date.h
+../util/dgn_main.o:  ../util/dgn_main.c $(CONFIG_H) ../include/dlb.h
+
+# see dgn_comp.l for WEIRD_LEX discussion
+../util/dgn_lex.o:   ../util/dgn_lex.c $(CONFIG.H) ../include/dgn_comp.h ../include/dgn_file.h
+	$(CC) -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus ../util/dgn_lex.c` -o $@ ../util/dgn_lex.c
+
+
+../include/dgn_comp.h: ../util/dgn_yacc.c
+
+../util/dgn_yacc.c: ../util/dgn_comp.y
+	(cd ../util && $(YACC) -d ../util/dgn_comp.y)
+	mv $(YTABC) ../util/dgn_yacc.c
+	mv $(YTABH) ../include/dgn_comp.h
+
+../util/dgn_lex.c: ../util/dgn_comp.l
+	(cd ../util && $(LEX) ../util/dgn_comp.l)
+	mv $(LEXYYC) ../util/dgn_lex.c
+
+
+../util/recover: $(RECOVOBJS)
+	$(CC) $(LFLAGS) -o $@ $(RECOVOBJS)
+
+../util/recover.o: ../util/recover.c $(CONFIG_H) ../include/date.h
+
+
+../util/dlb:	$(DLBOBJS)
+	$(CC) $(LFLAGS) -o $@ $(DLBOBJS)
+
+../util/dlb_main.o: ../util/dlb_main.c $(CONFIG_H) ../include/dlb.h ../include/date.h
+	$(CC) $(CFLAGS) -o $@ -c ../util/dlb_main.c
+
+
+# make sure object files from src are available when needed
+#
+alloc.o: alloc.c $(CONFIG_H)
+	$(CC) $(CFLAGS) -c alloc.c -o $@
+drawing.o: drawing.c $(CONFIG_H)
+	$(CC) $(CFLAGS) -c drawing.c -o $@
+decl.o: decl.c $(CONFIG_H)
+	$(CC) $(CFLAGS) -c decl.c -o $@
+monst.o: monst.c $(CONFIG_H)
+	$(CC) $(CFLAGS) -c monst.c -o $@
+objects.o: objects.c $(CONFIG_H)
+	$(CC) $(CFLAGS) -c objects.c -o $@
+dlb.o: dlb.c $(HACK_H) ../include/dlb.h
+	$(CC) $(CFLAGS) -c dlb.c -o $@
+
+
+
+
+
+
 
 SYSSRC = ../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c
@@ -16,10 +157,6 @@ WINSRC = $(WINTTYSRC)
 WINOBJ = $(WINTTYOBJ)
 
 MAKEDEFS = ../util/makedefs
-
-# timestamp files to reduce `make' overhead and shorten .o dependency lists
-CONFIG_H = ../src/config.h-t
-HACK_H	= ../src/hack.h-t
 
 # all .c that are part of the main NetHack program and are not operating- or
 # windowing-system specific
@@ -45,8 +182,8 @@ SYSCSRC = ../sys/atari/tos.c \
 	../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c ../sys/be/bemain.c
 
-# generated source files (tile.c is handled separately via WINxxxSRC)
-GENCSRC = monstr.c vis_tab.c	#tile.c
+# generated source files
+GENCSRC = monstr.c vis_tab.c
 
 # .c files for this version (for date.h)
 VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(GENCSRC)
@@ -87,36 +224,13 @@ HOBJ = monst.o objects.o allmain.o alloc.o apply.o artifact.o attrib.o ball.o \
 	$(SYSOBJ) $(WINOBJ) version.o
 
 nethack:	$(HOBJ)
-	$(CC) $(LFLAGS) -o nethack $(HOBJ) -lncurses
+	$(CC) -o $@ $(HOBJ) -lncurses
 
 all:	nethack
 
 
-monst.o:
-	$(CC) $(CFLAGS) -c monst.c
-
-objects.o:
-	$(CC) $(CFLAGS) -c objects.c
-
-$(MAKEDEFS): ../util/makedefs.c  $(CONFIG_H) ../include/permonst.h \
-		../include/objclass.h ../include/monsym.h \
-		../include/artilist.h ../include/dungeon.h ../include/obj.h \
-		../include/monst.h ../include/you.h ../include/flag.h \
-		../include/dlb.h ../include/patchlevel.h ../include/qtext.h
-	@( cd ../util ; $(MAKE) ../util/makedefs)
-
-../include/onames.h: $(MAKEDEFS)
-	@( cd ../util ; $(MAKE) ../include/onames.h )
-../include/pm.h: $(MAKEDEFS)
-	@( cd ../util ; $(MAKE) ../include/pm.h )
-monstr.c: $(MAKEDEFS)
-	@( cd ../util ; $(MAKE) ../src/monstr.c )
-../include/vis_tab.h: $(MAKEDEFS)
-	@( cd ../util ; $(MAKE) ../include/vis_tab.h )
 # makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
 vis_tab.c: ../include/vis_tab.h
-tile.c: ../win/share/tilemap.c $(HACK_H)
-	@( cd ../util ; $(MAKE) ../src/tile.c )
 
 ../win/gnome/gn_rip.h: ../win/X11/rip.xpm
 	cp ../win/X11/rip.xpm ../win/gnome/gn_rip.h
@@ -177,7 +291,6 @@ topl.o: ../win/tty/topl.c $(HACK_H) ../include/tcap.h
 wintty.o: ../win/tty/wintty.c $(HACK_H) ../include/dlb.h \
 		../include/patchlevel.h ../include/tcap.h
 	$(CC) $(CFLAGS) -c ../win/tty/wintty.c
-tile.o: tile.c $(HACK_H)
 monstr.o: monstr.c $(CONFIG_H)
 vis_tab.o: vis_tab.c $(CONFIG_H) ../include/vis_tab.h
 allmain.o: allmain.c $(HACK_H)
