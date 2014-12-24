@@ -1,4 +1,3 @@
-SYSTEM = Sysunix
 SHELL=/bin/sh
 LINK=$(CC)
 
@@ -16,12 +15,6 @@ WINTTYOBJ = getline.o termcap.o topl.o wintty.o
 
 WINSRC = $(WINTTYSRC)
 WINOBJ = $(WINTTYOBJ)
-
-WINCURSESLIB = -lncurses
-
-WINLIB = $(WINCURSESLIB)
-
-LIBS =
 
 MAKEDEFS = ../util/makedefs
 
@@ -55,9 +48,6 @@ SYSCSRC = ../sys/atari/tos.c \
 
 # generated source files (tile.c is handled separately via WINxxxSRC)
 GENCSRC = monstr.c vis_tab.c	#tile.c
-
-# all windowing-system-dependent .c (for dependencies and such)
-WINCSRC = $(WINTTYSRC) $(WINGNOMESRC) $(WINGEMSRC) $(WINLISPSRC)
 
 # .c files for this version (for date.h)
 VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(GENCSRC)
@@ -99,15 +89,9 @@ HOBJ = $(FIRSTOBJ) allmain.o alloc.o apply.o artifact.o attrib.o ball.o \
 	uhitm.o vault.o vision.o vis_tab.o weapon.o were.o wield.o windows.o \
 	wizard.o worm.o worn.o write.o zap.o \
 	$(SYSOBJ) $(WINOBJ) version.o
-# the .o files from the HACKCSRC, SYSSRC, and WINSRC lists
 
-nethack:	$(SYSTEM)
-	@echo "nethack is up to date."
-
-Sysunix:	$(HOBJ) Makefile
-	@echo "Loading ..."
-	$(LINK) $(LFLAGS) -o nethack $(HOBJ) $(WINLIB) $(LIBS)
-	@touch Sysunix
+nethack:	$(HOBJ)
+	$(LINK) $(LFLAGS) -o nethack $(HOBJ) -lncurses
 
 all:	nethack
 
