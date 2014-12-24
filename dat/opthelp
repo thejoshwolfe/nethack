@@ -8,18 +8,21 @@ autoquiver     when firing with an empty quiver, select some
                suitable inventory weapon to fill the quiver       [FALSE]
 BIOS           allow the use of IBM ROM BIOS calls                [FALSE]
 cmdassist      give help for errors on direction & other commands [TRUE]
+color          use different colors for objects on screen         [FALSE]
 confirm        ask before hitting tame or peaceful monsters       [TRUE]
 DECgraphics    use DEC/VT line-drawing characters for the dungeon [FALSE]
 eight_bit_tty  send 8-bit characters straight to terminal         [FALSE]
 extmenu        use a menu for selecting extended commands (#)     [FALSE]
 fixinv         try to retain the same letter for the same object  [TRUE]
 help           print all available info when using the / command  [TRUE]
+hilite_pet     display pets in a highlighted manner               [FALSE]
 IBMgraphics    use IBM extended characters for the dungeon        [FALSE]
 ignintr        ignore interrupt signal, including breaks          [FALSE]
 legacy         print introductory message                         [TRUE]
 lit_corridor   show a dark corridor as lit if in sight            [FALSE]
 lootabc        use a/b/c rather than o/i/b when looting           [FALSE]
 mail           enable the mail daemon                             [TRUE]
+menucolors     use different colors for menus                     [FALSE]
 null           allow nulls to be sent to your terminal            [TRUE]
                try turning this option off (forcing NetHack to use its own
                delay code) if moving objects seem to teleport across rooms
@@ -49,6 +52,8 @@ verbose        print more commentary during the game              [TRUE]
 
 
 
+
+
 There are further boolean options controlled by compilation flags.
 
 Boolean option if INSURANCE was set at compile time:
@@ -70,15 +75,8 @@ showexp    display your accumulated experience points             [FALSE]
 Boolean option if SCORE_ON_BOTL was set at compile time:
 showscore  display your approximate accumulated score             [FALSE]
 
-Boolean options if TEXTCOLOR was set at compile time:
-color      use different colors for objects on screen   [TRUE for micros]
-hilite_pet display pets in a highlighted manner                   [FALSE]
-
 Boolean option if HPMON was set at compile time:
 hpmon      color HP readout depending on how low it is            [FALSE]
-
-Boolean option if TEXTCOLOR and MENU_COLOR were set at compile time:
-menucolors use different colors for menus               [TRUE for micros]
 
 Boolean option if TIMED_DELAY was set at compile time (tty interface only):
 timed_delay    on unix, use a timer instead of sending extra
@@ -198,9 +196,7 @@ menucolor  Set colors for menus. (menucolor:"regex_string"=color)
 	   You can define menucolor as many times as you wish; those
 	   defined later will take precedence.
 	   Instead of using this with OPTIONS, consider using
-	   MENUCOLOR="regex_string"=color in the configuration file.
-	   Setting menucolor has effect only if TEXTCOLOR and MENU_COLOR
-	   were set at compile time.  [NONE]
+	   MENUCOLOR="regex_string"=color in the configuration file.  [NONE]
 menu_*     create single character accelerators for menu commands.  Below
            is a list of all commands.  Each is followed by a list of window-
            ports that implement them:  'x' is X11, 't' is tty, 'g' is Gem,

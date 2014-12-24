@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)flag.h	3.4	2002/08/22	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /* If you change the flag structure make sure you increment EDITLEVEL in   */
 /* patchlevel.h if needed.  Changing the instance_flags structure does	   */
 /* not require incrementing EDITLEVEL.					   */
@@ -212,7 +208,7 @@ struct instance_flags {
 	boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
 #endif
 
-#if defined(HPMON) && defined(TEXTCOLOR)
+#if defined(HPMON)
         boolean use_hpmon;
 #endif
 
@@ -289,17 +285,10 @@ struct instance_flags {
 #ifdef TTY_GRAPHICS
 #define eight_bit_tty wc_eight_bit_input
 #endif
-#ifdef TEXTCOLOR
+
 #define use_color wc_color
-#endif
 #define hilite_pet wc_hilite_pet
 #define use_inverse wc_inverse
-#ifdef MAC_GRAPHICS_ENV
-#define large_font obsolete
-#endif
-#ifdef MAC
-#define popup_dialog wc_popup_dialog
-#endif
 #define preload_tiles wc_preload_tiles
 
 extern struct flag flags;

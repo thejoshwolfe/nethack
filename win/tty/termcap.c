@@ -14,7 +14,7 @@ static char * FDECL(e_atr2str, (int));
 
 void FDECL(cmov, (int, int));
 void FDECL(nocmov, (int, int));
-#if defined(TEXTCOLOR) && defined(TERMLIB)
+#if defined(TERMLIB)
 # ifdef OVLB
 static void NDECL(init_hilite);
 static void NDECL(kill_hilite);
@@ -32,9 +32,7 @@ STATIC_VAR char *VS, *VE;
 STATIC_VAR char *ME;
 STATIC_VAR char *MR;
 #ifdef TERMLIB
-# ifdef TEXTCOLOR
 STATIC_VAR char *MD;
-# endif
 STATIC_VAR int SG;
 #ifdef OVLB
 STATIC_OVL char PC = '\0';
@@ -44,13 +42,7 @@ STATIC_DCL char PC;
 STATIC_VAR char tbuf[512];
 #endif
 
-#ifdef TEXTCOLOR
-# ifdef TOS
-const char *hilites[CLR_MAX];	/* terminal escapes for the various colors */
-# else
 char *hilites[CLR_MAX]; /* terminal escapes for the various colors */
-# endif
-#endif
 
 #ifdef OVLB
 static char *KS = (char *)0, *KE = (char *)0;	/* keypad sequences */
@@ -138,7 +130,6 @@ int *wid, *hgt;
 		AS = "\016";
 		AE = "\017";
 		TE = VS = VE = nullstr;
-#  ifdef TEXTCOLOR
 		for (i = 0; i < CLR_MAX / 2; i++)
 		    if (i != CLR_BLACK) {
 			hilites[i|BRIGHT] = (char *) alloc(sizeof("\033[1;3%dm"));
@@ -149,7 +140,6 @@ int *wid, *hgt;
 				Sprintf(hilites[i], "\033[0;3%dm", i);
 			    }
 		    }
-#  endif
 		*wid = CO;
 		*hgt = LI;
 		CL = "\033[2J";		/* last thing set */
@@ -244,19 +234,8 @@ int *wid, *hgt;
 	AS = Tgetstr("as");
 	AE = Tgetstr("ae");
 	nh_CD = Tgetstr("cd");
-# ifdef TEXTCOLOR
 	MD = Tgetstr("md");
-# endif
-# ifdef TEXTCOLOR
-#  if defined(TOS) && defined(__GNUC__)
-	if (!strcmp(term, "builtin") || !strcmp(term, "tw52") ||
-	    !strcmp(term, "st52")) {
-		init_hilite();
-	}
-#  else
 	init_hilite();
-#  endif
-# endif
 	*wid = CO;
 	*hgt = LI;
 	if (!(CL = Tgetstr("cl")))	/* last thing set */
@@ -269,10 +248,8 @@ int *wid, *hgt;
 
 /* note: at present, this routine is not part of the formal window interface */
 /* deallocate resources prior to final termination */
-void
-tty_shutdown()
-{
-#if defined(TEXTCOLOR) && defined(TERMLIB)
+void tty_shutdown(void) {
+#if defined(TERMLIB)
 	kill_hilite();
 #endif
 	/* we don't attempt to clean up individual termcap variables [yet?] */
@@ -665,7 +642,7 @@ cl_eos()			/* free after Robert Viduya */
 	}
 }
 
-#if defined(TEXTCOLOR) && defined(TERMLIB)
+#if defined(TERMLIB)
 /*
  * Sets up color highlighting, using terminfo(4) escape sequences.
  *
@@ -774,7 +751,7 @@ kill_hilite()
 # endif
 	return;
 }
-#endif /* TEXTCOLOR */
+#endif /* TERMLIB */
 
 
 static char nulstr[] = "";
@@ -788,7 +765,7 @@ int n;
 		    if(nh_US) return nh_US;
 	    case ATR_BOLD:
 	    case ATR_BLINK:
-#if defined(TERMLIB) && defined(TEXTCOLOR)
+#if defined(TERMLIB)
 		    if (MD) return MD;
 #endif
 		    return nh_HI;
@@ -849,58 +826,22 @@ term_end_raw_bold()
 }
 
 
-#ifdef TEXTCOLOR
 
-void
-term_end_color()
-{
+void term_end_color(void) {
 	xputs(nh_HE);
 }
 
 
-void
-term_start_color(color)
-int color;
-{
+void term_start_color(int color) {
 	xputs(hilites[color]);
 }
 
 
-int
-has_color(color)
-int color;
-{
-#ifdef X11_GRAPHICS
-	/* XXX has_color() should be added to windowprocs */
-	if (windowprocs.name != NULL &&
-	    !strcmpi(windowprocs.name, "X11")) return TRUE;
-#endif
-#ifdef GEM_GRAPHICS
-	/* XXX has_color() should be added to windowprocs */
-	if (windowprocs.name != NULL &&
-	    !strcmpi(windowprocs.name, "Gem")) return TRUE;
-#endif
-#ifdef LISP_GRAPHICS
-	/* XXX has_color() should be added to windowprocs */
-	if (windowprocs.name != NULL &&
-	    !strcmpi(windowprocs.name, "lisp")) return TRUE;
-#endif
-#ifdef QT_GRAPHICS
-	/* XXX has_color() should be added to windowprocs */
-	if (windowprocs.name != NULL &&
-	    !strcmpi(windowprocs.name, "Qt")) return TRUE;
-#endif
-#ifdef AMII_GRAPHICS
-	/* hilites[] not used */
-	return iflags.use_color;
-#endif
+int has_color(int color) {
 	return hilites[color] != (char *)0;
 }
 
-#endif /* TEXTCOLOR */
 
 #endif /* OVLB */
 
 #endif /* TTY_GRAPHICS */
-
-/*termcap.c*/

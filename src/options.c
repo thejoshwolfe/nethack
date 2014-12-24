@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)options.c	3.4	2003/11/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "tcap.h"
 #include <ctype.h>
@@ -66,7 +62,7 @@ static struct Bool_Opt
 #else
 	{"extmenu", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
-#if defined(TEXTCOLOR) && defined(HPMON)
+#if defined(HPMON)
         { "hpmon", &iflags.use_hpmon, FALSE, SET_IN_GAME},
 #endif
 #ifdef OPT_DISPMAP
@@ -331,10 +327,6 @@ static struct Comp_Opt
 
 static boolean need_redraw; /* for doset() */
 
-#if defined(TOS) && defined(TEXTCOLOR)
-extern boolean colors_changed;	/* in tos.c */
-#endif
-
 #ifdef VIDEOSHADES
 extern char *shade[3];		  /* in sys/msdos/video.c */
 extern char ttycolors[CLR_MAX];	  /* in sys/msdos/video.c */
@@ -534,7 +526,7 @@ initoptions()
 	for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++)
 		flags.end_disclose[i] = DISCLOSE_PROMPT_DEFAULT_NO;
 	switch_graphics(ASCII_GRAPHICS);	/* set default characters */
-#if defined(UNIX) && defined(TTY_GRAPHICS)
+#if defined(TTY_GRAPHICS)
 	/*
 	 * Set defaults for some options depending on what we can
 	 * detect about the environment's capabilities.
@@ -545,11 +537,9 @@ initoptions()
 	/* this detects the IBM-compatible console on most 386 boxes */
 	if ((opts = nh_getenv("TERM")) && !strncmp(opts, "AT", 2)) {
 		switch_graphics(IBM_GRAPHICS);
-# ifdef TEXTCOLOR
 		iflags.use_color = TRUE;
-# endif
 	}
-#endif /* UNIX && TTY_GRAPHICS */
+#endif /* TTY_GRAPHICS */
 # ifdef TTY_GRAPHICS
 	/* detect whether a "vt" terminal can handle alternate charsets */
 	if ((opts = nh_getenv("TERM")) &&
@@ -559,15 +549,11 @@ initoptions()
 	}
 # endif
 
-#ifdef MAC_GRAPHICS_ENV
-	switch_graphics(MAC_GRAPHICS);
-#endif /* MAC_GRAPHICS_ENV */
 	flags.menu_style = MENU_FULL;
 
 	/* since this is done before init_objects(), do partial init here */
 	objects[SLIME_MOLD].oc_name_idx = SLIME_MOLD;
 	nmcpy(pl_fruit, OBJ_NAME(objects[SLIME_MOLD]), PL_FSIZ);
-#ifndef MAC
 	opts = getenv("NETHACKOPTIONS");
 	if (!opts) opts = getenv("HACKOPTIONS");
 	if (opts) {
@@ -584,7 +570,6 @@ initoptions()
 			parseoptions(opts, TRUE, FALSE);
 		}
 	} else
-#endif
 		read_config_file((char *)0);
 
 	(void)fruitadd(pl_fruit);
@@ -2391,20 +2376,9 @@ goodfruit:
 					(boolopt[i].addr) == &iflags.wc2_guicolor) {
 			    need_redraw = TRUE;
 			}
-#ifdef TEXTCOLOR
 			else if ((boolopt[i].addr) == &iflags.use_color) {
 			    need_redraw = TRUE;
-# ifdef TOS
-			    if ((boolopt[i].addr) == &iflags.use_color
-				&& iflags.BIOS) {
-				if (colors_changed)
-				    restore_colors();
-				else
-				    set_colors();
-			    }
-# endif
 			}
-#endif
 
 			return;
 		}

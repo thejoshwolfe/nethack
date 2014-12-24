@@ -1,7 +1,6 @@
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
-#define TEXTCOLOR	/* Use System V r3.2 terminfo color support */
 #define POSIX_JOB_CONTROL /* use System V / Solaris 2.x / POSIX job control */
 
 /*

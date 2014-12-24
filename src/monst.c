@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)monst.c	3.4	2000/07/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "config.h"
 #include "permonst.h"
 #include "monsym.h"
@@ -18,14 +14,11 @@
 #ifdef C
 #undef C
 #endif
-#ifdef TEXTCOLOR
+
 #include "color.h"
 #define C(color)	color
 #define HI_DOMESTIC	CLR_WHITE	/* use for player + friendlies */
 #define HI_LORD		CLR_MAGENTA
-#else
-#define C(color)
-#endif
 
 void NDECL(monst_init);
 /*

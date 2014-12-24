@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)drawing.c	3.4	1999/12/02	*/
-/* Copyright (c) NetHack Development Team 1992.			  */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "tcap.h"
 /* Relevent header information in rm.h and objclass.h. */
@@ -10,11 +6,7 @@
 #undef C
 #endif
 
-#ifdef TEXTCOLOR
 #define C(n) n
-#else
-#define C(n)
-#endif
 
 #define g_FILLER(symbol) 0
 
