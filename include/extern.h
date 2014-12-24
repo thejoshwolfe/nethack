@@ -1476,15 +1476,6 @@ extern void FDECL(com_pager, (int));
 extern void FDECL(qt_pager, (int));
 extern struct permonst *NDECL(qt_montype);
 
-/* ### random.c ### */
-
-#if defined(RANDOM) && !defined(__GO32__) /* djgpp has its own random */
-extern void FDECL(srandom, (unsigned));
-extern char *FDECL(initstate, (unsigned,char *,int));
-extern char *FDECL(setstate, (char *));
-extern long NDECL(random);
-#endif /* RANDOM */
-
 /* ### read.c ### */
 
 extern int NDECL(doread);

@@ -42,7 +42,7 @@ HACKCSRC = allmain.c alloc.c apply.c artifact.c attrib.c ball.c bones.c \
 
 # all operating-system-dependent .c (for dependencies and such)
 SYSCSRC = ../sys/atari/tos.c \
-	../sys/share/pcunix.c ../sys/share/random.c \
+	../sys/share/pcunix.c \
 	../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c ../sys/be/bemain.c
 
@@ -167,8 +167,6 @@ $(HACK_H): ../include/hack.h $(CONFIG_H) ../include/align.h \
 
 pcunix.o: ../sys/share/pcunix.c $(HACK_H)
 	$(CC) $(CFLAGS) -c ../sys/share/pcunix.c
-random.o: ../sys/share/random.c $(HACK_H)
-	$(CC) $(CFLAGS) -c ../sys/share/random.c
 ioctl.o: ../sys/share/ioctl.c $(HACK_H) ../include/tcap.h
 	$(CC) $(CFLAGS) -c ../sys/share/ioctl.c
 unixtty.o: ../sys/share/unixtty.c $(HACK_H)

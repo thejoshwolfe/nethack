@@ -16,15 +16,8 @@
 # define SpinCursor(x)
 #endif
 
-#ifndef O_WRONLY
 #include <fcntl.h>
-#endif
-#ifndef O_CREAT	/* some older BSD systems do not define O_CREAT in <fcntl.h> */
 #include <sys/file.h>
-#endif
-#ifndef O_BINARY	/* used for micros, no-op for others */
-# define O_BINARY 0
-#endif
 
 #define OMASK 0644
 
@@ -1057,7 +1050,7 @@ specialmaze *maze_level;
 	Strcat(lbuf, filename);
 	Strcat(lbuf, LEV_EXT);
 
-	fout = open(lbuf, O_WRONLY|O_CREAT|O_BINARY, OMASK);
+	fout = open(lbuf, O_WRONLY|O_CREAT, OMASK);
 	if (fout < 0) return FALSE;
 
 	if (room_level) {

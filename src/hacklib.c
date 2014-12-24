@@ -453,11 +453,7 @@ void setrandom(void) {
 	/* the types are different enough here that sweeping the different
 	 * routine names into one via #defines is even more confusing
 	 */
-#ifdef RANDOM	/* srandom() from sys/share/random.c */
-	srandom((unsigned int) time((time_t *)0));
-#else
     srandom((int) time((time_t *)0));
-#endif
 }
 
 static struct tm * getlt(void) {
