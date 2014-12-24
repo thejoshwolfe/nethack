@@ -87,9 +87,6 @@ moverock (void)
 	if (isok(rx,ry) && !IS_ROCK(levl[rx][ry].typ) &&
 	    levl[rx][ry].typ != IRONBARS &&
 	    (!IS_DOOR(levl[rx][ry].typ) || !(u.dx && u.dy) || (
-#ifdef REINCARNATION
-		!Is_rogue_level(&u.uz) &&
-#endif
 		(levl[rx][ry].doormask & ~D_BROKEN) == D_NODOOR)) &&
 	    !sobj_at(BOULDER, rx, ry)) {
 	    ttmp = t_at(rx, ry);
@@ -607,9 +604,6 @@ int mode;
 	testdiag:
 	    if (dx && dy && !Passes_walls
 		&& ((tmpr->doormask & ~D_BROKEN)
-#ifdef REINCARNATION
-		    || Is_rogue_level(&u.uz)
-#endif
 		    || block_door(x,y))) {
 		/* Diagonal moves into a door are not allowed. */
 		if (Blind && mode == DO_MOVE)
@@ -655,9 +649,6 @@ int mode;
     /* Now see if other things block our way . . */
     if (dx && dy && !Passes_walls
 		     && (IS_DOOR(ust->typ) && ((ust->doormask & ~D_BROKEN)
-#ifdef REINCARNATION
-			     || Is_rogue_level(&u.uz)
-#endif
 			     || block_entry(x, y))
 			 )) {
 	/* Can't move at a diagonal out of a doorway with door. */

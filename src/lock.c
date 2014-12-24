@@ -767,25 +767,6 @@ int x, y;
 	switch(otmp->otyp) {
 	case WAN_LOCKING:
 	case SPE_WIZARD_LOCK:
-#ifdef REINCARNATION
-	    if (Is_rogue_level(&u.uz)) {
-	    	boolean vis = cansee(x,y);
-		/* Can't have real locking in Rogue, so just hide doorway */
-		if (vis) pline("%s springs up in the older, more primitive doorway.",
-			dustcloud);
-		else
-			You_hear("a swoosh.");
-		if (obstructed(x,y)) {
-			if (vis) pline_The("cloud %s.",quickly_dissipates);
-			return FALSE;
-		}
-		block_point(x, y);
-		door->typ = SDOOR;
-		if (vis) pline_The("doorway vanishes!");
-		newsym(x,y);
-		return TRUE;
-	    }
-#endif
 	    if (obstructed(x,y)) return FALSE;
 	    /* Don't allow doors to close over traps.  This is for pits */
 	    /* & trap doors, but is it ever OK for anything else? */

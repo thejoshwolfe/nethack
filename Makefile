@@ -30,7 +30,7 @@ NORMAL_ASS_O_FILES = src/allmain.o src/alloc.o src/apply.o src/artifact.o src/at
   src/bones.o src/botl.o src/cmd.o src/dbridge.o src/decl.o src/detect.o src/dig.o src/display.o src/dlb.o \
   src/do.o src/do_name.o src/do_wear.o src/dog.o src/dogmove.o src/dokick.o src/dothrow.o \
   src/drawing.o src/dungeon.o src/eat.o src/end.o src/engrave.o src/exper.o src/explode.o \
-  src/extralev.o src/files.o src/fountain.o src/hack.o src/hacklib.o src/invent.o src/light.o \
+  src/files.o src/fountain.o src/hack.o src/hacklib.o src/invent.o src/light.o \
   src/lock.o src/mail.o src/makemon.o src/mapglyph.o src/mcastu.o src/mhitm.o src/mhitu.o \
   src/minion.o src/mklev.o src/mkmap.o \
   src/mkmaze.o src/mkobj.o src/mkroom.o src/mon.o src/mondata.o src/monmove.o src/monstr.o \

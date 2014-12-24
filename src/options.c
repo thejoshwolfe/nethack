@@ -2184,10 +2184,6 @@ goodfruit:
 				 || (boolopt[i].addr) == &iflags.DECgraphics
 				 || (boolopt[i].addr) == &iflags.IBMgraphics
 				) {
-# ifdef REINCARNATION
-			    if (!initial && Is_rogue_level(&u.uz))
-				assign_rogue_graphics(FALSE);
-# endif
 			    need_redraw = TRUE;
 			    if ((boolopt[i].addr) == &iflags.DECgraphics)
 				switch_graphics(iflags.DECgraphics ?
@@ -2195,10 +2191,6 @@ goodfruit:
 			    if ((boolopt[i].addr) == &iflags.IBMgraphics)
 				switch_graphics(iflags.IBMgraphics ?
 						IBM_GRAPHICS : ASCII_GRAPHICS);
-# ifdef REINCARNATION
-			    if (!initial && Is_rogue_level(&u.uz))
-				assign_rogue_graphics(TRUE);
-# endif
 			}
 
 			/* only do processing below if setting with doset() */

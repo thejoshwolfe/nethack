@@ -344,9 +344,6 @@ make_version()
 	 */
 	version.feature_set = (unsigned long)(0L
 		/* levels and/or topology (0..4) */
-#ifdef REINCARNATION
-			| (1L <<  1)
-#endif
 #ifdef SINKS
 			| (1L <<  2)
 #endif
@@ -582,9 +579,6 @@ static const char *build_opts[] = {
 #endif
 #ifdef REDO
 		"redo command",
-#endif
-#ifdef REINCARNATION
-		"rogue level",
 #endif
 #ifdef STEED
 		"saddles and riding",
@@ -990,11 +984,6 @@ static	struct deflist {
 	const char	*defname;
 	boolean	true_or_false;
 } deflist[] = {
-#ifdef REINCARNATION
-	      {	"REINCARNATION", TRUE },
-#else
-	      {	"REINCARNATION", FALSE },
-#endif
 	      { 0, 0 } };
 
 static int

@@ -1120,9 +1120,6 @@ seffects (register struct obj *sobj)
 	case SCR_EARTH:
 	    /* TODO: handle steeds */
 	    if (
-#ifdef REINCARNATION
-		!Is_rogue_level(&u.uz) && 
-#endif
 	    	 (!In_endgame(&u.uz) || Is_earthlevel(&u.uz))) {
 	    	register int x, y;
 
@@ -1352,22 +1349,6 @@ do_it:
 	if (Punished && !on && !Blind)
 	    move_bc(1, 0, uball->ox, uball->oy, uchain->ox, uchain->oy);
 
-#ifdef REINCARNATION
-	if (Is_rogue_level(&u.uz)) {
-	    /* Can't use do_clear_area because MAX_RADIUS is too small */
-	    /* rogue lighting must light the entire room */
-	    int rnum = levl[u.ux][u.uy].roomno - ROOMOFFSET;
-	    int rx, ry;
-	    if(rnum >= 0) {
-		for(rx = rooms[rnum].lx-1; rx <= rooms[rnum].hx+1; rx++)
-		    for(ry = rooms[rnum].ly-1; ry <= rooms[rnum].hy+1; ry++)
-			set_lit(rx, ry,
-				(void *)(on ? &is_lit : (char *)0));
-		rooms[rnum].rlit = on;
-	    }
-	    /* hallways remain dark on the rogue level */
-	} else
-#endif
 	    do_clear_area(u.ux,u.uy,
 		(obj && obj->oclass==SCROLL_CLASS && obj->blessed) ? 9 : 5,
 		set_lit, (void *)(on ? &is_lit : (char *)0));

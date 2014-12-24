@@ -933,25 +933,6 @@ rndmonnam (void)
 	return mons[name].mname;
 }
 
-#ifdef REINCARNATION
-const char *
-roguename (void) /* Name of a Rogue player */
-{
-	char *i, *opts;
-
-	if ((opts = nh_getenv("ROGUEOPTS")) != 0) {
-		for (i = opts; *i; i++)
-			if (!strncmp("name=",i,5)) {
-				char *j;
-				if ((j = index(i+5,',')) != 0)
-					*j = (char)0;
-				return i+5;
-			}
-	}
-	return rn2(3) ? (rn2(2) ? "Michael Toy" : "Kenneth Arnold")
-		: "Glenn Wichman";
-}
-#endif /* REINCARNATION */
 #endif /* OVLB */
 
 #ifdef OVL2

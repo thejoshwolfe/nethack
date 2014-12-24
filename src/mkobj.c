@@ -49,18 +49,6 @@ const struct icp boxiprobs[] = {
 { 1, AMULET_CLASS}
 };
 
-#ifdef REINCARNATION
-const struct icp rogueprobs[] = {
-{12, WEAPON_CLASS},
-{12, ARMOR_CLASS},
-{22, FOOD_CLASS},
-{22, POTION_CLASS},
-{22, SCROLL_CLASS},
-{ 5, WAND_CLASS},
-{ 5, RING_CLASS}
-};
-#endif
-
 const struct icp hellprobs[] = {
 {20, WEAPON_CLASS},
 {20, ARMOR_CLASS},
@@ -74,12 +62,7 @@ const struct icp hellprobs[] = {
 { 4, AMULET_CLASS}
 };
 
-struct obj *
-mkobj_at(let, x, y, artif)
-char let;
-int x, y;
-boolean artif;
-{
+struct obj * mkobj_at(char let, int x, int y, boolean artif) {
 	struct obj *otmp;
 
 	otmp = mkobj(let, artif);
@@ -87,11 +70,7 @@ boolean artif;
 	return(otmp);
 }
 
-struct obj *
-mksobj_at(otyp, x, y, init, artif)
-int otyp, x, y;
-boolean init, artif;
-{
+struct obj * mksobj_at(int otyp, int x, int y, boolean init, boolean artif) {
 	struct obj *otmp;
 
 	otmp = mksobj(otyp, init, artif);
@@ -99,19 +78,11 @@ boolean init, artif;
 	return(otmp);
 }
 
-struct obj *
-mkobj(oclass, artif)
-char oclass;
-boolean artif;
-{
+struct obj * mkobj(char oclass, boolean artif) {
 	int tprob, i, prob = rnd(1000);
 
 	if(oclass == RANDOM_CLASS) {
 		const struct icp *iprobs =
-#ifdef REINCARNATION
-				    (Is_rogue_level(&u.uz)) ?
-				    (const struct icp *)rogueprobs :
-#endif
 				    Inhell ? (const struct icp *)hellprobs :
 				    (const struct icp *)mkobjprobs;
 

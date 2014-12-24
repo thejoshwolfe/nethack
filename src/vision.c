@@ -90,9 +90,6 @@ STATIC_DCL void NDECL(view_init);
 STATIC_DCL void FDECL(view_from,(int,int,char **,char *,char *,int,
 			     void (*)(int,int,void *),void *));
 STATIC_DCL void FDECL(get_unused_cs, (char ***,char **,char **));
-#ifdef REINCARNATION
-STATIC_DCL void FDECL(rogue_vision, (char **,char *,char *));
-#endif
 
 /* Macro definitions that I can't find anywhere. */
 #define sign(z) ((z) < 0 ? -1 : ((z) ? 1 : 0 ))
@@ -267,76 +264,6 @@ get_unused_cs (char ***rows, char **rmin, char **rmax)
     }
 }
 
-
-#ifdef REINCARNATION
-/*
- * rogue_vision()
- *
- * Set the "could see" and in sight bits so vision acts just like the old
- * rogue game:
- *
- *	+ If in a room, the hero can see to the room boundaries.
- *	+ The hero can always see adjacent squares.
- *
- * We set the in_sight bit here as well to escape a bug that shows up
- * due to the one-sided lit wall hack.
- */
-STATIC_OVL void 
-rogue_vision (
-    char **next,	/* could_see array pointers */
-    char *rmin,
-    char *rmax
-)
-{
-    int rnum = levl[u.ux][u.uy].roomno - ROOMOFFSET; /* no SHARED... */
-    int start, stop, in_door, xhi, xlo, yhi, ylo;
-    register int zx, zy;
-
-    /* If in a lit room, we are able to see to its boundaries. */
-    /* If dark, set COULD_SEE so various spells work -dlc */
-    if (rnum >= 0) {
-	for (zy = rooms[rnum].ly-1; zy <= rooms[rnum].hy+1; zy++) {
-	    rmin[zy] = start = rooms[rnum].lx-1;
-	    rmax[zy] = stop  = rooms[rnum].hx+1;
-
-	    for (zx = start; zx <= stop; zx++) {
-		if (rooms[rnum].rlit) {
-		    next[zy][zx] = COULD_SEE | IN_SIGHT;
-		    levl[zx][zy].seenv = SVALL;	/* see the walls */
-		} else
-		    next[zy][zx] = COULD_SEE;
-	    }
-	}
-    }
-
-    in_door = levl[u.ux][u.uy].typ == DOOR;
-
-    /* Can always see adjacent. */
-    ylo = max(u.uy - 1, 0);
-    yhi = min(u.uy + 1, ROWNO - 1);
-    xlo = max(u.ux - 1, 1);
-    xhi = min(u.ux + 1, COLNO - 1);
-    for (zy = ylo; zy <= yhi; zy++) {
-	if (xlo < rmin[zy]) rmin[zy] = xlo;
-	if (xhi > rmax[zy]) rmax[zy] = xhi;
-
-	for (zx = xlo; zx <= xhi; zx++) {
-	    next[zy][zx] = COULD_SEE | IN_SIGHT;
-	    /*
-	     * Yuck, update adjacent non-diagonal positions when in a doorway.
-	     * We need to do this to catch the case when we first step into
-	     * a room.  The room's walls were not seen from the outside, but
-	     * now are seen (the seen bits are set just above).  However, the
-	     * positions are not updated because they were already in sight.
-	     * So, we have to do it here.
-	     */
-	    if (in_door && (zx == u.ux || zy == u.uy)) newsym(zx,zy);
-	}
-    }
-}
-#endif /* REINCARNATION */
-
-/*#define EXTEND_SPINE*/	/* possibly better looking wall-angle */
 
 #ifdef EXTEND_SPINE
 
@@ -548,11 +475,6 @@ vision_recalc (int control)
 	/* skip the normal update loop */
 	goto skip;
     }
-#ifdef REINCARNATION
-    else if (Is_rogue_level(&u.uz)) {
-	rogue_vision(next_array,next_rmin,next_rmax);
-    }
-#endif
     else {
 	int has_night_vision = 1;	/* hero has night vision */
 
