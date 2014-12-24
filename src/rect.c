@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)rect.c	3.4	1990/02/22	*/
-/* Copyright (c) 1990 by Jean-Christophe Collet	 */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 int FDECL(get_rect_ind, (NhRect *));

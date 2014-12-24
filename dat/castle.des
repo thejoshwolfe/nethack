@@ -1,7 +1,3 @@
-#	SCCS Id: @(#)castle.des	3.4	2002/05/02
-#	Copyright (c) 1989 by Jean-Christophe Collet
-# NetHack may be freely redistributed.  See license for details.
-#
 # This is the stronghold level :
 # there are several ways to enter it :
 #	- opening the drawbridge (wand of opening, knock spell, playing

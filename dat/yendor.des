@@ -1,8 +1,3 @@
-#	SCCS Id: @(#)yendor.des	3.4	1996/10/20
-#	Copyright (c) 1989 by Jean-Christophe Collet
-#	Copyright (c) 1992 by M. Stephenson and Izchak Miller
-# NetHack may be freely redistributed.  See license for details.
-#
 # The top (real) wizard level.
 # Keeping the Moat for old-time's sake
 MAZE:"wizard1",random

@@ -1,9 +1,3 @@
-#	SCCS Id: @(#)endgame.des	3.4	2002/01/19
-#	Copyright (c) 1989 by Jean-Christophe Collet
-#	Copyright (c) 1992,1993 by Izchak Miller, David Cohrs,
-#                      and Timo Hakulinen
-# NetHack may be freely redistributed.  See license for details.
-#
 # These are the ENDGAME levels: earth, air, fire, water, and astral.
 # The top-most level, the Astral Level, has 3 temples and shrines.
 # Players are supposed to sacrifice the Amulet of Yendor on the appropriate

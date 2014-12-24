@@ -1,7 +1,3 @@
-#	SCCS Id: @(#)dungeon.def	3.4	1996/03/10
-#	Copyright (c) 1990-95 by M. Stephenson
-# NetHack may be freely redistributed.  See license for details.
-#
 #	The dungeon description file for the "standard" 3.1 NetHack.
 #
 #	Note:	The order of the definition of dungeons in this file
