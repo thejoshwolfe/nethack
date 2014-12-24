@@ -1,8 +1,6 @@
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
-#define POSIX_JOB_CONTROL /* use System V / Solaris 2.x / POSIX job control */
-
 /*
  * The next two defines are intended mainly for the Andrew File System,
  * which does not allow hard links.  If NO_FILE_LINKS is defined, lock files
@@ -73,47 +71,6 @@
 #endif
 
 #define FCMASK	0660	/* file creation mask */
-
-
-/*
- * The remainder of the file should not need to be changed.
- */
-
-#ifdef _AUX_SOURCE
-# ifdef AUX /* gcc ? */
-#  define _SYSV_SOURCE
-#  define _BSD_SOURCE
-#else
-#  define AUX
-# endif
-#endif /* _AUX_SOURCE */
-
-#define POSIX_JOB_CONTROL
-
-/*
- * BSD/ULTRIX systems are normally the only ones that can suspend processes.
- * Suspending NetHack processes cleanly should be easy to add to other systems
- * that have SIGTSTP in the Berkeley sense.  Currently the only such systems
- * known to work are HPUX and AIX 3.1; other systems will probably require
- * tweaks to unixtty.c and ioctl.c.
- *
- * POSIX defines a slightly different type of job control, which should be
- * equivalent for NetHack's purposes.  POSIX_JOB_CONTROL should work on
- * various recent SYSV versions (with possibly tweaks to unixtty.c again).
- */
-#ifndef POSIX_JOB_CONTROL
-# if defined(BSD) || defined(ULTRIX) || defined(HPUX) || defined(AIX_31)
-#  define BSD_JOB_CONTROL
-# else
-#  if defined(SVR4)
-#   define POSIX_JOB_CONTROL
-#  endif
-# endif
-#endif
-#if defined(BSD_JOB_CONTROL) || defined(POSIX_JOB_CONTROL) || defined(AUX)
-#define SUSPEND		/* let ^Z suspend the game */
-#endif
-
 
 #include <time.h>
 

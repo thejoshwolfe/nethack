@@ -816,14 +816,9 @@ extern void FDECL(silly_thing, (const char *,struct obj *));
 
 /* ### ioctl.c ### */
 
-#if defined(UNIX) || defined(__BEOS__)
 extern void NDECL(getwindowsz);
 extern void NDECL(getioctls);
 extern void NDECL(setioctls);
-# ifdef SUSPEND
-extern int NDECL(dosuspend);
-# endif /* SUSPEND */
-#endif /* UNIX || __BEOS__ */
 
 /* ### light.c ### */
 

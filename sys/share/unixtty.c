@@ -125,9 +125,7 @@ const char *s;
 	setioctls();
 }
 
-void
-setftty()
-{
+void setftty(void) {
 register int ef = 0;			/* desired value of flags & ECHO */
 #ifdef LINT	/* cf = CBRKON(CBRKMASK); const expr to initialize is ok */
 register int cf = 0;
@@ -149,7 +147,6 @@ register int change = 0;
 		/* be satisfied with one character; no timeout */
 		curttyb.c_cc[VMIN] = 1;		/* was VEOF */
 		curttyb.c_cc[VTIME] = 0;	/* was VEOL */
-# ifdef POSIX_JOB_CONTROL
 		/* turn off system suspend character
 		 * due to differences in structure layout, this has to be
 		 * here instead of in ioctl.c:getioctls() with the BSD
@@ -160,7 +157,6 @@ register int change = 0;
 #  else		/* other later SYSV */
 		curttyb.c_cc[VSWTCH] = nonesuch;
 #  endif
-# endif
 # ifdef VDSUSP /* SunOS Posix extensions */
 		curttyb.c_cc[VDSUSP] = nonesuch;
 # endif
