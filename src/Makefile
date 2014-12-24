@@ -137,7 +137,7 @@ SYSCSRC = ../sys/atari/tos.c \
 GENCSRC = monstr.c vis_tab.c	#tile.c
 
 # all windowing-system-dependent .c (for dependencies and such)
-WINCSRC = $(WINTTYSRC) $(WINX11SRC) $(WINGNOMESRC) $(WINGEMSRC) $(WINLISPSRC)
+WINCSRC = $(WINTTYSRC) $(WINGNOMESRC) $(WINGEMSRC) $(WINLISPSRC)
 
 # .c files for this version (for date.h)
 VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(GENCSRC)
@@ -155,7 +155,7 @@ HACKINCL = align.h artifact.h artilist.h attrib.h color.h \
 	patchlevel.h permonst.h prop.h rect.h region.h rm.h \
 	sp_lev.h spell.h tcap.h timeout.h tradstdc.h \
 	trampoli.h trap.h unixconf.h vault.h vision.h wintty.h \
-	winX.h winprocs.h wintype.h you.h youprop.h
+	winprocs.h wintype.h you.h youprop.h
 
 HSOURCES = $(HACKINCL) date.h onames.h pm.h vis_tab.h\
 		lev_comp.h dgn_comp.h dgn_file.h
@@ -286,12 +286,7 @@ $(HACK_H): ../include/hack.h $(CONFIG_H) ../include/align.h \
 		../include/rect.h ../include/region.h ../include/winprocs.h \
 		../include/wintty.h ../include/trampoli.h
 	touch $(HACK_H)
-#
-tos.o: ../sys/atari/tos.c $(HACK_H) ../include/tcap.h
-	$(CC) $(CFLAGS) -c ../sys/atari/tos.c
-pcmain.o: ../sys/share/pcmain.c $(HACK_H) ../include/dlb.h \
-		#../include/win32api.h
-	$(CC) $(CFLAGS) -c ../sys/share/pcmain.c
+
 pcunix.o: ../sys/share/pcunix.c $(HACK_H)
 	$(CC) $(CFLAGS) -c ../sys/share/pcunix.c
 random.o: ../sys/share/random.c $(HACK_H)
@@ -306,8 +301,6 @@ unixunix.o: ../sys/unix/unixunix.c $(HACK_H)
 	$(CC) $(CFLAGS) -c ../sys/unix/unixunix.c
 unixres.o: ../sys/unix/unixres.c $(CONFIG_H)
 	$(CC) $(CFLAGS) -c ../sys/unix/unixres.c
-bemain.o: ../sys/be/bemain.c $(HACK_H) ../include/dlb.h
-	$(CC) $(CFLAGS) -c ../sys/be/bemain.c
 getline.o: ../win/tty/getline.c $(HACK_H) ../include/func_tab.h
 	$(CC) $(CFLAGS) -c ../win/tty/getline.c
 termcap.o: ../win/tty/termcap.c $(HACK_H) ../include/tcap.h
@@ -317,87 +310,6 @@ topl.o: ../win/tty/topl.c $(HACK_H) ../include/tcap.h
 wintty.o: ../win/tty/wintty.c $(HACK_H) ../include/dlb.h \
 		../include/patchlevel.h ../include/tcap.h
 	$(CC) $(CFLAGS) -c ../win/tty/wintty.c
-Window.o: ../win/X11/Window.c ../include/xwindowp.h ../include/xwindow.h \
-		$(CONFIG_H)
-	$(CC) $(CFLAGS) -c ../win/X11/Window.c
-dialogs.o: ../win/X11/dialogs.c $(CONFIG_H)
-	$(CC) $(CFLAGS) -c ../win/X11/dialogs.c
-winX.o: ../win/X11/winX.c $(HACK_H) ../include/winX.h ../include/dlb.h \
-		../include/patchlevel.h ../win/X11/nh72icon \
-		../win/X11/nh56icon ../win/X11/nh32icon
-	$(CC) $(CFLAGS) -c ../win/X11/winX.c
-winmap.o: ../win/X11/winmap.c ../include/xwindow.h $(HACK_H) ../include/dlb.h \
-		../include/winX.h ../include/tile2x11.h
-	$(CC) $(CFLAGS) -c ../win/X11/winmap.c
-winmenu.o: ../win/X11/winmenu.c $(HACK_H) ../include/winX.h
-	$(CC) $(CFLAGS) -c ../win/X11/winmenu.c
-winmesg.o: ../win/X11/winmesg.c ../include/xwindow.h $(HACK_H) ../include/winX.h
-	$(CC) $(CFLAGS) -c ../win/X11/winmesg.c
-winmisc.o: ../win/X11/winmisc.c $(HACK_H) ../include/func_tab.h \
-		../include/winX.h
-	$(CC) $(CFLAGS) -c ../win/X11/winmisc.c
-winstat.o: ../win/X11/winstat.c $(HACK_H) ../include/winX.h
-	$(CC) $(CFLAGS) -c ../win/X11/winstat.c
-wintext.o: ../win/X11/wintext.c $(HACK_H) ../include/winX.h ../include/xwindow.h
-	$(CC) $(CFLAGS) -c ../win/X11/wintext.c
-winval.o: ../win/X11/winval.c $(HACK_H) ../include/winX.h
-	$(CC) $(CFLAGS) -c ../win/X11/winval.c
-tile.o: tile.c $(HACK_H)
-gnaskstr.o: ../win/gnome/gnaskstr.c ../win/gnome/gnaskstr.h \
-		../win/gnome/gnmain.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnaskstr.c
-gnbind.o: ../win/gnome/gnbind.c ../win/gnome/gnbind.h ../win/gnome/gnmain.h \
-		../win/gnome/gnmenu.h ../win/gnome/gnaskstr.h \
-		../win/gnome/gnyesno.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnbind.c
-gnglyph.o: ../win/gnome/gnglyph.c ../win/gnome/gnglyph.h ../include/tile2x11.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnglyph.c
-gnmain.o: ../win/gnome/gnmain.c ../win/gnome/gnmain.h ../win/gnome/gnsignal.h \
-		../win/gnome/gnbind.h ../win/gnome/gnopts.h $(HACK_H) \
-		../include/date.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnmain.c
-gnmap.o: ../win/gnome/gnmap.c ../win/gnome/gnmap.h ../win/gnome/gnglyph.h \
-		../win/gnome/gnsignal.h $(HACK_H)
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnmap.c
-gnmenu.o: ../win/gnome/gnmenu.c ../win/gnome/gnmenu.h ../win/gnome/gnmain.h \
-		../win/gnome/gnbind.h ../include/func_tab.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnmenu.c
-gnmesg.o: ../win/gnome/gnmesg.c ../win/gnome/gnmesg.h ../win/gnome/gnsignal.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnmesg.c
-gnopts.o: ../win/gnome/gnopts.c ../win/gnome/gnopts.h ../win/gnome/gnglyph.h \
-		../win/gnome/gnmain.h ../win/gnome/gnmap.h $(HACK_H)
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnopts.c
-gnplayer.o: ../win/gnome/gnplayer.c ../win/gnome/gnplayer.h \
-		../win/gnome/gnmain.h $(HACK_H)
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnplayer.c
-gnsignal.o: ../win/gnome/gnsignal.c ../win/gnome/gnsignal.h \
-		../win/gnome/gnmain.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnsignal.c
-gnstatus.o: ../win/gnome/gnstatus.c ../win/gnome/gnstatus.h \
-		../win/gnome/gnsignal.h ../win/gnome/gn_xpms.h \
-		../win/gnome/gnomeprv.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnstatus.c
-gntext.o: ../win/gnome/gntext.c ../win/gnome/gntext.h ../win/gnome/gnmain.h \
-		../win/gnome/gn_rip.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gntext.c
-gnyesno.o: ../win/gnome/gnyesno.c ../win/gnome/gnbind.h ../win/gnome/gnyesno.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnyesno.c
-gnworn.o: ../win/gnome/gnworn.c ../win/gnome/gnworn.h ../win/gnome/gnglyph.h \
-		../win/gnome/gnsignal.h ../win/gnome/gnomeprv.h
-	$(CC) $(CFLAGS) $(GNOMEINC) -c ../win/gnome/gnworn.c
-wingem.o: ../win/gem/wingem.c $(HACK_H) ../include/func_tab.h ../include/dlb.h \
-		../include/patchlevel.h ../include/wingem.h
-	$(CC) $(CFLAGS) -c ../win/gem/wingem.c
-wingem1.o: ../win/gem/wingem1.c ../include/gem_rsc.h ../include/load_img.h \
-		../include/gr_rect.h ../include/wintype.h ../include/wingem.h
-	$(CC) $(CFLAGS) -c ../win/gem/wingem1.c
-load_img.o: ../win/gem/load_img.c ../include/load_img.h
-	$(CC) $(CFLAGS) -c ../win/gem/load_img.c
-gr_rect.o: ../win/gem/gr_rect.c ../include/gr_rect.h
-	$(CC) $(CFLAGS) -c ../win/gem/gr_rect.c
-winlisp.o: ../win/lisp/winlisp.c $(HACK_H) ../include/winlisp.h \
-		../include/func_tab.h ../include/dlb.h ../include/patchlevel.h
-	$(CC) $(CFLAGS) -c ../win/lisp/winlisp.c
 tile.o: tile.c $(HACK_H)
 monstr.o: monstr.c $(CONFIG_H)
 vis_tab.o: vis_tab.c $(CONFIG_H) ../include/vis_tab.h
@@ -509,8 +421,7 @@ vision.o: vision.c $(HACK_H) ../include/vis_tab.h
 weapon.o: weapon.c $(HACK_H)
 were.o: were.c $(HACK_H)
 wield.o: wield.c $(HACK_H)
-windows.o: windows.c $(HACK_H) ../include/wingem.h ../include/winGnome.h \
-		../include/winlisp.h
+windows.o: windows.c $(HACK_H)
 wizard.o: wizard.c $(HACK_H) ../include/qtext.h ../include/epri.h
 worm.o: worm.c $(HACK_H) ../include/lev.h
 worn.o: worn.c $(HACK_H)

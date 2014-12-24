@@ -5,7 +5,7 @@
 /*
  * Section 1:	Operating and window systems selection.
  *		Select the version of the OS you are using.
- *		For "UNIX" select BSD, ULTRIX, SYSV, or HPUX in unixconf.h.
+ *		For "UNIX" select BSD, ULTRIX, or HPUX in unixconf.h.
  */
 
 #define UNIX		/* delete if no fork(), exec() available */
@@ -18,20 +18,11 @@
  * Some combinations make no sense.  See the installation document.
  */
 
-#ifndef LISP_GRAPHICS
 #define TTY_GRAPHICS	/* good old tty based graphics */
 
 /* Debian default window system is always tty; they have to set their
  * own if they want another one (or just use the scripts */
 #define DEFAULT_WINDOW_SYS "tty"
-#endif
-
-/* MAC also means MAC windows */
-#ifdef MAC
-# ifndef	AUX
-#  define DEFAULT_WINDOW_SYS "mac"
-# endif
-#endif
 
 #ifndef DEFAULT_WINDOW_SYS
 # define DEFAULT_WINDOW_SYS "tty"

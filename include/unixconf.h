@@ -1,28 +1,7 @@
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
-/*
- * Some include files are in a different place under SYSV
- *	BSD		   SYSV
- * <sys/time.h>		<time.h>
- * <sgtty.h>		<termio.h>
- *
- * Some routines are called differently
- * index		strchr
- * rindex		strrchr
- *
- */
-
-/* define exactly one of the following four choices */
-#define SYSV		/* define for System V, Solaris 2.x, newer versions */
-			/* of Linux */
-/* #define HPUX */	/* Hewlett-Packard's Unix, version 6.5 or higher */
-			/* use SYSV for < v6.5 */
-
-
 /* define any of the following that are appropriate */
-/* #define SVR4	*/	/* use in addition to SYSV for System V Release 4 */
-			/* including Solaris 2+ */
 #define NETWORK		/* if running on a networked system */
 			/* e.g. Suns sharing a playground through NFS */
 /* #define SUNOS4 */	/* SunOS 4.x */
@@ -112,7 +91,7 @@
 #   endif
 #  endif
 #else
-# if (defined(SYSV) || defined(DGUX) || defined(HPUX)) && !defined(LINUX)
+# if !defined(LINUX)
 #  if defined(M_XENIX)
 #define DEF_MAILREADER	"/usr/bin/mail"
 #  else

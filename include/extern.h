@@ -1969,7 +1969,7 @@ extern void VDECL(error, (const char *,...)) PRINTF_F(1,2);
 #ifdef UNIX
 extern void NDECL(getlock);
 extern void FDECL(regularize, (char *));
-# if defined(TIMED_DELAY) && !defined(msleep) && defined(SYSV)
+# if defined(TIMED_DELAY) && !defined(msleep)
 extern void FDECL(msleep, (unsigned));
 # endif
 # ifdef SHELL
