@@ -1,73 +1,14 @@
-# Set SYSTEM to one of:
-#	'Sysunix'	-- generic UNIX
 SYSTEM = Sysunix
-
-#
-# Make sure that your bourne shell is specified here, as you have to spawn
-# some of the commands (eg. depend) in bourne shell for them to work.
-#
-# For Systos users compiling on the ST, you'll either need a bourne shell
-# clone or you'll need to do make depend, etc. by hand. In either case,
-# the line below probably needs changing
 SHELL=/bin/sh
-# for Atari
-# SHELL=E:/GEMINI2/MUPFEL.TTP
-
-# Normally, the C compiler driver is used for linking:
 LINK=$(CC)
 
-# Pick the SYSSRC and SYSOBJ lines corresponding to your desired operating
-# system.
-#
-# for UNIX systems
 SYSSRC = ../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c
 SYSOBJ = ioctl.o unixmain.o unixtty.o unixunix.o unixres.o
 
-# if you are using gcc as your compiler:
-#	uncomment the CC definition below if it's not in your environment
-#	if you get setcgtty() warnings during execution, you are feeding gcc
-#		a non-ANSI <sys/ioctl.h> -- either run fixincludes on it or use
-#		-traditional in CFLAGS
 CC = gcc
-#	For cross-compiling, eg. with gcc on Linux (see also CXX further down):
-# CC = arm-linux-gcc
-#
-#
-# if you're debugging and want gcc to check as much as possible, use:
-# CC = gcc -W -Wimplicit -Wreturn-type -Wunused -Wformat -Wswitch -Wshadow -Wcast-qual -Wwrite-strings -DGCC_WARN
-
-# flags for Linux
-#   compile normally
-# CFLAGS = -O2 -fomit-frame-pointer -I../include
-# LFLAGS = -L/usr/X11R6/lib
-#   OR compile backwards compatible a.out format
-# CFLAGS = -O2 -b i486-linuxaout -fomit-frame-pointer -I../include
-# LFLAGS = -b i486-linuxaout -L/usr/X11R6/lib
-
-#CFLAGS = -O -DXCURSES -I../include -I/usr/local/include/pdcurses
-# Compile against system curses library, such as ncurses
 CFLAGS = -I../include -g
 
-
-# Only used for the Gnome interface.
-# When including the Gnome interface, you need to include gnome specific
-# directories.  The ones given below is the usual spot for linux systems.
-# The paths are for glibconfig.h and gnomesupport.h respectively.
-#
-GNOMEINC=-I/usr/lib/glib/include -I/usr/lib/gnome-libs/include -I../win/gnome
-
-# flags for debugging:
-# CFLAGS = -g -I../include
-
-#CFLAGS = -O -I../include
-#LFLAGS = 
-
-# Set the WINSRC, WINOBJ, and WINLIB lines to correspond to your desired
-# combination of windowing systems.  Also set windowing systems in config.h.
-# Note that if you are including multiple tiled window systems, you don't
-# want two copies of tile.o, so comment out all but the first.
-#
 # files for a straight tty port using no native windowing system
 WINTTYSRC = ../win/tty/getline.c ../win/tty/termcap.c ../win/tty/topl.c \
 	../win/tty/wintty.c
@@ -76,31 +17,11 @@ WINTTYOBJ = getline.o termcap.o topl.o wintty.o
 WINSRC = $(WINTTYSRC)
 WINOBJ = $(WINTTYOBJ)
 
-# Linux uses -lncurses
-#
-# libraries for curses port
-# link with ncurses
 WINCURSESLIB = -lncurses
 
 WINLIB = $(WINCURSESLIB)
 
-# Linux NetHack uses some bsd style ioctl functions, thus it is necessary to
-# use the bsd libs.
-# LIBS = -lbsd
 LIBS =
-
-# make NetHack
-GAME     = nethack
-
-# used by `make depend' to reconstruct this Makefile; you shouldn't need this
-AWK	= nawk
-
-# ----------------------------------------
-#
-# Nothing below this line should have to be changed.
-#
-# Other things that have to be reconfigured are in config.h,
-# {unixconf.h}
 
 MAKEDEFS = ../util/makedefs
 
@@ -180,20 +101,19 @@ HOBJ = $(FIRSTOBJ) allmain.o alloc.o apply.o artifact.o attrib.o ball.o \
 	$(SYSOBJ) $(WINOBJ) version.o
 # the .o files from the HACKCSRC, SYSSRC, and WINSRC lists
 
-$(GAME):	$(SYSTEM)
-	@echo "$(GAME) is up to date."
+nethack:	$(SYSTEM)
+	@echo "nethack is up to date."
 
 Sysunix:	$(HOBJ) Makefile
 	@echo "Loading ..."
-	$(LINK) $(LFLAGS) -o $(GAME) $(HOBJ) $(WINLIB) $(LIBS)
+	$(LINK) $(LFLAGS) -o nethack $(HOBJ) $(WINLIB) $(LIBS)
 	@touch Sysunix
 
-all:	$(GAME)
+all:	nethack
 
 
 #	dependencies for makedefs and its outputs, which the util
 #	Makefile is responsible for keeping up to date
-#
 
 # special rules, to force update of makedefs, real dependencies should be
 # below in the 'make depend' output.
@@ -239,31 +159,6 @@ tile.c: ../win/share/tilemap.c $(HACK_H)
 ../include/date.h:	$(VERSOURCES) $(HACK_H)
 	../util/makedefs -v
 
-clean:
-	-rm -f *.o $(HACK_H) $(CONFIG_H)
-
-spotless: clean
-	-rm -f a.out core $(GAME) Sys*
-	-rm -f ../include/date.h ../include/onames.h ../include/pm.h
-	-rm -f monstr.c ../include/vis_tab.h vis_tab.c tile.c *.moc
-	-rm -f ../win/gnome/gn_rip.h
-
-
-depend: ../sys/unix/depend.awk \
-		$(SYSCSRC) $(WINCSRC) $(WINCXXSRC) $(GENCSRC) $(HACKCSRC)
-	$(AWK) -f ../sys/unix/depend.awk ../include/*.h \
-		$(SYSCSRC) $(WINCSRC) $(WINCXXSRC) $(GENCSRC) $(HACKCSRC) >makedep
-	@echo '/^# DO NOT DELETE THIS LINE OR CHANGE ANYTHING BEYOND IT/+2,$$d' >eddep
-	@echo '$$r makedep' >>eddep
-	@echo 'w' >>eddep
-	@cp Makefile Makefile.bak
-	ed - Makefile < eddep
-	@rm -f eddep makedep
-	@echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
-	@echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
-	@echo '# see make depend above' >> Makefile
-	- diff Makefile.bak Makefile
-	@rm -f Makefile.bak
 
 # config.h timestamp
 $(CONFIG_H): ../include/config.h ../include/config1.h ../include/tradstdc.h \
@@ -426,6 +321,3 @@ worm.o: worm.c $(HACK_H) ../include/lev.h
 worn.o: worn.c $(HACK_H)
 write.o: write.c $(HACK_H)
 zap.o: zap.c $(HACK_H)
-# DEPENDENCIES MUST END AT END OF FILE
-# IF YOU PUT STUFF HERE IT WILL GO AWAY
-# see make depend above

@@ -1,7 +1,5 @@
 all:
 
-GAME     = nethack
-
 VARDATD = data oracles options quest.dat rumors
 
 DATHELP = help hh cmdhelp history opthelp wizhelp
@@ -15,26 +13,25 @@ QUEST_LEVS = ???-goal.lev ???-fil?.lev ???-loca.lev ???-strt.lev
 
 DATDLB = $(DATHELP) dungeon $(SPEC_LEVS) $(QUEST_LEVS) $(VARDATD)
 
-all:	$(GAME) recover dlb
+all:	nethack recover dlb
 	@echo "Done."
 
-$(GAME):
+nethack:
 	( cd src ; $(MAKE) )
 
-data: $(GAME)
+data: nethack
 	( cd dat && $(MAKE) data )
 
-rumors: $(GAME)
+rumors: nethack
 	( cd dat && $(MAKE) rumors )
 
-oracles: $(GAME)
+oracles: nethack
 	( cd dat && $(MAKE) oracles )
 
-#	Note: options should have already been made with make, but...
-options: $(GAME)
+options: nethack
 	( cd dat && $(MAKE) options )
 
-quest.dat: $(GAME)
+quest.dat: nethack
 	( cd dat && $(MAKE) quest.dat )
 
 spec_levs: dungeon
@@ -42,15 +39,15 @@ spec_levs: dungeon
 	( cd dat && $(MAKE) spec_levs )
 	( cd dat && $(MAKE) quest_levs )
 
-dungeon: $(GAME)
+dungeon: nethack
 	( cd util && $(MAKE) dgn_comp )
 	( cd dat && $(MAKE) dungeon )
 
-dlb: $(GAME) $(VARDATD) dungeon spec_levs
+dlb: nethack $(VARDATD) dungeon spec_levs
 	( cd util && $(MAKE) dlb )
 	( cd dat && ../util/dlb cf nhdat $(DATDLB) )
 
 # recover can be used when INSURANCE is defined in include/config.h
 # and the checkpoint option is true
-recover: $(GAME)
+recover: nethack
 	( cd util && $(MAKE) recover )
