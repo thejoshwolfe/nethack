@@ -16,17 +16,6 @@
 /* version information */
 #include "patchlevel.h"
 
-#ifdef MAC
-# if defined(__SC__) || defined(__MRC__)	/* MPW compilers */
-#  define MPWTOOL
-#include <CursorCtl.h>
-#include <string.h>
-#include <ctype.h>
-# else		/* MAC without MPWTOOL */
-#  define MACsansMPWTOOL
-# endif
-#endif /* MAC */
-
 #ifndef MPWTOOL
 # define SpinCursor(x)
 #endif
@@ -178,30 +167,6 @@ static char *FDECL(eos, (char *));
 /* input, output, tmp */
 static FILE *ifp, *ofp, *tfp;
 
-#ifdef MACsansMPWTOOL
-int
-main(void)
-{
-    const char *def_options = "odemvpqrhz";
-    char buf[100];
-    int len;
-
-    printf("Enter options to run: [%s] ", def_options);
-    fflush(stdout);
-    fgets(buf, 100, stdin);
-    len = strlen(buf);
-    if (len <= 1)
-	Strcpy(buf, def_options);
-    else
-	buf[len-1] = 0;			/* remove return */
-
-    do_makedefs(buf);
-    exit(EXIT_SUCCESS);
-    return 0;
-}
-
-#else /* ! MAC */
-
 int
 main(argc, argv)
 int	argc;
@@ -228,8 +193,6 @@ char	*argv[];
 	/*NOTREACHED*/
 	return 0;
 }
-
-#endif
 
 void
 do_makedefs(options)
