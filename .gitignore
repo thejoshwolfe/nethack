@@ -4,7 +4,6 @@
 /include/onames.h
 /include/pm.h
 /include/vis_tab.h
-/include/date.h
 /include/dgn_comp.h
 /include/lev_comp.h
 
@@ -15,7 +14,6 @@
 /src/Sysunix
 /src/nethack
 
-/dat/options
 /dat/data
 /dat/dungeon
 /dat/dungeon.pdf
