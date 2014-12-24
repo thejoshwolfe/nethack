@@ -62,7 +62,7 @@ static long laststattime;
 #  define MAILPATH "/var/spool/mail/"
 # endif
 /* Debian uses /var/mail, too. */
-# if !defined(MAILPATH) && (defined(__FreeBSD__) || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__))
+# if !defined(MAILPATH)
 #  define MAILPATH "/var/mail/"
 # endif
 # if !defined(MAILPATH) && (defined(BSD) || defined(ULTRIX))

@@ -5,11 +5,9 @@
 #include <unistd.h>
 #define termstruct	termios
 
-# ifdef LINUX
-#  include <sys/ioctl.h>
-#  undef delay_output	/* curses redefines this */
-#  include <curses.h>
-# endif
+# include <sys/ioctl.h>
+# undef delay_output	/* curses redefines this */
+# include <curses.h>
 # define kill_sym	c_cc[VKILL]
 # define erase_sym	c_cc[VERASE]
 # define intr_sym	c_cc[VINTR]

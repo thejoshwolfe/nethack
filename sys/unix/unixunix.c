@@ -23,10 +23,7 @@ extern int errno;
 static struct stat buf;
 
 /* see whether we should throw away this xlock file */
-static int
-veryold(fd)
-int fd;
-{
+static int veryold(int fd) {
 	time_t date;
 
 	if(fstat(fd, &buf)) return(0);			/* cannot get status */
@@ -37,28 +34,17 @@ int fd;
 	if(date - buf.st_mtime < 3L*24L*60L*60L) {	/* recent */
 		int lockedpid;	/* should be the same size as hackpid */
 
-		if(read(fd, (void *)&lockedpid, sizeof(lockedpid)) !=
-			sizeof(lockedpid))
+		if(read(fd, (void *)&lockedpid, sizeof(lockedpid)) != sizeof(lockedpid))
 			/* strange ... */
 			return(0);
 
-		/* From: Rick Adams <seismo!rick> */
-		/* This will work on 4.1cbsd, 4.2bsd and system 3? & 5. */
-		/* It will do nothing on V7 or 4.1bsd. */
-#ifndef NETWORK
-		/* It will do a VERY BAD THING if the playground is shared
-		   by more than one machine! -pem */
-		if(!(kill(lockedpid, 0) == -1 && errno == ESRCH))
-#endif
-			return(0);
+        return(0);
 	}
 	(void) close(fd);
 	return(1);
 }
 
-static int
-eraseoldlocks()
-{
+static int eraseoldlocks(void) {
 	register int i;
 
 	/* cannot use maxledgerno() here, because we need to find a lock name
@@ -76,9 +62,7 @@ eraseoldlocks()
 	return(1);					/* success! */
 }
 
-void
-getlock()
-{
+void getlock(void) {
 	register int i = 0, fd, c;
 	const char *fq_lock;
 
@@ -179,43 +163,18 @@ gotlock:
 	}
 }
 
-void
-regularize(s)	/* normalize file name - we don't like .'s, /'s, spaces */
-register char *s;
-{
+// normalize file name - we don't like .'s, /'s, spaces
+void regularize(char * s) {
 	register char *lp;
 
 	while((lp=index(s, '.')) || (lp=index(s, '/')) || (lp=index(s,' ')))
 		*lp = '_';
-#if !defined(AIX_31) && !defined(SVR4) && !defined(LINUX) && !defined(__APPLE__)
-	/* avoid problems with 14 character file name limit */
-# ifdef COMPRESS
-	/* leave room for .e from error and .Z from compress appended to
-	 * save files */
-	{
-#  ifdef COMPRESS_EXTENSION
-	    int i = 12 - strlen(COMPRESS_EXTENSION);
-#  else
-	    int i = 10;		/* should never happen... */
-#  endif
-	    if(strlen(s) > i)
-		s[i] = '\0';
-	}
-# else
-	if(strlen(s) > 11)
-		/* leave room for .nn appended to level files */
-		s[11] = '\0';
-# endif
-#endif
 }
 
 #if defined(TIMED_DELAY) && !defined(msleep)
 #include <poll.h>
 
-void
-msleep(msec)
-unsigned msec;				/* milliseconds */
-{
+void msleep(unsigned msec) {
 	struct pollfd unused;
 	int msecs = msec;		/* poll API is signed */
 
@@ -225,9 +184,7 @@ unsigned msec;				/* milliseconds */
 #endif /* TIMED_DELAY */
 
 #ifdef SHELL
-int
-dosh()
-{
+int dosh(void) {
 	register char *str;
 	if(child(0)) {
 		if((str = getenv("SHELL")) != (char*)0)
@@ -242,10 +199,7 @@ dosh()
 #endif /* SHELL */
 
 #if defined(SHELL) || defined(DEF_PAGER) || defined(DEF_MAILREADER)
-int
-child(wt)
-int wt;
-{
+int child(int wt) {
 	register int f;
 	suspend_nhwindows((char *)0);	/* also calls end_screen() */
 #ifdef _M_UNIX

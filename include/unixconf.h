@@ -1,25 +1,9 @@
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
-/* define any of the following that are appropriate */
-#define NETWORK		/* if running on a networked system */
-			/* e.g. Suns sharing a playground through NFS */
-/* #define SUNOS4 */	/* SunOS 4.x */
-#ifdef __linux__
-#define LINUX	/* Another Unix clone */
-#endif
-
 #define TERMINFO	/* uses terminfo rather than termcap */
-			/* Should be defined for most SYSV, SVR4 (including
-			 * Solaris 2+), HPUX, and Linux systems.  In
-			 * particular, it should NOT be defined for the UNIXPC
-			 * unless you remove the use of the shared library in
-			 * the Makefile */
 #define TEXTCOLOR	/* Use System V r3.2 terminfo color support */
-			/* and/or ANSI color support on termcap systems */
-			/* and/or X11 color */
 #define POSIX_JOB_CONTROL /* use System V / Solaris 2.x / POSIX job control */
-			/* (e.g., VSUSP) */
 
 /*
  * The next two defines are intended mainly for the Andrew File System,
@@ -78,37 +62,7 @@
  */
 
 #define MAIL			/* Deliver mail during the game */
-
-#ifdef MAIL
-# if defined(BSD) || defined(ULTRIX)
-#  ifdef AMS
-#define AMS_MAILBOX	"/Mailbox"
-#  else
-#   if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__FreeBSD_kernel__)
 #define DEF_MAILREADER	"/usr/bin/mail"
-#   else
-#define DEF_MAILREADER	"/usr/ucb/Mail"
-#   endif
-#  endif
-#else
-# if !defined(LINUX)
-#  if defined(M_XENIX)
-#define DEF_MAILREADER	"/usr/bin/mail"
-#  else
-#   ifdef __sgi
-#define DEF_MAILREADER	"/usr/sbin/Mail"
-#   else
-#define DEF_MAILREADER	"/usr/bin/mailx"
-#   endif
-#  endif
-# else
-/* Debian mail reader is /usr/bin/mail, not /bin/mail */
-#define DEF_MAILREADER	"/usr/bin/mail"
-# endif
-#endif
-
-#endif	/* MAIL */
-
 
 
 #ifdef COMPRESS
@@ -136,11 +90,7 @@
 # endif
 #endif /* _AUX_SOURCE */
 
-#if defined(LINUX) || defined(bsdi)
-# ifndef POSIX_JOB_CONTROL
-#  define POSIX_JOB_CONTROL
-# endif
-#endif
+#define POSIX_JOB_CONTROL
 
 /*
  * BSD/ULTRIX systems are normally the only ones that can suspend processes.
@@ -202,16 +152,10 @@
 #endif
 
 /* Use the high quality random number routines. */
-#if defined(BSD) || defined(LINUX) || defined(ULTRIX) || defined(RANDOM) || defined(__APPLE__)
 #define Rand()	random()
-#else
-#define Rand()	lrand48()
-#endif
 
 #ifdef TIMED_DELAY
-# if defined(SUNOS4) || defined(LINUX) || (defined(BSD) && !defined(ULTRIX))
 # define msleep(k) usleep((k)*1000)
-# endif
 # ifdef ULTRIX
 # define msleep(k) napms(k)
 # endif
@@ -224,28 +168,5 @@
 # define __HC__ hc
 # undef hc
 #endif
-
-#if defined(GNOME_GRAPHICS)
-#if defined(LINUX)
-# include <linux/unistd.h>
-# if defined(__NR_getresuid) && defined(__NR_getresgid)	/* ie., >= v2.1.44 */
-#  define GETRES_SUPPORT
-# endif
-#else
-# if defined(BSD) || defined(SVR4)
-/*
- * [ALI] We assume that SVR4 means we can safely include syscall.h
- * (although it's really a BSDism). This is certainly true for Solaris 2.5,
- * Solaris 7, Solaris 8 and Compaq Tru64 5.1
- * Later BSD systems will have the getresid system calls.
- */
-# include <sys/syscall.h>
-# if (defined (SYS_getuid) || defined(SYS_getresuid)) && \
-  (defined(SYS_getgid) || defined(SYS_getresgid))
-#  define GETRES_SUPPORT
-# endif
-# endif	/* BSD || SVR4 */
-#endif /* LINUX */
-#endif	/* GNOME_GRAPHICS */
 
 #endif /* UNIXCONF_H */

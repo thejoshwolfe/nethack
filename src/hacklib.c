@@ -456,11 +456,7 @@ void setrandom(void) {
 #ifdef RANDOM	/* srandom() from sys/share/random.c */
 	srandom((unsigned int) time((time_t *)0));
 #else
-# if defined(__APPLE__) || defined(BSD) || defined(LINUX) || defined(ULTRIX) /* system srandom() */
     srandom((int) time((time_t *)0));
-# else
-	srand48((long) time((time_t *)0));
-# endif
 #endif
 }
 
@@ -475,16 +471,11 @@ static struct tm * getlt(void) {
 #endif
 }
 
-int
-getyear()
-{
+int getyear(void) {
 	return(1900 + getlt()->tm_year);
 }
 
-long
-yyyymmdd(date)
-time_t date;
-{
+long yyyymmdd(time_t date) {
 	long datenum;
 	struct tm *lt;
 
