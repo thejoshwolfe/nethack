@@ -648,10 +648,7 @@ init_hilite()
 }
 
 
-static void
-kill_hilite()
-{
-# ifndef TOS
+static void kill_hilite(void) {
 	register int c;
 
 	for (c = 0; c < CLR_MAX / 2; c++) {
@@ -661,17 +658,13 @@ kill_hilite()
 	    if (hilites[c|BRIGHT] && (hilites[c|BRIGHT] != nh_HI))
 		free((void *) hilites[c|BRIGHT]),  hilites[c|BRIGHT] = 0;
 	}
-# endif
 	return;
 }
 
 
 static char nulstr[] = "";
 
-static char *
-s_atr2str(n)
-int n;
-{
+static char * s_atr2str(int n) {
     switch (n) {
 	    case ATR_ULINE:
 		    if(nh_US) return nh_US;

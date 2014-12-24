@@ -63,17 +63,8 @@ long FDECL(dlb_ftell, (dlb *));
 #endif
 
 #define RDTMODE "r"
-#if (defined(TOS) || defined(OS2)) && defined(DLB)
-#define WRTMODE "w+b"
-#else
 #define WRTMODE "w+"
-#endif
-#if defined(THINK_C) || defined(__MWERKS__)
-# define RDBMODE "rb"
-# define WRBMODE "w+b"
-#else
-# define RDBMODE "r"
-# define WRBMODE "w+"
-#endif
+#define RDBMODE "r"
+#define WRBMODE "w+"
 
 #endif	/* DLB_H */
