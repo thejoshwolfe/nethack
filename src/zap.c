@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)zap.c	3.4	2003/08/24	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 /* Disintegration rays have special treatment; corpses are never left.
@@ -1558,9 +1554,7 @@ struct obj *obj, *otmp;
 	case WAN_CANCELLATION:
 	case SPE_CANCELLATION:
 		cancel_item(obj);
-#ifdef TEXTCOLOR
 		newsym(obj->ox,obj->oy);	/* might change color */
-#endif
 		break;
 	case SPE_DRAIN_LIFE:
 		(void) drain_item(obj);

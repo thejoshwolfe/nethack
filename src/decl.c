@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)decl.c	3.2	2001/12/10	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 int NDECL((*afternmv));
@@ -149,7 +145,6 @@ struct obj *invent = (struct obj *)0,
 	*uchain = (struct obj *)0,
 	*uball = (struct obj *)0;
 
-#ifdef TEXTCOLOR
 /*
  *  This must be the same order as used for buzz() in zap.c.
  */
@@ -163,7 +158,6 @@ const int zapcolors[NUM_ZAP] = {
     CLR_YELLOW,		/* 6 - poison gas */
     CLR_GREEN,		/* 7 - acid */
 };
-#endif /* text color */
 
 const int shield_static[SHIELD_COUNT] = {
     S_ss1, S_ss2, S_ss3, S_ss2, S_ss1, S_ss2, S_ss4,	/* 7 per row */

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)music.c	3.4	2003/05/25	*/
-/*	Copyright (c) 1989 by Jean-Christophe Collet */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  * This file contains the different functions designed to manipulate the
  * musical instruments and their various effects.
@@ -345,20 +341,17 @@ do_improvisation(instr)
 struct obj *instr;
 {
 	int damage, do_spec = !Confusion;
-#if defined(MAC) || defined (PCMUSIC)
+#if defined (PCMUSIC)
 	struct obj itmp;
 
 	itmp = *instr;
 	/* if won't yield special effect, make sound of mundane counterpart */
 	if (!do_spec || instr->spe <= 0)
 	    while (objects[itmp.otyp].oc_magic) itmp.otyp -= 1;
-# ifdef MAC
-	mac_speaker(&itmp, "C");
-# endif
 #ifdef PCMUSIC
 	  pc_speaker ( &itmp, "C");
 #endif
-#endif /* MAC || PCMUSIC */
+#endif /* PCMUSIC */
 
 	if (!do_spec)
 	    pline("What you produce is quite far from music...");
@@ -489,9 +482,6 @@ struct obj *instr;
 	/* if user is at the console, play through the console speaker */
 	if (atconsole())
 	    speaker(instr, buf);
-#endif
-#ifdef MAC
-	mac_speaker ( instr , buf ) ;
 #endif
 #ifdef PCMUSIC
 	pc_speaker ( instr, buf );

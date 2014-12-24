@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)tradstdc.h 3.4	1993/05/30	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef TRADSTDC_H
 #define TRADSTDC_H
 
@@ -13,20 +9,6 @@
  */
 #if (defined(__STDC__) || defined(__TURBOC__)) && !defined(NOTSTDC)
 #define NHSTDC
-#endif
-
-#if defined(ultrix) && defined(__STDC__) && !defined(__LANGUAGE_C)
-/* Ultrix seems to be in a constant state of flux.  This check attempts to
- * set up ansi compatibility if it wasn't set up correctly by the compiler.
- */
-#ifdef mips
-#define __mips mips
-#endif
-
-#ifdef LANGUAGE_C
-#define __LANGUAGE_C LANGUAGE_C
-#endif
-
 #endif
 
 /*
@@ -51,7 +33,7 @@
 # define USE_VARARGS
 #endif
 
-#if defined(NHSTDC) || defined(ULTRIX_PROTO) || defined(MAC)
+#if defined(NHSTDC)
 # if !defined(USE_VARARGS) && !defined(USE_OLDARGS) && !defined(USE_STDARG)
 #   define USE_STDARG
 # endif
@@ -68,9 +50,6 @@
 # define VA_ARGS		the_args
 # define VA_START(x)		va_start(the_args, x)
 # define VA_END()		va_end(the_args)
-# if defined(ULTRIX_PROTO) && !defined(_VA_LIST_)
-#  define _VA_LIST_	/* prevents multiple def in stdio.h */
-# endif
 #else
 # ifdef USE_VARARGS
 #include <varargs.h>
@@ -97,7 +76,7 @@
 #endif
 #endif /* NEED_VARARGS */
 
-#if defined(NHSTDC) || defined(MSDOS) || defined(MAC) || defined(ULTRIX_PROTO) || defined(__BEOS__)
+#if defined(NHSTDC)
 
 /*
  * Used for robust ANSI parameter forward declarations:
@@ -115,7 +94,7 @@
 
 # define FDECL(f,p)	f p
 
-# if defined(MSDOS) || defined(USE_STDARG)
+# if defined(USE_STDARG)
 #  define VDECL(f,p)	f p
 # else
 #  define VDECL(f,p)	f()
@@ -137,43 +116,10 @@
 #endif /* NHSTDC */
 
 
-/*
- * According to ANSI, prototypes for old-style declarations must widen the
- * arguments to int.  However, the MSDOS compilers accept shorter arguments
- * (char, short, etc.) in prototypes and do typechecking with them.  Therefore
- * this mess to allow the better typechecking while also allowing some
- * prototypes for the ANSI compilers so people quit trying to fix the
- * prototypes to match the standard and thus lose the typechecking.
- */
-#if defined(MSDOS) && !defined(__GO32__)
-#define UNWIDENED_PROTOTYPES
-#endif
-#if defined(macintosh) && (defined(__SC__) || defined(__MRC__))
-#define WIDENED_PROTOTYPES
-#endif
-#if defined(__MWERKS__) && defined(__BEOS__)
-#define UNWIDENED_PROTOTYPES
-#endif
-
-#if defined(ULTRIX_PROTO) && defined(ULTRIX_CC20)
-#define UNWIDENED_PROTOTYPES
-#endif
-#if defined(apollo)
-#define UNWIDENED_PROTOTYPES
-#endif
-
 #ifndef UNWIDENED_PROTOTYPES
-# if defined(NHSTDC) || defined(ULTRIX_PROTO) || defined(THINK_C)
+# if defined(NHSTDC)
 # define WIDENED_PROTOTYPES
 # endif
-#endif
-
-
-
-	/* MetaWare High-C defaults to unsigned chars */
-	/* AIX 3.2 needs this also */
-#if defined(__HC__) || defined(_AIX32)
-# undef signed
 #endif
 
 

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)vault.c	3.4	2003/01/15	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "vault.h"
 
@@ -129,9 +125,6 @@ char *array;
 void
 invault()
 {
-#ifdef BSD_43_BUG
-    int dummy;		/* hack to avoid schain botch */
-#endif
     struct monst *guard;
     int trycount, vaultroom = (int)vault_occupied(u.urooms);
 

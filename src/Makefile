@@ -145,7 +145,7 @@ SYSSRC = ../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c
 SYSOBJ = ioctl.o unixmain.o unixtty.o unixunix.o unixres.o
 
-CC = gcc
+CC = clang
 CFLAGS = -I../include -g
 
 # files for a straight tty port using no native windowing system
@@ -178,7 +178,7 @@ HACKCSRC = allmain.c alloc.c apply.c artifact.c attrib.c ball.c bones.c \
 
 # all operating-system-dependent .c (for dependencies and such)
 SYSCSRC = ../sys/atari/tos.c \
-	../sys/share/pcunix.c ../sys/share/random.c \
+	../sys/share/pcunix.c \
 	../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c ../sys/be/bemain.c
 
@@ -194,7 +194,7 @@ VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(GENCSRC)
 # and dgn_comp.h, dgn_file.h, lev_comp.h, special level & dungeon files.
 #
 HACKINCL = align.h artifact.h artilist.h attrib.h color.h \
-	config.h config1.h coord.h decl.h def_os2.h display.h dlb.h dungeon.h \
+	config.h coord.h decl.h def_os2.h display.h dlb.h dungeon.h \
 	edog.h emin.h engrave.h epri.h eshk.h extern.h flag.h func_tab.h \
 	global.h hack.h lev.h mfndpos.h micro.h mkroom.h \
 	monattk.h mondata.h monflag.h monst.h monsym.h obj.h objclass.h \
@@ -248,7 +248,7 @@ vis_tab.c: ../include/vis_tab.h
 
 
 # config.h timestamp
-$(CONFIG_H): ../include/config.h ../include/config1.h ../include/tradstdc.h \
+$(CONFIG_H): ../include/config.h ../include/tradstdc.h \
 		../include/global.h ../include/coord.h \
 		../include/unixconf.h ../include/micro.h ../include/nhlan.h
 	touch $(CONFIG_H)
@@ -270,8 +270,6 @@ $(HACK_H): ../include/hack.h $(CONFIG_H) ../include/align.h \
 
 pcunix.o: ../sys/share/pcunix.c $(HACK_H)
 	$(CC) $(CFLAGS) -c ../sys/share/pcunix.c
-random.o: ../sys/share/random.c $(HACK_H)
-	$(CC) $(CFLAGS) -c ../sys/share/random.c
 ioctl.o: ../sys/share/ioctl.c $(HACK_H) ../include/tcap.h
 	$(CC) $(CFLAGS) -c ../sys/share/ioctl.c
 unixtty.o: ../sys/share/unixtty.c $(HACK_H)

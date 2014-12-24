@@ -816,14 +816,9 @@ extern void FDECL(silly_thing, (const char *,struct obj *));
 
 /* ### ioctl.c ### */
 
-#if defined(UNIX) || defined(__BEOS__)
 extern void NDECL(getwindowsz);
 extern void NDECL(getioctls);
 extern void NDECL(setioctls);
-# ifdef SUSPEND
-extern int NDECL(dosuspend);
-# endif /* SUSPEND */
-#endif /* UNIX || __BEOS__ */
 
 /* ### light.c ### */
 
@@ -861,46 +856,6 @@ extern boolean FDECL(boxlock, (struct obj *,struct obj *));
 extern boolean FDECL(doorlock, (struct obj *,int,int));
 extern int NDECL(doopen);
 extern int NDECL(doclose);
-
-#ifdef MAC
-/* These declarations are here because the main code calls them. */
-
-/* ### macfile.c ### */
-
-extern int FDECL(maccreat, (const char *,long));
-extern int FDECL(macopen, (const char *,int,long));
-extern int FDECL(macclose, (int));
-extern int FDECL(macread, (int,void *,unsigned));
-extern int FDECL(macwrite, (int,void *,unsigned));
-extern long FDECL(macseek, (int,long,short));
-extern int FDECL(macunlink, (const char *));
-
-/* ### macsnd.c ### */
-
-extern void FDECL(mac_speaker, (struct obj *,char *));
-
-/* ### macunix.c ### */
-
-extern void FDECL(regularize, (char *));
-extern void NDECL(getlock);
-
-/* ### macwin.c ### */
-
-extern void FDECL(lock_mouse_cursor, (Boolean));
-extern int NDECL(SanePositions);
-
-/* ### mttymain.c ### */
-
-extern void FDECL(getreturn, (char *));
-extern void VDECL(msmsg, (const char *,...));
-extern void NDECL(gettty);
-extern void NDECL(setftty);
-extern void FDECL(settty, (const char *));
-extern int NDECL(tgetch);
-extern void FDECL(cmov, (int x, int y));
-extern void FDECL(nocmov, (int x, int y));
-
-#endif /* MAC */
 
 /* ### mail.c ### */
 
@@ -1521,15 +1476,6 @@ extern void FDECL(com_pager, (int));
 extern void FDECL(qt_pager, (int));
 extern struct permonst *NDECL(qt_montype);
 
-/* ### random.c ### */
-
-#if defined(RANDOM) && !defined(__GO32__) /* djgpp has its own random */
-extern void FDECL(srandom, (unsigned));
-extern char *FDECL(initstate, (unsigned,char *,int));
-extern char *FDECL(setstate, (char *));
-extern long NDECL(random);
-#endif /* RANDOM */
-
 /* ### read.c ### */
 
 extern int NDECL(doread);
@@ -1750,12 +1696,6 @@ extern int NDECL(dotalk);
 #ifdef USER_SOUNDS
 extern int FDECL(add_sound_mapping, (const char *));
 extern void FDECL(play_sound_for_message, (const char *));
-#endif
-
-/* ### sys/msdos/sound.c ### */
-
-#ifdef MSDOS
-extern int FDECL(assign_soundcard, (char *));
 #endif
 
 /* ### sp_lev.c ### */
@@ -2014,14 +1954,6 @@ extern void FDECL(append_port_id, (char *));
 
 /* ### video.c ### */
 
-#ifdef MSDOS
-extern int FDECL(assign_video, (char *));
-# ifdef NO_TERMS
-extern void NDECL(gr_init);
-extern void NDECL(gr_finish);
-# endif
-extern void FDECL(tileview,(BOOLEAN_P));
-#endif
 #ifdef VIDEOSHADES
 extern int FDECL(assign_videoshades, (char *));
 extern int FDECL(assign_videocolors, (char *));

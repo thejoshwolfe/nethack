@@ -29,11 +29,7 @@
 #  define STTY(x)	(tcsetattr(0, TCSADRAIN, x))
 #  define GTTY2(x)	1
 #  define STTY2(x)	1
-#  if defined(BSD) && !defined(__DGUX__)
-#   define nonesuch	_POSIX_VDISABLE
-#  else
-#   define nonesuch	(fpathconf(0, _PC_VDISABLE))
-#  endif
+#  define nonesuch	(fpathconf(0, _PC_VDISABLE))
 # define inittyb2	inittyb
 # define curttyb2	curttyb
 
@@ -47,9 +43,6 @@ extern			/* it is defined in libtermlib (libtermcap) */
 short	ospeed = 0;	/* gets around "not defined" error message */
 #endif
 
-#if defined(BSD)
-unsigned
-#endif
 	char erase_char, intr_char, kill_char;
 static boolean settty_needed = FALSE;
 struct termstruct inittyb, curttyb;
@@ -125,9 +118,7 @@ const char *s;
 	setioctls();
 }
 
-void
-setftty()
-{
+void setftty(void) {
 register int ef = 0;			/* desired value of flags & ECHO */
 #ifdef LINT	/* cf = CBRKON(CBRKMASK); const expr to initialize is ok */
 register int cf = 0;
@@ -149,7 +140,6 @@ register int change = 0;
 		/* be satisfied with one character; no timeout */
 		curttyb.c_cc[VMIN] = 1;		/* was VEOF */
 		curttyb.c_cc[VTIME] = 0;	/* was VEOL */
-# ifdef POSIX_JOB_CONTROL
 		/* turn off system suspend character
 		 * due to differences in structure layout, this has to be
 		 * here instead of in ioctl.c:getioctls() with the BSD
@@ -160,7 +150,6 @@ register int change = 0;
 #  else		/* other later SYSV */
 		curttyb.c_cc[VSWTCH] = nonesuch;
 #  endif
-# endif
 # ifdef VDSUSP /* SunOS Posix extensions */
 		curttyb.c_cc[VDSUSP] = nonesuch;
 # endif
@@ -276,10 +265,8 @@ init_sco_cons()
 		atexit(sco_mapon);
 		sco_mapoff();
 		switch_graphics(IBM_GRAPHICS);
-#  ifdef TEXTCOLOR
 		if (has_colors())
 			iflags.use_color = TRUE;
-#  endif
 	}
 # endif
 }
@@ -333,10 +320,8 @@ init_linux_cons()
 	if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
 		atexit(linux_mapon);
 		linux_mapoff();
-#  ifdef TEXTCOLOR
 		if (has_colors())
 			iflags.use_color = TRUE;
-#  endif
 	}
 # endif
 }

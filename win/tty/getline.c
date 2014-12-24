@@ -1,14 +1,8 @@
-/*	SCCS Id: @(#)getline.c	3.4	2002/10/06	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #ifdef TTY_GRAPHICS
 
-#if !defined(MAC)
 #define NEWAUTOCOMP
-#endif
 
 #include "wintty.h"
 #include "func_tab.h"

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)global.h	3.4	2003/08/31	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
@@ -91,20 +87,9 @@ typedef xchar	boolean;		/* 0 or 1 */
 #  define ALIGNTYP_P int
 # endif
 #endif
-#if defined(ULTRIX_PROTO) && !defined(__STDC__)
-/* The ultrix 2.0 and 2.1 compilers (on Ultrix 4.0 and 4.2 respectively) can't
- * handle "struct obj *" constructs in prototypes.  Their bugs are different,
- * but both seem to work if we put "void*" in the prototype instead.  This
- * gives us minimal prototype checking but avoids the compiler bugs.
- *
- * OBJ_P and MONST_P should _only_ be used for declaring function pointers.
- */
-#define OBJ_P void*
-#define MONST_P void*
-#else
+
 #define OBJ_P struct obj*
 #define MONST_P struct monst*
-#endif
 
 #define SIZE(x) (int)(sizeof(x) / sizeof(x[0]))
 
@@ -141,18 +126,6 @@ typedef xchar	boolean;		/* 0 or 1 */
 #ifndef EXIT_FAILURE
 # define EXIT_FAILURE 1
 #endif
-
-#if defined(X11_GRAPHICS) || defined(QT_GRAPHICS) || defined(GNOME_GRAPHICS) || defined(MSWIN_GRAPHICS)
-# ifndef USE_TILES
-#  define USE_TILES		/* glyph2tile[] will be available */
-# endif
-#endif
-#if defined(AMII_GRAPHICS) || defined(GEM_GRAPHICS)
-# ifndef USE_TILES
-#  define USE_TILES
-# endif
-#endif
-
 
 #define Sprintf  (void) sprintf
 #define Strcat   (void) strcat

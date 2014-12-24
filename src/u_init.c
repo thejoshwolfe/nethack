@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)u_init.c	3.4	2002/10/22	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 struct trobj {
@@ -1018,17 +1014,7 @@ register struct trobj *trop;
 				obj->otyp != SPE_BLANK_PAPER)
 		    initialspell(obj);
 
-#if !defined(PYRAMID_BUG) && !defined(MAC)
 		if(--trop->trquan) continue;	/* make a similar object */
-#else
-		if(trop->trquan) {		/* check if zero first */
-			--trop->trquan;
-			if(trop->trquan)
-				continue;	/* make a similar object */
-		}
-#endif
 		trop++;
 	}
 }
-
-/*u_init.c*/

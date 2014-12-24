@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)botl.c	3.4	1996/07/15	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "wintty.h"
 
@@ -295,7 +291,6 @@ bot2()
 	putstr(WIN_STATUS, 0, newbot2);
 
 	Sprintf(nb = eos(newbot2), "%d(%d)", hp, hpmax);
-#if defined(TEXTCOLOR) && !defined(LISP_GRAPHICS)
 	if (iflags.use_color && iflags.use_hpmon) {
 	  curs(WIN_STATUS, 1, 1);
 	  hpattr = ATR_NONE;
@@ -318,7 +313,6 @@ bot2()
 	  if (hpcolor != NO_COLOR)
 	    term_end_color();
 	}
-#endif /* TEXTCOLOR */
 	Sprintf(nb = eos(newbot2), " Pw:%d(%d) AC:%-2d",
 		u.uen, u.uenmax, u.uac);
 #endif /* HPMON */

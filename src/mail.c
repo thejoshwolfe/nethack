@@ -22,9 +22,6 @@
  *	- Do something to the text when the scroll is enchanted or cancelled.
  *	- Make the daemon always appear at a stairwell, and have it find a
  *	  path to the hero.
- *
- * Note by Paul Winner:  The MSDOS port also 'fakes' the mail daemon at
- *			 random intervals.
  */
 
 STATIC_DCL boolean FDECL(md_start,(coord *));
@@ -46,7 +43,7 @@ extern char *viz_rmin, *viz_rmax;	/* line-of-sight limits (vision.c) */
 #include <pwd.h>
 /* DON'T trust all Unices to declare getpwuid() in <pwd.h> */
 #  if !defined(_BULL_SOURCE) && !defined(__sgi) && !defined(_M_UNIX)
-#   if !defined(SUNOS4) && !(defined(ULTRIX) && defined(__GNUC__))
+#   if !defined(SUNOS4)
 /* DO trust all SVR4 to typedef uid_t in <sys/types.h> (probably to a long) */
 extern struct passwd *FDECL(getpwuid,(uid_t));
 #   endif
@@ -65,16 +62,11 @@ static long laststattime;
 # if !defined(MAILPATH)
 #  define MAILPATH "/var/mail/"
 # endif
-# if !defined(MAILPATH) && (defined(BSD) || defined(ULTRIX))
-#  define MAILPATH "/usr/spool/mail/"
-# endif
 # if !defined(MAILPATH)
 #  define MAILPATH "/usr/mail/"
 # endif
 
-void
-getmailstatus()
-{
+void getmailstatus(void) {
 	if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
 #  ifdef MAILPATH
 #   ifdef AMS

@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)eat.c	3.4	2003/02/13	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 /* #define DEBUG */	/* uncomment to enable new eat code debugging */
 
@@ -1432,11 +1428,6 @@ struct obj *otmp;
 			    pline("Bus error -- core dumped.");
 			else pline("Yo' mama -- core dumped.");
 		    }
-		} else
-#endif
-#ifdef MAC	/* KMH -- Why should Unix have all the fun? */
-		if (otmp->otyp == APPLE) {
-			pline("Delicious!  Must be a Macintosh!");
 		} else
 #endif
 		if (otmp->otyp == EGG && stale_egg(otmp)) {

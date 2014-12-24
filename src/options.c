@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)options.c	3.4	2003/11/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "tcap.h"
 #include <ctype.h>
@@ -55,18 +51,14 @@ static struct Bool_Opt
 	{"color",         &iflags.wc_color, FALSE, SET_IN_GAME},	/*WC*/
 	{"confirm",&flags.confirm, TRUE, SET_IN_GAME},
 	{"cursesgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#if defined(TERMLIB) && !defined(MAC_GRAPHICS_ENV)
 	{"DECgraphics", &iflags.DECgraphics, FALSE, SET_IN_GAME},
-#else
-	{"DECgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 	{"eight_bit_tty", &iflags.wc_eight_bit_input, FALSE, SET_IN_GAME},	/*WC*/
 #if defined(TTY_GRAPHICS)
 	{"extmenu", &iflags.extmenu, FALSE, SET_IN_GAME},
 #else
 	{"extmenu", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
-#if defined(TEXTCOLOR) && defined(HPMON)
+#if defined(HPMON)
         { "hpmon", &iflags.use_hpmon, FALSE, SET_IN_GAME},
 #endif
 #ifdef OPT_DISPMAP
@@ -85,25 +77,13 @@ static struct Bool_Opt
 	{"guicolor", &iflags.wc2_guicolor, TRUE, SET_IN_GAME},
 	{"help", &flags.help, TRUE, SET_IN_GAME},
 	{"hilite_pet",    &iflags.wc_hilite_pet, FALSE, SET_IN_GAME},	/*WC*/
-#ifdef ASCIIGRAPH
 	{"IBMgraphics", &iflags.IBMgraphics, FALSE, SET_IN_GAME},
-#else
-	{"IBMgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
-#ifndef MAC
 	{"ignintr", &flags.ignintr, FALSE, SET_IN_GAME},
-#else
-	{"ignintr", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 	{"large_font", &iflags.obsolete, FALSE, SET_IN_FILE},	/* OBSOLETE */
 	{"legacy", &flags.legacy, TRUE, DISP_IN_GAME},
 	{"lit_corridor", &flags.lit_corridor, FALSE, SET_IN_GAME},
 	{"lootabc", &iflags.lootabc, FALSE, SET_IN_GAME},
-#ifdef MAC_GRAPHICS_ENV
-	{"Macgraphics", &iflags.MACgraphics, TRUE, SET_IN_GAME},
-#else
-	{"Macgraphics", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
+	{"Macgraphics", NULL, FALSE, SET_IN_FILE},
 #ifdef MAIL
 	{"mail", &flags.biff, TRUE, SET_IN_GAME},
 #else
@@ -127,11 +107,7 @@ static struct Bool_Opt
 	{"news", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
 	{"null", &flags.null, TRUE, SET_IN_GAME},
-#ifdef MAC
-	{"page_wait", &flags.page_wait, TRUE, SET_IN_GAME},
-#else
 	{"page_wait", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
 #ifdef PARANOID
 	{"paranoid_hit", &iflags.paranoid_hit, FALSE, SET_IN_GAME},
 #endif
@@ -276,10 +252,6 @@ static struct Comp_Opt
 #ifdef CHANGE_COLOR
 	{ "palette",  "palette (00c/880/-fff is blue/yellow/reverse white)",
 						15 , SET_IN_GAME },
-# if defined(MAC)
-	{ "hicolor",  "same as palette, only order is reversed",
-						15, SET_IN_FILE },
-# endif
 #endif
 	{ "petattr",  "attributes for highlighting pets", 12, SET_IN_FILE },
 	{ "pettype",  "your preferred initial pet type", 4, DISP_IN_GAME },
@@ -303,9 +275,6 @@ static struct Comp_Opt
 #ifdef SORTLOOT
 	{ "sortloot", "sort object selection lists by description", 4, SET_IN_GAME },
 #endif
-#ifdef MSDOS
-	{ "soundcard", "type of sound card to use", 20, SET_IN_FILE },
-#endif
 	{ "suppress_alert", "suppress alerts about version-specific features",
 						8, SET_IN_GAME },
 	{ "tile_width", "width of tiles", 20, DISP_IN_GAME},	/*WC*/
@@ -314,9 +283,6 @@ static struct Comp_Opt
 	{ "traps",    "the symbols to use in drawing traps",
 						MAXTCHARS+1, SET_IN_FILE },
 	{ "vary_msgcount", "show more old messages at a time", 20, DISP_IN_GAME }, /*WC*/
-#ifdef MSDOS
-	{ "video",    "method of video updating", 20, SET_IN_FILE },
-#endif
 #ifdef VIDEOSHADES
 	{ "videocolors", "color mappings for internal screen routines",
 						40, DISP_IN_GAME },
@@ -330,10 +296,6 @@ static struct Comp_Opt
 };
 
 static boolean need_redraw; /* for doset() */
-
-#if defined(TOS) && defined(TEXTCOLOR)
-extern boolean colors_changed;	/* in tos.c */
-#endif
 
 #ifdef VIDEOSHADES
 extern char *shade[3];		  /* in sys/msdos/video.c */
@@ -477,9 +439,7 @@ const char *ev;
 void
 initoptions()
 {
-#ifndef MAC
 	char *opts;
-#endif
 	int i;
 
 	/* initialize the random number generator */
@@ -534,7 +494,7 @@ initoptions()
 	for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++)
 		flags.end_disclose[i] = DISCLOSE_PROMPT_DEFAULT_NO;
 	switch_graphics(ASCII_GRAPHICS);	/* set default characters */
-#if defined(UNIX) && defined(TTY_GRAPHICS)
+#if defined(TTY_GRAPHICS)
 	/*
 	 * Set defaults for some options depending on what we can
 	 * detect about the environment's capabilities.
@@ -545,11 +505,9 @@ initoptions()
 	/* this detects the IBM-compatible console on most 386 boxes */
 	if ((opts = nh_getenv("TERM")) && !strncmp(opts, "AT", 2)) {
 		switch_graphics(IBM_GRAPHICS);
-# ifdef TEXTCOLOR
 		iflags.use_color = TRUE;
-# endif
 	}
-#endif /* UNIX && TTY_GRAPHICS */
+#endif /* TTY_GRAPHICS */
 # ifdef TTY_GRAPHICS
 	/* detect whether a "vt" terminal can handle alternate charsets */
 	if ((opts = nh_getenv("TERM")) &&
@@ -559,15 +517,11 @@ initoptions()
 	}
 # endif
 
-#ifdef MAC_GRAPHICS_ENV
-	switch_graphics(MAC_GRAPHICS);
-#endif /* MAC_GRAPHICS_ENV */
 	flags.menu_style = MENU_FULL;
 
 	/* since this is done before init_objects(), do partial init here */
 	objects[SLIME_MOLD].oc_name_idx = SLIME_MOLD;
 	nmcpy(pl_fruit, OBJ_NAME(objects[SLIME_MOLD]), PL_FSIZ);
-#ifndef MAC
 	opts = getenv("NETHACKOPTIONS");
 	if (!opts) opts = getenv("HACKOPTIONS");
 	if (opts) {
@@ -584,7 +538,6 @@ initoptions()
 			parseoptions(opts, TRUE, FALSE);
 		}
 	} else
-#endif
 		read_config_file((char *)0);
 
 	(void)fruitadd(pl_fruit);
@@ -694,9 +647,6 @@ const char *opts;
 		pline("Bad syntax: %s.  Enter \"?g\" for help.", opts);
 	    return;
 	}
-#ifdef MAC
-	else return;
-#endif
 
 	if(from_file)
 	    raw_printf("Bad syntax in OPTIONS in %s: %s.", configfile, opts);
@@ -913,13 +863,6 @@ const char *opts;
 int bool_or_comp;	/* 0 == boolean option, 1 == compound */
 {
 	int i, *optptr;
-#if defined(MAC)
-	/* the Mac has trouble dealing with the output of messages while
-	 * processing the config file.  That should get fixed one day.
-	 * For now just return.
-	 */
-	return;
-#endif
 	if ((bool_or_comp == 0) && iflags.opt_booldup && initial && from_file) {
 	    for (i = 0; boolopt[i].name; i++) {
 		if (match_optname(opts, boolopt[i].name, 3, FALSE)) {
@@ -1360,40 +1303,21 @@ boolean tinitial, tfrom_file;
 		if (wintype > 0 &&
 		    (op = string_for_opt(opts, FALSE)) != 0) {
 			wc_set_font_name(wintype, op);
-#ifdef MAC
-			set_font_name (wintype, op);
-#endif
 			return;
 		} else if (negated) bad_negation(fullname, TRUE);
 		return;
 	}
 #ifdef CHANGE_COLOR
 	if (match_optname(opts, "palette", 3, TRUE)
-# ifdef MAC
-	    || match_optname(opts, "hicolor", 3, TRUE)
-# endif
 							) {
 	    int color_number, color_incr;
 
-# ifdef MAC
-	    if (match_optname(opts, "hicolor", 3, TRUE)) {
-		if (negated) {
-		    bad_negation("hicolor", FALSE);
-		    return;
-		}
-		color_number = CLR_MAX + 4;	/* HARDCODED inverse number */
-		color_incr = -1;
-	    } else {
-# endif
 		if (negated) {
 		    bad_negation("palette", FALSE);
 		    return;
 		}
 		color_number = 0;
 		color_incr = 1;
-# ifdef MAC
-	    }
-# endif
 	    if ((op = string_for_opt(opts, FALSE)) != (char *)0) {
 		char *pt = op;
 		int cnt, tmp, reverse;
@@ -2004,38 +1928,6 @@ goodfruit:
 		return;
 	}
 #endif /* VIDEOSHADES */
-#ifdef MSDOS
-# ifdef NO_TERMS
-	/* video:string -- must be after longer tests */
-	fullname = "video";
-	if (match_optname(opts, fullname, 5, TRUE)) {
-		if (negated) {
-			bad_negation(fullname, FALSE);
-			return;
-		}
-		else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
-			return;
-		}
-		if (!assign_video(opts))
-			badoption(opts);
-		return;
-	}
-# endif /* NO_TERMS */
-	/* soundcard:string -- careful not to match boolean 'sound' */
-	fullname = "soundcard";
-	if (match_optname(opts, fullname, 6, TRUE)) {
-		if (negated) {
-			bad_negation(fullname, FALSE);
-			return;
-		}
-		else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
-			return;
-		}
-		if (!assign_soundcard(opts))
-			badoption(opts);
-		return;
-	}
-#endif /* MSDOS */
 
 	/* WINCAP
 	 * map_mode:[tiles|ascii4x6|ascii6x8|ascii8x8|ascii16x8|ascii7x12|ascii8x12|
@@ -2313,44 +2205,26 @@ goodfruit:
 
 			duplicate_opt_detection(boolopt[i].name, 0);
 
-#if defined(TERMLIB) || defined(ASCIIGRAPH) || defined(MAC_GRAPHICS_ENV)
 			if (FALSE
-# ifdef TERMLIB
 				 || (boolopt[i].addr) == &iflags.DECgraphics
-# endif
-# ifdef ASCIIGRAPH
 				 || (boolopt[i].addr) == &iflags.IBMgraphics
-# endif
-# ifdef MAC_GRAPHICS_ENV
-				 || (boolopt[i].addr) == &iflags.MACgraphics
-# endif
 				) {
 # ifdef REINCARNATION
 			    if (!initial && Is_rogue_level(&u.uz))
 				assign_rogue_graphics(FALSE);
 # endif
 			    need_redraw = TRUE;
-# ifdef TERMLIB
 			    if ((boolopt[i].addr) == &iflags.DECgraphics)
 				switch_graphics(iflags.DECgraphics ?
 						DEC_GRAPHICS : ASCII_GRAPHICS);
-# endif
-# ifdef ASCIIGRAPH
 			    if ((boolopt[i].addr) == &iflags.IBMgraphics)
 				switch_graphics(iflags.IBMgraphics ?
 						IBM_GRAPHICS : ASCII_GRAPHICS);
-# endif
-# ifdef MAC_GRAPHICS_ENV
-			    if ((boolopt[i].addr) == &iflags.MACgraphics)
-				switch_graphics(iflags.MACgraphics ?
-						MAC_GRAPHICS : ASCII_GRAPHICS);
-# endif
 # ifdef REINCARNATION
 			    if (!initial && Is_rogue_level(&u.uz))
 				assign_rogue_graphics(TRUE);
 # endif
 			}
-#endif /* TERMLIB || ASCIIGRAPH || MAC_GRAPHICS_ENV */
 
 			/* only do processing below if setting with doset() */
 			if (initial) return;
@@ -2391,20 +2265,9 @@ goodfruit:
 					(boolopt[i].addr) == &iflags.wc2_guicolor) {
 			    need_redraw = TRUE;
 			}
-#ifdef TEXTCOLOR
 			else if ((boolopt[i].addr) == &iflags.use_color) {
 			    need_redraw = TRUE;
-# ifdef TOS
-			    if ((boolopt[i].addr) == &iflags.use_color
-				&& iflags.BIOS) {
-				if (colors_changed)
-				    restore_colors();
-				else
-				    set_colors();
-			    }
-# endif
 			}
-#endif
 
 			return;
 		}
@@ -3269,10 +3132,6 @@ char *buf;
 #endif
 	else if (!strcmp(optname, "player_selection"))
 		Sprintf(buf, "%s", iflags.wc_player_selection ? "prompts" : "dialog");
-#ifdef MSDOS
-	else if (!strcmp(optname, "soundcard"))
-		Sprintf(buf, "%s", to_be_done);
-#endif
 	else if (!strcmp(optname, "suppress_alert")) {
 	    if (flags.suppress_alert == 0L)
 		Strcpy(buf, none);
@@ -3306,10 +3165,6 @@ char *buf;
 		if (iflags.wc_vary_msgcount) Sprintf(buf, "%d",iflags.wc_vary_msgcount);
 		else Strcpy(buf, defopt);
 	}
-#ifdef MSDOS
-	else if (!strcmp(optname, "video"))
-		Sprintf(buf, "%s", to_be_done);
-#endif
 #ifdef VIDEOSHADES
 	else if (!strcmp(optname, "videoshades"))
 		Sprintf(buf, "%s-%s-%s", shade[0],shade[1],shade[2]);

@@ -1,6 +1,3 @@
-#	NetHack Copyright (c) NetHack PC Development Team 1993, 1996, 1999
-#	NetHack may be freely redistributed.  See license for details.
-#
 # A '#' at the beginning of a line means the rest of the line is a comment.
 #
 # Some options MUST be set in this file, other options can be toggled while
@@ -148,8 +145,8 @@ OPTIONS=time,noshowexp,number_pad:2,lit_corridor
 # ================================================
 # Example using the DEC Rainbow/ANSI line-drawing character set:
 #
-# If you have compiled with TERMLIB, merely set the DECgraphics option as
-# above.  NetHack will then switch into the VTxxx line-drawing character set
+# Set the DECgraphics option as above.  NetHack will then switch into the
+# VTxxx line-drawing character set
 # (aka ANSI ruling character set '0') for dungeon characters.  If you don't
 # like the selections, you can make up your own via the graphics options,
 # adding 128 to the value of any line-drawing character you want to use.

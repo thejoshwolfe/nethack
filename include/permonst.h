@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)permonst.h 3.4	1999/07/02	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #ifndef PERMONST_H
 #define PERMONST_H
 
@@ -58,9 +54,7 @@ struct permonst {
 	unsigned long	mflags1,		/* boolean bitflags */
 			mflags2;		/* more boolean bitflags */
 	unsigned short	mflags3;		/* yet more boolean bitflags */
-# ifdef TEXTCOLOR
 	uchar		mcolor;			/* color to use */
-# endif
 };
 
 extern struct permonst

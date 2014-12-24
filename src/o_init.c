@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)o_init.c	3.4	1999/12/09	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "lev.h"	/* save & restore info */
 
@@ -105,18 +101,12 @@ shuffle(o_low, o_high, domaterial)
 	}
 }
 
-void
-init_objects()
-{
+void init_objects(void) {
 register int i, first, last, sum;
 register char oclass;
-#ifdef TEXTCOLOR
-# define COPY_OBJ_DESCR(o_dst,o_src) \
+#define COPY_OBJ_DESCR(o_dst,o_src) \
 			o_dst.oc_descr_idx = o_src.oc_descr_idx,\
 			o_dst.oc_color = o_src.oc_color
-#else
-# define COPY_OBJ_DESCR(o_dst,o_src) o_dst.oc_descr_idx = o_src.oc_descr_idx
-#endif
 
 	/* bug fix to prevent "initialization error" abort on Intel Xenix.
 	 * reported by mikew@semike

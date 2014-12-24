@@ -247,11 +247,7 @@ int set, entry;
 
 #define TILE_FILE	"tile.c"
 
-#ifdef MAC
-#  define SOURCE_TEMPLATE	":src:%s"
-#else
-#  define SOURCE_TEMPLATE	"../src/%s"
-#endif
+#define SOURCE_TEMPLATE	"../src/%s"
 
 short tilemap[MAX_GLYPH];
 int lastmontile, lastobjtile, lastothtile;
@@ -269,9 +265,7 @@ int lastmontile, lastobjtile, lastothtile;
  * of cmap), as well as the "flash" glyphs for the new warning system
  * introduced in 3.3.1.
  */
-void
-init_tilemap()
-{
+void init_tilemap(void) {
 	int i, j, condnum, tilenum;
 	int corpsetile, swallowbase;
 

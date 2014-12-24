@@ -4,13 +4,12 @@
 
 /*
  * Section 1:	Operating and window systems selection.
- *		Select the version of the OS you are using.
- *		For "UNIX" select BSD, ULTRIX, or HPUX in unixconf.h.
  */
 
 #define UNIX		/* delete if no fork(), exec() available */
 
-#include "config1.h"	/* should auto-detect MSDOS, MAC */
+/* ensure _GNU_SOURCE is defined before including any system headers */
+# define _GNU_SOURCE
 
 
 /* Windowing systems...
@@ -23,10 +22,6 @@
 /* Debian default window system is always tty; they have to set their
  * own if they want another one (or just use the scripts */
 #define DEFAULT_WINDOW_SYS "tty"
-
-#ifndef DEFAULT_WINDOW_SYS
-# define DEFAULT_WINDOW_SYS "tty"
-#endif
 
 /*
  * Section 2:	Some global parameters and filenames.
@@ -137,9 +132,7 @@ typedef unsigned char	uchar;
  * There are various choices for the NetHack vision system.  There is a
  * choice of two algorithms with the same behavior.  Defining VISION_TABLES
  * creates huge (60K) tables at compile time, drastically increasing data
- * size, but runs slightly faster than the alternate algorithm.  (MSDOS in
- * particular cannot tolerate the increase in data size; other systems can
- * flip a coin weighted to local conditions.)
+ * size, but runs slightly faster than the alternate algorithm.
  *
  * If VISION_TABLES is not defined, things will be faster if you can use
  * MACRO_CPATH.  Some cpps, however, cannot deal with the size of the
@@ -174,9 +167,7 @@ typedef unsigned char	uchar;
 #define ELBERETH	/* Engraving the E-word repels monsters */
 /* I/O */
 #define REDO		/* support for redoing last command - DGK */
-#if !defined(MAC)
-# define CLIPPING	/* allow smaller screens -- ERS */
-#endif
+#define CLIPPING	/* allow smaller screens -- ERS */
 
 #ifdef REDO
 # define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */

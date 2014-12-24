@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)weapon.c	3.4	2002/11/07	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 /*
  *	This module contains code for calculation of "to hit" and damage
  *	bonuses for any given weapon used, as well as weapons selection

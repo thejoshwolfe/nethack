@@ -38,25 +38,16 @@ typedef struct dlb_handle {
     long mark;		/* current file marker */
 } dlb;
 
-#if defined(ULTRIX_PROTO) && !defined(__STDC__)
- /* buggy old Ultrix compiler wants this for the (*dlb_fread_proc)
-    and (*dlb_fgets_proc) prototypes in struct dlb_procs (dlb.c);
-    we'll use it in all the declarations for consistency */
-#define DLB_P struct dlb_handle *
-#else
-#define DLB_P dlb *
-#endif
-
 boolean NDECL(dlb_init);
 void NDECL(dlb_cleanup);
 
 dlb *FDECL(dlb_fopen, (const char *,const char *));
-int FDECL(dlb_fclose, (DLB_P));
-int FDECL(dlb_fread, (char *,int,int,DLB_P));
-int FDECL(dlb_fseek, (DLB_P,long,int));
-char *FDECL(dlb_fgets, (char *,int,DLB_P));
-int FDECL(dlb_fgetc, (DLB_P));
-long FDECL(dlb_ftell, (DLB_P));
+int FDECL(dlb_fclose, (dlb *));
+int FDECL(dlb_fread, (char *,int,int,dlb *));
+int FDECL(dlb_fseek, (dlb *,long,int));
+char *FDECL(dlb_fgets, (char *,int,dlb *));
+int FDECL(dlb_fgetc, (dlb *));
+long FDECL(dlb_ftell, (dlb *));
 
 
 /* various other I/O stuff we don't want to replicate everywhere */

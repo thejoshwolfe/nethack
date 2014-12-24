@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)pline.c	3.4	1999/11/28	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #define NEED_VARARGS /* Uses ... */	/* comment line for pre-compiled headers */
 #include "hack.h"
 #include "epri.h"
@@ -65,10 +61,8 @@ plines(const char *line) {
 	    raw_print(line);
 	    return;
 	}
-#ifndef MAC
 	if (no_repeat && !strcmp(line, toplines))
 	    return;
-#endif /* MAC */
 	if (vision_full_recalc) vision_recalc(0);
 	if (u.ux) flush_screen(1);		/* %% */
 	putstr(WIN_MESSAGE, 0, line);

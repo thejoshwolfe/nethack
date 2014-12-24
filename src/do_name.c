@@ -1,7 +1,3 @@
-/*	SCCS Id: @(#)do_name.c	3.4	2003/01/14	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 
 #ifdef OVLB
@@ -65,9 +61,6 @@ const char *goal;
 #endif
     curs(WIN_MAP, cx,cy);
     flush_screen(0);
-#ifdef MAC
-    lock_mouse_cursor(TRUE);
-#endif
     for (;;) {
 	c = nh_poskey(&tx, &ty, &sidx);
 	if (c == '\033') {
@@ -181,9 +174,6 @@ const char *goal;
 	curs(WIN_MAP,cx,cy);
 	flush_screen(0);
     }
-#ifdef MAC
-    lock_mouse_cursor(FALSE);
-#endif
     if (msg_given) clear_nhwindow(WIN_MESSAGE);
     cc->x = cx;
     cc->y = cy;

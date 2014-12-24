@@ -12,35 +12,12 @@
 #include "tcap.h"
 #endif
 
-#ifdef MAC
-# if defined(__SC__) || defined(__MRC__)
-#  define MPWTOOL
-#  define PREFIX ":dungeon:"	/* place output files here */
-#  include <CursorCtl.h>
-# else
-#  if !defined(__MACH__)
-#   define PREFIX ":lib:"	/* place output files here */
-#  endif
-# endif
-#endif
-
-#ifdef WIN_CE
-#define PREFIX "\\nethack\\dat\\"
-#endif
-
 #ifndef MPWTOOL
 # define SpinCursor(x)
 #endif
 
-#ifndef O_WRONLY
 #include <fcntl.h>
-#endif
-#ifndef O_CREAT	/* some older BSD systems do not define O_CREAT in <fcntl.h> */
 #include <sys/file.h>
-#endif
-#ifndef O_BINARY	/* used for micros, no-op for others */
-# define O_BINARY 0
-#endif
 
 #define OMASK 0644
 
@@ -203,37 +180,6 @@ char **argv;
 	FILE *fin;
 	int i;
 	boolean errors_encountered = FALSE;
-#if defined(MAC) && (defined(THINK_C) || defined(__MWERKS__))
-	static char *mac_argv[] = {	"lev_comp",	/* dummy argv[0] */
-				":dat:Arch.des",
-				":dat:Barb.des",
-				":dat:Caveman.des",
-				":dat:Healer.des",
-				":dat:Knight.des",
-				":dat:Monk.des",
-				":dat:Priest.des",
-				":dat:Ranger.des",
-				":dat:Rogue.des",
-				":dat:Samurai.des",
-				":dat:Tourist.des",
-				":dat:Valkyrie.des",
-				":dat:Wizard.des",
-				":dat:bigroom.des",
-				":dat:castle.des",
-				":dat:endgame.des",
-				":dat:gehennom.des",
-				":dat:knox.des",
-				":dat:medusa.des",
-				":dat:mines.des",
-				":dat:oracle.des",
-				":dat:sokoban.des",
-				":dat:tower.des",
-				":dat:yendor.des"
-				};
-
-	argc = SIZE(mac_argv);
-	argv = mac_argv;
-#endif
 	/* Note:  these initializers don't do anything except guarantee that
 		we're linked properly.
 	*/
@@ -1104,11 +1050,7 @@ specialmaze *maze_level;
 	Strcat(lbuf, filename);
 	Strcat(lbuf, LEV_EXT);
 
-#if defined(MAC) && (defined(__SC__) || defined(__MRC__))
-	fout = open(lbuf, O_WRONLY|O_CREAT|O_BINARY);
-#else
-	fout = open(lbuf, O_WRONLY|O_CREAT|O_BINARY, OMASK);
-#endif
+	fout = open(lbuf, O_WRONLY|O_CREAT, OMASK);
 	if (fout < 0) return FALSE;
 
 	if (room_level) {
@@ -1532,13 +1474,7 @@ char lock[ARBITRARY_SIZE];
 char SAVEF[ARBITRARY_SIZE];
 /* termcap.c */
 struct tc_lcl_data tc_lcl_data;
-# ifdef TEXTCOLOR
-#  ifdef TOS
-const char *hilites[CLR_MAX];
-#  else
 char *hilites[CLR_MAX];
-#  endif
-# endif
 /* trap.c */
 const char *traps[TRAPNUM];
 /* window.c */

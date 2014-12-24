@@ -47,9 +47,7 @@ struct WinDesc {
 struct DisplayDesc {
     uchar rows, cols;		/* width and height of tty display */
     uchar curx, cury;		/* current cursor position on the screen */
-#ifdef TEXTCOLOR
     int color;			/* current color */
-#endif
     int attrs;			/* attributes in effect */
     int toplin;			/* flag for topl stuff */
     int rawprint;		/* number of raw_printed lines since synch */
@@ -90,9 +88,7 @@ extern void FDECL(xwaitforspace, (const char *));
 /* ### termcap.c, video.c ### */
 
 extern void FDECL(tty_startup,(int*, int*));
-#ifndef NO_TERMS
 extern void NDECL(tty_shutdown);
-#endif
 extern void FDECL(xputc, (CHAR_P));
 extern void FDECL(xputs, (const char *));
 #if defined(SCREEN_VGA) || defined(SCREEN_8514)
@@ -119,11 +115,9 @@ extern void FDECL(term_end_attr,(int attr));
 extern void NDECL(term_start_raw_bold);
 extern void NDECL(term_end_raw_bold);
 
-#ifdef TEXTCOLOR
 extern void NDECL(term_end_color);
 extern void FDECL(term_start_color,(int color));
 extern int FDECL(has_color,(int color));
-#endif /* TEXTCOLOR */
 
 
 /* ### topl.c ### */
@@ -187,10 +181,6 @@ extern void FDECL(tty_number_pad, (int));
 extern void NDECL(tty_delay_output);
 #ifdef CHANGE_COLOR
 extern void FDECL(tty_change_color,(int color,long rgb,int reverse));
-#ifdef MAC
-extern void FDECL(tty_change_background,(int white_or_black));
-extern short FDECL(set_tty_font_name, (winid, char *));
-#endif
 extern char * NDECL(tty_get_color_string);
 #endif
 
@@ -199,20 +189,5 @@ extern void NDECL(tty_start_screen);
 extern void NDECL(tty_end_screen);
 
 extern void FDECL(genl_outrip, (winid,int));
-
-#ifdef NO_TERMS
-# ifdef MAC
-#  ifdef putchar
-#   undef putchar
-#   undef putc
-#  endif
-#  define putchar term_putc
-#  define fflush term_flush
-#  define puts term_puts
-extern int FDECL(term_putc, (int c));
-extern int FDECL(term_flush, (void *desc));
-extern int FDECL(term_puts, (const char *str));
-# endif /* MAC */
-#endif/*NO_TERMS*/
 
 #endif /* WINTTY_H */

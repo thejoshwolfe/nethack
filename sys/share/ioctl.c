@@ -42,11 +42,7 @@ struct termios termio;
 # endif /* AMIX */
 #endif
 
-#ifdef SUSPEND	/* BSD isn't alone anymore... */
-#include	<signal.h>
-#endif
-
-#if defined(TIOCGWINSZ) && (defined(BSD) || defined(ULTRIX) || defined(AIX_31) || defined(_BULL_SOURCE) || defined(SVR4))
+#if defined(TIOCGWINSZ) && (defined(AIX_31) || defined(_BULL_SOURCE) || defined(SVR4))
 #define USE_WIN_IOCTL
 #include "tcap.h"	/* for LI and CO */
 #endif
@@ -60,22 +56,10 @@ extern void NDECL(linux_mapon);
 extern void NDECL(linux_mapoff);
 #endif
 
-#ifdef AUX
-void
-catch_stp()
-{
-    signal(SIGTSTP, SIG_DFL);
-    dosuspend();
-}
-#endif /* AUX */
-
-void
-getwindowsz()
-{
+void getwindowsz(void) {
 #ifdef USE_WIN_IOCTL
     /*
-     * ttysize is found on Suns and BSD
-     * winsize is found on Suns, BSD, and Ultrix
+     * ttysize and winsize is found on Suns and BSD
      */
     struct winsize ttsz;
 
@@ -102,53 +86,12 @@ getioctls()
 	(void) tcgetattr(fileno(stdin), &termio);
 #endif
 	getwindowsz();
-#ifdef AUX
-	( void ) signal ( SIGTSTP , catch_stp ) ;
-#endif
 }
 
-void
-setioctls()
-{
+void setioctls(void) {
 #ifdef BSD_JOB_CONTROL
 	(void) ioctl(fileno(stdin), (int) TIOCSLTC, (char *) &ltchars);
 #else
 	tcsetattr(fileno(stdin), TCSADRAIN, &termio);
 #endif
 }
-
-#ifdef SUSPEND		/* No longer implies BSD */
-int
-dosuspend()
-{
-# ifdef SIGTSTP
-	if(signal(SIGTSTP, SIG_IGN) == SIG_DFL) {
-		suspend_nhwindows((char *)0);
-#  ifdef _M_UNIX
-		sco_mapon();
-#  endif
-#  ifdef __linux__
-		linux_mapon();
-#  endif
-		(void) signal(SIGTSTP, SIG_DFL);
-#  ifdef AUX
-		( void ) kill ( 0 , SIGSTOP ) ;
-#  else
-		(void) kill(0, SIGTSTP);
-#  endif
-#  ifdef _M_UNIX
-		sco_mapoff();
-#  endif
-#  ifdef __linux__
-		linux_mapoff();
-#  endif
-		resume_nhwindows();
-	} else {
-		pline("I don't think your shell has job control.");
-	}
-# else
-	pline("Sorry, it seems we have no SIGTSTP here.  Try ! or S.");
-# endif
-	return(0);
-}
-#endif /* SUSPEND */

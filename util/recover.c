@@ -76,22 +76,14 @@ char *argv[];
 	}
 #if defined(SECURE)
 	if (dir
-# ifdef VAR_PLAYGROUND
-	        && strcmp(dir, VAR_PLAYGROUND)
-# else
 #  ifdef HACKDIR
 		&& strcmp(dir, HACKDIR)
 #  endif 
-# endif /* VAR_PLAYGROUND */
 		) {
 		(void) setgid(getgid());
 		(void) setuid(getuid());
 	}
 #endif	/* SECURE */
-
-#ifdef VAR_PLAYGROUND
-	if (!dir) dir = VAR_PLAYGROUND;
-#endif
 
 #ifdef HACKDIR
 	if (!dir) dir = HACKDIR;

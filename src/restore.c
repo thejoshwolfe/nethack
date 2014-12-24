@@ -1,10 +1,5 @@
-/*	SCCS Id: @(#)restore.c	3.4	2003/09/06	*/
-/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
-/* NetHack may be freely redistributed.  See license for details. */
-
 #include "hack.h"
 #include "lev.h"
-#include "tcap.h" /* for TERMLIB and ASCIIGRAPH */
 
 #ifdef USE_TILES
 extern void FDECL(substitute_tiles, (d_level *));       /* from tile.c */
@@ -662,9 +657,6 @@ boolean ghostly;
 	if (ghostly)
 	    clear_id_mapping();
 
-#if defined(MSDOS) || defined(OS2)
-	setmode(fd, O_BINARY);
-#endif
 	/* Load the old fruit info.  We have to do it first, so the
 	 * information is available when restoring the objects.
 	 */
@@ -699,10 +691,6 @@ boolean ghostly;
 		uchar	len;
 		struct rm r;
 		
-#if defined(MAC)
-		/* Suppress warning about used before set */
-		(void) memset((void *) &r, 0, sizeof(r));
-#endif
 		i = 0; j = 0; len = 0;
 		while(i < ROWNO) {
 		    while(j < COLNO) {
@@ -1009,27 +997,15 @@ register unsigned len;
 
 #else /* ZEROCOMP */
 
-void
-minit()
-{
+void minit(void) {
     return;
 }
 
-void
-mread(fd, buf, len)
-register int fd;
-register void * buf;
-register unsigned int len;
-{
+void mread(int fd, void *buf, unsigned int len) {
 	register int rlen;
 
-#if defined(BSD) || defined(ULTRIX)
-	rlen = read(fd, buf, (int) len);
-	if(rlen != len){
-#else /* e.g. SYSV, __TURBOC__ */
 	rlen = read(fd, buf, (unsigned) len);
 	if((unsigned)rlen != len){
-#endif
 		pline("Read %d instead of %u bytes.", rlen, len);
 		if(restoring) {
 			(void) close(fd);
@@ -1040,5 +1016,3 @@ register unsigned int len;
 	}
 }
 #endif /* ZEROCOMP */
-
-/*restore.c*/

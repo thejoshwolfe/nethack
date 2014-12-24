@@ -7,7 +7,7 @@
 
 #include <ctype.h>
 
-#if !defined(MAC) && !defined(O_WRONLY) && !defined(AZTEC_C)
+#if !defined(O_WRONLY) && !defined(AZTEC_C)
 #include <fcntl.h>
 #endif
 
@@ -47,10 +47,6 @@ boolean nethack_thinks_it_is_open;	/* Does NetHack think it's open?       */
 #define WIZKIT_MAX 128
 static char wizkit[WIZKIT_MAX];
 STATIC_DCL FILE *NDECL(fopen_wizkit_file);
-#endif
-
-#ifdef MAC
-# define unlink macunlink
 #endif
 
 #ifdef USER_SOUNDS
@@ -335,16 +331,12 @@ char errbuf[];
 	if (level_info[lev].where != ACTIVE)
 		swapin_file(lev);
 #endif
-#ifdef MAC
-	fd = macopen(fq_lock, O_RDONLY | O_BINARY, LEVL_TYPE);
-#else
 # ifdef HOLD_LOCKFILE_OPEN
 	if (lev == 0)
 		fd = open_levelfile_exclusively(fq_lock, lev, O_RDONLY | O_BINARY );
 	else
 # endif
 	fd = open(fq_lock, O_RDONLY | O_BINARY, 0);
-#endif
 
 	/* for failure, return an explanation that our caller can use;
 	   settle for `lock' instead of `fq_lock' because the latter
@@ -512,11 +504,7 @@ char errbuf[];
 	file = set_bonestemp_name();
 	file = fqname(file, BONESPREFIX, 0);
 
-# ifdef MAC
-	fd = maccreat(file, BONE_TYPE);
-# else
 	fd = creat(file, FCMASK);
-# endif
 	if (fd < 0 && errbuf) /* failure explanation */
 	    Sprintf(errbuf,
 		    "Cannot create bones \"%s\", id %s (errno %d).",
@@ -579,11 +567,7 @@ char **bonesid;
 	*bonesid = set_bonesfile_name(bones, lev);
 	fq_bones = fqname(bones, BONESPREFIX, 0);
 	uncompress(fq_bones);	/* no effect if nonexistent */
-#ifdef MAC
-	fd = macopen(fq_bones, O_RDONLY | O_BINARY, BONE_TYPE);
-#else
 	fd = open(fq_bones, O_RDONLY | O_BINARY, 0);
-#endif
 	return fd;
 }
 
