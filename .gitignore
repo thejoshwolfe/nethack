@@ -33,6 +33,8 @@
 /util/lev_lex.c
 /util/lev_yacc.c
 /util/recover
+/util/dgn_yacc.tmp/
+/util/lev_yacc.tmp/
 
 /perm
 /dumps/
