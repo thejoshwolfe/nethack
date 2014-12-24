@@ -55,8 +55,8 @@ rank_of(lev, monnum, female)
 	short monnum;
 	boolean female;
 {
-	register struct Role *role;
-	register int i;
+	struct Role *role;
+	int i;
 
 
 	/* Find the role */
@@ -88,7 +88,7 @@ rank (void)
 int 
 title_to_mon (const char *str, int *rank_indx, int *title_length)
 {
-	register int i, j;
+	int i, j;
 
 
 	/* Loop through each of the roles */
@@ -117,7 +117,7 @@ title_to_mon (const char *str, int *rank_indx, int *title_length)
 void 
 max_rank_sz (void)
 {
-	register int i, r, maxr = 0;
+	int i, r, maxr = 0;
 	for (i = 0; i < 9; i++) {
 	    if (urole.rank[i].m && (r = strlen(urole.rank[i].m)) > maxr) maxr = r;
 	    if (urole.rank[i].f && (r = strlen(urole.rank[i].f)) > maxr) maxr = r;
@@ -160,8 +160,8 @@ bot1()
 #ifndef DUMP_LOG
 	char newbot1[MAXCO];
 #endif
-	register char *nb;
-	register int i,j;
+	char *nb;
+	int i,j;
 
 	Strcpy(newbot1, plname);
 	if('a' <= newbot1[0] && newbot1[0] <= 'z') newbot1[0] += 'A'-'a';
@@ -252,7 +252,7 @@ bot2()
 #ifndef DUMP_LOG
 	char  newbot2[MAXCO];
 #endif
-	register char *nb;
+	char *nb;
 	int hp, hpmax;
 #if defined(HPMON) && !defined(LISP_GRAPHICS)
 	int hpcolor, hpattr;

@@ -99,7 +99,7 @@ lev_init init_lev;
 STATIC_OVL void 
 set_wall_property (signed char x1, signed char y1, signed char x2, signed char y2, int prop)
 {
-	register signed char x, y;
+	signed char x, y;
 
 	for(y = y1; y <= y2; y++)
 	    for(x = x1; x <= x2; x++)
@@ -150,7 +150,7 @@ rndtrap (void)
  *
  *	if x or y is -11, we generate a random coordinate.
  *	if x or y is between -1 and -10, we read one from the corresponding
- *	register (x0, x1, ... x9).
+ *	(x0, x1, ... x9).
  *	if x or y is nonnegative, we convert it from relative to the local map
  *	to global coordinates.
  *	The "humidity" flag is used to insure that engravings aren't
@@ -177,7 +177,7 @@ STATIC_OVL void get_location(signed char *x, signed char *y, int humidity) {
 		if (is_ok_location(*x,*y,humidity)) break;
 	    } while (++cpt < 100);
 	    if (cpt >= 100) {
-		register int xx, yy;
+		int xx, yy;
 		/* last try */
 		for (xx = 0; xx < xsize; xx++)
 		    for (yy = 0; yy < ysize; yy++) {
@@ -198,10 +198,10 @@ found_it:;
 
 STATIC_OVL boolean
 is_ok_location(x, y, humidity)
-register signed char x, y;
-register int humidity;
+signed char x, y;
+int humidity;
 {
-	register int typ;
+	int typ;
 
 	if (Is_waterlevel(&u.uz)) return TRUE;	/* accept any spot */
 
@@ -225,8 +225,8 @@ register int humidity;
 STATIC_OVL void 
 sp_lev_shuffle (char list1[], char list2[], int n)
 {
-	register int i, j;
-	register char k;
+	int i, j;
+	char k;
 
 	for (i = n - 1; i > 0; i--) {
 		if ((j = rn2(i + 1)) == i) continue;
@@ -276,7 +276,7 @@ STATIC_OVL void
 get_free_room_loc (signed char *x, signed char *y, struct mkroom *croom)
 {
 	signed char try_x, try_y;
-	register int trycnt = 0;
+	int trycnt = 0;
 
 	do {
 	    try_x = *x,  try_y = *y;
@@ -293,8 +293,8 @@ check_room(lowx, ddx, lowy, ddy, vault)
 signed char *lowx, *ddx, *lowy, *ddy;
 boolean vault;
 {
-	register int x,y,hix = *lowx + *ddx, hiy = *lowy + *ddy;
-	register struct rm *lev;
+	int x,y,hix = *lowx + *ddx, hiy = *lowy + *ddy;
+	struct rm *lev;
 	int xlim, ylim, ymax;
 
 	xlim = XLIM + (vault ? 1 : 0);
@@ -590,7 +590,7 @@ create_door (room_door *dd, struct mkroom *broom)
 	}
 
 	do {
-		register int dwall, dpos;
+		int dwall, dpos;
 
 		dwall = dd->wall;
 		if (dwall == -1)	/* The wall is RANDOM */
@@ -1229,9 +1229,9 @@ coord *org, *dest;
 boolean nxcor;
 signed char ftyp, btyp;
 {
-	register int dx=0, dy=0, dix, diy, cct;
-	register struct rm *crm;
-	register int tx, ty, xx, yy;
+	int dx=0, dy=0, dix, diy, cct;
+	struct rm *crm;
+	int tx, ty, xx, yy;
 
 	xx = org->x;  yy = org->y;
 	tx = dest->x; ty = dest->y;
@@ -1284,7 +1284,7 @@ signed char ftyp, btyp;
 
 	    /* do we have to change direction ? */
 	    if(dy && dix > diy) {
-		register int ddx = (xx > tx) ? -1 : 1;
+		int ddx = (xx > tx) ? -1 : 1;
 
 		crm = &levl[xx+ddx][yy];
 		if(crm->typ == btyp || crm->typ == ftyp || crm->typ == SCORR) {
@@ -1293,7 +1293,7 @@ signed char ftyp, btyp;
 		    continue;
 		}
 	    } else if(dx && diy > dix) {
-		register int ddy = (yy > ty) ? -1 : 1;
+		int ddy = (yy > ty) ? -1 : 1;
 
 		crm = &levl[xx][yy+ddy];
 		if(crm->typ == btyp || crm->typ == ftyp || crm->typ == SCORR) {
@@ -1628,10 +1628,10 @@ build_room (room *r, room *pr)
 STATIC_OVL void 
 light_region (region *tmpregion)
 {
-    register boolean litstate = tmpregion->rlit ? 1 : 0;
-    register int hiy = tmpregion->y2;
-    register int x, y;
-    register struct rm *lev;
+    boolean litstate = tmpregion->rlit ? 1 : 0;
+    int hiy = tmpregion->y2;
+    int x, y;
+    struct rm *lev;
     int lowy = tmpregion->y1;
     int lowx = tmpregion->x1, hix = tmpregion->x2;
 
@@ -1978,7 +1978,7 @@ dlb *fd;
 STATIC_OVL void 
 maze1xy (coord *m, int humidity)
 {
-	register int x, y, tryct = 2000;
+	int x, y, tryct = 2000;
 	/* tryct:  normally it won't take more than ten or so tries due
 	   to the circumstances under which we'll be called, but the
 	   `humidity' screening might drastically change the chances */
@@ -2218,7 +2218,7 @@ dlb *fd;
 	Fread((void *) &n, 1, sizeof(n), fd);
 						/* Number of subrooms */
 	while(n--) {
-		register struct mkroom *troom;
+		struct mkroom *troom;
 
 		Fread((void *)&tmpregion, 1, sizeof(tmpregion), fd);
 

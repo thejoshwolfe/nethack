@@ -315,7 +315,7 @@ void delete_levelfile(int lev) {
 
 
 void clearlocks(void) {
-	register int x;
+	int x;
 
 	signal(SIGHUP, SIG_IGN);
 	/* can't access maxledgerno() before dungeons are created -dlc */
@@ -937,7 +937,7 @@ int retryct;
 # else
 	while (link(filename, lockname) == -1) {
 # endif
-	    register int errnosv = errno;
+	    int errnosv = errno;
 
 	    switch (errnosv) {	/* George Barbanis */
 	    case EEXIST:

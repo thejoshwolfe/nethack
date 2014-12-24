@@ -45,7 +45,7 @@ static int veryold(int fd) {
 }
 
 static int eraseoldlocks(void) {
-	register int i;
+	int i;
 
 	/* cannot use maxledgerno() here, because we need to find a lock name
 	 * before starting everything (including the dungeon initialization
@@ -63,7 +63,7 @@ static int eraseoldlocks(void) {
 }
 
 void getlock(void) {
-	register int i = 0, fd, c;
+	int i = 0, fd, c;
 	const char *fq_lock;
 
 #ifdef TTY_GRAPHICS
@@ -165,7 +165,7 @@ gotlock:
 
 // normalize file name - we don't like .'s, /'s, spaces
 void regularize(char * s) {
-	register char *lp;
+	char *lp;
 
 	while((lp=index(s, '.')) || (lp=index(s, '/')) || (lp=index(s,' ')))
 		*lp = '_';
@@ -185,7 +185,7 @@ void msleep(unsigned msec) {
 
 #ifdef SHELL
 int dosh(void) {
-	register char *str;
+	char *str;
 	if(child(0)) {
 		if((str = getenv("SHELL")) != (char*)0)
 			(void) execl(str, str, (char *)0);
@@ -200,7 +200,7 @@ int dosh(void) {
 
 #if defined(SHELL) || defined(DEF_PAGER) || defined(DEF_MAILREADER)
 int child(int wt) {
-	register int f;
+	int f;
 	suspend_nhwindows((char *)0);	/* also calls end_screen() */
 #ifdef _M_UNIX
 	sco_mapon();

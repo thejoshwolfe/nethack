@@ -37,8 +37,8 @@ STATIC_DCL int FDECL(do_improvisation,(struct obj *));
  */
 
 STATIC_OVL void awaken_monsters (int distance) {
-	register struct monst *mtmp = fmon;
-	register int distm;
+	struct monst *mtmp = fmon;
+	int distm;
 
 	while(mtmp) {
 	    if (!DEADMONSTER(mtmp)) {
@@ -64,7 +64,7 @@ STATIC_OVL void awaken_monsters (int distance) {
 STATIC_OVL void 
 put_monsters_to_sleep (int distance)
 {
-	register struct monst *mtmp = fmon;
+	struct monst *mtmp = fmon;
 
 	while(mtmp) {
 		if (!DEADMONSTER(mtmp) && distu(mtmp->mx, mtmp->my) < distance &&
@@ -83,7 +83,7 @@ put_monsters_to_sleep (int distance)
 STATIC_OVL void 
 charm_snakes (int distance)
 {
-	register struct monst *mtmp = fmon;
+	struct monst *mtmp = fmon;
 	int could_see_mon, was_peaceful;
 
 	while (mtmp) {
@@ -116,7 +116,7 @@ charm_snakes (int distance)
 STATIC_OVL void 
 calm_nymphs (int distance)
 {
-	register struct monst *mtmp = fmon;
+	struct monst *mtmp = fmon;
 
 	while (mtmp) {
 	    if (!DEADMONSTER(mtmp) && mtmp->data->mlet == S_NYMPH && mtmp->mcanmove &&
@@ -138,7 +138,7 @@ calm_nymphs (int distance)
 void 
 awaken_soldiers (void)
 {
-	register struct monst *mtmp = fmon;
+	struct monst *mtmp = fmon;
 
 	while(mtmp) {
 	    if (!DEADMONSTER(mtmp) &&
@@ -187,7 +187,7 @@ charm_monsters (int distance)
 STATIC_OVL void 
 do_earthquake (int force)
 {
-	register int x,y;
+	int x,y;
 	struct monst *mtmp;
 	struct obj *otmp;
 	struct trap *chasm;

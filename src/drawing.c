@@ -528,9 +528,9 @@ def_char_to_monclass (char ch)
 }
 
 void 
-assign_graphics (register unsigned char *graph_chars, int glth, int maxlen, int offset)
+assign_graphics (unsigned char *graph_chars, int glth, int maxlen, int offset)
 {
-    register int i;
+    int i;
 
     for (i = 0; i < maxlen; i++)
 	showsyms[i+offset] = (((i < glth) && graph_chars[i]) ?

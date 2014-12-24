@@ -36,7 +36,7 @@ static boolean wiz_error_flag = FALSE;
 int 
 main (int argc, char *argv[])
 {
-	register int fd;
+	int fd;
 	boolean exact_username;
 #ifdef SIMPLE_MAIL
 	char* e_simple = NULL;
@@ -343,7 +343,7 @@ whoami() {
 	 * Note that we trust the user here; it is possible to play under
 	 * somebody else's name.
 	 */
-	register char *s;
+	char *s;
 
 	if (*plname) return FALSE;
 	if(/* !*plname && */ (s = nh_getenv("USER")))

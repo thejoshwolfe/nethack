@@ -92,7 +92,7 @@ unsigned gpflags;
 boolean
 enexto(cc, xx, yy, mdat)
 coord *cc;
-register signed char xx, yy;
+signed char xx, yy;
 struct permonst *mdat;
 {
 	return enexto_core(cc, xx, yy, mdat, 0);
@@ -101,7 +101,7 @@ struct permonst *mdat;
 boolean
 enexto_core(cc, xx, yy, mdat, entflags)
 coord *cc;
-register signed char xx, yy;
+signed char xx, yy;
 struct permonst *mdat;
 unsigned entflags;
 {
@@ -212,7 +212,7 @@ int x1, y1, x2, y2;
 
 STATIC_OVL boolean
 teleok(x, y, trapok)
-register int x, y;
+int x, y;
 boolean trapok;
 {
 	if (!trapok && t_at(x, y)) return FALSE;
@@ -224,7 +224,7 @@ boolean trapok;
 
 void
 teleds(nux, nuy, allow_drag)
-register int nux,nuy;
+int nux,nuy;
 boolean allow_drag;
 {
 	boolean ball_active = (Punished && uball->where != OBJ_FREE),
@@ -332,7 +332,7 @@ boolean
 safe_teleds(allow_drag)
 boolean allow_drag;
 {
-	register int nux, nuy, tcnt = 0;
+	int nux, nuy, tcnt = 0;
 
 	do {
 		nux = rnd(COLNO-1);
@@ -349,7 +349,7 @@ boolean allow_drag;
 STATIC_OVL void 
 vault_tele (void)
 {
-	register struct mkroom *croom = search_special(VAULT);
+	struct mkroom *croom = search_special(VAULT);
 	coord c;
 
 	if (croom && somexy(croom, &c) && teleok(c.x,c.y,FALSE)) {
@@ -361,10 +361,10 @@ vault_tele (void)
 
 boolean
 teleport_pet(mtmp, force_it)
-register struct monst *mtmp;
+struct monst *mtmp;
 boolean force_it;
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 
 #ifdef STEED
 	if (mtmp == u.usteed)
@@ -473,7 +473,7 @@ dotele()
 	}
 	if (!trap) {
 	    boolean castit = FALSE;
-	    register int sp_no = 0, energy = 0;
+	    int sp_no = 0, energy = 0;
 
 	    if (!Teleportation || (u.ulevel < (Role_if(PM_WIZARD) ? 8 : 12)
 					&& !can_teleport(youmonst.data))) {
@@ -559,7 +559,7 @@ dotele()
 void 
 level_tele (void)
 {
-	register int newlev;
+	int newlev;
 	d_level newlevel;
 	const char *escape_by_flying = 0;	/* when surviving dest of -N */
 	char buf[BUFSZ];
@@ -802,7 +802,7 @@ level_tele (void)
 }
 
 void 
-domagicportal (register struct trap *ttmp)
+domagicportal (struct trap *ttmp)
 {
 	struct d_level target_level;
 
@@ -874,10 +874,10 @@ level_tele_trap (struct trap *trap)
 /* check whether monster can arrive at location <x,y> via Tport (or fall) */
 STATIC_OVL boolean
 rloc_pos_ok(x, y, mtmp)
-register int x, y;		/* coordinates of candidate location */
+int x, y;		/* coordinates of candidate location */
 struct monst *mtmp;
 {
-	register int xx, yy;
+	int xx, yy;
 
 	if (!goodpos(x, y, mtmp, 0)) return FALSE;
 	/*
@@ -925,9 +925,9 @@ struct monst *mtmp;
  * the worm.
  */
 void 
-rloc_to (struct monst *mtmp, register int x, register int y)
+rloc_to (struct monst *mtmp, int x, int y)
 {
-	register int oldx = mtmp->mx, oldy = mtmp->my;
+	int oldx = mtmp->mx, oldy = mtmp->my;
 	boolean resident_shk = mtmp->isshk && inhishop(mtmp);
 
 	if (x == mtmp->mx && y == mtmp->my)	/* that was easy */
@@ -972,7 +972,7 @@ rloc(mtmp, suppress_impossible)
 struct monst *mtmp;	/* mx==0 implies migrating monster arrival */
 boolean suppress_impossible;
 {
-	register int x, y, trycount;
+	int x, y, trycount;
 
 #ifdef STEED
 	if (mtmp == u.usteed) {
@@ -1023,7 +1023,7 @@ boolean suppress_impossible;
 STATIC_OVL void 
 mvault_tele (struct monst *mtmp)
 {
-	register struct mkroom *croom = search_special(VAULT);
+	struct mkroom *croom = search_special(VAULT);
 	coord c;
 
 	if (croom && somexy(croom, &c) &&
@@ -1146,9 +1146,9 @@ int in_sight;
 
 
 void 
-rloco (register struct obj *obj)
+rloco (struct obj *obj)
 {
-	register signed char tx, ty, otx, oty;
+	signed char tx, ty, otx, oty;
 	boolean restricted_fall;
 	int try_limit = 4000;
 

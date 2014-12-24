@@ -210,7 +210,7 @@ msg_in (struct qtmsg *qtm_list, int msgnum)
 STATIC_OVL void 
 convert_arg (char c)
 {
-	register const char *str;
+	const char *str;
 
 	switch (c) {
 

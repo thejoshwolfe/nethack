@@ -7,8 +7,8 @@ msummon (		/* mon summons a monster */
     struct monst *mon
 )
 {
-	register struct permonst *ptr;
-	register int dtype = NON_PM, cnt = 0;
+	struct permonst *ptr;
+	int dtype = NON_PM, cnt = 0;
 	aligntyp atyp;
 	struct monst *mtmp;
 
@@ -85,7 +85,7 @@ summon_minion(alignment, talk)
 aligntyp alignment;
 boolean talk;
 {
-    register struct monst *mon;
+    struct monst *mon;
     int mnum;
 
     switch ((int)alignment) {
@@ -137,7 +137,7 @@ boolean talk;
 
 int 
 demon_talk (		/* returns 1 if it won't attack. */
-    register struct monst *mtmp
+    struct monst *mtmp
 )
 {
 	long cash, demand, offer;

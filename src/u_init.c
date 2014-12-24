@@ -489,7 +489,7 @@ static const struct def_skill Skill_W[] = {
 
 
 STATIC_OVL void 
-knows_object (register int obj)
+knows_object (int obj)
 {
 	discover_object(obj,TRUE,FALSE);
 	objects[obj].oc_pre_discovered = 1;	/* not a "discovery" */
@@ -499,9 +499,9 @@ knows_object (register int obj)
  * like all gems except the loadstone and luckstone.
  */
 STATIC_OVL void 
-knows_class (register char sym)
+knows_class (char sym)
 {
-	register int ct;
+	int ct;
 	for (ct = 1; ct < NUM_OBJECTS; ct++)
 		if (objects[ct].oc_class == sym && !objects[ct].oc_magic)
 			knows_object(ct);
@@ -510,7 +510,7 @@ knows_class (register char sym)
 void 
 u_init (void)
 {
-	register int i;
+	int i;
 
 	flags.female = flags.initgend;
 	flags.beginner = 1;
@@ -795,7 +795,7 @@ u_init (void)
  */
 	for(i = 0; i < A_MAX; i++)
 	    if(!rn2(20)) {
-		register int xd = rn2(7) - 2;	/* biased variation */
+		int xd = rn2(7) - 2;	/* biased variation */
 		(void) adjattrib(i, xd, TRUE);
 		if (ABASE(i) < AMAX(i)) AMAX(i) = ABASE(i);
 	    }
@@ -846,7 +846,7 @@ int otyp;
 }
 
 STATIC_OVL void 
-ini_inv (register struct trobj *trop)
+ini_inv (struct trobj *trop)
 {
 	struct obj *obj;
 	int otyp, i;

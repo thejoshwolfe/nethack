@@ -30,7 +30,7 @@ int explcolors[] = {
 
 /*ARGSUSED*/
 void mapglyph(int glyph, int *ochar, int *ocolor, unsigned *ospecial, int x, int y) {
-	register int offset;
+	int offset;
 	int color = NO_COLOR;
 	unsigned char ch;
 	unsigned special = 0;

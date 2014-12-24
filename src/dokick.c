@@ -22,8 +22,8 @@ static struct obj *kickobj;
 static const char kick_passes_thru[] = "kick passes harmlessly through";
 
 STATIC_OVL void kickdmg(struct monst *mon, boolean clumsy) {
-	register int mdx, mdy;
-	register int dmg = ( ACURRSTR + ACURR(A_DEX) + ACURR(A_CON) )/ 15;
+	int mdx, mdy;
+	int dmg = ( ACURRSTR + ACURR(A_DEX) + ACURR(A_CON) )/ 15;
 	int kick_skill = P_NONE;
 	int blessed_foot_damage = 0;
 	boolean trapkilled = FALSE;
@@ -107,9 +107,9 @@ STATIC_OVL void kickdmg(struct monst *mon, boolean clumsy) {
 }
 
 STATIC_OVL void kick_monster(signed char x, signed char y) {
-	register boolean clumsy = FALSE;
-	register struct monst *mon = m_at(x, y);
-	register int i, j;
+	boolean clumsy = FALSE;
+	struct monst *mon = m_at(x, y);
+	int i, j;
 
 	bhitpos.x = x;
 	bhitpos.y = y;
@@ -223,8 +223,8 @@ doit:
  */
 boolean
 ghitm(mtmp, gold)
-register struct monst *mtmp;
-register struct obj *gold;
+struct monst *mtmp;
+struct obj *gold;
 {
 	boolean msg_given = FALSE;
 
@@ -386,7 +386,7 @@ container_impact_dmg (struct obj *obj)
 
 STATIC_OVL int kick_object(signed char x, signed char y) {
 	int range;
-	register struct monst *mon, *shkp;
+	struct monst *mon, *shkp;
 	struct trap *trap;
 	char bhitroom;
 	boolean costly, isgold, slide = FALSE;
@@ -607,7 +607,7 @@ dokick()
 {
 	int x, y;
 	int avrg_attrib;
-	register struct monst *mtmp;
+	struct monst *mtmp;
 	boolean no_kick = FALSE;
 	char buf[BUFSZ];
 
@@ -810,7 +810,7 @@ dokick()
 		    } else goto ouch;
 		}
 		if(IS_THRONE(maploc->typ)) {
-		    register int i;
+		    int i;
 		    if(Levitation) goto dumb;
 		    if((Luck < 0 || maploc->doormask) && !rn2(3)) {
 			maploc->typ = ROOM;
@@ -1128,8 +1128,8 @@ STATIC_OVL void drop_to(coord *cc, signed char loc) {
 
 void impact_drop(struct obj *missile, signed char x, signed char y, signed char dlev) {
 	signed char toloc;
-	register struct obj *obj, *obj2;
-	register struct monst *shkp;
+	struct obj *obj, *obj2;
+	struct monst *shkp;
 	long oct, dct, price, debit, robbed;
 	boolean angry, costly, isrock;
 	coord cc;
@@ -1361,8 +1361,8 @@ boolean ship_object(struct obj *otmp, signed char x, signed char y, boolean shop
 void 
 obj_delivery (void)
 {
-	register struct obj *otmp, *otmp2;
-	register int nx, ny;
+	struct obj *otmp, *otmp2;
+	int nx, ny;
 	long where;
 
 	for (otmp = migrating_objs; otmp; otmp = otmp2) {

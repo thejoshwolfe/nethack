@@ -35,7 +35,7 @@ d_level *lev;
 STATIC_OVL void 
 goodfruit (int id)
 {
-	register struct fruit *f;
+	struct fruit *f;
 
 	for(f=ffruit; f; f=f->nextf) {
 		if(f->fid == -id) {
@@ -151,7 +151,7 @@ drop_upon_death (struct monst *mtmp, struct obj *cont)
 boolean
 can_make_bones()
 {
-	register struct trap *ttmp;
+	struct trap *ttmp;
 
 	if (ledger_no(&u.uz) <= 0 || ledger_no(&u.uz) > maxledgerno())
 	    return FALSE;
@@ -330,8 +330,8 @@ savebones (struct obj *corpse)
 }
 
 int getbones(void) {
-	register int fd;
-	register int ok;
+	int fd;
+	int ok;
 	char c, *bonesid, oldbonesid[10];
 
 	if(discover)		/* save bones files for real games */
@@ -377,7 +377,7 @@ int getbones(void) {
 #endif
 			trickery(errbuf);
 		} else {
-			register struct monst *mtmp;
+			struct monst *mtmp;
 
 			getlev(fd, 0, 0, TRUE);
 

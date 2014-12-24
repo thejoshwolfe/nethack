@@ -181,7 +181,7 @@ throw_obj (struct obj *obj, int shotlimit)
 int
 dothrow()
 {
-	register struct obj *obj;
+	struct obj *obj;
 	int shotlimit;
 
 	/*
@@ -328,7 +328,7 @@ dofire (void)
  * Object hits floor at hero's feet.  Called from drop() and throwit().
  */
 void 
-hitfloor (register struct obj *obj)
+hitfloor (struct obj *obj)
 {
 	if (IS_SOFT(levl[u.ux][u.uy].typ) || u.uinwater) {
 		dropy(obj);
@@ -839,12 +839,12 @@ sho_obj_return_to_u (struct obj *obj)
 
 void
 throwit(obj, wep_mask, twoweap)
-register struct obj *obj;
+struct obj *obj;
 long wep_mask;	/* used to re-equip returning boomerang */
 boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
 {
-	register struct monst *mon;
-	register int range, urange;
+	struct monst *mon;
+	int range, urange;
 	boolean impaired = (Confusion || Stunned || Blind ||
 			   Hallucination || Fumbling);
 
@@ -1154,10 +1154,10 @@ tmiss (struct obj *obj, struct monst *mon)
  * 0 if caller must take care of it.
  */
 int 
-thitmonst (register struct monst *mon, register struct obj *obj)
+thitmonst (struct monst *mon, struct obj *obj)
 {
-	register int	tmp; /* Base chance to hit */
-	register int	disttmp; /* distance modifier */
+	int	tmp; /* Base chance to hit */
+	int	disttmp; /* distance modifier */
 	int otyp = obj->otyp;
 	boolean guaranteed_hit = (u.uswallow && mon == u.ustuck);
 
@@ -1389,7 +1389,7 @@ thitmonst (register struct monst *mon, register struct obj *obj)
 }
 
 STATIC_OVL int 
-gem_accept (register struct monst *mon, register struct obj *obj)
+gem_accept (struct monst *mon, struct obj *obj)
 {
 	char buf[BUFSZ];
 	boolean is_buddy = sgn(mon->data->maligntyp) == sgn(u.ualign.type);
@@ -1670,7 +1670,7 @@ throw_gold (struct obj *obj)
 #ifndef GOLDOBJ
 	long zorks = obj->quan;
 #endif
-	register struct monst *mon;
+	struct monst *mon;
 
 	if(!u.dx && !u.dy && !u.dz) {
 #ifndef GOLDOBJ

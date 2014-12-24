@@ -89,7 +89,7 @@ hurtmarmor (struct monst *mdef, int attk)
 /* FALSE means it's OK to attack */
 boolean
 attack_checks(mtmp, wep)
-register struct monst *mtmp;
+struct monst *mtmp;
 struct obj *wep;	/* uwep for attack(), null for kick_monster() */
 {
 	char qbuf[QBUFSZ];
@@ -238,7 +238,7 @@ check_caitiff (struct monst *mtmp)
 }
 
 signed char 
-find_roll_to_hit (register struct monst *mtmp)
+find_roll_to_hit (struct monst *mtmp)
 {
 	signed char tmp;
 	int tmp2;
@@ -301,10 +301,10 @@ find_roll_to_hit (register struct monst *mtmp)
 /* u.dx and u.dy must be set */
 boolean
 attack(mtmp)
-register struct monst *mtmp;
+struct monst *mtmp;
 {
 	signed char tmp;
-	register struct permonst *mdat = mtmp->data;
+	struct permonst *mdat = mtmp->data;
 
 	/* This section of code provides protection against accidentally
 	 * hitting peaceful (like '@') and tame (like 'd') monsters.
@@ -420,11 +420,11 @@ atk_done:
 
 STATIC_OVL boolean
 known_hitum(mon, mhit, uattk)	/* returns TRUE if monster still lives */
-register struct monst *mon;
-register int *mhit;
+struct monst *mon;
+int *mhit;
 struct attack *uattk;
 {
-	register boolean malive = TRUE;
+	boolean malive = TRUE;
 
 	if (override_confirmation) {
 	    /* this may need to be generalized if weapons other than
@@ -1277,10 +1277,10 @@ steal_it (struct monst *mdef, struct attack *mattk)
 }
 
 int 
-damageum (register struct monst *mdef, register struct attack *mattk)
+damageum (struct monst *mdef, struct attack *mattk)
 {
-	register struct permonst *pd = mdef->data;
-	register int	tmp = d((int)mattk->damn, (int)mattk->damd);
+	struct permonst *pd = mdef->data;
+	int	tmp = d((int)mattk->damn, (int)mattk->damd);
 	int armpro;
 	boolean negated;
 
@@ -1657,9 +1657,9 @@ damageum (register struct monst *mdef, register struct attack *mattk)
 }
 
 STATIC_OVL int 
-explum (register struct monst *mdef, register struct attack *mattk)
+explum (struct monst *mdef, struct attack *mattk)
 {
-	register int tmp = d((int)mattk->damn, (int)mattk->damd);
+	int tmp = d((int)mattk->damn, (int)mattk->damd);
 
 	You("explode!");
 	switch(mattk->adtyp) {
@@ -1733,10 +1733,10 @@ end_engulf (void)
 }
 
 STATIC_OVL int 
-gulpum (register struct monst *mdef, register struct attack *mattk)
+gulpum (struct monst *mdef, struct attack *mattk)
 {
-	register int tmp;
-	register int dam = d((int)mattk->damn, (int)mattk->damd);
+	int tmp;
+	int dam = d((int)mattk->damn, (int)mattk->damd);
 	struct obj *otmp;
 	/* Not totally the same as for real monsters.  Specifically, these
 	 * don't take multiple moves.  (It's just too hard, for too little
@@ -1912,7 +1912,7 @@ gulpum (register struct monst *mdef, register struct attack *mattk)
 }
 
 void 
-missum (register struct monst *mdef, register struct attack *mattk)
+missum (struct monst *mdef, struct attack *mattk)
 {
 	if (could_seduce(&youmonst, mdef, mattk))
 		You("pretend to be friendly to %s.", mon_nam(mdef));
@@ -1926,8 +1926,8 @@ missum (register struct monst *mdef, register struct attack *mattk)
 
 STATIC_OVL boolean
 hmonas(mon, tmp)		/* attack monster as a monster. */
-register struct monst *mon;
-register int tmp;
+struct monst *mon;
+int tmp;
 {
 	struct attack *mattk, alt_attk;
 	int	i, sum[NATTK], hittmp = 0;
@@ -2126,8 +2126,8 @@ use_weapon:
 /*	Special (passive) attacks on you by monsters done here.		*/
 
 int passive(struct monst *mon, boolean mhit, int malive, unsigned char aatyp) {
-	register struct permonst *ptr = mon->data;
-	register int i, tmp;
+	struct permonst *ptr = mon->data;
+	int i, tmp;
 
 	for(i = 0; ; i++) {
 	    if(i >= NATTK) return(malive | mhit);	/* no passive attacks */
@@ -2330,13 +2330,13 @@ int passive(struct monst *mon, boolean mhit, int malive, unsigned char aatyp) {
  */
 void 
 passive_obj (
-    register struct monst *mon,
-    register struct obj *obj,	/* null means pick uwep, uswapwep or uarmg */
+    struct monst *mon,
+    struct obj *obj,	/* null means pick uwep, uswapwep or uarmg */
     struct attack *mattk		/* null means we find one internally */
 )
 {
-	register struct permonst *ptr = mon->data;
-	register int i;
+	struct permonst *ptr = mon->data;
+	int i;
 
 	/* if caller hasn't specified an object, use uwep, uswapwep or uarmg */
 	if (!obj) {

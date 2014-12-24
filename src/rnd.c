@@ -7,7 +7,7 @@
 
 int 
 rn2 (		/* 0 <= rn2(x) < x */
-    register int x
+    int x
 )
 {
 #ifdef DEBUG
@@ -27,10 +27,10 @@ rn2 (		/* 0 <= rn2(x) < x */
 
 int 
 rnl (		/* 0 <= rnl(x) < x; sometimes subtracting Luck */
-    register int x	/* good luck approaches 0, bad luck approaches (x-1) */
+    int x	/* good luck approaches 0, bad luck approaches (x-1) */
 )
 {
-	register int i;
+	int i;
 
 #ifdef DEBUG
 	if (x <= 0) {
@@ -54,7 +54,7 @@ rnl (		/* 0 <= rnl(x) < x; sometimes subtracting Luck */
 
 int 
 rnd (		/* 1 <= rnd(x) <= x */
-    register int x
+    int x
 )
 {
 #ifdef DEBUG
@@ -74,11 +74,11 @@ rnd (		/* 1 <= rnd(x) <= x */
 
 int 
 d (		/* n <= d(n,x) <= (n*x) */
-    register int n,
-    register int x
+    int n,
+    int x
 )
 {
-	register int tmp = n;
+	int tmp = n;
 
 #ifdef DEBUG
 	if (x < 0 || n < 0 || (x == 0 && n != 0)) {
@@ -94,9 +94,9 @@ d (		/* n <= d(n,x) <= (n*x) */
 #ifdef OVLB
 
 int 
-rne (register int x)
+rne (int x)
 {
-	register int tmp, utmp;
+	int tmp, utmp;
 
 	utmp = (u.ulevel < 15) ? 5 : u.ulevel/3;
 	tmp = 1;
@@ -120,8 +120,8 @@ rnz (int i)
 	int x = i;
 	int tmp = 1000;
 #else
-	register long x = i;
-	register long tmp = 1000;
+	long x = i;
+	long tmp = 1000;
 #endif
 	tmp += rn2(1000);
 	tmp *= rne(4);

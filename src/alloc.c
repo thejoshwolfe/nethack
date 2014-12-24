@@ -25,7 +25,7 @@ extern void VDECL(panic, (const char *,...)) PRINTF_F(1,2);
 
 long *
 alloc(lth)
-register unsigned int lth;
+unsigned int lth;
 {
 #ifdef LINT
 /*
@@ -38,7 +38,7 @@ register unsigned int lth;
 	if(lth) dummy = 0;	/* make sure arg is used */
 	return(&dummy);
 #else
-	register void * ptr;
+	void * ptr;
 
 	ptr = malloc(lth);
 #ifndef MONITOR_HEAP

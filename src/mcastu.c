@@ -154,8 +154,8 @@ choose_clerical_spell (int spellnum)
  */
 int
 castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
-	register struct monst *mtmp;
-	register struct attack *mattk;
+	struct monst *mtmp;
+	struct attack *mattk;
 	boolean thinks_it_foundyou;
 	boolean foundyou;
 {
@@ -744,8 +744,8 @@ int spellnum;
 
 int 
 buzzmu (		/* monster uses spell (ranged) */
-    register struct monst *mtmp,
-    register struct attack *mattk
+    struct monst *mtmp,
+    struct attack *mattk
 )
 {
 	/* don't print constant stream of curse messages for 'normal'

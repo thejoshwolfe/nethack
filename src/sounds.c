@@ -29,8 +29,8 @@ mon_in_room (struct monst *mon, int rmtyp)
 void 
 dosounds (void)
 {
-    register struct mkroom *sroom;
-    register int hallu, vx, vy;
+    struct mkroom *sroom;
+    int hallu, vx, vy;
     struct monst *mtmp;
 
     if (!flags.soundok || u.uswallow || Underwater) return;
@@ -247,7 +247,7 @@ static const char * const h_sounds[] = {
 };
 
 const char *
-growl_sound (register struct monst *mtmp)
+growl_sound (struct monst *mtmp)
 {
 	const char *ret;
 
@@ -289,9 +289,9 @@ growl_sound (register struct monst *mtmp)
 
 /* the sounds of a seriously abused pet, including player attacking it */
 void 
-growl (register struct monst *mtmp)
+growl (struct monst *mtmp)
 {
-    register const char *growl_verb = 0;
+    const char *growl_verb = 0;
 
     if (mtmp->msleeping || !mtmp->mcanmove || !mtmp->data->msound)
 	return;
@@ -310,9 +310,9 @@ growl (register struct monst *mtmp)
 
 /* the sounds of mistreated pets */
 void 
-yelp (register struct monst *mtmp)
+yelp (struct monst *mtmp)
 {
-    register const char *yelp_verb = 0;
+    const char *yelp_verb = 0;
 
     if (mtmp->msleeping || !mtmp->mcanmove || !mtmp->data->msound)
 	return;
@@ -350,9 +350,9 @@ yelp (register struct monst *mtmp)
 
 /* the sounds of distressed pets */
 void 
-whimper (register struct monst *mtmp)
+whimper (struct monst *mtmp)
 {
-    register const char *whimper_verb = 0;
+    const char *whimper_verb = 0;
 
     if (mtmp->msleeping || !mtmp->mcanmove || !mtmp->data->msound)
 	return;
@@ -381,7 +381,7 @@ whimper (register struct monst *mtmp)
 
 /* pet makes "I'm hungry" noises */
 void 
-beg (register struct monst *mtmp)
+beg (struct monst *mtmp)
 {
     if (mtmp->msleeping || !mtmp->mcanmove ||
 	    !(carnivorous(mtmp->data) || herbivorous(mtmp->data)))
@@ -398,9 +398,9 @@ beg (register struct monst *mtmp)
 }
 
 static int 
-domonnoise (register struct monst *mtmp)
+domonnoise (struct monst *mtmp)
 {
-    register const char *pline_msg = 0,	/* Monnam(mtmp) will be prepended */
+    const char *pline_msg = 0,	/* Monnam(mtmp) will be prepended */
 			*verbl_msg = 0;	/* verbalize() */
     struct permonst *ptr = mtmp->data;
     char verbuf[BUFSZ];
@@ -807,8 +807,8 @@ dotalk()
 static int 
 dochat (void)
 {
-    register struct monst *mtmp;
-    register int tx,ty;
+    struct monst *mtmp;
+    int tx,ty;
     struct obj *otmp;
 
     if (is_silent(youmonst.data)) {

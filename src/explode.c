@@ -408,8 +408,8 @@ scatter (
     struct obj *obj			/* only scatter this obj        */
 )
 {
-	register struct obj *otmp;
-	register int tmp;
+	struct obj *otmp;
+	int tmp;
 	int farthest = 0;
 	unsigned char typ;
 	long qtmp;

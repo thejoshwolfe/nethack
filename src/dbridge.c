@@ -726,7 +726,7 @@ do_entity (struct entity *etmp)
 void 
 close_drawbridge (int x, int y)
 {
-	register struct rm *lev1, *lev2;
+	struct rm *lev1, *lev2;
 	struct trap *t;
 	int x2, y2;
 
@@ -777,7 +777,7 @@ close_drawbridge (int x, int y)
 void 
 open_drawbridge (int x, int y)
 {
-	register struct rm *lev1, *lev2;
+	struct rm *lev1, *lev2;
 	struct trap *t;
 	int x2, y2;
 
@@ -814,7 +814,7 @@ open_drawbridge (int x, int y)
 void 
 destroy_drawbridge (int x, int y)
 {
-	register struct rm *lev1, *lev2;
+	struct rm *lev1, *lev2;
 	struct trap *t;
 	int x2, y2;
 	boolean e_inview;

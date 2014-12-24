@@ -88,9 +88,9 @@ amulet (void)
 #ifdef OVLB
 
 int 
-mon_has_amulet (register struct monst *mtmp)
+mon_has_amulet (struct monst *mtmp)
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 
 	for(otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
 		if(otmp->otyp == AMULET_OF_YENDOR) return(1);
@@ -98,9 +98,9 @@ mon_has_amulet (register struct monst *mtmp)
 }
 
 int 
-mon_has_special (register struct monst *mtmp)
+mon_has_special (struct monst *mtmp)
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 
 	for(otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
 		if(otmp->otyp == AMULET_OF_YENDOR ||
@@ -123,7 +123,7 @@ mon_has_special (register struct monst *mtmp)
 #define M_Wants(mask)	(mtmp->data->mflags3 & (mask))
 
 STATIC_OVL short 
-which_arti (register int mask)
+which_arti (int mask)
 {
 	switch(mask) {
 	    case M3_WANTSAMUL:	return(AMULET_OF_YENDOR);
@@ -142,10 +142,10 @@ which_arti (register int mask)
  */
 STATIC_OVL boolean
 mon_has_arti(mtmp, otyp)
-	register struct monst *mtmp;
-	register short	otyp;
+	struct monst *mtmp;
+	short	otyp;
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 
 	for(otmp = mtmp->minvent; otmp; otmp = otmp->nobj) {
 	    if(otyp) {
@@ -159,9 +159,9 @@ mon_has_arti(mtmp, otyp)
 }
 
 STATIC_OVL struct monst *
-other_mon_has_arti (register struct monst *mtmp, register short otyp)
+other_mon_has_arti (struct monst *mtmp, short otyp)
 {
-	register struct monst *mtmp2;
+	struct monst *mtmp2;
 
 	for(mtmp2 = fmon; mtmp2; mtmp2 = mtmp2->nmon)
 	    /* no need for !DEADMONSTER check here since they have no inventory */
@@ -172,9 +172,9 @@ other_mon_has_arti (register struct monst *mtmp, register short otyp)
 }
 
 STATIC_OVL struct obj *
-on_ground (register short otyp)
+on_ground (short otyp)
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 
 	for (otmp = fobj; otmp; otmp = otmp->nobj)
 	    if (otyp) {
@@ -187,7 +187,7 @@ on_ground (register short otyp)
 
 STATIC_OVL boolean
 you_have(mask)
-	register int mask;
+	int mask;
 {
 	switch(mask) {
 	    case M3_WANTSAMUL:	return(boolean)(u.uhave.amulet);
@@ -201,11 +201,11 @@ you_have(mask)
 }
 
 STATIC_OVL long 
-target_on (register int mask, register struct monst *mtmp)
+target_on (int mask, struct monst *mtmp)
 {
-	register short	otyp;
-	register struct obj *otmp;
-	register struct monst *mtmp2;
+	short	otyp;
+	struct obj *otmp;
+	struct monst *mtmp2;
 
 	if(!M_Wants(mask))	return(STRAT_NONE);
 
@@ -222,7 +222,7 @@ target_on (register int mask, register struct monst *mtmp)
 }
 
 STATIC_OVL long 
-strategy (register struct monst *mtmp)
+strategy (struct monst *mtmp)
 {
 	long strat, dstrat;
 
@@ -280,7 +280,7 @@ strategy (register struct monst *mtmp)
 }
 
 int 
-tactics (register struct monst *mtmp)
+tactics (struct monst *mtmp)
 {
 	long strat = strategy(mtmp);
 
@@ -359,7 +359,7 @@ tactics (register struct monst *mtmp)
 void 
 aggravate (void)
 {
-	register struct monst *mtmp;
+	struct monst *mtmp;
 
 	for(mtmp = fmon; mtmp; mtmp = mtmp->nmon)
 	    if (!DEADMONSTER(mtmp)) {
@@ -374,7 +374,7 @@ aggravate (void)
 void 
 clonewiz (void)
 {
-	register struct monst *mtmp2;
+	struct monst *mtmp2;
 
 	if ((mtmp2 = makemon(&mons[PM_WIZARD_OF_YENDOR],
 				u.ux, u.uy, NO_MM_FLAGS)) != 0) {
@@ -403,8 +403,8 @@ pick_nasty (void)
 int 
 nasty (struct monst *mcast)
 {
-    register struct monst	*mtmp;
-    register int	i, j, tmp;
+    struct monst	*mtmp;
+    int	i, j, tmp;
     int castalign = (mcast ? mcast->data->maligntyp : -1);
     coord bypos;
     int count=0;
@@ -580,7 +580,7 @@ const char * const random_malediction[] = {
 
 /* Insult or intimidate the player */
 void 
-cuss (register struct monst *mtmp)
+cuss (struct monst *mtmp)
 {
 	if (mtmp->iswiz) {
 	    if (!rn2(5))  /* typical bad guy action */

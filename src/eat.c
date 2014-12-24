@@ -93,7 +93,7 @@ const char *hu_stat[] = {
  */
 boolean
 is_edible(obj)
-register struct obj *obj;
+struct obj *obj;
 {
 	/* protect invocation tools but not Rider corpses (handled elsewhere)*/
      /* if (obj->oclass != FOOD_CLASS && obj_resists(obj, 0, 0)) */
@@ -220,7 +220,7 @@ boolean the_pfx;
  */
 STATIC_OVL void 
 choke (	/* To a full belly all food is bad. (It.) */
-    register struct obj *food
+    struct obj *food
 )
 {
 	/* only happens if you were satiated */
@@ -305,7 +305,7 @@ reset_eat (void)		/* called when eating interrupted by an event */
 }
 
 STATIC_OVL struct obj *
-touchfood (register struct obj *otmp)
+touchfood (struct obj *otmp)
 {
 	if (otmp->quan > 1L) {
 	    if(!carried(otmp))
@@ -351,7 +351,7 @@ touchfood (register struct obj *otmp)
  * in do_reset_eat().
  */
 void 
-food_disappears (register struct obj *obj)
+food_disappears (struct obj *obj)
 {
 	if (obj == victual.piece) victual.piece = (struct obj *)0;
 	if (obj->timed) obj_stop_timers(obj);
@@ -451,7 +451,7 @@ boolean allowmsg;
 }
 
 STATIC_OVL void 
-cprefx (register int pm)
+cprefx (int pm)
 {
 	(void) maybe_cannibal(pm,TRUE);
 	if (touch_petrifies(&mons[pm]) || pm == PM_MEDUSA) {
@@ -538,7 +538,7 @@ fix_petrification (void)
 
 /* intrinsic_possible() returns TRUE iff a monster can give an intrinsic. */
 STATIC_OVL int 
-intrinsic_possible (int type, register struct permonst *ptr)
+intrinsic_possible (int type, struct permonst *ptr)
 {
 	switch (type) {
 	    case FIRE_RES:
@@ -632,9 +632,9 @@ intrinsic_possible (int type, register struct permonst *ptr)
  * and what type of intrinsic it is trying to give you.
  */
 STATIC_OVL void 
-givit (int type, register struct permonst *ptr)
+givit (int type, struct permonst *ptr)
 {
-	register int chance;
+	int chance;
 
 #ifdef DEBUG
 	debugpline("Attempting to give intrinsic %d", type);
@@ -771,10 +771,10 @@ givit (int type, register struct permonst *ptr)
 
 STATIC_OVL void 
 cpostfx (		/* called after completely consuming a corpse */
-    register int pm
+    int pm
 )
 {
-	register int tmp = 0;
+	int tmp = 0;
 	boolean catch_lycanthropy = FALSE;
 
 	/* in case `afternmv' didn't get called for previously mimicking
@@ -905,7 +905,7 @@ cpostfx (		/* called after completely consuming a corpse */
 		}
 		/* fall through to default case */
 	    default: {
-		register struct permonst *ptr = &mons[pm];
+		struct permonst *ptr = &mons[pm];
 		int i, count;
 
 		if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU) ||
@@ -1005,7 +1005,7 @@ STATIC_PTR
 int
 opentin()		/* called during each move whilst opening a tin */
 {
-	register int r;
+	int r;
 	const char *what;
 	int which;
 
@@ -1121,10 +1121,10 @@ use_me:
 
 STATIC_OVL void 
 start_tin (		/* called when starting to open a tin */
-    register struct obj *otmp
+    struct obj *otmp
 )
 {
-	register int tmp;
+	int tmp;
 
 	if (metallivorous(youmonst.data)) {
 		You("bite right into the metal tin...");
@@ -1224,7 +1224,7 @@ rottenfood (struct obj *obj)
 
 STATIC_OVL int 
 eatcorpse (		/* called when a corpse is selected as food */
-    register struct obj *otmp
+    struct obj *otmp
 )
 {
 	int tp = 0, mnum = otmp->corpsenm;
@@ -1327,7 +1327,7 @@ eatcorpse (		/* called when a corpse is selected as food */
 
 STATIC_OVL void 
 start_eating (		/* called as you start to eat */
-    register struct obj *otmp
+    struct obj *otmp
 )
 {
 #ifdef DEBUG
@@ -1582,7 +1582,7 @@ eataccessory (struct obj *otmp)
 STATIC_OVL void 
 eatspecial (void) /* called after eating non-food */
 {
-	register struct obj *otmp = victual.piece;
+	struct obj *otmp = victual.piece;
 
 	/* lesshungry wants an occupation to handle choke messages correctly */
 	set_occupation(eatfood, "eating non-food", 0);
@@ -1644,7 +1644,7 @@ static const char *foodwords[] = {
 };
 
 STATIC_OVL const char *
-foodword (register struct obj *otmp)
+foodword (struct obj *otmp)
 {
 	if (otmp->oclass == FOOD_CLASS) return "food";
 	if (otmp->oclass == GEM_CLASS &&
@@ -1656,7 +1656,7 @@ foodword (register struct obj *otmp)
 
 STATIC_OVL void 
 fpostfx (		/* called after consuming (non-corpse) food */
-    register struct obj *otmp
+    struct obj *otmp
 )
 {
 	switch(otmp->otyp) {
@@ -1850,7 +1850,7 @@ edibility_prompts (struct obj *otmp)
 int
 doeat()		/* generic "eat" command funtion (see cmd.c) */
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 	int basenutrit;			/* nutrition of full item */
 	boolean dont_start = FALSE;
 	
@@ -2151,7 +2151,7 @@ gethungry (void)	/* as time goes by - called by moveloop() and domove() */
 
 void 
 morehungry (	/* called after vomiting and after performing feats of magic */
-    register int num
+    int num
 )
 {
 	u.uhunger -= num;
@@ -2161,7 +2161,7 @@ morehungry (	/* called after vomiting and after performing feats of magic */
 
 void 
 lesshungry (	/* called after eating (and after drinking fruit juice) */
-    register int num
+    int num
 )
 {
 	/* See comments in newuhs() for discussion on force_save_hs */
@@ -2373,7 +2373,7 @@ floorfood (	/* get food from floor or pack */
     int corpsecheck /* 0, no check, 1, corpses, 2, tinnable corpses */
 )
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 	char qbuf[QBUFSZ];
 	char c;
 	boolean feeding = (!strcmp(verb, "eat"));
@@ -2464,7 +2464,7 @@ vomit (void)		/* A good idea from David Neves */
 }
 
 int 
-eaten_stat (register int base, register struct obj *obj)
+eaten_stat (int base, struct obj *obj)
 {
 	long uneaten_amt, full_amount;
 

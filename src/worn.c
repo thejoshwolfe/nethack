@@ -40,11 +40,11 @@ const struct worn {
 
 /* Updated to use the extrinsic and blocked fields. */
 void 
-setworn (register struct obj *obj, long mask)
+setworn (struct obj *obj, long mask)
 {
-	register const struct worn *wp;
-	register struct obj *oobj;
-	register int p;
+	const struct worn *wp;
+	struct obj *oobj;
+	int p;
 
 	if ((mask & (W_ARM|I_SPECIAL)) == (W_ARM|I_SPECIAL)) {
 	    /* restoring saved game; no properties are conferred via skin */
@@ -100,10 +100,10 @@ setworn (register struct obj *obj, long mask)
 /* called e.g. when obj is destroyed */
 /* Updated to use the extrinsic and blocked fields. */
 void 
-setnotworn (register struct obj *obj)
+setnotworn (struct obj *obj)
 {
-	register const struct worn *wp;
-	register int p;
+	const struct worn *wp;
+	int p;
 
 	if (!obj) return;
 	if (obj == uwep || obj == uswapwep) u.twoweap = 0;
@@ -318,9 +318,9 @@ boolean on, silently;
 }
 
 int 
-find_mac (register struct monst *mon)
+find_mac (struct monst *mon)
 {
-	register struct obj *obj;
+	struct obj *obj;
 	int base = mon->data->ac;
 	long mwflags = mon->misc_worn_check;
 
@@ -349,7 +349,7 @@ find_mac (register struct monst *mon)
  */
 void
 m_dowear(mon, creation)
-register struct monst *mon;
+struct monst *mon;
 boolean creation;
 {
 #define RACE_EXCEPTION TRUE
@@ -507,7 +507,7 @@ outer_break:
 struct obj *
 which_armor (struct monst *mon, long flag)
 {
-	register struct obj *obj;
+	struct obj *obj;
 
 	for(obj = mon->minvent; obj; obj = obj->nobj)
 		if (obj->owornmask & flag) return obj;
@@ -573,7 +573,7 @@ mon_break_armor(mon, polyspot)
 struct monst *mon;
 boolean polyspot;
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 	struct permonst *mdat = mon->data;
 	boolean vis = cansee(mon->mx, mon->my);
 	boolean handless_or_tiny = (nohands(mdat) || verysmall(mdat));

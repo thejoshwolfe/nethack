@@ -38,9 +38,9 @@ init_rect (void)
 int 
 get_rect_ind (NhRect *r)
 {
-	register NhRect *rectp;
-	register int lx, ly, hx, hy;
-	register int i;
+	NhRect *rectp;
+	int lx, ly, hx, hy;
+	int i;
 
 	lx = r->lx; ly = r->ly;
 	hx = r->hx; hy = r->hy;
@@ -58,9 +58,9 @@ get_rect_ind (NhRect *r)
 NhRect *
 get_rect (NhRect *r)
 {
-	register NhRect *rectp;
-	register int lx, ly, hx, hy;
-	register int i;
+	NhRect *rectp;
+	int lx, ly, hx, hy;
+	int i;
 
 	lx = r->lx; ly = r->ly;
 	hx = r->hx; hy = r->hy;

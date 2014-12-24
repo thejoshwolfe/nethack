@@ -17,7 +17,7 @@ floating_above (const char *what)
 STATIC_OVL void 
 dowatersnakes (void) /* Fountain of snakes! */
 {
-    register int num = rn1(5,2);
+    int num = rn1(5,2);
     struct monst *mtmp;
 
     if (!(mvitals[PM_WATER_MOCCASIN].mvflags & G_GONE)) {
@@ -37,7 +37,7 @@ dowatersnakes (void) /* Fountain of snakes! */
 STATIC_OVL void 
 dowaterdemon (void) /* Water demon */
 {
-    register struct monst *mtmp;
+    struct monst *mtmp;
 
     if(!(mvitals[PM_WATER_DEMON].mvflags & G_GONE)) {
 	if((mtmp = makemon(&mons[PM_WATER_DEMON],u.ux,u.uy, NO_MM_FLAGS))) {
@@ -62,7 +62,7 @@ dowaterdemon (void) /* Water demon */
 STATIC_OVL void 
 dowaternymph (void) /* Water Nymph */
 {
-	register struct monst *mtmp;
+	struct monst *mtmp;
 
 	if(!(mvitals[PM_WATER_NYMPH].mvflags & G_GONE) &&
 	   (mtmp = makemon(&mons[PM_WATER_NYMPH],u.ux,u.uy, NO_MM_FLAGS))) {
@@ -101,8 +101,8 @@ gush(x, y, poolcnt)
 int x, y;
 void * poolcnt;
 {
-	register struct monst *mtmp;
-	register struct trap *ttmp;
+	struct monst *mtmp;
+	struct trap *ttmp;
 
 	if (((x+y)%2) || (x == u.ux && y == u.uy) ||
 	    (rn2(1 + distmin(u.ux, u.uy, x, y)))  ||
@@ -190,8 +190,8 @@ void
 drinkfountain (void)
 {
 	/* What happens when you drink from a fountain? */
-	register boolean mgkftn = (levl[u.ux][u.uy].blessedftn == 1);
-	register int fate = rnd(30);
+	boolean mgkftn = (levl[u.ux][u.uy].blessedftn == 1);
+	int fate = rnd(30);
 
 	if (Levitation) {
 		floating_above("fountain");
@@ -272,7 +272,7 @@ drinkfountain (void)
 			break;
 
 		case 24: /* Curse an item */ {
-			register struct obj *obj;
+			struct obj *obj;
 
 			pline("This water's no good!");
 			morehungry(rn1(20, 11));
@@ -319,7 +319,7 @@ drinkfountain (void)
 			break;
 
 		case 29: /* Scare */ {
-			register struct monst *mtmp;
+			struct monst *mtmp;
 
 			pline("This water gives you bad breath!");
 			for(mtmp = fmon; mtmp; mtmp = mtmp->nmon)
@@ -343,7 +343,7 @@ drinkfountain (void)
 }
 
 void 
-dipfountain (register struct obj *obj)
+dipfountain (struct obj *obj)
 {
 	if (Levitation) {
 		floating_above("fountain");

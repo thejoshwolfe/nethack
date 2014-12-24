@@ -31,14 +31,14 @@ enermod (int en)
 
 int 
 experience (	/* return # of exp points for mtmp after nk killed */
-    register struct monst *mtmp,
-    register int nk
+    struct monst *mtmp,
+    int nk
 )
 #if defined(macintosh) && (defined(__SC__) || defined(__MRC__))
 # pragma unused(nk)
 #endif
 {
-	register struct permonst *ptr = mtmp->data;
+	struct permonst *ptr = mtmp->data;
 	int	i, tmp, tmp2;
 
 	tmp = 1 + mtmp->m_lev * mtmp->m_lev;
@@ -91,7 +91,7 @@ experience (	/* return # of exp points for mtmp after nk killed */
 }
 
 void 
-more_experienced (register int exp, register int rexp)
+more_experienced (int exp, int rexp)
 {
 	u.uexp += exp;
 	u.urexp += 4*exp + rexp;
@@ -109,7 +109,7 @@ losexp (		/* e.g., hit by drain life attack */
     const char *drainer	/* cause of death, if drain should be fatal */
 )
 {
-	register int num;
+	int num;
 
 #ifdef WIZARD
 	/* override life-drain resistance when handling an explicit
@@ -176,7 +176,7 @@ void
 pluslvl(incr)
 boolean incr;	/* true iff via incremental experience growth */
 {		/*	(false for potion of gain level)      */
-	register int num;
+	int num;
 
 	if (!incr) You_feel("more experienced.");
 	num = newhp();

@@ -47,7 +47,7 @@ mon_nam_too (char *outbuf, struct monst *mon, struct monst *other_mon)
 }
 
 STATIC_OVL void 
-noises (register struct monst *magr, register struct attack *mattk)
+noises (struct monst *magr, struct attack *mattk)
 {
 	boolean farq = (distu(magr->mx, magr->my) > 15);
 
@@ -61,7 +61,7 @@ noises (register struct monst *magr, register struct attack *mattk)
 }
 
 STATIC_OVL void 
-missmm (register struct monst *magr, register struct monst *mdef, struct attack *mattk)
+missmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
 	const char *fmt;
 	char buf[BUFSZ], mdef_name[BUFSZ];
@@ -93,10 +93,10 @@ missmm (register struct monst *magr, register struct monst *mdef, struct attack 
  */
 int 
 fightm (		/* have monsters fight each other */
-    register struct monst *mtmp
+    struct monst *mtmp
 )
 {
-	register struct monst *mon, *nmon;
+	struct monst *mon, *nmon;
 	int result, has_u_swallowed;
 #ifdef LINT
 	nmon = 0;
@@ -182,7 +182,7 @@ fightm (		/* have monsters fight each other */
  * In the case of exploding monsters, the monster dies as well.
  */
 int 
-mattackm (register struct monst *magr, register struct monst *mdef)
+mattackm (struct monst *magr, struct monst *mdef)
 {
     int		    i,		/* loop counter */
 		    tmp,	/* amour class difference */
@@ -368,7 +368,7 @@ mattackm (register struct monst *magr, register struct monst *mdef)
 
 /* Returns the result of mdamagem(). */
 STATIC_OVL int 
-hitmm (register struct monst *magr, register struct monst *mdef, struct attack *mattk)
+hitmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
 	if(vis){
 		int compat;
@@ -423,7 +423,7 @@ hitmm (register struct monst *magr, register struct monst *mdef, struct attack *
 
 /* Returns the same values as mdamagem(). */
 STATIC_OVL int 
-gazemm (register struct monst *magr, register struct monst *mdef, struct attack *mattk)
+gazemm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
 	char buf[BUFSZ];
 
@@ -470,7 +470,7 @@ gazemm (register struct monst *magr, register struct monst *mdef, struct attack 
 
 /* Returns the same values as mattackm(). */
 STATIC_OVL int 
-gulpmm (register struct monst *magr, register struct monst *mdef, register struct attack *mattk)
+gulpmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
 	signed char	ax, ay, dx, dy;
 	int	status;
@@ -536,7 +536,7 @@ gulpmm (register struct monst *magr, register struct monst *mdef, register struc
 }
 
 STATIC_OVL int 
-explmm (register struct monst *magr, register struct monst *mdef, register struct attack *mattk)
+explmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
 	int result;
 
@@ -565,7 +565,7 @@ explmm (register struct monst *magr, register struct monst *mdef, register struc
  *  See comment at top of mattackm(), for return values.
  */
 STATIC_OVL int 
-mdamagem (register struct monst *magr, register struct monst *mdef, register struct attack *mattk)
+mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
 	struct obj *obj;
 	char buf[BUFSZ];
@@ -888,7 +888,7 @@ mdamagem (register struct monst *magr, register struct monst *mdef, register str
 		break;
 	    case AD_BLND:
 		if (can_blnd(magr, mdef, mattk->aatyp, (struct obj*)0)) {
-		    register unsigned rnd_tmp;
+		    unsigned rnd_tmp;
 
 		    if (vis && mdef->mcansee)
 			pline("%s is blinded.", Monnam(mdef));
@@ -1194,7 +1194,7 @@ slept_monst (struct monst *mon)
 #ifdef OVLB
 
 STATIC_OVL void 
-mrustm (register struct monst *magr, register struct monst *mdef, register struct obj *obj)
+mrustm (struct monst *magr, struct monst *mdef, struct obj *obj)
 {
 	boolean is_acid;
 
@@ -1229,7 +1229,7 @@ mrustm (register struct monst *magr, register struct monst *mdef, register struc
 }
 
 STATIC_OVL void 
-mswingsm (register struct monst *magr, register struct monst *mdef, register struct obj *otemp)
+mswingsm (struct monst *magr, struct monst *mdef, struct obj *otemp)
 {
 	char buf[BUFSZ];
 	if (!flags.verbose || Blind || !mon_visible(magr)) return;
@@ -1245,12 +1245,12 @@ mswingsm (register struct monst *magr, register struct monst *mdef, register str
  */
 STATIC_OVL int
 passivemm(magr,mdef,mhit,mdead)
-register struct monst *magr, *mdef;
+struct monst *magr, *mdef;
 boolean mhit;
 int mdead;
 {
-	register struct permonst *mddat = mdef->data;
-	register struct permonst *madat = magr->data;
+	struct permonst *mddat = mdef->data;
+	struct permonst *madat = magr->data;
 	char buf[BUFSZ];
 	int i, tmp;
 

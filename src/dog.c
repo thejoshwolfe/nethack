@@ -6,7 +6,7 @@
 STATIC_DCL int NDECL(pet_type);
 
 void 
-initedog (register struct monst *mtmp)
+initedog (struct monst *mtmp)
 {
 	mtmp->mtame = is_domestic(mtmp->data) ? 10 : 5;
 	mtmp->mpeaceful = 1;
@@ -42,7 +42,7 @@ pet_type (void)
 
 struct monst *
 make_familiar(otmp,x,y,quietly)
-register struct obj *otmp;
+struct obj *otmp;
 signed char x, y;
 boolean quietly;
 {
@@ -122,9 +122,9 @@ boolean quietly;
 struct monst *
 makedog (void)
 {
-	register struct monst *mtmp;
+	struct monst *mtmp;
 #ifdef STEED
-	register struct obj *otmp;
+	struct obj *otmp;
 #endif
 	const char *petname;
 	int   pettype;
@@ -189,7 +189,7 @@ update_mlstmv (void)
 void 
 losedogs (void)
 {
-	register struct monst *mtmp, *mtmp0 = 0, *mtmp2;
+	struct monst *mtmp, *mtmp0 = 0, *mtmp2;
 
 	while ((mtmp = mydogs) != 0) {
 		mydogs = mtmp->nmon;
@@ -480,8 +480,8 @@ void
 keepdogs(pets_only)
 boolean pets_only;	/* true for ascension or final escape */
 {
-	register struct monst *mtmp, *mtmp2;
-	register struct obj *obj;
+	struct monst *mtmp, *mtmp2;
+	struct obj *obj;
 	int num_segs;
 	boolean stay_behind;
 
@@ -538,7 +538,7 @@ boolean pets_only;	/* true for ascension or final escape */
 			set_residency(mtmp, TRUE);
 
 		if (mtmp->wormno) {
-		    register int cnt;
+		    int cnt;
 		    /* NOTE: worm is truncated to # segs = max wormno size */
 		    cnt = count_wsegs(mtmp);
 		    num_segs = min(cnt, MAX_NUM_WORMS - 1);
@@ -579,13 +579,13 @@ boolean pets_only;	/* true for ascension or final escape */
 
 void 
 migrate_to_level (
-    register struct monst *mtmp,
+    struct monst *mtmp,
     signed char tolev,	/* destination level */
     signed char xyloc,	/* MIGR_xxx destination xy location: */
     coord *cc	/* optional destination coordinates */
 )
 {
-	register struct obj *obj;
+	struct obj *obj;
 	d_level new_lev;
 	signed char xyflags;
 	int num_segs = 0;	/* count of worm segments */
@@ -594,7 +594,7 @@ migrate_to_level (
 	    set_residency(mtmp, TRUE);
 
 	if (mtmp->wormno) {
-	    register int cnt;
+	    int cnt;
 	  /* **** NOTE: worm is truncated to # segs = max wormno size **** */
 	    cnt = count_wsegs(mtmp);
 	    num_segs = min(cnt, MAX_NUM_WORMS - 1);
@@ -640,7 +640,7 @@ migrate_to_level (
 /* return quality of food; the lower the better */
 /* fungi will eat even tainted food */
 int 
-dogfood (struct monst *mon, register struct obj *obj)
+dogfood (struct monst *mon, struct obj *obj)
 {
 	boolean carni = carnivorous(mon->data);
 	boolean herbi = herbivorous(mon->data);
@@ -737,9 +737,9 @@ dogfood (struct monst *mon, register struct obj *obj)
 #ifdef OVLB
 
 struct monst *
-tamedog (register struct monst *mtmp, register struct obj *obj)
+tamedog (struct monst *mtmp, struct obj *obj)
 {
-	register struct monst *mtmp2;
+	struct monst *mtmp2;
 
 	/* The Wiz, Medusa and the quest nemeses aren't even made peaceful. */
 	if (mtmp->iswiz || mtmp->data == &mons[PM_MEDUSA]

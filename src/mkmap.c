@@ -23,7 +23,7 @@ static int n_loc_filled;
 STATIC_OVL void 
 init_map (signed char bg_typ)
 {
-	register int i,j;
+	int i,j;
 
 	for(i=1; i<COLNO; i++)
 	    for(j=0; j<ROWNO; j++)
@@ -33,7 +33,7 @@ init_map (signed char bg_typ)
 STATIC_OVL void 
 init_fill (signed char bg_typ, signed char fg_typ)
 {
-	register int i,j;
+	int i,j;
 	long limit, count;
 
 	limit = (WIDTH * HEIGHT * 2) / 5;
@@ -64,7 +64,7 @@ static int dirs[16] = {
 STATIC_OVL void 
 pass_one (signed char bg_typ, signed char fg_typ)
 {
-	register int i,j;
+	int i,j;
 	short count, dr;
 
 	for(i=2; i<=WIDTH; i++)
@@ -97,7 +97,7 @@ pass_one (signed char bg_typ, signed char fg_typ)
 STATIC_OVL void 
 pass_two (signed char bg_typ, signed char fg_typ)
 {
-	register int i,j;
+	int i,j;
 	short count, dr;
 
 	for(i=2; i<=WIDTH; i++)
@@ -120,7 +120,7 @@ pass_two (signed char bg_typ, signed char fg_typ)
 STATIC_OVL void 
 pass_three (signed char bg_typ, signed char fg_typ)
 {
-	register int i,j;
+	int i,j;
 	short count, dr;
 
 	for(i=2; i<=WIDTH; i++)
@@ -149,12 +149,12 @@ pass_three (signed char bg_typ, signed char fg_typ)
 void
 flood_fill_rm(sx, sy, rmno, lit, anyroom)
     int sx;
-    register int sy;
-    register int rmno;
+    int sy;
+    int rmno;
     boolean lit;
     boolean anyroom;
 {
-    register int i;
+    int i;
     int nx;
     signed char fg_typ = levl[sx][sy].typ;
 
@@ -174,7 +174,7 @@ flood_fill_rm(sx, sy, rmno, lit, anyroom)
 	levl[i][sy].lit = lit;
 	if(anyroom) {
 	    /* add walls to room as well */
-	    register int ii,jj;
+	    int ii,jj;
 	    for(ii= (i == sx ? i-1 : i); ii <= i+1; ii++)
 		for(jj = sy-1; jj <= sy+1; jj++)
 		    if(isok(ii,jj) &&
@@ -254,9 +254,9 @@ wallify_map (void)
 }
 
 STATIC_OVL void join_map(signed char bg_typ, signed char fg_typ) {
-    register struct mkroom *croom, *croom2;
+    struct mkroom *croom, *croom2;
 
-    register int i, j;
+    int i, j;
     int sx, sy;
     coord sm, em;
 

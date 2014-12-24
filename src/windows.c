@@ -24,7 +24,7 @@ STATIC_OVL void def_raw_print(const char *s) {
 
 void choose_windows(const char *s) {
     char *ow; const char *wt;
-    register int i;
+    int i;
     
     if (!strcmp(s, DEFAULT_WINDOW_SYS) && (ow = getenv("OVERRIDEWIN")))
       wt = ow;

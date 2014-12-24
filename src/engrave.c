@@ -141,9 +141,9 @@ can_reach_floor()
 #ifdef OVL0
 
 const char *
-surface (register int x, register int y)
+surface (int x, int y)
 {
-	register struct rm *lev = &levl[x][y];
+	struct rm *lev = &levl[x][y];
 
 	if ((x == u.ux) && (y == u.uy) && u.uswallow &&
 		is_animal(u.ustuck->data))
@@ -172,9 +172,9 @@ surface (register int x, register int y)
 }
 
 const char *
-ceiling (register int x, register int y)
+ceiling (int x, int y)
 {
-	register struct rm *lev = &levl[x][y];
+	struct rm *lev = &levl[x][y];
 	const char *what;
 
 	/* other room types will no longer exist when we're interested --
@@ -202,7 +202,7 @@ ceiling (register int x, register int y)
 struct engr *
 engr_at (signed char x, signed char y)
 {
-	register struct engr *ep = head_engr;
+	struct engr *ep = head_engr;
 
 	while(ep) {
 		if(x == ep->engr_x && y == ep->engr_y)
@@ -220,7 +220,7 @@ engr_at (signed char x, signed char y)
 int 
 sengr_at (const char *s, signed char x, signed char y)
 {
-	register struct engr *ep = engr_at(x,y);
+	struct engr *ep = engr_at(x,y);
 
 	return (ep && ep->engr_type != HEADSTONE &&
 		ep->engr_time <= moves && strstri(ep->engr_txt, s) != 0);
@@ -231,7 +231,7 @@ sengr_at (const char *s, signed char x, signed char y)
 #ifdef OVL2
 
 void 
-u_wipe_engr (register int cnt)
+u_wipe_engr (int cnt)
 {
 	if (can_reach_floor())
 		wipe_engr_at(u.ux, u.uy, cnt);
@@ -241,9 +241,9 @@ u_wipe_engr (register int cnt)
 #ifdef OVL1
 
 void 
-wipe_engr_at (register signed char x, register signed char y, register signed char cnt)
+wipe_engr_at (signed char x, signed char y, signed char cnt)
 {
-	register struct engr *ep = engr_at(x,y);
+	struct engr *ep = engr_at(x,y);
 
 	/* Headstones are indelible */
 	if(ep && ep->engr_type != HEADSTONE){
@@ -263,10 +263,10 @@ wipe_engr_at (register signed char x, register signed char y, register signed ch
 #ifdef OVL2
 
 void 
-read_engr_at (register int x, register int y)
+read_engr_at (int x, int y)
 {
-	register struct engr *ep = engr_at(x,y);
-	register int	sensed = 0;
+	struct engr *ep = engr_at(x,y);
+	int	sensed = 0;
 	char buf[BUFSZ];
 	
 	/* Sensing an engraving does not require sight,
@@ -340,9 +340,9 @@ read_engr_at (register int x, register int y)
 #ifdef OVLB
 
 void 
-make_engr_at (register int x, register int y, register const char *s, register long e_time, register signed char e_type)
+make_engr_at (int x, int y, const char *s, long e_time, signed char e_type)
 {
-	register struct engr *ep;
+	struct engr *ep;
 
 	if ((ep = engr_at(x,y)) != 0)
 	    del_engr(ep);
@@ -364,7 +364,7 @@ make_engr_at (register int x, register int y, register const char *s, register l
 void 
 del_engr_at (int x, int y)
 {
-	register struct engr *ep = engr_at(x, y);
+	struct engr *ep = engr_at(x, y);
 
 	if (ep) del_engr(ep);
 }
@@ -861,7 +861,7 @@ doengrave()
 	 */
 
 	if (oep) {
-	    register char c = 'n';
+	    char c = 'n';
 
 	    /* Give player the choice to add to engraving. */
 
@@ -1097,8 +1097,8 @@ doengrave()
 void 
 save_engravings (int fd, int mode)
 {
-	register struct engr *ep = head_engr;
-	register struct engr *ep2;
+	struct engr *ep = head_engr;
+	struct engr *ep2;
 	unsigned no_more_engr = 0;
 
 	while (ep) {
@@ -1120,7 +1120,7 @@ save_engravings (int fd, int mode)
 void 
 rest_engravings (int fd)
 {
-	register struct engr *ep;
+	struct engr *ep;
 	unsigned lth;
 
 	head_engr = 0;
@@ -1140,12 +1140,12 @@ rest_engravings (int fd)
 }
 
 void 
-del_engr (register struct engr *ep)
+del_engr (struct engr *ep)
 {
 	if (ep == head_engr) {
 		head_engr = ep->nxt_engr;
 	} else {
-		register struct engr *ept;
+		struct engr *ept;
 
 		for (ept = head_engr; ept; ept = ept->nxt_engr)
 		    if (ept->nxt_engr == ep) {

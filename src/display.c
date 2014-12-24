@@ -144,7 +144,7 @@ struct obj *
 vobj_at(x,y)
     signed char x,y;
 {
-    register struct obj *obj = level.objects[x][y];
+    struct obj *obj = level.objects[x][y];
 
     while (obj) {
 	if (!obj->oinvis || See_invisible) return obj;
@@ -204,9 +204,9 @@ magic_map_background (signed char x, signed char y, int show)
  * the hero can physically see the location.  Update the screen if directed.
  */
 void 
-map_background (register signed char x, register signed char y, register int show)
+map_background (signed char x, signed char y, int show)
 {
-    register int glyph = back_to_glyph(x,y);
+    int glyph = back_to_glyph(x,y);
 
     if (level.flags.hero_memory)
 	levl[x][y].glyph = glyph;
@@ -220,10 +220,10 @@ map_background (register signed char x, register signed char y, register int sho
  * hero can physically see the location.
  */
 void 
-map_trap (register struct trap *trap, register int show)
+map_trap (struct trap *trap, int show)
 {
-    register int x = trap->tx, y = trap->ty;
-    register int glyph = trap_to_glyph(trap);
+    int x = trap->tx, y = trap->ty;
+    int glyph = trap_to_glyph(trap);
 
     if (level.flags.hero_memory)
 	levl[x][y].glyph = glyph;
@@ -237,10 +237,10 @@ map_trap (register struct trap *trap, register int show)
  * see the location of the object.  Update the screen if directed.
  */
 void 
-map_object (register struct obj *obj, register int show)
+map_object (struct obj *obj, int show)
 {
-    register int x = obj->ox, y = obj->oy;
-    register int glyph = obj_to_glyph(obj);
+    int x = obj->ox, y = obj->oy;
+    int glyph = obj_to_glyph(obj);
 
     if (level.flags.hero_memory)
 	levl[x][y].glyph = glyph;
@@ -257,7 +257,7 @@ map_object (register struct obj *obj, register int show)
  * by newsym() if necessary.
  */
 void 
-map_invisible (register signed char x, register signed char y)
+map_invisible (signed char x, signed char y)
 {
     if (x != u.ux || y != u.uy) { /* don't display I at hero's location */
 	if (level.flags.hero_memory)
@@ -276,9 +276,9 @@ map_invisible (register signed char x, register signed char y)
  * to call newsym().
  */
 void 
-unmap_object (register int x, register int y)
+unmap_object (int x, int y)
 {
-    register struct trap *trap;
+    struct trap *trap;
 
     if (!level.flags.hero_memory) return;
 
@@ -308,8 +308,8 @@ unmap_object (register int x, register int y)
  */
 #define _map_location(x,y,show)						\
 {									\
-    register struct obj   *obj;						\
-    register struct trap  *trap;					\
+    struct obj   *obj;						\
+    struct trap  *trap;					\
 									\
     if ((obj = vobj_at(x,y)) && !covers_objects(x,y))			\
 	map_object(obj,show);						\
@@ -342,15 +342,15 @@ map_location (int x, int y, int show)
  */
 STATIC_OVL void 
 display_monster (
-    register signed char x,
-    register signed char y,	/* display position */
-    register struct monst *mon,	/* monster to display */
+    signed char x,
+    signed char y,	/* display position */
+    struct monst *mon,	/* monster to display */
     int sightflags,		/* 1 if the monster is physically seen */
-    register signed char worm_tail	/* mon is actually a worm tail */
+    signed char worm_tail	/* mon is actually a worm tail */
 )
 {
-    register boolean mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
-    register int sensed = mon_mimic &&
+    boolean mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
+    int sensed = mon_mimic &&
 	(Protection_from_shape_changers || sensemon(mon));
     /*
      * We must do the mimic check first.  If the mimic is mimicing something,
@@ -378,7 +378,7 @@ display_monster (
 		 * mappearance is currently set to an S_ index value in
 		 * makemon.c.
 		 */
-		register int glyph = cmap_to_glyph(mon->mappearance);
+		int glyph = cmap_to_glyph(mon->mappearance);
 		levl[x][y].glyph = glyph;
 		if (!sensed) show_glyph(x,y, glyph);
 		break;
@@ -439,7 +439,7 @@ display_monster (
  * Do not call for worm tails.
  */
 STATIC_OVL void 
-display_warning (register struct monst *mon)
+display_warning (struct monst *mon)
 {
     int x = mon->mx, y = mon->my;
     int wl = (int) (mon->m_lev / 4);
@@ -475,7 +475,7 @@ feel_location (signed char x, signed char y)
 {
     struct rm *lev = &(levl[x][y]);
     struct obj *boulder;
-    register struct monst *mon;
+    struct monst *mon;
 
     /* If the hero's memory of an invisible monster is accurate, we want to keep
      * him from detecting the same monster over and over again on each turn.
@@ -610,12 +610,12 @@ feel_location (signed char x, signed char y)
  * Possibly put a new glyph at the given location.
  */
 void 
-newsym (register int x, register int y)
+newsym (int x, int y)
 {
-    register struct monst *mon;
-    register struct rm *lev = &(levl[x][y]);
-    register int see_it;
-    register signed char worm_tail;
+    struct monst *mon;
+    struct rm *lev = &(levl[x][y]);
+    int see_it;
+    signed char worm_tail;
 
     if (in_mklev) return;
 
@@ -760,7 +760,7 @@ show_mem:
 void 
 shieldeff (signed char x, signed char y)
 {
-    register int i;
+    int i;
 
     if (!flags.sparkle) return;
     if (cansee(x,y)) {	/* Don't see anything if can't see the location */
@@ -850,7 +850,7 @@ tmp_at (int x, int y)
 
 	case DISP_END:
 	    if (tglyph->style == DISP_BEAM) {
-		register int i;
+		int i;
 
 		/* Erase (reset) from source to end */
 		for (i = 0; i < tglyph->sidx; i++)
@@ -907,7 +907,7 @@ swallowed (int first)
     if (first)
 	cls();
     else {
-	register int x, y;
+	int x, y;
 
 	/* Clear old location */
 	for (y = lasty-1; y <= lasty+1; y++)
@@ -960,7 +960,7 @@ under_water (int mode)
 {
     static signed char lastx, lasty;
     static boolean dela;
-    register int x, y;
+    int x, y;
 
     /* swallowing has a higher precedence than under water */
     if (Is_waterlevel(&u.uz) || u.uswallow) return;
@@ -1042,7 +1042,7 @@ under_ground (int mode)
 void 
 see_monsters (void)
 {
-    register struct monst *mon;
+    struct monst *mon;
 
     for (mon = fmon; mon; mon = mon->nmon) {
 	if (DEADMONSTER(mon)) continue;
@@ -1064,7 +1064,7 @@ see_monsters (void)
 void 
 set_mimic_blocking (void)
 {
-    register struct monst *mon;
+    struct monst *mon;
 
     for (mon = fmon; mon; mon = mon->nmon) {
 	if (DEADMONSTER(mon)) continue;
@@ -1087,7 +1087,7 @@ set_mimic_blocking (void)
 void 
 see_objects (void)
 {
-    register struct obj *obj;
+    struct obj *obj;
     for(obj = fobj; obj; obj = obj->nobj)
 	if (vobj_at(obj->ox,obj->oy) == obj) newsym(obj->ox, obj->oy);
 }
@@ -1127,8 +1127,8 @@ doredraw()
 void 
 docrt (void)
 {
-    register int x,y;
-    register struct rm *lev;
+    int x,y;
+    struct rm *lev;
 
     if (!u.ux) return; /* display isn't ready yet */
 
@@ -1274,8 +1274,8 @@ static gbuf_entry nul_gbuf = { 0, cmap_to_glyph(S_stone) };
 void 
 clear_glyph_buffer (void)
 {
-    register int x, y;
-    register gbuf_entry *gptr;
+    int x, y;
+    gbuf_entry *gptr;
 
     for (y = 0; y < ROWNO; y++) {
 	gptr = &gbuf[y][0];
@@ -1292,7 +1292,7 @@ clear_glyph_buffer (void)
 void 
 row_refresh (int start, int stop, int y)
 {
-    register int x;
+    int x;
 
     for (x = start; x <= stop; x++)
 	if (gbuf[y][x].glyph != cmap_to_glyph(S_stone))
@@ -1320,7 +1320,7 @@ flush_screen (int cursor_on_u)
      */
     static   boolean flushing = 0;
     static   boolean delay_flushing = 0;
-    register int x,y;
+    int x,y;
 
     if (cursor_on_u == -1) delay_flushing = !delay_flushing;
     if (delay_flushing) return;
@@ -1328,7 +1328,7 @@ flush_screen (int cursor_on_u)
     flushing = 1;
 
     for (y = 0; y < ROWNO; y++) {
-	register gbuf_entry *gptr = &gbuf[y][x = gbuf_start[y]];
+	gbuf_entry *gptr = &gbuf[y][x = gbuf_start[y]];
 	for (; x <= gbuf_stop[y]; gptr++, x++)
 	    if (gptr->new) {
 		print_glyph(WIN_MAP,x,y,gptr->glyph);
@@ -1351,7 +1351,7 @@ STATIC_PTR unsigned char
 get_glyph_char (int glyph)
 {
     unsigned char   ch;
-    register int offset;
+    int offset;
 
     assert (!(glyph >= NO_GLYPH));
 
@@ -1400,8 +1400,8 @@ compress_str ( /* copied from win/tty/wintty.c */
 	static char cbuf[BUFSZ];
 	/* compress in case line too long */
 	if((int)strlen(str) >= 80) {
-		register const char *bp0 = str;
-		register char *bp1 = cbuf;
+		const char *bp0 = str;
+		char *bp1 = cbuf;
 
 		do {
 			if(*bp0 != ' ' || bp0[1] != ' ')
@@ -1417,7 +1417,7 @@ compress_str ( /* copied from win/tty/wintty.c */
 void 
 dump_screen (void)
 {
-    register int x,y;
+    int x,y;
     int lastc;
     /* D: botl.c has a closer approximation to the size, but we'll go with
      *    this */
@@ -1582,7 +1582,7 @@ swallow_to_glyph (int mnum, int loc)
  *	/  S_rslant	(-1, 1) or ( 1,-1)
  */
 int 
-zapdir_to_glyph (register int dx, register int dy, int beam_type)
+zapdir_to_glyph (int dx, int dy, int beam_type)
 {
     if (beam_type >= NUM_ZAP) {
 	impossible("zapdir_to_glyph:  illegal beam type");
@@ -1968,7 +1968,7 @@ t_warn (struct rm *lev)
 STATIC_OVL int 
 wall_angle (struct rm *lev)
 {
-    register unsigned int seenv = lev->seenv & 0xff;
+    unsigned int seenv = lev->seenv & 0xff;
     const int *row;
     int col, idx;
 

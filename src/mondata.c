@@ -206,7 +206,7 @@ boolean
 ranged_attk(ptr)	/* returns TRUE if monster can attack at range */
 struct permonst *ptr;
 {
-	register int i, atyp;
+	int i, atyp;
 	long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
 
 	/* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP) ||
@@ -226,7 +226,7 @@ struct permonst *ptr;
 
 boolean
 hates_silver(ptr)
-register struct permonst *ptr;
+struct permonst *ptr;
 /* returns TRUE if monster is especially affected by silver weapons */
 {
 	return((boolean)(is_were(ptr) || ptr->mlet==S_VAMPIRE || is_demon(ptr) ||
@@ -249,7 +249,7 @@ struct permonst *mptr;
 
 boolean
 can_track(ptr)		/* returns TRUE if monster can track well */
-	register struct permonst *ptr;
+	struct permonst *ptr;
 {
 	if (uwep && uwep->oartifact == ART_EXCALIBUR)
 		return TRUE;
@@ -262,7 +262,7 @@ can_track(ptr)		/* returns TRUE if monster can track well */
 
 boolean
 sliparm(ptr)	/* creature will slide out of armor */
-	register struct permonst *ptr;
+	struct permonst *ptr;
 {
 	return((boolean)(is_whirly(ptr) || ptr->msize <= MZ_SMALL ||
 			 noncorporeal(ptr)));
@@ -270,7 +270,7 @@ sliparm(ptr)	/* creature will slide out of armor */
 
 boolean
 breakarm(ptr)	/* creature will break out of armor */
-	register struct permonst *ptr;
+	struct permonst *ptr;
 {
 	return ((bigmonst(ptr) || (ptr->msize > MZ_SMALL && !humanoid(ptr)) ||
 		/* special cases of humanoids that cannot wear body armor */
@@ -282,7 +282,7 @@ breakarm(ptr)	/* creature will break out of armor */
 
 boolean
 sticks(ptr)	/* creature sticks other creatures it hits */
-	register struct permonst *ptr;
+	struct permonst *ptr;
 {
 	return((boolean)(dmgtype(ptr,AD_STCK) || dmgtype(ptr,AD_WRAP) ||
 		attacktype(ptr,AT_HUGS)));
@@ -332,7 +332,7 @@ int dtyp;
 /* returns the maximum damage a defender can do to the attacker via
  * a passive defense */
 int 
-max_passive_dmg (register struct monst *mdef, register struct monst *magr)
+max_passive_dmg (struct monst *mdef, struct monst *magr)
 {
     int	i, dmg = 0;
     unsigned char adtyp;
@@ -364,7 +364,7 @@ monsndx (		/* return an index into the mons array */
     struct permonst *ptr
 )
 {
-	register int	i;
+	int	i;
 
 	i = (int)(ptr - &mons[0]);
 	if (i < LOW_PM || i >= NUMMONS) {
@@ -396,9 +396,9 @@ name_to_mon (const char *in_str)
 	 * This also permits plurals created by adding suffixes such as 's'
 	 * or 'es'.  Other plurals must still be handled explicitly.
 	 */
-	register int i;
-	register int mntmp = NON_PM;
-	register char *s, *str, *term;
+	int i;
+	int mntmp = NON_PM;
+	char *s, *str, *term;
 	char buf[BUFSZ];
 	int len, slen;
 
@@ -459,7 +459,7 @@ name_to_mon (const char *in_str)
 	    /* end of list */
 		{ 0, 0 }
 	};
-	register const struct alt_spl *namep;
+	const struct alt_spl *namep;
 
 	for (namep = names; namep->name; namep++)
 	    if (!strncmpi(str, namep->name, (int)strlen(namep->name)))
@@ -467,7 +467,7 @@ name_to_mon (const char *in_str)
     }
 
 	for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
-	    register int m_i_len = strlen(mons[i].mname);
+	    int m_i_len = strlen(mons[i].mname);
 	    if (m_i_len > len && !strncmpi(mons[i].mname, str, m_i_len)) {
 		if (m_i_len == slen) return i;	/* exact match */
 		else if (slen > m_i_len &&
@@ -494,7 +494,7 @@ name_to_mon (const char *in_str)
 
 /* returns 3 values (0=male, 1=female, 2=none) */
 int 
-gender (register struct monst *mtmp)
+gender (struct monst *mtmp)
 {
 	if (is_neuter(mtmp->data)) return 2;
 	return mtmp->female;
@@ -503,7 +503,7 @@ gender (register struct monst *mtmp)
 /* Like gender(), but lower animals and such are still "it". */
 /* This is the one we want to use when printing messages. */
 int 
-pronoun_gender (register struct monst *mtmp)
+pronoun_gender (struct monst *mtmp)
 {
 	if (is_neuter(mtmp->data) || !canspotmon(mtmp)) return 2;
 	return (humanoid(mtmp->data) || (mtmp->data->geno & G_UNIQ) ||
@@ -590,7 +590,7 @@ int
 little_to_big (int montype)
 {
 #ifndef AIXPS2_BUG
-	register int i;
+	int i;
 
 	for (i = 0; grownups[i][0] >= LOW_PM; i++)
 		if(montype == grownups[i][0]) return grownups[i][1];
@@ -615,7 +615,7 @@ little_to_big (int montype)
 int 
 big_to_little (int montype)
 {
-	register int i;
+	int i;
 
 	for (i = 0; grownups[i][0] >= LOW_PM; i++)
 		if(montype == grownups[i][1]) return grownups[i][0];

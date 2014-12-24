@@ -34,7 +34,7 @@ extern const int monstr[];
 #ifdef OVLB
 boolean
 is_home_elemental(ptr)
-register struct permonst *ptr;
+struct permonst *ptr;
 {
 	if (ptr->mlet == S_ELEMENTAL)
 	    switch (monsndx(ptr)) {
@@ -51,7 +51,7 @@ register struct permonst *ptr;
  */
 STATIC_OVL boolean
 wrong_elem_type(ptr)
-    register struct permonst *ptr;
+    struct permonst *ptr;
 {
     if (ptr->mlet == S_ELEMENTAL) {
 	return((boolean)(!is_home_elemental(ptr)));
@@ -72,14 +72,14 @@ wrong_elem_type(ptr)
 
 STATIC_OVL void 
 m_initgrp (	/* make a group just like mtmp */
-    register struct monst *mtmp,
-    register int x,
-    register int y,
-    register int n
+    struct monst *mtmp,
+    int x,
+    int y,
+    int n
 )
 {
 	coord mm;
-	register int cnt = rnd(n);
+	int cnt = rnd(n);
 	struct monst *mon;
 #if defined(__GNUC__) && (defined(HPUX) || defined(DGUX))
 	/* There is an unresolved problem with several people finding that
@@ -141,7 +141,7 @@ m_initgrp (	/* make a group just like mtmp */
 STATIC_OVL void 
 m_initthrow (struct monst *mtmp, int otyp, int oquan)
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 
 	otmp = mksobj(otyp, TRUE, FALSE);
 	otmp->quan = (long) rn1(oquan, 3);
@@ -154,10 +154,10 @@ m_initthrow (struct monst *mtmp, int otyp, int oquan)
 #ifdef OVL2
 
 STATIC_OVL void 
-m_initweap (register struct monst *mtmp)
+m_initweap (struct monst *mtmp)
 {
-	register struct permonst *ptr = mtmp->data;
-	register int mm = monsndx(ptr);
+	struct permonst *ptr = mtmp->data;
+	int mm = monsndx(ptr);
 	struct obj *otmp;
 
 /*
@@ -470,11 +470,11 @@ mkmonmoney (struct monst *mtmp, long amount)
 #endif
 
 STATIC_OVL void 
-m_initinv (register struct monst *mtmp)
+m_initinv (struct monst *mtmp)
 {
-	register int cnt;
-	register struct obj *otmp;
-	register struct permonst *ptr = mtmp->data;
+	int cnt;
+	struct obj *otmp;
+	struct permonst *ptr = mtmp->data;
 /*
  *	Soldiers get armour & rations - armour approximates their ac.
  *	Nymphs may get mirror or potion of object detection.
@@ -483,7 +483,7 @@ m_initinv (register struct monst *mtmp)
 
 	    case S_HUMAN:
 		if(is_mercenary(ptr)) {
-		    register int mac;
+		    int mac;
 
 		    switch(monsndx(ptr)) {
 			case PM_GUARD: mac = -1; break;
@@ -804,9 +804,9 @@ boolean ghostly;
  *	In case we make a monster group, only return the one at [x,y].
  */
 struct monst *
-makemon (register struct permonst *ptr, register int x, register int y, register int mmflags)
+makemon (struct permonst *ptr, int x, int y, int mmflags)
 {
-	register struct monst *mtmp;
+	struct monst *mtmp;
 	int mndx, mcham, ct, mitem, xlth;
 	boolean anymon = (!ptr);
 	boolean byyou = (x == u.ux && y == u.uy);
@@ -1142,11 +1142,11 @@ int mndx;
  *	return an integer in the range of 0-5.
  */
 STATIC_OVL int 
-align_shift (register struct permonst *ptr)
+align_shift (struct permonst *ptr)
 {
     static long oldmoves = 0L;	/* != 1, starting value of moves */
     static s_level *lev;
-    register int alshift;
+    int alshift;
 
     if(oldmoves != moves) {
 	lev = Is_special(&u.uz);
@@ -1175,8 +1175,8 @@ static struct {
 struct permonst *
 rndmonst (void)
 {
-	register struct permonst *ptr;
-	register int mndx, ct;
+	struct permonst *ptr;
+	int mndx, ct;
 
 	if (u.uz.dnum == quest_dnum && rn2(7) && (ptr = qt_montype()) != 0)
 	    return ptr;
@@ -1280,7 +1280,7 @@ reset_rndmonst (
 struct permonst *
 mkclass (char class, int spc)
 {
-	register int	first, last, num = 0;
+	int	first, last, num = 0;
 	int maxmlev, mask = (G_NOGEN | G_UNIQ) & ~spc;
 
 	maxmlev = level_difficulty() >> 1;
@@ -1328,7 +1328,7 @@ mkclass (char class, int spc)
 
 int 
 adj_lev (	/* adjust strength of monsters based on u.uz and u.ulevel */
-    register struct permonst *ptr
+    struct permonst *ptr
 )
 {
 	int	tmp, tmp2;
@@ -1453,9 +1453,9 @@ grow_up (	/* `mtmp' might "grow up" into a bigger version */
 #ifdef OVL1
 
 int 
-mongets (register struct monst *mtmp, register int otyp)
+mongets (struct monst *mtmp, int otyp)
 {
-	register struct obj *otmp;
+	struct obj *otmp;
 	int spe;
 
 	if (!otyp) return 0;
@@ -1530,7 +1530,7 @@ golemhp (int type)
  */
 boolean
 peace_minded(ptr)
-register struct permonst *ptr;
+struct permonst *ptr;
 {
 	aligntyp mal = ptr->maligntyp, ual = u.ualign.type;
 
@@ -1631,7 +1631,7 @@ static char syms[] = {
 
 void 
 set_mimic_sym (		/* KAA, modified by ERS */
-    register struct monst *mtmp
+    struct monst *mtmp
 )
 {
 	int typ, roomno, rt;
