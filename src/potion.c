@@ -7,10 +7,10 @@ boolean notonhead = FALSE;
 static int nothing, unkn;
 static const char beverages[] = { POTION_CLASS, 0 };
 
-STATIC_DCL long FDECL(itimeout, (long));
-STATIC_DCL long FDECL(itimeout_incr, (long,int));
-STATIC_DCL void NDECL(ghost_from_bottle);
-STATIC_DCL short FDECL(mixtype, (struct obj *,struct obj *));
+STATIC_DCL long itimeout(long);
+STATIC_DCL long itimeout_incr(long,int);
+STATIC_DCL void ghost_from_bottle(void);
+STATIC_DCL short mixtype(struct obj *,struct obj *);
 
 /* force `val' to be within valid range for intrinsic timeout value */
 STATIC_OVL long 

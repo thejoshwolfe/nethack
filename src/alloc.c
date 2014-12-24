@@ -7,21 +7,21 @@
 #include "config.h"
 
 #if defined(MONITOR_HEAP) || defined(WIZARD)
-char *FDECL(fmt_ptr, (const void *,char *));
+char *fmt_ptr(const void *,char *);
 #endif
 
 #ifdef MONITOR_HEAP
 #undef alloc
 #undef free
-extern void FDECL(free,(void *));
-static void NDECL(heapmon_init);
+extern void free(void *);
+static void heapmon_init(void);
 
 static FILE *heaplog = 0;
 static boolean tried_heaplog = FALSE;
 #endif
 
-long *FDECL(alloc,(unsigned int));
-extern void VDECL(panic, (const char *,...));
+long *alloc(unsigned int);
+extern void panic(const char *,...);
 
 
 long *

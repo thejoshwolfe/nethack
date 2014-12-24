@@ -6,14 +6,14 @@
 #define SCHAR_LIM 127
 #define NUMOBUF 12
 
-STATIC_DCL char *FDECL(strprepend,(char *,const char *));
+STATIC_DCL char *strprepend(char *,const char *);
 #ifdef OVLB
-static boolean FDECL(wishymatch, (const char *,const char *,boolean));
+static boolean wishymatch(const char *,const char *,boolean);
 #endif
-static char *NDECL(nextobuf);
-static void FDECL(add_erosion_words, (struct obj *, char *));
+static char *nextobuf(void);
+static void add_erosion_words(struct obj *, char *);
 #ifdef SORTLOOT
-char * FDECL(xname2, (struct obj *, boolean));
+char * xname2(struct obj *, boolean);
 #endif
 
 struct Jitem {
@@ -53,7 +53,7 @@ STATIC_OVL struct Jitem Japanese_items[] = {
 
 #endif /* OVLB */
 
-STATIC_DCL const char *FDECL(Japanese_item_name,(int i));
+STATIC_DCL const char *Japanese_item_name(int i);
 
 #ifdef OVL1
 
@@ -194,7 +194,7 @@ struct obj *obj;
 char *
 distant_name(obj, func)
 struct obj *obj;
-char *FDECL((*func), (OBJ_P));
+char *(*func)(OBJ_P);
 {
 	char *str;
 
@@ -909,7 +909,7 @@ killer_xname (struct obj *obj)
 const char *
 singular(otmp, func)
 struct obj *otmp;
-char *FDECL((*func), (OBJ_P));
+char *(*func)(OBJ_P);
 {
 	long savequan;
 	char *nam;

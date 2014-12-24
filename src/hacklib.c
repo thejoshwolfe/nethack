@@ -472,7 +472,7 @@ fuzzymatch(s1, s2, ignore_chars, caseblind)
  *	- determination of what files are "very old"
  */
 
-static struct tm *NDECL(getlt);
+static struct tm *getlt(void);
 
 void setrandom(void) {
 	/* the types are different enough here that sweeping the different

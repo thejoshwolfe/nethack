@@ -4,14 +4,14 @@
 #include "wintty.h"
 #endif
 
-STATIC_DCL void FDECL(def_raw_print, (const char *s));
+STATIC_DCL void def_raw_print(const char *s);
 
 struct window_procs windowprocs;
 
 static
 struct win_choices {
     struct window_procs *procs;
-    void NDECL((*ini_routine));		/* optional (can be 0) */
+    void (*ini_routine)(void);		/* optional (can be 0) */
 } winchoices[] = {
 #ifdef TTY_GRAPHICS
     { &tty_procs, win_tty_init },

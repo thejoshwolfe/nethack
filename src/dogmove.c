@@ -8,13 +8,13 @@ extern boolean notonhead;
 
 #ifdef OVL0
 
-STATIC_DCL boolean FDECL(dog_hunger,(struct monst *,struct edog *));
-STATIC_DCL int FDECL(dog_invent,(struct monst *,struct edog *,int));
-STATIC_DCL int FDECL(dog_goal,(struct monst *,struct edog *,int,int,int));
+STATIC_DCL boolean dog_hunger(struct monst *,struct edog *);
+STATIC_DCL int dog_invent(struct monst *,struct edog *,int);
+STATIC_DCL int dog_goal(struct monst *,struct edog *,int,int,int);
 
-STATIC_DCL struct obj *FDECL(DROPPABLES, (struct monst *));
-STATIC_DCL boolean FDECL(can_reach_location,(struct monst *,signed char,signed char, signed char,signed char));
-STATIC_DCL boolean FDECL(could_reach_item,(struct monst *, signed char,signed char));
+STATIC_DCL struct obj *DROPPABLES(struct monst *);
+STATIC_DCL boolean can_reach_location(struct monst *,signed char,signed char, signed char,signed char);
+STATIC_DCL boolean could_reach_item(struct monst *, signed char,signed char);
 
 STATIC_OVL struct obj *
 DROPPABLES (struct monst *mon)
@@ -46,11 +46,11 @@ static const char nofetch[] = { BALL_CLASS, CHAIN_CLASS, ROCK_CLASS, 0 };
 
 #endif /* OVL0 */
 
-STATIC_OVL boolean FDECL(cursed_object_at, (int, int));
+STATIC_OVL boolean cursed_object_at(int, int);
 
 STATIC_VAR signed char gtyp, gx, gy;	/* type and position of dog's current goal */
 
-STATIC_PTR void FDECL(wantdoor, (int, int, void *));
+STATIC_PTR void wantdoor(int, int, void *);
 
 #ifdef OVLB
 STATIC_OVL boolean

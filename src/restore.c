@@ -3,24 +3,24 @@
 #include "lev.h"
 
 #ifdef USE_TILES
-extern void FDECL(substitute_tiles, (d_level *));       /* from tile.c */
+extern void substitute_tiles(d_level *);       /* from tile.c */
 #endif
 
 #ifdef ZEROCOMP
-static int NDECL(mgetc);
+static int mgetc(void);
 #endif
-STATIC_DCL void NDECL(find_lev_obj);
-STATIC_DCL void FDECL(restlevchn, (int));
-STATIC_DCL void FDECL(restdamage, (int,boolean));
-STATIC_DCL struct obj *FDECL(restobjchn, (int,boolean,boolean));
-STATIC_DCL struct monst *FDECL(restmonchn, (int,boolean));
-STATIC_DCL struct fruit *FDECL(loadfruitchn, (int));
-STATIC_DCL void FDECL(freefruitchn, (struct fruit *));
-STATIC_DCL void FDECL(ghostfruit, (struct obj *));
-STATIC_DCL boolean FDECL(restgamestate, (int, unsigned int *, unsigned int *));
-STATIC_DCL void FDECL(restlevelstate, (unsigned int, unsigned int));
-STATIC_DCL int FDECL(restlevelfile, (int,signed char));
-STATIC_DCL void FDECL(reset_oattached_mids, (boolean));
+STATIC_DCL void find_lev_obj(void);
+STATIC_DCL void restlevchn(int);
+STATIC_DCL void restdamage(int,boolean);
+STATIC_DCL struct obj *restobjchn(int,boolean,boolean);
+STATIC_DCL struct monst *restmonchn(int,boolean);
+STATIC_DCL struct fruit *loadfruitchn(int);
+STATIC_DCL void freefruitchn(struct fruit *);
+STATIC_DCL void ghostfruit(struct obj *);
+STATIC_DCL boolean restgamestate(int, unsigned int *, unsigned int *);
+STATIC_DCL void restlevelstate(unsigned int, unsigned int);
+STATIC_DCL int restlevelfile(int,signed char);
+STATIC_DCL void reset_oattached_mids(boolean);
 
 /*
  * Save a mapping of IDs from ghost levels to the current level.  This
@@ -35,15 +35,15 @@ struct bucket {
     } map[N_PER_BUCKET];
 };
 
-STATIC_DCL void NDECL(clear_id_mapping);
-STATIC_DCL void FDECL(add_id_mapping, (unsigned, unsigned));
+STATIC_DCL void clear_id_mapping(void);
+STATIC_DCL void add_id_mapping(unsigned, unsigned);
 
 static int n_ids_mapped = 0;
 static struct bucket *id_map = 0;
 
 
 #ifdef AMII_GRAPHICS
-void FDECL( amii_setpens, (int) );	/* use colors from save file */
+void  amii_setpens(int) ;	/* use colors from save file */
 extern int amii_numcolors;
 #endif
 

@@ -25,10 +25,10 @@
  *	  path to the hero.
  */
 
-STATIC_DCL boolean FDECL(md_start,(coord *));
-STATIC_DCL boolean FDECL(md_stop,(coord *, coord *));
-STATIC_DCL boolean FDECL(md_rush,(struct monst *,int,int));
-STATIC_DCL void FDECL(newmail, (struct mail_info *));
+STATIC_DCL boolean md_start(coord *);
+STATIC_DCL boolean md_stop(coord *, coord *);
+STATIC_DCL boolean md_rush(struct monst *,int,int);
+STATIC_DCL void newmail(struct mail_info *);
 
 int mailckfreq = 0;
 
@@ -46,7 +46,7 @@ extern char *viz_rmin, *viz_rmax;	/* line-of-sight limits (vision.c) */
 #  if !defined(_BULL_SOURCE) && !defined(__sgi) && !defined(_M_UNIX)
 #   if !defined(SUNOS4)
 /* DO trust all SVR4 to typedef uid_t in <sys/types.h> (probably to a long) */
-extern struct passwd *FDECL(getpwuid,(uid_t));
+extern struct passwd *getpwuid(uid_t);
 #   endif
 #  endif
 static struct stat omstat,nmstat;

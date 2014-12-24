@@ -1,8 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL long FDECL(newuexp, (int));
-STATIC_DCL int FDECL(enermod, (int));
+STATIC_DCL long newuexp(int);
+STATIC_DCL int enermod(int);
 
 STATIC_OVL long 
 newuexp (int lev)

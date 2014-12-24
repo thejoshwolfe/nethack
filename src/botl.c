@@ -14,8 +14,8 @@ const char * const enc_stat[] = {
 	"Overloaded"
 };
 
-STATIC_DCL void NDECL(bot1);
-STATIC_DCL void NDECL(bot2);
+STATIC_DCL void bot1(void);
+STATIC_DCL void bot2(void);
 #endif /* OVL0 */
 
 /* MAXCO must hold longest uncompressed status line, and must be larger
@@ -38,7 +38,7 @@ STATIC_DCL int mrank_sz;
 STATIC_OVL int mrank_sz = 0; /* loaded by max_rank_sz (from u_init) */
 #endif /* OVLB */
 
-STATIC_DCL const char *NDECL(rank);
+STATIC_DCL const char *rank(void);
 
 #ifdef OVL1
 

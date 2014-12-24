@@ -39,16 +39,16 @@ typedef struct dlb_handle {
     long mark;		/* current file marker */
 } dlb;
 
-boolean NDECL(dlb_init);
-void NDECL(dlb_cleanup);
+boolean dlb_init(void);
+void dlb_cleanup(void);
 
-dlb *FDECL(dlb_fopen, (const char *,const char *));
-int FDECL(dlb_fclose, (dlb *));
-int FDECL(dlb_fread, (char *,int,int,dlb *));
-int FDECL(dlb_fseek, (dlb *,long,int));
-char *FDECL(dlb_fgets, (char *,int,dlb *));
-int FDECL(dlb_fgetc, (dlb *));
-long FDECL(dlb_ftell, (dlb *));
+dlb *dlb_fopen(const char *,const char *);
+int dlb_fclose(dlb *);
+int dlb_fread(char *,int,int,dlb *);
+int dlb_fseek(dlb *,long,int);
+char *dlb_fgets(char *,int,dlb *);
+int dlb_fgetc(dlb *);
+long dlb_ftell(dlb *);
 
 
 /* various other I/O stuff we don't want to replicate everywhere */

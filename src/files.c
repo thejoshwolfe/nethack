@@ -40,7 +40,7 @@ boolean nethack_thinks_it_is_open;	/* Does NetHack think it's open?       */
 #ifdef WIZARD
 #define WIZKIT_MAX 128
 static char wizkit[WIZKIT_MAX];
-STATIC_DCL FILE *NDECL(fopen_wizkit_file);
+STATIC_DCL FILE *fopen_wizkit_file(void);
 #endif
 
 #ifdef USER_SOUNDS
@@ -49,22 +49,22 @@ extern char *sounddir;
 
 extern int n_dgns;		/* from dungeon.c */
 
-STATIC_DCL char *FDECL(set_bonesfile_name, (char *,d_level*));
-STATIC_DCL char *NDECL(set_bonestemp_name);
+STATIC_DCL char *set_bonesfile_name(char *,d_level*);
+STATIC_DCL char *set_bonestemp_name(void);
 #ifdef COMPRESS
-STATIC_DCL void FDECL(redirect, (const char *,const char *,FILE *,boolean));
-STATIC_DCL void FDECL(docompress_file, (const char *,boolean));
+STATIC_DCL void redirect(const char *,const char *,FILE *,boolean);
+STATIC_DCL void docompress_file(const char *,boolean);
 #endif
-STATIC_DCL char *FDECL(make_lockname, (const char *,char *));
-STATIC_DCL FILE *FDECL(fopen_config_file, (const char *));
-STATIC_DCL int FDECL(get_uchars, (FILE *,char *,char *,unsigned char *,boolean,int,const char *));
-int FDECL(parse_config_line, (FILE *,char *,char *,char *));
-STATIC_DCL void FDECL(adjust_prefix, (char *, int));
+STATIC_DCL char *make_lockname(const char *,char *);
+STATIC_DCL FILE *fopen_config_file(const char *);
+STATIC_DCL int get_uchars(FILE *,char *,char *,unsigned char *,boolean,int,const char *);
+int parse_config_line(FILE *,char *,char *,char *);
+STATIC_DCL void adjust_prefix(char *, int);
 #ifdef SELF_RECOVER
-STATIC_DCL boolean FDECL(copy_bytes, (int, int));
+STATIC_DCL boolean copy_bytes(int, int);
 #endif
 #ifdef HOLD_LOCKFILE_OPEN
-STATIC_DCL int FDECL(open_levelfile_exclusively, (const char *, int, int));
+STATIC_DCL int open_levelfile_exclusively(const char *, int, int);
 #endif
 
 /*

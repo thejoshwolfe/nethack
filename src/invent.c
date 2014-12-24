@@ -5,31 +5,30 @@
 #define CONTAINED_SYM	'>'	/* designator for inside a container */
 
 #ifdef OVL1
-STATIC_DCL void NDECL(reorder_invent);
-STATIC_DCL boolean FDECL(mergable,(struct obj *,struct obj *));
-STATIC_DCL void FDECL(invdisp_nothing, (const char *,const char *));
-STATIC_DCL boolean FDECL(worn_wield_only, (struct obj *));
-STATIC_DCL boolean FDECL(only_here, (struct obj *));
+STATIC_DCL void reorder_invent(void);
+STATIC_DCL boolean mergable(struct obj *,struct obj *);
+STATIC_DCL void invdisp_nothing(const char *,const char *);
+STATIC_DCL boolean worn_wield_only(struct obj *);
+STATIC_DCL boolean only_here(struct obj *);
 #endif /* OVL1 */
-STATIC_DCL void FDECL(compactify,(char *));
-STATIC_DCL boolean FDECL(taking_off, (const char *));
-STATIC_DCL boolean FDECL(putting_on, (const char *));
-STATIC_PTR int FDECL(ckunpaid,(struct obj *));
-STATIC_PTR int FDECL(ckvalidcat,(struct obj *));
+STATIC_DCL void compactify(char *);
+STATIC_DCL boolean taking_off(const char *);
+STATIC_DCL boolean putting_on(const char *);
+STATIC_PTR int ckunpaid(struct obj *);
+STATIC_PTR int ckvalidcat(struct obj *);
 #ifdef DUMP_LOG
-static char FDECL(display_pickinv,
-		 (const char *,boolean, long *, boolean));
+static char display_pickinv(const char *,boolean, long *, boolean);
 #else
-static char FDECL(display_pickinv, (const char *,boolean, long *));
+static char display_pickinv(const char *,boolean, long *);
 #endif /* DUMP_LOG */
 #ifdef OVLB
-STATIC_DCL boolean FDECL(this_type_only, (struct obj *));
-STATIC_DCL void NDECL(dounpaid);
-STATIC_DCL struct obj *FDECL(find_unpaid,(struct obj *,struct obj **));
-STATIC_DCL void FDECL(menu_identify, (int));
-STATIC_DCL boolean FDECL(tool_in_use, (struct obj *));
+STATIC_DCL boolean this_type_only(struct obj *);
+STATIC_DCL void dounpaid(void);
+STATIC_DCL struct obj *find_unpaid(struct obj *,struct obj **);
+STATIC_DCL void menu_identify(int);
+STATIC_DCL boolean tool_in_use(struct obj *);
 #endif /* OVLB */
-STATIC_DCL char FDECL(obj_to_let,(struct obj *));
+STATIC_DCL char obj_to_let(struct obj *);
 
 #ifdef OVLB
 
@@ -1142,12 +1141,12 @@ static const char removeables[] =
 int
 ggetobj(word, fn, mx, combo, resultflags)
 const char *word;
-int FDECL((*fn),(OBJ_P)), mx;
+int (*fn)(OBJ_P), mx;
 boolean combo;		/* combination menu flag */
 unsigned *resultflags;
 {
-	int FDECL((*ckfn),(OBJ_P)) = (int FDECL((*),(OBJ_P))) 0;
-	boolean FDECL((*filter),(OBJ_P)) = (boolean FDECL((*),(OBJ_P))) 0;
+	int (*ckfn)(OBJ_P) = (int (*)(OBJ_P)) 0;
+	boolean (*filter)(OBJ_P) = (boolean (*)(OBJ_P)) 0;
 	boolean takeoff, ident, allflag, m_seen;
 	int itemcount;
 #ifndef GOLDOBJ
@@ -1338,7 +1337,7 @@ askchain(objchn, olets, allflag, fn, ckfn, mx, word)
 struct obj **objchn;
 int allflag, mx;
 const char *olets, *word;	/* olets is an Obj Class char array */
-int FDECL((*fn),(OBJ_P)), FDECL((*ckfn),(OBJ_P));
+int (*fn)(OBJ_P), (*ckfn)(OBJ_P);
 {
 	struct obj *otmp, *otmp2, *otmpo;
 	char sym, ilet;
@@ -2101,7 +2100,7 @@ dotypeinv()
 #ifndef GOLDOBJ
 					      (u.ugold != 0),
 #endif
-					      (boolean FDECL((*),(OBJ_P))) 0, &itemcount);
+					      (boolean (*)(OBJ_P)) 0, &itemcount);
 	    if (unpaid_count) {
 		Strcat(types, "u");
 		class_count++;

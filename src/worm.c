@@ -11,10 +11,10 @@ struct wseg {
     signed char  wx, wy;	/* the segment's position */
 };
 
-STATIC_DCL void FDECL(toss_wsegs, (struct wseg *,boolean));
-STATIC_DCL void FDECL(shrink_worm, (int));
-STATIC_DCL void FDECL(random_dir, (signed char,signed char,signed char *,signed char *));
-STATIC_DCL struct wseg *FDECL(create_worm_tail, (int));
+STATIC_DCL void toss_wsegs(struct wseg *,boolean);
+STATIC_DCL void shrink_worm(int);
+STATIC_DCL void random_dir(signed char,signed char,signed char *,signed char *);
+STATIC_DCL struct wseg *create_worm_tail(int);
 
 /*  Description of long worm implementation.
  *

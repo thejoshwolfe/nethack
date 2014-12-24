@@ -80,8 +80,6 @@
  *		the AT&T 3B2/3B5/etc. family.
  */
 
-#include "tradstdc.h"
-
 /*
  * Various structures have the option of using bitfields to save space.
  * If your C compiler handles bitfields well (e.g., it can initialize structs

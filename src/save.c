@@ -11,14 +11,14 @@
 #endif
 
 #ifdef ZEROCOMP
-STATIC_DCL void FDECL(bputc, (int));
+STATIC_DCL void bputc(int);
 #endif
-STATIC_DCL void FDECL(savelevchn, (int,int));
-STATIC_DCL void FDECL(savedamage, (int,int));
-STATIC_DCL void FDECL(saveobjchn, (int,struct obj *,int));
-STATIC_DCL void FDECL(savemonchn, (int,struct monst *,int));
-STATIC_DCL void FDECL(savetrapchn, (int,struct trap *,int));
-STATIC_DCL void FDECL(savegamestate, (int,int));
+STATIC_DCL void savelevchn(int,int);
+STATIC_DCL void savedamage(int,int);
+STATIC_DCL void saveobjchn(int,struct obj *,int);
+STATIC_DCL void savemonchn(int,struct monst *,int);
+STATIC_DCL void savetrapchn(int,struct trap *,int);
+STATIC_DCL void savegamestate(int,int);
 #ifdef GCC_WARN
 static long nulls[10];
 #else

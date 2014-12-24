@@ -15,19 +15,19 @@
  */
 
 typedef struct dlb_procs {
-    boolean NDECL((*dlb_init_proc));
-    void NDECL((*dlb_cleanup_proc));
-    boolean FDECL((*dlb_fopen_proc), (dlb *,const char *,const char *));
-    int FDECL((*dlb_fclose_proc), (dlb *));
-    int FDECL((*dlb_fread_proc), (char *,int,int,dlb *));
-    int FDECL((*dlb_fseek_proc), (dlb *,long,int));
-    char *FDECL((*dlb_fgets_proc), (char *,int,dlb *));
-    int FDECL((*dlb_fgetc_proc), (dlb *));
-    long FDECL((*dlb_ftell_proc), (dlb *));
+    boolean (*dlb_init_proc)(void);
+    void (*dlb_cleanup_proc)(void);
+    boolean (*dlb_fopen_proc)(dlb *,const char *,const char *);
+    int (*dlb_fclose_proc)(dlb *);
+    int (*dlb_fread_proc)(char *,int,int,dlb *);
+    int (*dlb_fseek_proc)(dlb *,long,int);
+    char *(*dlb_fgets_proc)(char *,int,dlb *);
+    int (*dlb_fgetc_proc)(dlb *);
+    long (*dlb_ftell_proc)(dlb *);
 } dlb_procs_t;
 
 /* without extern.h via hack.h, these haven't been declared for us */
-extern FILE *FDECL(fopen_datafile, (const char *,const char *,int));
+extern FILE *fopen_datafile(const char *,const char *,int);
 
 /*
  * Library Implementation:
@@ -48,25 +48,25 @@ extern FILE *FDECL(fopen_datafile, (const char *,const char *,int));
 #define MAX_LIBS 4
 static library dlb_libs[MAX_LIBS];
 
-static boolean FDECL(readlibdir,(library *lp));
-static boolean FDECL(find_file,(const char *name, library **lib, long *startp,
-                                long *sizep));
-static boolean NDECL(lib_dlb_init);
-static void NDECL(lib_dlb_cleanup);
-static boolean FDECL(lib_dlb_fopen,(dlb *, const char *, const char *));
-static int FDECL(lib_dlb_fclose,(dlb *));
-static int FDECL(lib_dlb_fread,(char *, int, int, dlb *));
-static int FDECL(lib_dlb_fseek,(dlb *, long, int));
-static char *FDECL(lib_dlb_fgets,(char *, int, dlb *));
-static int FDECL(lib_dlb_fgetc,(dlb *));
-static long FDECL(lib_dlb_ftell,(dlb *));
+static boolean readlibdir(library *lp);
+static boolean find_file(const char *name, library **lib, long *startp,
+                                long *sizep);
+static boolean lib_dlb_init(void);
+static void lib_dlb_cleanup(void);
+static boolean lib_dlb_fopen(dlb *, const char *, const char *);
+static int lib_dlb_fclose(dlb *);
+static int lib_dlb_fread(char *, int, int, dlb *);
+static int lib_dlb_fseek(dlb *, long, int);
+static char *lib_dlb_fgets(char *, int, dlb *);
+static int lib_dlb_fgetc(dlb *);
+static long lib_dlb_ftell(dlb *);
 
 /* not static because shared with dlb_main.c */
-boolean FDECL(open_library,(const char *lib_name, library *lp));
-void FDECL(close_library,(library *lp));
+boolean open_library(const char *lib_name, library *lp);
+void close_library(library *lp);
 
 /* without extern.h via hack.h, these haven't been declared for us */
-extern char *FDECL(eos, (char *));
+extern char *eos(char *);
 
 
 

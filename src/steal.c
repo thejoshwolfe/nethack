@@ -1,11 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_PTR int NDECL(stealarm);
+STATIC_PTR int stealarm(void);
 
 #ifdef OVLB
-STATIC_DCL const char *FDECL(equipname, (struct obj *));
-STATIC_DCL void FDECL(mdrop_obj, (struct monst *,struct obj *,boolean));
+STATIC_DCL const char *equipname(struct obj *);
+STATIC_DCL void mdrop_obj(struct monst *,struct obj *,boolean);
 
 STATIC_OVL const char *
 equipname (struct obj *otmp)

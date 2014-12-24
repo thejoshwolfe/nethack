@@ -5,17 +5,17 @@
 #define HEIGHT	(ROWNO - 1)
 #define WIDTH	(COLNO - 2)
 
-STATIC_DCL void FDECL(init_map,(signed char));
-STATIC_DCL void FDECL(init_fill,(signed char,signed char));
-STATIC_DCL signed char FDECL(get_map,(int,int,signed char));
-STATIC_DCL void FDECL(pass_one,(signed char,signed char));
-STATIC_DCL void FDECL(pass_two,(signed char,signed char));
-STATIC_DCL void FDECL(pass_three,(signed char,signed char));
-STATIC_DCL void NDECL(wallify_map);
-STATIC_DCL void FDECL(join_map,(signed char,signed char));
-STATIC_DCL void FDECL(finish_map,(signed char,signed char,boolean,boolean));
-STATIC_DCL void FDECL(remove_room,(unsigned));
-void FDECL(mkmap, (lev_init *));
+STATIC_DCL void init_map(signed char);
+STATIC_DCL void init_fill(signed char,signed char);
+STATIC_DCL signed char get_map(int,int,signed char);
+STATIC_DCL void pass_one(signed char,signed char);
+STATIC_DCL void pass_two(signed char,signed char);
+STATIC_DCL void pass_three(signed char,signed char);
+STATIC_DCL void wallify_map(void);
+STATIC_DCL void join_map(signed char,signed char);
+STATIC_DCL void finish_map(signed char,signed char,boolean,boolean);
+STATIC_DCL void remove_room(unsigned);
+void mkmap(lev_init *);
 
 char *new_locations;
 int min_rx, max_rx, min_ry, max_ry; /* rectangle bounds for regions */

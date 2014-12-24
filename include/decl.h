@@ -2,8 +2,8 @@
 #ifndef DECL_H
 #define DECL_H
 
-extern int NDECL((*occupation));
-extern int NDECL((*afternmv));
+extern int (*occupation)(void);
+extern int (*afternmv)(void);
 
 extern const char *hname;
 extern int hackpid;

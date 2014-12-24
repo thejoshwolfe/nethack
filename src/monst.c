@@ -21,7 +21,7 @@
 #define HI_DOMESTIC	CLR_WHITE	/* use for player + friendlies */
 #define HI_LORD		CLR_MAGENTA
 
-void NDECL(monst_init);
+void monst_init(void);
 /*
  *	Entry Format:		(from permonst.h)
  *

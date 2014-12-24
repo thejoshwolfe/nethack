@@ -6,14 +6,14 @@
 
 #define Tgetstr(key) (tgetstr(key,&tbufptr))
 
-static char * FDECL(s_atr2str, (int));
-static char * FDECL(e_atr2str, (int));
+static char * s_atr2str(int);
+static char * e_atr2str(int);
 
-void FDECL(cmov, (int, int));
-void FDECL(nocmov, (int, int));
+void cmov(int, int);
+void nocmov(int, int);
 # ifdef OVLB
-static void NDECL(init_hilite);
-static void NDECL(kill_hilite);
+static void init_hilite(void);
+static void kill_hilite(void);
 # endif /* OVLB */
 
 #ifdef OVLB
@@ -215,8 +215,8 @@ int state;
 	}
 }
 
-extern void NDECL((*decgraphics_mode_callback));    /* defined in drawing.c */
-static void NDECL(tty_decgraphics_termcap_fixup);
+extern void (*decgraphics_mode_callback)(void);    /* defined in drawing.c */
+static void tty_decgraphics_termcap_fixup(void);
 
 /*
    We call this routine whenever DECgraphics mode is enabled, even if it
@@ -271,12 +271,12 @@ static void tty_decgraphics_termcap_fixup (void) {
 }
 
 #if defined(PC9800)
-extern void NDECL((*ibmgraphics_mode_callback));    /* defined in drawing.c */
+extern void (*ibmgraphics_mode_callback)(void);    /* defined in drawing.c */
 #endif
 
 #ifdef PC9800
-extern void NDECL((*ascgraphics_mode_callback));    /* defined in drawing.c */
-static void NDECL(tty_ascgraphics_hilite_fixup);
+extern void (*ascgraphics_mode_callback)(void);    /* defined in drawing.c */
+static void tty_ascgraphics_hilite_fixup(void);
 
 static void tty_ascgraphics_hilite_fixup (void) {
     int c;

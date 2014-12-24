@@ -43,8 +43,8 @@
 
 static light_source *light_base = 0;
 
-STATIC_DCL void FDECL(write_ls, (int, light_source *));
-STATIC_DCL int FDECL(maybe_write_ls, (int, int, boolean));
+STATIC_DCL void write_ls(int, light_source *);
+STATIC_DCL int maybe_write_ls(int, int, boolean);
 
 /* imported from vision.c, for small circles */
 extern char circle_data[];
@@ -558,7 +558,7 @@ candle_light_range (struct obj *obj)
 }
 
 #ifdef WIZARD
-extern char *FDECL(fmt_ptr, (const void *, char *));  /* from alloc.c */
+extern char *fmt_ptr(const void *, char *);  /* from alloc.c */
 
 int 
 wiz_light_sources (void)

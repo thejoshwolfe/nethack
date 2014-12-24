@@ -4,18 +4,18 @@
 #include "hack.h"
 #include "edog.h"
 
-STATIC_DCL int FDECL(throw_obj, (struct obj *,int));
-STATIC_DCL void NDECL(autoquiver);
-STATIC_DCL int FDECL(gem_accept, (struct monst *, struct obj *));
-STATIC_DCL void FDECL(tmiss, (struct obj *, struct monst *));
-STATIC_DCL int FDECL(throw_gold, (struct obj *));
-STATIC_DCL void FDECL(check_shop_obj, (struct obj *,signed char,signed char,boolean));
-STATIC_DCL void FDECL(breakobj, (struct obj *,signed char,signed char,boolean,boolean));
-STATIC_DCL void FDECL(breakmsg, (struct obj *,boolean));
-STATIC_DCL boolean FDECL(toss_up,(struct obj *, boolean));
-STATIC_DCL boolean FDECL(throwing_weapon, (struct obj *));
-STATIC_DCL void FDECL(sho_obj_return_to_u, (struct obj *obj));
-STATIC_DCL boolean FDECL(mhurtle_step, (void *,int,int));
+STATIC_DCL int throw_obj(struct obj *,int);
+STATIC_DCL void autoquiver(void);
+STATIC_DCL int gem_accept(struct monst *, struct obj *);
+STATIC_DCL void tmiss(struct obj *, struct monst *);
+STATIC_DCL int throw_gold(struct obj *);
+STATIC_DCL void check_shop_obj(struct obj *,signed char,signed char,boolean);
+STATIC_DCL void breakobj(struct obj *,signed char,signed char,boolean,boolean);
+STATIC_DCL void breakmsg(struct obj *,boolean);
+STATIC_DCL boolean toss_up(struct obj *, boolean);
+STATIC_DCL boolean throwing_weapon(struct obj *);
+STATIC_DCL void sho_obj_return_to_u(struct obj *obj);
+STATIC_DCL boolean mhurtle_step(void *,int,int);
 
 
 static const char toss_objs[] =
@@ -357,7 +357,7 @@ boolean
 walk_path(src_cc, dest_cc, check_proc, arg)
     coord *src_cc;
     coord *dest_cc;
-    boolean FDECL((*check_proc), (void *, int, int));
+    boolean (*check_proc)(void *, int, int);
     void * arg;
 {
     int x, y, dx, dy, x_change, y_change, err, i, prev_x, prev_y;
@@ -963,8 +963,8 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
 		if (Underwater) range = 1;
 
 		mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
-			   (int FDECL((*),(MONST_P,OBJ_P)))0,
-			   (int FDECL((*),(OBJ_P,OBJ_P)))0,
+			   (int (*)(MONST_P,OBJ_P))0,
+			   (int (*)(OBJ_P,OBJ_P))0,
 			   obj);
 
 		/* have to do this after bhit() so u.ux & u.uy are correct */
@@ -1721,8 +1721,8 @@ throw_gold (struct obj *obj)
 			bhitpos.y = u.uy;
 		} else {
 			mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
-				   (int FDECL((*),(MONST_P,OBJ_P)))0,
-				   (int FDECL((*),(OBJ_P,OBJ_P)))0,
+				   (int (*)(MONST_P,OBJ_P))0,
+				   (int (*)(OBJ_P,OBJ_P))0,
 				   obj);
 			if(mon) {
 			    if (ghitm(mon, obj))	/* was it caught? */

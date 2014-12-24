@@ -4,12 +4,12 @@
 #include "edog.h"
 #include <ctype.h>
 
-STATIC_DCL boolean FDECL(restrap,(struct monst *));
-STATIC_DCL long FDECL(mm_aggression, (struct monst *,struct monst *));
+STATIC_DCL boolean restrap(struct monst *);
+STATIC_DCL long mm_aggression(struct monst *,struct monst *);
 #ifdef OVL2
-STATIC_DCL int NDECL(pick_animal);
-STATIC_DCL int FDECL(select_newcham_form, (struct monst *));
-STATIC_DCL void FDECL(kill_eggs, (struct obj *));
+STATIC_DCL int pick_animal(void);
+STATIC_DCL int select_newcham_form(struct monst *);
+STATIC_DCL void kill_eggs(struct obj *);
 #endif
 
 #define LEVEL_SPECIFIC_NOCORPSE(mdat) \
@@ -18,9 +18,9 @@ STATIC_DCL void FDECL(kill_eggs, (struct obj *));
 #ifndef OVLB
 STATIC_VAR short cham_to_pm[];
 #else
-STATIC_DCL struct obj *FDECL(make_corpse,(struct monst *));
-STATIC_DCL void FDECL(m_detach, (struct monst *, struct permonst *));
-STATIC_DCL void FDECL(lifesaved_monster, (struct monst *));
+STATIC_DCL struct obj *make_corpse(struct monst *);
+STATIC_DCL void m_detach(struct monst *, struct permonst *);
+STATIC_DCL void lifesaved_monster(struct monst *);
 
 /* convert the monster index of an undead to its living counterpart */
 int 

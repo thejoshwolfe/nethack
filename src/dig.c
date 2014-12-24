@@ -7,13 +7,13 @@
 
 static boolean did_dig_msg;
 
-STATIC_DCL boolean NDECL(rm_waslit);
-STATIC_DCL void FDECL(mkcavepos, (signed char,signed char,int,boolean,boolean));
-STATIC_DCL void FDECL(mkcavearea, (boolean));
-STATIC_DCL int FDECL(dig_typ, (struct obj *,signed char,signed char));
-STATIC_DCL int NDECL(dig);
-STATIC_DCL signed char FDECL(fillholetyp, (int, int));
-STATIC_DCL void NDECL(dig_up_grave);
+STATIC_DCL boolean rm_waslit(void);
+STATIC_DCL void mkcavepos(signed char,signed char,int,boolean,boolean);
+STATIC_DCL void mkcavearea(boolean);
+STATIC_DCL int dig_typ(struct obj *,signed char,signed char);
+STATIC_DCL int dig(void);
+STATIC_DCL signed char fillholetyp(int, int);
+STATIC_DCL void dig_up_grave(void);
 
 /* Indices returned by dig_typ() */
 #define DIGTYP_UNDIGGABLE 0

@@ -85,12 +85,12 @@ static char  left_ptrs[ROWNO][COLNO];		/* LOS algorithm helpers */
 static char right_ptrs[ROWNO][COLNO];
 
 /* Forward declarations. */
-STATIC_DCL void FDECL(fill_point, (int,int));
-STATIC_DCL void FDECL(dig_point, (int,int));
-STATIC_DCL void NDECL(view_init);
-STATIC_DCL void FDECL(view_from,(int,int,char **,char *,char *,int,
-			     void (*)(int,int,void *),void *));
-STATIC_DCL void FDECL(get_unused_cs, (char ***,char **,char **));
+STATIC_DCL void fill_point(int,int);
+STATIC_DCL void dig_point(int,int);
+STATIC_DCL void view_init(void);
+STATIC_DCL void view_from(int,int,char **,char *,char *,int,
+			     void (*)(int,int,void *),void *);
+STATIC_DCL void get_unused_cs(char ***,char **,char **);
 
 /* Macro definitions that I can't find anywhere. */
 #define sign(z) ((z) < 0 ? -1 : ((z) ? 1 : 0 ))
@@ -268,7 +268,7 @@ get_unused_cs (char ***rows, char **rmin, char **rmax)
 
 #ifdef EXTEND_SPINE
 
-STATIC_DCL int FDECL(new_angle, (struct rm *, unsigned char *, int, int));
+STATIC_DCL int new_angle(struct rm *, unsigned char *, int, int);
 /*
  * new_angle()
  *
@@ -452,7 +452,7 @@ vision_recalc (int control)
 	 *	+ Monsters can see you even when you're in a pit.
 	 */
 	view_from(u.uy, u.ux, next_array, next_rmin, next_rmax,
-		0, (void FDECL((*),(int,int,void *)))0, (void *)0);
+		0, (void (*)(int,int,void *))0, (void *)0);
 
 	/*
 	 * Our own version of the update loop below.  We know we can't see
@@ -511,7 +511,7 @@ vision_recalc (int control)
 	    }
 	} else
 	    view_from(u.uy, u.ux, next_array, next_rmin, next_rmax,
-		0, (void FDECL((*),(int,int,void *)))0, (void *)0);
+		0, (void (*)(int,int,void *))0, (void *)0);
 
 	/*
 	 * Set the IN_SIGHT bit for xray and night vision.
@@ -976,7 +976,7 @@ static char **cs_rows;
 static char *cs_left;
 static char *cs_right;
 
-static void FDECL((*vis_func), (int,int,void *));
+static void (*vis_func)(int,int,void *);
 static void * varg;
 
 /*
@@ -1205,10 +1205,10 @@ static void * varg;
 
 #else   /* quadrants are really functions */
 
-STATIC_DCL int FDECL(_q1_path, (int,int,int,int));
-STATIC_DCL int FDECL(_q2_path, (int,int,int,int));
-STATIC_DCL int FDECL(_q3_path, (int,int,int,int));
-STATIC_DCL int FDECL(_q4_path, (int,int,int,int));
+STATIC_DCL int _q1_path(int,int,int,int);
+STATIC_DCL int _q2_path(int,int,int,int);
+STATIC_DCL int _q3_path(int,int,int,int);
+STATIC_DCL int _q4_path(int,int,int,int);
 
 #define q1_path(sy,sx,y,x,dummy) result = _q1_path(sy,sx,y,x)
 #define q2_path(sy,sx,y,x,dummy) result = _q2_path(sy,sx,y,x)
@@ -1447,10 +1447,10 @@ cleardone:
 static close2d *close_dy[CLOSE_MAX_BC_DY];
 static far2d   *far_dy[FAR_MAX_BC_DY];
 
-STATIC_DCL void FDECL(right_side, (int,int,int,int,int,int,int,char*));
-STATIC_DCL void FDECL(left_side, (int,int,int,int,int,int,int,char*));
-STATIC_DCL int FDECL(close_shadow, (int,int,int,int));
-STATIC_DCL int FDECL(far_shadow, (int,int,int,int));
+STATIC_DCL void right_side(int,int,int,int,int,int,int,char*);
+STATIC_DCL void left_side(int,int,int,int,int,int,int,char*);
+STATIC_DCL int close_shadow(int,int,int,int);
+STATIC_DCL int far_shadow(int,int,int,int);
 
 /*
  * Initialize algorithm D's table pointers.  If we don't have these,
@@ -1991,7 +1991,7 @@ view_from(srow,scol,loc_cs_rows,left_most,right_most, range, func, arg)
     char **loc_cs_rows;			/* could_see array (row pointers) */
     char *left_most, *right_most;	/* limits of what could be seen */
     int range;		/* 0 if unlimited */
-    void FDECL((*func), (int,int,void *));
+    void (*func)(int,int,void *);
     void * arg;
 {
     int i;
@@ -2076,8 +2076,8 @@ view_from(srow,scol,loc_cs_rows,left_most,right_most, range, func, arg)
 /*
  * Defines local to Algorithm C.
  */
-STATIC_DCL void FDECL(right_side, (int,int,int,char*));
-STATIC_DCL void FDECL(left_side, (int,int,int,char*));
+STATIC_DCL void right_side(int,int,int,char*);
+STATIC_DCL void left_side(int,int,int,char*);
 
 /* Initialize algorithm C (nothing). */
 STATIC_OVL void 
@@ -2399,7 +2399,7 @@ view_from(srow, scol, loc_cs_rows, left_most, right_most, range, func, arg)
     char *left_most;	/* min mark on each row */
     char *right_most;	/* max mark on each row */
     int range;		/* 0 if unlimited */
-    void FDECL((*func), (int,int,void *));
+    void (*func)(int,int,void *);
     void * arg;
 {
     int i;		/* loop counter */
@@ -2490,7 +2490,7 @@ view_from(srow, scol, loc_cs_rows, left_most, right_most, range, func, arg)
 void
 do_clear_area(scol,srow,range,func,arg)
     int scol, srow, range;
-    void FDECL((*func), (int,int,void *));
+    void (*func)(int,int,void *);
     void * arg;
 {
 	/* If not centered on hero, do the hard work of figuring the area */

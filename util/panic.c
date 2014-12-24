@@ -13,8 +13,6 @@
 
 /*VARARGS1*/
 boolean panicking;
-void VDECL(panic, (char *,...));
-
 void panic (char * str, ...) {
     va_list the_args;
 	va_start(the_args, str);

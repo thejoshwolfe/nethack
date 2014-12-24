@@ -9,9 +9,9 @@ extern const struct shclass shtypes[];
 
 #else
 
-STATIC_DCL void FDECL(mkshobj_at, (const struct shclass *,int,int));
-STATIC_DCL void FDECL(nameshk, (struct monst *,const char * const *));
-STATIC_DCL int  FDECL(shkinit, (const struct shclass *,struct mkroom *));
+STATIC_DCL void mkshobj_at(const struct shclass *,int,int);
+STATIC_DCL void nameshk(struct monst *,const char * const *);
+STATIC_DCL int  shkinit(const struct shclass *,struct mkroom *);
 
 static const char * const shkliquors[] = {
     /* Ukraine */

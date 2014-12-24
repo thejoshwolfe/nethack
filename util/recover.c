@@ -15,11 +15,11 @@
 #include <unistd.h>
 #endif
 
-int FDECL(restore_savefile, (char *));
-void FDECL(set_levelfile_name, (int));
-int FDECL(open_levelfile, (int));
-int NDECL(create_savefile);
-void FDECL(copy_bytes, (int,int));
+int restore_savefile(char *);
+void set_levelfile_name(int);
+int open_levelfile(int);
+int create_savefile(void);
+void copy_bytes(int,int);
 
 #define Fprintf	(void)fprintf
 #define Perror  (void)perror
@@ -28,7 +28,7 @@ void FDECL(copy_bytes, (int,int));
 #define SAVESIZE	(PL_NSIZ + 13)	/* save/99999player.e */
 
 #if defined(EXEPATH)
-char *FDECL(exepath, (char *));
+char *exepath(char *);
 #endif
 
 char savename[SAVESIZE]; /* holds relative path of save file from playground */
