@@ -701,12 +701,7 @@ register unsigned num;
 	} else
 #endif /* UNIX */
 	{
-/* lint wants the 3rd arg of write to be an int; lint -p an unsigned */
-#if defined(BSD) || defined(ULTRIX)
-	    failed = (write(fd, loc, (int)num) != (int)num);
-#else /* e.g. SYSV, __TURBOC__ */
 	    failed = (write(fd, loc, num) != num);
-#endif
 	}
 
 	if (failed) {
@@ -717,10 +712,7 @@ register unsigned num;
 	}
 }
 
-void
-bclose(fd)
-    int fd;
-{
+void bclose(int fd) {
     bufoff(fd);
 #ifdef UNIX
     if (fd == bw_fd) {

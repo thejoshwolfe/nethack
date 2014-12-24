@@ -4,13 +4,12 @@
 
 /*
  * Section 1:	Operating and window systems selection.
- *		Select the version of the OS you are using.
- *		For "UNIX" select BSD, ULTRIX, or HPUX in unixconf.h.
  */
 
 #define UNIX		/* delete if no fork(), exec() available */
 
-#include "config1.h"	/* should auto-detect MSDOS, MAC */
+/* ensure _GNU_SOURCE is defined before including any system headers */
+# define _GNU_SOURCE
 
 
 /* Windowing systems...
@@ -23,10 +22,6 @@
 /* Debian default window system is always tty; they have to set their
  * own if they want another one (or just use the scripts */
 #define DEFAULT_WINDOW_SYS "tty"
-
-#ifndef DEFAULT_WINDOW_SYS
-# define DEFAULT_WINDOW_SYS "tty"
-#endif
 
 /*
  * Section 2:	Some global parameters and filenames.

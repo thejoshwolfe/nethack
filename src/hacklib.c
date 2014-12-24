@@ -464,11 +464,7 @@ static struct tm * getlt(void) {
 	time_t date;
 
 	time(&date);
-#if defined(ULTRIX) && !(defined(ULTRIX_PROTO) || defined(NHSTDC))
 	return(localtime((long *)(&date)));
-#else
-	return(localtime(&date));
-#endif
 }
 
 int getyear(void) {
@@ -482,11 +478,7 @@ long yyyymmdd(time_t date) {
 	if (date == 0)
 		lt = getlt();
 	else
-#if defined(ULTRIX) && !(defined(ULTRIX_PROTO) || defined(NHSTDC))
-		lt = localtime((long *)(&date));
-#else
 		lt = localtime(&date);
-#endif
 
 	/* just in case somebody's localtime supplies (year % 100)
 	   rather than the expected (year - 1900) */

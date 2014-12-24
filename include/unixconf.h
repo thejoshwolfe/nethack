@@ -1,42 +1,6 @@
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
-/*
- * The next two defines are intended mainly for the Andrew File System,
- * which does not allow hard links.  If NO_FILE_LINKS is defined, lock files
- * will be created in LOCKDIR using open() instead of in the playground using
- * link().
- *		Ralf Brown, 7/26/89 (from v2.3 hack of 10/10/88)
- */
-
-/* #define NO_FILE_LINKS */	/* if no hard links */
-/* #define LOCKDIR "/usr/games/lib/nethackdir" */	/* where to put locks */
-
-/*
- * If you want the static parts of your playground on a read-only file
- * system, define VAR_PLAYGROUND to be where the variable parts are kept.
- */
-#define VAR_PLAYGROUND "run"
-
-
-/*
- * Define DEF_PAGER as your default pager, e.g. "/bin/cat" or "/usr/ucb/more"
- * If defined, it can be overridden by the environment variable PAGER.
- * Hack will use its internal pager if DEF_PAGER is not defined.
- * (This might be preferable for security reasons.)
- * #define DEF_PAGER	".../mydir/mypager"
- */
-
-
-
-/*
- * Define PORT_HELP to be the name of the port-specfic help file.
- * This file is found in HACKDIR.
- * Normally, you shouldn't need to change this.
- * There is currently no port-specific help for Unix systems.
- */
-/* #define PORT_HELP "Unixhelp" */
-
 #ifdef TTY_GRAPHICS
 /*
  * To enable the `timed_delay' option for using a timer rather than extra
@@ -60,16 +24,6 @@
 #define MAIL			/* Deliver mail during the game */
 #define DEF_MAILREADER	"/usr/bin/mail"
 
-
-#ifdef COMPRESS
-/* Some implementations of compress need a 'quiet' option.
- * If you've got one of these versions, put -q here.
- * You can also include any other strange options your compress needs.
- * If you have a normal compress, just leave it commented out.
- */
-/* #define COMPRESS_OPTIONS "-q" */
-#endif
-
 #define FCMASK	0660	/* file creation mask */
 
 #include <time.h>
@@ -84,44 +38,17 @@
 #define SHELL		/* do not delete the '!' command */
 
 #include <string.h>
+#include <strings.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
-#if defined(BSD) || defined(ULTRIX)
-# if !defined(DGUX) && !defined(SUNOS4)
-#define memcpy(d, s, n)		bcopy(s, d, n)
-#define memcmp(s1, s2, n)	bcmp(s2, s1, n)
-# endif
-# ifdef SUNOS4
-#include <memory.h>
-# endif
-#else	/* therefore SYSV */
-# ifndef index	/* some systems seem to do this for you */
-#define index	strchr
-# endif
-# ifndef rindex
-#define rindex	strrchr
-# endif
-#endif
 
 /* Use the high quality random number routines. */
 #define Rand()	random()
 
 #ifdef TIMED_DELAY
 # define msleep(k) usleep((k)*1000)
-# ifdef ULTRIX
-# define msleep(k) napms(k)
-# endif
-#endif
-
-#ifdef hc	/* older versions of the MetaWare High-C compiler define this */
-# ifdef __HC__
-#  undef __HC__
-# endif
-# define __HC__ hc
-# undef hc
 #endif
 
 #endif /* UNIXCONF_H */

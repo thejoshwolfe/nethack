@@ -471,14 +471,11 @@ char c;
 	(void) putchar(c);
 }
 
-void
-xputs(s)
-const char *s;
-{
+void xputs(const char *s) {
 # ifndef TERMLIB
 	(void) fputs(s, stdout);
 # else
-#  if defined(NHSTDC) || defined(ULTRIX_PROTO)
+#  if defined(NHSTDC)
 	tputs(s, 1, (int (*)())xputc);
 #  else
 	tputs(s, 1, xputc);

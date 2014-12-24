@@ -17,7 +17,7 @@
 #include "wintty.h"
 
 #ifdef CLIPPING		/* might want SIGWINCH */
-# if defined(BSD) || defined(ULTRIX) || defined(AIX_31) || defined(_BULL_SOURCE)
+# if defined(AIX_31) || defined(_BULL_SOURCE)
 #include <signal.h>
 # endif
 #endif
