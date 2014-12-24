@@ -35,19 +35,19 @@ quest.dat: nethack
 	( cd dat && $(MAKE) quest.dat )
 
 spec_levs: dungeon
-	( cd util && $(MAKE) lev_comp )
+	( cd util && $(MAKE) ../util/lev_comp )
 	( cd dat && $(MAKE) spec_levs )
 	( cd dat && $(MAKE) quest_levs )
 
 dungeon: nethack
-	( cd util && $(MAKE) dgn_comp )
+	( cd util && $(MAKE) ../util/dgn_comp )
 	( cd dat && $(MAKE) dungeon )
 
 dlb: nethack $(VARDATD) dungeon spec_levs
-	( cd util && $(MAKE) dlb )
+	( cd util && $(MAKE) ../util/dlb )
 	( cd dat && ../util/dlb cf nhdat $(DATDLB) )
 
 # recover can be used when INSURANCE is defined in include/config.h
 # and the checkpoint option is true
 recover: nethack
-	( cd util && $(MAKE) recover )
+	( cd util && $(MAKE) ../util/recover )

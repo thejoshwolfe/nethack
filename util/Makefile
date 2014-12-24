@@ -6,9 +6,9 @@ YACC     = yacc
 LEX      = lex
  
 # these are the names of the output files from YACC/LEX.
-YTABC = y.tab.c
-YTABH = y.tab.h
-LEXYYC = lex.yy.c
+YTABC = ../util/y.tab.c
+YTABH = ../util/y.tab.h
+LEXYYC = ../util/lex.yy.c
 
 
 # timestamps for primary header files, matching src/Makefile
@@ -16,12 +16,12 @@ CONFIG_H = ../src/config.h-t
 HACK_H	 = ../src/hack.h-t
 
 # utility .c files
-MAKESRC = makedefs.c
-SPLEVSRC = lev_yacc.c lev_lex.c lev_main.c
-DGNCOMPSRC = dgn_yacc.c dgn_lex.c dgn_main.c
-RECOVSRC = recover.c
-DLBSRC = dlb_main.c
-UTILSRCS = $(MAKESRC) panic.c $(SPLEVSRC) $(DGNCOMPSRC) $(RECOVSRC) $(DLBSRC)
+MAKESRC = ../util/makedefs.c
+SPLEVSRC = ../util/lev_yacc.c ../util/lev_lex.c ../util/lev_main.c
+DGNCOMPSRC = ../util/dgn_yacc.c ../util/dgn_lex.c ../util/dgn_main.c
+RECOVSRC = ../util/recover.c
+DLBSRC = ../util/dlb_main.c
+UTILSRCS = $(MAKESRC) ../util/panic.c $(SPLEVSRC) $(DGNCOMPSRC) $(RECOVSRC) $(DLBSRC)
 
 # files that define all monsters and objects
 CMONOBJ = ../src/monst.c ../src/objects.c
@@ -30,44 +30,44 @@ OMONOBJ = $(OBJDIR)/monst.o $(OBJDIR)/objects.o
 CNAMING = ../src/drawing.c ../src/decl.c $(CMONOBJ)
 ONAMING = $(OBJDIR)/drawing.o $(OBJDIR)/decl.o $(OMONOBJ)
 # dynamic memory allocation
-CALLOC = ../src/alloc.c panic.c
-OALLOC = $(OBJDIR)/alloc.o panic.o
+CALLOC = ../src/alloc.c ../util/panic.c
+OALLOC = $(OBJDIR)/alloc.o ../util/panic.o
 
 # object files for makedefs
-MAKEOBJS = makedefs.o $(OMONOBJ)
+MAKEOBJS = ../util/makedefs.o $(OMONOBJ)
 
 # object files for special levels compiler
-SPLEVOBJS = lev_yacc.o lev_lex.o lev_main.o $(OALLOC) $(ONAMING)
+SPLEVOBJS = ../util/lev_yacc.o ../util/lev_lex.o ../util/lev_main.o $(OALLOC) $(ONAMING)
 
 # object files for dungeon compiler
-DGNCOMPOBJS = dgn_yacc.o dgn_lex.o dgn_main.o $(OALLOC)
+DGNCOMPOBJS = ../util/dgn_yacc.o ../util/dgn_lex.o ../util/dgn_main.o $(OALLOC)
 
 # object files for recovery utility
-RECOVOBJS = recover.o
+RECOVOBJS = ../util/recover.o
 
 # object files for the data librarian
-DLBOBJS = dlb_main.o $(OBJDIR)/dlb.o $(OALLOC)
+DLBOBJS = ../util/dlb_main.o $(OBJDIR)/dlb.o $(OALLOC)
 
 FLEXDIST =
 YACCDIST =
 
-makedefs:	$(MAKEOBJS)
-	$(CC) $(LFLAGS) -o makedefs $(MAKEOBJS)
+../util/makedefs:	$(MAKEOBJS)
+	$(CC) $(LFLAGS) -o $@ $(MAKEOBJS)
 
-makedefs.o: makedefs.c $(CONFIG_H) ../include/permonst.h \
+../util/makedefs.o: ../util/makedefs.c $(CONFIG_H) ../include/permonst.h \
 		../include/objclass.h ../include/monsym.h \
 		../include/artilist.h ../include/dungeon.h ../include/obj.h \
 		../include/monst.h ../include/you.h ../include/flag.h \
 		../include/dlb.h ../include/patchlevel.h ../include/qtext.h
 
-../include/onames.h: makedefs
-	./makedefs -o
-../include/pm.h: makedefs
-	./makedefs -p
-../src/monstr.c: makedefs
-	./makedefs -m
-../include/vis_tab.h: makedefs
-	./makedefs -z
+../include/onames.h: ../util/makedefs
+	../util/./makedefs -o
+../include/pm.h: ../util/makedefs
+	../util/./makedefs -p
+../src/monstr.c: ../util/makedefs
+	../util/./makedefs -m
+../include/vis_tab.h: ../util/makedefs
+	../util/./makedefs -z
 # makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
 ../src/vis_tab.c: ../include/vis_tab.h
 
@@ -78,69 +78,69 @@ makedefs.o: makedefs.c $(CONFIG_H) ../include/permonst.h \
 	@( cd ../src ; $(MAKE) ../include/date.h )
 
 # support code used by several of the utility programs (but not makedefs)
-panic.o:     panic.c $(CONFIG_H)
+../util/panic.o:     ../util/panic.c $(CONFIG_H)
 
 
-lev_comp:  $(SPLEVOBJS)
-	$(CC) $(LFLAGS) -o lev_comp $(SPLEVOBJS) $(LIBS)
+../util/lev_comp:  $(SPLEVOBJS)
+	$(CC) $(LFLAGS) -o ../util/lev_comp $(SPLEVOBJS) $(LIBS)
 
-lev_yacc.o:  lev_yacc.c $(HACK_H) ../include/sp_lev.h
-lev_main.o:  lev_main.c $(HACK_H) ../include/sp_lev.h ../include/tcap.h ../include/date.h
+../util/lev_yacc.o:  ../util/lev_yacc.c $(HACK_H) ../include/sp_lev.h
+../util/lev_main.o:  ../util/lev_main.c $(HACK_H) ../include/sp_lev.h ../include/tcap.h ../include/date.h
 
 # see lev_comp.l for WEIRD_LEX discussion
 # egrep will return failure if it doesn't find anything, but we know there
 # is one "_cplusplus" inside a comment
-lev_lex.o:   lev_lex.c $(HACK_H) ../include/lev_comp.h ../include/sp_lev.h
-	@echo $(CC) -c $(CFLAGS) lev_lex.c
-	@$(CC) -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus lev_lex.c` lev_lex.c
+../util/lev_lex.o:   ../util/lev_lex.c $(HACK_H) ../include/lev_comp.h ../include/sp_lev.h
+	@echo $(CC) -c $(CFLAGS) ../util/lev_lex.c
+	@$(CC) -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus ../util/lev_lex.c` ../util/lev_lex.c
 
-../include/lev_comp.h: lev_yacc.c
+../include/lev_comp.h: ../util/lev_yacc.c
 
-lev_yacc.c: lev_comp.y
-	$(YACC) $(YACCDIST) -d lev_comp.y
-	mv $(YTABC) lev_yacc.c
+../util/lev_yacc.c: ../util/lev_comp.y
+	$(YACC) $(YACCDIST) -d ../util/lev_comp.y
+	mv $(YTABC) ../util/lev_yacc.c
 	mv $(YTABH) ../include/lev_comp.h
 
-lev_lex.c: lev_comp.l
-	$(LEX) $(FLEXDIST) lev_comp.l
-	mv $(LEXYYC) lev_lex.c
+../util/lev_lex.c: ../util/lev_comp.l
+	$(LEX) $(FLEXDIST) ../util/lev_comp.l
+	mv $(LEXYYC) ../util/lev_lex.c
 
 
-dgn_comp:  $(DGNCOMPOBJS)
-	$(CC) $(LFLAGS) -o dgn_comp $(DGNCOMPOBJS) $(LIBS)
+../util/dgn_comp:  $(DGNCOMPOBJS)
+	$(CC) $(LFLAGS) -o ../util/dgn_comp $(DGNCOMPOBJS) $(LIBS)
 
-dgn_yacc.o:  dgn_yacc.c $(CONFIG_H) ../include/dgn_file.h ../include/date.h
-dgn_main.o:  dgn_main.c $(CONFIG_H) ../include/dlb.h
+../util/dgn_yacc.o:  ../util/dgn_yacc.c $(CONFIG_H) ../include/dgn_file.h ../include/date.h
+../util/dgn_main.o:  ../util/dgn_main.c $(CONFIG_H) ../include/dlb.h
 
 # see dgn_comp.l for WEIRD_LEX discussion
-dgn_lex.o:   dgn_lex.c $(CONFIG.H) ../include/dgn_comp.h ../include/dgn_file.h
-	@echo $(CC) -c $(CFLAGS) dgn_lex.c
-	@$(CC) -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus dgn_lex.c` dgn_lex.c
+../util/dgn_lex.o:   ../util/dgn_lex.c $(CONFIG.H) ../include/dgn_comp.h ../include/dgn_file.h
+	@echo $(CC) -c $(CFLAGS) ../util/dgn_lex.c
+	@$(CC) -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus ../util/dgn_lex.c` ../util/dgn_lex.c
 
 
-../include/dgn_comp.h: dgn_yacc.c
+../include/dgn_comp.h: ../util/dgn_yacc.c
 
-dgn_yacc.c: dgn_comp.y
-	$(YACC) $(YACCDIST) -d dgn_comp.y
-	mv $(YTABC) dgn_yacc.c
+../util/dgn_yacc.c: ../util/dgn_comp.y
+	$(YACC) $(YACCDIST) -d ../util/dgn_comp.y
+	mv $(YTABC) ../util/dgn_yacc.c
 	mv $(YTABH) ../include/dgn_comp.h
 
-dgn_lex.c: dgn_comp.l
-	$(LEX) $(FLEXDIST) dgn_comp.l
-	mv $(LEXYYC) dgn_lex.c
+../util/dgn_lex.c: ../util/dgn_comp.l
+	$(LEX) $(FLEXDIST) ../util/dgn_comp.l
+	mv $(LEXYYC) ../util/dgn_lex.c
 
 
-recover: $(RECOVOBJS)
-	$(CC) $(LFLAGS) -o recover $(RECOVOBJS) $(LIBS)
+../util/recover: $(RECOVOBJS)
+	$(CC) $(LFLAGS) -o ../util/recover $(RECOVOBJS) $(LIBS)
 
-recover.o: recover.c $(CONFIG_H) ../include/date.h
+../util/recover.o: ../util/recover.c $(CONFIG_H) ../include/date.h
 
 
-dlb:	$(DLBOBJS)
-	$(CC) $(LFLAGS) -o dlb $(DLBOBJS) $(LIBS)
+../util/dlb:	$(DLBOBJS)
+	$(CC) $(LFLAGS) -o ../util/dlb $(DLBOBJS) $(LIBS)
 
-dlb_main.o: dlb_main.c $(CONFIG_H) ../include/dlb.h ../include/date.h
-	$(CC) $(CFLAGS) -c dlb_main.c
+../util/dlb_main.o: ../util/dlb_main.c $(CONFIG_H) ../include/dlb.h ../include/date.h
+	$(CC) $(CFLAGS) -c ../util/dlb_main.c
 
 
 # make sure object files from src are available when needed

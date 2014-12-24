@@ -1,5 +1,4 @@
 SHELL=/bin/sh
-LINK=$(CC)
 
 SYSSRC = ../sys/share/ioctl.c ../sys/share/unixtty.c ../sys/unix/unixmain.c \
 	../sys/unix/unixunix.c ../sys/unix/unixres.c
@@ -70,10 +69,7 @@ HACKINCL = align.h artifact.h artilist.h attrib.h color.h \
 HSOURCES = $(HACKINCL) date.h onames.h pm.h vis_tab.h\
 		lev_comp.h dgn_comp.h dgn_file.h
 
-# the following .o's _must_ be made before any others (for makedefs)
-FIRSTOBJ = monst.o objects.o
-
-HOBJ = $(FIRSTOBJ) allmain.o alloc.o apply.o artifact.o attrib.o ball.o \
+HOBJ = monst.o objects.o allmain.o alloc.o apply.o artifact.o attrib.o ball.o \
 	bones.o botl.o cmd.o dbridge.o decl.o detect.o dig.o display.o dlb.o \
 	do.o do_name.o do_wear.o dog.o dogmove.o dokick.o dothrow.o \
 	drawing.o dungeon.o eat.o end.o engrave.o exper.o explode.o \
@@ -91,30 +87,23 @@ HOBJ = $(FIRSTOBJ) allmain.o alloc.o apply.o artifact.o attrib.o ball.o \
 	$(SYSOBJ) $(WINOBJ) version.o
 
 nethack:	$(HOBJ)
-	$(LINK) $(LFLAGS) -o nethack $(HOBJ) -lncurses
+	$(CC) $(LFLAGS) -o nethack $(HOBJ) -lncurses
 
 all:	nethack
 
 
-#	dependencies for makedefs and its outputs, which the util
-#	Makefile is responsible for keeping up to date
-
-# special rules, to force update of makedefs, real dependencies should be
-# below in the 'make depend' output.
 monst.o:
 	$(CC) $(CFLAGS) -c monst.c
-	@rm -f $(MAKEDEFS)
 
 objects.o:
 	$(CC) $(CFLAGS) -c objects.c
-	@rm -f $(MAKEDEFS)
 
 $(MAKEDEFS): ../util/makedefs.c  $(CONFIG_H) ../include/permonst.h \
 		../include/objclass.h ../include/monsym.h \
 		../include/artilist.h ../include/dungeon.h ../include/obj.h \
 		../include/monst.h ../include/you.h ../include/flag.h \
 		../include/dlb.h ../include/patchlevel.h ../include/qtext.h
-	@( cd ../util ; $(MAKE) makedefs)
+	@( cd ../util ; $(MAKE) ../util/makedefs)
 
 ../include/onames.h: $(MAKEDEFS)
 	@( cd ../util ; $(MAKE) ../include/onames.h )
