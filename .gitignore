@@ -1,7 +1,2 @@
 /build/
 /run/
-
-# in case you want to use eclipse to browse the codebase
-/.cproject
-/.project
-/.settings/
