@@ -15,8 +15,6 @@ STATIC_DCL void check_contained(struct obj *,const char *);
 
 extern struct obj *thrownobj;           /* defined in dothrow.c */
 
-/*#define DEBUG_EFFECTS*/       /* show some messages for debugging */
-
 struct icp {
     int  iprob;         /* probability of an item type */
     char iclass;        /* item class */
@@ -1099,21 +1097,13 @@ void obj_ice_effects(int x, int y, boolean do_buried) {
  * rot timers pertaining to the object don't have to be stopped and
  * restarted etc.
  */
-long 
-peek_at_iced_corpse_age (struct obj *otmp)
-{
+long peek_at_iced_corpse_age (struct obj *otmp) {
     long age, retval = otmp->age;
     
     if (otmp->otyp == CORPSE && ON_ICE(otmp)) {
         /* Adjust the age; must be same as obj_timer_checks() for off ice*/
         age = monstermoves - otmp->age;
         retval = otmp->age + (age / ROT_ICE_ADJUSTMENT);
-#ifdef DEBUG_EFFECTS
-        pline_The("%s age has ice modifications:otmp->age = %ld, returning %ld.",
-                s_suffix(doname(otmp)),otmp->age, retval);
-        pline("Effective age of corpse: %ld.",
-                monstermoves - retval);
-#endif
     }
     return retval;
 }
@@ -1139,9 +1129,6 @@ STATIC_OVL void obj_timer_checks(struct obj *otmp, signed char x, signed char y,
             tleft = tleft - monstermoves;
             /* mark the corpse as being on ice */
             ON_ICE(otmp) = 1;
-#ifdef DEBUG_EFFECTS
-            pline("%s is now on ice at %d,%d.", The(xname(otmp)),x,y);
-#endif
             /* Adjust the time remaining */
             tleft *= ROT_ICE_ADJUSTMENT;
             restart_timer = TRUE;
@@ -1164,9 +1151,6 @@ STATIC_OVL void obj_timer_checks(struct obj *otmp, signed char x, signed char y,
 
                 tleft = tleft - monstermoves;
                 ON_ICE(otmp) = 0;
-#ifdef DEBUG_EFFECTS
-                pline("%s is no longer on ice at %d,%d.", The(xname(otmp)),x,y);
-#endif
                 /* Adjust the remaining time */
                 tleft /= ROT_ICE_ADJUSTMENT;
                 restart_timer = TRUE;

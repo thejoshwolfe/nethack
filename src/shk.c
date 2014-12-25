@@ -1133,9 +1133,6 @@ dopay()
         }
 
         if(!shkp) {
-#ifdef DEBUG
-                pline("dopay: null shkp.");
-#endif
                 return(0);
         }
 proceed:

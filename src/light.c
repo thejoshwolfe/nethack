@@ -375,17 +375,9 @@ write_ls (int fd, light_source *ls)
             if (ls->type == LS_OBJECT) {
                 otmp = (struct obj *)ls->id;
                 ls->id = (void *)otmp->o_id;
-#ifdef DEBUG
-                if (find_oid((unsigned)ls->id) != otmp)
-                    panic("write_ls: can't find obj #%u!", (unsigned)ls->id);
-#endif
             } else { /* ls->type == LS_MONSTER */
                 mtmp = (struct monst *)ls->id;
                 ls->id = (void *)mtmp->m_id;
-#ifdef DEBUG
-                if (find_mid((unsigned)ls->id, FM_EVERYWHERE) != mtmp)
-                    panic("write_ls: can't find mon #%u!", (unsigned)ls->id);
-#endif
             }
             ls->flags |= LSF_NEEDS_FIXUP;
             bwrite(fd, (void *)ls, sizeof(light_source));

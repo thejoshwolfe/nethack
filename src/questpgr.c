@@ -8,8 +8,6 @@
 
 #define QTEXT_FILE      "quest.dat"
 
-/* #define DEBUG */     /* uncomment for debugging */
-
 static void Fread(void *,int,int,dlb *);
 STATIC_DCL struct qtmsg * construct_qtlist(long);
 STATIC_DCL const char * intermed(void);
@@ -27,25 +25,6 @@ static struct   qtlists qt_list;
 static dlb      *msg_file;
 /* used by ldrname() and neminame(), then copied into cvt_buf */
 static char     nambuf[sizeof cvt_buf];
-
-#ifdef DEBUG
-static void dump_qtlist(void);
-
-static void 
-dump_qtlist (void)      /* dump the character msg list to check appearance */
-{
-        struct  qtmsg   *msg;
-        long    size;
-
-        for (msg = qt_list.chrole; msg->msgnum > 0; msg++) {
-                pline("msgnum %d: delivery %c",
-                        msg->msgnum, msg->delivery);
-                more();
-                (void) dlb_fseek(msg_file, msg->offset, SEEK_SET);
-                deliver_by_window(msg, NHW_TEXT);
-        }
-}
-#endif /* DEBUG */
 
 static void 
 Fread (void *ptr, int size, int nitems, dlb *stream)
@@ -116,9 +95,6 @@ load_qtlist (void)
 
         if (!qt_list.common || !qt_list.chrole)
             impossible("load_qtlist: cannot load quest text.");
-#ifdef DEBUG
-        dump_qtlist();
-#endif
         return; /* no ***DON'T*** close the msg_file */
 }
 

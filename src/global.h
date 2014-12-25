@@ -5,8 +5,6 @@
 #include <stdio.h>
 
 
-/* #define BETA */      /* if a beta-test copy  [MRS] */
-
 /*
  * Files expected to exist in the playground directory.
  */
@@ -14,7 +12,6 @@
 #define RECORD        "run/record" /* file containing list of topscorers */
 #define HELP          "help"    /* file containing command descriptions */
 #define SHELP         "hh"      /* abbreviated form of the same */
-#define DEBUGHELP     "wizhelp" /* file containing debug mode cmds */
 #define RUMORFILE     "rumors"  /* file with fortune cookies */
 #define ORACLEFILE    "oracles" /* file with oracular information */
 #define DATAFILE      "data"    /* file giving the meaning of symbols used */

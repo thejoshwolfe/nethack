@@ -6,123 +6,112 @@
 
 STATIC_DCL int pet_type(void);
 
-void 
-initedog (struct monst *mtmp)
-{
-        mtmp->mtame = is_domestic(mtmp->data) ? 10 : 5;
-        mtmp->mpeaceful = 1;
-        mtmp->mavenge = 0;
-        set_malign(mtmp); /* recalc alignment now that it's tamed */
-        mtmp->mleashed = 0;
-        mtmp->meating = 0;
-        EDOG(mtmp)->droptime = 0;
-        EDOG(mtmp)->dropdist = 10000;
-        EDOG(mtmp)->apport = 10;
-        EDOG(mtmp)->whistletime = 0;
-        EDOG(mtmp)->hungrytime = 1000 + monstermoves;
-        EDOG(mtmp)->ogoal.x = -1;       /* force error if used before set */
-        EDOG(mtmp)->ogoal.y = -1;
-        EDOG(mtmp)->abuse = 0;
-        EDOG(mtmp)->revivals = 0;
-        EDOG(mtmp)->mhpmax_penalty = 0;
-        EDOG(mtmp)->killed_by_u = 0;
+void initedog (struct monst *mtmp) {
+    mtmp->mtame = is_domestic(mtmp->data) ? 10 : 5;
+    mtmp->mpeaceful = 1;
+    mtmp->mavenge = 0;
+    set_malign(mtmp); /* recalc alignment now that it's tamed */
+    mtmp->mleashed = 0;
+    mtmp->meating = 0;
+    EDOG(mtmp)->droptime = 0;
+    EDOG(mtmp)->dropdist = 10000;
+    EDOG(mtmp)->apport = 10;
+    EDOG(mtmp)->whistletime = 0;
+    EDOG(mtmp)->hungrytime = 1000 + monstermoves;
+    EDOG(mtmp)->ogoal.x = -1;       /* force error if used before set */
+    EDOG(mtmp)->ogoal.y = -1;
+    EDOG(mtmp)->abuse = 0;
+    EDOG(mtmp)->revivals = 0;
+    EDOG(mtmp)->mhpmax_penalty = 0;
+    EDOG(mtmp)->killed_by_u = 0;
 }
 
-STATIC_OVL int 
-pet_type (void)
-{
-        if (urole.petnum != NON_PM)
-            return (urole.petnum);
-        else if (preferred_pet == 'c')
-            return (PM_KITTEN);
-        else if (preferred_pet == 'd')
-            return (PM_LITTLE_DOG);
-        else
-            return (rn2(2) ? PM_KITTEN : PM_LITTLE_DOG);
+STATIC_OVL int pet_type (void) {
+    if (urole.petnum != NON_PM)
+        return (urole.petnum);
+    else if (preferred_pet == 'c')
+        return (PM_KITTEN);
+    else if (preferred_pet == 'd')
+        return (PM_LITTLE_DOG);
+    else
+        return (rn2(2) ? PM_KITTEN : PM_LITTLE_DOG);
 }
 
-struct monst *
-make_familiar(otmp,x,y,quietly)
-struct obj *otmp;
-signed char x, y;
-boolean quietly;
-{
-        struct permonst *pm;
-        struct monst *mtmp = 0;
-        int chance, trycnt = 100;
+struct monst * make_familiar(struct obj *otmp, signed char x, signed char y, boolean quietly) {
+    struct permonst *pm;
+    struct monst *mtmp = 0;
+    int chance, trycnt = 100;
 
-        do {
-            if (otmp) { /* figurine; otherwise spell */
-                int mndx = otmp->corpsenm;
-                pm = &mons[mndx];
-                /* activating a figurine provides one way to exceed the
-                   maximum number of the target critter created--unless
-                   it has a special limit (erinys, Nazgul) */
-                if ((mvitals[mndx].mvflags & G_EXTINCT) &&
-                        mbirth_limit(mndx) != MAXMONNO) {
-                    if (!quietly)
-                        /* have just been given "You <do something with>
-                           the figurine and it transforms." message */
-                        pline("... into a pile of dust.");
-                    break;      /* mtmp is null */
-                }
-            } else if (!rn2(3)) {
-                pm = &mons[pet_type()];
-            } else {
-                pm = rndmonst();
-                if (!pm) {
-                  if (!quietly)
-                    There("seems to be nothing available for a familiar.");
-                  break;
-                }
-            }
-
-            mtmp = makemon(pm, x, y, MM_EDOG|MM_IGNOREWATER);
-            if (otmp && !mtmp) { /* monster was genocided or square occupied */
+    do {
+        if (otmp) { /* figurine; otherwise spell */
+            int mndx = otmp->corpsenm;
+            pm = &mons[mndx];
+            /* activating a figurine provides one way to exceed the
+               maximum number of the target critter created--unless
+               it has a special limit (erinys, Nazgul) */
+            if ((mvitals[mndx].mvflags & G_EXTINCT) &&
+                    mbirth_limit(mndx) != MAXMONNO) {
                 if (!quietly)
-                   pline_The("figurine writhes and then shatters into pieces!");
+                    /* have just been given "You <do something with>
+                       the figurine and it transforms." message */
+                    pline("... into a pile of dust.");
+                break;      /* mtmp is null */
+            }
+        } else if (!rn2(3)) {
+            pm = &mons[pet_type()];
+        } else {
+            pm = rndmonst();
+            if (!pm) {
+                if (!quietly)
+                    There("seems to be nothing available for a familiar.");
                 break;
             }
-        } while (!mtmp && --trycnt > 0);
+        }
 
-        if (!mtmp) return (struct monst *)0;
+        mtmp = makemon(pm, x, y, MM_EDOG|MM_IGNOREWATER);
+        if (otmp && !mtmp) { /* monster was genocided or square occupied */
+            if (!quietly)
+                pline_The("figurine writhes and then shatters into pieces!");
+            break;
+        }
+    } while (!mtmp && --trycnt > 0);
 
-        if (is_pool(mtmp->mx, mtmp->my) && minliquid(mtmp))
-                return (struct monst *)0;
+    if (!mtmp) return (struct monst *)0;
 
-        initedog(mtmp);
-        mtmp->msleeping = 0;
-        if (otmp) { /* figurine; resulting monster might not become a pet */
-            chance = rn2(10);   /* 0==tame, 1==peaceful, 2==hostile */
-            if (chance > 2) chance = otmp->blessed ? 0 : !otmp->cursed ? 1 : 2;
-            /* 0,1,2:  b=80%,10,10; nc=10%,80,10; c=10%,10,80 */
-            if (chance > 0) {
-                mtmp->mtame = 0;        /* not tame after all */
-                if (chance == 2) { /* hostile (cursed figurine) */
-                    if (!quietly)
-                       You("get a bad feeling about this.");
-                    mtmp->mpeaceful = 0;
-                    set_malign(mtmp);
-                }
+    if (is_pool(mtmp->mx, mtmp->my) && minliquid(mtmp))
+        return (struct monst *)0;
+
+    initedog(mtmp);
+    mtmp->msleeping = 0;
+    if (otmp) { /* figurine; resulting monster might not become a pet */
+        chance = rn2(10);   /* 0==tame, 1==peaceful, 2==hostile */
+        if (chance > 2) chance = otmp->blessed ? 0 : !otmp->cursed ? 1 : 2;
+        /* 0,1,2:  b=80%,10,10; nc=10%,80,10; c=10%,10,80 */
+        if (chance > 0) {
+            mtmp->mtame = 0;        /* not tame after all */
+            if (chance == 2) { /* hostile (cursed figurine) */
+                if (!quietly)
+                    You("get a bad feeling about this.");
+                mtmp->mpeaceful = 0;
+                set_malign(mtmp);
             }
-            /* if figurine has been named, give same name to the monster */
-            if (otmp->onamelth)
-                mtmp = christen_monst(mtmp, ONAME(otmp));
         }
-        set_malign(mtmp); /* more alignment changes */
-        newsym(mtmp->mx, mtmp->my);
+        /* if figurine has been named, give same name to the monster */
+        if (otmp->onamelth)
+            mtmp = christen_monst(mtmp, ONAME(otmp));
+    }
+    set_malign(mtmp); /* more alignment changes */
+    newsym(mtmp->mx, mtmp->my);
 
-        /* must wield weapon immediately since pets will otherwise drop it */
-        if (mtmp->mtame && attacktype(mtmp->data, AT_WEAP)) {
-                mtmp->weapon_check = NEED_HTH_WEAPON;
-                (void) mon_wield_item(mtmp);
-        }
-        return mtmp;
+    /* must wield weapon immediately since pets will otherwise drop it */
+    if (mtmp->mtame && attacktype(mtmp->data, AT_WEAP)) {
+        mtmp->weapon_check = NEED_HTH_WEAPON;
+        (void) mon_wield_item(mtmp);
+    }
+    return mtmp;
 }
 
-struct monst *
-makedog (void)
-{
+struct monst * makedog (void) {
         struct monst *mtmp;
 #ifdef STEED
         struct obj *otmp;
@@ -388,23 +377,10 @@ boolean with_you;
 }
 
 /* heal monster for time spent elsewhere */
-void 
-mon_catchup_elapsed_time (
-    struct monst *mtmp,
-    long nmv            /* number of moves */
-)
-{
+/* nmv - number of moves */
+void mon_catchup_elapsed_time (struct monst *mtmp, long nmv) {
         int imv = 0;    /* avoid zillions of casts and lint warnings */
 
-#if defined(DEBUG) || defined(BETA)
-        if (nmv < 0L) {                 /* crash likely... */
-            panic("catchup from future time?");
-            /*NOTREACHED*/
-            return;
-        } else if (nmv == 0L) {         /* safe, but should'nt happen */
-            impossible("catchup from now?");
-        } else
-#endif
         if (nmv >= LARGEST_INT)         /* paranoia */
             imv = LARGEST_INT - 1;
         else

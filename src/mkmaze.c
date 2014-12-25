@@ -586,12 +586,6 @@ makemaz (const char *s)
             int x_range = x_maze_max - x_maze_min - 2*INVPOS_X_MARGIN - 1,
                 y_range = y_maze_max - y_maze_min - 2*INVPOS_Y_MARGIN - 1;
 
-#ifdef DEBUG
-            if (x_range <= INVPOS_X_MARGIN || y_range <= INVPOS_Y_MARGIN ||
-                   (x_range * y_range) <= (INVPOS_DISTANCE * INVPOS_DISTANCE))
-                panic("inv_pos: maze is too small! (%d x %d)",
-                      x_maze_max, y_maze_max);
-#endif
             inv_pos.x = inv_pos.y = 0; /*{occupied() => invocation_pos()}*/
             do {
                 x = rn1(x_range, x_maze_min + INVPOS_X_MARGIN + 1);
@@ -812,10 +806,6 @@ void mkportal (signed char x, signed char y, signed char todnum, signed char tod
                 impossible("portal on top of portal??");
                 return;
         }
-#ifdef DEBUG
-        pline("mkportal: at (%d,%d), to %s, level %d",
-                x, y, dungeons[todnum].dname, todlevel);
-#endif
         ttmp->dst.dnum = todnum;
         ttmp->dst.dlevel = todlevel;
         return;
@@ -827,9 +817,6 @@ void mkportal (signed char x, signed char y, signed char todnum, signed char tod
  * Some of these functions would probably logically belong to some
  * other source files, but they are all so nicely encapsulated here.
  */
-
-/* to ease the work of debuggers at this stage */
-#define register
 
 #define CONS_OBJ   0
 #define CONS_MON   1

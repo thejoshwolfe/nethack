@@ -3,8 +3,6 @@
 
 #include "hack.h"
 
-/* #define DEBUG */     /* uncomment for debugging info */
-
 #ifdef OVLB
 
         /* part of the output on gain or loss of attribute */
@@ -259,9 +257,6 @@ exercise(i, inc_or_dec)
 int     i;
 boolean inc_or_dec;
 {
-#ifdef DEBUG
-        pline("Exercise:");
-#endif
         if (i == A_INT || i == A_CHA) return;   /* can't exercise these */
 
         /* no physical exercise while polymorphed; the body's temporary */
@@ -278,12 +273,6 @@ boolean inc_or_dec;
                  *      Note: *YES* ACURR is the right one to use.
                  */
                 AEXE(i) += (inc_or_dec) ? (rn2(19) > ACURR(i)) : -rn2(2);
-#ifdef DEBUG
-                pline("%s, %s AEXE = %d",
-                        (i == A_STR) ? "Str" : (i == A_WIS) ? "Wis" :
-                        (i == A_DEX) ? "Dex" : "Con",
-                        (inc_or_dec) ? "inc" : "dec", AEXE(i));
-#endif
         }
         if (moves > 0 && (i == A_STR || i == A_CON)) (void)encumber_msg();
 }
@@ -308,9 +297,6 @@ exerper (void)
                          (u.uhunger > 50) ? HUNGRY :
                          (u.uhunger > 0) ? WEAK : FAINTING;
 
-#ifdef DEBUG
-                pline("exerper: Hunger checks");
-#endif
                 switch (hs) {
                     case SATIATED:      exercise(A_DEX, FALSE);
                                         if (Role_if(PM_MONK))
@@ -326,9 +312,6 @@ exerper (void)
                 }
 
                 /* Encumberance Checks */
-#ifdef DEBUG
-                pline("exerper: Encumber checks");
-#endif
                 switch (near_capacity()) {
                     case MOD_ENCUMBER:  exercise(A_STR, TRUE); break;
                     case HVY_ENCUMBER:  exercise(A_STR, TRUE);
@@ -341,9 +324,6 @@ exerper (void)
 
         /* status checks */
         if(!(moves % 5)) {
-#ifdef DEBUG
-                pline("exerper: Status checks");
-#endif
                 if ((HClairvoyant & (INTRINSIC|TIMEOUT)) &&
                         !BClairvoyant)                      exercise(A_WIS, TRUE);
                 if (HRegeneration)                      exercise(A_STR, TRUE);
@@ -366,15 +346,8 @@ exerchk (void)
         /*      Check out the periodic accumulations */
         exerper();
 
-#ifdef DEBUG
-        if(moves >= next_check)
-                pline("exerchk: ready to test. multi = %d.", multi);
-#endif
         /*      Are we ready for a test?        */
         if(moves >= next_check && !multi) {
-#ifdef DEBUG
-            pline("exerchk: testing.");
-#endif
             /*
              *  Law of diminishing returns (Part II):
              *
@@ -388,11 +361,6 @@ exerchk (void)
                 if(ABASE(i) >= 18 || !AEXE(i)) continue;
                 if(i == A_INT || i == A_CHA) continue;/* can't exercise these */
 
-#ifdef DEBUG
-                pline("exerchk: testing %s (%d).",
-                        (i == A_STR) ? "Str" : (i == A_WIS) ? "Wis" :
-                        (i == A_DEX) ? "Dex" : "Con", AEXE(i));
-#endif
                 /*
                  *      Law of diminishing returns (Part III):
                  *
@@ -403,13 +371,7 @@ exerchk (void)
                     continue;
                 mod_val = sgn(AEXE(i));
 
-#ifdef DEBUG
-                pline("exerchk: changing %d.", i);
-#endif
                 if(adjattrib(i, mod_val, -1)) {
-#ifdef DEBUG
-                    pline("exerchk: changed %d.", i);
-#endif
                     /* if you actually changed an attrib - zero accumulation */
                     AEXE(i) = 0;
                     /* then print an explanation */
@@ -434,104 +396,91 @@ exerchk (void)
                 }
             }
             next_check += rn1(200,800);
-#ifdef DEBUG
-            pline("exerchk: next check at %ld.", next_check);
-#endif
         }
 }
 
 /* next_check will otherwise have its initial 600L after a game restore */
-void 
-reset_attribute_clock (void)
-{
-        if (moves > 600L) next_check = moves + rn1(50,800);
+void reset_attribute_clock (void) {
+    if (moves > 600L) next_check = moves + rn1(50,800);
 }
 
 
-void 
-init_attr (int np)
-{
-        int     i, x, tryct;
+void init_attr (int np) {
+    int     i, x, tryct;
 
 
-        for(i = 0; i < A_MAX; i++) {
-            ABASE(i) = AMAX(i) = urole.attrbase[i];
-            ATEMP(i) = ATIME(i) = 0;
-            np -= urole.attrbase[i];
+    for(i = 0; i < A_MAX; i++) {
+        ABASE(i) = AMAX(i) = urole.attrbase[i];
+        ATEMP(i) = ATIME(i) = 0;
+        np -= urole.attrbase[i];
+    }
+
+    tryct = 0;
+    while(np > 0 && tryct < 100) {
+
+        x = rn2(100);
+        for (i = 0; (i < A_MAX) && ((x -= urole.attrdist[i]) > 0); i++) ;
+        if(i >= A_MAX) continue; /* impossible */
+
+        if(ABASE(i) >= ATTRMAX(i)) {
+
+            tryct++;
+            continue;
         }
-
         tryct = 0;
-        while(np > 0 && tryct < 100) {
+        ABASE(i)++;
+        AMAX(i)++;
+        np--;
+    }
 
-            x = rn2(100);
-            for (i = 0; (i < A_MAX) && ((x -= urole.attrdist[i]) > 0); i++) ;
-            if(i >= A_MAX) continue; /* impossible */
+    tryct = 0;
+    while(np < 0 && tryct < 100) {          /* for redistribution */
 
-            if(ABASE(i) >= ATTRMAX(i)) {
+        x = rn2(100);
+        for (i = 0; (i < A_MAX) && ((x -= urole.attrdist[i]) > 0); i++) ;
+        if(i >= A_MAX) continue; /* impossible */
 
-                tryct++;
-                continue;
-            }
-            tryct = 0;
-            ABASE(i)++;
-            AMAX(i)++;
-            np--;
+        if(ABASE(i) <= ATTRMIN(i)) {
+
+            tryct++;
+            continue;
         }
-
         tryct = 0;
-        while(np < 0 && tryct < 100) {          /* for redistribution */
-
-            x = rn2(100);
-            for (i = 0; (i < A_MAX) && ((x -= urole.attrdist[i]) > 0); i++) ;
-            if(i >= A_MAX) continue; /* impossible */
-
-            if(ABASE(i) <= ATTRMIN(i)) {
-
-                tryct++;
-                continue;
-            }
-            tryct = 0;
-            ABASE(i)--;
-            AMAX(i)--;
-            np++;
-        }
+        ABASE(i)--;
+        AMAX(i)--;
+        np++;
+    }
 }
 
-void 
-redist_attr (void)
-{
-        int i, tmp;
+void redist_attr (void) {
+    int i, tmp;
 
-        for(i = 0; i < A_MAX; i++) {
-            if (i==A_INT || i==A_WIS) continue;
-                /* Polymorphing doesn't change your mind */
-            tmp = AMAX(i);
-            AMAX(i) += (rn2(5)-2);
-            if (AMAX(i) > ATTRMAX(i)) AMAX(i) = ATTRMAX(i);
-            if (AMAX(i) < ATTRMIN(i)) AMAX(i) = ATTRMIN(i);
-            ABASE(i) = ABASE(i) * AMAX(i) / tmp;
-            /* ABASE(i) > ATTRMAX(i) is impossible */
-            if (ABASE(i) < ATTRMIN(i)) ABASE(i) = ATTRMIN(i);
-        }
-        (void)encumber_msg();
+    for(i = 0; i < A_MAX; i++) {
+        if (i==A_INT || i==A_WIS) continue;
+        /* Polymorphing doesn't change your mind */
+        tmp = AMAX(i);
+        AMAX(i) += (rn2(5)-2);
+        if (AMAX(i) > ATTRMAX(i)) AMAX(i) = ATTRMAX(i);
+        if (AMAX(i) < ATTRMIN(i)) AMAX(i) = ATTRMIN(i);
+        ABASE(i) = ABASE(i) * AMAX(i) / tmp;
+        /* ABASE(i) > ATTRMAX(i) is impossible */
+        if (ABASE(i) < ATTRMIN(i)) ABASE(i) = ATTRMIN(i);
+    }
+    (void)encumber_msg();
 }
 
-STATIC_OVL void 
-postadjabil (long *ability)
-{
-        if (!ability) return;
-        if (ability == &(HWarning) || ability == &(HSee_invisible))
-                see_monsters();
+STATIC_OVL void postadjabil (long *ability) {
+    if (!ability) return;
+    if (ability == &(HWarning) || ability == &(HSee_invisible))
+        see_monsters();
 }
 
-void 
-adjabil (int oldlevel, int newlevel)
-{
-        const struct innate *abil, *rabil;
-        long mask = FROMEXPER;
+void adjabil (int oldlevel, int newlevel) {
+    const struct innate *abil, *rabil;
+    long mask = FROMEXPER;
 
 
-        switch (Role_switch) {
+    switch (Role_switch) {
         case PM_ARCHEOLOGIST:   abil = arc_abil;        break;
         case PM_BARBARIAN:      abil = bar_abil;        break;
         case PM_CAVEMAN:        abil = cav_abil;        break;
@@ -546,105 +495,103 @@ adjabil (int oldlevel, int newlevel)
         case PM_VALKYRIE:       abil = val_abil;        break;
         case PM_WIZARD:         abil = wiz_abil;        break;
         default:                abil = 0;               break;
-        }
+    }
 
-        switch (Race_switch) {
+    switch (Race_switch) {
         case PM_ELF:            rabil = elf_abil;       break;
         case PM_ORC:            rabil = orc_abil;       break;
         case PM_HUMAN:
         case PM_DWARF:
         case PM_GNOME:
         default:                rabil = 0;              break;
-        }
+    }
 
-        while (abil || rabil) {
-            long prevabil;
-            /* Have we finished with the intrinsics list? */
-            if (!abil || !abil->ability) {
-                /* Try the race intrinsics */
-                if (!rabil || !rabil->ability) break;
-                abil = rabil;
-                rabil = 0;
-                mask = FROMRACE;
-            }
-                prevabil = *(abil->ability);
-                if(oldlevel < abil->ulevel && newlevel >= abil->ulevel) {
-                        /* Abilities gained at level 1 can never be lost
-                         * via level loss, only via means that remove _any_
-                         * sort of ability.  A "gain" of such an ability from
-                         * an outside source is devoid of meaning, so we set
-                         * FROMOUTSIDE to avoid such gains.
-                         */
-                        if (abil->ulevel == 1)
-                                *(abil->ability) |= (mask|FROMOUTSIDE);
-                        else
-                                *(abil->ability) |= mask;
-                        if(!(*(abil->ability) & INTRINSIC & ~mask)) {
-                            if(*(abil->gainstr))
-                                You_feel("%s!", abil->gainstr);
-                        }
-                } else if (oldlevel >= abil->ulevel && newlevel < abil->ulevel) {
-                        *(abil->ability) &= ~mask;
-                        if(!(*(abil->ability) & INTRINSIC)) {
-                            if(*(abil->losestr))
-                                You_feel("%s!", abil->losestr);
-                            else if(*(abil->gainstr))
-                                You_feel("less %s!", abil->gainstr);
-                        }
-                }
-            if (prevabil != *(abil->ability))   /* it changed */
-                postadjabil(abil->ability);
-            abil++;
+    while (abil || rabil) {
+        long prevabil;
+        /* Have we finished with the intrinsics list? */
+        if (!abil || !abil->ability) {
+            /* Try the race intrinsics */
+            if (!rabil || !rabil->ability) break;
+            abil = rabil;
+            rabil = 0;
+            mask = FROMRACE;
         }
-
-        if (oldlevel > 0) {
-            if (newlevel > oldlevel)
-                add_weapon_skill(newlevel - oldlevel);
+        prevabil = *(abil->ability);
+        if(oldlevel < abil->ulevel && newlevel >= abil->ulevel) {
+            /* Abilities gained at level 1 can never be lost
+             * via level loss, only via means that remove _any_
+             * sort of ability.  A "gain" of such an ability from
+             * an outside source is devoid of meaning, so we set
+             * FROMOUTSIDE to avoid such gains.
+             */
+            if (abil->ulevel == 1)
+                *(abil->ability) |= (mask|FROMOUTSIDE);
             else
-                lose_weapon_skill(oldlevel - newlevel);
+                *(abil->ability) |= mask;
+            if(!(*(abil->ability) & INTRINSIC & ~mask)) {
+                if(*(abil->gainstr))
+                    You_feel("%s!", abil->gainstr);
+            }
+        } else if (oldlevel >= abil->ulevel && newlevel < abil->ulevel) {
+            *(abil->ability) &= ~mask;
+            if(!(*(abil->ability) & INTRINSIC)) {
+                if(*(abil->losestr))
+                    You_feel("%s!", abil->losestr);
+                else if(*(abil->gainstr))
+                    You_feel("less %s!", abil->gainstr);
+            }
         }
+        if (prevabil != *(abil->ability))   /* it changed */
+            postadjabil(abil->ability);
+        abil++;
+    }
+
+    if (oldlevel > 0) {
+        if (newlevel > oldlevel)
+            add_weapon_skill(newlevel - oldlevel);
+        else
+            lose_weapon_skill(oldlevel - newlevel);
+    }
 }
 
 
-int 
-newhp (void)
-{
-        int     hp, conplus;
+int newhp (void) {
+    int     hp, conplus;
 
 
-        if (u.ulevel == 0) {
-            /* Initialize hit points */
-            hp = urole.hpadv.infix + urace.hpadv.infix;
-            if (urole.hpadv.inrnd > 0) hp += rnd(urole.hpadv.inrnd);
-            if (urace.hpadv.inrnd > 0) hp += rnd(urace.hpadv.inrnd);
+    if (u.ulevel == 0) {
+        /* Initialize hit points */
+        hp = urole.hpadv.infix + urace.hpadv.infix;
+        if (urole.hpadv.inrnd > 0) hp += rnd(urole.hpadv.inrnd);
+        if (urace.hpadv.inrnd > 0) hp += rnd(urace.hpadv.inrnd);
 
-            /* Initialize alignment stuff */
-            u.ualign.type = aligns[flags.initalign].value;
-            u.ualign.record = urole.initrecord;
+        /* Initialize alignment stuff */
+        u.ualign.type = aligns[flags.initalign].value;
+        u.ualign.record = urole.initrecord;
 
-                return hp;
+        return hp;
+    } else {
+        if (u.ulevel < urole.xlev) {
+            hp = urole.hpadv.lofix + urace.hpadv.lofix;
+            if (urole.hpadv.lornd > 0) hp += rnd(urole.hpadv.lornd);
+            if (urace.hpadv.lornd > 0) hp += rnd(urace.hpadv.lornd);
         } else {
-            if (u.ulevel < urole.xlev) {
-                hp = urole.hpadv.lofix + urace.hpadv.lofix;
-                if (urole.hpadv.lornd > 0) hp += rnd(urole.hpadv.lornd);
-                if (urace.hpadv.lornd > 0) hp += rnd(urace.hpadv.lornd);
-            } else {
-                hp = urole.hpadv.hifix + urace.hpadv.hifix;
-                if (urole.hpadv.hirnd > 0) hp += rnd(urole.hpadv.hirnd);
-                if (urace.hpadv.hirnd > 0) hp += rnd(urace.hpadv.hirnd);
-            }
+            hp = urole.hpadv.hifix + urace.hpadv.hifix;
+            if (urole.hpadv.hirnd > 0) hp += rnd(urole.hpadv.hirnd);
+            if (urace.hpadv.hirnd > 0) hp += rnd(urace.hpadv.hirnd);
         }
+    }
 
-        if (ACURR(A_CON) <= 3) conplus = -2;
-        else if (ACURR(A_CON) <= 6) conplus = -1;
-        else if (ACURR(A_CON) <= 14) conplus = 0;
-        else if (ACURR(A_CON) <= 16) conplus = 1;
-        else if (ACURR(A_CON) == 17) conplus = 2;
-        else if (ACURR(A_CON) == 18) conplus = 3;
-        else conplus = 4;
-        
-        hp += conplus;
-        return((hp <= 0) ? 1 : hp);
+    if (ACURR(A_CON) <= 3) conplus = -2;
+    else if (ACURR(A_CON) <= 6) conplus = -1;
+    else if (ACURR(A_CON) <= 14) conplus = 0;
+    else if (ACURR(A_CON) <= 16) conplus = 1;
+    else if (ACURR(A_CON) == 17) conplus = 2;
+    else if (ACURR(A_CON) == 18) conplus = 3;
+    else conplus = 4;
+
+    hp += conplus;
+    return((hp <= 0) ? 1 : hp);
 }
 
 #endif /* OVLB */
@@ -687,22 +634,18 @@ acurrstr (void)
 /* avoid possible problems with alignment overflow, and provide a centralized
  * location for any future alignment limits
  */
-void 
-adjalign (int n)
-{
-        int newalign = u.ualign.record + n;
+void adjalign (int n) {
+    int newalign = u.ualign.record + n;
 
-        if(n < 0) {
-                if(newalign < u.ualign.record)
-                        u.ualign.record = newalign;
-        } else
-                if(newalign > u.ualign.record) {
-                        u.ualign.record = newalign;
-                        if(u.ualign.record > ALIGNLIM)
-                                u.ualign.record = ALIGNLIM;
-                }
+    if(n < 0) {
+        if(newalign < u.ualign.record)
+            u.ualign.record = newalign;
+    } else
+        if(newalign > u.ualign.record) {
+            u.ualign.record = newalign;
+            if(u.ualign.record > ALIGNLIM)
+                u.ualign.record = ALIGNLIM;
+        }
 }
 
 #endif /* OVL2 */
-
-/*attrib.c*/

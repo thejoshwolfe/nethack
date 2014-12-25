@@ -4,11 +4,6 @@
 
 #include "config.h"
 
-/*      For debugging beta code.        */
-#ifdef BETA
-#define Dpline  pline
-#endif
-
 #define TELL            1
 #define NOTELL          0
 #define ON              1

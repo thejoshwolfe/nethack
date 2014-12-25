@@ -1559,9 +1559,6 @@ fig_transform (void *arg, long timeout)
         char monnambuf[BUFSZ], carriedby[BUFSZ];
 
         if (!figurine) {
-#ifdef DEBUG
-            pline("null figurine in fig_transform()");
-#endif
             return;
         }
         silent = (timeout != monstermoves); /* happened while away */

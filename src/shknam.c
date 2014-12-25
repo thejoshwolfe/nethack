@@ -322,26 +322,6 @@ shkinit (       /* create a new shopkeeper in the given room */
         else if(sy == sroom->ly-1) sy++;
         else if(sy == sroom->hy+1) sy--; else {
         shk_failed:
-#ifdef DEBUG
-# ifdef WIZARD
-            /* Said to happen sometimes, but I have never seen it. */
-            /* Supposedly fixed by fdoor change in mklev.c */
-            if(wizard) {
-                int j = sroom->doorct;
-
-                pline("Where is shopdoor?");
-                pline("Room at (%d,%d),(%d,%d).",
-                      sroom->lx, sroom->ly, sroom->hx, sroom->hy);
-                pline("doormax=%d doorct=%d fdoor=%d",
-                      doorindex, sroom->doorct, sh);
-                while(j--) {
-                    pline("door [%d,%d]", doors[sh].x, doors[sh].y);
-                    sh++;
-                }
-                display_nhwindow(WIN_MESSAGE, FALSE);
-            }
-# endif
-#endif
             return(-1);
         }
 

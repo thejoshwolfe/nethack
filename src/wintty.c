@@ -1522,21 +1522,6 @@ int x, y;       /* not signed char: perhaps signed char is unsigned and
 
     cw->curx = --x;     /* column 0 is never used */
     cw->cury = y;
-#ifdef DEBUG
-    if(x<0 || y<0 || y >= cw->rows || x > cw->cols) {
-        const char *s = "[unknown type]";
-        switch(cw->type) {
-        case NHW_MESSAGE: s = "[topl window]"; break;
-        case NHW_STATUS: s = "[status window]"; break;
-        case NHW_MAP: s = "[map window]"; break;
-        case NHW_MENU: s = "[corner window]"; break;
-        case NHW_TEXT: s = "[text window]"; break;
-        case NHW_BASE: s = "[base window]"; break;
-        }
-        impossible("bad curs positioning win %d %s (%d,%d)", window, s, x, y);
-        return;
-    }
-#endif
     x += cw->offx;
     y += cw->offy;
 

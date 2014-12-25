@@ -1,14 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-/* #define DEBUG */     /* uncomment to enable code debugging */
-
-#ifdef DEBUG
-# ifdef WIZARD
-#define debugpline      if (wizard) pline
-# else
-#define debugpline      pline
-# endif
-#endif
 
 /* for UNIX, Rand #def'd to (long)lrand48() or (long)random() */
 /* croom->lx etc are signed char (width <= int), so % arith ensures that */
@@ -632,9 +623,6 @@ makelevel (void)
         /* make a secret treasure vault, not connected to the rest */
         if(do_vault()) {
                 signed char w,h;
-#ifdef DEBUG
-                debugpline("trying to make a vault...");
-#endif
                 w = 1;
                 h = 1;
                 if (check_room(&vault_x, &w, &vault_y, &h, TRUE)) {
@@ -1457,8 +1445,5 @@ STATIC_OVL void mk_knox_portal(signed char x, signed char y) {
         *source = u.uz;
         insert_branch(br, TRUE);
 
-#ifdef DEBUG
-        pline("Made knox portal.");
-#endif
         place_branch(br, x, y);
 }

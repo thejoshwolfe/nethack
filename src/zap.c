@@ -1469,9 +1469,6 @@ struct obj *obj, *otmp;
                 if (flags.bypasses)
                         return 0;
                 else {
-#ifdef DEBUG
-                        pline("%s for a moment.", Tobjnam(obj, "pulsate"));
-#endif
                         obj->bypass = 0;
                 }
         }
@@ -2903,11 +2900,6 @@ struct obj **ootmp;     /* to return worn armor for caller to disintegrate */
                 tmp = d(nd,6);
                 if (spellcaster)
                     tmp += spell_damage_bonus();
-#ifdef WIZ_PATCH_DEBUG
-                if (spellcaster)
-                    pline("Damage = %d + %d", tmp-spell_damage_bonus(),
-                        spell_damage_bonus());
-#endif
                 break;
         case ZT_FIRE:
                 if (resists_fire(mon)) {
@@ -2918,11 +2910,6 @@ struct obj **ootmp;     /* to return worn armor for caller to disintegrate */
                 if (resists_cold(mon)) tmp += 7;
                 if (spellcaster)
                     tmp += spell_damage_bonus();
-#ifdef WIZ_PATCH_DEBUG
-                if (spellcaster)
-                    pline("Damage = %d + %d",tmp-spell_damage_bonus(),
-                        spell_damage_bonus());
-#endif
                 if (burnarmor(mon)) {
                     if (!rn2(3)) (void)destroy_mitem(mon, POTION_CLASS, AD_FIRE);
                     if (!rn2(3)) (void)destroy_mitem(mon, SCROLL_CLASS, AD_FIRE);
@@ -2938,11 +2925,6 @@ struct obj **ootmp;     /* to return worn armor for caller to disintegrate */
                 if (resists_fire(mon)) tmp += d(nd, 3);
                 if (spellcaster)
                     tmp += spell_damage_bonus();
-#ifdef WIZ_PATCH_DEBUG
-                if (spellcaster)
-                    pline("Damage = %d + %d", tmp-spell_damage_bonus(),
-                        spell_damage_bonus());
-#endif
                 if (!rn2(3)) (void)destroy_mitem(mon, POTION_CLASS, AD_COLD);
                 break;
         case ZT_SLEEP:
@@ -3002,11 +2984,6 @@ struct obj **ootmp;     /* to return worn armor for caller to disintegrate */
                     tmp = d(nd,6);
                 if (spellcaster)
                     tmp += spell_damage_bonus();
-#ifdef WIZ_PATCH_DEBUG
-                if (spellcaster)
-                    pline("Damage = %d + %d", tmp-spell_damage_bonus(),
-                        spell_damage_bonus());
-#endif
                 if (!resists_blnd(mon) &&
                                 !(type > 0 && u.uswallow && mon == u.ustuck)) {
                         unsigned rnd_tmp = rnd(50);
@@ -3043,9 +3020,6 @@ struct obj **ootmp;     /* to return worn armor for caller to disintegrate */
                 resist(mon, type < ZT_SPELL(0) ? WAND_CLASS : '\0', 0, NOTELL))
             tmp /= 2;
         if (tmp < 0) tmp = 0;           /* don't allow negative damage */
-#ifdef WIZ_PATCH_DEBUG
-        pline("zapped monster hp = %d (= %d - %d)", mon->mhp-tmp,mon->mhp,tmp);
-#endif
         mon->mhp -= tmp;
         return(tmp);
 }

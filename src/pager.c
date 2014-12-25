@@ -910,9 +910,7 @@ help_menu(sel)
         return FALSE;
 }
 
-int
-dohelp()
-{
+int dohelp(void) {
         int sel = 0;
 
         if (help_menu(&sel)) {
@@ -928,7 +926,7 @@ dohelp()
                         case  8:  display_file(LICENSE, TRUE);  break;
 #ifdef WIZARD
                         /* handle slot 9 or 10 */
-                        default: display_file(DEBUGHELP, TRUE);  break;
+                        default: display_file("wizhelp", TRUE);  break;
 #endif
 #ifdef PORT_HELP
                         case PORT_HELP_ID:  port_help();  break;
@@ -938,11 +936,7 @@ dohelp()
         return 0;
 }
 
-int
-dohistory()
-{
-        display_file(HISTORY, TRUE);
-        return 0;
+int dohistory(void) {
+    display_file(HISTORY, TRUE);
+    return 0;
 }
-
-/*pager.c*/

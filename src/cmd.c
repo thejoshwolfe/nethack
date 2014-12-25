@@ -1,8 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "func_tab.h"
-/* #define DEBUG */     /* uncomment for debugging */
-
 /*
  * Some systems may have getchar() return EOF for various reasons, and
  * we should not quit before seeing at least NR_OF_EOFS consecutive EOFs.
@@ -11,14 +9,6 @@
 
 #define CMD_TRAVEL (char)0x90
 
-#ifdef DEBUG
-/*
- * only one "wiz_debug_cmd" routine should be available (in whatever
- * module you are trying to debug) or things are going to get rather
- * hard to link :-)
- */
-extern int wiz_debug_cmd(void);
-#endif
 
 #ifdef OVL1
 static int (*timed_occ_fn)(void);
@@ -44,18 +34,12 @@ STATIC_PTR int wiz_show_seenv(void);
 STATIC_PTR int wiz_show_vision(void);
 STATIC_PTR int wiz_mon_polycontrol(void);
 STATIC_PTR int wiz_show_wmodes(void);
-#ifdef DEBUG_MIGRATING_MONS
-STATIC_PTR int wiz_migrate_mons(void);
-#endif
 STATIC_DCL void count_obj(struct obj *, long *, long *, boolean, boolean);
 STATIC_DCL void obj_chain(winid, const char *, struct obj *, long *, long *);
 STATIC_DCL void mon_invent_chain(winid, const char *, struct monst *, long *, long *);
 STATIC_DCL void mon_chain(winid, const char *, struct monst *, long *, long *);
 STATIC_DCL void contained(winid, const char *, long *, long *);
 STATIC_PTR int wiz_show_stats(void);
-#  ifdef PORT_DEBUG
-STATIC_DCL int wiz_port_debug(void);
-#  endif
 # endif
 STATIC_PTR int enter_explore_mode(void);
 STATIC_PTR int doattributes(void);
@@ -269,13 +253,6 @@ extcmd_via_menu (void)  /* here after # - now show pick-list of possible command
                                 biggest = strlen(efp->ef_desc);
                                 Sprintf(fmtstr,"%%-%ds", biggest + 15);
                         }
-#ifdef DEBUG
-                        if (i >= MAX_EXT_CMD - 2) {
-                            impossible("Exceeded %d extended commands in doextcmd() menu",
-                                        MAX_EXT_CMD - 2);
-                            return 0;
-                        }
-#endif
                 }
             }
             choices[i] = (struct ext_func_tab *)0;
@@ -333,10 +310,6 @@ extcmd_via_menu (void)  /* here after # - now show pick-list of possible command
             if (n==1) {
                 if (matchlevel > (QBUFSZ - 2)) {
                         free((void *)pick_list);
-#ifdef DEBUG
-                        impossible("Too many characters (%d) entered in extcmd_via_menu()",
-                                matchlevel);
-#endif
                         ret = -1;
                 } else {
                         cbuf[matchlevel++] = pick_list[0].item.a_char;
@@ -407,9 +380,8 @@ enter_explore_mode()
 #ifdef WIZARD
 
 /* ^W command - wish for something */
-STATIC_PTR int
-wiz_wish()      /* Unlimited wishes for debug mode by Paul Polderman */
-{
+/* Unlimited wishes for debug mode by Paul Polderman */
+STATIC_PTR int wiz_wish() {
         if (wizard) {
             boolean save_verbose = flags.verbose;
 
@@ -1784,22 +1756,13 @@ struct ext_func_tab extcmdlist[] = {
          */
         {(char *)0, (char *)0, donull, TRUE},
         {(char *)0, (char *)0, donull, TRUE},
-#ifdef DEBUG_MIGRATING_MONS
-        {(char *)0, (char *)0, donull, TRUE},
-#endif
-        {(char *)0, (char *)0, donull, TRUE},
-        {(char *)0, (char *)0, donull, TRUE},
-        {(char *)0, (char *)0, donull, TRUE},
-#ifdef PORT_DEBUG
-        {(char *)0, (char *)0, donull, TRUE},
-#endif
         {(char *)0, (char *)0, donull, TRUE},
         {(char *)0, (char *)0, donull, TRUE},
         {(char *)0, (char *)0, donull, TRUE},
         {(char *)0, (char *)0, donull, TRUE},
-#ifdef DEBUG
         {(char *)0, (char *)0, donull, TRUE},
-#endif
+        {(char *)0, (char *)0, donull, TRUE},
+        {(char *)0, (char *)0, donull, TRUE},
         {(char *)0, (char *)0, donull, TRUE},
 #endif
         {(char *)0, (char *)0, donull, TRUE}    /* sentinel */
@@ -1809,22 +1772,13 @@ struct ext_func_tab extcmdlist[] = {
 static const struct ext_func_tab debug_extcmdlist[] = {
         {"levelchange", "change experience level", wiz_level_change, TRUE},
         {"lightsources", "show mobile light sources", wiz_light_sources, TRUE},
-#ifdef DEBUG_MIGRATING_MONS
-        {"migratemons", "migrate n random monsters", wiz_migrate_mons, TRUE},
-#endif
         {"monpolycontrol", "control monster polymorphs", wiz_mon_polycontrol, TRUE},
         {"panic", "test panic routine (fatal to game)", wiz_panic, TRUE},
         {"polyself", "polymorph self", wiz_polyself, TRUE},
-#ifdef PORT_DEBUG
-        {"portdebug", "wizard port debug command", wiz_port_debug, TRUE},
-#endif
         {"seenv", "show seen vectors", wiz_show_seenv, TRUE},
         {"stats", "show memory statistics", wiz_show_stats, TRUE},
         {"timeout", "look at timeout queue", wiz_timeout_queue, TRUE},
         {"vision", "show vision array", wiz_show_vision, TRUE},
-#ifdef DEBUG
-        {"wizdebug", "wizard debug command", wiz_debug_cmd, TRUE},
-#endif
         {"wmode", "show wall modes", wiz_show_wmodes, TRUE},
         {(char *)0, (char *)0, donull, TRUE}
 };
@@ -1836,25 +1790,23 @@ static const struct ext_func_tab debug_extcmdlist[] = {
  * You must add entries in ext_func_tab every time you add one to the
  * debug_extcmdlist().
  */
-void 
-add_debug_extended_commands (void)
-{
-        int i, j, k, n;
+void add_debug_extended_commands (void) {
+    int i, j, k, n;
 
-        /* count the # of help entries */
-        for (n = 0; extcmdlist[n].ef_txt[0] != '?'; n++)
-            ;
+    /* count the # of help entries */
+    for (n = 0; extcmdlist[n].ef_txt[0] != '?'; n++)
+        ;
 
-        for (i = 0; debug_extcmdlist[i].ef_txt; i++) {
-            for (j = 0; j < n; j++)
-                if (strcmp(debug_extcmdlist[i].ef_txt, extcmdlist[j].ef_txt) < 0) break;
+    for (i = 0; debug_extcmdlist[i].ef_txt; i++) {
+        for (j = 0; j < n; j++)
+            if (strcmp(debug_extcmdlist[i].ef_txt, extcmdlist[j].ef_txt) < 0) break;
 
-            /* insert i'th debug entry into extcmdlist[j], pushing down  */
-            for (k = n; k >= j; --k)
-                extcmdlist[k+1] = extcmdlist[k];
-            extcmdlist[j] = debug_extcmdlist[i];
-            n++;        /* now an extra entry */
-        }
+        /* insert i'th debug entry into extcmdlist[j], pushing down  */
+        for (k = n; k >= j; --k)
+            extcmdlist[k+1] = extcmdlist[k];
+        extcmdlist[j] = debug_extcmdlist[i];
+        n++;        /* now an extra entry */
+    }
 }
 
 
@@ -2017,34 +1969,6 @@ sanity_check (void)
         timer_sanity_check();
 }
 
-#ifdef DEBUG_MIGRATING_MONS
-static int 
-wiz_migrate_mons (void)
-{
-        int mcount = 0;
-        char inbuf[BUFSZ];
-        struct permonst *ptr;
-        struct monst *mtmp;
-        d_level tolevel;
-        getlin("How many random monsters to migrate? [0]", inbuf);
-        if (*inbuf == '\033') return 0;
-        mcount = atoi(inbuf);
-        if (mcount < 0 || mcount > (COLNO * ROWNO) || Is_botlevel(&u.uz))
-                return 0;
-        while (mcount > 0) {
-                if (Is_stronghold(&u.uz))
-                    assign_level(&tolevel, &valley_level);
-                else
-                    get_level(&tolevel, depth(&u.uz) + 1);
-                ptr = rndmonst();
-                mtmp = makemon(ptr, 0, 0, NO_MM_FLAGS);
-                if (mtmp) migrate_to_level(mtmp, ledger_no(&tolevel),
-                                MIGR_RANDOM, (coord *)0);
-                mcount--;
-        }
-        return 0;
-}
-#endif
 
 #endif /* WIZARD */
 
@@ -2710,46 +2634,6 @@ dotravel (void)
         readchar_queue = cmd;
         return 0;
 }
-
-#ifdef PORT_DEBUG
-
-int wiz_port_debug(void) {
-        int n, k;
-        winid win;
-        anything any;
-        int item = 'a';
-        int num_menu_selections;
-        struct menu_selection_struct {
-                char *menutext;
-                void (*fn)(void);
-        } menu_selections[] = {
-                {(char *)0, (void (*)(void))0}          /* array terminator */
-        };
-
-        num_menu_selections = SIZE(menu_selections) - 1;
-        if (num_menu_selections > 0) {
-                menu_item *pick_list;
-                win = create_nhwindow(NHW_MENU);
-                start_menu(win);
-                for (k=0; k < num_menu_selections; ++k) {
-                        any.a_int = k+1;
-                        add_menu(win, NO_GLYPH, &any, item++, 0, ATR_NONE,
-                                menu_selections[k].menutext, MENU_UNSELECTED);
-                }
-                end_menu(win, "Which port debugging feature?");
-                n = select_menu(win, PICK_ONE, &pick_list);
-                destroy_nhwindow(win);
-                if (n > 0) {
-                        n = pick_list[0].item.a_int - 1;
-                        free((void *) pick_list);
-                        /* execute the function */
-                        (*menu_selections[n].fn)();
-                }
-        } else
-                pline("No port-specific debug capability defined.");
-        return 0;
-}
-# endif /*PORT_DEBUG*/
 
 #endif /* OVL0 */
 #ifdef OVLB

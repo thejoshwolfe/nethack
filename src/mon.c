@@ -805,9 +805,7 @@ mpickstuff(mtmp, str)
 #endif /* OVL2 */
 #ifdef OVL0
 
-int 
-curr_mon_load (struct monst *mtmp)
-{
+int curr_mon_load (struct monst *mtmp) {
         int curload = 0;
         struct obj *obj;
 
@@ -819,9 +817,7 @@ curr_mon_load (struct monst *mtmp)
         return curload;
 }
 
-int 
-max_mon_load (struct monst *mtmp)
-{
+int max_mon_load (struct monst *mtmp) {
         long maxload;
 
         /* Base monster carrying capacity is equal to human maximum
@@ -1155,17 +1151,11 @@ dmonsfree (void)
 #ifdef OVLB
 
 /* called when monster is moved to larger structure */
-void 
-replmon (struct monst *mtmp, struct monst *mtmp2)
-{
+void replmon (struct monst *mtmp, struct monst *mtmp2) {
     struct obj *otmp;
 
     /* transfer the monster's inventory */
     for (otmp = mtmp2->minvent; otmp; otmp = otmp->nobj) {
-#ifdef DEBUG
-        if (otmp->where != OBJ_MINVENT || otmp->ocarry != mtmp)
-            panic("replmon: minvent inconsistency");
-#endif
         otmp->ocarry = mtmp2;
     }
     mtmp->minvent = 0;

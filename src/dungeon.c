@@ -52,57 +52,6 @@ STATIC_DCL const char *br_string(int);
 STATIC_DCL void print_branch(winid, int, int, int, boolean, struct lchoice *);
 #endif
 
-#ifdef DEBUG
-#define DD    dungeons[i]
-STATIC_DCL void dumpit(void);
-
-STATIC_OVL void dumpit(void) {
-    int    i;
-    s_level    *x;
-    branch *br;
-
-    for(i = 0; i < n_dgns; i++)  {
-        fprintf(stderr, "\n#%d \"%s\" (%s):\n", i,
-                DD.dname, DD.proto);
-        fprintf(stderr, "    num_dunlevs %d, dunlev_ureached %d\n",
-                DD.num_dunlevs, DD.dunlev_ureached);
-        fprintf(stderr, "    depth_start %d, ledger_start %d\n",
-                DD.depth_start, DD.ledger_start);
-        fprintf(stderr, "    flags:%s%s%s\n",
-            DD.flags.rogue_like ? " rogue_like" : "",
-            DD.flags.maze_like  ? " maze_like"  : "",
-            DD.flags.hellish    ? " hellish"    : "");
-        getchar();
-    }
-    fprintf(stderr,"\nSpecial levels:\n");
-    for(x = sp_levchn; x; x = x->next) {
-        fprintf(stderr, "%s (%d): ", x->proto, x->rndlevs);
-        fprintf(stderr, "on %d, %d; ", x->dlevel.dnum, x->dlevel.dlevel);
-        fprintf(stderr, "flags:%s%s%s%s\n",
-            x->flags.rogue_like    ? " rogue_like" : "",
-            x->flags.maze_like  ? " maze_like"  : "",
-            x->flags.hellish    ? " hellish"    : "",
-            x->flags.town       ? " town"       : "");
-        getchar();
-    }
-    fprintf(stderr,"\nBranches:\n");
-    for (br = branches; br; br = br->next) {
-        fprintf(stderr, "%d: %s, end1 %d %d, end2 %d %d, %s\n",
-        br->id,
-        br->type == BR_STAIR ? "stair" :
-            br->type == BR_NO_END1 ? "no end1" :
-            br->type == BR_NO_END2 ? "no end2" :
-            br->type == BR_PORTAL  ? "portal"  :
-                         "unknown",
-        br->end1.dnum, br->end1.dlevel,
-        br->end2.dnum, br->end2.dlevel,
-        br->end1_up ? "end1 up" : "end1 down");
-    }
-    getchar();
-    fprintf(stderr,"\nDone\n");
-    getchar();
-}
-#endif
 
 /* Save the dungeon structures. */
 void save_dungeon(int fd, boolean perform_write, boolean free_data) {
@@ -520,15 +469,6 @@ pick_level(map, nth)
     return 0;
 }
 
-#ifdef DDEBUG
-static void indent(int);
-
-static void 
-indent (int d)
-{
-    while (d-- > 0) fputs("    ", stderr);
-}
-#endif
 
 /*
  * Place a level.  First, find the possible places on a dungeon map
@@ -545,9 +485,6 @@ place_level(proto_index, pd)
     boolean map[MAXLEVEL+1];    /* valid levels are 1..MAXLEVEL inclusive */
     s_level *lev;
     int npossible;
-#ifdef DDEBUG
-    int i;
-#endif
 
     if (proto_index == pd->n_levs) return TRUE;    /* at end of proto levels */
 
@@ -560,20 +497,9 @@ place_level(proto_index, pd)
 
     for (; npossible; --npossible) {
     lev->dlevel.dlevel = pick_level(map, rn2(npossible));
-#ifdef DDEBUG
-    indent(proto_index-pd->start);
-    fprintf(stderr,"%s: trying %d [ ", lev->proto, lev->dlevel.dlevel);
-    for (i = 1; i <= MAXLEVEL; i++)
-        if (map[i]) fprintf(stderr,"%d ", i);
-    fprintf(stderr,"]\n");
-#endif
     if (place_level(proto_index+1, pd)) return TRUE;
     map[lev->dlevel.dlevel] = FALSE;    /* this choice didn't work */
     }
-#ifdef DDEBUG
-    indent(proto_index-pd->start);
-    fprintf(stderr,"%s: failed\n", lev->proto);
-#endif
     return FALSE;
 }
 
@@ -776,11 +702,6 @@ void init_dungeons(void) {
          */
         if (!place_level(pd.start, &pd))
         panic("init_dungeon:  couldn't place levels");
-#ifdef DDEBUG
-        fprintf(stderr, "--- end of dungeon %d ---\n", i);
-        fflush(stderr);
-        getchar();
-#endif
         for (; pd.start < pd.n_levs; pd.start++)
         if (pd.final_lev[pd.start]) add_level(pd.final_lev[pd.start]);
 
@@ -848,9 +769,6 @@ void init_dungeons(void) {
            so that it's hidden from <ctrl/O> feedback. */
     }
 
-#ifdef DEBUG
-    dumpit();
-#endif
 }
 
 signed char 
@@ -1059,9 +977,6 @@ u_on_sstairs (void) {    /* place you on the special staircase */
         /* code stolen from goto_level */
         int trycnt = 0;
         signed char x, y;
-#ifdef DEBUG
-        pline("u_on_sstairs: picking random spot");
-#endif
 #define badspot(x,y) ((levl[x][y].typ != ROOM && levl[x][y].typ != CORR) || MON_AT(x, y))
         do {
         x = rnd(COLNO-1);

@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #define MAKEDEFS_C      /* use to conditionally include file sections */
-/* #define DEBUG */     /* uncomment for debugging info */
 
 #include "config.h"
 #include "permonst.h"
@@ -378,14 +377,8 @@ static void make_version(void) {
         return;
 }
 
-static char *
-version_string(outbuf)
-char *outbuf;
-{
+static char * version_string(char *outbuf) {
     Sprintf(outbuf, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
-#ifdef BETA
-    Sprintf(eos(outbuf), "-%d", EDITLEVEL);
-#endif
     return outbuf;
 }
 
@@ -401,10 +394,6 @@ const char *build_date;
     subbuf[0] = ' ';
     Strcpy(&subbuf[1], PORT_SUB_ID);
 #endif
-#ifdef BETA
-    Strcat(subbuf, " Beta");
-#endif
-
     Sprintf(outbuf, "%s NetHack%s Version %s - last build %s.",
             PORT_ID, subbuf, version_string(versbuf), build_date);
     return outbuf;
@@ -606,11 +595,7 @@ void do_options(void) {
 
         build_savebones_compat_string();
         Fprintf(ofp,
-#ifdef BETA
-                "\n    NetHack version %d.%d.%d [beta]\n",
-#else
                 "\n    NetHack version %d.%d.%d\n",
-#endif
                 VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
 
         Fprintf(ofp,"\nOptions compiled into this edition:\n");
@@ -1275,43 +1260,21 @@ put_qt_hdrs()
         /*
          *      The main header record.
          */
-#ifdef DEBUG
-        Fprintf(stderr, "%ld: header info.\n", ftell(ofp));
-#endif
         (void) fwrite((void *)&(qt_hdr.n_hdr), sizeof(int), 1, ofp);
         (void) fwrite((void *)&(qt_hdr.id[0][0]), sizeof(char)*LEN_HDR,
                                                         qt_hdr.n_hdr, ofp);
         (void) fwrite((void *)&(qt_hdr.offset[0]), sizeof(long),
                                                         qt_hdr.n_hdr, ofp);
-#ifdef DEBUG
-        for(i = 0; i < qt_hdr.n_hdr; i++)
-                Fprintf(stderr, "%c @ %ld, ", qt_hdr.id[i], qt_hdr.offset[i]);
-
-        Fprintf(stderr, "\n");
-#endif
 
         /*
          *      The individual class headers.
          */
         for(i = 0; i < qt_hdr.n_hdr; i++) {
 
-#ifdef DEBUG
-            Fprintf(stderr, "%ld: %c header info.\n", ftell(ofp),
-                    qt_hdr.id[i]);
-#endif
             (void) fwrite((void *)&(msg_hdr[i].n_msg), sizeof(int),
                                                         1, ofp);
             (void) fwrite((void *)&(msg_hdr[i].qt_msg[0]),
                             sizeof(struct qtmsg), msg_hdr[i].n_msg, ofp);
-#ifdef DEBUG
-            { int j;
-              for(j = 0; j < msg_hdr[i].n_msg; j++)
-                Fprintf(stderr, "msg %d @ %ld (%ld)\n",
-                        msg_hdr[i].qt_msg[j].msgnum,
-                        msg_hdr[i].qt_msg[j].offset,
-                        msg_hdr[i].qt_msg[j].size);
-            }
-#endif
         }
 }
 
@@ -1358,9 +1321,6 @@ do_questtxt()
                     in_msg = (in_line[1] == 'C');
                     continue;
                 } else if(qt_comment(in_line)) continue;
-#ifdef DEBUG
-                Fprintf(stderr, "%ld: %s", ftell(stdout), in_line);
-#endif
                 (void) fputs(xcrypt(in_line), ofp);
         }
         Fclose(ifp);
