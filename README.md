@@ -53,9 +53,9 @@ The goal of this fork is to make the game more approachable for new players.
    * The Oracle should be more helpful.
      * At all times, the oracle should direct you toward your next goal for free,
        such as telling you that you should do the quest next.
-     * The Major Consolations should tell you something important and relevant,
+     * The Major Consultations should tell you something important and relevant,
        such as the weaknesses of your quest nemesis.
-       Major Consolations should be added to your encyclopedia, and should never repeat.
+       Major Consultations should be added to your encyclopedia, and should never repeat.
    * Make the "You hear" and "You feel" messages more direct, possibly after getting them enough times.
    * The retro "Rogue" level has got to go.
  * A game mode that allows save states, called "Practice Mode".
