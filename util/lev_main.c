@@ -408,20 +408,14 @@ what_map_char (char c)
                   case 'H'  : return(SCORR);
                   case '{'  : return(FOUNTAIN);
                   case '\\' : return(THRONE);
-                  case 'K'  :
-#ifdef SINKS
-                      return(SINK);
-#else
-                      yywarning("Sinks are not allowed in this version!  Ignoring...");
-                      return(ROOM);
-#endif
+                  case 'K'  : return(SINK);
                   case '}'  : return(MOAT);
                   case 'P'  : return(POOL);
                   case 'L'  : return(LAVAPOOL);
                   case 'I'  : return(ICE);
                   case 'W'  : return(WATER);
-                  case 'T'      : return (TREE);
-                  case 'F'      : return (IRONBARS);    /* Fe = iron */
+                  case 'T'  : return (TREE);
+                  case 'F'  : return (IRONBARS);    /* Fe = iron */
             }
         return(INVALID_TYPE);
 }

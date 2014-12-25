@@ -2323,7 +2323,6 @@ srch:
                         newsym(u.ux, u.uy);
                         return(&zeroobj);
                 }
-# ifdef SINKS
                 if(!BSTRCMP(bp, p-4, "sink")) {
                         levl[u.ux][u.uy].typ = SINK;
                         level.flags.nsinks++;
@@ -2331,7 +2330,6 @@ srch:
                         newsym(u.ux, u.uy);
                         return &zeroobj;
                 }
-# endif
                 if(!BSTRCMP(bp, p-4, "pool")) {
                         levl[u.ux][u.uy].typ = POOL;
                         del_engr_at(u.ux, u.uy);

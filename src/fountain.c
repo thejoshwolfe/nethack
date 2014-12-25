@@ -487,7 +487,6 @@ dipfountain (struct obj *obj)
         dryup(u.ux, u.uy, TRUE);
 }
 
-#ifdef SINKS
 void 
 breaksink (int x, int y)
 {
@@ -591,6 +590,3 @@ drinksink (void)
                         rn2(3) ? (rn2(2) ? "cold" : "warm") : "hot");
         }
 }
-#endif /* SINKS */
-
-/*fountain.c*/

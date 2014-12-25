@@ -330,7 +330,6 @@ dodrink()
                         return 1;
                 }
         }
-#ifdef SINKS
         /* Or a kitchen sink? */
         if (IS_SINK(levl[u.ux][u.uy].typ)) {
                 if (yn("Drink from the sink?") == 'y') {
@@ -338,7 +337,6 @@ dodrink()
                         return 1;
                 }
         }
-#endif
 
         /* Or are you surrounded by water? */
         if (Underwater) {

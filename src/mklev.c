@@ -16,9 +16,7 @@
 
 
 STATIC_DCL void mkfount(int,struct mkroom *);
-#ifdef SINKS
 STATIC_DCL void mksink(struct mkroom *);
-#endif
 STATIC_DCL void mkaltar(struct mkroom *);
 STATIC_DCL void mkgrave(struct mkroom *);
 STATIC_DCL void makevtele(void);
@@ -725,9 +723,7 @@ makelevel (void)
                 if (!goldseen && !rn2(3))
                     (void) mkgold(0L, somex(croom), somey(croom));
                 if(!rn2(10)) mkfount(0,croom);
-#ifdef SINKS
                 if(!rn2(60)) mksink(croom);
-#endif
                 if(!rn2(60)) mkaltar(croom);
                 x = 80 - (depth(&u.uz) * 2);
                 if (x < 2) x = 2;
@@ -1229,7 +1225,6 @@ mkfount (int mazeflag, struct mkroom *croom)
         level.flags.nfountains++;
 }
 
-#ifdef SINKS
 STATIC_OVL void 
 mksink (struct mkroom *croom)
 {
@@ -1247,7 +1242,6 @@ mksink (struct mkroom *croom)
 
         level.flags.nsinks++;
 }
-#endif /* SINKS */
 
 
 STATIC_OVL void 

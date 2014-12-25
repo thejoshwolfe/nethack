@@ -338,9 +338,7 @@ make_version()
          */
         version.feature_set = (unsigned long)(0L
                 /* levels and/or topology (0..4) */
-#ifdef SINKS
                         | (1L <<  2)
-#endif
                 /* monsters (5..9) */
                         | (1L <<  6)
 #ifdef MAIL
@@ -583,9 +581,7 @@ static const char *build_opts[] = {
 #ifdef SHELL
                 "shell command",
 #endif
-#ifdef SINKS
                 "sinks",
-#endif
                 "terminal info library",
 #ifdef TIMED_DELAY
                 "timed wait for display effects",
@@ -810,9 +806,6 @@ h_filter(line)
     if (*line == '#') return TRUE;      /* ignore comment lines */
     if (sscanf(line, "----- %s", tag) == 1) {
         skip = FALSE;
-#ifndef SINKS
-        if (!strcmp(tag, "SINKS")) skip = TRUE;
-#endif
 #ifndef ELBERETH
         if (!strcmp(tag, "ELBERETH")) skip = TRUE;
 #endif
