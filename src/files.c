@@ -43,10 +43,6 @@ static char wizkit[WIZKIT_MAX];
 static FILE *fopen_wizkit_file(void);
 #endif
 
-#ifdef USER_SOUNDS
-extern char *sounddir;
-#endif
-
 extern int n_dgns;              /* from dungeon.c */
 
 static char *set_bonesfile_name(char *,d_level*);
@@ -60,12 +56,6 @@ static FILE *fopen_config_file(const char *);
 static int get_uchars(FILE *,char *,char *,unsigned char *,boolean,int,const char *);
 int parse_config_line(FILE *,char *,char *,char *);
 static void adjust_prefix(char *, int);
-#ifdef SELF_RECOVER
-static boolean copy_bytes(int, int);
-#endif
-#ifdef HOLD_LOCKFILE_OPEN
-static int open_levelfile_exclusively(const char *, int, int);
-#endif
 
 /*
  * fname_encode()
@@ -1139,43 +1129,10 @@ char            *tmp_levels;
         } else if (match_varname(buf, "WIZKIT", 6)) {
             (void) strncpy(wizkit, bufp, WIZKIT_MAX-1);
 #endif
-#ifdef USER_SOUNDS
-        } else if (match_varname(buf, "SOUNDDIR", 8)) {
-                sounddir = (char *)strdup(bufp);
-        } else if (match_varname(buf, "SOUND", 5)) {
-                add_sound_mapping(bufp);
-#endif
-#ifdef QT_GRAPHICS
-        /* These should move to wc_ options */
-        } else if (match_varname(buf, "QT_TILEWIDTH", 12)) {
-                extern char *qt_tilewidth;
-                if (qt_tilewidth == NULL)       
-                        qt_tilewidth=(char *)strdup(bufp);
-        } else if (match_varname(buf, "QT_TILEHEIGHT", 13)) {
-                extern char *qt_tileheight;
-                if (qt_tileheight == NULL)      
-                        qt_tileheight=(char *)strdup(bufp);
-        } else if (match_varname(buf, "QT_FONTSIZE", 11)) {
-                extern char *qt_fontsize;
-                if (qt_fontsize == NULL)
-                        qt_fontsize=(char *)strdup(bufp);
-        } else if (match_varname(buf, "QT_COMPACT", 10)) {
-                extern int qt_compact_mode;
-                qt_compact_mode = atoi(bufp);
-#endif
         } else
                 return 0;
         return 1;
 }
-
-#ifdef USER_SOUNDS
-boolean
-can_read_file(filename)
-const char *filename;
-{
-        return (access(filename, 4) == 0);
-}
-#endif /* USER_SOUNDS */
 
 void
 read_config_file(filename)
@@ -1317,188 +1274,11 @@ void check_recordfile(const char *dir) {
 
 /* ----------  END SCOREBOARD CREATION ----------- */
 
-/* ----------  BEGIN PANIC/IMPOSSIBLE LOG ----------- */
 
-void
-paniclog(type, reason)
-const char *type;       /* panic, impossible, trickery */
-const char *reason;     /* explanation */
+void paniclog(const char *type, /* panic, impossible, trickery */
+              const char *reason)     /* explanation */
 {
-#ifdef PANICLOG
-        FILE *lfile;
-        char buf[BUFSZ];
-
-        if (!program_state.in_paniclog) {
-                program_state.in_paniclog = 1;
-                lfile = fopen_datafile(PANICLOG, "a", TROUBLEPREFIX);
-                if (lfile) {
-                    (void) fprintf(lfile, "%s %08ld: %s %s\n",
-                                   version_string(buf), yyyymmdd((time_t)0L),
-                                   type, reason);
-                    (void) fclose(lfile);
-                }
-                program_state.in_paniclog = 0;
-        }
-#endif /* PANICLOG */
-        return;
+  return;
 }
 
 /* ----------  END PANIC/IMPOSSIBLE LOG ----------- */
-
-#ifdef SELF_RECOVER
-
-/* ----------  BEGIN INTERNAL RECOVER ----------- */
-boolean recover_savefile(void) {
-        int gfd, lfd, sfd;
-        int lev, savelev, hpid;
-        signed char levc;
-        struct version_info version_data;
-        int processed[256];
-        char savename[SAVESIZE], errbuf[BUFSZ];
-
-        for (lev = 0; lev < 256; lev++)
-                processed[lev] = 0;
-
-        /* level 0 file contains:
-         *      pid of creating process (ignored here)
-         *      level number for current level of save file
-         *      name of save file nethack would have created
-         *      and game state
-         */
-        gfd = open_levelfile(0, errbuf);
-        if (gfd < 0) {
-            raw_printf("%s\n", errbuf);
-            return FALSE;
-        }
-        if (read(gfd, (void *) &hpid, sizeof hpid) != sizeof hpid) {
-            raw_printf(
-"\nCheckpoint data incompletely written or subsequently clobbered. Recovery impossible.");
-            (void)close(gfd);
-            return FALSE;
-        }
-        if (read(gfd, (void *) &savelev, sizeof(savelev))
-                                                        != sizeof(savelev)) {
-            raw_printf("\nCheckpointing was not in effect for %s -- recovery impossible.\n",
-                        lock);
-            (void)close(gfd);
-            return FALSE;
-        }
-        if ((read(gfd, (void *) savename, sizeof savename)
-                != sizeof savename) ||
-            (read(gfd, (void *) &version_data, sizeof version_data)
-                != sizeof version_data)) {
-            raw_printf("\nError reading %s -- can't recover.\n", lock);
-            (void)close(gfd);
-            return FALSE;
-        }
-
-        /* save file should contain:
-         *      version info
-         *      current level (including pets)
-         *      (non-level-based) game state
-         *      other levels
-         */
-        set_savefile_name();
-        sfd = create_savefile();
-        if (sfd < 0) {
-            raw_printf("\nCannot recover savefile %s.\n", SAVEF);
-            (void)close(gfd);
-            return FALSE;
-        }
-
-        lfd = open_levelfile(savelev, errbuf);
-        if (lfd < 0) {
-            raw_printf("\n%s\n", errbuf);
-            (void)close(gfd);
-            (void)close(sfd);
-            delete_savefile();
-            return FALSE;
-        }
-
-        if (write(sfd, (void *) &version_data, sizeof version_data)
-                != sizeof version_data) {
-            raw_printf("\nError writing %s; recovery failed.", SAVEF);
-            (void)close(gfd);
-            (void)close(sfd);
-            delete_savefile();
-            return FALSE;
-        }
-
-        if (!copy_bytes(lfd, sfd)) {
-                (void) close(lfd);
-                (void) close(sfd);
-                delete_savefile();
-                return FALSE;
-        }
-        (void)close(lfd);
-        processed[savelev] = 1;
-
-        if (!copy_bytes(gfd, sfd)) {
-                (void) close(lfd);
-                (void) close(sfd);
-                delete_savefile();
-                return FALSE;
-        }
-        (void)close(gfd);
-        processed[0] = 1;
-
-        for (lev = 1; lev < 256; lev++) {
-                /* level numbers are kept in signed chars in save.c, so the
-                 * maximum level number (for the endlevel) must be < 256
-                 */
-                if (lev != savelev) {
-                        lfd = open_levelfile(lev, (char *)0);
-                        if (lfd >= 0) {
-                                /* any or all of these may not exist */
-                                levc = (signed char) lev;
-                                write(sfd, (void *) &levc, sizeof(levc));
-                                if (!copy_bytes(lfd, sfd)) {
-                                        (void) close(lfd);
-                                        (void) close(sfd);
-                                        delete_savefile();
-                                        return FALSE;
-                                }
-                                (void)close(lfd);
-                                processed[lev] = 1;
-                        }
-                }
-        }
-        (void)close(sfd);
-
-#ifdef HOLD_LOCKFILE_OPEN
-        really_close();
-#endif
-        /*
-         * We have a successful savefile!
-         * Only now do we erase the level files.
-         */
-        for (lev = 0; lev < 256; lev++) {
-                if (processed[lev]) {
-                        const char *fq_lock;
-                        set_levelfile_name(lock, lev);
-                        fq_lock = fqname(lock, LEVELPREFIX, 3);
-                        (void) unlink(fq_lock);
-                }
-        }
-        return TRUE;
-}
-
-boolean
-copy_bytes(ifd, ofd)
-int ifd, ofd;
-{
-        char buf[BUFSIZ];
-        int nfrom, nto;
-
-        do {
-                nfrom = read(ifd, buf, BUFSIZ);
-                nto = write(ofd, buf, nfrom);
-                if (nto != nfrom) return FALSE;
-        } while (nfrom == BUFSIZ);
-        return TRUE;
-}
-
-/* ----------  END INTERNAL RECOVER ----------- */
-#endif /*SELF_RECOVER*/
-
-/*files.c*/

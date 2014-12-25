@@ -551,13 +551,6 @@ static const char *build_opts[] = {
                 "sinks",
                 "terminal info library",
                 "tourists",
-#ifdef USER_SOUNDS
-# ifdef USER_SOUNDS_REGEX
-                "user sounds via regular expressions",
-# else
-                "user sounds via pmatch",
-# endif
-#endif
                 "variable playground",
 #ifdef VISION_TABLES
                 "vision tables",

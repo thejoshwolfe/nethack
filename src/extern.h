@@ -566,9 +566,6 @@ extern void compress(const char *);
 extern void uncompress(const char *);
 extern boolean lock_file(const char *,int,int);
 extern void unlock_file(const char *);
-#ifdef USER_SOUNDS
-extern boolean can_read_file(const char *);
-#endif
 extern void read_config_file(const char *);
 extern void check_recordfile(const char *);
 #if defined(WIZARD)
@@ -578,12 +575,6 @@ extern void paniclog(const char *, const char *);
 extern int validate_prefix_locations(char *);
 extern char** get_saved_games(void);
 extern void free_saved_games(char**);
-#ifdef SELF_RECOVER
-extern boolean recover_savefile(void);
-#endif
-#ifdef HOLD_LOCKFILE_OPEN
-extern void really_close(void);
-#endif
 
 /* ### fountain.c ### */
 
@@ -1565,10 +1556,6 @@ extern void yelp(struct monst *);
 extern void whimper(struct monst *);
 extern void beg(struct monst *);
 extern int dotalk(void);
-#ifdef USER_SOUNDS
-extern int add_sound_mapping(const char *);
-extern void play_sound_for_message(const char *);
-#endif
 
 /* ### sp_lev.c ### */
 
