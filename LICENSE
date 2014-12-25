@@ -17,3 +17,24 @@ Clone this repository, if you haven't already, from the command line like this:
 Then get a changelog for a particular file like this:
 
     git log -p path/to/file
+
+
+Thanks to the following for their contributions over the years:
+
+ * Dave Cohrs
+ * David Cohrs
+ * Dean Luick
+ * Eric Raymond
+ * Izchak Miller
+ * Janet Walz
+ * Jean-Christophe Collet
+ * Kevin Darcy
+ * Kevin Hugo
+ * Michael Allison
+ * Mike Stephenson
+ * Mike Threepoint
+ * M. Stephenson
+ * P. Winner
+ * Steve Linhart
+ * Stichting Mathematisch Centrum, Amsterdam
+ * Timo Hakulinen
