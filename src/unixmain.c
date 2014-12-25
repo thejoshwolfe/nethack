@@ -37,334 +37,334 @@ static boolean wiz_error_flag = FALSE;
 int 
 main (int argc, char *argv[])
 {
-	int fd;
-	boolean exact_username;
+        int fd;
+        boolean exact_username;
 #ifdef SIMPLE_MAIL
-	char* e_simple = NULL;
+        char* e_simple = NULL;
 #endif
 
 #ifdef SIMPLE_MAIL
-	/* figure this out early */
-	e_simple = nh_getenv("SIMPLEMAIL");
-	iflags.simplemail = (e_simple ? 1 : 0);
+        /* figure this out early */
+        e_simple = nh_getenv("SIMPLEMAIL");
+        iflags.simplemail = (e_simple ? 1 : 0);
 #endif
 
-	hname = argv[0];
-	hackpid = getpid();
-	(void) umask(0777 & ~FCMASK);
+        hname = argv[0];
+        hackpid = getpid();
+        (void) umask(0777 & ~FCMASK);
 
-	choose_windows(DEFAULT_WINDOW_SYS);
+        choose_windows(DEFAULT_WINDOW_SYS);
 
-	if(argc > 1) {
-	    /*
-	     * Now we know the directory containing 'record' and
-	     * may do a prscore().  Exclude `-style' - it's a Qt option.
-	     */
-	    if (!strncmp(argv[1], "-s", 2) && strncmp(argv[1], "-style", 6)) {
-		prscore(argc, argv);
-		exit(EXIT_SUCCESS);
-	    }
-	}
+        if(argc > 1) {
+            /*
+             * Now we know the directory containing 'record' and
+             * may do a prscore().  Exclude `-style' - it's a Qt option.
+             */
+            if (!strncmp(argv[1], "-s", 2) && strncmp(argv[1], "-style", 6)) {
+                prscore(argc, argv);
+                exit(EXIT_SUCCESS);
+            }
+        }
 
-	/*
-	 * Change directories before we initialize the window system so
-	 * we can find the tile file.
-	 */
+        /*
+         * Change directories before we initialize the window system so
+         * we can find the tile file.
+         */
 
 #ifdef _M_UNIX
-	check_sco_console();
+        check_sco_console();
 #endif
 #ifdef __linux__
-	check_linux_console();
+        check_linux_console();
 #endif
-	initoptions();
-	init_nhwindows(&argc,argv);
-	exact_username = whoami();
+        initoptions();
+        init_nhwindows(&argc,argv);
+        exact_username = whoami();
 #ifdef _M_UNIX
-	init_sco_cons();
+        init_sco_cons();
 #endif
 #ifdef __linux__
-	init_linux_cons();
+        init_linux_cons();
 #endif
 
-	/*
-	 * It seems you really want to play.
-	 */
-	u.uhp = 1;	/* prevent RIP on early quits */
-	(void) signal(SIGHUP, (sighandler_t) hangup);
+        /*
+         * It seems you really want to play.
+         */
+        u.uhp = 1;      /* prevent RIP on early quits */
+        (void) signal(SIGHUP, (sighandler_t) hangup);
 #ifdef SIGXCPU
-	(void) signal(SIGXCPU, (sighandler_t) hangup);
+        (void) signal(SIGXCPU, (sighandler_t) hangup);
 #endif
 
-	process_options(argc, argv);	/* command line options */
+        process_options(argc, argv);    /* command line options */
 
 #ifdef DEF_PAGER
-	if(!(catmore = nh_getenv("HACKPAGER")) && !(catmore = nh_getenv("PAGER")))
-		catmore = DEF_PAGER;
+        if(!(catmore = nh_getenv("HACKPAGER")) && !(catmore = nh_getenv("PAGER")))
+                catmore = DEF_PAGER;
 #endif
 #ifdef MAIL
-	getmailstatus();
+        getmailstatus();
 #endif
 #ifdef WIZARD
-	if (wizard)
-		Strcpy(plname, "wizard");
-	else
+        if (wizard)
+                Strcpy(plname, "wizard");
+        else
 #endif
-	if(!*plname || !strncmp(plname, "player", 4)
-		    || !strncmp(plname, "games", 4)) {
-		askname();
-	} else if (exact_username) {
-		/* guard against user names with hyphens in them */
-		int len = strlen(plname);
-		/* append the current role, if any, so that last dash is ours */
-		if (++len < sizeof plname)
-			(void)strncat(strcat(plname, "-"),
-				      pl_character, sizeof plname - len - 1);
-	}
-	plnamesuffix();		/* strip suffix from name; calls askname() */
-				/* again if suffix was whole name */
-				/* accepts any suffix */
+        if(!*plname || !strncmp(plname, "player", 4)
+                    || !strncmp(plname, "games", 4)) {
+                askname();
+        } else if (exact_username) {
+                /* guard against user names with hyphens in them */
+                int len = strlen(plname);
+                /* append the current role, if any, so that last dash is ours */
+                if (++len < sizeof plname)
+                        (void)strncat(strcat(plname, "-"),
+                                      pl_character, sizeof plname - len - 1);
+        }
+        plnamesuffix();         /* strip suffix from name; calls askname() */
+                                /* again if suffix was whole name */
+                                /* accepts any suffix */
 #ifdef WIZARD
-	if(!wizard) {
+        if(!wizard) {
 #endif
-		/*
-		 * check for multiple games under the same name
-		 * (if !locknum) or check max nr of players (otherwise)
-		 */
-		(void) signal(SIGQUIT,SIG_IGN);
-		(void) signal(SIGINT,SIG_IGN);
-		if(!locknum)
-			Sprintf(lock, "%d%s", (int)getuid(), plname);
-		getlock();
+                /*
+                 * check for multiple games under the same name
+                 * (if !locknum) or check max nr of players (otherwise)
+                 */
+                (void) signal(SIGQUIT,SIG_IGN);
+                (void) signal(SIGINT,SIG_IGN);
+                if(!locknum)
+                        Sprintf(lock, "%d%s", (int)getuid(), plname);
+                getlock();
 #ifdef WIZARD
-	} else {
-		Sprintf(lock, "%d%s", (int)getuid(), plname);
-		getlock();
-	}
+        } else {
+                Sprintf(lock, "%d%s", (int)getuid(), plname);
+                getlock();
+        }
 #endif /* WIZARD */
 
-	dlb_init();	/* must be before newgame() */
+        dlb_init();     /* must be before newgame() */
 
-	/*
-	 * Initialization of the boundaries of the mazes
-	 * Both boundaries have to be even.
-	 */
-	x_maze_max = COLNO-1;
-	if (x_maze_max % 2)
-		x_maze_max--;
-	y_maze_max = ROWNO-1;
-	if (y_maze_max % 2)
-		y_maze_max--;
+        /*
+         * Initialization of the boundaries of the mazes
+         * Both boundaries have to be even.
+         */
+        x_maze_max = COLNO-1;
+        if (x_maze_max % 2)
+                x_maze_max--;
+        y_maze_max = ROWNO-1;
+        if (y_maze_max % 2)
+                y_maze_max--;
 
-	/*
-	 *  Initialize the vision system.  This must be before mklev() on a
-	 *  new game or before a level restore on a saved game.
-	 */
-	vision_init();
+        /*
+         *  Initialize the vision system.  This must be before mklev() on a
+         *  new game or before a level restore on a saved game.
+         */
+        vision_init();
 
-	display_gamewindows();
+        display_gamewindows();
 
-	if ((fd = restore_saved_game()) >= 0) {
+        if ((fd = restore_saved_game()) >= 0) {
 #ifdef WIZARD
-		/* Since wizard is actually flags.debug, restoring might
-		 * overwrite it.
-		 */
-		boolean remember_wiz_mode = wizard;
+                /* Since wizard is actually flags.debug, restoring might
+                 * overwrite it.
+                 */
+                boolean remember_wiz_mode = wizard;
 #endif
-		const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
+                const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
-		(void) chmod(fq_save,0);	/* disallow parallel restores */
-		(void) signal(SIGINT, (sighandler_t) done1);
+                (void) chmod(fq_save,0);        /* disallow parallel restores */
+                (void) signal(SIGINT, (sighandler_t) done1);
 #ifdef NEWS
-		if(iflags.news) {
-		    display_file(NEWS, FALSE);
-		    iflags.news = FALSE; /* in case dorecover() fails */
-		}
+                if(iflags.news) {
+                    display_file(NEWS, FALSE);
+                    iflags.news = FALSE; /* in case dorecover() fails */
+                }
 #endif
-		pline("Restoring save file...");
-		mark_synch();	/* flush output */
-		if(!dorecover(fd))
-			goto not_recovered;
+                pline("Restoring save file...");
+                mark_synch();   /* flush output */
+                if(!dorecover(fd))
+                        goto not_recovered;
 #ifdef WIZARD
-		if(!wizard && remember_wiz_mode) wizard = TRUE;
+                if(!wizard && remember_wiz_mode) wizard = TRUE;
 #endif
-		check_special_room(FALSE);
-		wd_message();
+                check_special_room(FALSE);
+                wd_message();
 
-		if (discover || wizard) {
-			if(yn("Do you want to keep the save file?") == 'n')
-			    (void) delete_savefile();
-			else {
-			    (void) chmod(fq_save,FCMASK); /* back to readable */
-			    compress(fq_save);
-			}
-		}
-		flags.move = 0;
-	} else {
+                if (discover || wizard) {
+                        if(yn("Do you want to keep the save file?") == 'n')
+                            (void) delete_savefile();
+                        else {
+                            (void) chmod(fq_save,FCMASK); /* back to readable */
+                            compress(fq_save);
+                        }
+                }
+                flags.move = 0;
+        } else {
 not_recovered:
-		player_selection();
-		newgame();
-		wd_message();
+                player_selection();
+                newgame();
+                wd_message();
 
-		flags.move = 0;
-		set_wear();
-		(void) pickup(1);
-	}
+                flags.move = 0;
+                set_wear();
+                (void) pickup(1);
+        }
 
-	moveloop();
-	exit(EXIT_SUCCESS);
-	/*NOTREACHED*/
-	return(0);
+        moveloop();
+        exit(EXIT_SUCCESS);
+        /*NOTREACHED*/
+        return(0);
 }
 
 static void 
 process_options (int argc, char *argv[])
 {
-	int i;
+        int i;
 
 
-	/*
-	 * Process options.
-	 */
-	while(argc > 1 && argv[1][0] == '-'){
-		argv++;
-		argc--;
-		switch(argv[0][1]){
-		case 'D':
+        /*
+         * Process options.
+         */
+        while(argc > 1 && argv[1][0] == '-'){
+                argv++;
+                argc--;
+                switch(argv[0][1]){
+                case 'D':
 #ifdef WIZARD
-			{
-			  char *user;
-			  int uid;
-			  struct passwd *pw = (struct passwd *)0;
+                        {
+                          char *user;
+                          int uid;
+                          struct passwd *pw = (struct passwd *)0;
 
-			  uid = getuid();
-			  user = getlogin();
-			  if (user) {
-			      pw = getpwnam(user);
-			      if (pw && (pw->pw_uid != uid)) pw = 0;
-			  }
-			  if (pw == 0) {
-			      user = nh_getenv("USER");
-			      if (user) {
-				  pw = getpwnam(user);
-				  if (pw && (pw->pw_uid != uid)) pw = 0;
-			      }
-			      if (pw == 0) {
-				  pw = getpwuid(uid);
-			      }
-			  }
-			  if (pw && !strcmp(pw->pw_name,WIZARD)) {
-			      wizard = TRUE;
-			      break;
-			  }
-			}
-			/* otherwise fall thru to discover */
-			wiz_error_flag = TRUE;
+                          uid = getuid();
+                          user = getlogin();
+                          if (user) {
+                              pw = getpwnam(user);
+                              if (pw && (pw->pw_uid != uid)) pw = 0;
+                          }
+                          if (pw == 0) {
+                              user = nh_getenv("USER");
+                              if (user) {
+                                  pw = getpwnam(user);
+                                  if (pw && (pw->pw_uid != uid)) pw = 0;
+                              }
+                              if (pw == 0) {
+                                  pw = getpwuid(uid);
+                              }
+                          }
+                          if (pw && !strcmp(pw->pw_name,WIZARD)) {
+                              wizard = TRUE;
+                              break;
+                          }
+                        }
+                        /* otherwise fall thru to discover */
+                        wiz_error_flag = TRUE;
 #endif
-		case 'X':
-			discover = TRUE;
-			break;
+                case 'X':
+                        discover = TRUE;
+                        break;
 #ifdef NEWS
-		case 'n':
-			iflags.news = FALSE;
-			break;
+                case 'n':
+                        iflags.news = FALSE;
+                        break;
 #endif
-		case 'u':
-			if(argv[0][2])
-			  (void) strncpy(plname, argv[0]+2, sizeof(plname)-1);
-			else if(argc > 1) {
-			  argc--;
-			  argv++;
-			  (void) strncpy(plname, argv[0], sizeof(plname)-1);
-			} else
-				raw_print("Player name expected after -u");
-			break;
-		case 'I':
-		case 'i':
-			if (!strncmpi(argv[0]+1, "IBM", 3))
-				switch_graphics(IBM_GRAPHICS);
-			break;
-	    /*  case 'D': */
-		case 'd':
-			if (!strncmpi(argv[0]+1, "DEC", 3))
-				switch_graphics(DEC_GRAPHICS);
-			break;
-		case 'p': /* profession (role) */
-			if (argv[0][2]) {
-			    if ((i = str2role(&argv[0][2])) >= 0)
-			    	flags.initrole = i;
-			} else if (argc > 1) {
-				argc--;
-				argv++;
-			    if ((i = str2role(argv[0])) >= 0)
-			    	flags.initrole = i;
-			}
-			break;
-		case 'r': /* race */
-			if (argv[0][2]) {
-			    if ((i = str2race(&argv[0][2])) >= 0)
-			    	flags.initrace = i;
-			} else if (argc > 1) {
-				argc--;
-				argv++;
-			    if ((i = str2race(argv[0])) >= 0)
-			    	flags.initrace = i;
-			}
-			break;
-		case '@':
-			flags.randomall = 1;
-			break;
-		default:
-			if ((i = str2role(&argv[0][1])) >= 0) {
-			    flags.initrole = i;
-				break;
-			}
-			/* else raw_printf("Unknown option: %s", *argv); */
-		}
-	}
+                case 'u':
+                        if(argv[0][2])
+                          (void) strncpy(plname, argv[0]+2, sizeof(plname)-1);
+                        else if(argc > 1) {
+                          argc--;
+                          argv++;
+                          (void) strncpy(plname, argv[0], sizeof(plname)-1);
+                        } else
+                                raw_print("Player name expected after -u");
+                        break;
+                case 'I':
+                case 'i':
+                        if (!strncmpi(argv[0]+1, "IBM", 3))
+                                switch_graphics(IBM_GRAPHICS);
+                        break;
+            /*  case 'D': */
+                case 'd':
+                        if (!strncmpi(argv[0]+1, "DEC", 3))
+                                switch_graphics(DEC_GRAPHICS);
+                        break;
+                case 'p': /* profession (role) */
+                        if (argv[0][2]) {
+                            if ((i = str2role(&argv[0][2])) >= 0)
+                                flags.initrole = i;
+                        } else if (argc > 1) {
+                                argc--;
+                                argv++;
+                            if ((i = str2role(argv[0])) >= 0)
+                                flags.initrole = i;
+                        }
+                        break;
+                case 'r': /* race */
+                        if (argv[0][2]) {
+                            if ((i = str2race(&argv[0][2])) >= 0)
+                                flags.initrace = i;
+                        } else if (argc > 1) {
+                                argc--;
+                                argv++;
+                            if ((i = str2race(argv[0])) >= 0)
+                                flags.initrace = i;
+                        }
+                        break;
+                case '@':
+                        flags.randomall = 1;
+                        break;
+                default:
+                        if ((i = str2role(&argv[0][1])) >= 0) {
+                            flags.initrole = i;
+                                break;
+                        }
+                        /* else raw_printf("Unknown option: %s", *argv); */
+                }
+        }
 
-	if(argc > 1)
-		locknum = atoi(argv[1]);
+        if(argc > 1)
+                locknum = atoi(argv[1]);
 #ifdef MAX_NR_OF_PLAYERS
-	if(!locknum || locknum > MAX_NR_OF_PLAYERS)
-		locknum = MAX_NR_OF_PLAYERS;
+        if(!locknum || locknum > MAX_NR_OF_PLAYERS)
+                locknum = MAX_NR_OF_PLAYERS;
 #endif
 }
 
 static boolean
 whoami() {
-	/*
-	 * Who am i? Algorithm: 1. Use name as specified in NETHACKOPTIONS
-	 *			2. Use $USER or $LOGNAME	(if 1. fails)
-	 *			3. Use getlogin()		(if 2. fails)
-	 * The resulting name is overridden by command line options.
-	 * If everything fails, or if the resulting name is some generic
-	 * account like "games", "play", "player", "hack" then eventually
-	 * we'll ask him.
-	 * Note that we trust the user here; it is possible to play under
-	 * somebody else's name.
-	 */
-	char *s;
+        /*
+         * Who am i? Algorithm: 1. Use name as specified in NETHACKOPTIONS
+         *                      2. Use $USER or $LOGNAME        (if 1. fails)
+         *                      3. Use getlogin()               (if 2. fails)
+         * The resulting name is overridden by command line options.
+         * If everything fails, or if the resulting name is some generic
+         * account like "games", "play", "player", "hack" then eventually
+         * we'll ask him.
+         * Note that we trust the user here; it is possible to play under
+         * somebody else's name.
+         */
+        char *s;
 
-	if (*plname) return FALSE;
-	if(/* !*plname && */ (s = nh_getenv("USER")))
-		(void) strncpy(plname, s, sizeof(plname)-1);
-	if(!*plname && (s = nh_getenv("LOGNAME")))
-		(void) strncpy(plname, s, sizeof(plname)-1);
-	if(!*plname && (s = getlogin()))
-		(void) strncpy(plname, s, sizeof(plname)-1);
-	return TRUE;
+        if (*plname) return FALSE;
+        if(/* !*plname && */ (s = nh_getenv("USER")))
+                (void) strncpy(plname, s, sizeof(plname)-1);
+        if(!*plname && (s = nh_getenv("LOGNAME")))
+                (void) strncpy(plname, s, sizeof(plname)-1);
+        if(!*plname && (s = getlogin()))
+                (void) strncpy(plname, s, sizeof(plname)-1);
+        return TRUE;
 }
 
 #ifdef PORT_HELP
 void 
 port_help (void)
 {
-	/*
-	 * Display unix-specific help.   Just show contents of the helpfile
-	 * named by PORT_HELP.
-	 */
-	display_file(PORT_HELP, TRUE);
+        /*
+         * Display unix-specific help.   Just show contents of the helpfile
+         * named by PORT_HELP.
+         */
+        display_file(PORT_HELP, TRUE);
 }
 #endif
 
@@ -372,18 +372,18 @@ static void
 wd_message (void)
 {
 #ifdef WIZARD
-	if (wiz_error_flag) {
-		pline("Only user \"%s\" may access debug (wizard) mode.",
+        if (wiz_error_flag) {
+                pline("Only user \"%s\" may access debug (wizard) mode.",
 # ifndef KR1ED
-			WIZARD);
+                        WIZARD);
 # else
-			WIZARD_NAME);
+                        WIZARD_NAME);
 # endif
-		pline("Entering discovery mode instead.");
-	} else
+                pline("Entering discovery mode instead.");
+        } else
 #endif
-	if (discover)
-		You("are in non-scoring discovery mode.");
+        if (discover)
+                You("are in non-scoring discovery mode.");
 }
 
 /*
@@ -393,16 +393,16 @@ wd_message (void)
 void 
 append_slash (char *name)
 {
-	char *ptr;
+        char *ptr;
 
-	if (!*name)
-		return;
-	ptr = name + (strlen(name) - 1);
-	if (*ptr != '/') {
-		*++ptr = '/';
-		*++ptr = '\0';
-	}
-	return;
+        if (!*name)
+                return;
+        ptr = name + (strlen(name) - 1);
+        if (*ptr != '/') {
+                *++ptr = '/';
+                *++ptr = '\0';
+        }
+        return;
 }
 
 /*unixmain.c*/

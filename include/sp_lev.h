@@ -3,241 +3,241 @@
 #define SP_LEV_H
 
     /* wall directions */
-#define W_NORTH		1
-#define W_SOUTH		2
-#define W_EAST		4
-#define W_WEST		8
-#define W_ANY		(W_NORTH|W_SOUTH|W_EAST|W_WEST)
+#define W_NORTH         1
+#define W_SOUTH         2
+#define W_EAST          4
+#define W_WEST          8
+#define W_ANY           (W_NORTH|W_SOUTH|W_EAST|W_WEST)
 
     /* MAP limits */
-#define MAP_X_LIM	76
-#define MAP_Y_LIM	21
+#define MAP_X_LIM       76
+#define MAP_Y_LIM       21
 
     /* Per level flags */
-#define NOTELEPORT	1
-#define HARDFLOOR	2
-#define NOMMAP		4
-#define SHORTSIGHTED	8
-#define ARBOREAL	16
+#define NOTELEPORT      1
+#define HARDFLOOR       2
+#define NOMMAP          4
+#define SHORTSIGHTED    8
+#define ARBOREAL        16
 
     /* special level types */
-#define SP_LEV_ROOMS	1
-#define SP_LEV_MAZE	2
+#define SP_LEV_ROOMS    1
+#define SP_LEV_MAZE     2
 
 /*
  * Structures manipulated by the special levels loader & compiler
  */
 
 typedef union str_or_len {
-	char *str;
-	int   len;
+        char *str;
+        int   len;
 } Str_or_Len;
 
 typedef struct {
-	boolean init_present, padding;
-	char	fg, bg;
-	boolean smoothed, joined;
-	signed char	lit, walled;
+        boolean init_present, padding;
+        char    fg, bg;
+        boolean smoothed, joined;
+        signed char     lit, walled;
 } lev_init;
 
 typedef struct {
-	signed char x, y, mask;
+        signed char x, y, mask;
 } door;
 
 typedef struct {
-	signed char wall, pos, secret, mask;
+        signed char wall, pos, secret, mask;
 } room_door;
 
 typedef struct {
-	signed char x, y, chance, type;
+        signed char x, y, chance, type;
 } trap;
 
 typedef struct {
-	Str_or_Len name, appear_as;
-	short id;
-	aligntyp align;
-	signed char x, y, chance, class, appear;
-	signed char peaceful, asleep;
+        Str_or_Len name, appear_as;
+        short id;
+        aligntyp align;
+        signed char x, y, chance, class, appear;
+        signed char peaceful, asleep;
 } monster;
 
 typedef struct {
-	Str_or_Len name;
-	int   corpsenm;
-	short id, spe;
-	signed char x, y, chance, class, containment;
-	signed char curse_state;
+        Str_or_Len name;
+        int   corpsenm;
+        short id, spe;
+        signed char x, y, chance, class, containment;
+        signed char curse_state;
 } object;
 
 typedef struct {
-	signed char		x, y;
-	aligntyp	align;
-	signed char		shrine;
+        signed char             x, y;
+        aligntyp        align;
+        signed char             shrine;
 } altar;
 
 typedef struct {
-	signed char x, y, dir, db_open;
+        signed char x, y, dir, db_open;
 } drawbridge;
 
 typedef struct {
-	signed char x, y, dir;
+        signed char x, y, dir;
 } walk;
 
 typedef struct {
-	signed char x1, y1, x2, y2;
+        signed char x1, y1, x2, y2;
 } digpos;
 
 typedef struct {
-	signed char x, y, up;
+        signed char x, y, up;
 } lad;
 
 typedef struct {
-	signed char x, y, up;
+        signed char x, y, up;
 } stair;
 
 typedef struct {
-	signed char x1, y1, x2, y2;
-	signed char rtype, rlit, rirreg;
+        signed char x1, y1, x2, y2;
+        signed char rtype, rlit, rirreg;
 } region;
 
 /* values for rtype are defined in dungeon.h */
 typedef struct {
-	struct { signed char x1, y1, x2, y2; } inarea;
-	struct { signed char x1, y1, x2, y2; } delarea;
-	boolean in_islev, del_islev;
-	signed char rtype, padding;
-	Str_or_Len rname;
+        struct { signed char x1, y1, x2, y2; } inarea;
+        struct { signed char x1, y1, x2, y2; } delarea;
+        boolean in_islev, del_islev;
+        signed char rtype, padding;
+        Str_or_Len rname;
 } lev_region;
 
 typedef struct {
-	signed char x, y;
-	int   amount;
+        signed char x, y;
+        int   amount;
 } gold;
 
 typedef struct {
-	signed char x, y;
-	Str_or_Len engr;
-	signed char etype;
+        signed char x, y;
+        Str_or_Len engr;
+        signed char etype;
 } engraving;
 
 typedef struct {
-	signed char x, y;
+        signed char x, y;
 } fountain;
 
 typedef struct {
-	signed char x, y;
+        signed char x, y;
 } sink;
 
 typedef struct {
-	signed char x, y;
+        signed char x, y;
 } pool;
 
 typedef struct {
-	char halign, valign;
-	char xsize, ysize;
-	char **map;
-	char nrobjects;
-	char *robjects;
-	char nloc;
-	char *rloc_x;
-	char *rloc_y;
-	char nrmonst;
-	char *rmonst;
-	char nreg;
-	region **regions;
-	char nlreg;
-	lev_region **lregions;
-	char ndoor;
-	door **doors;
-	char ntrap;
-	trap **traps;
-	char nmonster;
-	monster **monsters;
-	char nobject;
-	object **objects;
-	char ndrawbridge;
-	drawbridge **drawbridges;
-	char nwalk;
-	walk **walks;
-	char ndig;
-	digpos **digs;
-	char npass;
-	digpos **passs;
-	char nlad;
-	lad **lads;
-	char nstair;
-	stair **stairs;
-	char naltar;
-	altar **altars;
-	char ngold;
-	gold **golds;
-	char nengraving;
-	engraving **engravings;
-	char nfountain;
-	fountain **fountains;
+        char halign, valign;
+        char xsize, ysize;
+        char **map;
+        char nrobjects;
+        char *robjects;
+        char nloc;
+        char *rloc_x;
+        char *rloc_y;
+        char nrmonst;
+        char *rmonst;
+        char nreg;
+        region **regions;
+        char nlreg;
+        lev_region **lregions;
+        char ndoor;
+        door **doors;
+        char ntrap;
+        trap **traps;
+        char nmonster;
+        monster **monsters;
+        char nobject;
+        object **objects;
+        char ndrawbridge;
+        drawbridge **drawbridges;
+        char nwalk;
+        walk **walks;
+        char ndig;
+        digpos **digs;
+        char npass;
+        digpos **passs;
+        char nlad;
+        lad **lads;
+        char nstair;
+        stair **stairs;
+        char naltar;
+        altar **altars;
+        char ngold;
+        gold **golds;
+        char nengraving;
+        engraving **engravings;
+        char nfountain;
+        fountain **fountains;
 } mazepart;
 
 typedef struct {
-	long flags;
-	lev_init init_lev;
-	signed char filling;
-	char numpart;
-	mazepart **parts;
+        long flags;
+        lev_init init_lev;
+        signed char filling;
+        char numpart;
+        mazepart **parts;
 } specialmaze;
 
 typedef struct _room {
-	char  *name;
-	char  *parent;
-	signed char x, y, w, h;
-	signed char xalign, yalign;
-	signed char rtype, chance, rlit, filled;
-	char ndoor;
-	room_door **doors;
-	char ntrap;
-	trap **traps;
-	char nmonster;
-	monster **monsters;
-	char nobject;
-	object **objects;
-	char naltar;
-	altar **altars;
-	char nstair;
-	stair **stairs;
-	char ngold;
-	gold **golds;
-	char nengraving;
-	engraving **engravings;
-	char nfountain;
-	fountain **fountains;
-	char nsink;
-	sink **sinks;
-	char npool;
-	pool **pools;
-	/* These three fields are only used when loading the level... */
-	int nsubroom;
-	struct _room *subrooms[MAX_SUBROOMS];
-	struct mkroom *mkr;
+        char  *name;
+        char  *parent;
+        signed char x, y, w, h;
+        signed char xalign, yalign;
+        signed char rtype, chance, rlit, filled;
+        char ndoor;
+        room_door **doors;
+        char ntrap;
+        trap **traps;
+        char nmonster;
+        monster **monsters;
+        char nobject;
+        object **objects;
+        char naltar;
+        altar **altars;
+        char nstair;
+        stair **stairs;
+        char ngold;
+        gold **golds;
+        char nengraving;
+        engraving **engravings;
+        char nfountain;
+        fountain **fountains;
+        char nsink;
+        sink **sinks;
+        char npool;
+        pool **pools;
+        /* These three fields are only used when loading the level... */
+        int nsubroom;
+        struct _room *subrooms[MAX_SUBROOMS];
+        struct mkroom *mkr;
 } room;
 
 typedef struct {
-	struct {
-		signed char room;
-		signed char wall;
-		signed char door;
-	} src, dest;
+        struct {
+                signed char room;
+                signed char wall;
+                signed char door;
+        } src, dest;
 } corridor;
 
 /* used only by lev_comp */
 typedef struct {
-	long flags;
-	lev_init init_lev;
-	char nrobjects;
-	char *robjects;
-	char nrmonst;
-	char *rmonst;
-	signed char nroom;
-	room **rooms;
-	signed char ncorr;
-	corridor **corrs;
+        long flags;
+        lev_init init_lev;
+        char nrobjects;
+        char *robjects;
+        char nrmonst;
+        char *rmonst;
+        signed char nroom;
+        room **rooms;
+        signed char ncorr;
+        corridor **corrs;
 } splev;
 
 #endif /* SP_LEV_H */

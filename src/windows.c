@@ -11,12 +11,12 @@ struct window_procs windowprocs;
 static
 struct win_choices {
     struct window_procs *procs;
-    void (*ini_routine)(void);		/* optional (can be 0) */
+    void (*ini_routine)(void);          /* optional (can be 0) */
 } winchoices[] = {
 #ifdef TTY_GRAPHICS
     { &tty_procs, win_tty_init },
 #endif
-    { 0, 0 }		/* must be last */
+    { 0, 0 }            /* must be last */
 };
 
 STATIC_OVL void def_raw_print(const char *s) {
@@ -33,21 +33,21 @@ void choose_windows(const char *s) {
       wt = s;
 
     for(i=0; winchoices[i].procs; i++)
-	if (!strcmpi(wt, winchoices[i].procs->name)) {
-	    windowprocs = *winchoices[i].procs;
-	    if (winchoices[i].ini_routine) (*winchoices[i].ini_routine)();
-	    return;
-	}
+        if (!strcmpi(wt, winchoices[i].procs->name)) {
+            windowprocs = *winchoices[i].procs;
+            if (winchoices[i].ini_routine) (*winchoices[i].ini_routine)();
+            return;
+        }
 
     if (!windowprocs.win_raw_print)
-	windowprocs.win_raw_print = def_raw_print;
+        windowprocs.win_raw_print = def_raw_print;
 
     raw_printf("Window type %s not recognized.  Choices are:", s);
     for(i=0; winchoices[i].procs; i++)
-	raw_printf("        %s", winchoices[i].procs->name);
+        raw_printf("        %s", winchoices[i].procs->name);
 
     if (windowprocs.win_raw_print == def_raw_print)
-	terminate(EXIT_SUCCESS);
+        terminate(EXIT_SUCCESS);
     wait_synch();
 }
 
@@ -67,10 +67,10 @@ genl_message_menu (char let, int how, const char *mesg)
 void 
 genl_preference_update (const char *pref)
 {
-	/* window ports are expected to provide
-	   their own preference update routine
-	   for the preference capabilities that
-	   they support.
-	   Just return in this genl one. */
+        /* window ports are expected to provide
+           their own preference update routine
+           for the preference capabilities that
+           they support.
+           Just return in this genl one. */
 }
 /*windows.c*/

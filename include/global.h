@@ -5,39 +5,39 @@
 #include <stdio.h>
 
 
-/* #define BETA	*/	/* if a beta-test copy	[MRS] */
+/* #define BETA */      /* if a beta-test copy  [MRS] */
 
 /*
  * Files expected to exist in the playground directory.
  */
 
-#define RECORD	      "run/record" /* file containing list of topscorers */
-#define HELP	      "help"	/* file containing command descriptions */
-#define SHELP	      "hh"	/* abbreviated form of the same */
+#define RECORD        "run/record" /* file containing list of topscorers */
+#define HELP          "help"    /* file containing command descriptions */
+#define SHELP         "hh"      /* abbreviated form of the same */
 #define DEBUGHELP     "wizhelp" /* file containing debug mode cmds */
-#define RUMORFILE     "rumors"	/* file with fortune cookies */
+#define RUMORFILE     "rumors"  /* file with fortune cookies */
 #define ORACLEFILE    "oracles" /* file with oracular information */
-#define DATAFILE      "data"	/* file giving the meaning of symbols used */
+#define DATAFILE      "data"    /* file giving the meaning of symbols used */
 #define CMDHELPFILE   "cmdhelp" /* file telling what commands do */
 #define HISTORY       "history" /* file giving nethack's history */
 #define LICENSE       "license" /* file with license information */
 #define OPTIONFILE    "opthelp" /* file explaining runtime options */
 #define OPTIONS_USED  "options" /* compile-time options, for #version */
 
-#define LEV_EXT ".lev"		/* extension for special level files */
+#define LEV_EXT ".lev"          /* extension for special level files */
 
 
 /* Assorted definitions that may depend on selections in config.h. */
 
-typedef signed char	boolean;		/* 0 or 1 */
+typedef signed char     boolean;                /* 0 or 1 */
 
-#ifndef TRUE		/* defined in some systems' native include files */
-#define TRUE	((boolean)1)
-#define FALSE	((boolean)0)
+#ifndef TRUE            /* defined in some systems' native include files */
+#define TRUE    ((boolean)1)
+#define FALSE   ((boolean)0)
 #endif
 
 #ifndef STRNCMPI
-# ifndef __SASC_60		/* SAS/C already shifts to stricmp */
+# ifndef __SASC_60              /* SAS/C already shifts to stricmp */
 #  define strcmpi(a,b) strncmpi((a),(b),-1)
 # endif
 #endif
@@ -46,17 +46,17 @@ typedef signed char	boolean;		/* 0 or 1 */
  * disappear eventually
  */
 #ifdef INTERNAL_COMP
-# define RLECOMP	/* run-length compression of levl array - JLee */
-# define ZEROCOMP	/* zero-run compression of everything - Olaf Seibert */
+# define RLECOMP        /* run-length compression of levl array - JLee */
+# define ZEROCOMP       /* zero-run compression of everything - Olaf Seibert */
 #endif
 
-/* #define SPECIALIZATION */	/* do "specialized" version of new topology */
+/* #define SPECIALIZATION */    /* do "specialized" version of new topology */
 
 
 #ifdef BITFIELDS
-#define Bitfield(x,n)	unsigned x:n
+#define Bitfield(x,n)   unsigned x:n
 #else
-#define Bitfield(x,n)	unsigned char x
+#define Bitfield(x,n)   unsigned char x
 #endif
 
 #define OBJ_P struct obj*
@@ -70,7 +70,7 @@ typedef signed char	boolean;		/* 0 or 1 */
  * particular machine, although it is set to the minimum required maximum
  * signed integer for C (2^15 -1).
  */
-#define LARGEST_INT	32767
+#define LARGEST_INT     32767
 
 
 #ifdef REDO
@@ -88,7 +88,7 @@ typedef signed char	boolean;		/* 0 or 1 */
 
 /* Displayable name of this port; don't redefine if defined in *conf.h */
 #ifndef PORT_ID
-# define PORT_ID	"Unix"
+# define PORT_ID        "Unix"
 #endif
 
 #ifndef EXIT_SUCCESS
@@ -118,17 +118,17 @@ extern void nhfree(void *,const char *,int);
 # endif
 # define alloc(a) nhalloc(a,__FILE__,(int)__LINE__)
 # define free(a) nhfree(a,__FILE__,(int)__LINE__)
-#else	/* !MONITOR_HEAP */
-extern long *alloc(unsigned int);		/* alloc.c */
+#else   /* !MONITOR_HEAP */
+extern long *alloc(unsigned int);               /* alloc.c */
 #endif
 
 /* Used for consistency checks of various data files; declare it here so
    that utility programs which include config.h but not hack.h can see it. */
 struct version_info {
-	unsigned long	incarnation;	/* actual version number */
-	unsigned long	feature_set;	/* bitmask of config settings */
-	unsigned long	entity_count;	/* # of monsters and objects */
-	unsigned long	struct_sizes;	/* size of key structs */
+        unsigned long   incarnation;    /* actual version number */
+        unsigned long   feature_set;    /* bitmask of config settings */
+        unsigned long   entity_count;   /* # of monsters and objects */
+        unsigned long   struct_sizes;   /* size of key structs */
 };
 
 
@@ -141,32 +141,32 @@ struct version_info {
  */
 
 /* size of terminal screen is (at least) (ROWNO+3) by COLNO */
-#define COLNO	80
-#define ROWNO	21
+#define COLNO   80
+#define ROWNO   21
 
-#define MAXNROFROOMS	40	/* max number of rooms per level */
-#define MAX_SUBROOMS	24	/* max # of subrooms in a given room */
-#define DOORMAX		120	/* max number of doors per level */
+#define MAXNROFROOMS    40      /* max number of rooms per level */
+#define MAX_SUBROOMS    24      /* max # of subrooms in a given room */
+#define DOORMAX         120     /* max number of doors per level */
 
-#define BUFSZ		256	/* for getlin buffers */
-#define QBUFSZ		128	/* for building question text */
-#define TBUFSZ		300	/* toplines[] buffer max msg: 3 81char names */
-				/* plus longest prefix plus a few extra words */
+#define BUFSZ           256     /* for getlin buffers */
+#define QBUFSZ          128     /* for building question text */
+#define TBUFSZ          300     /* toplines[] buffer max msg: 3 81char names */
+                                /* plus longest prefix plus a few extra words */
 
-#define PL_NSIZ		32	/* name of player, ghost, shopkeeper */
-#define PL_CSIZ		32	/* sizeof pl_character */
-#define PL_FSIZ		32	/* fruit name */
-#define PL_PSIZ		63	/* player-given names for pets, other
-				 * monsters, objects */
+#define PL_NSIZ         32      /* name of player, ghost, shopkeeper */
+#define PL_CSIZ         32      /* sizeof pl_character */
+#define PL_FSIZ         32      /* fruit name */
+#define PL_PSIZ         63      /* player-given names for pets, other
+                                 * monsters, objects */
 
-#define MAXDUNGEON	16	/* current maximum number of dungeons */
-#define MAXLEVEL	32	/* max number of levels in one dungeon */
-#define MAXSTAIRS	1	/* max # of special stairways in a dungeon */
-#define ALIGNWEIGHT	4	/* generation weight of alignment */
+#define MAXDUNGEON      16      /* current maximum number of dungeons */
+#define MAXLEVEL        32      /* max number of levels in one dungeon */
+#define MAXSTAIRS       1       /* max # of special stairways in a dungeon */
+#define ALIGNWEIGHT     4       /* generation weight of alignment */
 
-#define MAXULEV		30	/* max character experience level */
+#define MAXULEV         30      /* max character experience level */
 
-#define MAXMONNO	120	/* extinct monst after this number created */
-#define MHPMAX		500	/* maximum monster hp */
+#define MAXMONNO        120     /* extinct monst after this number created */
+#define MHPMAX          500     /* maximum monster hp */
 
 #endif /* GLOBAL_H */

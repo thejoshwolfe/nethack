@@ -3,9 +3,9 @@
 #define EMIN_H
 
 struct emin {
-	aligntyp min_align;	/* alignment of minion */
+        aligntyp min_align;     /* alignment of minion */
 };
 
-#define EMIN(mon)	((struct emin *)&(mon)->mextra[0])
+#define EMIN(mon)       ((struct emin *)&(mon)->mextra[0])
 
 #endif /* EMIN_H */

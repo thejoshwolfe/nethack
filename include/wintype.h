@@ -2,7 +2,7 @@
 #ifndef WINTYPE_H
 #define WINTYPE_H
 
-typedef int winid;		/* a window identifier */
+typedef int winid;              /* a window identifier */
 
 /* generic parameter - must not be any larger than a pointer */
 typedef union any {
@@ -17,15 +17,15 @@ typedef union any {
 
 /* menu return list */
 typedef struct mi {
-    anything item;		/* identifier */
-    long count;			/* count */
+    anything item;              /* identifier */
+    long count;                 /* count */
 } menu_item;
 #define MENU_ITEM_P struct mi
 
 /* select_menu() "how" argument types */
-#define PICK_NONE 0	/* user picks nothing (display only) */
-#define PICK_ONE  1	/* only pick one */
-#define PICK_ANY  2	/* can pick any amount */
+#define PICK_NONE 0     /* user picks nothing (display only) */
+#define PICK_ONE  1     /* only pick one */
+#define PICK_ANY  2     /* can pick any amount */
 
 /* window types */
 /* any additional port specific types should be defined in win*.h */
@@ -51,17 +51,17 @@ typedef struct mi {
 #define WIN_ERR ((winid) -1)
 
 /* menu window keyboard commands (may be mapped) */
-#define MENU_FIRST_PAGE		'^'
-#define MENU_LAST_PAGE		'|'
-#define MENU_NEXT_PAGE		'>'
-#define MENU_PREVIOUS_PAGE	'<'
-#define MENU_SELECT_ALL		'.'
-#define MENU_UNSELECT_ALL	'-'
-#define MENU_INVERT_ALL		'@'
-#define MENU_SELECT_PAGE	','
-#define MENU_UNSELECT_PAGE	'\\'
-#define MENU_INVERT_PAGE	'~'
-#define MENU_SEARCH		':'
+#define MENU_FIRST_PAGE         '^'
+#define MENU_LAST_PAGE          '|'
+#define MENU_NEXT_PAGE          '>'
+#define MENU_PREVIOUS_PAGE      '<'
+#define MENU_SELECT_ALL         '.'
+#define MENU_UNSELECT_ALL       '-'
+#define MENU_INVERT_ALL         '@'
+#define MENU_SELECT_PAGE        ','
+#define MENU_UNSELECT_PAGE      '\\'
+#define MENU_INVERT_PAGE        '~'
+#define MENU_SEARCH             ':'
 
 
 #endif /* WINTYPE_H */

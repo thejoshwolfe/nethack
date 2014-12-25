@@ -10,19 +10,19 @@
  * Notify user when new mail has arrived.  Idea by Merlyn Leroy.
  *
  * The mail daemon can move with less than usual restraint.  It can:
- *	- move diagonally from a door
- *	- use secret and closed doors
- *	- run through a monster ("Gangway!", etc.)
- *	- run over pools & traps
+ *      - move diagonally from a door
+ *      - use secret and closed doors
+ *      - run through a monster ("Gangway!", etc.)
+ *      - run over pools & traps
  *
  * Possible extensions:
- *	- Open the file MAIL and do fstat instead of stat for efficiency.
- *	  (But sh uses stat, so this cannot be too bad.)
- *	- Examine the mail and produce a scroll of mail named "From somebody".
- *	- Invoke MAILREADER in such a way that only this single letter is read.
- *	- Do something to the text when the scroll is enchanted or cancelled.
- *	- Make the daemon always appear at a stairwell, and have it find a
- *	  path to the hero.
+ *      - Open the file MAIL and do fstat instead of stat for efficiency.
+ *        (But sh uses stat, so this cannot be too bad.)
+ *      - Examine the mail and produce a scroll of mail named "From somebody".
+ *      - Invoke MAILREADER in such a way that only this single letter is read.
+ *      - Do something to the text when the scroll is enchanted or cancelled.
+ *      - Make the daemon always appear at a stairwell, and have it find a
+ *        path to the hero.
  */
 
 STATIC_DCL boolean md_start(coord *);
@@ -32,7 +32,7 @@ STATIC_DCL void newmail(struct mail_info *);
 
 int mailckfreq = 0;
 
-extern char *viz_rmin, *viz_rmax;	/* line-of-sight limits (vision.c) */
+extern char *viz_rmin, *viz_rmax;       /* line-of-sight limits (vision.c) */
 
 #ifdef OVL0
 
@@ -53,7 +53,7 @@ static struct stat omstat,nmstat;
 static char *mailbox = (char *)0;
 static long laststattime;
 
-# if !defined(MAILPATH) && defined(AMS)	/* Just a placeholder for AMS */
+# if !defined(MAILPATH) && defined(AMS) /* Just a placeholder for AMS */
 #  define MAILPATH "/dev/null"
 # endif
 # if !defined(MAILPATH) && defined(__osf__)
@@ -68,36 +68,36 @@ static long laststattime;
 # endif
 
 void getmailstatus(void) {
-	if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
+        if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
 #  ifdef MAILPATH
 #   ifdef AMS
-	        struct passwd ppasswd;
+                struct passwd ppasswd;
 
-		(void) memcpy(&ppasswd, getpwuid(getuid()), sizeof(struct passwd));
-		if (ppasswd.pw_dir) {
-		     mailbox = (char *) alloc((unsigned) strlen(ppasswd.pw_dir)+sizeof(AMS_MAILBOX));
-		     Strcpy(mailbox, ppasswd.pw_dir);
-		     Strcat(mailbox, AMS_MAILBOX);
-		} else
-		  return;
+                (void) memcpy(&ppasswd, getpwuid(getuid()), sizeof(struct passwd));
+                if (ppasswd.pw_dir) {
+                     mailbox = (char *) alloc((unsigned) strlen(ppasswd.pw_dir)+sizeof(AMS_MAILBOX));
+                     Strcpy(mailbox, ppasswd.pw_dir);
+                     Strcat(mailbox, AMS_MAILBOX);
+                } else
+                  return;
 #   else
-		const char *pw_name = getpwuid(getuid())->pw_name;
-		mailbox = (char *) alloc(sizeof(MAILPATH)+strlen(pw_name));
-		Strcpy(mailbox, MAILPATH);
-		Strcat(mailbox, pw_name);
+                const char *pw_name = getpwuid(getuid())->pw_name;
+                mailbox = (char *) alloc(sizeof(MAILPATH)+strlen(pw_name));
+                Strcpy(mailbox, MAILPATH);
+                Strcat(mailbox, pw_name);
 #  endif /* AMS */
 #  else
-		return;
+                return;
 #  endif
-	}
-	if(stat(mailbox, &omstat)){
+        }
+        if(stat(mailbox, &omstat)){
 #  ifdef PERMANENT_MAILBOX
-		pline("Cannot get status of MAIL=\"%s\".", mailbox);
-		mailbox = 0;
+                pline("Cannot get status of MAIL=\"%s\".", mailbox);
+                mailbox = 0;
 #  else
-		omstat.st_mtime = 0;
+                omstat.st_mtime = 0;
 #  endif
-	}
+        }
 }
 # endif /* UNIX */
 
@@ -112,20 +112,20 @@ STATIC_OVL boolean
 md_start(startp)
     coord *startp;
 {
-    coord testcc;	/* scratch coordinates */
-    int row;		/* current row we are checking */
-    int lax;		/* if TRUE, pick a position in sight. */
-    int dd;		/* distance to current point */
-    int max_distance;	/* max distance found so far */
+    coord testcc;       /* scratch coordinates */
+    int row;            /* current row we are checking */
+    int lax;            /* if TRUE, pick a position in sight. */
+    int dd;             /* distance to current point */
+    int max_distance;   /* max distance found so far */
 
     /*
      * If blind and not telepathic, then it doesn't matter what we pick ---
      * the hero is not going to see it anyway.  So pick a nearby position.
      */
     if (Blind && !Blind_telepat) {
-	if (!enexto(startp, u.ux, u.uy, (struct permonst *) 0))
-	    return FALSE;	/* no good posiitons */
-	return TRUE;
+        if (!enexto(startp, u.ux, u.uy, (struct permonst *) 0))
+            return FALSE;       /* no good posiitons */
+        return TRUE;
     }
 
     /*
@@ -133,14 +133,14 @@ md_start(startp)
      * hero.
      */
     if (couldsee(upstair.sx, upstair.sy)) {
-	startp->x = upstair.sx;
-	startp->y = upstair.sy;
-	return TRUE;
+        startp->x = upstair.sx;
+        startp->y = upstair.sy;
+        return TRUE;
     }
     if (couldsee(dnstair.sx, dnstair.sy)) {
-	startp->x = dnstair.sx;
-	startp->y = dnstair.sy;
-	return TRUE;
+        startp->x = dnstair.sx;
+        startp->y = dnstair.sy;
+        return TRUE;
     }
 
     /*
@@ -152,52 +152,52 @@ md_start(startp)
      * The arrays viz_rmin[] and viz_rmax[] are set even when blind.  These
      * are the LOS limits for each row.
      */
-    lax = 0;	/* be picky */
+    lax = 0;    /* be picky */
     max_distance = -1;
 retry:
     for (row = 0; row < ROWNO; row++) {
-	if (viz_rmin[row] < viz_rmax[row]) {
-	    /* There are valid positions on this row. */
-	    dd = distu(viz_rmin[row],row);
-	    if (dd > max_distance) {
-		if (lax) {
-		    max_distance = dd;
-		    startp->y = row;
-		    startp->x = viz_rmin[row];
-		
-		} else if (enexto(&testcc, (signed char)viz_rmin[row], row,
-						(struct permonst *) 0) &&
-			   !cansee(testcc.x, testcc.y) &&
-			   couldsee(testcc.x, testcc.y)) {
-		    max_distance = dd;
-		    *startp = testcc;
-		}
-	    }
-	    dd = distu(viz_rmax[row],row);
-	    if (dd > max_distance) {
-		if (lax) {
-		    max_distance = dd;
-		    startp->y = row;
-		    startp->x = viz_rmax[row];
-		
-		} else if (enexto(&testcc, (signed char)viz_rmax[row], row,
-						(struct permonst *) 0) &&
-			   !cansee(testcc.x,testcc.y) &&
-			   couldsee(testcc.x, testcc.y)) {
+        if (viz_rmin[row] < viz_rmax[row]) {
+            /* There are valid positions on this row. */
+            dd = distu(viz_rmin[row],row);
+            if (dd > max_distance) {
+                if (lax) {
+                    max_distance = dd;
+                    startp->y = row;
+                    startp->x = viz_rmin[row];
+                
+                } else if (enexto(&testcc, (signed char)viz_rmin[row], row,
+                                                (struct permonst *) 0) &&
+                           !cansee(testcc.x, testcc.y) &&
+                           couldsee(testcc.x, testcc.y)) {
+                    max_distance = dd;
+                    *startp = testcc;
+                }
+            }
+            dd = distu(viz_rmax[row],row);
+            if (dd > max_distance) {
+                if (lax) {
+                    max_distance = dd;
+                    startp->y = row;
+                    startp->x = viz_rmax[row];
+                
+                } else if (enexto(&testcc, (signed char)viz_rmax[row], row,
+                                                (struct permonst *) 0) &&
+                           !cansee(testcc.x,testcc.y) &&
+                           couldsee(testcc.x, testcc.y)) {
 
-		    max_distance = dd;
-		    *startp = testcc;
-		}
-	    }
-	}
+                    max_distance = dd;
+                    *startp = testcc;
+                }
+            }
+        }
     }
 
     if (max_distance < 0) {
-	if (!lax) {
-	    lax = 1;		/* just find a position */
-	    goto retry;
-	}
-	return FALSE;
+        if (!lax) {
+            lax = 1;            /* just find a position */
+            goto retry;
+        }
+        return FALSE;
     }
 
     return TRUE;
@@ -211,30 +211,30 @@ retry:
  */
 STATIC_OVL boolean
 md_stop(stopp, startp)
-    coord *stopp;	/* stopping position (we fill it in) */
-    coord *startp;	/* starting positon (read only) */
+    coord *stopp;       /* stopping position (we fill it in) */
+    coord *startp;      /* starting positon (read only) */
 {
     int x, y, distance, min_distance = -1;
 
     for (x = u.ux-1; x <= u.ux+1; x++)
-	for (y = u.uy-1; y <= u.uy+1; y++) {
-	    if (!isok(x, y) || (x == u.ux && y == u.uy)) continue;
+        for (y = u.uy-1; y <= u.uy+1; y++) {
+            if (!isok(x, y) || (x == u.ux && y == u.uy)) continue;
 
-	    if (ACCESSIBLE(levl[x][y].typ) && !MON_AT(x,y)) {
-		distance = dist2(x,y,startp->x,startp->y);
-		if (min_distance < 0 || distance < min_distance ||
-			(distance == min_distance && rn2(2))) {
-		    stopp->x = x;
-		    stopp->y = y;
-		    min_distance = distance;
-		}
-	    }
-	}
+            if (ACCESSIBLE(levl[x][y].typ) && !MON_AT(x,y)) {
+                distance = dist2(x,y,startp->x,startp->y);
+                if (min_distance < 0 || distance < min_distance ||
+                        (distance == min_distance && rn2(2))) {
+                    stopp->x = x;
+                    stopp->y = y;
+                    min_distance = distance;
+                }
+            }
+        }
 
     /* If we didn't find a good spot, try enexto(). */
     if (min_distance < 0 &&
-		!enexto(stopp, u.ux, u.uy, &mons[PM_MAIL_DAEMON]))
-	return FALSE;
+                !enexto(stopp, u.ux, u.uy, &mons[PM_MAIL_DAEMON]))
+        return FALSE;
 
     return TRUE;
 }
@@ -245,7 +245,7 @@ static const char *mail_text[] = {
     "Look out!",
     "Pardon me!"
 };
-#define md_exclamations()	(mail_text[rn2(3)])
+#define md_exclamations()       (mail_text[rn2(3)])
 
 /*
  * Make the mail daemon run through the dungeon.  The daemon will run over
@@ -256,21 +256,21 @@ static const char *mail_text[] = {
 STATIC_OVL boolean
 md_rush(md,tx,ty)
     struct monst *md;
-    int tx, ty;		/* destination of mail daemon */
+    int tx, ty;         /* destination of mail daemon */
 {
-    struct monst *mon;			/* displaced monster */
-    int dx, dy;		/* direction counters */
-    int fx = md->mx, fy = md->my;	/* current location */
-    int nfx = fx, nfy = fy,		/* new location */
-	d1, d2;				/* shortest distances */
+    struct monst *mon;                  /* displaced monster */
+    int dx, dy;         /* direction counters */
+    int fx = md->mx, fy = md->my;       /* current location */
+    int nfx = fx, nfy = fy,             /* new location */
+        d1, d2;                         /* shortest distances */
 
     /*
      * It is possible that the monster at (fx,fy) is not the md when:
      * the md rushed the hero and failed, and is now starting back.
      */
     if (m_at(fx, fy) == md) {
-	remove_monster(fx, fy);		/* pick up from orig position */
-	newsym(fx, fy);
+        remove_monster(fx, fy);         /* pick up from orig position */
+        newsym(fx, fy);
     }
 
     /*
@@ -278,47 +278,47 @@ md_rush(md,tx,ty)
      * dungeon.
      */
     while (1) {
-	/* Find a good location next to (fx,fy) closest to (tx,ty). */
-	d1 = dist2(fx,fy,tx,ty);
-	for (dx = -1; dx <= 1; dx++) for(dy = -1; dy <= 1; dy++)
-	    if ((dx || dy) && isok(fx+dx,fy+dy) &&
-				       !IS_STWALL(levl[fx+dx][fy+dy].typ)) {
-		d2 = dist2(fx+dx,fy+dy,tx,ty);
-		if (d2 < d1) {
-		    d1 = d2;
-		    nfx = fx+dx;
-		    nfy = fy+dy;
-		}
-	    }
+        /* Find a good location next to (fx,fy) closest to (tx,ty). */
+        d1 = dist2(fx,fy,tx,ty);
+        for (dx = -1; dx <= 1; dx++) for(dy = -1; dy <= 1; dy++)
+            if ((dx || dy) && isok(fx+dx,fy+dy) &&
+                                       !IS_STWALL(levl[fx+dx][fy+dy].typ)) {
+                d2 = dist2(fx+dx,fy+dy,tx,ty);
+                if (d2 < d1) {
+                    d1 = d2;
+                    nfx = fx+dx;
+                    nfy = fy+dy;
+                }
+            }
 
-	/* Break if the md couldn't find a new position. */
-	if (nfx == fx && nfy == fy) break;
+        /* Break if the md couldn't find a new position. */
+        if (nfx == fx && nfy == fy) break;
 
-	fx = nfx;			/* this is our new position */
-	fy = nfy;
+        fx = nfx;                       /* this is our new position */
+        fy = nfy;
 
-	/* Break if the md reaches its destination. */
-	if (fx == tx && fy == ty) break;
+        /* Break if the md reaches its destination. */
+        if (fx == tx && fy == ty) break;
 
-	if ((mon = m_at(fx,fy)) != 0)	/* save monster at this position */
-	    verbalize("%s", md_exclamations());
-	else if (fx == u.ux && fy == u.uy)
-	    verbalize("Excuse me.");
+        if ((mon = m_at(fx,fy)) != 0)   /* save monster at this position */
+            verbalize("%s", md_exclamations());
+        else if (fx == u.ux && fy == u.uy)
+            verbalize("Excuse me.");
 
-	place_monster(md,fx,fy);	/* put md down */
-	newsym(fx,fy);			/* see it */
-	flush_screen(0);		/* make sure md shows up */
-	delay_output();			/* wait a little bit */
+        place_monster(md,fx,fy);        /* put md down */
+        newsym(fx,fy);                  /* see it */
+        flush_screen(0);                /* make sure md shows up */
+        delay_output();                 /* wait a little bit */
 
-	/* Remove md from the dungeon.  Restore original mon, if necessary. */
-	if (mon) {
-	    if ((mon->mx != fx) || (mon->my != fy))
-		place_worm_seg(mon, fx, fy);
-	    else
-		place_monster(mon, fx, fy);
-	} else
-	    remove_monster(fx, fy);
-	newsym(fx,fy);
+        /* Remove md from the dungeon.  Restore original mon, if necessary. */
+        if (mon) {
+            if ((mon->mx != fx) || (mon->my != fy))
+                place_worm_seg(mon, fx, fy);
+            else
+                place_monster(mon, fx, fy);
+        } else
+            remove_monster(fx, fy);
+        newsym(fx,fy);
     }
 
     /*
@@ -326,23 +326,23 @@ md_rush(md,tx,ty)
      * very unlikely).  If one exists, then have the md leave in disgust.
      */
     if ((mon = m_at(fx, fy)) != 0) {
-	place_monster(md, fx, fy);	/* display md with text below */
-	newsym(fx, fy);
-	verbalize("This place's too crowded.  I'm outta here.");
+        place_monster(md, fx, fy);      /* display md with text below */
+        newsym(fx, fy);
+        verbalize("This place's too crowded.  I'm outta here.");
 
-	if ((mon->mx != fx) || (mon->my != fy))	/* put mon back */
-	    place_worm_seg(mon, fx, fy);
-	else
-	    place_monster(mon, fx, fy);
+        if ((mon->mx != fx) || (mon->my != fy)) /* put mon back */
+            place_worm_seg(mon, fx, fy);
+        else
+            place_monster(mon, fx, fy);
 
-	newsym(fx, fy);
-	return FALSE;
+        newsym(fx, fy);
+        return FALSE;
     }
 
-    place_monster(md, fx, fy);	/* place at final spot */
+    place_monster(md, fx, fy);  /* place at final spot */
     newsym(fx, fy);
     flush_screen(0);
-    delay_output();			/* wait a little bit */
+    delay_output();                     /* wait a little bit */
 
     return TRUE;
 }
@@ -361,30 +361,30 @@ newmail (struct mail_info *info)
 
     /* Make the daemon.  Have it rush towards the hero. */
     if (!(md = makemon(&mons[PM_MAIL_DAEMON], start.x, start.y, NO_MM_FLAGS)))
-	 goto give_up;
+         goto give_up;
     if (!md_rush(md, stop.x, stop.y)) goto go_back;
 
     message_seen = TRUE;
     verbalize("%s, %s!  %s.", Hello(md), plname, info->display_txt);
 
     if (info->message_typ) {
-	struct obj *obj = mksobj(SCR_MAIL, FALSE, FALSE);
-	if (distu(md->mx,md->my) > 2)
-	    verbalize("Catch!");
-	display_nhwindow(WIN_MESSAGE, FALSE);
-	if (info->object_nam) {
-	    obj = oname(obj, info->object_nam);
-	    if (info->response_cmd) {	/*(hide extension of the obj name)*/
-		int namelth = info->response_cmd - info->object_nam - 1;
-		if ( namelth <= 0 || namelth >= (int) obj->onamelth )
-		    impossible("mail delivery screwed up");
-		else
-		    *(ONAME(obj) + namelth) = '\0';
-		/* Note: renaming object will discard the hidden command. */
-	    }
-	}
-	obj = hold_another_object(obj, "Oops!",
-				  (const char *)0, (const char *)0);
+        struct obj *obj = mksobj(SCR_MAIL, FALSE, FALSE);
+        if (distu(md->mx,md->my) > 2)
+            verbalize("Catch!");
+        display_nhwindow(WIN_MESSAGE, FALSE);
+        if (info->object_nam) {
+            obj = oname(obj, info->object_nam);
+            if (info->response_cmd) {   /*(hide extension of the obj name)*/
+                int namelth = info->response_cmd - info->object_nam - 1;
+                if ( namelth <= 0 || namelth >= (int) obj->onamelth )
+                    impossible("mail delivery screwed up");
+                else
+                    *(ONAME(obj) + namelth) = '\0';
+                /* Note: renaming object will discard the hidden command. */
+            }
+        }
+        obj = hold_another_object(obj, "Oops!",
+                                  (const char *)0, (const char *)0);
     }
 
     /* zip back to starting location */
@@ -394,129 +394,129 @@ go_back:
     /* deliver some classes of messages even if no daemon ever shows up */
 give_up:
     if (!message_seen && info->message_typ == MSG_OTHER)
-	pline("Hark!  \"%s.\"", info->display_txt);
+        pline("Hark!  \"%s.\"", info->display_txt);
 }
 
 void ckmailstatus(void) {
 #ifdef SIMPLE_MAIL
-	if (mailckfreq == 0)
-	  mailckfreq = (iflags.simplemail ? 5 : 10);
+        if (mailckfreq == 0)
+          mailckfreq = (iflags.simplemail ? 5 : 10);
 #else
-	mailckfreq = 10;
+        mailckfreq = 10;
 #endif
 
-	if(!mailbox || u.uswallow || !flags.biff
-		    || moves < laststattime + mailckfreq)
-		return;
+        if(!mailbox || u.uswallow || !flags.biff
+                    || moves < laststattime + mailckfreq)
+                return;
 
-	laststattime = moves;
-	if(stat(mailbox, &nmstat)){
+        laststattime = moves;
+        if(stat(mailbox, &nmstat)){
 #  ifdef PERMANENT_MAILBOX
-		pline("Cannot get status of MAIL=\"%s\" anymore.", mailbox);
-		mailbox = 0;
+                pline("Cannot get status of MAIL=\"%s\" anymore.", mailbox);
+                mailbox = 0;
 #  else
-		nmstat.st_mtime = 0;
+                nmstat.st_mtime = 0;
 #  endif
-	} else if(nmstat.st_mtime > omstat.st_mtime) {
-		if (nmstat.st_size) {
-		    static struct mail_info deliver = {
+        } else if(nmstat.st_mtime > omstat.st_mtime) {
+                if (nmstat.st_size) {
+                    static struct mail_info deliver = {
 #  ifndef NO_MAILREADER
-			MSG_MAIL, "I have some mail for you",
+                        MSG_MAIL, "I have some mail for you",
 #  else
-			/* suppress creation and delivery of scroll of mail */
-			MSG_OTHER, "You have some mail in the outside world",
+                        /* suppress creation and delivery of scroll of mail */
+                        MSG_OTHER, "You have some mail in the outside world",
 #  endif
-			0, 0
-		    };
-		    newmail(&deliver);
-		}
-		getmailstatus();	/* might be too late ... */
-	}
+                        0, 0
+                    };
+                    newmail(&deliver);
+                }
+                getmailstatus();        /* might be too late ... */
+        }
 }
 
 void readmail(struct obj *otmp) {
 #ifdef DEF_MAILREADER
-	const char *mr = 0;
+        const char *mr = 0;
 #endif /* DEF_MAILREADER */
 #ifdef SIMPLE_MAIL
-	if (iflags.simplemail)
-	{
-		FILE* mb = fopen(mailbox, "r");
-		char curline[102], *msg;
-		boolean seen_one_already = FALSE;
-		struct flock fl = { 0 };
+        if (iflags.simplemail)
+        {
+                FILE* mb = fopen(mailbox, "r");
+                char curline[102], *msg;
+                boolean seen_one_already = FALSE;
+                struct flock fl = { 0 };
 
-		fl.l_type = F_RDLCK;
-		fl.l_whence = SEEK_SET;
-		fl.l_start = 0;
-		fl.l_len = 0;
+                fl.l_type = F_RDLCK;
+                fl.l_whence = SEEK_SET;
+                fl.l_start = 0;
+                fl.l_len = 0;
 
-		if (!mb)
-			goto bail;
+                if (!mb)
+                        goto bail;
 
-		/* Allow this call to block. */
-		if (fcntl (fileno (mb), F_SETLKW, &fl) == -1)
-		  goto bail;
-		
-		errno = 0;
-		
-		while (fgets(curline, 102, mb) != NULL)
-		{
-		  fl.l_type = F_UNLCK;
-		  fcntl (fileno(mb), F_UNLCK, &fl);
-		  
-		  pline("There is a%s message on this scroll.",
-		      seen_one_already ? "nother" : "");
-		  
-		  msg = strchr(curline, ':');
-		  
-		  if (!msg)
-		    goto bail;
-		  
-		  *msg = '\0';
-		  msg++;
-		  
-		  pline ("This message is from '%s'.", curline);
+                /* Allow this call to block. */
+                if (fcntl (fileno (mb), F_SETLKW, &fl) == -1)
+                  goto bail;
+                
+                errno = 0;
+                
+                while (fgets(curline, 102, mb) != NULL)
+                {
+                  fl.l_type = F_UNLCK;
+                  fcntl (fileno(mb), F_UNLCK, &fl);
+                  
+                  pline("There is a%s message on this scroll.",
+                      seen_one_already ? "nother" : "");
+                  
+                  msg = strchr(curline, ':');
+                  
+                  if (!msg)
+                    goto bail;
+                  
+                  *msg = '\0';
+                  msg++;
+                  
+                  pline ("This message is from '%s'.", curline);
 
-		  msg[strlen(msg) - 1] = '\0'; /* kill newline */
-		  pline ("It reads: \"%s\".", msg);
+                  msg[strlen(msg) - 1] = '\0'; /* kill newline */
+                  pline ("It reads: \"%s\".", msg);
 
-		  seen_one_already = TRUE;
-		  errno = 0;
+                  seen_one_already = TRUE;
+                  errno = 0;
 
-		  fl.l_type = F_RDLCK;
-		  fcntl(fileno(mb), F_SETLKW, &fl);
-		}
+                  fl.l_type = F_RDLCK;
+                  fcntl(fileno(mb), F_SETLKW, &fl);
+                }
 
-		fl.l_type = F_UNLCK;
-		fcntl(fileno(mb), F_UNLCK, &fl);
-		
-		fclose(mb);
-		unlink(mailbox);
-		return;
-	}
+                fl.l_type = F_UNLCK;
+                fcntl(fileno(mb), F_UNLCK, &fl);
+                
+                fclose(mb);
+                unlink(mailbox);
+                return;
+        }
 # endif /* SIMPLE_MAIL */
-# ifdef DEF_MAILREADER			/* This implies that UNIX is defined */
-	display_nhwindow(WIN_MESSAGE, FALSE);
-	if(!(mr = nh_getenv("MAILREADER")))
-		mr = DEF_MAILREADER;
+# ifdef DEF_MAILREADER                  /* This implies that UNIX is defined */
+        display_nhwindow(WIN_MESSAGE, FALSE);
+        if(!(mr = nh_getenv("MAILREADER")))
+                mr = DEF_MAILREADER;
 
-	if(child(1)){
-		(void) execl(mr, mr, (char *)0);
-		terminate(EXIT_FAILURE);
-	}
+        if(child(1)){
+                (void) execl(mr, mr, (char *)0);
+                terminate(EXIT_FAILURE);
+        }
 # else
-	display_file(mailbox, TRUE);
+        display_file(mailbox, TRUE);
 # endif /* DEF_MAILREADER */
 
-	/* get new stat; not entirely correct: there is a small time
-	   window where we do not see new mail */
-	getmailstatus();
-	return;
+        /* get new stat; not entirely correct: there is a small time
+           window where we do not see new mail */
+        getmailstatus();
+        return;
 
 #ifdef SIMPLE_MAIL
 bail:
-	pline("It appears to be all gibberish."); /* bail out _professionally_ */
+        pline("It appears to be all gibberish."); /* bail out _professionally_ */
 #endif
 }
 
@@ -525,32 +525,32 @@ bail:
 void 
 ckmailstatus (void)
 {
-	static int laststattime = 0;
-	
-	if(u.uswallow || !flags.biff
-		    || moves < laststattime + mailckfreq)
-		return;
+        static int laststattime = 0;
+        
+        if(u.uswallow || !flags.biff
+                    || moves < laststattime + mailckfreq)
+                return;
 
-	laststattime = moves;
-	if (lan_mail_check()) {
-		    static struct mail_info deliver = {
+        laststattime = moves;
+        if (lan_mail_check()) {
+                    static struct mail_info deliver = {
 #  ifndef NO_MAILREADER
-			MSG_MAIL, "I have some mail for you",
+                        MSG_MAIL, "I have some mail for you",
 #  else
-			/* suppress creation and delivery of scroll of mail */
-			MSG_OTHER, "You have some mail in the outside world",
+                        /* suppress creation and delivery of scroll of mail */
+                        MSG_OTHER, "You have some mail in the outside world",
 #  endif
-			0, 0
-		    };
-		    newmail(&deliver);
-	}
+                        0, 0
+                    };
+                    newmail(&deliver);
+        }
 }
 
 /*ARGSUSED*/
 void 
 readmail (struct obj *otmp)
 {
-	lan_mail_read(otmp);
+        lan_mail_read(otmp);
 }
 
 # endif /* LAN_MAIL */

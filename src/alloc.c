@@ -1,9 +1,9 @@
 /* See LICENSE in the root of this project for change info */
-#define ALLOC_C		/* comment line for pre-compiled headers */
+#define ALLOC_C         /* comment line for pre-compiled headers */
 /* since this file is also used in auxiliary programs, don't include all the
  * function declarations for all of nethack
  */
-#define EXTERN_H	/* comment line for pre-compiled headers */
+#define EXTERN_H        /* comment line for pre-compiled headers */
 #include "config.h"
 
 #if defined(MONITOR_HEAP) || defined(WIZARD)
@@ -31,21 +31,21 @@ unsigned int lth;
 #ifdef LINT
 /*
  * a ridiculous definition, suppressing
- *	"possible pointer alignment problem" for (long *) malloc()
+ *      "possible pointer alignment problem" for (long *) malloc()
  * from lint
  */
-	long dummy = ftell(stderr);
+        long dummy = ftell(stderr);
 
-	if(lth) dummy = 0;	/* make sure arg is used */
-	return(&dummy);
+        if(lth) dummy = 0;      /* make sure arg is used */
+        return(&dummy);
 #else
-	void * ptr;
+        void * ptr;
 
-	ptr = malloc(lth);
+        ptr = malloc(lth);
 #ifndef MONITOR_HEAP
-	if (!ptr) panic("Memory allocation failure; cannot get %u bytes", lth);
+        if (!ptr) panic("Memory allocation failure; cannot get %u bytes", lth);
 #endif
-	return((long *) ptr);
+        return((long *) ptr);
 #endif
 }
 
@@ -64,8 +64,8 @@ unsigned int lth;
 char *
 fmt_ptr (const void *ptr, char *buf)
 {
-	Sprintf(buf, PTR_FMT, (PTR_TYP)ptr);
-	return buf;
+        Sprintf(buf, PTR_FMT, (PTR_TYP)ptr);
+        return buf;
 }
 
 #endif
@@ -77,43 +77,43 @@ fmt_ptr (const void *ptr, char *buf)
 static void 
 heapmon_init (void)
 {
-	char *logname = getenv("NH_HEAPLOG");
+        char *logname = getenv("NH_HEAPLOG");
 
-	if (logname && *logname)
-		heaplog = fopen(logname, "w");
-	tried_heaplog = TRUE;
+        if (logname && *logname)
+                heaplog = fopen(logname, "w");
+        tried_heaplog = TRUE;
 }
 
 long *
 nhalloc (unsigned int lth, const char *file, int line)
 {
-	long *ptr = alloc(lth);
-	char ptr_address[20];
+        long *ptr = alloc(lth);
+        char ptr_address[20];
 
-	if (!tried_heaplog) heapmon_init();
-	if (heaplog)
-		(void) fprintf(heaplog, "+%5u %s %4d %s\n", lth,
-				fmt_ptr((void *)ptr, ptr_address),
-				line, file);
-	/* potential panic in alloc() was deferred til here */
-	if (!ptr) panic("Cannot get %u bytes, line %d of %s",
-			lth, line, file);
+        if (!tried_heaplog) heapmon_init();
+        if (heaplog)
+                (void) fprintf(heaplog, "+%5u %s %4d %s\n", lth,
+                                fmt_ptr((void *)ptr, ptr_address),
+                                line, file);
+        /* potential panic in alloc() was deferred til here */
+        if (!ptr) panic("Cannot get %u bytes, line %d of %s",
+                        lth, line, file);
 
-	return ptr;
+        return ptr;
 }
 
 void 
 nhfree (void *ptr, const char *file, int line)
 {
-	char ptr_address[20];
+        char ptr_address[20];
 
-	if (!tried_heaplog) heapmon_init();
-	if (heaplog)
-		(void) fprintf(heaplog, "-      %s %4d %s\n",
-				fmt_ptr((void *)ptr, ptr_address),
-				line, file);
+        if (!tried_heaplog) heapmon_init();
+        if (heaplog)
+                (void) fprintf(heaplog, "-      %s %4d %s\n",
+                                fmt_ptr((void *)ptr, ptr_address),
+                                line, file);
 
-	free(ptr);
+        free(ptr);
 }
 
 #endif /* MONITOR_HEAP */

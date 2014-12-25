@@ -11,7 +11,7 @@
  * "extra output" method is used, but not all systems provide access to
  * a fine-grained timer.
  */
-#define TIMED_DELAY	/* usleep() */
+#define TIMED_DELAY     /* usleep() */
 #endif
 
 /*
@@ -22,21 +22,21 @@
  * A stat system call is done on the mailbox every MAILCKFREQ moves.
  */
 
-#define MAIL			/* Deliver mail during the game */
-#define DEF_MAILREADER	"/usr/bin/mail"
+#define MAIL                    /* Deliver mail during the game */
+#define DEF_MAILREADER  "/usr/bin/mail"
 
-#define FCMASK	0660	/* file creation mask */
+#define FCMASK  0660    /* file creation mask */
 
 #include <time.h>
 
-#define HLOCK	"run/perm" /* an empty file used for locking purposes */
+#define HLOCK   "run/perm" /* an empty file used for locking purposes */
 
 #ifndef REDO
 #define Getchar nhgetch
 #endif
 #define tgetch getchar
 
-#define SHELL		/* do not delete the '!' command */
+#define SHELL           /* do not delete the '!' command */
 
 #include <string.h>
 #include <strings.h>
@@ -46,7 +46,7 @@
 #include <sys/wait.h>
 
 /* Use the high quality random number routines. */
-#define Rand()	random()
+#define Rand()  random()
 
 #ifdef TIMED_DELAY
 # define msleep(k) usleep((k)*1000)

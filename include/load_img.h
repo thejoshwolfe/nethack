@@ -15,7 +15,7 @@ typedef struct IMG_HEADER{
   short img_h;    /* Total number of lines               */
   long  magic;    /* Contains "XIMG" if standard color   */
   short paltype;  /* palette type (0=RGB (short each)) */
-  short *palette;	/* palette etc.                        */
+  short *palette;       /* palette etc.                        */
   char *addr;     /* Address for the depacked bit-planes */
 } IMG_header;
 

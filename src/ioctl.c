@@ -10,7 +10,7 @@
 #include <bsdtty.h>
 # else
 #  if defined(AIX_31) && !defined(_ALL_SOURCE)
-#   define _ALL_SOURCE	/* causes struct winsize to be present */
+#   define _ALL_SOURCE  /* causes struct winsize to be present */
 #   ifdef _AIX32
 #    include <sys/ioctl.h>
 #   endif
@@ -18,10 +18,10 @@
 #  if defined(_BULL_SOURCE)
 #   include <termios.h>
 struct termios termio;
-#   undef TIMEOUT		/* defined in you.h and sys/tty.h */
-#   include <sys/tty.h>		/* define winsize */
-#   include <sys/ttold.h>	/* define struct ltchars */
-#   include <sys/bsdioctl.h>	/* define TIOGWINSZ */
+#   undef TIMEOUT               /* defined in you.h and sys/tty.h */
+#   include <sys/tty.h>         /* define winsize */
+#   include <sys/ttold.h>       /* define struct ltchars */
+#   include <sys/bsdioctl.h>    /* define TIOGWINSZ */
 #  else
 #   include <sgtty.h>
 #  endif
@@ -45,7 +45,7 @@ struct termios termio;
 
 #if defined(TIOCGWINSZ) && (defined(AIX_31) || defined(_BULL_SOURCE) || defined(SVR4))
 #define USE_WIN_IOCTL
-#include "tcap.h"	/* for LI and CO */
+#include "tcap.h"       /* for LI and CO */
 #endif
 
 #ifdef _M_UNIX
@@ -65,14 +65,14 @@ void getwindowsz(void) {
     struct winsize ttsz;
 
     if (ioctl(fileno(stdin), (int)TIOCGWINSZ, (char *)&ttsz) != -1) {
-	/*
-	 * Use the kernel's values for lines and columns if it has
-	 * any idea.
-	 */
-	if (ttsz.ws_row)
-	    LI = ttsz.ws_row;
-	if (ttsz.ws_col)
-	    CO = ttsz.ws_col;
+        /*
+         * Use the kernel's values for lines and columns if it has
+         * any idea.
+         */
+        if (ttsz.ws_row)
+            LI = ttsz.ws_row;
+        if (ttsz.ws_col)
+            CO = ttsz.ws_col;
     }
 #endif
 }
@@ -81,18 +81,18 @@ void
 getioctls (void)
 {
 #ifdef BSD_JOB_CONTROL
-	(void) ioctl(fileno(stdin), (int) TIOCGLTC, (char *) &ltchars);
-	(void) ioctl(fileno(stdin), (int) TIOCSLTC, (char *) &ltchars0);
+        (void) ioctl(fileno(stdin), (int) TIOCGLTC, (char *) &ltchars);
+        (void) ioctl(fileno(stdin), (int) TIOCSLTC, (char *) &ltchars0);
 #else
-	(void) tcgetattr(fileno(stdin), &termio);
+        (void) tcgetattr(fileno(stdin), &termio);
 #endif
-	getwindowsz();
+        getwindowsz();
 }
 
 void setioctls(void) {
 #ifdef BSD_JOB_CONTROL
-	(void) ioctl(fileno(stdin), (int) TIOCSLTC, (char *) &ltchars);
+        (void) ioctl(fileno(stdin), (int) TIOCSLTC, (char *) &ltchars);
 #else
-	tcsetattr(fileno(stdin), TCSADRAIN, &termio);
+        tcsetattr(fileno(stdin), TCSADRAIN, &termio);
 #endif
 }

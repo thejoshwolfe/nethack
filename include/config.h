@@ -4,10 +4,10 @@
 
 
 /*
- * Section 1:	Operating and window systems selection.
+ * Section 1:   Operating and window systems selection.
  */
 
-#define UNIX		/* delete if no fork(), exec() available */
+#define UNIX            /* delete if no fork(), exec() available */
 
 /* ensure _GNU_SOURCE is defined before including any system headers */
 # define _GNU_SOURCE
@@ -18,21 +18,21 @@
  * Some combinations make no sense.  See the installation document.
  */
 
-#define TTY_GRAPHICS	/* good old tty based graphics */
+#define TTY_GRAPHICS    /* good old tty based graphics */
 
 /* Debian default window system is always tty; they have to set their
  * own if they want another one (or just use the scripts */
 #define DEFAULT_WINDOW_SYS "tty"
 
 /*
- * Section 2:	Some global parameters and filenames.
- *		Commenting out WIZARD, LOGFILE, NEWS or PANICLOG removes that
- *		feature from the game; otherwise set the appropriate wizard
- *		name.  LOGFILE, NEWS and PANICLOG refer to files in the
- *		playground.
+ * Section 2:   Some global parameters and filenames.
+ *              Commenting out WIZARD, LOGFILE, NEWS or PANICLOG removes that
+ *              feature from the game; otherwise set the appropriate wizard
+ *              name.  LOGFILE, NEWS and PANICLOG refer to files in the
+ *              playground.
  */
 
-#ifndef WIZARD		/* allow for compile-time or Makefile changes */
+#ifndef WIZARD          /* allow for compile-time or Makefile changes */
 # ifndef KR1ED
 #  define WIZARD  "root" /* the person allowed to use the -D option */
 # else
@@ -42,42 +42,42 @@
 #endif
 
 #define LOGFILE "run/logfile" /* larger file for debugging purposes */
-#define NEWS "news"		/* the file containing the latest hack news */
+#define NEWS "news"             /* the file containing the latest hack news */
 
 /*
- *	If COMPRESS is defined, it should contain the full path name of your
- *	'compress' program.  Defining INTERNAL_COMP causes NetHack to do
- *	simpler byte-stream compression internally.  Both COMPRESS and
- *	INTERNAL_COMP create smaller bones/level/save files, but require
- *	additional code and time.  Currently, only UNIX fully implements
- *	COMPRESS; other ports should be able to uncompress save files a
- *	la unixmain.c if so inclined.
- *	If you define COMPRESS, you must also define COMPRESS_EXTENSION
- *	as the extension your compressor appends to filenames after
- *	compression.
+ *      If COMPRESS is defined, it should contain the full path name of your
+ *      'compress' program.  Defining INTERNAL_COMP causes NetHack to do
+ *      simpler byte-stream compression internally.  Both COMPRESS and
+ *      INTERNAL_COMP create smaller bones/level/save files, but require
+ *      additional code and time.  Currently, only UNIX fully implements
+ *      COMPRESS; other ports should be able to uncompress save files a
+ *      la unixmain.c if so inclined.
+ *      If you define COMPRESS, you must also define COMPRESS_EXTENSION
+ *      as the extension your compressor appends to filenames after
+ *      compression.
  */
 
 #ifdef UNIX
 /* path and file name extension for compression program */
 #define COMPRESS "/bin/gzip" /* FSF gzip compression */
-#define COMPRESS_EXTENSION ".gz"	/* normal gzip extension */
+#define COMPRESS_EXTENSION ".gz"        /* normal gzip extension */
 #endif
 
 #ifndef COMPRESS
-# define INTERNAL_COMP	/* control use of NetHack's compression routines */
+# define INTERNAL_COMP  /* control use of NetHack's compression routines */
 #endif
 
 /*
- *	Defining INSURANCE slows down level changes, but allows games that
- *	died due to program or system crashes to be resumed from the point
- *	of the last level change, after running a utility program.
+ *      Defining INSURANCE slows down level changes, but allows games that
+ *      died due to program or system crashes to be resumed from the point
+ *      of the last level change, after running a utility program.
  */
-#define INSURANCE	/* allow crashed game recovery */
+#define INSURANCE       /* allow crashed game recovery */
 
 /*
- * Section 3:	Definitions that may vary with system type.
- *		For example, both signed char and unsigned char should be short ints on
- *		the AT&T 3B2/3B5/etc. family.
+ * Section 3:   Definitions that may vary with system type.
+ *              For example, both signed char and unsigned char should be short ints on
+ *              the AT&T 3B2/3B5/etc. family.
  */
 
 /*
@@ -87,9 +87,9 @@
  * allocate a separate character for each bitfield.  (The bitfields used never
  * have more than 7 bits, and most are only 1 bit.)
  */
-#define BITFIELDS	/* Good bitfield handling */
+#define BITFIELDS       /* Good bitfield handling */
 
-/* #define STRNCMPI */	/* compiler/library has the strncmpi function */
+/* #define STRNCMPI */  /* compiler/library has the strncmpi function */
 
 /*
  * There are various choices for the NetHack vision system.  There is a
@@ -105,7 +105,7 @@
 /* #define VISION_TABLES */ /* use vision tables generated at compile time */
 #ifndef VISION_TABLES
 # ifndef NO_MACRO_CPATH
-#  define MACRO_CPATH	/* use clear_path macros instead of functions */
+#  define MACRO_CPATH   /* use clear_path macros instead of functions */
 # endif
 #endif
 
@@ -118,30 +118,30 @@
  */
 
 /* dungeon features */
-#define SINKS		/* Kitchen sinks - Janet Walz */
+#define SINKS           /* Kitchen sinks - Janet Walz */
 /* dungeon levels */
-#define WALLIFIED_MAZE	/* Fancy mazes - Jean-Christophe Collet */
+#define WALLIFIED_MAZE  /* Fancy mazes - Jean-Christophe Collet */
 /* monsters & objects */
-#define SEDUCE		/* Succubi/incubi seduction, by KAA, suggested by IM */
-#define STEED		/* Riding steeds */
-#define TOURIST		/* Tourist players with cameras and Hawaiian shirts */
+#define SEDUCE          /* Succubi/incubi seduction, by KAA, suggested by IM */
+#define STEED           /* Riding steeds */
+#define TOURIST         /* Tourist players with cameras and Hawaiian shirts */
 /* difficulty */
-#define ELBERETH	/* Engraving the E-word repels monsters */
+#define ELBERETH        /* Engraving the E-word repels monsters */
 /* I/O */
-#define REDO		/* support for redoing last command - DGK */
-#define CLIPPING	/* allow smaller screens -- ERS */
+#define REDO            /* support for redoing last command - DGK */
+#define CLIPPING        /* allow smaller screens -- ERS */
 
 #ifdef REDO
 # define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
 #endif
 
-#define EXP_ON_BOTL	/* Show experience on bottom line */
+#define EXP_ON_BOTL     /* Show experience on bottom line */
 #define PARANOID
 
 #define HPMON           /* Color HP monitor */
 #define SORTLOOT        /* Sort yer loot by alphabetical order, not index */
 
-/* #define SCORE_ON_BOTL */	/* added by Gary Erickson (erickson@ucivax) */
+/* #define SCORE_ON_BOTL */     /* added by Gary Erickson (erickson@ucivax) */
 
 /*
  * Section 5:  EXPERIMENTAL STUFF
@@ -162,13 +162,13 @@
 #endif
 #endif
 
-/*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
+/*#define GOLDOBJ */    /* Gold is kept on obj chains - Helge Hafting */
 #define AUTOPICKUP_EXCEPTIONS  /* exceptions to autopickup */
 #define DUMP_LOG
 #define DUMP_FN "run/dumps/%n.lastgame.txt"
 
 /* End of Section 5 */
 
-#include "global.h"	/* Define everything else according to choices above */
+#include "global.h"     /* Define everything else according to choices above */
 
 #endif /* CONFIG_H */
