@@ -296,10 +296,6 @@ const struct symdef defsyms[MAXPCHARS] = {
 
 #undef C
 
-#ifdef PC9800
-void (*ibmgraphics_mode_callback)(void) = 0;    /* set in tty_start_screen() */
-#endif /* PC9800 */
-
 static unsigned char ibm_graphics[MAXPCHARS] = {
 /* 0*/  g_FILLER(S_stone),
         0xb3,   /* S_vwall:     meta-3, vertical rule */
@@ -493,10 +489,6 @@ static unsigned char dec_graphics[MAXPCHARS] = {
 };
 
 
-#ifdef PC9800
-void (*ascgraphics_mode_callback)(void) = 0;    /* set in tty_start_screen() */
-#endif
-
 /*
  * Convert the given character to an object class.  If the character is not
  * recognized, then MAXOCLASSES is returned.  Used in detect.c invent.c,
@@ -541,9 +533,6 @@ switch_graphics (int gr_set_flag)
         default:
         case ASCII_GRAPHICS:
             assign_graphics((unsigned char *)0, 0, MAXPCHARS, 0);
-#ifdef PC9800
-            if (ascgraphics_mode_callback) (*ascgraphics_mode_callback)();
-#endif
             break;
         case IBM_GRAPHICS:
 /*
@@ -556,9 +545,6 @@ switch_graphics (int gr_set_flag)
             iflags.IBMgraphics = TRUE;
             iflags.DECgraphics = FALSE;
             assign_graphics(ibm_graphics, SIZE(ibm_graphics), MAXPCHARS, 0);
-#ifdef PC9800
-            if (ibmgraphics_mode_callback) (*ibmgraphics_mode_callback)();
-#endif
             break;
         case DEC_GRAPHICS:
 /*
