@@ -10,4 +10,4 @@ touch perm
 touch logfile
 touch record
 
-./src/nethack
+./build/nethack

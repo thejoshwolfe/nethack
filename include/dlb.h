@@ -23,7 +23,7 @@ typedef struct dlb_library {
 
 /* library definitions */
 # ifndef DLBFILE
-#  define DLBFILE	"dat/nhdat"			/* name of library */
+#  define DLBFILE	"build/nhdat"
 # endif
 
 # ifndef FILENAME_CMP

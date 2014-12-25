@@ -101,6 +101,18 @@ verbose_help (void)
     usage();
 }
 
+/**
+ * "path/to/file.c" => "file.c"
+ * "file.c"         => "file.c"
+ */
+static char * get_basename(char * path) {
+  int i;
+  for (i = strlen(path) - 1; i >= 0; i--) {
+    if (path[i] == '/') return path + i + 1;
+  }
+  return path;
+}
+
 static void 
 Write (int out, char *buf, long len)
 {
@@ -353,7 +365,7 @@ main (int argc, char **argv)
 	    ld[i].fsize = lseek(fd, 0, SEEK_END);
 	    ld[i].foffset = flen;
 
-	    slen += strlen(ld[i].fname);	/* don't add null (yet) */
+	    slen += strlen(get_basename(ld[i].fname)); /* don't add null (yet) */
 	    flen += ld[i].fsize;
 	    close(fd);
 	}
@@ -429,12 +441,12 @@ write_dlb_directory (int out, int nfiles, libdir *ld, long slen, long dir_size, 
     int i;
 
     sprintf(buf,"%3ld %8ld %8ld %8ld %8ld\n",
-	    (long) DLB_VERS,	    /* version of dlb file */
-	    (long) nfiles+1,	    /* # of entries (includes directory) */
-				    /* string length + room for nulls */
-	    (long) slen+strlen(DLB_DIRECTORY)+nfiles+1,
-	    (long) dir_size,	    /* start of first file */
-	    (long) flen+dir_size);  /* total file size */
+            (long) DLB_VERS,            /* version of dlb file */
+            (long) nfiles+1,            /* # of entries (includes directory) */
+                                    /* string length + room for nulls */
+            (long) slen+strlen(DLB_DIRECTORY)+nfiles+1,
+            (long) dir_size,            /* start of first file */
+            (long) flen+dir_size);  /* total file size */
     Write(out, buf, strlen(buf));
 
     /* write each file entry */
@@ -442,11 +454,11 @@ write_dlb_directory (int out, int nfiles, libdir *ld, long slen, long dir_size, 
     sprintf(buf, ENTRY_FORMAT, ENC_NORMAL, DLB_DIRECTORY, (long) 0);
     Write(out, buf, strlen(buf));
     for (i = 0; i < nfiles; i++) {
-	sprintf(buf, ENTRY_FORMAT,
-		ENC_NORMAL,		    /* encoding */
-		ld[i].fname,		    /* name */
-		ld[i].foffset + dir_size);  /* offset */
-	Write(out, buf, strlen(buf));
+        sprintf(buf, ENTRY_FORMAT,
+                ENC_NORMAL,                    /* encoding */
+                get_basename(ld[i].fname),                    /* name */
+                ld[i].foffset + dir_size);  /* offset */
+        Write(out, buf, strlen(buf));
     }
 }
 
