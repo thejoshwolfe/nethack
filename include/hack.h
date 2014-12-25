@@ -109,21 +109,8 @@ extern coord bhitpos;	/* place where throw or zap hits or stops */
 #include "rect.h"
 #include "region.h"
 
-#ifdef USE_TRAMPOLI /* This doesn't belong here, but we have little choice */
-#undef NDECL
-#define NDECL(f) f()
-#endif
-
 #include "extern.h"
 #include "winprocs.h"
-
-#ifdef USE_TRAMPOLI
-#include "wintty.h"
-#undef WINTTY_H
-#include "trampoli.h"
-#undef EXTERN_H
-#include "extern.h"
-#endif /* USE_TRAMPOLI */
 
 #define NO_SPELL	0
 
@@ -314,7 +301,7 @@ extern coord bhitpos;	/* place where throw or zap hits or stops */
 #endif	/* OVERLAY && (OVL0 || OVL1 || OVL2 || OVL3 || OVLB) */
 
 /* Macro for a few items that are only static if we're not overlaid.... */
-#if defined(USE_TRAMPOLI) || defined(USE_OVLx)
+#if defined(USE_OVLx)
 # define STATIC_PTR
 #else
 # define STATIC_PTR static
