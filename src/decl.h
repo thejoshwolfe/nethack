@@ -216,9 +216,7 @@ extern unsigned char monsyms[MAXMCLASSES];              /* current class symbols
 #include "obj.h"
 extern struct obj *invent,
         *uarm, *uarmc, *uarmh, *uarms, *uarmg, *uarmf,
-#ifdef TOURIST
         *uarmu,                         /* under-wear, so to speak */
-#endif
         *uskin, *uamul, *uleft, *uright, *ublindf,
         *uwep, *uswapwep, *uquiver;
 

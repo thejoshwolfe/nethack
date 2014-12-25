@@ -77,11 +77,9 @@ struct monst *victim;
                 (void) burn_dmg(item, xname(item));
                 return TRUE;
             }
-#ifdef TOURIST
             item = (victim == &youmonst) ? uarmu : which_armor(victim, W_ARMU);
             if (item)
                 (void) burn_dmg(item, "shirt");
-#endif
             return TRUE;
         case 2:
             item = (victim == &youmonst) ? uarms : which_armor(victim, W_ARMS);
@@ -830,10 +828,8 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                                                 1, TRUE, &youmonst);
                         else if (uarm)
                             (void) rust_dmg(uarm, "armor", 1, TRUE, &youmonst);
-#ifdef TOURIST
                         else if (uarmu)
                             (void) rust_dmg(uarmu, "shirt", 1, TRUE, &youmonst);
-#endif
                 }
                 update_inventory();
                 break;
@@ -1832,12 +1828,10 @@ glovecheck:                 target = which_armor(mtmp, W_ARMG);
                                 target = which_armor(mtmp, W_ARM);
                                 if (target)
                                     (void) rust_dmg(target, "armor", 1, TRUE, mtmp);
-#ifdef TOURIST
                                 else {
                                     target = which_armor(mtmp, W_ARMU);
                                     (void) rust_dmg(target, "shirt", 1, TRUE, mtmp);
                                 }
-#endif
                             }
                         }
                         if (mptr == &mons[PM_IRON_GOLEM]) {
@@ -2739,9 +2733,7 @@ boolean *lostsome;
                           obj == uamul || obj == uleft || obj == uright ||
                           obj == ublindf || obj == uarm || obj == uarmc ||
                           obj == uarmg || obj == uarmf ||
-#ifdef TOURIST
                           obj == uarmu ||
-#endif
                           (obj->cursed && (obj == uarmh || obj == uarms)) ||
                           welded(obj)))
                         otmp = obj;
@@ -3909,9 +3901,7 @@ lava_effects()
                     else if(obj == uarms) (void) Shield_off();
                     else if(obj == uarmg) (void) Gloves_off();
                     else if(obj == uarmf) (void) Boots_off();
-#ifdef TOURIST
                     else if(obj == uarmu) setnotworn(obj);
-#endif
                     else if(obj == uleft) Ring_gone(obj);
                     else if(obj == uright) Ring_gone(obj);
                     else if(obj == ublindf) Blindf_off(obj);

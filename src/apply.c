@@ -8,9 +8,7 @@ static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,
                                   WEAPON_CLASS, WAND_CLASS, GEM_CLASS, 0 };
 
-#ifdef TOURIST
 STATIC_DCL int use_camera(struct obj *);
-#endif
 STATIC_DCL int use_towel(struct obj *);
 STATIC_DCL boolean its_dead(int,int,int *);
 STATIC_DCL int use_stethoscope(struct obj *);
@@ -40,7 +38,6 @@ STATIC_DCL void add_class(char *, char);
 
 static const char no_elbow_room[] = "don't have enough elbow-room to maneuver.";
 
-#ifdef TOURIST
 STATIC_OVL int 
 use_camera (struct obj *obj)
 {
@@ -77,7 +74,6 @@ use_camera (struct obj *obj)
         }
         return 1;
 }
-#endif
 
 STATIC_OVL int 
 use_towel (struct obj *obj)
@@ -1737,7 +1733,6 @@ use_grease (struct obj *obj)
                         You(need_to_remove_outer_armor, buf, xname(otmp));
                         return;
                 }
-#ifdef TOURIST
                 if ((otmp->owornmask & WORN_SHIRT) && (uarmc || uarm)) {
                         Strcpy(buf, uarmc ? xname(uarmc) : "");
                         if (uarmc && uarm) Strcat(buf, " and ");
@@ -1745,7 +1740,6 @@ use_grease (struct obj *obj)
                         You(need_to_remove_outer_armor, buf, xname(otmp));
                         return;
                 }
-#endif
                 consume_obj_charge(obj, TRUE);
 
                 if (otmp != &zeroobj) {
@@ -2762,9 +2756,7 @@ doapply()
                 use_grease(obj);
                 break;
         case LOCK_PICK:
-#ifdef TOURIST
         case CREDIT_CARD:
-#endif
         case SKELETON_KEY:
                 (void) pick_lock(obj);
                 break;
@@ -2835,11 +2827,9 @@ doapply()
         case POT_OIL:
                 light_cocktail(obj);
                 break;
-#ifdef TOURIST
         case EXPENSIVE_CAMERA:
                 res = use_camera(obj);
                 break;
-#endif
         case TOWEL:
                 res = use_towel(obj);
                 break;

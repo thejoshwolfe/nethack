@@ -61,10 +61,8 @@ hurtmarmor (struct monst *mdef, int attk)
                 }
                 if ((target = which_armor(mdef, W_ARM)) != (struct obj *)0) {
                     (void)rust_dmg(target, xname(target), hurt, TRUE, mdef);
-#ifdef TOURIST
                 } else if ((target = which_armor(mdef, W_ARMU)) != (struct obj *)0) {
                     (void)rust_dmg(target, xname(target), hurt, TRUE, mdef);
-#endif
                 }
                 break;
             case 2:
@@ -721,7 +719,6 @@ int thrown;
                         }
                         tmp = 1;
                         break;
-#ifdef TOURIST
                     case EXPENSIVE_CAMERA:
                         You("succeed in destroying %s camera.  Congratulations!",
                                 shk_your(yourbuf, obj));
@@ -729,7 +726,6 @@ int thrown;
                         return(TRUE);
                         /*NOTREACHED*/
                         break;
-#endif
                     case CORPSE:                /* fixed by polder@cs.vu.nl */
                         if (touch_petrifies(&mons[obj->corpsenm])) {
                             static const char withwhat[] = "corpse";
@@ -1109,9 +1105,7 @@ struct attack *mattk;
             /* grabbing attacks the body */
             obj = which_armor(mdef, W_ARMC);            /* cloak */
             if (!obj) obj = which_armor(mdef, W_ARM);   /* suit */
-#ifdef TOURIST
             if (!obj) obj = which_armor(mdef, W_ARMU);  /* shirt */
-#endif
         }
 
         /* if your cloak/armor is greased, monster slips off; this

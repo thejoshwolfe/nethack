@@ -1317,9 +1317,7 @@ boolean ship_object(struct obj *otmp, signed char x, signed char y, boolean shop
             const char *result;
 
             if (objects[otmp->otyp].oc_material == GLASS
-#ifdef TOURIST
                 || otmp->otyp == EXPENSIVE_CAMERA
-#endif
                 ) {
                 if (otmp->otyp == MIRROR)
                     change_luck(-2);
