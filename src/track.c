@@ -3,8 +3,8 @@
 
 #define UTSZ    50
 
-STATIC_VAR int utcnt, utpnt;
-STATIC_VAR coord utrack[UTSZ];
+static int utcnt, utpnt;
+static coord utrack[UTSZ];
 
 #ifdef OVLB
 

@@ -354,22 +354,22 @@ static short n_menu_mapped = 0;
 
 static boolean initial, from_file;
 
-STATIC_DCL void doset_add_menu(winid,const char *,int);
-STATIC_DCL void nmcpy(char *, const char *, int);
-STATIC_DCL void escapes(const char *, char *);
-STATIC_DCL void rejectoption(const char *);
-STATIC_DCL void badoption(const char *);
-STATIC_DCL char *string_for_opt(char *,boolean);
-STATIC_DCL char *string_for_env_opt(const char *, char *,boolean);
-STATIC_DCL void bad_negation(const char *,boolean);
-STATIC_DCL int change_inv_order(char *);
-STATIC_DCL void oc_to_str(char *, char *);
-STATIC_DCL void graphics_opts(char *,const char *,int,int);
-STATIC_DCL int feature_alert_opts(char *, const char *);
-STATIC_DCL const char *get_compopt_value(const char *, char *);
-STATIC_DCL boolean special_handling(const char *, boolean, boolean);
-STATIC_DCL void warning_opts(char *,const char *);
-STATIC_DCL void duplicate_opt_detection(const char *, int);
+static void doset_add_menu(winid,const char *,int);
+static void nmcpy(char *, const char *, int);
+static void escapes(const char *, char *);
+static void rejectoption(const char *);
+static void badoption(const char *);
+static char *string_for_opt(char *,boolean);
+static char *string_for_env_opt(const char *, char *,boolean);
+static void bad_negation(const char *,boolean);
+static int change_inv_order(char *);
+static void oc_to_str(char *, char *);
+static void graphics_opts(char *,const char *,int,int);
+static int feature_alert_opts(char *, const char *);
+static const char *get_compopt_value(const char *, char *);
+static boolean special_handling(const char *, boolean, boolean);
+static void warning_opts(char *,const char *);
+static void duplicate_opt_detection(const char *, int);
 
 static void wc_set_font_name(int, char *);
 static int wc_set_window_colors(char *);
@@ -378,7 +378,7 @@ static boolean wc_supported(const char *);
 static boolean is_wc2_option(const char *);
 static boolean wc2_supported(const char *);
 #ifdef AUTOPICKUP_EXCEPTIONS
-STATIC_DCL void remove_autopickup_exception(struct autopickup_exception *);
+static void remove_autopickup_exception(struct autopickup_exception *);
 static int count_ape_maps(int *, int *);
 #endif
 

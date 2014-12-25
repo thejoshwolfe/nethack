@@ -3,11 +3,11 @@
 
 #include "hack.h"
 
-STATIC_DCL void dowatersnakes(void);
-STATIC_DCL void dowaterdemon(void);
-STATIC_DCL void dowaternymph(void);
+static void dowatersnakes(void);
+static void dowaterdemon(void);
+static void dowaternymph(void);
 STATIC_PTR void gush(int,int,void *);
-STATIC_DCL void dofindgem(void);
+static void dofindgem(void);
 
 void 
 floating_above (const char *what)

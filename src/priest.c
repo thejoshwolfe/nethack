@@ -10,8 +10,8 @@
 
 #ifdef OVLB
 
-STATIC_DCL boolean histemple_at(struct monst *,signed char,signed char);
-STATIC_DCL boolean has_shrine(struct monst *);
+static boolean histemple_at(struct monst *,signed char,signed char);
+static boolean has_shrine(struct monst *);
 
 /*
  * Move for priests and shopkeepers.  Called from shk_move() and pri_move().

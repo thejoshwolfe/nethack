@@ -3,42 +3,42 @@
 
 extern const char * const destroy_strings[];    /* from zap.c */
 
-STATIC_DCL void dofiretrap(struct obj *);
-STATIC_DCL void domagictrap(void);
-STATIC_DCL boolean emergency_disrobe(boolean *);
-STATIC_DCL int untrap_prob(struct trap *ttmp);
-STATIC_DCL void cnv_trap_obj(int, int, struct trap *);
-STATIC_DCL void move_into_trap(struct trap *);
-STATIC_DCL int try_disarm(struct trap *,boolean);
-STATIC_DCL void reward_untrap(struct trap *, struct monst *);
-STATIC_DCL int disarm_holdingtrap(struct trap *);
-STATIC_DCL int disarm_landmine(struct trap *);
-STATIC_DCL int disarm_squeaky_board(struct trap *);
-STATIC_DCL int disarm_shooting_trap(struct trap *, int);
-STATIC_DCL int try_lift(struct monst *, struct trap *, int, boolean);
-STATIC_DCL int help_monster_out(struct monst *, struct trap *);
-STATIC_DCL boolean thitm(int,struct monst *,struct obj *,int,boolean);
-STATIC_DCL int mkroll_launch(struct trap *,signed char,signed char,short,long);
-STATIC_DCL boolean isclearpath(coord *, int, signed char, signed char);
+static void dofiretrap(struct obj *);
+static void domagictrap(void);
+static boolean emergency_disrobe(boolean *);
+static int untrap_prob(struct trap *ttmp);
+static void cnv_trap_obj(int, int, struct trap *);
+static void move_into_trap(struct trap *);
+static int try_disarm(struct trap *,boolean);
+static void reward_untrap(struct trap *, struct monst *);
+static int disarm_holdingtrap(struct trap *);
+static int disarm_landmine(struct trap *);
+static int disarm_squeaky_board(struct trap *);
+static int disarm_shooting_trap(struct trap *, int);
+static int try_lift(struct monst *, struct trap *, int, boolean);
+static int help_monster_out(struct monst *, struct trap *);
+static boolean thitm(int,struct monst *,struct obj *,int,boolean);
+static int mkroll_launch(struct trap *,signed char,signed char,short,long);
+static boolean isclearpath(coord *, int, signed char, signed char);
 #ifdef STEED
 static int steedintrap(struct trap *, struct obj *);
 static boolean keep_saddle_with_steedcorpse(unsigned, struct obj *, struct obj *);
 #endif
 
 #ifndef OVLB
-STATIC_VAR const char *a_your[2];
-STATIC_VAR const char *A_Your[2];
-STATIC_VAR const char tower_of_flame[];
-STATIC_VAR const char *A_gush_of_water_hits;
-STATIC_VAR const char * const blindgas[6];
+static const char *a_your[2];
+static const char *A_Your[2];
+static const char tower_of_flame[];
+static const char *A_gush_of_water_hits;
+static const char * const blindgas[6];
 
 #else
 
-STATIC_VAR const char * const a_your[2] = { "a", "your" };
-STATIC_VAR const char * const A_Your[2] = { "A", "Your" };
-STATIC_VAR const char tower_of_flame[] = "tower of flame";
-STATIC_VAR const char * const A_gush_of_water_hits = "A gush of water hits";
-STATIC_VAR const char * const blindgas[6] = 
+static const char * const a_your[2] = { "a", "your" };
+static const char * const A_Your[2] = { "A", "Your" };
+static const char tower_of_flame[] = "tower of flame";
+static const char * const A_gush_of_water_hits = "A gush of water hits";
+static const char * const blindgas[6] = 
         {"humid", "odorless", "pungent", "chilling", "acrid", "biting"};
 
 #endif /* OVLB */

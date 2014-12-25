@@ -4,7 +4,7 @@
 #ifdef OVLB
 #include "artilist.h"
 #else
-STATIC_DCL struct artifact artilist[];
+static struct artifact artilist[];
 #endif
 /*
  * Note:  both artilist[] and artiexist[] have a dummy element #0,
@@ -18,9 +18,9 @@ extern boolean notonhead;       /* for long worms */
 #define get_artifact(o) \
                 (((o)&&(o)->oartifact) ? &artilist[(int) (o)->oartifact] : 0)
 
-STATIC_DCL int spec_applies(const struct artifact *,struct monst *);
-STATIC_DCL int arti_invoke(struct obj*);
-STATIC_DCL boolean Mb_hit(struct monst *magr,struct monst *mdef,
+static int spec_applies(const struct artifact *,struct monst *);
+static int arti_invoke(struct obj*);
+static boolean Mb_hit(struct monst *magr,struct monst *mdef,
                                   struct obj *,int *,int,boolean,char *);
 
 /* The amount added to the victim's total hit points to insure that the
@@ -34,8 +34,8 @@ STATIC_DCL boolean Mb_hit(struct monst *magr,struct monst *mdef,
 #define FATAL_DAMAGE_MODIFIER 200
 
 #ifndef OVLB
-STATIC_DCL int spec_dbon_applies;
-STATIC_DCL signed char artidisco[NROFARTIFACTS];
+static int spec_dbon_applies;
+static signed char artidisco[NROFARTIFACTS];
 #else   /* OVLB */
 /* coordinate effects from spec_dbon() with messages in artifact_hit() */
 static int spec_dbon_applies = 0;
@@ -45,8 +45,8 @@ static boolean artiexist[1+NROFARTIFACTS+1];
 /* and a discovery list for them (no dummy first entry here) */
 static signed char artidisco[NROFARTIFACTS];
 
-STATIC_DCL void hack_artifacts(void);
-STATIC_DCL boolean attacks(int,struct obj *);
+static void hack_artifacts(void);
+static boolean attacks(int,struct obj *);
 
 /* handle some special cases; must be called after u_init() */
 static void

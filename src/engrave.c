@@ -3,7 +3,7 @@
 #include "lev.h"
 #include <ctype.h>
 
-STATIC_VAR struct engr *head_engr;
+static struct engr *head_engr;
 
 #ifdef OVLB
 /* random engravings */

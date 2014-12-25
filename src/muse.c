@@ -16,16 +16,16 @@ boolean m_using = FALSE;
  * don't know not to read scrolls, etc....
  */
 
-STATIC_DCL struct permonst *muse_newcham_mon(struct monst *);
-STATIC_DCL int precheck(struct monst *,struct obj *);
-STATIC_DCL void mzapmsg(struct monst *,struct obj *,boolean);
-STATIC_DCL void mreadmsg(struct monst *,struct obj *);
-STATIC_DCL void mquaffmsg(struct monst *,struct obj *);
+static struct permonst *muse_newcham_mon(struct monst *);
+static int precheck(struct monst *,struct obj *);
+static void mzapmsg(struct monst *,struct obj *,boolean);
+static void mreadmsg(struct monst *,struct obj *);
+static void mquaffmsg(struct monst *,struct obj *);
 STATIC_PTR int mbhitm(struct monst *,struct obj *);
-STATIC_DCL void mbhit(struct monst *,int,int (*)(MONST_P,OBJ_P),
+static void mbhit(struct monst *,int,int (*)(MONST_P,OBJ_P),
         int (*)(OBJ_P,OBJ_P),struct obj *);
-STATIC_DCL void you_aggravate(struct monst *);
-STATIC_DCL void mon_consume_unstone(struct monst *,struct obj *,
+static void you_aggravate(struct monst *);
+static void mon_consume_unstone(struct monst *,struct obj *,
         boolean,boolean);
 
 static struct musable {

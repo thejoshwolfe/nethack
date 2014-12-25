@@ -44,19 +44,19 @@ struct toptenentry {
         char death[DTHSZ+1];
 } *tt_head;
 
-STATIC_DCL void topten_print(const char *);
-STATIC_DCL void topten_print_bold(const char *);
-STATIC_DCL signed char observable_depth(d_level *);
-STATIC_DCL void outheader(void);
-STATIC_DCL void outentry(int,struct toptenentry *,boolean);
-STATIC_DCL void readentry(FILE *,struct toptenentry *);
-STATIC_DCL void writeentry(FILE *,struct toptenentry *);
-STATIC_DCL void free_ttlist(struct toptenentry *);
-STATIC_DCL int classmon(char *,boolean);
-STATIC_DCL int score_wanted(boolean, int,struct toptenentry *,int,const char **,int);
+static void topten_print(const char *);
+static void topten_print_bold(const char *);
+static signed char observable_depth(d_level *);
+static void outheader(void);
+static void outentry(int,struct toptenentry *,boolean);
+static void readentry(FILE *,struct toptenentry *);
+static void writeentry(FILE *,struct toptenentry *);
+static void free_ttlist(struct toptenentry *);
+static int classmon(char *,boolean);
+static int score_wanted(boolean, int,struct toptenentry *,int,const char **,int);
 #ifdef NO_SCAN_BRACK
-STATIC_DCL void nsb_mung_line(char*);
-STATIC_DCL void nsb_unmung_line(char*);
+static void nsb_mung_line(char*);
+static void nsb_unmung_line(char*);
 #endif
 
 /* must fit with end.c; used in rip.c */

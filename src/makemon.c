@@ -4,7 +4,7 @@
 #include "emin.h"
 #include "edog.h"
 
-STATIC_VAR struct monst zeromonst;
+static struct monst zeromonst;
 
 /* this assumes that a human quest leader or nemesis is an archetype
    of the corresponding role; that isn't so for some roles (tourist
@@ -14,15 +14,15 @@ STATIC_VAR struct monst zeromonst;
                   (mptr->msound == MS_LEADER || mptr->msound == MS_NEMESIS))
 
 #ifdef OVL0
-STATIC_DCL boolean uncommon(int);
-STATIC_DCL int align_shift(struct permonst *);
+static boolean uncommon(int);
+static int align_shift(struct permonst *);
 #endif /* OVL0 */
-STATIC_DCL boolean wrong_elem_type(struct permonst *);
-STATIC_DCL void m_initgrp(struct monst *,int,int,int);
-STATIC_DCL void m_initthrow(struct monst *,int,int);
-STATIC_DCL void m_initweap(struct monst *);
+static boolean wrong_elem_type(struct permonst *);
+static void m_initgrp(struct monst *,int,int,int);
+static void m_initthrow(struct monst *,int,int);
+static void m_initweap(struct monst *);
 #ifdef OVL1
-STATIC_DCL void m_initinv(struct monst *);
+static void m_initinv(struct monst *);
 #endif /* OVL1 */
 
 extern const int monstr[];

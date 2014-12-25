@@ -1,7 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL int drop_throw(struct obj *,boolean,int,int);
+static int drop_throw(struct obj *,boolean,int,int);
 
 #define URETREATING(x,y) (distmin(u.ux,u.uy,x,y) > distmin(u.ux0,u.uy0,x,y))
 
@@ -9,7 +9,7 @@ STATIC_DCL int drop_throw(struct obj *,boolean,int,int);
 
 #ifndef OVLB
 
-STATIC_DCL const char *breathwep[];
+static const char *breathwep[];
 
 #else /* OVLB */
 

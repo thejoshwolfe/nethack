@@ -2,14 +2,14 @@
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
 
-STATIC_DCL void stoned_dialogue(void);
-STATIC_DCL void vomiting_dialogue(void);
-STATIC_DCL void choke_dialogue(void);
-STATIC_DCL void slime_dialogue(void);
-STATIC_DCL void slip_or_trip(void);
-STATIC_DCL void see_lamp_flicker(struct obj *, const char *);
-STATIC_DCL void lantern_message(struct obj *);
-STATIC_DCL void cleanup_burn(void *,long);
+static void stoned_dialogue(void);
+static void vomiting_dialogue(void);
+static void choke_dialogue(void);
+static void slime_dialogue(void);
+static void slip_or_trip(void);
+static void see_lamp_flicker(struct obj *, const char *);
+static void lantern_message(struct obj *);
+static void cleanup_burn(void *,long);
 
 #ifdef OVLB
 
@@ -1237,15 +1237,15 @@ do_storms (void)
  */
 
 #ifdef WIZARD
-STATIC_DCL const char *kind_name(short);
-STATIC_DCL void print_queue(winid, timer_element *);
+static const char *kind_name(short);
+static void print_queue(winid, timer_element *);
 #endif
-STATIC_DCL void insert_timer(timer_element *);
-STATIC_DCL timer_element *remove_timer(timer_element **, short, void *);
-STATIC_DCL void write_timer(int, timer_element *);
-STATIC_DCL boolean mon_is_local(struct monst *);
-STATIC_DCL boolean timer_is_local(timer_element *);
-STATIC_DCL int maybe_write_timer(int, int, boolean);
+static void insert_timer(timer_element *);
+static timer_element *remove_timer(timer_element **, short, void *);
+static void write_timer(int, timer_element *);
+static boolean mon_is_local(struct monst *);
+static boolean timer_is_local(timer_element *);
+static int maybe_write_timer(int, int, boolean);
 
 /* ordered timer list */
 static timer_element *timer_base;               /* "active" */

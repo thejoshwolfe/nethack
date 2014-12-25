@@ -1,7 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL int cost(struct obj *);
+static int cost(struct obj *);
 
 /*
  * returns basecost of a scroll or a spellbook

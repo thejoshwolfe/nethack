@@ -6,7 +6,7 @@
 #define SCHAR_LIM 127
 #define NUMOBUF 12
 
-STATIC_DCL char *strprepend(char *,const char *);
+static char *strprepend(char *,const char *);
 #ifdef OVLB
 static boolean wishymatch(const char *,const char *,boolean);
 #endif
@@ -31,7 +31,7 @@ struct Jitem {
 
 #ifndef OVLB
 
-STATIC_DCL struct Jitem Japanese_items[];
+static struct Jitem Japanese_items[];
 
 #else /* OVLB */
 
@@ -53,7 +53,7 @@ static struct Jitem Japanese_items[] = {
 
 #endif /* OVLB */
 
-STATIC_DCL const char *Japanese_item_name(int i);
+static const char *Japanese_item_name(int i);
 
 #ifdef OVL1
 
@@ -1480,7 +1480,7 @@ struct o_range {
 
 #ifndef OVLB
 
-STATIC_DCL const struct o_range o_ranges[];
+static const struct o_range o_ranges[];
 
 #else /* OVLB */
 

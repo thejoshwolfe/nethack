@@ -22,18 +22,18 @@ static void kill_hilite(void);
 struct tc_lcl_data tc_lcl_data = { 0, 0, 0, 0,0, 0,0, FALSE };
 #endif /* OVLB */
 
-STATIC_VAR char *HO, *CL, *CE, *UP, *XD, *BC, *SO, *SE, *TI, *TE;
-STATIC_VAR char *VS, *VE;
-STATIC_VAR char *ME;
-STATIC_VAR char *MR;
-STATIC_VAR char *MD;
-STATIC_VAR int SG;
+static char *HO, *CL, *CE, *UP, *XD, *BC, *SO, *SE, *TI, *TE;
+static char *VS, *VE;
+static char *ME;
+static char *MR;
+static char *MD;
+static int SG;
 #ifdef OVLB
 static char PC = '\0';
 #else /* OVLB */
-STATIC_DCL char PC;
+static char PC;
 #endif /* OVLB */
-STATIC_VAR char tbuf[512];
+static char tbuf[512];
 
 char *hilites[CLR_MAX]; /* terminal escapes for the various colors */
 

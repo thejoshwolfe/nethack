@@ -483,9 +483,9 @@ const struct Align aligns[] = {
         {"evil",        "unaligned",    "Una",  0,              A_NONE}
 };
 
-STATIC_DCL char * promptsep(char *, int);
-STATIC_DCL int role_gendercount(int);
-STATIC_DCL int race_alignmentcount(int);
+static char * promptsep(char *, int);
+static int role_gendercount(int);
+static int race_alignmentcount(int);
 
 /* used by str2XXX() */
 static char randomstr[] = "random";
@@ -1020,7 +1020,7 @@ rigid_role_checks (void)
 #define BP_ROLE         3
 #define NUM_BP          4
 
-STATIC_VAR char pa[NUM_BP], post_attribs;
+static char pa[NUM_BP], post_attribs;
 
 static char *
 promptsep (char *buf, int num_post_attribs)

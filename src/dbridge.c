@@ -10,19 +10,19 @@
 #include "hack.h"
 
 #ifdef OVLB
-STATIC_DCL void get_wall_for_db(int *, int *);
-STATIC_DCL struct entity *e_at(int, int);
-STATIC_DCL void m_to_e(struct monst *, int, int, struct entity *);
-STATIC_DCL void u_to_e(struct entity *);
-STATIC_DCL void set_entity(int, int, struct entity *);
-STATIC_DCL const char *e_nam(struct entity *);
-STATIC_DCL const char *E_phrase(struct entity *, const char *);
-STATIC_DCL boolean e_survives_at(struct entity *, int, int);
-STATIC_DCL void e_died(struct entity *, int, int);
-STATIC_DCL boolean automiss(struct entity *);
-STATIC_DCL boolean e_missed(struct entity *, boolean);
-STATIC_DCL boolean e_jumps(struct entity *);
-STATIC_DCL void do_entity(struct entity *);
+static void get_wall_for_db(int *, int *);
+static struct entity *e_at(int, int);
+static void m_to_e(struct monst *, int, int, struct entity *);
+static void u_to_e(struct entity *);
+static void set_entity(int, int, struct entity *);
+static const char *e_nam(struct entity *);
+static const char *E_phrase(struct entity *, const char *);
+static boolean e_survives_at(struct entity *, int, int);
+static void e_died(struct entity *, int, int);
+static boolean automiss(struct entity *);
+static boolean e_missed(struct entity *, boolean);
+static boolean e_jumps(struct entity *);
+static void do_entity(struct entity *);
 #endif /* OVLB */
 
 #ifdef OVL0

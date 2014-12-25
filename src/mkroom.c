@@ -13,16 +13,16 @@
 #include "hack.h"
 
 #ifdef OVLB
-STATIC_DCL boolean isbig(struct mkroom *);
-STATIC_DCL struct mkroom * pick_room(boolean);
-STATIC_DCL void mkshop(void), mkzoo(int), mkswamp(void);
-STATIC_DCL void mktemple(void);
-STATIC_DCL coord * shrine_pos(int);
-STATIC_DCL struct permonst * morguemon(void);
-STATIC_DCL struct permonst * antholemon(void);
-STATIC_DCL struct permonst * squadmon(void);
-STATIC_DCL void save_room(int,struct mkroom *);
-STATIC_DCL void rest_room(int,struct mkroom *);
+static boolean isbig(struct mkroom *);
+static struct mkroom * pick_room(boolean);
+static void mkshop(void), mkzoo(int), mkswamp(void);
+static void mktemple(void);
+static coord * shrine_pos(int);
+static struct permonst * morguemon(void);
+static struct permonst * antholemon(void);
+static struct permonst * squadmon(void);
+static void save_room(int,struct mkroom *);
+static void rest_room(int,struct mkroom *);
 #endif /* OVLB */
 
 #define sq(x) ((x)*(x))

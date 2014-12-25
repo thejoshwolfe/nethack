@@ -34,7 +34,7 @@ were_change (struct monst *mon)
 #endif /* OVL0 */
 #ifdef OVLB
 
-STATIC_DCL int counter_were(int);
+static int counter_were(int);
 
 static int 
 counter_were (int pm)

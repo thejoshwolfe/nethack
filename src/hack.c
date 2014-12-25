@@ -2,15 +2,15 @@
 #include "hack.h"
 
 #ifdef OVL1
-STATIC_DCL void maybe_wail(void);
+static void maybe_wail(void);
 #endif /*OVL1*/
-STATIC_DCL int moverock(void);
-STATIC_DCL int still_chewing(signed char,signed char);
-STATIC_DCL void dosinkfall(void);
-STATIC_DCL boolean findtravelpath(boolean);
-STATIC_DCL boolean monstinroom(struct permonst *,int);
+static int moverock(void);
+static int still_chewing(signed char,signed char);
+static void dosinkfall(void);
+static boolean findtravelpath(boolean);
+static boolean monstinroom(struct permonst *,int);
 
-STATIC_DCL void move_update(boolean);
+static void move_update(boolean);
 
 #define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
 

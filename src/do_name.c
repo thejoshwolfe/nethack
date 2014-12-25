@@ -3,7 +3,7 @@
 
 #ifdef OVLB
 
-STATIC_DCL void do_oname(struct obj *);
+static void do_oname(struct obj *);
 static void getpos_help(boolean,const char *);
 
 extern const char what_is_an_unknown_object[];          /* from pager.c */

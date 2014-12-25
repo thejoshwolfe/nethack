@@ -9,11 +9,11 @@
 #ifdef OVL1
 char morc = 0;  /* tell the outside world what char you chose */
 #endif /* OVL1 */
-STATIC_DCL boolean ext_cmd_getlin_hook(char *);
+static boolean ext_cmd_getlin_hook(char *);
 
 typedef boolean (*getlin_hook_proc)(char *);
 
-STATIC_DCL void hooked_tty_getlin(const char*,char*,getlin_hook_proc);
+static void hooked_tty_getlin(const char*,char*,getlin_hook_proc);
 extern int extcmd_via_menu(void);       /* cmd.c */
 
 extern char erase_char, kill_char;      /* from appropriate tty.c file */

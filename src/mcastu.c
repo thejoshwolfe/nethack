@@ -27,13 +27,13 @@
 #define CLC_FIRE_PILLAR  8
 #define CLC_GEYSER       9
 
-STATIC_DCL void cursetxt(struct monst *,boolean);
-STATIC_DCL int choose_magic_spell(int);
-STATIC_DCL int choose_clerical_spell(int);
-STATIC_DCL void cast_wizard_spell(struct monst *, int,int);
-STATIC_DCL void cast_cleric_spell(struct monst *, int,int);
-STATIC_DCL boolean is_undirected_spell(unsigned int,int);
-STATIC_DCL boolean spell_would_be_useless(struct monst *,unsigned int,int);
+static void cursetxt(struct monst *,boolean);
+static int choose_magic_spell(int);
+static int choose_clerical_spell(int);
+static void cast_wizard_spell(struct monst *, int,int);
+static void cast_cleric_spell(struct monst *, int,int);
+static boolean is_undirected_spell(unsigned int,int);
+static boolean spell_would_be_useless(struct monst *,unsigned int,int);
 
 #ifdef OVL0
 
@@ -647,7 +647,7 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
     if (dmg) mdamageu(mtmp, dmg);
 }
 
-STATIC_DCL
+static
 boolean
 is_undirected_spell(adtyp, spellnum)
 unsigned int adtyp;
@@ -678,7 +678,7 @@ int spellnum;
 }
 
 /* Some spells are useless under some circumstances. */
-STATIC_DCL
+static
 boolean
 spell_would_be_useless(mtmp, adtyp, spellnum)
 struct monst *mtmp;

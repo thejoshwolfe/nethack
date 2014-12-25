@@ -9,11 +9,11 @@
 
 extern boolean known;   /* from read.c */
 
-STATIC_DCL void do_dknown_of(struct obj *);
-STATIC_DCL boolean check_map_spot(int,int,char,unsigned);
-STATIC_DCL boolean clear_stale_map(char,unsigned);
-STATIC_DCL void sense_trap(struct trap *,signed char,signed char,int);
-STATIC_DCL void show_map_spot(int,int);
+static void do_dknown_of(struct obj *);
+static boolean check_map_spot(int,int,char,unsigned);
+static boolean clear_stale_map(char,unsigned);
+static void sense_trap(struct trap *,signed char,signed char,int);
+static void show_map_spot(int,int);
 STATIC_PTR void findone(int,int,void *);
 STATIC_PTR void openone(int,int,void *);
 

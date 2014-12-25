@@ -25,13 +25,13 @@
 
 #include "hack.h"
 
-STATIC_DCL void awaken_monsters(int);
-STATIC_DCL void put_monsters_to_sleep(int);
-STATIC_DCL void charm_snakes(int);
-STATIC_DCL void calm_nymphs(int);
-STATIC_DCL void charm_monsters(int);
-STATIC_DCL void do_earthquake(int);
-STATIC_DCL int do_improvisation(struct obj *);
+static void awaken_monsters(int);
+static void put_monsters_to_sleep(int);
+static void charm_snakes(int);
+static void calm_nymphs(int);
+static void charm_monsters(int);
+static void do_earthquake(int);
+static int do_improvisation(struct obj *);
 
 /*
  * Wake every monster in range...

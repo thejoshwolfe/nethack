@@ -5,32 +5,32 @@
 
 #include "hack.h"
 
-STATIC_DCL void simple_look(struct obj *,boolean);
+static void simple_look(struct obj *,boolean);
 #ifndef GOLDOBJ
-STATIC_DCL boolean query_classes(char *,boolean *,boolean *,
+static boolean query_classes(char *,boolean *,boolean *,
                 const char *,struct obj *,boolean,boolean,int *);
 #else
-STATIC_DCL boolean query_classes(char *,boolean *,boolean *,
+static boolean query_classes(char *,boolean *,boolean *,
                 const char *,struct obj *,boolean,int *);
 #endif
-STATIC_DCL void check_here(boolean);
-STATIC_DCL boolean n_or_more(struct obj *);
-STATIC_DCL boolean all_but_uchain(struct obj *);
-STATIC_DCL int autopick(struct obj*, int, menu_item **);
-STATIC_DCL int count_categories(struct obj *,int);
-STATIC_DCL long carry_count(struct obj *,struct obj *,long,boolean,int *,int *);
-STATIC_DCL int lift_object(struct obj *,struct obj *,long *,boolean);
-STATIC_DCL boolean mbag_explodes(struct obj *,int);
+static void check_here(boolean);
+static boolean n_or_more(struct obj *);
+static boolean all_but_uchain(struct obj *);
+static int autopick(struct obj*, int, menu_item **);
+static int count_categories(struct obj *,int);
+static long carry_count(struct obj *,struct obj *,long,boolean,int *,int *);
+static int lift_object(struct obj *,struct obj *,long *,boolean);
+static boolean mbag_explodes(struct obj *,int);
 STATIC_PTR int in_container(struct obj *);
 STATIC_PTR int ck_bag(struct obj *);
 STATIC_PTR int out_container(struct obj *);
-STATIC_DCL long mbag_item_gone(int,struct obj *);
-STATIC_DCL void observe_quantum_cat(struct obj *);
-STATIC_DCL int menu_loot(int, struct obj *, boolean);
-STATIC_DCL int in_or_out_menu(const char *,struct obj *, boolean, boolean);
-STATIC_DCL int container_at(int, int, boolean);
-STATIC_DCL boolean able_to_loot(int, int);
-STATIC_DCL boolean mon_beside(int, int);
+static long mbag_item_gone(int,struct obj *);
+static void observe_quantum_cat(struct obj *);
+static int menu_loot(int, struct obj *, boolean);
+static int in_or_out_menu(const char *,struct obj *, boolean, boolean);
+static int container_at(int, int, boolean);
+static boolean able_to_loot(int, int);
+static boolean mon_beside(int, int);
 
 /* define for query_objlist() and autopickup() */
 #define FOLLOW(curr, flags) \

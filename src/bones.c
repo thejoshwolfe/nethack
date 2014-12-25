@@ -4,10 +4,10 @@
 
 extern char bones[];    /* from files.c */
 
-STATIC_DCL boolean no_bones_level(d_level *);
-STATIC_DCL void goodfruit(int);
-STATIC_DCL void resetobjs(struct obj *,boolean);
-STATIC_DCL void drop_upon_death(struct monst *, struct obj *);
+static boolean no_bones_level(d_level *);
+static void goodfruit(int);
+static void resetobjs(struct obj *,boolean);
+static void drop_upon_death(struct monst *, struct obj *);
 
 static boolean
 no_bones_level(lev)

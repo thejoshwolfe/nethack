@@ -7,7 +7,7 @@
 #include "hack.h"
 
 #ifdef DUMP_LOG
-STATIC_DCL int enhance_skill(boolean);
+static int enhance_skill(boolean);
 #endif
 
 /* Categories whose names don't come from OBJ_NAME(objects[type])
@@ -27,17 +27,17 @@ STATIC_DCL int enhance_skill(boolean);
 #define PN_ESCAPE_SPELL                 (-13)
 #define PN_MATTER_SPELL                 (-14)
 
-STATIC_DCL void give_may_advance_msg(int);
+static void give_may_advance_msg(int);
 
 #ifndef OVLB
 
-STATIC_DCL const short skill_names_indices[];
-STATIC_DCL const char *odd_skill_names[];
-STATIC_DCL const char *barehands_or_martial[];
+static const short skill_names_indices[];
+static const char *odd_skill_names[];
+static const char *barehands_or_martial[];
 
 #else   /* OVLB */
 
-STATIC_VAR const short skill_names_indices[P_NUM_SKILLS] = {
+static const short skill_names_indices[P_NUM_SKILLS] = {
         0,                DAGGER,         KNIFE,        AXE,
         PICK_AXE,         SHORT_SWORD,    BROADSWORD,   LONG_SWORD,
         TWO_HANDED_SWORD, SCIMITAR,       PN_SABER,     CLUB,
@@ -57,7 +57,7 @@ STATIC_VAR const short skill_names_indices[P_NUM_SKILLS] = {
 };
 
 /* note: entry [0] isn't used */
-STATIC_VAR const char * const odd_skill_names[] = {
+static const char * const odd_skill_names[] = {
     "no skill",
     "bare hands",               /* use barehands_or_martial[] instead */
     "two weapon combat",
@@ -75,7 +75,7 @@ STATIC_VAR const char * const odd_skill_names[] = {
     "matter spells",
 };
 /* indexed vis `is_martial() */
-STATIC_VAR const char * const barehands_or_martial[] = {
+static const char * const barehands_or_martial[] = {
     "bare handed combat", "martial arts"
 };
 
@@ -94,15 +94,15 @@ give_may_advance_msg (int skill)
 
 #endif  /* OVLB */
 
-STATIC_DCL boolean can_advance(int, boolean);
-STATIC_DCL boolean could_advance(int);
-STATIC_DCL boolean peaked_skill(int);
-STATIC_DCL int slots_required(int);
+static boolean can_advance(int, boolean);
+static boolean could_advance(int);
+static boolean peaked_skill(int);
+static int slots_required(int);
 
 #ifdef OVL1
 
-STATIC_DCL char *skill_level_name(int,char *);
-STATIC_DCL void skill_advance(int);
+static char *skill_level_name(int,char *);
+static void skill_advance(int);
 
 #endif  /* OVL1 */
 
@@ -313,7 +313,7 @@ dmgval (struct obj *otmp, struct monst *mon)
 #endif /* OVLB */
 #ifdef OVL0
 
-STATIC_DCL struct obj *oselect(struct monst *,int);
+static struct obj *oselect(struct monst *,int);
 #define Oselect(x)      if ((otmp = oselect(mtmp, x)) != 0) return(otmp);
 
 static struct obj *

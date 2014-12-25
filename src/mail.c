@@ -25,10 +25,10 @@
  *        path to the hero.
  */
 
-STATIC_DCL boolean md_start(coord *);
-STATIC_DCL boolean md_stop(coord *, coord *);
-STATIC_DCL boolean md_rush(struct monst *,int,int);
-STATIC_DCL void newmail(struct mail_info *);
+static boolean md_start(coord *);
+static boolean md_stop(coord *, coord *);
+static boolean md_rush(struct monst *,int,int);
+static void newmail(struct mail_info *);
 
 int mailckfreq = 0;
 

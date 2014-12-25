@@ -5,12 +5,12 @@
 #include "hack.h"
 #include "dlb.h"
 
-STATIC_DCL boolean is_swallow_sym(int);
-STATIC_DCL int append_str(char *, const char *);
-STATIC_DCL struct permonst * lookat(int, int, char *, char *);
-STATIC_DCL void checkfile(char *,struct permonst *,boolean,boolean);
-STATIC_DCL int do_look(boolean);
-STATIC_DCL boolean help_menu(int *);
+static boolean is_swallow_sym(int);
+static int append_str(char *, const char *);
+static struct permonst * lookat(int, int, char *, char *);
+static void checkfile(char *,struct permonst *,boolean,boolean);
+static int do_look(boolean);
+static boolean help_menu(int *);
 #ifdef PORT_HELP
 extern void port_help(void);
 #endif

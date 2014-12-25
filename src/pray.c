@@ -3,21 +3,21 @@
 #include "epri.h"
 
 STATIC_PTR int prayer_done(void);
-STATIC_DCL struct obj *worst_cursed_item(void);
-STATIC_DCL int in_trouble(void);
-STATIC_DCL void fix_worst_trouble(int);
-STATIC_DCL void angrygods(aligntyp);
-STATIC_DCL void at_your_feet(const char *);
-STATIC_DCL void gcrownu(void);
-STATIC_DCL void pleased(aligntyp);
-STATIC_DCL void godvoice(aligntyp,const char*);
-STATIC_DCL void god_zaps_you(aligntyp);
-STATIC_DCL void fry_by_god(aligntyp);
-STATIC_DCL void gods_angry(aligntyp);
-STATIC_DCL void gods_upset(aligntyp);
-STATIC_DCL void consume_offering(struct obj *);
-STATIC_DCL boolean water_prayer(boolean);
-STATIC_DCL boolean blocked_boulder(int,int);
+static struct obj *worst_cursed_item(void);
+static int in_trouble(void);
+static void fix_worst_trouble(int);
+static void angrygods(aligntyp);
+static void at_your_feet(const char *);
+static void gcrownu(void);
+static void pleased(aligntyp);
+static void godvoice(aligntyp,const char*);
+static void god_zaps_you(aligntyp);
+static void fry_by_god(aligntyp);
+static void gods_angry(aligntyp);
+static void gods_upset(aligntyp);
+static void consume_offering(struct obj *);
+static boolean water_prayer(boolean);
+static boolean blocked_boulder(int,int);
 
 /* simplify a few tests */
 #define Cursed_obj(obj,typ) ((obj) && (obj)->otyp == (typ) && (obj)->cursed)

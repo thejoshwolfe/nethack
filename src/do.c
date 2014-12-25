@@ -5,19 +5,19 @@
 #include "lev.h"
 
 # ifdef OVLB
-STATIC_DCL void trycall(struct obj *);
+static void trycall(struct obj *);
 # endif /* OVLB */
-STATIC_DCL void dosinkring(struct obj *);
+static void dosinkring(struct obj *);
 
 STATIC_PTR int drop(struct obj *);
 STATIC_PTR int wipeoff(void);
 
 #ifdef OVL0
-STATIC_DCL int menu_drop(int);
+static int menu_drop(int);
 #endif
 #ifdef OVL2
-STATIC_DCL int currentlevel_rewrite(void);
-STATIC_DCL void final_level(void);
+static int currentlevel_rewrite(void);
+static void final_level(void);
 #endif
 
 #ifdef OVLB

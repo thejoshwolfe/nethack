@@ -3,8 +3,8 @@
 
 #include "hack.h"
 
-STATIC_DCL int bc_order(void);
-STATIC_DCL void litter(void);
+static int bc_order(void);
+static void litter(void);
 
 void 
 ballfall (void)

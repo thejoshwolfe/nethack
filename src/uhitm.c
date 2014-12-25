@@ -1,22 +1,22 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL boolean known_hitum(struct monst *,int *,struct attack *);
-STATIC_DCL void steal_it(struct monst *, struct attack *);
-STATIC_DCL boolean hitum(struct monst *,int,struct attack *);
-STATIC_DCL boolean hmon_hitmon(struct monst *,struct obj *,int);
+static boolean known_hitum(struct monst *,int *,struct attack *);
+static void steal_it(struct monst *, struct attack *);
+static boolean hitum(struct monst *,int,struct attack *);
+static boolean hmon_hitmon(struct monst *,struct obj *,int);
 #ifdef STEED
-STATIC_DCL int joust(struct monst *,struct obj *);
+static int joust(struct monst *,struct obj *);
 #endif
-STATIC_DCL void demonpet(void);
-STATIC_DCL boolean m_slips_free(struct monst *mtmp,struct attack *mattk);
-STATIC_DCL int explum(struct monst *,struct attack *);
-STATIC_DCL void start_engulf(struct monst *);
-STATIC_DCL void end_engulf(void);
-STATIC_DCL int gulpum(struct monst *,struct attack *);
-STATIC_DCL boolean hmonas(struct monst *,int);
-STATIC_DCL void nohandglow(struct monst *);
-STATIC_DCL boolean shade_aware(struct obj *);
+static void demonpet(void);
+static boolean m_slips_free(struct monst *mtmp,struct attack *mattk);
+static int explum(struct monst *,struct attack *);
+static void start_engulf(struct monst *);
+static void end_engulf(void);
+static int gulpum(struct monst *,struct attack *);
+static boolean hmonas(struct monst *,int);
+static void nohandglow(struct monst *);
+static boolean shade_aware(struct obj *);
 
 extern boolean notonhead;       /* for long worms */
 /* The below might become a parameter instead if we use it a lot */

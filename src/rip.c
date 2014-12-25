@@ -1,7 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL void center(int, char *);
+static void center(int, char *);
 
 extern const char * const killed_by_prefix[];   /* from topten.c */
 

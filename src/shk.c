@@ -8,10 +8,10 @@
 #define PAY_SKIP  (-1)
 #define PAY_BROKE (-2)
 
-STATIC_DCL void makekops(coord *);
-STATIC_DCL void call_kops(struct monst *,boolean);
+static void makekops(coord *);
+static void call_kops(struct monst *,boolean);
 #ifdef OVLB
-STATIC_DCL void kops_gone(boolean);
+static void kops_gone(boolean);
 #endif /* OVLB */
 
 #define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
@@ -19,43 +19,43 @@ STATIC_DCL void kops_gone(boolean);
 extern const struct shclass shtypes[];  /* defined in shknam.c */
 extern struct obj *thrownobj;           /* defined in dothrow.c */
 
-STATIC_VAR long int followmsg;  /* last time of follow message */
+static long int followmsg;  /* last time of follow message */
 
-STATIC_DCL void setpaid(struct monst *);
-STATIC_DCL long addupbill(struct monst *);
-STATIC_DCL void pacify_shk(struct monst *);
-STATIC_DCL struct bill_x *onbill(struct obj *, struct monst *, boolean);
-STATIC_DCL struct monst *next_shkp(struct monst *, boolean);
-STATIC_DCL long shop_debt(struct eshk *);
-STATIC_DCL char *shk_owns(char *,struct obj *);
-STATIC_DCL char *mon_owns(char *,struct obj *);
-STATIC_DCL void clear_unpaid(struct obj *);
-STATIC_DCL long check_credit(long, struct monst *);
-STATIC_DCL void pay(long, struct monst *);
-STATIC_DCL long get_cost(struct obj *, struct monst *);
-STATIC_DCL long set_cost(struct obj *, struct monst *);
-STATIC_DCL const char *shk_embellish(struct obj *, long);
-STATIC_DCL long cost_per_charge(struct monst *,struct obj *,boolean);
-STATIC_DCL long cheapest_item(struct monst *);
-STATIC_DCL int dopayobj(struct monst *, struct bill_x *,
+static void setpaid(struct monst *);
+static long addupbill(struct monst *);
+static void pacify_shk(struct monst *);
+static struct bill_x *onbill(struct obj *, struct monst *, boolean);
+static struct monst *next_shkp(struct monst *, boolean);
+static long shop_debt(struct eshk *);
+static char *shk_owns(char *,struct obj *);
+static char *mon_owns(char *,struct obj *);
+static void clear_unpaid(struct obj *);
+static long check_credit(long, struct monst *);
+static void pay(long, struct monst *);
+static long get_cost(struct obj *, struct monst *);
+static long set_cost(struct obj *, struct monst *);
+static const char *shk_embellish(struct obj *, long);
+static long cost_per_charge(struct monst *,struct obj *,boolean);
+static long cheapest_item(struct monst *);
+static int dopayobj(struct monst *, struct bill_x *,
                             struct obj **, int, boolean);
-STATIC_DCL long stolen_container(struct obj *, struct monst *, long,
+static long stolen_container(struct obj *, struct monst *, long,
                                      boolean);
-STATIC_DCL long getprice(struct obj *,boolean);
-STATIC_DCL void shk_names_obj(struct monst *,struct obj *,const char *,long,const char *);
-STATIC_DCL struct obj *bp_to_obj(struct bill_x *);
-STATIC_DCL boolean inherits(struct monst *,int,int);
-STATIC_DCL void set_repo_loc(struct eshk *);
-STATIC_DCL boolean angry_shk_exists(void);
-STATIC_DCL void rile_shk(struct monst *);
-STATIC_DCL void rouse_shk(struct monst *,boolean);
-STATIC_DCL void remove_damage(struct monst *, boolean);
-STATIC_DCL void sub_one_frombill(struct obj *, struct monst *);
-STATIC_DCL void add_one_tobill(struct obj *, boolean);
-STATIC_DCL void dropped_container(struct obj *, struct monst *,
+static long getprice(struct obj *,boolean);
+static void shk_names_obj(struct monst *,struct obj *,const char *,long,const char *);
+static struct obj *bp_to_obj(struct bill_x *);
+static boolean inherits(struct monst *,int,int);
+static void set_repo_loc(struct eshk *);
+static boolean angry_shk_exists(void);
+static void rile_shk(struct monst *);
+static void rouse_shk(struct monst *,boolean);
+static void remove_damage(struct monst *, boolean);
+static void sub_one_frombill(struct obj *, struct monst *);
+static void add_one_tobill(struct obj *, boolean);
+static void dropped_container(struct obj *, struct monst *,
                                       boolean);
-STATIC_DCL void add_to_billobjs(struct obj *);
-STATIC_DCL void bill_box_content(struct obj *, boolean, boolean,
+static void add_to_billobjs(struct obj *);
+static void bill_box_content(struct obj *, boolean, boolean,
                                      struct monst *);
 #ifdef OVL1
 static boolean rob_shop(struct monst *);
@@ -1006,13 +1006,13 @@ make_angry_shk (struct monst *shkp, signed char ox, signed char oy)
         hot_pursuit(shkp);
 }
 
-STATIC_VAR const char no_money[] = "Moreover, you%s have no money.";
-STATIC_VAR const char not_enough_money[] =
+static const char no_money[] = "Moreover, you%s have no money.";
+static const char not_enough_money[] =
                             "Besides, you don't have enough to interest %s.";
 
 #else
-STATIC_VAR const char no_money[];
-STATIC_VAR const char not_enough_money[];
+static const char no_money[];
+static const char not_enough_money[];
 #endif /*OVLB*/
 
 #ifdef OVL3

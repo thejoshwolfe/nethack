@@ -10,12 +10,12 @@
 #include "hack.h"
 
 #ifdef OVLB
-STATIC_DCL void polyman(const char *,const char *);
-STATIC_DCL void break_armor(void);
-STATIC_DCL void drop_weapon(int);
-STATIC_DCL void uunstick(void);
-STATIC_DCL int armor_to_dragon(int);
-STATIC_DCL void newman(void);
+static void polyman(const char *,const char *);
+static void break_armor(void);
+static void drop_weapon(int);
+static void uunstick(void);
+static int armor_to_dragon(int);
+static void newman(void);
 
 /* update the youmonst.data structure pointer */
 void 

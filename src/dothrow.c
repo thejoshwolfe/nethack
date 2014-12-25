@@ -4,18 +4,18 @@
 #include "hack.h"
 #include "edog.h"
 
-STATIC_DCL int throw_obj(struct obj *,int);
-STATIC_DCL void autoquiver(void);
-STATIC_DCL int gem_accept(struct monst *, struct obj *);
-STATIC_DCL void tmiss(struct obj *, struct monst *);
-STATIC_DCL int throw_gold(struct obj *);
-STATIC_DCL void check_shop_obj(struct obj *,signed char,signed char,boolean);
-STATIC_DCL void breakobj(struct obj *,signed char,signed char,boolean,boolean);
-STATIC_DCL void breakmsg(struct obj *,boolean);
-STATIC_DCL boolean toss_up(struct obj *, boolean);
-STATIC_DCL boolean throwing_weapon(struct obj *);
-STATIC_DCL void sho_obj_return_to_u(struct obj *obj);
-STATIC_DCL boolean mhurtle_step(void *,int,int);
+static int throw_obj(struct obj *,int);
+static void autoquiver(void);
+static int gem_accept(struct monst *, struct obj *);
+static void tmiss(struct obj *, struct monst *);
+static int throw_gold(struct obj *);
+static void check_shop_obj(struct obj *,signed char,signed char,boolean);
+static void breakobj(struct obj *,signed char,signed char,boolean,boolean);
+static void breakmsg(struct obj *,boolean);
+static boolean toss_up(struct obj *, boolean);
+static boolean throwing_weapon(struct obj *);
+static void sho_obj_return_to_u(struct obj *obj);
+static boolean mhurtle_step(void *,int,int);
 
 
 static const char toss_objs[] =

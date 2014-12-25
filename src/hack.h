@@ -270,9 +270,6 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 /* negative armor class is randomly weakened to prevent invulnerability */
 #define AC_VALUE(AC)    ((AC) >= 0 ? (AC) : -rnd(-(AC)))
 
-# define STATIC_DCL static
-# define STATIC_VAR static
-
 /* If not compiling an overlay, compile everything. */
 # define OVL0   /* highest priority */
 # define OVL1

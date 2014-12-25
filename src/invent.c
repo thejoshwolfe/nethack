@@ -5,15 +5,15 @@
 #define CONTAINED_SYM   '>'     /* designator for inside a container */
 
 #ifdef OVL1
-STATIC_DCL void reorder_invent(void);
-STATIC_DCL boolean mergable(struct obj *,struct obj *);
-STATIC_DCL void invdisp_nothing(const char *,const char *);
-STATIC_DCL boolean worn_wield_only(struct obj *);
-STATIC_DCL boolean only_here(struct obj *);
+static void reorder_invent(void);
+static boolean mergable(struct obj *,struct obj *);
+static void invdisp_nothing(const char *,const char *);
+static boolean worn_wield_only(struct obj *);
+static boolean only_here(struct obj *);
 #endif /* OVL1 */
-STATIC_DCL void compactify(char *);
-STATIC_DCL boolean taking_off(const char *);
-STATIC_DCL boolean putting_on(const char *);
+static void compactify(char *);
+static boolean taking_off(const char *);
+static boolean putting_on(const char *);
 STATIC_PTR int ckunpaid(struct obj *);
 STATIC_PTR int ckvalidcat(struct obj *);
 #ifdef DUMP_LOG
@@ -22,13 +22,13 @@ static char display_pickinv(const char *,boolean, long *, boolean);
 static char display_pickinv(const char *,boolean, long *);
 #endif /* DUMP_LOG */
 #ifdef OVLB
-STATIC_DCL boolean this_type_only(struct obj *);
-STATIC_DCL void dounpaid(void);
-STATIC_DCL struct obj *find_unpaid(struct obj *,struct obj **);
-STATIC_DCL void menu_identify(int);
-STATIC_DCL boolean tool_in_use(struct obj *);
+static boolean this_type_only(struct obj *);
+static void dounpaid(void);
+static struct obj *find_unpaid(struct obj *,struct obj **);
+static void menu_identify(int);
+static boolean tool_in_use(struct obj *);
 #endif /* OVLB */
-STATIC_DCL char obj_to_let(struct obj *);
+static char obj_to_let(struct obj *);
 
 #ifdef OVLB
 
@@ -2639,7 +2639,7 @@ long numused;
  * Conversion from a class to a string for printing.
  * This must match the object class order.
  */
-STATIC_VAR const char *names[] = { 0,
+static const char *names[] = { 0,
         "Illegal objects", "Weapons", "Armor", "Rings", "Amulets",
         "Tools", "Comestibles", "Potions", "Scrolls", "Spellbooks",
         "Wands", "Coins", "Gems", "Boulders/Statues", "Iron balls",

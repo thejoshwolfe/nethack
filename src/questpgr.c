@@ -9,16 +9,16 @@
 #define QTEXT_FILE      "quest.dat"
 
 static void Fread(void *,int,int,dlb *);
-STATIC_DCL struct qtmsg * construct_qtlist(long);
-STATIC_DCL const char * intermed(void);
-STATIC_DCL const char * neminame(void);
-STATIC_DCL const char * guardname(void);
-STATIC_DCL const char * homebase(void);
-STATIC_DCL struct qtmsg * msg_in(struct qtmsg *,int);
-STATIC_DCL void convert_arg(char);
-STATIC_DCL void convert_line(void);
-STATIC_DCL void deliver_by_pline(struct qtmsg *);
-STATIC_DCL void deliver_by_window(struct qtmsg *,int);
+static struct qtmsg * construct_qtlist(long);
+static const char * intermed(void);
+static const char * neminame(void);
+static const char * guardname(void);
+static const char * homebase(void);
+static struct qtmsg * msg_in(struct qtmsg *,int);
+static void convert_arg(char);
+static void convert_line(void);
+static void deliver_by_pline(struct qtmsg *);
+static void deliver_by_window(struct qtmsg *,int);
 
 static char     in_line[80], cvt_buf[64], out_line[128];
 static struct   qtlists qt_list;

@@ -4,8 +4,8 @@
 STATIC_PTR int stealarm(void);
 
 #ifdef OVLB
-STATIC_DCL const char *equipname(struct obj *);
-STATIC_DCL void mdrop_obj(struct monst *,struct obj *,boolean);
+static const char *equipname(struct obj *);
+static void mdrop_obj(struct monst *,struct obj *,boolean);
 
 static const char *
 equipname (struct obj *otmp)

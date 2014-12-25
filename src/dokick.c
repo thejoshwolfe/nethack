@@ -11,12 +11,12 @@ static const char *gate_str;
 
 extern boolean notonhead;       /* for long worms */
 
-STATIC_DCL void kickdmg(struct monst *, boolean);
-STATIC_DCL void kick_monster(signed char, signed char);
-STATIC_DCL int kick_object(signed char, signed char);
-STATIC_DCL char *kickstr(char *);
-STATIC_DCL void otransit_msg(struct obj *, boolean, long);
-STATIC_DCL void drop_to(coord *,signed char);
+static void kickdmg(struct monst *, boolean);
+static void kick_monster(signed char, signed char);
+static int kick_object(signed char, signed char);
+static char *kickstr(char *);
+static void otransit_msg(struct obj *, boolean, long);
+static void drop_to(coord *,signed char);
 
 static struct obj *kickobj;
 

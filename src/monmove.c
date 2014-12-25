@@ -8,10 +8,10 @@ extern boolean notonhead;
 
 #ifdef OVL0
 
-STATIC_DCL int disturb(struct monst *);
-STATIC_DCL void distfleeck(struct monst *,int *,int *,int *);
-STATIC_DCL int m_arrival(struct monst *);
-STATIC_DCL void watch_on_duty(struct monst *);
+static int disturb(struct monst *);
+static void distfleeck(struct monst *,int *,int *,int *);
+static int m_arrival(struct monst *);
+static void watch_on_duty(struct monst *);
 
 #endif /* OVL0 */
 #ifdef OVLB

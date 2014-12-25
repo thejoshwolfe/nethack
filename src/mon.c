@@ -4,23 +4,23 @@
 #include "edog.h"
 #include <ctype.h>
 
-STATIC_DCL boolean restrap(struct monst *);
-STATIC_DCL long mm_aggression(struct monst *,struct monst *);
+static boolean restrap(struct monst *);
+static long mm_aggression(struct monst *,struct monst *);
 #ifdef OVL2
-STATIC_DCL int pick_animal(void);
-STATIC_DCL int select_newcham_form(struct monst *);
-STATIC_DCL void kill_eggs(struct obj *);
+static int pick_animal(void);
+static int select_newcham_form(struct monst *);
+static void kill_eggs(struct obj *);
 #endif
 
 #define LEVEL_SPECIFIC_NOCORPSE(mdat) \
            (level.flags.graveyard && is_undead(mdat) && rn2(3))
 
 #ifndef OVLB
-STATIC_VAR short cham_to_pm[];
+static short cham_to_pm[];
 #else
-STATIC_DCL struct obj *make_corpse(struct monst *);
-STATIC_DCL void m_detach(struct monst *, struct permonst *);
-STATIC_DCL void lifesaved_monster(struct monst *);
+static struct obj *make_corpse(struct monst *);
+static void m_detach(struct monst *, struct permonst *);
+static void lifesaved_monster(struct monst *);
 
 /* convert the monster index of an undead to its living counterpart */
 int 
@@ -104,7 +104,7 @@ pm_to_cham (int mndx)
 }
 
 /* convert chameleon index to monster index */
-STATIC_VAR short cham_to_pm[] = {
+static short cham_to_pm[] = {
                 NON_PM,         /* placeholder for CHAM_ORDINARY */
                 PM_CHAMELEON,
                 PM_DOPPELGANGER,

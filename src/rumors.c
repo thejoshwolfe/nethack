@@ -25,8 +25,8 @@
  * and placed there by 'makedefs'.
  */
 
-STATIC_DCL void init_rumors(dlb *);
-STATIC_DCL void init_oracles(dlb *);
+static void init_rumors(dlb *);
+static void init_oracles(dlb *);
 
 static long true_rumor_start,  true_rumor_size,  true_rumor_end,
             false_rumor_start, false_rumor_size, false_rumor_end;

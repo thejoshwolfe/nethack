@@ -85,12 +85,12 @@ static char  left_ptrs[ROWNO][COLNO];           /* LOS algorithm helpers */
 static char right_ptrs[ROWNO][COLNO];
 
 /* Forward declarations. */
-STATIC_DCL void fill_point(int,int);
-STATIC_DCL void dig_point(int,int);
-STATIC_DCL void view_init(void);
-STATIC_DCL void view_from(int,int,char **,char *,char *,int,
+static void fill_point(int,int);
+static void dig_point(int,int);
+static void view_init(void);
+static void view_from(int,int,char **,char *,char *,int,
                              void (*)(int,int,void *),void *);
-STATIC_DCL void get_unused_cs(char ***,char **,char **);
+static void get_unused_cs(char ***,char **,char **);
 
 /* Macro definitions that I can't find anywhere. */
 #define sign(z) ((z) < 0 ? -1 : ((z) ? 1 : 0 ))
@@ -268,7 +268,7 @@ get_unused_cs (char ***rows, char **rmin, char **rmax)
 
 #ifdef EXTEND_SPINE
 
-STATIC_DCL int new_angle(struct rm *, unsigned char *, int, int);
+static int new_angle(struct rm *, unsigned char *, int, int);
 /*
  * new_angle()
  *
@@ -1205,10 +1205,10 @@ static void * varg;
 
 #else   /* quadrants are really functions */
 
-STATIC_DCL int _q1_path(int,int,int,int);
-STATIC_DCL int _q2_path(int,int,int,int);
-STATIC_DCL int _q3_path(int,int,int,int);
-STATIC_DCL int _q4_path(int,int,int,int);
+static int _q1_path(int,int,int,int);
+static int _q2_path(int,int,int,int);
+static int _q3_path(int,int,int,int);
+static int _q4_path(int,int,int,int);
 
 #define q1_path(sy,sx,y,x,dummy) result = _q1_path(sy,sx,y,x)
 #define q2_path(sy,sx,y,x,dummy) result = _q2_path(sy,sx,y,x)
@@ -1447,10 +1447,10 @@ cleardone:
 static close2d *close_dy[CLOSE_MAX_BC_DY];
 static far2d   *far_dy[FAR_MAX_BC_DY];
 
-STATIC_DCL void right_side(int,int,int,int,int,int,int,char*);
-STATIC_DCL void left_side(int,int,int,int,int,int,int,char*);
-STATIC_DCL int close_shadow(int,int,int,int);
-STATIC_DCL int far_shadow(int,int,int,int);
+static void right_side(int,int,int,int,int,int,int,char*);
+static void left_side(int,int,int,int,int,int,int,char*);
+static int close_shadow(int,int,int,int);
+static int far_shadow(int,int,int,int);
 
 /*
  * Initialize algorithm D's table pointers.  If we don't have these,
@@ -2076,8 +2076,8 @@ view_from(srow,scol,loc_cs_rows,left_most,right_most, range, func, arg)
 /*
  * Defines local to Algorithm C.
  */
-STATIC_DCL void right_side(int,int,int,char*);
-STATIC_DCL void left_side(int,int,int,char*);
+static void right_side(int,int,int,char*);
+static void left_side(int,int,int,char*);
 
 /* Initialize algorithm C (nothing). */
 static void 

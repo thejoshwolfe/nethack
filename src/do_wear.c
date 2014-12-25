@@ -3,7 +3,7 @@
 
 #ifndef OVLB
 
-STATIC_DCL long takeoff_mask, taking_off;
+static long takeoff_mask, taking_off;
 
 #else /* OVLB */
 
@@ -34,22 +34,22 @@ static const long takeoff_order[] = { WORN_BLINDF, W_WEP,
         WORN_SHIRT,
         WORN_BOOTS, W_SWAPWEP, W_QUIVER, 0L };
 
-STATIC_DCL void on_msg(struct obj *);
+static void on_msg(struct obj *);
 STATIC_PTR int Armor_on(void);
 STATIC_PTR int Boots_on(void);
-STATIC_DCL int Cloak_on(void);
+static int Cloak_on(void);
 STATIC_PTR int Helmet_on(void);
 STATIC_PTR int Gloves_on(void);
 STATIC_PTR int Shield_on(void);
 STATIC_PTR int Shirt_on(void);
-STATIC_DCL void Amulet_on(void);
-STATIC_DCL void Ring_off_or_gone(struct obj *, boolean);
+static void Amulet_on(void);
+static void Ring_off_or_gone(struct obj *, boolean);
 STATIC_PTR int select_off(struct obj *);
-STATIC_DCL struct obj *do_takeoff(void);
+static struct obj *do_takeoff(void);
 STATIC_PTR int take_off(void);
-STATIC_DCL int menu_remarm(int);
-STATIC_DCL void already_wearing(const char*);
-STATIC_DCL void already_wearing2(const char*, const char*);
+static int menu_remarm(int);
+static void already_wearing(const char*);
+static void already_wearing2(const char*, const char*);
 
 void 
 off_msg (struct obj *otmp)

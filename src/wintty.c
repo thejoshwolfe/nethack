@@ -105,22 +105,22 @@ static int clipy = 0, clipymax = 0;
 boolean GFlag = FALSE;
 boolean HE_resets_AS;   /* see termcap.c */
 
-STATIC_DCL void getret(void);
-STATIC_DCL void erase_menu_or_text(winid, struct WinDesc *, boolean);
-STATIC_DCL void free_window_info(struct WinDesc *, boolean);
-STATIC_DCL void dmore(struct WinDesc *, const char *);
-STATIC_DCL void set_item_state(winid, int, tty_menu_item *);
-STATIC_DCL void set_all_on_page(winid,tty_menu_item *,tty_menu_item *);
-STATIC_DCL void unset_all_on_page(winid,tty_menu_item *,tty_menu_item *);
-STATIC_DCL void invert_all_on_page(winid,tty_menu_item *,tty_menu_item *, char);
-STATIC_DCL void invert_all(winid,tty_menu_item *,tty_menu_item *, char);
-STATIC_DCL void process_menu_window(winid,struct WinDesc *);
-STATIC_DCL void process_text_window(winid,struct WinDesc *);
-STATIC_DCL tty_menu_item *reverse(tty_menu_item *);
+static void getret(void);
+static void erase_menu_or_text(winid, struct WinDesc *, boolean);
+static void free_window_info(struct WinDesc *, boolean);
+static void dmore(struct WinDesc *, const char *);
+static void set_item_state(winid, int, tty_menu_item *);
+static void set_all_on_page(winid,tty_menu_item *,tty_menu_item *);
+static void unset_all_on_page(winid,tty_menu_item *,tty_menu_item *);
+static void invert_all_on_page(winid,tty_menu_item *,tty_menu_item *, char);
+static void invert_all(winid,tty_menu_item *,tty_menu_item *, char);
+static void process_menu_window(winid,struct WinDesc *);
+static void process_text_window(winid,struct WinDesc *);
+static tty_menu_item *reverse(tty_menu_item *);
 const char * compress_str(const char *);
-STATIC_DCL void tty_putsym(winid, int, int, char);
+static void tty_putsym(winid, int, int, char);
 static char *copy_of(const char *);
-STATIC_DCL void bail(const char *);     /* __attribute__((noreturn)) */
+static void bail(const char *);     /* __attribute__((noreturn)) */
 
 /*
  * A string containing all the default commands -- to add to a list

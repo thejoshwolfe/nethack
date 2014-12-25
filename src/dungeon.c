@@ -35,21 +35,21 @@ struct lchoice {
 };
 
 static void Fread(void *, int, int, dlb *);
-STATIC_DCL signed char dname_to_dnum(const char *);
-STATIC_DCL int find_branch(const char *, struct proto_dungeon *);
-STATIC_DCL signed char parent_dnum(const char *, struct proto_dungeon *);
-STATIC_DCL int level_range(signed char,int,int,int,struct proto_dungeon *,int *);
-STATIC_DCL signed char parent_dlevel(const char *, struct proto_dungeon *);
-STATIC_DCL int correct_branch_type(struct tmpbranch *);
-STATIC_DCL branch *add_branch(int, int, struct proto_dungeon *);
-STATIC_DCL void add_level(s_level *);
-STATIC_DCL void init_level(int,int,struct proto_dungeon *);
-STATIC_DCL int possible_places(int, boolean *, struct proto_dungeon *);
-STATIC_DCL signed char pick_level(boolean *, int);
-STATIC_DCL boolean place_level(int, struct proto_dungeon *);
+static signed char dname_to_dnum(const char *);
+static int find_branch(const char *, struct proto_dungeon *);
+static signed char parent_dnum(const char *, struct proto_dungeon *);
+static int level_range(signed char,int,int,int,struct proto_dungeon *,int *);
+static signed char parent_dlevel(const char *, struct proto_dungeon *);
+static int correct_branch_type(struct tmpbranch *);
+static branch *add_branch(int, int, struct proto_dungeon *);
+static void add_level(s_level *);
+static void init_level(int,int,struct proto_dungeon *);
+static int possible_places(int, boolean *, struct proto_dungeon *);
+static signed char pick_level(boolean *, int);
+static boolean place_level(int, struct proto_dungeon *);
 #ifdef WIZARD
-STATIC_DCL const char *br_string(int);
-STATIC_DCL void print_branch(winid, int, int, int, boolean, struct lchoice *);
+static const char *br_string(int);
+static void print_branch(winid, int, int, int, boolean, struct lchoice *);
 #endif
 
 

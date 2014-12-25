@@ -1,9 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL const char *dev_name(void);
-STATIC_DCL void get_mplname(struct monst *, char *);
-STATIC_DCL void mk_mplayer_armor(struct monst *, short);
+static const char *dev_name(void);
+static void get_mplname(struct monst *, char *);
+static void mk_mplayer_armor(struct monst *, short);
 
 /* These are the names of those who
  * contributed to the development of NetHack 3.2/3.3/3.4.

@@ -1,8 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL long newuexp(int);
-STATIC_DCL int enermod(int);
+static long newuexp(int);
+static int enermod(int);
 
 static long 
 newuexp (int lev)

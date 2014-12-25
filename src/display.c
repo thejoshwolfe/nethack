@@ -115,21 +115,21 @@
 #include "region.h"
 #include <assert.h>
 
-STATIC_DCL void display_monster(signed char,signed char,struct monst *,int,signed char);
-STATIC_DCL int swallow_to_glyph(int, int);
-STATIC_DCL void display_warning(struct monst *);
+static void display_monster(signed char,signed char,struct monst *,int,signed char);
+static int swallow_to_glyph(int, int);
+static void display_warning(struct monst *);
 
-STATIC_DCL int check_pos(int, int, int);
+static int check_pos(int, int, int);
 #ifdef WA_VERBOSE
-STATIC_DCL boolean more_than_one(int, int, int, int, int);
+static boolean more_than_one(int, int, int, int, int);
 #endif
-STATIC_DCL int set_twall(int,int, int,int, int,int, int,int);
-STATIC_DCL int set_wall(int, int, int);
-STATIC_DCL int set_corn(int,int, int,int, int,int, int,int);
-STATIC_DCL int set_crosswall(int, int);
-STATIC_DCL void set_seenv(struct rm *, int, int, int, int);
-STATIC_DCL void t_warn(struct rm *);
-STATIC_DCL int wall_angle(struct rm *);
+static int set_twall(int,int, int,int, int,int, int,int);
+static int set_wall(int, int, int);
+static int set_corn(int,int, int,int, int,int, int,int);
+static int set_crosswall(int, int);
+static void set_seenv(struct rm *, int, int, int, int);
+static void t_warn(struct rm *);
+static int wall_angle(struct rm *);
 
 #ifdef INVISIBLE_OBJECTS
 /*

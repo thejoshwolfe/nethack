@@ -2,30 +2,30 @@
 #include "hack.h"
 #include "artifact.h"
 
-STATIC_VAR struct obj *otmp;
+static struct obj *otmp;
 
-STATIC_DCL void urustm(struct monst *, struct obj *);
+static void urustm(struct monst *, struct obj *);
 # ifdef OVL1
-STATIC_DCL boolean u_slip_free(struct monst *,struct attack *);
-STATIC_DCL int passiveum(struct permonst *,struct monst *,struct attack *);
+static boolean u_slip_free(struct monst *,struct attack *);
+static int passiveum(struct permonst *,struct monst *,struct attack *);
 # endif /* OVL1 */
 
 #ifdef OVLB
 # ifdef SEDUCE
-STATIC_DCL void mayberem(struct obj *, const char *);
+static void mayberem(struct obj *, const char *);
 # endif
 #endif /* OVLB */
 
-STATIC_DCL boolean diseasemu(struct permonst *);
-STATIC_DCL int hitmu(struct monst *,struct attack *);
-STATIC_DCL int gulpmu(struct monst *,struct attack *);
-STATIC_DCL int explmu(struct monst *,struct attack *,boolean);
-STATIC_DCL void missmu(struct monst *,boolean,struct attack *);
-STATIC_DCL void mswings(struct monst *,struct obj *);
-STATIC_DCL void wildmiss(struct monst *,struct attack *);
+static boolean diseasemu(struct permonst *);
+static int hitmu(struct monst *,struct attack *);
+static int gulpmu(struct monst *,struct attack *);
+static int explmu(struct monst *,struct attack *,boolean);
+static void missmu(struct monst *,boolean,struct attack *);
+static void mswings(struct monst *,struct obj *);
+static void wildmiss(struct monst *,struct attack *);
 
-STATIC_DCL void hurtarmor(int);
-STATIC_DCL void hitmsg(struct monst *,struct attack *);
+static void hurtarmor(int);
+static void hitmsg(struct monst *,struct attack *);
 
 /* See comment in mhitm.c.  If we use this a lot it probably should be */
 /* changed to a parameter to mhitu. */

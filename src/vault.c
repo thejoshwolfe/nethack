@@ -2,18 +2,18 @@
 #include "hack.h"
 #include "vault.h"
 
-STATIC_DCL struct monst *findgd(void);
+static struct monst *findgd(void);
 
 #define g_monnam(mtmp) \
         x_monnam(mtmp, ARTICLE_NONE, (char *)0, SUPPRESS_IT, FALSE)
 
 #ifdef OVLB
 
-STATIC_DCL boolean clear_fcorr(struct monst *,boolean);
-STATIC_DCL void restfakecorr(struct monst *);
-STATIC_DCL boolean in_fcorridor(struct monst *,int,int);
-STATIC_DCL void move_gold(struct obj *,int);
-STATIC_DCL void wallify_vault(struct monst *);
+static boolean clear_fcorr(struct monst *,boolean);
+static void restfakecorr(struct monst *);
+static boolean in_fcorridor(struct monst *,int,int);
+static void move_gold(struct obj *,int);
+static void wallify_vault(struct monst *);
 
 static boolean
 clear_fcorr(grd, forceshow)

@@ -8,7 +8,7 @@
 #endif
 
 #ifdef POSITIONBAR
-STATIC_DCL void do_positionbar(void);
+static void do_positionbar(void);
 #endif
 
 #ifdef OVL0
@@ -522,7 +522,7 @@ void welcome(boolean new_game) {
 }
 
 #ifdef POSITIONBAR
-STATIC_DCL void 
+static void 
 do_positionbar (void)
 {
         static char pbar[COLNO];

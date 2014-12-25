@@ -18,23 +18,23 @@ extern boolean notonhead;       /* for long worms */
 /* kludge to use mondied instead of killed */
 extern boolean m_using;
 
-STATIC_DCL void costly_cancel(struct obj *);
-STATIC_DCL void polyuse(struct obj*, int, int);
-STATIC_DCL void create_polymon(struct obj *, int);
-STATIC_DCL boolean zap_updown(struct obj *);
-STATIC_DCL int zhitm(struct monst *,int,int,struct obj **);
-STATIC_DCL void zhitu(int,int,const char *,signed char,signed char);
-STATIC_DCL void revive_egg(struct obj *);
+static void costly_cancel(struct obj *);
+static void polyuse(struct obj*, int, int);
+static void create_polymon(struct obj *, int);
+static boolean zap_updown(struct obj *);
+static int zhitm(struct monst *,int,int,struct obj **);
+static void zhitu(int,int,const char *,signed char,signed char);
+static void revive_egg(struct obj *);
 #ifdef STEED
-STATIC_DCL boolean zap_steed(struct obj *);
+static boolean zap_steed(struct obj *);
 #endif
 
 #ifdef OVLB
-STATIC_DCL int zap_hit(int,int);
+static int zap_hit(int,int);
 #endif
 #ifdef OVL0
-STATIC_DCL void backfire(struct obj *);
-STATIC_DCL int spell_hit_bonus(int);
+static void backfire(struct obj *);
+static int spell_hit_bonus(int);
 #endif
 
 #define ZT_MAGIC_MISSILE        (AD_MAGM-1)
@@ -54,10 +54,10 @@ STATIC_DCL int spell_hit_bonus(int);
 #define is_hero_spell(type)     ((type) >= 10 && (type) < 20)
 
 #ifndef OVLB
-STATIC_VAR const char are_blinded_by_the_flash[];
+static const char are_blinded_by_the_flash[];
 extern const char * const flash_types[];
 #else
-STATIC_VAR const char are_blinded_by_the_flash[] = "are blinded by the flash!";
+static const char are_blinded_by_the_flash[] = "are blinded by the flash!";
 
 const char * const flash_types[] = {    /* also used in buzzmu(mcastu.c) */
         "magic missile",        /* Wands must be 0-9 */

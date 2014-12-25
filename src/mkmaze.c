@@ -8,18 +8,18 @@ extern char *lev_message;
 extern lev_region *lregions;
 extern int num_lregions;
 
-STATIC_DCL boolean iswall(int,int);
-STATIC_DCL boolean iswall_or_stone(int,int);
-STATIC_DCL boolean is_solid(int,int);
-STATIC_DCL int extend_spine(int [3][3], int, int, int);
-STATIC_DCL boolean okay(int,int,int);
-STATIC_DCL void maze0xy(coord *);
-STATIC_DCL boolean put_lregion_here(signed char,signed char,signed char,
+static boolean iswall(int,int);
+static boolean iswall_or_stone(int,int);
+static boolean is_solid(int,int);
+static int extend_spine(int [3][3], int, int, int);
+static boolean okay(int,int,int);
+static void maze0xy(coord *);
+static boolean put_lregion_here(signed char,signed char,signed char,
         signed char,signed char,signed char,signed char,boolean,d_level *);
-STATIC_DCL void fixup_special(void);
-STATIC_DCL void move(int *,int *,int);
-STATIC_DCL void setup_waterlevel(void);
-STATIC_DCL void unsetup_waterlevel(void);
+static void fixup_special(void);
+static void move(int *,int *,int);
+static void setup_waterlevel(void);
+static void unsetup_waterlevel(void);
 
 
 static boolean
@@ -833,9 +833,9 @@ static int xmin, ymin, xmax, ymax;      /* level boundaries */
 #define bxmax (xmax - 1)
 #define bymax (ymax - 1)
 
-STATIC_DCL void set_wportal(void);
-STATIC_DCL void mk_bubble(int,int,int);
-STATIC_DCL void mv_bubble(struct bubble *,int,int,boolean);
+static void set_wportal(void);
+static void mk_bubble(int,int,int);
+static void mv_bubble(struct bubble *,int,int,boolean);
 
 void 
 movebubbles (void)

@@ -1,11 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_DCL boolean tele_jump_ok(int,int,int,int);
-STATIC_DCL boolean teleok(int,int,boolean);
-STATIC_DCL void vault_tele(void);
-STATIC_DCL boolean rloc_pos_ok(int,int,struct monst *);
-STATIC_DCL void mvault_tele(struct monst *);
+static boolean tele_jump_ok(int,int,int,int);
+static boolean teleok(int,int,boolean);
+static void vault_tele(void);
+static boolean rloc_pos_ok(int,int,struct monst *);
+static void mvault_tele(struct monst *);
 
 /*
  * Is (x,y) a good position of mtmp?  If mtmp is NULL, then is (x,y) good

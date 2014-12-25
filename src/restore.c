@@ -9,18 +9,18 @@ extern void substitute_tiles(d_level *);       /* from tile.c */
 #ifdef ZEROCOMP
 static int mgetc(void);
 #endif
-STATIC_DCL void find_lev_obj(void);
-STATIC_DCL void restlevchn(int);
-STATIC_DCL void restdamage(int,boolean);
-STATIC_DCL struct obj *restobjchn(int,boolean,boolean);
-STATIC_DCL struct monst *restmonchn(int,boolean);
-STATIC_DCL struct fruit *loadfruitchn(int);
-STATIC_DCL void freefruitchn(struct fruit *);
-STATIC_DCL void ghostfruit(struct obj *);
-STATIC_DCL boolean restgamestate(int, unsigned int *, unsigned int *);
-STATIC_DCL void restlevelstate(unsigned int, unsigned int);
-STATIC_DCL int restlevelfile(int,signed char);
-STATIC_DCL void reset_oattached_mids(boolean);
+static void find_lev_obj(void);
+static void restlevchn(int);
+static void restdamage(int,boolean);
+static struct obj *restobjchn(int,boolean,boolean);
+static struct monst *restmonchn(int,boolean);
+static struct fruit *loadfruitchn(int);
+static void freefruitchn(struct fruit *);
+static void ghostfruit(struct obj *);
+static boolean restgamestate(int, unsigned int *, unsigned int *);
+static void restlevelstate(unsigned int, unsigned int);
+static int restlevelfile(int,signed char);
+static void reset_oattached_mids(boolean);
 
 /*
  * Save a mapping of IDs from ghost levels to the current level.  This
@@ -35,8 +35,8 @@ struct bucket {
     } map[N_PER_BUCKET];
 };
 
-STATIC_DCL void clear_id_mapping(void);
-STATIC_DCL void add_id_mapping(unsigned, unsigned);
+static void clear_id_mapping(void);
+static void add_id_mapping(unsigned, unsigned);
 
 static int n_ids_mapped = 0;
 static struct bucket *id_map = 0;

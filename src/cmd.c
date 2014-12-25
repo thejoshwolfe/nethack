@@ -34,11 +34,11 @@ STATIC_PTR int wiz_show_seenv(void);
 STATIC_PTR int wiz_show_vision(void);
 STATIC_PTR int wiz_mon_polycontrol(void);
 STATIC_PTR int wiz_show_wmodes(void);
-STATIC_DCL void count_obj(struct obj *, long *, long *, boolean, boolean);
-STATIC_DCL void obj_chain(winid, const char *, struct obj *, long *, long *);
-STATIC_DCL void mon_invent_chain(winid, const char *, struct monst *, long *, long *);
-STATIC_DCL void mon_chain(winid, const char *, struct monst *, long *, long *);
-STATIC_DCL void contained(winid, const char *, long *, long *);
+static void count_obj(struct obj *, long *, long *, boolean, boolean);
+static void obj_chain(winid, const char *, struct obj *, long *, long *);
+static void mon_invent_chain(winid, const char *, struct monst *, long *, long *);
+static void mon_chain(winid, const char *, struct monst *, long *, long *);
+static void contained(winid, const char *, long *, long *);
 STATIC_PTR int wiz_show_stats(void);
 # endif
 STATIC_PTR int enter_explore_mode(void);
@@ -47,15 +47,15 @@ STATIC_PTR int doconduct(void); /**/
 STATIC_PTR boolean minimal_enlightenment(void);
 
 #ifdef OVLB
-STATIC_DCL void enlght_line(const char *,const char *,const char *);
-STATIC_DCL char *enlght_combatinc(const char *,int,int,char *);
+static void enlght_line(const char *,const char *,const char *);
+static char *enlght_combatinc(const char *,int,int,char *);
 static void end_of_input(void);
 #endif /* OVLB */
 
 static const char* readchar_queue="";
 
-STATIC_DCL char *parse(void);
-STATIC_DCL boolean help_dir(char,const char *);
+static char *parse(void);
+static boolean help_dir(char,const char *);
 
 #ifdef OVL1
 

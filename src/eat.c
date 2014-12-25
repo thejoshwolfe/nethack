@@ -9,29 +9,29 @@ STATIC_PTR int opentin(void);
 STATIC_PTR int unfaint(void);
 
 #ifdef OVLB
-STATIC_DCL const char *food_xname(struct obj *,boolean);
-STATIC_DCL void choke(struct obj *);
-STATIC_DCL void recalc_wt(void);
-STATIC_DCL struct obj *touchfood(struct obj *);
-STATIC_DCL void do_reset_eat(void);
-STATIC_DCL void done_eating(boolean);
-STATIC_DCL void cprefx(int);
-STATIC_DCL int intrinsic_possible(int,struct permonst *);
-STATIC_DCL void givit(int,struct permonst *);
-STATIC_DCL void cpostfx(int);
-STATIC_DCL void start_tin(struct obj *);
-STATIC_DCL int eatcorpse(struct obj *);
-STATIC_DCL void start_eating(struct obj *);
-STATIC_DCL void fprefx(struct obj *);
-STATIC_DCL void accessory_has_effect(struct obj *);
-STATIC_DCL void fpostfx(struct obj *);
-STATIC_DCL int bite(void);
-STATIC_DCL int edibility_prompts(struct obj *);
-STATIC_DCL int rottenfood(struct obj *);
-STATIC_DCL void eatspecial(void);
-STATIC_DCL void eataccessory(struct obj *);
-STATIC_DCL const char *foodword(struct obj *);
-STATIC_DCL boolean maybe_cannibal(int,boolean);
+static const char *food_xname(struct obj *,boolean);
+static void choke(struct obj *);
+static void recalc_wt(void);
+static struct obj *touchfood(struct obj *);
+static void do_reset_eat(void);
+static void done_eating(boolean);
+static void cprefx(int);
+static int intrinsic_possible(int,struct permonst *);
+static void givit(int,struct permonst *);
+static void cpostfx(int);
+static void start_tin(struct obj *);
+static int eatcorpse(struct obj *);
+static void start_eating(struct obj *);
+static void fprefx(struct obj *);
+static void accessory_has_effect(struct obj *);
+static void fpostfx(struct obj *);
+static int bite(void);
+static int edibility_prompts(struct obj *);
+static int rottenfood(struct obj *);
+static void eatspecial(void);
+static void eataccessory(struct obj *);
+static const char *foodword(struct obj *);
+static boolean maybe_cannibal(int,boolean);
 
 char msgbuf[BUFSZ];
 
@@ -51,9 +51,9 @@ char msgbuf[BUFSZ];
 
 #ifndef OVLB
 
-STATIC_DCL const char comestibles[];
-STATIC_DCL const char allobj[];
-STATIC_DCL boolean force_save_hs;
+static const char comestibles[];
+static const char allobj[];
+static boolean force_save_hs;
 
 #else
 

@@ -28,20 +28,20 @@ static struct val_list { struct valuable_data *list; int size; } valuables[] = {
 STATIC_PTR void done_intr(int);
 static void done_hangup(int);
 #endif
-STATIC_DCL void disclose(int,boolean);
-STATIC_DCL void get_valuables(struct obj *);
-STATIC_DCL void sort_valuables(struct valuable_data *,int);
-STATIC_DCL void artifact_score(struct obj *,boolean,winid);
-STATIC_DCL void savelife(int);
-STATIC_DCL void list_vanquished(char,boolean);
+static void disclose(int,boolean);
+static void get_valuables(struct obj *);
+static void sort_valuables(struct valuable_data *,int);
+static void artifact_score(struct obj *,boolean,winid);
+static void savelife(int);
+static void list_vanquished(char,boolean);
 #ifdef DUMP_LOG
 extern void dump_spells(void);
 void do_vanquished(int, boolean, boolean);
-STATIC_DCL void list_genocided(int, boolean, boolean);
+static void list_genocided(int, boolean, boolean);
 #else
-STATIC_DCL void list_genocided(char,boolean);
+static void list_genocided(char,boolean);
 #endif /* DUMP_LOG */
-STATIC_DCL boolean should_query_disclose_option(int,char *);
+static boolean should_query_disclose_option(int,char *);
 
 #define nethack_exit exit
 

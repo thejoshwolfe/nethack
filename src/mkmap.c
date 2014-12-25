@@ -5,16 +5,16 @@
 #define HEIGHT  (ROWNO - 1)
 #define WIDTH   (COLNO - 2)
 
-STATIC_DCL void init_map(signed char);
-STATIC_DCL void init_fill(signed char,signed char);
-STATIC_DCL signed char get_map(int,int,signed char);
-STATIC_DCL void pass_one(signed char,signed char);
-STATIC_DCL void pass_two(signed char,signed char);
-STATIC_DCL void pass_three(signed char,signed char);
-STATIC_DCL void wallify_map(void);
-STATIC_DCL void join_map(signed char,signed char);
-STATIC_DCL void finish_map(signed char,signed char,boolean,boolean);
-STATIC_DCL void remove_room(unsigned);
+static void init_map(signed char);
+static void init_fill(signed char,signed char);
+static signed char get_map(int,int,signed char);
+static void pass_one(signed char,signed char);
+static void pass_two(signed char,signed char);
+static void pass_three(signed char,signed char);
+static void wallify_map(void);
+static void join_map(signed char,signed char);
+static void finish_map(signed char,signed char,boolean,boolean);
+static void remove_room(unsigned);
 void mkmap(lev_init *);
 
 char *new_locations;

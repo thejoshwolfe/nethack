@@ -6,13 +6,13 @@
 
 static boolean did_dig_msg;
 
-STATIC_DCL boolean rm_waslit(void);
-STATIC_DCL void mkcavepos(signed char,signed char,int,boolean,boolean);
-STATIC_DCL void mkcavearea(boolean);
-STATIC_DCL int dig_typ(struct obj *,signed char,signed char);
-STATIC_DCL int dig(void);
-STATIC_DCL signed char fillholetyp(int, int);
-STATIC_DCL void dig_up_grave(void);
+static boolean rm_waslit(void);
+static void mkcavepos(signed char,signed char,int,boolean,boolean);
+static void mkcavearea(boolean);
+static int dig_typ(struct obj *,signed char,signed char);
+static int dig(void);
+static signed char fillholetyp(int, int);
+static void dig_up_grave(void);
 
 /* Indices returned by dig_typ() */
 #define DIGTYP_UNDIGGABLE 0
