@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 		fname = strcpy(infile, argv[i]);
 		/* the input file had better be a .pdf file */
 		len = strlen(fname) - 4;	/* length excluding suffix */
-		if (len < 0 || strncmp(".pdf", fname + len, 4)) {
+		if (len < 0 || strncmp(".def", fname + len, 4)) {
 		    Fprintf(stderr,
 			    "Error - file name \"%s\" in wrong format.\n",
 			    fname);

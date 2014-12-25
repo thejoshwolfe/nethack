@@ -97,11 +97,8 @@ dat/oracles: dat/oracles.txt util/makedefs
 util/dlb: $(DLB_OBJS)
 	gcc -o $@ $(DLB_OBJS)
 
-dat/dungeon: util/dgn_comp dat/dungeon.pdf
-	cd dat && ../util/dgn_comp dungeon.pdf
-
-dat/dungeon.pdf: util/makedefs dat/dungeon.def
-	cd dat && ../util/makedefs -e
+dat/dungeon: util/dgn_comp dat/dungeon.def
+	cd dat && ../util/dgn_comp dungeon.def
 
 util/dgn_yacc.c: util/dgn_comp.y
 	mkdir -p util/dgn_yacc.tmp

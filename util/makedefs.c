@@ -92,7 +92,6 @@ int main(int,char **);
 void do_makedefs(char *);
 void do_objs(void);
 void do_data(void);
-void do_dungeon(void);
 void do_date(void);
 void do_options(void);
 void do_monstr(void);
@@ -197,9 +196,6 @@ char	*options;
 				break;
 		case 'd':
 		case 'D':	do_data();
-				break;
-		case 'e':
-		case 'E':	do_dungeon();
 				break;
 		case 'm':
 		case 'M':	do_monstr();
@@ -1003,55 +999,6 @@ without_control(s)
 	char *s;
 {
 	return(s + 1 + strlen(deflist[check_control(in_line)].defname));
-}
-
-void
-do_dungeon()
-{
-	int rcnt = 0;
-
-	Sprintf(filename, DATA_IN_TEMPLATE, DGN_I_FILE);
-	if (!(ifp = fopen(filename, RDTMODE))) {
-		perror(filename);
-		exit(EXIT_FAILURE);
-	}
-	filename[0]='\0';
-#ifdef FILE_PREFIX
-	Strcat(filename, file_prefix);
-#endif
-	Sprintf(eos(filename), DGN_TEMPLATE, DGN_O_FILE);
-	if (!(ofp = fopen(filename, WRTMODE))) {
-		perror(filename);
-		exit(EXIT_FAILURE);
-	}
-	Fprintf(ofp, "%s", Dont_Edit_Data);
-
-	while (fgets(in_line, sizeof in_line, ifp) != 0) {
-	    SpinCursor(3);
-
-	    rcnt++;
-	    if(in_line[0] == '#') continue;	/* discard comments */
-recheck:
-	    if(in_line[0] == '%') {
-		int i = check_control(in_line);
-		if(i >= 0) {
-		    if(!deflist[i].true_or_false)  {
-			while (fgets(in_line, sizeof in_line, ifp) != 0)
-			    if(check_control(in_line) != i) goto recheck;
-		    } else
-			(void) fputs(without_control(in_line),ofp);
-		} else {
-		    Fprintf(stderr, "Unknown control option '%s' in file %s at line %d.\n",
-			    in_line, DGN_I_FILE, rcnt);
-		    exit(EXIT_FAILURE);
-		}
-	    } else
-		(void) fputs(in_line,ofp);
-	}
-	Fclose(ifp);
-	Fclose(ofp);
-
-	return;
 }
 
 static boolean
