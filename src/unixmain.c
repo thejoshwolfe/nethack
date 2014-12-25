@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #endif
 
-#if !defined(_BULL_SOURCE) && !defined(__sgi) && !defined(_M_UNIX)
+#if !defined(_BULL_SOURCE) && !defined(__sgi)
 # if !defined(SUNOS4)
 extern struct passwd *getpwuid(uid_t);
 # endif
@@ -20,14 +20,8 @@ extern struct passwd *getpwnam(const char *);
 static boolean whoami(void);
 static void process_options(int, char **);
 
-#ifdef _M_UNIX
-extern void check_sco_console(void);
-extern void init_sco_cons(void);
-#endif
-#ifdef __linux__
 extern void check_linux_console(void);
 extern void init_linux_cons(void);
-#endif
 
 static void wd_message(void);
 #ifdef WIZARD
@@ -71,21 +65,11 @@ main (int argc, char *argv[])
          * we can find the tile file.
          */
 
-#ifdef _M_UNIX
-        check_sco_console();
-#endif
-#ifdef __linux__
         check_linux_console();
-#endif
         initoptions();
         init_nhwindows(&argc,argv);
         exact_username = whoami();
-#ifdef _M_UNIX
-        init_sco_cons();
-#endif
-#ifdef __linux__
         init_linux_cons();
-#endif
 
         /*
          * It seems you really want to play.

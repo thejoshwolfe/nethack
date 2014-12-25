@@ -1412,7 +1412,6 @@ fprefx (struct obj *otmp)
                           Hallucination ? "primo" : "yummy",
                           singular(otmp, xname));
                 else
-#ifdef UNIX
                 if (otmp->otyp == APPLE || otmp->otyp == PEAR) {
                     if (!Hallucination) pline("Core dumped.");
                     else {
@@ -1425,7 +1424,6 @@ fprefx (struct obj *otmp)
                         else pline("Yo' mama -- core dumped.");
                     }
                 } else
-#endif
                 if (otmp->otyp == EGG && stale_egg(otmp)) {
                     pline("Ugh.  Rotten egg."); /* perhaps others like it */
                     make_vomiting(Vomiting+d(10,4), TRUE);

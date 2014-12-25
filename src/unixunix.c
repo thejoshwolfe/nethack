@@ -8,14 +8,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#ifdef _M_UNIX
-extern void sco_mapon(void);
-extern void sco_mapoff(void);
-#endif
-#ifdef __linux__
 extern void linux_mapon(void);
 extern void linux_mapoff(void);
-#endif
 
 static struct stat buf;
 
@@ -199,12 +193,7 @@ int dosh(void) {
 int child(int wt) {
         int f;
         suspend_nhwindows((char *)0);   /* also calls end_screen() */
-#ifdef _M_UNIX
-        sco_mapon();
-#endif
-#ifdef __linux__
         linux_mapon();
-#endif
         if((f = fork()) == 0){          /* child */
                 (void) setgid(getgid());
                 (void) setuid(getuid());
@@ -218,12 +207,7 @@ int child(int wt) {
         (void) signal(SIGINT,SIG_IGN);
         (void) signal(SIGQUIT,SIG_IGN);
         (void) wait( (int *) 0);
-#ifdef _M_UNIX
-        sco_mapoff();
-#endif
-#ifdef __linux__
         linux_mapoff();
-#endif
         (void) signal(SIGINT, (sighandler_t) done1);
 #ifdef WIZARD
         if(wizard) (void) signal(SIGQUIT,SIG_DFL);

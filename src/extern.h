@@ -775,9 +775,7 @@ extern int doclose(void);
 /* ### mail.c ### */
 
 #ifdef MAIL
-# ifdef UNIX
 extern void getmailstatus(void);
-# endif
 extern void ckmailstatus(void);
 extern void readmail(struct obj *);
 #endif /* MAIL */
@@ -1759,27 +1757,22 @@ extern int flash_hits_mon(struct monst *,struct obj *);
 
 /* ### unixmain.c ### */
 
-#ifdef UNIX
 # ifdef PORT_HELP
 extern void port_help(void);
 # endif
-#endif /* UNIX */
 
 
 /* ### unixtty.c ### */
 
-#if defined(UNIX) || defined(__BEOS__)
 extern void gettty(void);
 extern void settty(const char *);
 extern void setftty(void);
 extern void intron(void);
 extern void introff(void);
 extern void error(const char *,...);
-#endif /* UNIX || __BEOS__ */
 
 /* ### unixunix.c ### */
 
-#ifdef UNIX
 extern void getlock(void);
 extern void regularize(char *);
 # if !defined(msleep)
@@ -1791,7 +1784,6 @@ extern int dosh(void);
 # if defined(SHELL) || defined(DEF_PAGER) || defined(DEF_MAILREADER)
 extern int child(int);
 # endif
-#endif /* UNIX */
 
 /* ### vault.c ### */
 

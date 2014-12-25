@@ -531,69 +531,55 @@ static int bw_fd = -1;
 static FILE *bw_FILE = 0;
 static boolean buffering = FALSE;
 
-void 
-bufon (int fd)
-{
-#ifdef UNIX
+void bufon (int fd) {
     if(bw_fd >= 0)
         panic("double buffering unexpected");
     bw_fd = fd;
     if((bw_FILE = fdopen(fd, "w")) == 0)
         panic("buffering of file %d failed", fd);
-#endif
     buffering = TRUE;
 }
 
-void 
-bufoff (int fd)
-{
+void bufoff (int fd) {
     bflush(fd);
     buffering = FALSE;
 }
 
-void 
-bflush (int fd)
-{
-#ifdef UNIX
+void bflush (int fd) {
     if(fd == bw_fd) {
         if(fflush(bw_FILE) == EOF)
             panic("flush of savefile failed!");
     }
-#endif
     return;
 }
 
-void 
-bwrite (int fd, void *loc, unsigned num)
-{
-        boolean failed;
+void bwrite (int fd, void *loc, unsigned num) {
+    boolean failed;
 
-        if (buffering) {
-            if(fd != bw_fd)
-                panic("unbuffered write to fd %d (!= %d)", fd, bw_fd);
+    if (buffering) {
+        if(fd != bw_fd)
+            panic("unbuffered write to fd %d (!= %d)", fd, bw_fd);
 
-            failed = (fwrite(loc, (int)num, 1, bw_FILE) != 1);
-        } else {
-            failed = (write(fd, loc, num) != num);
-        }
+        failed = (fwrite(loc, (int)num, 1, bw_FILE) != 1);
+    } else {
+        failed = (write(fd, loc, num) != num);
+    }
 
-        if (failed) {
-            if (program_state.done_hup)
-                terminate(EXIT_FAILURE);
-            else
-                panic("cannot write %u bytes to file #%d", num, fd);
-        }
+    if (failed) {
+        if (program_state.done_hup)
+            terminate(EXIT_FAILURE);
+        else
+            panic("cannot write %u bytes to file #%d", num, fd);
+    }
 }
 
 void bclose(int fd) {
     bufoff(fd);
-#ifdef UNIX
     if (fd == bw_fd) {
         (void) fclose(bw_FILE);
         bw_fd = -1;
         bw_FILE = 0;
     } else
-#endif
         (void) close(fd);
     return;
 }

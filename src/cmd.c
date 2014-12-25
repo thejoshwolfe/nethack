@@ -65,9 +65,7 @@ STATIC_PTR boolean minimal_enlightenment(void);
 #ifdef OVLB
 STATIC_DCL void enlght_line(const char *,const char *,const char *);
 STATIC_DCL char *enlght_combatinc(const char *,int,int,char *);
-#ifdef UNIX
 static void end_of_input(void);
-#endif
 #endif /* OVLB */
 
 static const char* readchar_queue="";
@@ -2638,10 +2636,7 @@ parse (void)
 #endif /* OVL0 */
 #ifdef OVLB
 
-#ifdef UNIX
-static void 
-end_of_input (void)
-{
+static void end_of_input (void) {
 #ifndef NOSAVEONHANGUP
         if (!program_state.done_hup++ && program_state.something_worth_saving)
             (void) dosave0();
@@ -2650,7 +2645,6 @@ end_of_input (void)
         clearlocks();
         terminate(EXIT_SUCCESS);
 }
-#endif
 
 #endif /* OVLB */
 #ifdef OVL0
@@ -2670,7 +2664,6 @@ readchar (void)
             sym = Getchar();
 #endif
 
-#ifdef UNIX
 # ifdef NR_OF_EOFS
         if (sym == EOF) {
             int cnt = NR_OF_EOFS;
@@ -2687,7 +2680,6 @@ readchar (void)
 # endif /* NR_OF_EOFS */
         if (sym == EOF)
             end_of_input();
-#endif /* UNIX */
 
         if(sym == 0) {
             /* click event */

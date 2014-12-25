@@ -7,8 +7,6 @@
  * Section 1:   Operating and window systems selection.
  */
 
-#define UNIX            /* delete if no fork(), exec() available */
-
 /* ensure _GNU_SOURCE is defined before including any system headers */
 # define _GNU_SOURCE
 
@@ -57,11 +55,9 @@
  *      compression.
  */
 
-#ifdef UNIX
 /* path and file name extension for compression program */
 #define COMPRESS "/bin/gzip" /* FSF gzip compression */
 #define COMPRESS_EXTENSION ".gz"        /* normal gzip extension */
-#endif
 
 #ifndef COMPRESS
 # define INTERNAL_COMP  /* control use of NetHack's compression routines */
@@ -148,13 +144,11 @@
 
 #ifdef TTY_GRAPHICS
 # define MENU_COLOR
-#ifdef __linux__
 # define MENU_COLOR_REGEX
 /* if MENU_COLOR_REGEX is defined, use regular expressions (GNU regex.h)
  * otherwise use pmatch() to match menu color lines.
  * pmatch() provides basic globbing: '*' and '?' wildcards.
  */
-#endif
 #endif
 
 /*#define GOLDOBJ */    /* Gold is kept on obj chains - Helge Hafting */

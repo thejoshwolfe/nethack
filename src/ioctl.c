@@ -48,15 +48,6 @@ struct termios termio;
 #include "tcap.h"       /* for LI and CO */
 #endif
 
-#ifdef _M_UNIX
-extern void sco_mapon(void);
-extern void sco_mapoff(void);
-#endif
-#ifdef __linux__
-extern void linux_mapon(void);
-extern void linux_mapoff(void);
-#endif
-
 void getwindowsz(void) {
 #ifdef USE_WIN_IOCTL
     /*

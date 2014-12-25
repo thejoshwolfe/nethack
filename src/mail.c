@@ -39,11 +39,10 @@ extern char *viz_rmin, *viz_rmax;       /* line-of-sight limits (vision.c) */
 #endif /* OVL0 */
 #ifdef OVLB
 
-# ifdef UNIX
 #include <sys/stat.h>
 #include <pwd.h>
 /* DON'T trust all Unices to declare getpwuid() in <pwd.h> */
-#  if !defined(_BULL_SOURCE) && !defined(__sgi) && !defined(_M_UNIX)
+#  if !defined(_BULL_SOURCE) && !defined(__sgi)
 #   if !defined(SUNOS4)
 /* DO trust all SVR4 to typedef uid_t in <sys/types.h> (probably to a long) */
 extern struct passwd *getpwuid(uid_t);
@@ -99,7 +98,6 @@ void getmailstatus(void) {
 #  endif
         }
 }
-# endif /* UNIX */
 
 #endif /* OVLB */
 #ifdef OVL0
@@ -496,7 +494,7 @@ void readmail(struct obj *otmp) {
                 return;
         }
 # endif /* SIMPLE_MAIL */
-# ifdef DEF_MAILREADER                  /* This implies that UNIX is defined */
+# ifdef DEF_MAILREADER
         display_nhwindow(WIN_MESSAGE, FALSE);
         if(!(mr = nh_getenv("MAILREADER")))
                 mr = DEF_MAILREADER;
@@ -522,9 +520,7 @@ bail:
 
 # ifdef LAN_MAIL
 
-void 
-ckmailstatus (void)
-{
+void ckmailstatus (void) {
         static int laststattime = 0;
         
         if(u.uswallow || !flags.biff

@@ -34,7 +34,7 @@
 # define curttyb2       curttyb
 
 
-#if defined(TTY_GRAPHICS) && (defined(UNIXPC) || defined(SVR4))
+#if defined(TTY_GRAPHICS) && (defined(SVR4))
 # ifndef LINT
 extern                  /* it is defined in libtermlib (libtermcap) */
 # endif
@@ -205,70 +205,8 @@ introff (void)          /* disable kbd interrupts if required*/
 #endif
 }
 
-#ifdef _M_UNIX          /* SCO UNIX (3.2.4), from Andreas Arens */
-# include <sys/console.h>
-
-# define BSIZE (E_TABSZ*2)
-# define LDIOC ('D'<<8)         /* POSIX prevents definition */
-
-# include <sys/emap.h>
-
-int sco_flag_console = 0;
-int sco_map_valid = -1;
-unsigned char sco_chanmap_buf[BSIZE];
-
-void sco_mapon(void);
-void sco_mapoff(void);
-void check_sco_console(void);
-void init_sco_cons(void);
-
-void 
-sco_mapon (void)
-{
-# ifdef TTY_GRAPHICS
-        if (!strcmp(windowprocs.name, "tty") && sco_flag_console) {
-                if (sco_map_valid != -1) {
-                        ioctl(0,LDSMAP,sco_chanmap_buf);
-                }
-                sco_map_valid = -1;
-        }
-# endif
-}
-
-void 
-sco_mapoff (void)
-{
-# ifdef TTY_GRAPHICS
-        if (!strcmp(windowprocs.name, "tty") && sco_flag_console) {
-                sco_map_valid = ioctl(0,LDGMAP,sco_chanmap_buf);
-                if (sco_map_valid != -1) {
-                        ioctl(0,LDNMAP,(char *)0);
-                }
-        }
-# endif
-}
-
-void check_sco_console (void) {
-        if (isatty(0) && ioctl(0,CONS_GET,0) != -1) {
-                sco_flag_console = 1;
-        }
-}
-
-void init_sco_cons (void) {
-# ifdef TTY_GRAPHICS
-        if (!strcmp(windowprocs.name, "tty") && sco_flag_console) {
-                atexit(sco_mapon);
-                sco_mapoff();
-                switch_graphics(IBM_GRAPHICS);
-                if (has_colors())
-                        iflags.use_color = TRUE;
-        }
-# endif
-}
-#endif  /* _M_UNIX */
 
 
-#ifdef __linux__                /* via Jesse Thilo and Ben Gertzfield */
 # include <sys/vt.h>
 
 int linux_flag_console = 0;
@@ -278,9 +216,7 @@ void linux_mapoff(void);
 void check_linux_console(void);
 void init_linux_cons(void);
 
-void 
-linux_mapon (void)
-{
+void linux_mapon (void) {
 # ifdef TTY_GRAPHICS
         if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
                 write(1, "\033(B", 3);
@@ -288,9 +224,7 @@ linux_mapon (void)
 # endif
 }
 
-void 
-linux_mapoff (void)
-{
+void linux_mapoff (void) {
 # ifdef TTY_GRAPHICS
         if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
                 write(1, "\033(U", 3);
@@ -298,9 +232,7 @@ linux_mapoff (void)
 # endif
 }
 
-void 
-check_linux_console (void)
-{
+void check_linux_console (void) {
         struct vt_mode vtm;
 
         if (isatty(0) && ioctl(0,VT_GETMODE,&vtm) >= 0) {
@@ -318,7 +250,6 @@ void init_linux_cons (void) {
         }
 # endif
 }
-#endif  /* __linux__ */
 
 
 /* fatal error */

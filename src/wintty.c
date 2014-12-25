@@ -1775,7 +1775,7 @@ tty_display_file(fname, complain)
 const char *fname;
 boolean complain;
 {
-#ifdef DEF_PAGER                        /* this implies that UNIX is defined */
+#ifdef DEF_PAGER
     {
         /* use external pager; this may give security problems */
         int fd = open(fname, 0);
@@ -2327,11 +2327,8 @@ void tty_raw_print_bold(const char *str) {
     (void) fflush(stdout);
 }
 
-int
-tty_nhgetch()
-{
+int tty_nhgetch(void) {
     int i;
-#ifdef UNIX
     /* kludge alert: Some Unix variants return funny values if getc()
      * is called, interrupted, and then called again.  There
      * is non-reentrant code in the internal _filbuf() routine, called by
@@ -2339,7 +2336,6 @@ tty_nhgetch()
      */
     static volatile int nesting = 0;
     char nestbuf;
-#endif
 
     (void) fflush(stdout);
     /* Note: if raw_print() and wait_synch() get called to report terminal
@@ -2349,14 +2345,10 @@ tty_nhgetch()
      */
     if (WIN_MESSAGE != WIN_ERR && wins[WIN_MESSAGE])
             wins[WIN_MESSAGE]->flags &= ~WIN_STOP;
-#ifdef UNIX
     i = ((++nesting == 1) ? tgetch() :
          (read(fileno(stdin), (void *)&nestbuf,1) == 1 ? (int)nestbuf :
                                                                 EOF));
     --nesting;
-#else
-    i = tgetch();
-#endif
     if (!i) i = '\033'; /* map NUL to ESC since nethack doesn't expect NUL */
     if (ttyDisplay && ttyDisplay->toplin == 1)
         ttyDisplay->toplin = 2;
