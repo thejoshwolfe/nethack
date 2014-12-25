@@ -50,25 +50,13 @@ static boolean made_branch;     /* used only during level creation */
 
 /* Args must be (const void *) so that qsort will always be happy. */
 
-STATIC_PTR int CFDECLSPEC
-do_comp(vx,vy)
-const void * vx;
-const void * vy;
-{
-#ifdef LINT
-/* lint complains about possible pointer alignment problems, but we know
-   that vx and vy are always properly aligned. Hence, the following
-   bogus definition:
-*/
-        return (vx == vy) ? 0 : -1;
-#else
+STATIC_PTR int CFDECLSPEC do_comp(const void *vx, const void *vy) {
         const struct mkroom *x, *y;
 
         x = (const struct mkroom *)vx;
         y = (const struct mkroom *)vy;
         if(x->lx < y->lx) return(-1);
         return(x->lx > y->lx);
-#endif /* LINT */
 }
 
 STATIC_OVL void finddpos(coord *cc, signed char xl,signed char yl,signed char xh,signed char yh) {

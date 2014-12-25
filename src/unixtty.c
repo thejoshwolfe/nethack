@@ -35,9 +35,7 @@
 
 
 #if defined(TTY_GRAPHICS) && (defined(SVR4))
-# ifndef LINT
 extern                  /* it is defined in libtermlib (libtermcap) */
-# endif
         short ospeed;   /* terminal baudrate; set by gettty */
 #else
 short   ospeed = 0;     /* gets around "not defined" error message */
@@ -119,11 +117,7 @@ settty (const char *s)
 
 void setftty(void) {
 int ef = 0;                     /* desired value of flags & ECHO */
-#ifdef LINT     /* cf = CBRKON(CBRKMASK); const expr to initialize is ok */
-int cf = 0;
-#else
 int cf = CBRKON(CBRKMASK);      /* desired value of flags & CBREAK */
-#endif
 int change = 0;
         iflags.cbreak = ON;
         iflags.echo = OFF;

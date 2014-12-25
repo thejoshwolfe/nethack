@@ -2566,14 +2566,8 @@ click_to_cmd (int x, int y, int mod)
     return cmd;
 }
 
-STATIC_OVL char *
-parse (void)
-{
-#ifdef LINT     /* static char in_line[COLNO]; */
-        char in_line[COLNO];
-#else
+STATIC_OVL char * parse (void) {
         static char in_line[COLNO];
-#endif
         int foo;
         boolean prezero = FALSE;
 

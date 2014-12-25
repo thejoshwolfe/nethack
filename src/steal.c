@@ -20,15 +20,9 @@ equipname (struct obj *otmp)
 }
 
 #ifndef GOLDOBJ
-long 
-somegold (void)
-{
-#ifdef LINT     /* long conv. ok */
-        return(0L);
-#else
+long somegold (void) {
         return (long)( (u.ugold < 100) ? u.ugold :
                 (u.ugold > 10000) ? rnd(10000) : rnd((int) u.ugold) );
-#endif
 }
 
 void 
@@ -61,15 +55,9 @@ stealgold (struct monst *mtmp)
 
 #else /* !GOLDOBJ */
 
-long 
-somegold (long umoney)
-{
-#ifdef LINT     /* long conv. ok */
-        return(0L);
-#else
+long somegold (long umoney) {
         return (long)( (umoney < 100) ? umoney :
                 (umoney > 10000) ? rnd(10000) : rnd((int) umoney) );
-#endif
 }
 
 /*
@@ -90,9 +78,7 @@ findgold (struct obj *chain)
 /* 
 Steal gold coins only.  Leprechauns don't care for lesser coins.
 */
-void 
-stealgold (struct monst *mtmp)
-{
+void stealgold (struct monst *mtmp) {
         struct obj *fgold = g_at(u.ux, u.uy);
         struct obj *ygold;
         long tmp;

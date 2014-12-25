@@ -24,21 +24,7 @@ long *alloc(unsigned int);
 extern void panic(const char *,...);
 
 
-long *
-alloc(lth)
-unsigned int lth;
-{
-#ifdef LINT
-/*
- * a ridiculous definition, suppressing
- *      "possible pointer alignment problem" for (long *) malloc()
- * from lint
- */
-        long dummy = ftell(stderr);
-
-        if(lth) dummy = 0;      /* make sure arg is used */
-        return(&dummy);
-#else
+long * alloc(unsigned int lth) {
         void * ptr;
 
         ptr = malloc(lth);
@@ -46,7 +32,6 @@ unsigned int lth;
         if (!ptr) panic("Memory allocation failure; cannot get %u bytes", lth);
 #endif
         return((long *) ptr);
-#endif
 }
 
 

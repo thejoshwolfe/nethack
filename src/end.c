@@ -181,9 +181,7 @@ done2()
             } else if (c == 'q') done_stopprint++;
         }
 #endif
-#ifndef LINT
         done(QUIT);
-#endif
         return 0;
 }
 

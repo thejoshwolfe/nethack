@@ -99,9 +99,6 @@ fightm (                /* have monsters fight each other */
 {
         struct monst *mon, *nmon;
         int result, has_u_swallowed;
-#ifdef LINT
-        nmon = 0;
-#endif
         /* perhaps the monster will resist Conflict */
         if(resist(mtmp, RING_CLASS, 0, 0))
             return(0);
