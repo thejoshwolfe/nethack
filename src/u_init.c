@@ -877,9 +877,7 @@ ini_inv (struct trobj *trop)
                                 || otyp == nocreate2
                                 || otyp == nocreate3
                                 || otyp == nocreate4
-#ifdef ELBERETH
                                 || otyp == RIN_LEVITATION
-#endif
                                 /* 'useless' items */
                                 || otyp == POT_HALLUCINATION
                                 || otyp == POT_ACID

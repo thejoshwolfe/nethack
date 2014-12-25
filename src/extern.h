@@ -504,9 +504,7 @@ extern boolean can_reach_floor(void);
 extern const char *surface(int,int);
 extern const char *ceiling(int,int);
 extern struct engr *engr_at(signed char,signed char);
-#ifdef ELBERETH
 extern int sengr_at(const char *,signed char,signed char);
-#endif
 extern void u_wipe_engr(int);
 extern void wipe_engr_at(signed char,signed char,signed char);
 extern void read_engr_at(int,int);
