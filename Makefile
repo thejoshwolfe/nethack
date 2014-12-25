@@ -1,7 +1,5 @@
 all:
 
-SHELL=/bin/sh
-
 GENERATED_LEVELS = build/asmodeus.lev build/baalz.lev build/bigrm-?.lev build/castle.lev build/fakewiz?.lev \
   build/juiblex.lev build/knox.lev build/medusa-?.lev build/minend-?.lev build/minefill.lev \
   build/minetn-?.lev build/oracle.lev build/orcus.lev build/sanctum.lev build/soko?-?.lev \
@@ -12,7 +10,6 @@ GENERATED_LEVELS = build/asmodeus.lev build/baalz.lev build/bigrm-?.lev build/ca
 DATA_INPUTS1 = dat/help dat/hh dat/cmdhelp dat/history dat/opthelp dat/wizhelp build/dungeon
 DATA_INPUTS2 = build/data build/oracles dat/options build/quest.dat build/rumors
 DATDLB = $(DATA_INPUTS1) $(GENERATED_LEVELS) $(DATA_INPUTS2)
-BUILD_DIR_CHILDREN += $(DATDLB)
 
 MAKEDEFS_OBJS = build/makedefs.o build/monst.o build/objects.o
 DLB_OBJS = build/dlb_main.o build/dlb.o build/alloc.o build/panic.o
@@ -174,6 +171,6 @@ build/recover: $(RECOVER_OBJS)
 	gcc -o $@ $(RECOVER_OBJS)
 
 
-$(sort $(BUILD_DIR_CHILDREN)): | build
+$(BUILD_DIR_CHILDREN): | build
 build:
 	mkdir -p $@
