@@ -169,11 +169,7 @@ done2()
 #if defined(WIZARD)
         if(wizard) {
             int c;
-#  ifdef LATTICE
-            const char *tmp = "Create SnapShot?";
-#  else
             const char *tmp = "Dump core?";
-#  endif
             if ((c = ynq(tmp)) == 'y') {
                 (void) signal(SIGINT, (sighandler_t) done1);
                 exit_nhwindows((char *)0);
