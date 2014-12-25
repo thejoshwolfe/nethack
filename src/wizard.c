@@ -123,7 +123,7 @@ mon_has_special (struct monst *mtmp)
 
 #define M_Wants(mask)   (mtmp->data->mflags3 & (mask))
 
-STATIC_OVL short 
+static short 
 which_arti (int mask)
 {
         switch(mask) {
@@ -141,7 +141,7 @@ which_arti (int mask)
  *      since bell, book, candle, and amulet are all objects, not really
  *      artifacts right now.    [MRS]
  */
-STATIC_OVL boolean
+static boolean
 mon_has_arti(mtmp, otyp)
         struct monst *mtmp;
         short   otyp;
@@ -159,7 +159,7 @@ mon_has_arti(mtmp, otyp)
 
 }
 
-STATIC_OVL struct monst *
+static struct monst *
 other_mon_has_arti (struct monst *mtmp, short otyp)
 {
         struct monst *mtmp2;
@@ -172,7 +172,7 @@ other_mon_has_arti (struct monst *mtmp, short otyp)
         return((struct monst *)0);
 }
 
-STATIC_OVL struct obj *
+static struct obj *
 on_ground (short otyp)
 {
         struct obj *otmp;
@@ -186,7 +186,7 @@ on_ground (short otyp)
         return((struct obj *)0);
 }
 
-STATIC_OVL boolean
+static boolean
 you_have(mask)
         int mask;
 {
@@ -201,7 +201,7 @@ you_have(mask)
         return(0);
 }
 
-STATIC_OVL long 
+static long 
 target_on (int mask, struct monst *mtmp)
 {
         short   otyp;
@@ -222,7 +222,7 @@ target_on (int mask, struct monst *mtmp)
         return(STRAT_NONE);
 }
 
-STATIC_OVL long 
+static long 
 strategy (struct monst *mtmp)
 {
         long strat, dstrat;

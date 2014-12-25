@@ -286,7 +286,7 @@ boolean inc_or_dec;
 #define FAINTED         5
 #define STARVED         6
 
-STATIC_OVL void 
+static void 
 exerper (void)
 {
         if(!(moves % 10)) {
@@ -469,7 +469,7 @@ void redist_attr (void) {
     (void)encumber_msg();
 }
 
-STATIC_OVL void postadjabil (long *ability) {
+static void postadjabil (long *ability) {
     if (!ability) return;
     if (ability == &(HWarning) || ability == &(HSee_invisible))
         see_monsters();

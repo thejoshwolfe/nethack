@@ -42,7 +42,7 @@ struct monst *mtmp;
 #endif /* OVLB */
 #ifdef OVL0
 
-STATIC_OVL void 
+static void 
 watch_on_duty (struct monst *mtmp)
 {
         int     x, y;
@@ -142,7 +142,7 @@ boolean digest_meal;
  * Possibly awaken the given monster.  Return a 1 if the monster has been
  * jolted awake.
  */
-STATIC_OVL int 
+static int 
 disturb (struct monst *mtmp)
 {
         /*
@@ -209,7 +209,7 @@ boolean fleemsg;
         }
 }
 
-STATIC_OVL void 
+static void 
 distfleeck (struct monst *mtmp, int *inrange, int *nearby, int *scared)
 {
         int seescaryx, seescaryy;
@@ -247,7 +247,7 @@ distfleeck (struct monst *mtmp, int *inrange, int *nearby, int *scared)
 
 /* perform a special one-time action for a monster; returns -1 if nothing
    special happened, 0 if monster uses up its turn, 1 if monster is killed */
-STATIC_OVL int 
+static int 
 m_arrival (struct monst *mon)
 {
         mon->mstrategy &= ~STRAT_ARRIVE;        /* always reset */

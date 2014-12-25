@@ -16,7 +16,7 @@ STATIC_DCL struct obj *DROPPABLES(struct monst *);
 STATIC_DCL boolean can_reach_location(struct monst *,signed char,signed char, signed char,signed char);
 STATIC_DCL boolean could_reach_item(struct monst *, signed char,signed char);
 
-STATIC_OVL struct obj *
+static struct obj *
 DROPPABLES (struct monst *mon)
 {
         struct obj *obj;
@@ -46,14 +46,14 @@ static const char nofetch[] = { BALL_CLASS, CHAIN_CLASS, ROCK_CLASS, 0 };
 
 #endif /* OVL0 */
 
-STATIC_OVL boolean cursed_object_at(int, int);
+static boolean cursed_object_at(int, int);
 
 STATIC_VAR signed char gtyp, gx, gy;    /* type and position of dog's current goal */
 
 STATIC_PTR void wantdoor(int, int, void *);
 
 #ifdef OVLB
-STATIC_OVL boolean
+static boolean
 cursed_object_at(x, y)
 int x, y;
 {
@@ -192,7 +192,7 @@ int dog_eat(struct monst *mtmp, struct obj *obj, int x, int y, boolean devour) {
 #ifdef OVL0
 
 /* hunger effects -- returns TRUE on starvation */
-STATIC_OVL boolean
+static boolean
 dog_hunger(mtmp, edog)
 struct monst *mtmp;
 struct edog *edog;
@@ -240,7 +240,7 @@ struct edog *edog;
 /* do something with object (drop, pick up, eat) at current position
  * returns 1 if object eaten (since that counts as dog's move), 2 if died
  */
-STATIC_OVL int 
+static int 
 dog_invent (struct monst *mtmp, struct edog *edog, int udist)
 {
         int omx, omy;
@@ -307,7 +307,7 @@ dog_invent (struct monst *mtmp, struct edog *edog, int udist)
 /* set dog's goal -- gtyp, gx, gy
  * returns -1/0/1 (dog's desire to approach player) or -2 (abort move)
  */
-STATIC_OVL int
+static int
 dog_goal(mtmp, edog, after, udist, whappr)
 struct monst *mtmp;
 struct edog *edog;
@@ -772,7 +772,7 @@ dognext:
 }
 
 /* check if a monster could pick up objects from a location */
-STATIC_OVL boolean could_reach_item(struct monst *mon, signed char nx, signed char ny) {
+static boolean could_reach_item(struct monst *mon, signed char nx, signed char ny) {
     if ((!is_pool(nx,ny) || is_swimmer(mon->data)) &&
         (!is_lava(nx,ny) || likes_lava(mon->data)) &&
         (!sobj_at(BOULDER,nx,ny) || throws_rocks(mon->data)))
@@ -787,7 +787,7 @@ STATIC_OVL boolean could_reach_item(struct monst *mon, signed char nx, signed ch
  * Since the maximum food distance is 5, this should never be more than 5 calls
  * deep.
  */
-STATIC_OVL boolean can_reach_location(struct monst *mon,
+static boolean can_reach_location(struct monst *mon,
         signed char mx, signed char my, signed char fx, signed char fy)
 {
     int i, j;

@@ -53,7 +53,7 @@ o_material (struct obj *obj, unsigned material)
     return (struct obj *) 0;
 }
 
-STATIC_OVL void 
+static void 
 do_dknown_of (struct obj *obj)
 {
     struct obj *otmp;
@@ -66,7 +66,7 @@ do_dknown_of (struct obj *obj)
 }
 
 /* Check whether the location has an outdated object displayed on it. */
-STATIC_OVL boolean
+static boolean
 check_map_spot(x, y, oclass, material)
 int x, y;
 char oclass;
@@ -132,7 +132,7 @@ unsigned material;
    reappear after the detection has completed.  Return true if noticeable
    change occurs.
  */
-STATIC_OVL boolean
+static boolean
 clear_stale_map(oclass, material)
 char oclass;
 unsigned material;
@@ -632,7 +632,7 @@ int mclass;                     /* monster class, 0 for all */
     return 0;
 }
 
-STATIC_OVL void
+static void
 sense_trap(trap, x, y, src_cursed)
 struct trap *trap;
 signed char x, y;
@@ -898,7 +898,7 @@ struct obj *obj;
     return;
 }
 
-STATIC_OVL void
+static void
 show_map_spot(x, y)
 int x, y;
 {

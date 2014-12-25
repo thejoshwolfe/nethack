@@ -21,8 +21,8 @@ STATIC_DCL boolean thitm(int,struct monst *,struct obj *,int,boolean);
 STATIC_DCL int mkroll_launch(struct trap *,signed char,signed char,short,long);
 STATIC_DCL boolean isclearpath(coord *, int, signed char, signed char);
 #ifdef STEED
-STATIC_OVL int steedintrap(struct trap *, struct obj *);
-STATIC_OVL boolean keep_saddle_with_steedcorpse(unsigned, struct obj *, struct obj *);
+static int steedintrap(struct trap *, struct obj *);
+static boolean keep_saddle_with_steedcorpse(unsigned, struct obj *, struct obj *);
 #endif
 
 #ifndef OVLB
@@ -535,7 +535,7 @@ boolean shatter;
 }
 
 #ifdef STEED
-STATIC_OVL boolean
+static boolean
 keep_saddle_with_steedcorpse(steed_mid, objchn, saddle)
 unsigned steed_mid;
 struct obj *objchn, *saddle;
@@ -1168,7 +1168,7 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
 }
 
 #ifdef STEED
-STATIC_OVL int 
+static int 
 steedintrap (struct trap *trap, struct obj *otmp)
 {
         struct monst *mtmp = u.usteed;
@@ -1529,7 +1529,7 @@ seetrap (struct trap *trap)
 #endif /* OVLB */
 #ifdef OVL3
 
-STATIC_OVL int mkroll_launch(struct trap *ttmp, signed char x, signed char y,
+static int mkroll_launch(struct trap *ttmp, signed char x, signed char y,
         short otyp, long ocount)
 {
         struct obj *otmp;
@@ -1587,7 +1587,7 @@ STATIC_OVL int mkroll_launch(struct trap *ttmp, signed char x, signed char y,
         return 1;
 }
 
-STATIC_OVL boolean isclearpath(coord *cc, int distance, signed char dx, signed char dy) {
+static boolean isclearpath(coord *cc, int distance, signed char dx, signed char dy) {
         unsigned char typ;
         signed char x, y;
 
@@ -2385,7 +2385,7 @@ long hmask, emask;     /* might cancel timeout */
         return 1;
 }
 
-STATIC_OVL void 
+static void 
 dofiretrap (
     struct obj *box     /* null for floor trap */
 )
@@ -2444,7 +2444,7 @@ dofiretrap (
             melt_ice(u.ux, u.uy);
 }
 
-STATIC_OVL void 
+static void 
 domagictrap (void)
 {
         int fate = rnd(20);
@@ -2709,7 +2709,7 @@ boolean force, here;
  * Returns TRUE if disrobing made player unencumbered enough to
  * crawl out of the current predicament.
  */
-STATIC_OVL boolean
+static boolean
 emergency_disrobe(lostsome)
 boolean *lostsome;
 {
@@ -2957,7 +2957,7 @@ dountrap()      /* disarm a trap */
 #ifdef OVL2
 
 /* Probability of disabling a trap.  Helge Hafting */
-STATIC_OVL int 
+static int 
 untrap_prob (struct trap *ttmp)
 {
         int chance = 3;
@@ -2979,7 +2979,7 @@ untrap_prob (struct trap *ttmp)
 }
 
 /* Replace trap with object(s).  Helge Hafting */
-STATIC_OVL void 
+static void 
 cnv_trap_obj (int otyp, int cnt, struct trap *ttmp)
 {
         struct obj *otmp = mksobj(otyp, TRUE, FALSE);
@@ -2997,7 +2997,7 @@ cnv_trap_obj (int otyp, int cnt, struct trap *ttmp)
 }
 
 /* while attempting to disarm an adjacent trap, we've fallen into it */
-STATIC_OVL void 
+static void 
 move_into_trap (struct trap *ttmp)
 {
         int bc;
@@ -3023,7 +3023,7 @@ move_into_trap (struct trap *ttmp)
  * 1: tries and fails
  * 2: succeeds
  */
-STATIC_OVL int
+static int
 try_disarm(ttmp, force_failure)
 struct trap *ttmp;
 boolean force_failure;
@@ -3109,7 +3109,7 @@ boolean force_failure;
         return 2;
 }
 
-STATIC_OVL void 
+static void 
 reward_untrap (struct trap *ttmp, struct monst *mtmp)
 {
         if (!ttmp->madeby_u) {
@@ -3130,7 +3130,7 @@ reward_untrap (struct trap *ttmp, struct monst *mtmp)
         }
 }
 
-STATIC_OVL int 
+static int 
 disarm_holdingtrap ( /* Helge Hafting */
     struct trap *ttmp
 )
@@ -3163,7 +3163,7 @@ disarm_holdingtrap ( /* Helge Hafting */
         return 1;
 }
 
-STATIC_OVL int 
+static int 
 disarm_landmine ( /* Helge Hafting */
     struct trap *ttmp
 )
@@ -3180,7 +3180,7 @@ disarm_landmine ( /* Helge Hafting */
 static const char oil[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS, 0 };
 
 /* it may not make much sense to use grease on floor boards, but so what? */
-STATIC_OVL int 
+static int 
 disarm_squeaky_board (struct trap *ttmp)
 {
         struct obj *obj;
@@ -3213,7 +3213,7 @@ disarm_squeaky_board (struct trap *ttmp)
 }
 
 /* removes traps that shoot arrows, darts, etc. */
-STATIC_OVL int 
+static int 
 disarm_shooting_trap (struct trap *ttmp, int otyp)
 {
         int fails = try_disarm(ttmp, FALSE);
@@ -3226,7 +3226,7 @@ disarm_shooting_trap (struct trap *ttmp, int otyp)
 
 /* Is the weight too heavy?
  * Formula as in near_capacity() & check_capacity() */
-STATIC_OVL int
+static int
 try_lift(mtmp, ttmp, wt, stuff)
 struct monst *mtmp;
 struct trap *ttmp;
@@ -3251,7 +3251,7 @@ boolean stuff;
 }
 
 /* Help trapped monster (out of a (spiked) pit) */
-STATIC_OVL int 
+static int 
 help_monster_out (struct monst *mtmp, struct trap *ttmp)
 {
         int wt;
@@ -3802,7 +3802,7 @@ b_trapped (const char *item, int bodypart)
 
 /* Monster is hit by trap. */
 /* Note: doesn't work if both obj and d_override are null */
-STATIC_OVL boolean
+static boolean
 thitm(tlev, mon, obj, d_override, nocorpse)
 int tlev;
 struct monst *mon;

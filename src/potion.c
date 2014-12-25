@@ -13,7 +13,7 @@ STATIC_DCL void ghost_from_bottle(void);
 STATIC_DCL short mixtype(struct obj *,struct obj *);
 
 /* force `val' to be within valid range for intrinsic timeout value */
-STATIC_OVL long 
+static long 
 itimeout (long val)
 {
     if (val >= TIMEOUT) val = TIMEOUT;
@@ -23,7 +23,7 @@ itimeout (long val)
 }
 
 /* increment `old' by `incr' and force result to be valid intrinsic timeout */
-STATIC_OVL long 
+static long 
 itimeout_incr (long old, int incr)
 {
     return itimeout((old & TIMEOUT) + (long)incr);
@@ -290,7 +290,7 @@ long mask;      /* nonzero if resistance status should change by mask */
         return changed;
 }
 
-STATIC_OVL void 
+static void 
 ghost_from_bottle (void)
 {
         struct monst *mtmp = makemon(&mons[PM_GHOST], u.ux, u.uy, NO_MM_FLAGS);
@@ -1302,7 +1302,7 @@ potionbreathe (struct obj *obj)
         }
 }
 
-STATIC_OVL short 
+static short 
 mixtype (struct obj *o1, struct obj *o2)
 /* returns the potion type when o1 is dipped in o2 */
 {

@@ -55,7 +55,7 @@ static const char overloadmsg[] = "You have extreme difficulty lifting";
 /* BUG: this lets you look at cockatrice corpses while blind without
    touching them */
 /* much simpler version of the look-here code; used by query_classes() */
-STATIC_OVL void
+static void
 simple_look(otmp, here)
 struct obj *otmp;       /* list of objects */
 boolean here;           /* flag for type of obj list linkage */
@@ -131,7 +131,7 @@ int *itemcount;
  *          (ie, treated as if it had just been "?a").
  */
 #ifndef GOLDOBJ
-STATIC_OVL boolean
+static boolean
 query_classes(oclasses, one_at_a_time, everything, action, objs,
               here, incl_gold, menu_on_demand)
 char oclasses[];
@@ -141,7 +141,7 @@ struct obj *objs;
 boolean here, incl_gold;
 int *menu_on_demand;
 #else
-STATIC_OVL boolean
+static boolean
 query_classes(oclasses, one_at_a_time, everything, action, objs,
               here, menu_on_demand)
 char oclasses[];
@@ -245,7 +245,7 @@ ask_again:
 }
 
 /* look at the objects at our location, unless there are too many of them */
-STATIC_OVL void
+static void
 check_here(picked_some)
 boolean picked_some;
 {
@@ -272,7 +272,7 @@ boolean picked_some;
 static long val_for_n_or_more;
 
 /* query_objlist callback: return TRUE if obj's count is >= reference value */
-STATIC_OVL boolean
+static boolean
 n_or_more(obj)
 struct obj *obj;
 {
@@ -296,7 +296,7 @@ add_valid_menu_class (int c)
 }
 
 /* query_objlist callback: return TRUE if not uchain */
-STATIC_OVL boolean
+static boolean
 all_but_uchain(obj)
 struct obj *obj;
 {
@@ -601,7 +601,7 @@ boolean grab;    /* forced pickup, rather than forced leave behind? */
  * picked is zero, the pickup list is left alone.  The caller of this
  * function must free the pickup list.
  */
-STATIC_OVL int 
+static int 
 autopick (
     struct obj *olist,  /* the object list */
     int follow,         /* how to follow the object list */
@@ -959,7 +959,7 @@ int how;                        /* type of query */
         return n;
 }
 
-STATIC_OVL int
+static int
 count_categories(olist, qflags)
 struct obj *olist;
 int qflags;
@@ -990,7 +990,7 @@ int qflags;
 }
 
 /* could we carry `obj'? if not, could we carry some of it/them? */
-STATIC_OVL long
+static long
 carry_count(obj, container, count, telekinesis, wt_before, wt_after)
 struct obj *obj, *container;    /* object to pick up, bag it's coming out of */
 long count;
@@ -1153,7 +1153,7 @@ int *wt_before, *wt_after;
 }
 
 /* determine whether character is able and player is willing to carry `obj' */
-STATIC_OVL
+static
 int 
 lift_object(obj, container, cnt_p, telekinesis)
 struct obj *obj, *container;    /* object to pick up, bag it's coming out of */
@@ -1457,7 +1457,7 @@ encumber_msg()
 }
 
 /* Is there a container at x,y. Optional: return count of containers at x,y */
-STATIC_OVL int
+static int
 container_at(x, y, countem)
 int x,y;
 boolean countem;
@@ -1475,7 +1475,7 @@ boolean countem;
         return container_count;
 }
 
-STATIC_OVL boolean
+static boolean
 able_to_loot(x, y)
 int x, y;
 {
@@ -1503,7 +1503,7 @@ int x, y;
         return TRUE;
 }
 
-STATIC_OVL boolean
+static boolean
 mon_beside(x,y)
 int x, y;
 {
@@ -1752,7 +1752,7 @@ boolean *prev_loot;
  * Decide whether an object being placed into a magic bag will cause
  * it to explode.  If the object is a bag itself, check recursively.
  */
-STATIC_OVL boolean
+static boolean
 mbag_explodes(obj, depthin)
     struct obj *obj;
     int depthin;
@@ -2018,7 +2018,7 @@ struct obj *obj;
 }
 
 /* an object inside a cursed bag of holding is being destroyed */
-STATIC_OVL long
+static long
 mbag_item_gone(held, item)
 int held;
 struct obj *item;
@@ -2040,7 +2040,7 @@ struct obj *item;
     return loss;
 }
 
-STATIC_OVL void
+static void
 observe_quantum_cat(box)
 struct obj *box;
 {
@@ -2313,7 +2313,7 @@ ask_again2:
 }
 
 /* Loot a container (take things out, put things in), using a menu. */
-STATIC_OVL int
+static int
 menu_loot(retry, container, put_in)
 int retry;
 struct obj *container;
@@ -2386,7 +2386,7 @@ boolean put_in;
     return n_looted;
 }
 
-STATIC_OVL int
+static int
 in_or_out_menu(prompt, obj, outokay, inokay)
 const char *prompt;
 struct obj *obj;

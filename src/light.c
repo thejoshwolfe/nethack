@@ -322,7 +322,7 @@ relink_light_sources(ghostly)
  * sources that would be written.  If write_it is true, actually write
  * the light source out.
  */
-STATIC_OVL int
+static int
 maybe_write_ls(fd, range, write_it)
     int fd, range;
     boolean write_it;
@@ -359,7 +359,7 @@ maybe_write_ls(fd, range, write_it)
 }
 
 /* Write a light source structure to disk. */
-STATIC_OVL void 
+static void 
 write_ls (int fd, light_source *ls)
 {
     void * arg_save;

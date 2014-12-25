@@ -15,7 +15,7 @@ floating_above (const char *what)
     You("are floating high above the %s.", what);
 }
 
-STATIC_OVL void 
+static void 
 dowatersnakes (void) /* Fountain of snakes! */
 {
     int num = rn1(5,2);
@@ -35,7 +35,7 @@ dowatersnakes (void) /* Fountain of snakes! */
         pline_The("fountain bubbles furiously for a moment, then calms.");
 }
 
-STATIC_OVL void 
+static void 
 dowaterdemon (void) /* Water demon */
 {
     struct monst *mtmp;
@@ -60,7 +60,7 @@ dowaterdemon (void) /* Water demon */
         pline_The("fountain bubbles furiously for a moment, then calms.");
 }
 
-STATIC_OVL void 
+static void 
 dowaternymph (void) /* Water Nymph */
 {
         struct monst *mtmp;
@@ -129,7 +129,7 @@ void * poolcnt;
                 newsym(x,y);
 }
 
-STATIC_OVL void 
+static void 
 dofindgem (void) /* Find a gem in the sparkling waters. */
 {
         if (!Blind) You("spot a gem in the sparkling waters!");

@@ -201,7 +201,7 @@ const struct shclass shtypes[] = {
         {(char *)0, 0, 0, 0, {{0, 0}, {0, 0}, {0, 0}}, 0}
 };
 
-STATIC_OVL void 
+static void 
 mkshobj_at (
 /* make an object of the appropriate type for a shop square */
     const struct shclass *shp,
@@ -231,7 +231,7 @@ mkshobj_at (
 }
 
 /* extract a shopkeeper name for the given shop type */
-STATIC_OVL void 
+static void 
 nameshk (struct monst *shk, const char *const *nlp)
 {
         int i, trycnt, names_avail;
@@ -290,7 +290,7 @@ nameshk (struct monst *shk, const char *const *nlp)
         ESHK(shk)->shknam[PL_NSIZ-1] = 0;
 }
 
-STATIC_OVL int 
+static int 
 shkinit (       /* create a new shopkeeper in the given room */
     const struct shclass *shp,
     struct mkroom *sroom

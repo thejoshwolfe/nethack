@@ -36,7 +36,7 @@ were_change (struct monst *mon)
 
 STATIC_DCL int counter_were(int);
 
-STATIC_OVL int 
+static int 
 counter_were (int pm)
 {
         switch(pm) {

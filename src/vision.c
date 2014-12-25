@@ -238,7 +238,7 @@ vision_reset (void)
  * Called from vision_recalc() and at least one light routine.  Get pointers
  * to the unused vision work area.
  */
-STATIC_OVL void 
+static void 
 get_unused_cs (char ***rows, char **rmin, char **rmax)
 {
     int  row;
@@ -311,7 +311,7 @@ STATIC_DCL int new_angle(struct rm *, unsigned char *, int, int);
  *        many exceptions.  I may have to bite the bullet and do more
  *        checks.       - Dean 2/11/93
  */
-STATIC_OVL int 
+static int 
 new_angle (struct rm *lev, unsigned char *sv, int row, int col)
 {
     int res = *sv;
@@ -801,7 +801,7 @@ unblock_point (int x, int y)
  *   This means that a right-edge (a blocked spot that has an open
  *    spot on its right) will point to itself.
  */
-STATIC_OVL void 
+static void 
 dig_point (int row, int col)
 {
     int i;
@@ -881,7 +881,7 @@ dig_point (int row, int col)
     }
 }
 
-STATIC_OVL void 
+static void 
 fill_point (int row, int col)
 {
     int i;
@@ -1218,7 +1218,7 @@ STATIC_DCL int _q4_path(int,int,int,int);
 /*
  * Quadrant I (step < 0).
  */
-STATIC_OVL int 
+static int 
 _q1_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1261,7 +1261,7 @@ _q1_path (int srow, int scol, int y2, int x2)
 /*
  * Quadrant IV (step > 0).
  */
-STATIC_OVL int 
+static int 
 _q4_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1304,7 +1304,7 @@ _q4_path (int srow, int scol, int y2, int x2)
 /*
  * Quadrant II (step < 0).
  */
-STATIC_OVL int 
+static int 
 _q2_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1347,7 +1347,7 @@ _q2_path (int srow, int scol, int y2, int x2)
 /*
  * Quadrant III (step > 0).
  */
-STATIC_OVL int 
+static int 
 _q3_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1456,7 +1456,7 @@ STATIC_DCL int far_shadow(int,int,int,int);
  * Initialize algorithm D's table pointers.  If we don't have these,
  * then we do 3D table lookups.  Verrrry slow.
  */
-STATIC_OVL void 
+static void 
 view_init (void)
 {
     int i;
@@ -1476,7 +1476,7 @@ view_init (void)
  */
 #define OFF_TABLE 0xff
 
-STATIC_OVL int 
+static int 
 close_shadow (int side, int this_row, int block_row, int block_col)
 {
     int sdy, sdx, pdy, offset;
@@ -1504,7 +1504,7 @@ close_shadow (int side, int this_row, int block_row, int block_col)
 }
 
 
-STATIC_OVL int 
+static int 
 far_shadow (int side, int this_row, int block_row, int block_col)
 {
     int sdy, sdx, pdy, offset;
@@ -1543,7 +1543,7 @@ far_shadow (int side, int this_row, int block_row, int block_col)
  *
  * Figure out what could be seen on the right side of the source.
  */
-STATIC_OVL void 
+static void 
 right_side (
     int row,            /* current row */
     int cb_row,
@@ -1801,7 +1801,7 @@ right_side (
  * This routine is the mirror image of right_side().  Please see right_side()
  * for blow by blow comments.
  */
-STATIC_OVL void 
+static void 
 left_side (
     int row,            /* the current row */
     int cb_row,
@@ -1985,7 +1985,7 @@ left_side (
  * seen from the source location.  Initialize and fill the left most
  * and right most boundaries of what could be seen.
  */
-STATIC_OVL void
+static void
 view_from(srow,scol,loc_cs_rows,left_most,right_most, range, func, arg)
     int  srow, scol;                    /* source row and column */
     char **loc_cs_rows;                 /* could_see array (row pointers) */
@@ -2080,7 +2080,7 @@ STATIC_DCL void right_side(int,int,int,char*);
 STATIC_DCL void left_side(int,int,int,char*);
 
 /* Initialize algorithm C (nothing). */
-STATIC_OVL void 
+static void 
 view_init (void)
 {
 }
@@ -2089,7 +2089,7 @@ view_init (void)
  * Mark positions as visible on one quadrant of the right side.  The
  * quadrant is determined by the value of the global variable step.
  */
-STATIC_OVL void 
+static void 
 right_side (
     int row,            /* current row */
     int left,           /* first (left side) visible spot on prev row */
@@ -2272,7 +2272,7 @@ rside2:                                 /* used if q?_path() is a macro */
  * This routine is the mirror image of right_side().  See right_side() for
  * extensive comments.
  */
-STATIC_OVL void 
+static void 
 left_side (int row, int left_mark, int right, char *limits)
 {
     int           left, left_edge, nrow, deeper, result;
@@ -2392,7 +2392,7 @@ lside2:                                 /* used if q?_path() is a macro */
  * (srow,scol).  NOTE this is (y,x)!  Mark the visible locations in the
  * array provided.
  */
-STATIC_OVL void
+static void
 view_from(srow, scol, loc_cs_rows, left_most, right_most, range, func, arg)
     int  srow, scol;    /* starting row and column */
     char **loc_cs_rows; /* pointers to the rows of the could_see array */

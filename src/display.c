@@ -341,7 +341,7 @@ map_location (int x, int y, int show)
  * a worm tail.
  *
  */
-STATIC_OVL void 
+static void 
 display_monster (
     signed char x,
     signed char y,      /* display position */
@@ -439,7 +439,7 @@ display_monster (
  *
  * Do not call for worm tails.
  */
-STATIC_OVL void 
+static void 
 display_warning (struct monst *mon)
 {
     int x = mon->mx, y = mon->my;
@@ -1558,7 +1558,7 @@ back_to_glyph (signed char x, signed char y)
  * If you don't want a patchwork monster while hallucinating, decide on
  * a random monster in swallowed() and don't use what_mon() here.
  */
-STATIC_OVL int 
+static int 
 swallow_to_glyph (int mnum, int loc)
 {
     if (loc < S_sw_tl || S_sw_br < loc) {
@@ -1655,7 +1655,7 @@ error4 (int x, int y, int a, int b, int c, int dd)
  *
  * Things that are ambigious: lava
  */
-STATIC_OVL int 
+static int 
 check_pos (int x, int y, int which)
 {
     int type;
@@ -1668,7 +1668,7 @@ check_pos (int x, int y, int which)
 /* Return TRUE if more than one is non-zero. */
 /*ARGSUSED*/
 #ifdef WA_VERBOSE
-STATIC_OVL boolean
+static boolean
 more_than_one(x, y, a, b, c)
     int x, y, a, b, c;
 {
@@ -1683,7 +1683,7 @@ more_than_one(x, y, a, b, c)
 #endif
 
 /* Return the wall mode for a T wall. */
-STATIC_OVL int 
+static int 
 set_twall (int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3)
 {
     int wmode, is_1, is_2, is_3;
@@ -1700,7 +1700,7 @@ set_twall (int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3)
 }
 
 /* Return wall mode for a horizontal or vertical wall. */
-STATIC_OVL int 
+static int 
 set_wall (int x, int y, int horiz)
 {
     int wmode, is_1, is_2;
@@ -1722,7 +1722,7 @@ set_wall (int x, int y, int horiz)
 
 
 /* Return a wall mode for a corner wall. (x4,y4) is the "inner" position. */
-STATIC_OVL int 
+static int 
 set_corn (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 {
     int wmode, is_1, is_2, is_3, is_4;
@@ -1750,7 +1750,7 @@ set_corn (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 }
 
 /* Return mode for a crosswall. */
-STATIC_OVL int 
+static int 
 set_crosswall (int x, int y)
 {
     int wmode, is_1, is_2, is_3, is_4;
@@ -1867,7 +1867,7 @@ unsigned char seenv_matrix[3][3] = { {SV2,   SV1, SV0},
 #define sign(z) ((z) < 0 ? -1 : ((z) > 0 ? 1 : 0))
 
 /* Set the seen vector of lev as if seen from (x0,y0) to (x,y). */
-STATIC_OVL void 
+static void 
 set_seenv (
     struct rm *lev,
     int x0,
@@ -1938,7 +1938,7 @@ static const int cross_matrix[4][6] = {
 
 
 /* Print out a T wall warning and all interesting info. */
-STATIC_OVL void 
+static void 
 t_warn (struct rm *lev)
 {
     static const char warn_str[] = "wall_angle: %s: case %d: seenv = 0x%x";
@@ -1966,7 +1966,7 @@ t_warn (struct rm *lev)
  * draw diagrams.  See rm.h for more details on the wall modes and
  * seen vector (SV).
  */
-STATIC_OVL int 
+static int 
 wall_angle (struct rm *lev)
 {
     unsigned int seenv = lev->seenv & 0xff;

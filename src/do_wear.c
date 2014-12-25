@@ -7,7 +7,7 @@ STATIC_DCL long takeoff_mask, taking_off;
 
 #else /* OVLB */
 
-STATIC_OVL long takeoff_mask = 0L;
+static long takeoff_mask = 0L;
 static long taking_off = 0L;
 
 static int todelay;
@@ -59,7 +59,7 @@ off_msg (struct obj *otmp)
 }
 
 /* for items that involve no delay */
-STATIC_OVL void 
+static void 
 on_msg (struct obj *otmp)
 {
         if (flags.verbose) {
@@ -182,7 +182,7 @@ Boots_off()
     return 0;
 }
 
-STATIC_OVL int 
+static int 
 Cloak_on (void)
 {
     long oldprop =
@@ -459,7 +459,7 @@ Gloves_off()
     return 0;
 }
 
-STATIC_OVL int 
+static int 
 Shield_on (void)
 {
 /*
@@ -499,7 +499,7 @@ Shield_off (void)
     return 0;
 }
 
-STATIC_OVL int 
+static int 
 Shirt_on (void)
 {
 /*
@@ -561,7 +561,7 @@ Armor_gone (void)
     return 0;
 }
 
-STATIC_OVL void 
+static void 
 Amulet_on (void)
 {
     switch(uamul->otyp) {
@@ -770,7 +770,7 @@ Ring_on (struct obj *obj)
     }
 }
 
-STATIC_OVL void
+static void
 Ring_off_or_gone(obj,gone)
 struct obj *obj;
 boolean gone;
@@ -1197,13 +1197,13 @@ armoroff (struct obj *otmp)
         return(1);
 }
 
-STATIC_OVL void 
+static void 
 already_wearing (const char *cc)
 {
         You("are already wearing %s%c", cc, (cc == c_that_) ? '!' : '.');
 }
 
-STATIC_OVL void 
+static void 
 already_wearing2 (const char *cc1, const char *cc2)
 {
         You_cant("wear %s because you're wearing %s there already.", cc1, cc2);
@@ -1811,7 +1811,7 @@ struct obj *otmp;
         return(0);
 }
 
-STATIC_OVL struct obj *
+static struct obj *
 do_takeoff (void)
 {
         struct obj *otmp = (struct obj *)0;
@@ -1996,7 +1996,7 @@ doddoremarm()
     return 0;
 }
 
-STATIC_OVL int 
+static int 
 menu_remarm (int retry)
 {
     int n, i = 0;

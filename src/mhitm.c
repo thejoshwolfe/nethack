@@ -34,7 +34,7 @@ static int dieroll;
 
 /* returns mon_nam(mon) relative to other_mon; normal name unless they're
    the same, in which case the reference is to {him|her|it} self */
-STATIC_OVL char *
+static char *
 mon_nam_too (char *outbuf, struct monst *mon, struct monst *other_mon)
 {
         Strcpy(outbuf, mon_nam(mon));
@@ -47,7 +47,7 @@ mon_nam_too (char *outbuf, struct monst *mon, struct monst *other_mon)
         return outbuf;
 }
 
-STATIC_OVL void 
+static void 
 noises (struct monst *magr, struct attack *mattk)
 {
         boolean farq = (distu(magr->mx, magr->my) > 15);
@@ -61,7 +61,7 @@ noises (struct monst *magr, struct attack *mattk)
         }
 }
 
-STATIC_OVL void 
+static void 
 missmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         const char *fmt;
@@ -365,7 +365,7 @@ mattackm (struct monst *magr, struct monst *mdef)
 }
 
 /* Returns the result of mdamagem(). */
-STATIC_OVL int 
+static int 
 hitmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         if(vis){
@@ -420,7 +420,7 @@ hitmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 }
 
 /* Returns the same values as mdamagem(). */
-STATIC_OVL int 
+static int 
 gazemm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         char buf[BUFSZ];
@@ -467,7 +467,7 @@ gazemm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 }
 
 /* Returns the same values as mattackm(). */
-STATIC_OVL int 
+static int 
 gulpmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         signed char     ax, ay, dx, dy;
@@ -533,7 +533,7 @@ gulpmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
         return status;
 }
 
-STATIC_OVL int 
+static int 
 explmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         int result;
@@ -562,7 +562,7 @@ explmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 /*
  *  See comment at top of mattackm(), for return values.
  */
-STATIC_OVL int 
+static int 
 mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         struct obj *obj;
@@ -1191,7 +1191,7 @@ slept_monst (struct monst *mon)
 #endif /* OVL0 */
 #ifdef OVLB
 
-STATIC_OVL void 
+static void 
 mrustm (struct monst *magr, struct monst *mdef, struct obj *obj)
 {
         boolean is_acid;
@@ -1226,7 +1226,7 @@ mrustm (struct monst *magr, struct monst *mdef, struct obj *obj)
         }
 }
 
-STATIC_OVL void 
+static void 
 mswingsm (struct monst *magr, struct monst *mdef, struct obj *otemp)
 {
         char buf[BUFSZ];
@@ -1241,7 +1241,7 @@ mswingsm (struct monst *magr, struct monst *mdef, struct obj *otemp)
  * Passive responses by defenders.  Does not replicate responses already
  * handled above.  Returns same values as mattackm.
  */
-STATIC_OVL int
+static int
 passivemm(magr,mdef,mhit,mdead)
 struct monst *magr, *mdef;
 boolean mhit;

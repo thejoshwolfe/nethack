@@ -34,7 +34,7 @@ char *bufp;
     hooked_tty_getlin(query, bufp, (getlin_hook_proc) 0);
 }
 
-STATIC_OVL void
+static void
 hooked_tty_getlin(query, bufp, hook)
 const char *query;
 char *bufp;
@@ -177,7 +177,7 @@ xwaitforspace (
  *      + we don't change the characters that are already in base
  *      + base has enough room to hold our string
  */
-STATIC_OVL boolean
+static boolean
 ext_cmd_getlin_hook(base)
         char *base;
 {

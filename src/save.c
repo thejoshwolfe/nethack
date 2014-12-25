@@ -184,7 +184,7 @@ int dosave0(void) {
         return(1);
 }
 
-STATIC_OVL void 
+static void 
 savegamestate (int fd, int mode)
 {
         int uid;
@@ -438,7 +438,7 @@ static boolean compressing = FALSE;
     HUP printf("outbufp %d outrunlength %d\n", outbufp,outrunlength);
 }*/
 
-STATIC_OVL void bputc(int c) {
+static void bputc(int c) {
     if (outbufp >= sizeof outbuf) {
         (void) write(bwritefd, outbuf, sizeof outbuf);
         outbufp = 0;
@@ -585,7 +585,7 @@ void bclose(int fd) {
 }
 #endif /* ZEROCOMP */
 
-STATIC_OVL void 
+static void 
 savelevchn (int fd, int mode)
 {
         s_level *tmplev, *tmplev2;
@@ -606,7 +606,7 @@ savelevchn (int fd, int mode)
             sp_levchn = 0;
 }
 
-STATIC_OVL void 
+static void 
 savedamage (int fd, int mode)
 {
         struct damage *damageptr, *tmp_dam;
@@ -630,7 +630,7 @@ savedamage (int fd, int mode)
             level.damagelist = 0;
 }
 
-STATIC_OVL void 
+static void 
 saveobjchn (int fd, struct obj *otmp, int mode)
 {
         struct obj *otmp2;
@@ -660,7 +660,7 @@ saveobjchn (int fd, struct obj *otmp, int mode)
             bwrite(fd, (void *) &minusone, sizeof(int));
 }
 
-STATIC_OVL void 
+static void 
 savemonchn (int fd, struct monst *mtmp, int mode)
 {
         struct monst *mtmp2;
@@ -688,7 +688,7 @@ savemonchn (int fd, struct monst *mtmp, int mode)
             bwrite(fd, (void *) &minusone, sizeof(int));
 }
 
-STATIC_OVL void 
+static void 
 savetrapchn (int fd, struct trap *trap, int mode)
 {
         struct trap *trap2;

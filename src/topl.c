@@ -117,7 +117,7 @@ tty_doprev_message()
 #endif /* OVLB */
 #ifdef OVL1
 
-STATIC_OVL void 
+static void 
 redotoplin (const char *str)
 {
         int otoplin = ttyDisplay->toplin;
@@ -136,7 +136,7 @@ redotoplin (const char *str)
                 more();
 }
 
-STATIC_OVL void 
+static void 
 remember_topl (void)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
@@ -252,7 +252,7 @@ update_topl (const char *bp)
         if(!(cw->flags & WIN_STOP)) redotoplin(toplines);
 }
 
-STATIC_OVL void 
+static void 
 topl_putsym (char c)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
@@ -288,7 +288,7 @@ void putsyms(const char *str) {
         topl_putsym(*str++);
 }
 
-STATIC_OVL void removetopl(int n) {
+static void removetopl(int n) {
     /* assume addtopl() has been done, so ttyDisplay->toplin is already set */
     while (n-- > 0) putsyms("\b \b");
 }

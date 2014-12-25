@@ -132,7 +132,7 @@ initworm (struct monst *worm, int wseg_count)
  *  Get rid of all worm segments on and following the given pointer curr.
  *  The display may or may not need to be updated as we free the segments.
  */
-STATIC_OVL
+static
 void
 toss_wsegs(curr, display_update)
     struct wseg *curr;
@@ -165,7 +165,7 @@ toss_wsegs(curr, display_update)
  *
  *  Remove the tail segment of the worm (the starting segment of the list).
  */
-STATIC_OVL void 
+static void 
 shrink_worm (
     int wnum    /* worm number */
 )
@@ -623,7 +623,7 @@ place_worm_tail_randomly (struct monst *worm, signed char x, signed char y)
  * This function, and the loop it serves, could be eliminated by coding
  * enexto() with a search radius.
  */
-STATIC_OVL void random_dir(signed char x, signed char y, signed char *nx, signed char *ny) {
+static void random_dir(signed char x, signed char y, signed char *nx, signed char *ny) {
     *nx = x;
     *ny = y;
 
@@ -674,7 +674,7 @@ count_wsegs (struct monst *mtmp)
  *
  *  will create a worm tail chain of (num_segs + 1) and return a pointer to it.
  */
-STATIC_OVL struct wseg *
+static struct wseg *
 create_worm_tail (int num_segs)
 {
     int i=0;

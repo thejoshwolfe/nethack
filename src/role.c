@@ -1022,7 +1022,7 @@ rigid_role_checks (void)
 
 STATIC_VAR char pa[NUM_BP], post_attribs;
 
-STATIC_OVL char *
+static char *
 promptsep (char *buf, int num_post_attribs)
 {
         const char *conj = "and ";
@@ -1035,7 +1035,7 @@ promptsep (char *buf, int num_post_attribs)
         return buf;
 }
 
-STATIC_OVL int 
+static int 
 role_gendercount (int rolenum)
 {
         int gendcount = 0;
@@ -1047,7 +1047,7 @@ role_gendercount (int rolenum)
         return gendcount;
 }
 
-STATIC_OVL int 
+static int 
 race_alignmentcount (int racenum)
 {
         int aligncount = 0;

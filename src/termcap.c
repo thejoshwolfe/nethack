@@ -29,7 +29,7 @@ STATIC_VAR char *MR;
 STATIC_VAR char *MD;
 STATIC_VAR int SG;
 #ifdef OVLB
-STATIC_OVL char PC = '\0';
+static char PC = '\0';
 #else /* OVLB */
 STATIC_DCL char PC;
 #endif /* OVLB */

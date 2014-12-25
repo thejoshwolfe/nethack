@@ -23,7 +23,7 @@ extern short glyph2tile[];      /* from tile.c */
  * is restored.  So might as well do that the first time instead of writing
  * another routine.
  */
-STATIC_OVL void 
+static void 
 shuffle_tiles (void)
 {
         int i;
@@ -38,7 +38,7 @@ shuffle_tiles (void)
 }
 #endif  /* USE_TILES */
 
-STATIC_OVL void 
+static void 
 setgemprobs (d_level *dlev)
 {
         int j, first, lev;
@@ -64,7 +64,7 @@ setgemprobs (d_level *dlev)
 }
 
 /* shuffle descriptions on objects o_low to o_high */
-STATIC_OVL void
+static void
 shuffle(o_low, o_high, domaterial)
         int o_low, o_high;
         boolean domaterial;
@@ -166,7 +166,7 @@ char oclass;
 #endif
 }
 
-STATIC_OVL void 
+static void 
 shuffle_all (void)
 {
         int first, last, oclass;
@@ -334,7 +334,7 @@ undiscover_object (int oindx)
     }
 }
 
-STATIC_OVL boolean
+static boolean
 interesting_to_discover(i)
 int i;
 {

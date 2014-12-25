@@ -35,7 +35,7 @@ STATIC_DCL struct Jitem Japanese_items[];
 
 #else /* OVLB */
 
-STATIC_OVL struct Jitem Japanese_items[] = {
+static struct Jitem Japanese_items[] = {
         { SHORT_SWORD, "wakizashi" },
         { BROADSWORD, "ninja-to" },
         { FLAIL, "nunchaku" },
@@ -57,7 +57,7 @@ STATIC_DCL const char *Japanese_item_name(int i);
 
 #ifdef OVL1
 
-STATIC_OVL char *
+static char *
 strprepend (char *s, const char *pref)
 {
         int i = (int)strlen(pref);
@@ -1485,7 +1485,7 @@ STATIC_DCL const struct o_range o_ranges[];
 #else /* OVLB */
 
 /* wishable subranges of objects */
-STATIC_OVL const struct o_range o_ranges[] = {
+static const struct o_range o_ranges[] = {
         { "bag",        TOOL_CLASS,   SACK,           BAG_OF_TRICKS },
         { "lamp",       TOOL_CLASS,   OIL_LAMP,       MAGIC_LAMP },
         { "candle",     TOOL_CLASS,   TALLOW_CANDLE,  WAX_CANDLE },
@@ -2719,7 +2719,7 @@ rnd_class (int first, int last)
         return 0;
 }
 
-STATIC_OVL const char *
+static const char *
 Japanese_item_name (int i)
 {
         struct Jitem *j = Japanese_items;

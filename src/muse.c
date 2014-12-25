@@ -49,7 +49,7 @@ static boolean zap_oseen;
  * the item.  Returns 0 if nothing happened, 2 if the monster can't do anything
  * (i.e. it teleported) and 1 if it's dead.
  */
-STATIC_OVL int 
+static int 
 precheck (struct monst *mon, struct obj *obj)
 {
         boolean vis;
@@ -137,7 +137,7 @@ precheck (struct monst *mon, struct obj *obj)
         return 0;
 }
 
-STATIC_OVL void
+static void
 mzapmsg(mtmp, otmp, self)
 struct monst *mtmp;
 struct obj *otmp;
@@ -157,7 +157,7 @@ boolean self;
         }
 }
 
-STATIC_OVL void 
+static void 
 mreadmsg (struct monst *mtmp, struct obj *otmp)
 {
         boolean vismon = canseemon(mtmp);
@@ -194,7 +194,7 @@ mreadmsg (struct monst *mtmp, struct obj *otmp)
                   vismon ? mon_nam(mtmp) : mhe(mtmp));
 }
 
-STATIC_OVL void 
+static void 
 mquaffmsg (struct monst *mtmp, struct obj *otmp)
 {
         if (canseemon(mtmp)) {
@@ -1139,7 +1139,7 @@ struct obj *otmp;
  * zapping you, so we need a special function for it.  (Unless someone wants
  * to merge the two functions...)
  */
-STATIC_OVL void
+static void
 mbhit(mon,range,fhitm,fhito,obj)
 struct monst *mon;                      /* monster shooting the wand */
 int range;                      /* direction and range */
@@ -1798,7 +1798,7 @@ skipmsg:
         return 0;
 }
 
-STATIC_OVL void 
+static void 
 you_aggravate (struct monst *mtmp)
 {
         pline("For some reason, %s presence is known to you.",
@@ -2034,7 +2034,7 @@ boolean by_you;
         return FALSE;
 }
 
-STATIC_OVL void
+static void
 mon_consume_unstone(mon, obj, by_you, stoning)
 struct monst *mon;
 struct obj *obj;

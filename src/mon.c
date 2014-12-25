@@ -127,7 +127,7 @@ STATIC_VAR short cham_to_pm[] = {
  * G_NOCORPSE set in order to prevent wishing for one, finding tins of one,
  * etc....
  */
-STATIC_OVL struct obj *
+static struct obj *
 make_corpse (struct monst *mtmp)
 {
         struct permonst *mdat = mtmp->data;
@@ -1096,7 +1096,7 @@ impossible("A monster looked at a very strange trap of type %d.", ttmp->ttyp);
    in the absence of Conflict.  There is no provision for targetting
    other monsters; just hand to hand fighting when they happen to be
    next to each other. */
-STATIC_OVL long 
+static long 
 mm_aggression (
     struct monst *magr, /* monster that is currently deciding where to move */
     struct monst *mdef  /* another monster which is next to it */
@@ -1209,7 +1209,7 @@ relmon (struct monst *mon)
 }
 
 /* remove effects of mtmp from other data structures */
-STATIC_OVL void 
+static void 
 m_detach (
     struct monst *mtmp,
     struct permonst *mptr       /* reflects mtmp->data _prior_ to mtmp's death */
@@ -1245,7 +1245,7 @@ mlifesaver (struct monst *mon)
         return (struct obj *)0;
 }
 
-STATIC_OVL void 
+static void 
 lifesaved_monster (struct monst *mtmp)
 {
         struct obj *lifesave = mlifesaver(mtmp);
@@ -2113,7 +2113,7 @@ restore_cham (struct monst *mon)
 }
 
 /* unwatched hiders may hide again; if so, a 1 is returned.  */
-STATIC_OVL boolean
+static boolean
 restrap(mtmp)
 struct monst *mtmp;
 {
@@ -2162,7 +2162,7 @@ boolean construct;
         }
 }
 
-STATIC_OVL int 
+static int 
 pick_animal (void)
 {
         if (!animal_list) mon_animal_list(TRUE);
@@ -2170,7 +2170,7 @@ pick_animal (void)
         return animal_list[rn2(animal_list_count)];
 }
 
-STATIC_OVL int 
+static int 
 select_newcham_form (struct monst *mon)
 {
         int mndx = NON_PM;
@@ -2464,7 +2464,7 @@ boolean egg;
 }
 
 /* kill off any eggs of genocided monsters */
-STATIC_OVL void
+static void
 kill_eggs(obj_list)
 struct obj *obj_list;
 {

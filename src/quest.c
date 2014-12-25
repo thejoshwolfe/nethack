@@ -21,7 +21,7 @@ STATIC_DCL void chat_with_guardian(void);
 STATIC_DCL void prisoner_speaks(struct monst *);
 
 
-STATIC_OVL void 
+static void 
 on_start (void)
 {
   if(!Qstat(first_start)) {
@@ -33,7 +33,7 @@ on_start (void)
   }
 }
 
-STATIC_OVL void 
+static void 
 on_locate (void)
 {
   if(!Qstat(first_locate)) {
@@ -43,7 +43,7 @@ on_locate (void)
         qt_pager(QT_NEXTLOCATE);
 }
 
-STATIC_OVL void 
+static void 
 on_goal (void)
 {
   if (Qstat(killed_nemesis)) {
@@ -96,13 +96,13 @@ ok_to_quest()
                         && (is_pure(FALSE) > 0));
 }
 
-STATIC_OVL boolean
+static boolean
 not_capable()
 {
         return((boolean)(u.ulevel < MIN_QUEST_LEVEL));
 }
 
-STATIC_OVL int
+static int
 is_pure(talk)
 boolean talk;
 {
@@ -137,7 +137,7 @@ boolean talk;
  * This assumes that the hero is currently _in_ the quest dungeon and that
  * there is a single branch to and from it.
  */
-STATIC_OVL void
+static void
 expulsion(seal)
 boolean seal;
 {
@@ -200,7 +200,7 @@ finish_quest (
         }
 }
 
-STATIC_OVL void 
+static void 
 chat_with_leader (void)
 {
 /*      Rule 0: Cheater checks.                                 */
@@ -285,7 +285,7 @@ leader_speaks (struct monst *mtmp)
         } else chat_with_leader();
 }
 
-STATIC_OVL void 
+static void 
 chat_with_nemesis (void)
 {
 /*      The nemesis will do most of the talking, but... */
@@ -309,7 +309,7 @@ nemesis_speaks (void)
           if(!rn2(5))   qt_pager(rn1(10, QT_DISCOURAGE));
 }
 
-STATIC_OVL void 
+static void 
 chat_with_guardian (void)
 {
 /*      These guys/gals really don't have much to say... */
@@ -319,7 +319,7 @@ chat_with_guardian (void)
             qt_pager(rn1(5, QT_GUARDTALK));
 }
 
-STATIC_OVL void 
+static void 
 prisoner_speaks (struct monst *mtmp)
 {
         if (mtmp->data == &mons[PM_PRISONER] &&

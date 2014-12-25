@@ -34,7 +34,7 @@ static int dieroll;
 #ifdef OVL1
 
 
-STATIC_OVL void 
+static void 
 hitmsg (struct monst *mtmp, struct attack *mattk)
 {
         int compat;
@@ -77,7 +77,7 @@ hitmsg (struct monst *mtmp, struct attack *mattk)
             }
 }
 
-STATIC_OVL void
+static void
 missmu(mtmp, nearmiss, mattk)           /* monster missed you */
 struct monst *mtmp;
 boolean nearmiss;
@@ -97,7 +97,7 @@ struct attack *mattk;
         stop_occupation();
 }
 
-STATIC_OVL void 
+static void 
 mswings (               /* monster swings obj */
     struct monst *mtmp,
     struct obj *otemp
@@ -141,7 +141,7 @@ u_slow_down (void)
 #endif /* OVL1 */
 #ifdef OVLB
 
-STATIC_OVL void 
+static void 
 wildmiss (              /* monster attacked your displaced image */
     struct monst *mtmp,
     struct attack *mattk
@@ -688,7 +688,7 @@ mattacku (struct monst *mtmp)
  * helper function for some compilers that have trouble with hitmu
  */
 
-STATIC_OVL void 
+static void 
 hurtarmor (int attk)
 {
         int     hurt;
@@ -747,7 +747,7 @@ hurtarmor (int attk)
 #endif /* OVLB */
 #ifdef OVL1
 
-STATIC_OVL boolean
+static boolean
 diseasemu(mdat)
 struct permonst *mdat;
 {
@@ -762,7 +762,7 @@ struct permonst *mdat;
 }
 
 /* check whether slippery clothing protects from hug or wrap attack */
-STATIC_OVL boolean
+static boolean
 u_slip_free(mtmp, mattk)
 struct monst *mtmp;
 struct attack *mattk;
@@ -844,7 +844,7 @@ magic_negation (struct monst *mon)
  *        3 if the monster lives but teleported/paralyzed, so it can't keep
  *             attacking you
  */
-STATIC_OVL int 
+static int 
 hitmu (struct monst *mtmp, struct attack *mattk)
 {
         struct permonst *mdat = mtmp->data;
@@ -1595,7 +1595,7 @@ dopois:
 #endif /* OVL1 */
 #ifdef OVLB
 
-STATIC_OVL int 
+static int 
 gulpmu (        /* monster swallows you, or damage if u.uswallow */
     struct monst *mtmp,
     struct attack *mattk
@@ -1785,7 +1785,7 @@ gulpmu (        /* monster swallows you, or damage if u.uswallow */
         return(1);
 }
 
-STATIC_OVL int
+static int
 explmu(mtmp, mattk, ufound)     /* monster explodes in your face */
 struct monst *mtmp;
 struct attack  *mattk;
@@ -2037,7 +2037,7 @@ mdamageu (      /* mtmp hits you for n points damage */
 #endif /* OVL1 */
 #ifdef OVLB
 
-STATIC_OVL void 
+static void 
 urustm (struct monst *mon, struct obj *obj)
 {
         boolean vis;
@@ -2374,7 +2374,7 @@ doseduce (struct monst *mon)
         return 1;
 }
 
-STATIC_OVL void 
+static void 
 mayberem (struct obj *obj, const char *str)
 {
         char qbuf[QBUFSZ];
@@ -2408,7 +2408,7 @@ mayberem (struct obj *obj, const char *str)
 
 #ifdef OVL1
 
-STATIC_OVL int 
+static int 
 passiveum (struct permonst *olduasmon, struct monst *mtmp, struct attack *mattk)
 {
         int i, tmp;

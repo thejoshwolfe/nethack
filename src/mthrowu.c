@@ -16,7 +16,7 @@ STATIC_DCL const char *breathwep[];
 /*
  * Keep consistent with breath weapons in zap.c, and AD_* in monattk.h.
  */
-STATIC_OVL const char *breathwep[] = {
+static const char *breathwep[] = {
                                 "fragments",
                                 "fire",
                                 "frost",
@@ -91,7 +91,7 @@ thitu (
  * Returns 0 if object still exists (not destroyed).
  */
 
-STATIC_OVL int
+static int
 drop_throw(obj, ohit, x, y)
 struct obj *obj;
 boolean ohit;

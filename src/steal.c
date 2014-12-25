@@ -7,7 +7,7 @@ STATIC_PTR int stealarm(void);
 STATIC_DCL const char *equipname(struct obj *);
 STATIC_DCL void mdrop_obj(struct monst *,struct obj *,boolean);
 
-STATIC_OVL const char *
+static const char *
 equipname (struct obj *otmp)
 {
         return (
@@ -486,7 +486,7 @@ stealamulet (struct monst *mtmp)
 #ifdef OVL0
 
 /* drop one object taken from a (possibly dead) monster's inventory */
-STATIC_OVL void
+static void
 mdrop_obj(mon, obj, verbosely)
 struct monst *mon;
 struct obj *obj;

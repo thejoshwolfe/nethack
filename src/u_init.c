@@ -483,7 +483,7 @@ static const struct def_skill Skill_W[] = {
 };
 
 
-STATIC_OVL void 
+static void 
 knows_object (int obj)
 {
         discover_object(obj,TRUE,FALSE);
@@ -493,7 +493,7 @@ knows_object (int obj)
 /* Know ordinary (non-magical) objects of a certain class,
  * like all gems except the loadstone and luckstone.
  */
-STATIC_OVL void 
+static void 
 knows_class (char sym)
 {
         int ct;
@@ -805,7 +805,7 @@ u_init (void)
 }
 
 /* skills aren't initialized, so we use the role-specific skill lists */
-STATIC_OVL boolean
+static boolean
 restricted_spell_discipline(otyp)
 int otyp;
 {
@@ -836,7 +836,7 @@ int otyp;
     return TRUE;
 }
 
-STATIC_OVL void 
+static void 
 ini_inv (struct trobj *trop)
 {
         struct obj *obj;

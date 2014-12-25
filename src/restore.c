@@ -56,7 +56,7 @@ static long omoves;
 #define Is_IceBox(o) ((o)->otyp == ICE_BOX ? TRUE : FALSE)
 
 /* Recalculate level.objects[x][y], since this info was not saved. */
-STATIC_OVL void 
+static void 
 find_lev_obj (void)
 {
         struct obj *fobjtmp = (struct obj *)0;
@@ -115,7 +115,7 @@ boolean quietly;
         }
 }
 
-STATIC_OVL void 
+static void 
 restlevchn (int fd)
 {
         int cnt;
@@ -137,7 +137,7 @@ restlevchn (int fd)
         }
 }
 
-STATIC_OVL void
+static void
 restdamage(fd, ghostly)
 int fd;
 boolean ghostly;
@@ -180,7 +180,7 @@ boolean ghostly;
         free((void *)tmp_dam);
 }
 
-STATIC_OVL struct obj *
+static struct obj *
 restobjchn(fd, ghostly, frozen)
 int fd;
 boolean ghostly, frozen;
@@ -230,7 +230,7 @@ boolean ghostly, frozen;
         return(first);
 }
 
-STATIC_OVL struct monst *
+static struct monst *
 restmonchn(fd, ghostly)
 int fd;
 boolean ghostly;
@@ -299,7 +299,7 @@ boolean ghostly;
         return(first);
 }
 
-STATIC_OVL struct fruit *
+static struct fruit *
 loadfruitchn (int fd)
 {
         struct fruit *flist, *fnext;
@@ -315,7 +315,7 @@ loadfruitchn (int fd)
         return flist;
 }
 
-STATIC_OVL void 
+static void 
 freefruitchn (struct fruit *flist)
 {
         struct fruit *fnext;
@@ -327,7 +327,7 @@ freefruitchn (struct fruit *flist)
         }
 }
 
-STATIC_OVL void 
+static void 
 ghostfruit (struct obj *otmp)
 {
         struct fruit *oldf;
@@ -339,7 +339,7 @@ ghostfruit (struct obj *otmp)
         else otmp->spe = fruitadd(oldf->fname);
 }
 
-STATIC_OVL
+static
 boolean
 restgamestate(fd, stuckid, steedid)
 int fd;
@@ -441,7 +441,7 @@ unsigned int *stuckid, *steedid;        /* STEED */
 /* update game state pointers to those valid for the current level (so we
  * don't dereference a wild u.ustuck when saving the game state, for instance)
  */
-STATIC_OVL void 
+static void 
 restlevelstate (
     unsigned int stuckid,
     unsigned int steedid        /* STEED */
@@ -466,7 +466,7 @@ restlevelstate (
 #endif
 }
 
-STATIC_OVL int restlevelfile(int fd, signed char ltmp) {
+static int restlevelfile(int fd, signed char ltmp) {
         int nfd;
         char whynot[BUFSZ];
 
@@ -786,7 +786,7 @@ boolean ghostly;
 
 
 /* Clear all structures for object and monster ID mapping. */
-STATIC_OVL void 
+static void 
 clear_id_mapping (void)
 {
     struct bucket *curr;
@@ -799,7 +799,7 @@ clear_id_mapping (void)
 }
 
 /* Add a mapping to the ID map. */
-STATIC_OVL void 
+static void 
 add_id_mapping (unsigned gid, unsigned nid)
 {
     int idx;
@@ -849,7 +849,7 @@ lookup_id_mapping(gid, nidp)
     return FALSE;
 }
 
-STATIC_OVL void
+static void
 reset_oattached_mids(ghostly)
 boolean ghostly;
 {

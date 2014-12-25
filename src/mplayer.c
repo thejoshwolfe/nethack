@@ -35,7 +35,7 @@ static const char *developers[] = {
 
 
 /* return a randomly chosen developer name */
-STATIC_OVL const char *
+static const char *
 dev_name (void)
 {
         int i, m = 0, n = SIZE(developers);
@@ -60,7 +60,7 @@ dev_name (void)
         return(developers[i]);
 }
 
-STATIC_OVL void 
+static void 
 get_mplname (struct monst *mtmp, char *nam)
 {
         boolean fmlkind = is_female(mtmp->data);
@@ -83,7 +83,7 @@ get_mplname (struct monst *mtmp, char *nam)
                             (boolean)mtmp->female));
 }
 
-STATIC_OVL void 
+static void 
 mk_mplayer_armor (struct monst *mon, short typ)
 {
         struct obj *obj;

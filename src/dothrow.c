@@ -30,7 +30,7 @@ extern boolean notonhead;       /* for long worms */
 
 
 /* Throw the selected object, asking for direction */
-STATIC_OVL int 
+static int 
 throw_obj (struct obj *obj, int shotlimit)
 {
         struct obj *otmp;
@@ -556,7 +556,7 @@ hurtle_step(arg, x, y)
     return TRUE;
 }
 
-STATIC_OVL boolean
+static boolean
 mhurtle_step(arg, x, y)
     void * arg;
     int x, y;
@@ -665,7 +665,7 @@ mhurtle (struct monst *mon, int dx, int dy, int range)
         return;
 }
 
-STATIC_OVL void check_shop_obj(struct obj *obj, signed char x, signed char y, boolean broken) {
+static void check_shop_obj(struct obj *obj, signed char x, signed char y, boolean broken) {
         struct monst *shkp = shop_keeper(*u.ushops);
 
         if(!shkp) return;
@@ -701,7 +701,7 @@ STATIC_OVL void check_shop_obj(struct obj *obj, signed char x, signed char y, bo
  *
  * Returns FALSE if the object is gone.
  */
-STATIC_OVL boolean
+static boolean
 toss_up(obj, hitsroof)
 struct obj *obj;
 boolean hitsroof;
@@ -808,7 +808,7 @@ boolean hitsroof;
 }
 
 /* return true for weapon meant to be thrown; excludes ammo */
-STATIC_OVL boolean
+static boolean
 throwing_weapon(obj)
 struct obj *obj;
 {
@@ -821,7 +821,7 @@ struct obj *obj;
 }
 
 /* the currently thrown object is returning to you (not for boomerangs) */
-STATIC_OVL void 
+static void 
 sho_obj_return_to_u (struct obj *obj)
 {
     /* might already be our location (bounced off a wall) */
@@ -1128,7 +1128,7 @@ boolean mon_notices;
 }
 
 /* thrown object misses target monster */
-STATIC_OVL void 
+static void 
 tmiss (struct obj *obj, struct monst *mon)
 {
     const char *missile = mshot_xname(obj);
@@ -1389,7 +1389,7 @@ thitmonst (struct monst *mon, struct obj *obj)
         return 0;
 }
 
-STATIC_OVL int 
+static int 
 gem_accept (struct monst *mon, struct obj *obj)
 {
         char buf[BUFSZ];
@@ -1530,7 +1530,7 @@ breaks (
  */
 /* object location (ox, oy may not be right) */
 /* is this the hero's fault? */
-STATIC_OVL void breakobj(struct obj *obj, signed char x, signed char y,
+static void breakobj(struct obj *obj, signed char x, signed char y,
         boolean hero_caused, boolean from_invent)
 {
         switch (obj->oclass == POTION_CLASS ? POT_WATER : obj->otyp) {
@@ -1620,7 +1620,7 @@ struct obj *obj;
         }
 }
 
-STATIC_OVL void
+static void
 breakmsg(obj, in_view)
 struct obj *obj;
 boolean in_view;
@@ -1660,7 +1660,7 @@ boolean in_view;
         }
 }
 
-STATIC_OVL int 
+static int 
 throw_gold (struct obj *obj)
 {
         int range, odx, ody;

@@ -38,18 +38,18 @@ STATIC_DCL int spec_dbon_applies;
 STATIC_DCL signed char artidisco[NROFARTIFACTS];
 #else   /* OVLB */
 /* coordinate effects from spec_dbon() with messages in artifact_hit() */
-STATIC_OVL int spec_dbon_applies = 0;
+static int spec_dbon_applies = 0;
 
 /* flags including which artifacts have already been created */
 static boolean artiexist[1+NROFARTIFACTS+1];
 /* and a discovery list for them (no dummy first entry here) */
-STATIC_OVL signed char artidisco[NROFARTIFACTS];
+static signed char artidisco[NROFARTIFACTS];
 
 STATIC_DCL void hack_artifacts(void);
 STATIC_DCL boolean attacks(int,struct obj *);
 
 /* handle some special cases; must be called after u_init() */
-STATIC_OVL void
+static void
 hack_artifacts()
 {
         struct artifact *art;
@@ -306,7 +306,7 @@ const char *name;
         return FALSE;
 }
 
-STATIC_OVL boolean
+static boolean
 attacks(adtyp, otmp)
 int adtyp;
 struct obj *otmp;
@@ -555,7 +555,7 @@ touch_artifact(obj,mon)
 #ifdef OVL1
 
 /* decide whether an artifact's special attacks apply against mtmp */
-STATIC_OVL int
+static int
 spec_applies(weap, mtmp)
 const struct artifact *weap;
 struct monst *mtmp;
@@ -750,7 +750,7 @@ static const char * const mb_verb[2][4] = {
 #define MB_INDEX_CANCEL         3
 
 /* called when someone is being hit by Magicbane */
-STATIC_OVL boolean
+static boolean
 Mb_hit(magr, mdef, mb, dmgptr, dieroll, vis, hittee)
 struct monst *magr, *mdef;      /* attacker and defender */
 struct obj *mb;                 /* Magicbane */
@@ -1178,7 +1178,7 @@ doinvoke()
     return arti_invoke(obj);
 }
 
-STATIC_OVL int
+static int
 arti_invoke(obj)
     struct obj *obj;
 {

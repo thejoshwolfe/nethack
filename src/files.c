@@ -325,7 +325,7 @@ void clearlocks(void) {
 }
 
 #ifdef HOLD_LOCKFILE_OPEN
-STATIC_OVL int 
+static int 
 open_levelfile_exclusively (const char *name, int lev, int oflag)
 {
         int reslt, fd;
@@ -390,7 +390,7 @@ close (int fd)
 /* set up "file" to be file name for retrieving bones, and return a
  * bonesid to be read/written in the bones file.
  */
-STATIC_OVL char *
+static char *
 set_bonesfile_name (char *file, d_level *lev)
 {
         s_level *sptr;
@@ -412,7 +412,7 @@ set_bonesfile_name (char *file, d_level *lev)
  * (we are not reading or writing level files while writing bones files, so
  * the same array may be used instead of copying.)
  */
-STATIC_OVL char *
+static char *
 set_bonestemp_name (void)
 {
         char *tf;
@@ -587,7 +587,7 @@ void free_saved_games (char **saved) {
 
 #ifdef COMPRESS
 
-STATIC_OVL void
+static void
 redirect(filename, mode, stream, uncomp)
 const char *filename, *mode;
 FILE *stream;
@@ -607,7 +607,7 @@ boolean uncomp;
  *
  * cf. child() in unixunix.c.
  */
-STATIC_OVL void
+static void
 docompress_file(filename, uncomp)
 const char *filename;
 boolean uncomp;
@@ -785,7 +785,7 @@ static int nesting = 0;
 
 #define HUP     if (!program_state.done_hup)
 
-STATIC_OVL char * make_lockname (const char *filename, char *lockname) {
+static char * make_lockname (const char *filename, char *lockname) {
         Strcpy(lockname, filename);
         Strcat(lockname, "_lock");
         return lockname;
@@ -881,7 +881,7 @@ void unlock_file(const char *filename) {
 
 const char *configfile = ".nethackrc";
 
-STATIC_OVL FILE * fopen_config_file(const char *filename) {
+static FILE * fopen_config_file(const char *filename) {
         FILE *fp;
         char    tmp_config[BUFSZ];
         char *envp;
@@ -944,7 +944,7 @@ STATIC_OVL FILE * fopen_config_file(const char *filename) {
  * NOTE: zeros are inserted unless modlist is TRUE, in which case the list
  *  location is unchanged.  Callers must handle zeros if modlist is FALSE.
  */
-STATIC_OVL int
+static int
 get_uchars(fp, buf, bufp, list, modlist, size, name)
     FILE *fp;           /* input file pointer */
     char *buf;          /* read buffer, must be of size BUFSZ */
@@ -1000,7 +1000,7 @@ gi_error:
     /*NOTREACHED*/
 }
 
-STATIC_OVL void
+static void
 adjust_prefix(bufp, prefixid)
 char *bufp;
 int prefixid;
@@ -1207,7 +1207,7 @@ const char *filename;
 }
 
 #ifdef WIZARD
-STATIC_OVL FILE *
+static FILE *
 fopen_wizkit_file()
 {
         FILE *fp;

@@ -410,7 +410,7 @@ kick_steed (void)
  * room's walls, which is not what we want.
  * Adapted from mail daemon code.
  */
-STATIC_OVL boolean
+static boolean
 landing_spot(spot, reason, forceit)
 coord *spot;    /* landing position (we fill it in) */
 int reason;

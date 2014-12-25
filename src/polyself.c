@@ -25,7 +25,7 @@ set_uasmon (void)
 }
 
 /* make a (new) human out of the player */
-STATIC_OVL void 
+static void 
 polyman (const char *fmt, const char *arg)
 {
         boolean sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
@@ -124,7 +124,7 @@ change_sex (void)
         }
 }
 
-STATIC_OVL void 
+static void 
 newman (void)
 {
         int tmp, oldlvl;
@@ -546,7 +546,7 @@ polymon (       /* returns 1 if polymorph successful */
         return(1);
 }
 
-STATIC_OVL void 
+static void 
 break_armor (void)
 {
     struct obj *otmp;
@@ -648,7 +648,7 @@ break_armor (void)
     }
 }
 
-STATIC_OVL void 
+static void 
 drop_weapon (int alone)
 {
     struct obj *otmp;
@@ -1077,7 +1077,7 @@ domindblast (void)
         return 1;
 }
 
-STATIC_OVL void 
+static void 
 uunstick (void)
 {
         pline("%s is no longer in your clutches.", Monnam(u.ustuck));
@@ -1260,7 +1260,7 @@ ugolemeffects (int damtype, int dam)
         }
 }
 
-STATIC_OVL int 
+static int 
 armor_to_dragon (int atyp)
 {
         switch(atyp) {

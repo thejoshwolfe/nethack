@@ -716,7 +716,7 @@ struct obj *obj;
         return mtmp;
 }
 
-STATIC_OVL void
+static void
 revive_egg(obj)
 struct obj *obj;
 {
@@ -769,7 +769,7 @@ struct monst *mon;
 #ifdef OVLB
 static const char charged_objs[] = { WAND_CLASS, WEAPON_CLASS, ARMOR_CLASS, 0 };
 
-STATIC_OVL void
+static void
 costly_cancel(obj)
 struct obj *obj;
 {
@@ -1021,7 +1021,7 @@ struct obj *obj;
  * there's a random factor here to keep from always using the stuff
  * at the top of the pile.
  */
-STATIC_OVL void
+static void
 polyuse(objhdr, mat, minwt)
     struct obj *objhdr;
     int mat, minwt;
@@ -1059,7 +1059,7 @@ polyuse(objhdr, mat, minwt)
  * Polymorph some of the stuff in this pile into a monster, preferably
  * a golem of the kind okind.
  */
-STATIC_OVL void
+static void
 create_polymon(obj, okind)
     struct obj *obj;
     int okind;
@@ -1801,7 +1801,7 @@ struct obj *obj;
 #endif /*OVL1*/
 #ifdef OVL0
 
-STATIC_OVL void
+static void
 backfire(otmp)
 struct obj *otmp;
 {
@@ -2145,7 +2145,7 @@ boolean ordinary;
  * Return TRUE if the steed was hit by the wand.
  * Return FALSE if the steed was not hit by the wand.
  */
-STATIC_OVL boolean
+static boolean
 zap_steed(obj)
 struct obj *obj;        /* wand or spell */
 {
@@ -2271,7 +2271,7 @@ boolean                 youattack, allow_cancel_kill, self_cancel;
 }
 
 /* you've zapped an immediate type wand up or down */
-STATIC_OVL boolean
+static boolean
 zap_updown(obj)
 struct obj *obj;        /* wand or spell */
 {
@@ -2519,7 +2519,7 @@ spell_damage_bonus()
  * Generate the to hit bonus for a spell.  Based on the hero's skill in
  * spell class and dexterity.
  */
-STATIC_OVL int
+static int
 spell_hit_bonus(skill)
 int skill;
 {
@@ -2879,7 +2879,7 @@ int dx, dy;
         return (struct monst *)0;
 }
 
-STATIC_OVL int
+static int
 zhitm(mon, type, nd, ootmp)                     /* returns damage to mon */
 struct monst *mon;
 int type, nd;
@@ -3024,7 +3024,7 @@ struct obj **ootmp;     /* to return worn armor for caller to disintegrate */
         return(tmp);
 }
 
-STATIC_OVL void zhitu(int type, int nd, const char *fltxt, signed char sx, signed char sy) {
+static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed char sy) {
         int dam = 0;
 
         switch (abs(type) % 10) {
@@ -3198,7 +3198,7 @@ boolean u_caused;
 }
 
 /* will zap/spell/breath attack score a hit against armor class `ac'? */
-STATIC_OVL int
+static int
 zap_hit(ac, type)
 int ac;
 int type;       /* either hero cast spell type or 0 */

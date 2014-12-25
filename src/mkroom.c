@@ -31,7 +31,7 @@ extern const struct shclass shtypes[];  /* defined in shknam.c */
 
 #ifdef OVLB
 
-STATIC_OVL boolean
+static boolean
 isbig(sroom)
 struct mkroom *sroom;
 {
@@ -63,7 +63,7 @@ mkroom (
     }
 }
 
-STATIC_OVL void 
+static void 
 mkshop (void)
 {
         struct mkroom *sroom;
@@ -176,7 +176,7 @@ gottype:
         stock_room(i, sroom);
 }
 
-STATIC_OVL struct mkroom *
+static struct mkroom *
 pick_room(strict)
 boolean strict;
 /* pick an unused room, preferably with only one door */
@@ -205,7 +205,7 @@ boolean strict;
         return (struct mkroom *)0;
 }
 
-STATIC_OVL void 
+static void 
 mkzoo (int type)
 {
         struct mkroom *sroom;
@@ -405,7 +405,7 @@ int mm_flags;
         level.flags.graveyard = TRUE;   /* reduced chance for undead corpse */
 }
 
-STATIC_OVL struct permonst *
+static struct permonst *
 morguemon (void)
 {
         int i = rn2(100), hd = rn2(level_difficulty());
@@ -420,7 +420,7 @@ morguemon (void)
                         : (i < 40) ? &mons[PM_WRAITH] : mkclass(S_ZOMBIE,0));
 }
 
-STATIC_OVL struct permonst *
+static struct permonst *
 antholemon (void)
 {
         int mtyp;
@@ -435,7 +435,7 @@ antholemon (void)
                         (struct permonst *)0 : &mons[mtyp]);
 }
 
-STATIC_OVL void 
+static void 
 mkswamp (void)  /* Michiel Huisjes & Fred de Wilde */
 {
         struct mkroom *sroom;
@@ -472,7 +472,7 @@ mkswamp (void)  /* Michiel Huisjes & Fred de Wilde */
         }
 }
 
-STATIC_OVL coord *
+static coord *
 shrine_pos (int roomno)
 {
         static coord buf;
@@ -483,7 +483,7 @@ shrine_pos (int roomno)
         return(&buf);
 }
 
-STATIC_OVL void 
+static void 
 mktemple (void)
 {
         struct mkroom *sroom;
@@ -671,7 +671,7 @@ static struct {
     {PM_SOLDIER, 80}, {PM_SERGEANT, 15}, {PM_LIEUTENANT, 4}, {PM_CAPTAIN, 1}
 };
 
-STATIC_OVL struct permonst *
+static struct permonst *
 squadmon (void)         /* return soldier types. */
 {
         int sel_prob, i, cpro, mndx;
@@ -697,7 +697,7 @@ gotone:
  * (if any).
  */
 
-STATIC_OVL void 
+static void 
 save_room (int fd, struct mkroom *r)
 {
         short i;
@@ -726,7 +726,7 @@ save_rooms (int fd)
             save_room(fd, &rooms[i]);
 }
 
-STATIC_OVL void 
+static void 
 rest_room (int fd, struct mkroom *r)
 {
         short i;

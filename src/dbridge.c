@@ -149,7 +149,7 @@ int *x,*y;
 /*
  * Find the drawbridge wall associated with a drawbridge.
  */
-STATIC_OVL void 
+static void 
 get_wall_for_db (int *x, int *y)
 {
         switch (levl[*x][*y].drawbridgemask & DB_DIR) {
@@ -226,7 +226,7 @@ struct entity {
 
 static struct entity occupants[ENTITIES];
 
-STATIC_OVL struct entity *
+static struct entity *
 e_at (int x, int y)
 {
         int entitycnt;
@@ -240,7 +240,7 @@ e_at (int x, int y)
                (struct entity *)0 : &(occupants[entitycnt]));
 }
 
-STATIC_OVL void 
+static void 
 m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp)
 {
         etmp->emon = mtmp;
@@ -255,7 +255,7 @@ m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp)
                 etmp->edata = (struct permonst *)0;
 }
 
-STATIC_OVL void 
+static void 
 u_to_e (struct entity *etmp)
 {
         etmp->emon = &youmonst;
@@ -264,7 +264,7 @@ u_to_e (struct entity *etmp)
         etmp->edata = youmonst.data;
 }
 
-STATIC_OVL void 
+static void 
 set_entity (int x, int y, struct entity *etmp)
 {
         if ((x == u.ux) && (y == u.uy))
@@ -285,7 +285,7 @@ set_entity (int x, int y, struct entity *etmp)
 
 /* #define e_strg(etmp, func) (is_u(etmp)? (char *)0 : func(etmp->emon)) */
 
-STATIC_OVL const char *
+static const char *
 e_nam (struct entity *etmp)
 {
         return(is_u(etmp)? "you" : mon_nam(etmp->emon));
@@ -296,7 +296,7 @@ e_nam (struct entity *etmp)
  * verb, where necessary.
  */
 
-STATIC_OVL const char *
+static const char *
 E_phrase (struct entity *etmp, const char *verb)
 {
         static char wholebuf[80];
@@ -315,7 +315,7 @@ E_phrase (struct entity *etmp, const char *verb)
  * Simple-minded "can it be here?" routine
  */
 
-STATIC_OVL boolean
+static boolean
 e_survives_at(etmp, x, y)
 struct entity *etmp;
 int x, y;
@@ -338,7 +338,7 @@ int x, y;
         return(TRUE);
 }
 
-STATIC_OVL void 
+static void 
 e_died (struct entity *etmp, int dest, int how)
 {
         if (is_u(etmp)) {
@@ -401,7 +401,7 @@ e_died (struct entity *etmp, int dest, int how)
  * These are never directly affected by a bridge or portcullis.
  */
 
-STATIC_OVL boolean
+static boolean
 automiss(etmp)
 struct entity *etmp;
 {
@@ -413,7 +413,7 @@ struct entity *etmp;
  * Does falling drawbridge or portcullis miss etmp?
  */
 
-STATIC_OVL boolean
+static boolean
 e_missed(etmp, chunks)
 struct entity *etmp;
 boolean chunks;
@@ -447,7 +447,7 @@ boolean chunks;
  * Can etmp jump from death?
  */
 
-STATIC_OVL boolean
+static boolean
 e_jumps(etmp)
 struct entity *etmp;
 {
@@ -470,7 +470,7 @@ struct entity *etmp;
         return((boolean)((tmp >= rnd(10))? TRUE : FALSE));
 }
 
-STATIC_OVL void 
+static void 
 do_entity (struct entity *etmp)
 {
         int newx, newy, at_portcullis, oldx, oldy;

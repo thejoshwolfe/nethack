@@ -4,7 +4,7 @@
 STATIC_DCL long newuexp(int);
 STATIC_DCL int enermod(int);
 
-STATIC_OVL long 
+static long 
 newuexp (int lev)
 {
         if (lev < 10) return (10L * (1L << lev));
@@ -12,7 +12,7 @@ newuexp (int lev)
         return (10000000L * ((long)(lev - 19)));
 }
 
-STATIC_OVL int 
+static int 
 enermod (int en)
 {
         switch (Role_switch) {

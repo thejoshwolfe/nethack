@@ -26,7 +26,7 @@ void initedog (struct monst *mtmp) {
     EDOG(mtmp)->killed_by_u = 0;
 }
 
-STATIC_OVL int pet_type (void) {
+static int pet_type (void) {
     if (urole.petnum != NON_PM)
         return (urole.petnum);
     else if (preferred_pet == 'c')

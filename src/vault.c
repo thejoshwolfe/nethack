@@ -15,7 +15,7 @@ STATIC_DCL boolean in_fcorridor(struct monst *,int,int);
 STATIC_DCL void move_gold(struct obj *,int);
 STATIC_DCL void wallify_vault(struct monst *);
 
-STATIC_OVL boolean
+static boolean
 clear_fcorr(grd, forceshow)
 struct monst *grd;
 boolean forceshow;
@@ -56,7 +56,7 @@ boolean forceshow;
         return(TRUE);
 }
 
-STATIC_OVL void 
+static void 
 restfakecorr (struct monst *grd)
 {
         /* it seems you left the corridor - let the guard disappear */
@@ -81,7 +81,7 @@ struct monst *grd;
         return(dispose);
 }
 
-STATIC_OVL boolean
+static boolean
 in_fcorridor(grd, x, y)
 struct monst *grd;
 int x, y;
@@ -95,7 +95,7 @@ int x, y;
         return(FALSE);
 }
 
-STATIC_OVL struct monst *
+static struct monst *
 findgd (void)
 {
         struct monst *mtmp;
@@ -337,7 +337,7 @@ fnd:
 #endif /* OVL0 */
 #ifdef OVLB
 
-STATIC_OVL void 
+static void 
 move_gold (struct obj *gold, int vroom)
 {
         signed char nx, ny;
@@ -351,7 +351,7 @@ move_gold (struct obj *gold, int vroom)
         newsym(nx,ny);
 }
 
-STATIC_OVL void 
+static void 
 wallify_vault (struct monst *grd)
 {
         int x, y, typ;

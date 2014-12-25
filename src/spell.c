@@ -88,7 +88,7 @@ STATIC_DCL int isqrt(int);
 static const char explodes[] = "radiates explosive energy";
 
 /* convert a letter into a number in the range 0..51, or -1 if not a letter */
-STATIC_OVL int 
+static int 
 spell_let_to_idx (char ilet)
 {
     int indx;
@@ -101,7 +101,7 @@ spell_let_to_idx (char ilet)
 }
 
 /* TRUE: book should be destroyed by caller */
-STATIC_OVL boolean
+static boolean
 cursed_book(bp)
         struct obj *bp;
 {
@@ -171,7 +171,7 @@ cursed_book(bp)
 }
 
 /* study while confused: returns TRUE if the book is destroyed */
-STATIC_OVL boolean
+static boolean
 confused_book(spellbook)
 struct obj *spellbook;
 {
@@ -196,7 +196,7 @@ struct obj *spellbook;
 }
 
 /* special effects for The Book of the Dead */
-STATIC_OVL void 
+static void 
 deadbook (struct obj *book2)
 {
     struct monst *mtmp, *mtmp2;
@@ -526,7 +526,7 @@ age_spells (void)
  * Return TRUE if a spell was picked, with the spell index in the return
  * parameter.  Otherwise return FALSE.
  */
-STATIC_OVL boolean
+static boolean
 getspell(spell_no)
         int *spell_no;
 {
@@ -579,7 +579,7 @@ docast()
         return 0;
 }
 
-STATIC_OVL const char *
+static const char *
 spelltypemnemonic (int skill)
 {
         switch (skill) {
@@ -609,7 +609,7 @@ spell_skilltype (int booktype)
         return (objects[booktype].oc_skill);
 }
 
-STATIC_OVL void 
+static void 
 cast_protection (void)
 {
         int loglev = 0;
@@ -671,7 +671,7 @@ cast_protection (void)
 }
 
 /* attempting to cast a forgotten spell will cause disorientation */
-STATIC_OVL void 
+static void 
 spell_backfire (int spell)
 {
     long duration = (long)((spellev(spell) + 1) * 3);    /* 6..24 */
@@ -953,7 +953,7 @@ boolean atme;
 }
 
 /* Choose location where spell takes effect. */
-STATIC_OVL int 
+static int 
 throwspell (void)
 {
         coord cc;
@@ -1033,7 +1033,7 @@ dovspell()
         return 0;
 }
 
-STATIC_OVL boolean
+static boolean
 dospellmenu(prompt, splaction, spell_no)
 const char *prompt;
 int splaction;  /* SPELLMENU_CAST, SPELLMENU_VIEW, or spl_book[] index */
@@ -1133,7 +1133,7 @@ dump_spells (void)
 #endif
 
 /* Integer square root function without using floating point. */
-STATIC_OVL int 
+static int 
 isqrt (int val)
 {
     int rt = 0;
@@ -1146,7 +1146,7 @@ isqrt (int val)
     return rt;
 }
 
-STATIC_OVL int 
+static int 
 percent_success (int spell)
 {
         /* Intrinsic and learned ability are combined to calculate

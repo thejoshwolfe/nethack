@@ -34,7 +34,7 @@ static int oracle_flg = 0;  /* -1=>don't use, 0=>need init, 1=>init done */
 static unsigned oracle_cnt = 0;
 static long *oracle_loc = 0;
 
-STATIC_OVL void 
+static void 
 init_rumors (dlb *fp)
 {
         char line[BUFSZ];
@@ -176,7 +176,7 @@ outrumor (
         pline("%s", line);
 }
 
-STATIC_OVL void 
+static void 
 init_oracles (dlb *fp)
 {
         int i;

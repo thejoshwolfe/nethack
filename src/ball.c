@@ -143,7 +143,7 @@ unplacebc (void)
  *  Return the stacking of the hero's ball & chain.  This assumes that the
  *  hero is being punished.
  */
-STATIC_OVL int 
+static int 
 bc_order (void)
 {
     struct obj *obj;
@@ -724,7 +724,7 @@ drop_ball (signed char x, signed char y)
 }
 
 
-STATIC_OVL void 
+static void 
 litter (void)
 {
         struct obj *otmp = invent, *nextobj;

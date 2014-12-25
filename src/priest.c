@@ -124,7 +124,7 @@ temple_occupied (char *array)
 #endif /* OVL0 */
 #ifdef OVLB
 
-STATIC_OVL boolean histemple_at(struct monst *priest, signed char x, signed char y) {
+static boolean histemple_at(struct monst *priest, signed char x, signed char y) {
         return((boolean)((EPRI(priest)->shroom == *in_rooms(x, y, TEMPLE)) &&
                on_level(&(EPRI(priest)->shrlevel), &u.uz)));
 }
@@ -283,7 +283,7 @@ struct monst *priest;
         return((boolean)(u.ualign.type == ((int)EPRI(priest)->shralign)));
 }
 
-STATIC_OVL boolean
+static boolean
 has_shrine(pri)
 struct monst *pri;
 {

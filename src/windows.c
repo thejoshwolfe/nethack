@@ -19,7 +19,7 @@ struct win_choices {
     { 0, 0 }            /* must be last */
 };
 
-STATIC_OVL void def_raw_print(const char *s) {
+static void def_raw_print(const char *s) {
     puts(s);
 }
 

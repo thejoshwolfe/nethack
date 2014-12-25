@@ -100,7 +100,7 @@ struct obj * mkobj(char oclass, boolean artif) {
         return(mksobj(i, TRUE, artif));
 }
 
-STATIC_OVL void 
+static void 
 mkbox_cnts (struct obj *box)
 {
         int n;
@@ -1109,7 +1109,7 @@ long peek_at_iced_corpse_age (struct obj *otmp) {
 }
 
 /* 0 = no force so do checks, <0 = force off, >0 force on */
-STATIC_OVL void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int force) {
+static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int force) {
     long tleft = 0L;
     short action = ROT_CORPSE;
     boolean restart_timer = FALSE;
@@ -1363,7 +1363,7 @@ add_to_buried (struct obj *obj)
 }
 
 /* Recalculate the weight of this container and all of _its_ containers. */
-STATIC_OVL void 
+static void 
 container_weight (struct obj *container)
 {
     container->owt = weight(container);
@@ -1508,14 +1508,14 @@ static const char *obj_state_names[NOBJ_STATES] = {
         "minvent",      "migrating",    "buried",       "onbill"
 };
 
-STATIC_OVL const char *
+static const char *
 where_name (int where)
 {
     return (where<0 || where>=NOBJ_STATES) ? "unknown" : obj_state_names[where];
 }
 
 /* obj sanity check: check objs contained by container */
-STATIC_OVL void 
+static void 
 check_contained (struct obj *container, const char *mesg)
 {
     struct obj *obj;

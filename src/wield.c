@@ -108,7 +108,7 @@ setuwep (struct obj *obj)
         update_inventory();
 }
 
-STATIC_OVL int 
+static int 
 ready_weapon (struct obj *wep)
 {
         /* Separated function so swapping works easily */

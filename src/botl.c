@@ -35,7 +35,7 @@ STATIC_DCL void bot2(void);
 #ifndef OVLB
 STATIC_DCL int mrank_sz;
 #else /* OVLB */
-STATIC_OVL int mrank_sz = 0; /* loaded by max_rank_sz (from u_init) */
+static int mrank_sz = 0; /* loaded by max_rank_sz (from u_init) */
 #endif /* OVLB */
 
 STATIC_DCL const char *rank(void);
@@ -80,7 +80,7 @@ rank_of(lev, monnum, female)
 }
 
 
-STATIC_OVL const char *
+static const char *
 rank (void)
 {
         return(rank_of(u.ulevel, Role_switch, flags.female));
@@ -154,7 +154,7 @@ botl_score (void)
 #ifdef DUMP_LOG
 void bot1str(char *newbot1)
 #else
-STATIC_OVL void
+static void
 bot1()
 #endif
 {
@@ -209,7 +209,7 @@ bot1()
 #endif
 #ifdef DUMP_LOG
 }
-STATIC_OVL void 
+static void 
 bot1 (void)
 {
         char newbot1[MAXCO];
@@ -246,7 +246,7 @@ describe_level (char *buf)
 void bot2str(newbot2)
 char* newbot2;
 #else
-STATIC_OVL void
+static void
 bot2()
 #endif
 {
@@ -344,7 +344,7 @@ bot2()
                 Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
 #ifdef DUMP_LOG
 }
-STATIC_OVL void 
+static void 
 bot2 (void)
 {
         char newbot2[MAXCO];

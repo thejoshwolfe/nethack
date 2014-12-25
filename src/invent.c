@@ -86,7 +86,7 @@ assigninvlet (struct obj *otmp)
 #define inv_rank(o) ((o)->invlet ^ 040)
 
 /* sort the inventory; used by addinv() and doorganize() */
-STATIC_OVL void 
+static void 
 reorder_invent (void)
 {
         struct obj *otmp, *prev, *next;
@@ -662,7 +662,7 @@ mkgoldobj (long q)
 #endif /* OVLB */
 #ifdef OVL1
 
-STATIC_OVL void 
+static void 
 compactify (char *buf)
 /* compact a string of inventory letters by dashing runs of letters */
 {
@@ -692,7 +692,7 @@ compactify (char *buf)
 }
 
 /* match the prompt for either 'T' or 'R' command */
-STATIC_OVL boolean
+static boolean
 taking_off(action)
 const char *action;
 {
@@ -700,7 +700,7 @@ const char *action;
 }
 
 /* match the prompt for either 'W' or 'P' command */
-STATIC_OVL boolean
+static boolean
 putting_on(action)
 const char *action;
 {
@@ -1444,7 +1444,7 @@ struct obj *otmp;
 }
 
 /* menu of unidentified objects; select and identify up to id_limit of them */
-STATIC_OVL void
+static void
 menu_identify(id_limit)
 int id_limit;
 {
@@ -1516,7 +1516,7 @@ int id_limit;
 #endif /* OVLB */
 #ifdef OVL2
 
-STATIC_OVL char
+static char
 obj_to_let(obj) /* should of course only be called for things in invent */
 struct obj *obj;
 {
@@ -1614,7 +1614,7 @@ ddoinv()
  * next unpaid object is returned.  This routine recursively follows
  * containers.
  */
-STATIC_OVL struct obj *
+static struct obj *
 find_unpaid(list, last_found)
     struct obj *list, **last_found;
 {
@@ -1948,7 +1948,7 @@ count_buc(list, type)
     return count;
 }
 
-STATIC_OVL void
+static void
 dounpaid()
 {
     winid win;
@@ -2039,7 +2039,7 @@ dounpaid()
 /* query objlist callback: return TRUE if obj type matches "this_type" */
 static int this_type;
 
-STATIC_OVL boolean
+static boolean
 this_type_only(obj)
     struct obj *obj;
 {
@@ -2393,7 +2393,7 @@ struct obj *obj;
         return;
 }
 
-STATIC_OVL boolean
+static boolean
 mergable(otmp, obj)     /* returns TRUE if obj  & otmp can be merged */
         struct obj *otmp, *obj;
 {
@@ -2555,7 +2555,7 @@ dopramulet()
         return 0;
 }
 
-STATIC_OVL boolean
+static boolean
 tool_in_use(obj)
 struct obj *obj;
 {
@@ -2799,7 +2799,7 @@ doorganize()    /* inventory organizer by Del Lamb */
 }
 
 /* common to display_minventory and display_cinventory */
-STATIC_OVL void
+static void
 invdisp_nothing(hdr, txt)
 const char *hdr, *txt;
 {
@@ -2821,7 +2821,7 @@ const char *hdr, *txt;
 }
 
 /* query_objlist callback: return things that could possibly be worn/wielded */
-STATIC_OVL boolean
+static boolean
 worn_wield_only(obj)
 struct obj *obj;
 {
@@ -2958,7 +2958,7 @@ struct obj *obj;
 /* query objlist callback: return TRUE if obj is at given location */
 static coord only;
 
-STATIC_OVL boolean
+static boolean
 only_here(obj)
     struct obj *obj;
 {

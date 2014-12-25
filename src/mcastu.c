@@ -40,7 +40,7 @@ STATIC_DCL boolean spell_would_be_useless(struct monst *,unsigned int,int);
 extern const char * const flash_types[];        /* from zap.c */
 
 /* feedback when frustrated monster couldn't cast a spell */
-STATIC_OVL
+static
 void
 cursetxt(mtmp, undirected)
 struct monst *mtmp;
@@ -73,7 +73,7 @@ boolean undirected;
 
 /* convert a level based random selection into a specific mage spell;
    inappropriate choices will be screened out by spell_would_be_useless() */
-STATIC_OVL int 
+static int 
 choose_magic_spell (int spellval)
 {
     switch (spellval) {
@@ -117,7 +117,7 @@ choose_magic_spell (int spellval)
 }
 
 /* convert a level based random selection into a specific cleric spell */
-STATIC_OVL int 
+static int 
 choose_clerical_spell (int spellnum)
 {
     switch (spellnum) {
@@ -311,7 +311,7 @@ castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
    If you modify either of these, be sure to change is_undirected_spell()
    and spell_would_be_useless().
  */
-STATIC_OVL void 
+static void 
 cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum)
 {
     if (dmg == 0 && !is_undirected_spell(AD_SPEL, spellnum)) {
@@ -466,7 +466,7 @@ cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum)
     if (dmg) mdamageu(mtmp, dmg);
 }
 
-STATIC_OVL void 
+static void 
 cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
 {
     if (dmg == 0 && !is_undirected_spell(AD_CLRC, spellnum)) {

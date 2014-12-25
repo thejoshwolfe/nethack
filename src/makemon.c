@@ -50,7 +50,7 @@ struct permonst *ptr;
 /*
  * Return true if the given monster cannot exist on this elemental level.
  */
-STATIC_OVL boolean
+static boolean
 wrong_elem_type(ptr)
     struct permonst *ptr;
 {
@@ -71,7 +71,7 @@ wrong_elem_type(ptr)
     return FALSE;
 }
 
-STATIC_OVL void 
+static void 
 m_initgrp (     /* make a group just like mtmp */
     struct monst *mtmp,
     int x,
@@ -136,7 +136,7 @@ m_initgrp (     /* make a group just like mtmp */
         }
 }
 
-STATIC_OVL void 
+static void 
 m_initthrow (struct monst *mtmp, int otyp, int oquan)
 {
         struct obj *otmp;
@@ -151,7 +151,7 @@ m_initthrow (struct monst *mtmp, int otyp, int oquan)
 #endif /* OVLB */
 #ifdef OVL2
 
-STATIC_OVL void 
+static void 
 m_initweap (struct monst *mtmp)
 {
         struct permonst *ptr = mtmp->data;
@@ -467,7 +467,7 @@ mkmonmoney (struct monst *mtmp, long amount)
 }
 #endif
 
-STATIC_OVL void 
+static void 
 m_initinv (struct monst *mtmp)
 {
         int cnt;
@@ -1101,7 +1101,7 @@ struct permonst *mptr;          /* usually null; used for confused reading */
 #endif /* OVL1 */
 #ifdef OVL0
 
-STATIC_OVL boolean
+static boolean
 uncommon(mndx)
 int mndx;
 {
@@ -1118,7 +1118,7 @@ int mndx;
  *      comparing the dungeon alignment and monster alignment.
  *      return an integer in the range of 0-5.
  */
-STATIC_OVL int 
+static int 
 align_shift (struct permonst *ptr)
 {
     static long oldmoves = 0L;  /* != 1, starting value of moves */

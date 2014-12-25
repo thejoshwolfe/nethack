@@ -79,7 +79,7 @@ STATIC_VAR const char * const barehands_or_martial[] = {
     "bare handed combat", "martial arts"
 };
 
-STATIC_OVL void 
+static void 
 give_may_advance_msg (int skill)
 {
         You_feel("more confident in your %sskills.",
@@ -316,7 +316,7 @@ dmgval (struct obj *otmp, struct monst *mon)
 STATIC_DCL struct obj *oselect(struct monst *,int);
 #define Oselect(x)      if ((otmp = oselect(mtmp, x)) != 0) return(otmp);
 
-STATIC_OVL struct obj *
+static struct obj *
 oselect (struct monst *mtmp, int x)
 {
         struct obj *otmp;
@@ -719,7 +719,7 @@ dbon (void)             /* damage bonus for strength */
 
 
 /* copy the skill level name into the given buffer */
-STATIC_OVL char *
+static char *
 skill_level_name (int skill, char *buf)
 {
     const char *ptr;
@@ -739,7 +739,7 @@ skill_level_name (int skill, char *buf)
 }
 
 /* return the # of slots required to advance the skill */
-STATIC_OVL int 
+static int 
 slots_required (int skill)
 {
     int tmp = P_SKILL(skill);
@@ -764,7 +764,7 @@ slots_required (int skill)
 
 /* return true if this skill can be advanced */
 /*ARGSUSED*/
-STATIC_OVL boolean
+static boolean
 can_advance(skill, speedy)
 int skill;
 boolean speedy;
@@ -781,7 +781,7 @@ boolean speedy;
 }
 
 /* return true if this skill could be advanced if more slots were available */
-STATIC_OVL boolean
+static boolean
 could_advance(skill)
 int skill;
 {
@@ -794,7 +794,7 @@ int skill;
 
 /* return true if this skill has reached its maximum and there's been enough
    practice to become eligible for the next step if that had been possible */
-STATIC_OVL boolean
+static boolean
 peaked_skill(skill)
 int skill;
 {
@@ -804,7 +804,7 @@ int skill;
                 (unsigned) practice_needed_to_advance(P_SKILL(skill))));
 }
 
-STATIC_OVL void 
+static void 
 skill_advance (int skill)
 {
     u.weapon_slots -= slots_required(skill);

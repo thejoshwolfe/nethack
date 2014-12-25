@@ -6,7 +6,7 @@ STATIC_DCL int cost(struct obj *);
 /*
  * returns basecost of a scroll or a spellbook
  */
-STATIC_OVL int 
+static int 
 cost (struct obj *otmp)
 {
 

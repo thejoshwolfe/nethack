@@ -16,7 +16,7 @@ extern void port_help(void);
 #endif
 
 /* Returns "true" for characters that could represent a monster's stomach. */
-STATIC_OVL boolean
+static boolean
 is_swallow_sym(c)
 int c;
 {
@@ -31,7 +31,7 @@ int c;
  * a substring of buf.  Return 1 if the string was appended, 0 otherwise.
  * It is expected that buf is of size BUFSZ.
  */
-STATIC_OVL int 
+static int 
 append_str (char *buf, const char *new_str)
 {
     int space_left;     /* space remaining in buf */
@@ -48,7 +48,7 @@ append_str (char *buf, const char *new_str)
  * Return the name of the glyph found at (x,y).
  * If not hallucinating and the glyph is a monster, also monster data.
  */
-STATIC_OVL struct permonst *
+static struct permonst *
 lookat (int x, int y, char *buf, char *monbuf)
 {
     struct monst *mtmp = (struct monst *) 0;
@@ -290,7 +290,7 @@ lookat (int x, int y, char *buf, char *monbuf)
  *       lcase() for data.base lookup so that we can have a clean key.
  *       Therefore, we create a copy of inp _just_ for data.base lookup.
  */
-STATIC_OVL void
+static void
 checkfile(inp, pm, user_typed_name, without_asking)
     char *inp;
     struct permonst *pm;
@@ -446,7 +446,7 @@ bad_data_file:  impossible("'data' file in wrong format");
 /* also used by getpos hack in do_name.c */
 const char what_is_an_unknown_object[] = "an unknown object";
 
-STATIC_OVL int
+static int
 do_look(quick)
     boolean quick;      /* use cursor && don't search for "more info" */
 {
@@ -866,7 +866,7 @@ static const char *help_menu_items[] = {
         (char *)0
 };
 
-STATIC_OVL boolean
+static boolean
 help_menu(sel)
         int *sel;
 {

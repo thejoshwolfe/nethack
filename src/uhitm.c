@@ -417,7 +417,7 @@ atk_done:
         return(TRUE);
 }
 
-STATIC_OVL boolean
+static boolean
 known_hitum(mon, mhit, uattk)   /* returns TRUE if monster still lives */
 struct monst *mon;
 int *mhit;
@@ -477,7 +477,7 @@ struct attack *uattk;
         return(malive);
 }
 
-STATIC_OVL boolean
+static boolean
 hitum(mon, tmp, uattk)          /* returns TRUE if monster still lives */
 struct monst *mon;
 int tmp;
@@ -511,7 +511,7 @@ int thrown;
 }
 
 /* guts of hmon() */
-STATIC_OVL boolean
+static boolean
 hmon_hitmon(mon, obj, thrown)
 struct monst *mon;
 struct obj *obj;
@@ -1068,7 +1068,7 @@ int thrown;
         return((boolean)(destroyed ? FALSE : TRUE));
 }
 
-STATIC_OVL boolean
+static boolean
 shade_aware(obj)
 struct obj *obj;
 {
@@ -1091,7 +1091,7 @@ struct obj *obj;
 
 /* check whether slippery clothing protects from hug or wrap attack */
 /* [currently assumes that you are the attacker] */
-STATIC_OVL boolean
+static boolean
 m_slips_free(mdef, mattk)
 struct monst *mdef;
 struct attack *mattk;
@@ -1132,7 +1132,7 @@ struct attack *mattk;
 }
 
 /* used when hitting a monster with a lance while mounted */
-STATIC_OVL int 
+static int 
 joust (
     struct monst *mon,  /* target */
     struct obj *obj     /* weapon */
@@ -1167,7 +1167,7 @@ joust (
  * (DR4 and DR4.5) screws up with an internal error 5 "Expression Too Complex."
  * Pulling it out makes it work.
  */
-STATIC_OVL void 
+static void 
 demonpet (void)
 {
         int i;
@@ -1194,7 +1194,7 @@ demonpet (void)
  * If that ever changes, the check for touching a cockatrice corpse
  * will need to be smarter about whether to break out of the theft loop.
  */
-STATIC_OVL void 
+static void 
 steal_it (struct monst *mdef, struct attack *mattk)
 {
         struct obj *otmp, *stealoid, **minvent_ptr;
@@ -1651,7 +1651,7 @@ damageum (struct monst *mdef, struct attack *mattk)
         return(1);
 }
 
-STATIC_OVL int 
+static int 
 explum (struct monst *mdef, struct attack *mattk)
 {
         int tmp = d((int)mattk->damn, (int)mattk->damd);
@@ -1705,7 +1705,7 @@ common:
         return(1);
 }
 
-STATIC_OVL void 
+static void 
 start_engulf (struct monst *mdef)
 {
         if (!Invisible) {
@@ -1718,7 +1718,7 @@ start_engulf (struct monst *mdef)
         delay_output();
 }
 
-STATIC_OVL void 
+static void 
 end_engulf (void)
 {
         if (!Invisible) {
@@ -1727,7 +1727,7 @@ end_engulf (void)
         }
 }
 
-STATIC_OVL int 
+static int 
 gulpum (struct monst *mdef, struct attack *mattk)
 {
         int tmp;
@@ -1915,7 +1915,7 @@ missum (struct monst *mdef, struct attack *mattk)
                 wakeup(mdef);
 }
 
-STATIC_OVL boolean
+static boolean
 hmonas(mon, tmp)                /* attack monster as a monster. */
 struct monst *mon;
 int tmp;
@@ -2417,7 +2417,7 @@ stumble_onto_mimic (struct monst *mtmp)
         wakeup(mtmp);   /* clears mimicking */
 }
 
-STATIC_OVL void 
+static void 
 nohandglow (struct monst *mon)
 {
         char *hands=makeplural(body_part(HAND));

@@ -68,7 +68,7 @@ const char * const killed_by_prefix[] = {
 
 static winid toptenwin = WIN_ERR;
 
-STATIC_OVL void 
+static void 
 topten_print (const char *x)
 {
         if (toptenwin == WIN_ERR)
@@ -77,7 +77,7 @@ topten_print (const char *x)
             putstr(toptenwin, ATR_NONE, x);
 }
 
-STATIC_OVL void 
+static void 
 topten_print_bold (const char *x)
 {
         if (toptenwin == WIN_ERR)
@@ -86,13 +86,13 @@ topten_print_bold (const char *x)
             putstr(toptenwin, ATR_BOLD, x);
 }
 
-STATIC_OVL signed char 
+static signed char 
 observable_depth (d_level *lev)
 {
             return depth(lev);
 }
 
-STATIC_OVL void
+static void
 readentry(rfile,tt)
 FILE *rfile;
 struct toptenentry *tt;
@@ -155,7 +155,7 @@ struct toptenentry *tt;
         }
 }
 
-STATIC_OVL void
+static void
 writeentry(rfile,tt)
 FILE *rfile;
 struct toptenentry *tt;
@@ -196,7 +196,7 @@ struct toptenentry *tt;
 #endif
 }
 
-STATIC_OVL void 
+static void 
 free_ttlist (struct toptenentry *tt)
 {
         struct toptenentry *ttnext;
@@ -523,7 +523,7 @@ topten (int how)
         }
 }
 
-STATIC_OVL void 
+static void 
 outheader (void)
 {
         char linebuf[BUFSZ];
@@ -540,7 +540,7 @@ outheader (void)
 }
 
 /* so>0: standout line; so=0: ordinary line */
-STATIC_OVL void
+static void
 outentry(rank, t1, so)
 struct toptenentry *t1;
 int rank;
@@ -693,7 +693,7 @@ boolean so;
 #endif
 }
 
-STATIC_OVL int
+static int
 score_wanted(current_ver, rank, t1, playerct, players, uid)
 boolean current_ver;
 int rank;
@@ -859,7 +859,7 @@ prscore (int argc, char **argv)
         free_ttlist(tt_head);
 }
 
-STATIC_OVL int
+static int
 classmon(plch, fem)
         char *plch;
         boolean fem;
@@ -936,13 +936,13 @@ pickentry:
 /* Lattice scanf isn't up to reading the scorefile.  What */
 /* follows deals with that; I admit it's ugly. (KL) */
 /* Now generally available (KL) */
-STATIC_OVL void 
+static void 
 nsb_mung_line (char *p)
 {
         while ((p = index(p, ' ')) != 0) *p = '|';
 }
 
-STATIC_OVL void 
+static void 
 nsb_unmung_line (char *p)
 {
         while ((p = index(p, '|')) != 0) *p = ' ';

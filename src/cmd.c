@@ -1294,7 +1294,7 @@ dump_enlightenment (int final)
  * to help refresh them about who/what they are.
  * Returns FALSE if menu cancelled (dismissed with ESC), TRUE otherwise.
  */
-STATIC_OVL boolean
+static boolean
 minimal_enlightenment()
 {
         winid tmpwin;
@@ -1814,7 +1814,7 @@ static const char template[] = "%-18s %4ld  %6ld";
 static const char count_str[] = "                   count  bytes";
 static const char separator[] = "------------------ -----  ------";
 
-STATIC_OVL void
+static void
 count_obj(chain, total_count, total_size, top, recurse)
         struct obj *chain;
         long *total_count;
@@ -1837,7 +1837,7 @@ count_obj(chain, total_count, total_size, top, recurse)
         *total_size += size;
 }
 
-STATIC_OVL void 
+static void 
 obj_chain (winid win, const char *src, struct obj *chain, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -1850,7 +1850,7 @@ obj_chain (winid win, const char *src, struct obj *chain, long *total_count, lon
         putstr(win, 0, buf);
 }
 
-STATIC_OVL void 
+static void 
 mon_invent_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -1865,7 +1865,7 @@ mon_invent_chain (winid win, const char *src, struct monst *chain, long *total_c
         putstr(win, 0, buf);
 }
 
-STATIC_OVL void 
+static void 
 contained (winid win, const char *src, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -1888,7 +1888,7 @@ contained (winid win, const char *src, long *total_count, long *total_size)
         putstr(win, 0, buf);
 }
 
-STATIC_OVL void 
+static void 
 mon_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -2284,7 +2284,7 @@ getdir (const char *s)
         return 1;
 }
 
-STATIC_OVL boolean
+static boolean
 help_dir(sym, msg)
 char sym;
 const char *msg;
@@ -2490,7 +2490,7 @@ click_to_cmd (int x, int y, int mod)
     return cmd;
 }
 
-STATIC_OVL char * parse (void) {
+static char * parse (void) {
         static char in_line[COLNO];
         int foo;
         boolean prezero = FALSE;

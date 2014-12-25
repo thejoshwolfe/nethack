@@ -324,7 +324,7 @@ void panic (const char * str, ...) {
         done(PANICKED);
 }
 
-STATIC_OVL boolean
+static boolean
 should_query_disclose_option(category, defquery)
 int category;
 char *defquery;
@@ -362,7 +362,7 @@ char *defquery;
     return TRUE;
 }
 
-STATIC_OVL void
+static void
 disclose(how,taken)
 int how;
 boolean taken;
@@ -448,7 +448,7 @@ boolean taken;
 }
 
 /* try to get the player back in a viable state after being killed */
-STATIC_OVL void 
+static void 
 savelife (int how)
 {
         u.uswldtim = 0;
@@ -477,7 +477,7 @@ savelife (int how)
  * Get valuables from the given list.  Revised code: the list always remains
  * intact.
  */
-STATIC_OVL void 
+static void 
 get_valuables (
     struct obj *list    /* inventory or container contents */
 )
@@ -511,7 +511,7 @@ get_valuables (
  *  Sort collected valuables, most frequent to least.  We could just
  *  as easily use qsort, but we don't care about efficiency here.
  */
-STATIC_OVL void 
+static void 
 sort_valuables (
     struct valuable_data list[],
     int size            /* max value is less than 20 */
@@ -535,7 +535,7 @@ sort_valuables (
 }
 
 /* called twice; first to calculate total, then to list relevant items */
-STATIC_OVL void
+static void
 artifact_score(list, counting, endwin)
 struct obj *list;
 boolean counting;       /* true => add up points; false => display them */
@@ -1127,7 +1127,7 @@ void terminate(int status) {
         nethack_exit(status);
 }
 
-STATIC_OVL void
+static void
 list_vanquished(defquery, ask)
 char defquery;
 boolean ask;
@@ -1237,13 +1237,13 @@ num_genocides()
 }
 
 #ifdef DUMP_LOG
-STATIC_OVL void
+static void
 list_genocided(defquery, ask, want_dump)
 int defquery;
 boolean ask;
 boolean want_dump;
 #else
-STATIC_OVL void
+static void
 list_genocided(defquery, ask)
 char defquery;
 boolean ask;

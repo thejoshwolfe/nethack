@@ -39,7 +39,7 @@ int x, y;
 }
 
 /* produce an occupation string appropriate for the current activity */
-STATIC_OVL const char *
+static const char *
 lock_action (void)
 {
         /* "unlocking"+2 == "locking" */
@@ -560,7 +560,7 @@ doopen()                /* try to open a door */
         return(1);
 }
 
-STATIC_OVL
+static
 boolean
 obstructed(x,y)
 int x, y;
@@ -838,7 +838,7 @@ int x, y;
         return res;
 }
 
-STATIC_OVL void 
+static void 
 chest_shatter_msg (struct obj *otmp)
 {
         const char *disposition;

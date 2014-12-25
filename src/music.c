@@ -37,7 +37,7 @@ STATIC_DCL int do_improvisation(struct obj *);
  * Wake every monster in range...
  */
 
-STATIC_OVL void awaken_monsters (int distance) {
+static void awaken_monsters (int distance) {
         struct monst *mtmp = fmon;
         int distm;
 
@@ -62,7 +62,7 @@ STATIC_OVL void awaken_monsters (int distance) {
  * Make monsters fall asleep.  Note that they may resist the spell.
  */
 
-STATIC_OVL void 
+static void 
 put_monsters_to_sleep (int distance)
 {
         struct monst *mtmp = fmon;
@@ -81,7 +81,7 @@ put_monsters_to_sleep (int distance)
  * Charm snakes in range.  Note that the snakes are NOT tamed.
  */
 
-STATIC_OVL void 
+static void 
 charm_snakes (int distance)
 {
         struct monst *mtmp = fmon;
@@ -114,7 +114,7 @@ charm_snakes (int distance)
  * Calm nymphs in range.
  */
 
-STATIC_OVL void 
+static void 
 calm_nymphs (int distance)
 {
         struct monst *mtmp = fmon;
@@ -159,7 +159,7 @@ awaken_soldiers (void)
  * If swallowed, range is reduced to 0.
  */
 
-STATIC_OVL void 
+static void 
 charm_monsters (int distance)
 {
         struct monst *mtmp, *mtmp2;
@@ -185,7 +185,7 @@ charm_monsters (int distance)
  * That is:  create random chasms (pits).
  */
 
-STATIC_OVL void 
+static void 
 do_earthquake (int force)
 {
         int x,y;
@@ -319,7 +319,7 @@ do_pit:             chasm = maketrap(x,y,PIT);
  * The player is trying to extract something from his/her instrument.
  */
 
-STATIC_OVL int do_improvisation (struct obj *instr) {
+static int do_improvisation (struct obj *instr) {
         int damage, do_spec = !Confusion;
         if (!do_spec)
             pline("What you produce is quite far from music...");

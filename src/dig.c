@@ -23,7 +23,7 @@ STATIC_DCL void dig_up_grave(void);
 #define DIGTYP_TREE       5
 
 
-STATIC_OVL boolean
+static boolean
 rm_waslit()
 {
     signed char x, y;
@@ -40,7 +40,7 @@ rm_waslit()
  * boulders in the name of a nice effect.  Vision will get fixed up again
  * immediately after the effect is complete.
  */
-STATIC_OVL void
+static void
 mkcavepos(x, y, dist, waslit, rockit)
     signed char x,y;
     int dist;
@@ -79,7 +79,7 @@ mkcavepos(x, y, dist, waslit, rockit)
     else newsym(x,y);
 }
 
-STATIC_OVL void
+static void
 mkcavearea(rockit)
 boolean rockit;
 {
@@ -126,7 +126,7 @@ boolean rockit;
 }
 
 /* When digging into location <x,y>, what are you actually digging into? */
-STATIC_OVL int 
+static int 
 dig_typ (struct obj *otmp, signed char x, signed char y)
 {
         boolean ispick = is_pick(otmp);
@@ -200,7 +200,7 @@ dig_check(madeby, verbose, x, y)
         return(TRUE);
 }
 
-STATIC_OVL int
+static int
 dig()
 {
         struct rm *lev;
@@ -435,7 +435,7 @@ holetime (void)
 }
 
 /* Return typ of liquid to fill a hole with, or ROOM, if no liquid nearby */
-STATIC_OVL signed char fillholetyp(int x,int y) {
+static signed char fillholetyp(int x,int y) {
     int x1, y1;
     int lo_x = max(1,x-1), hi_x = min(x+1,COLNO-1),
         lo_y = max(0,y-1), hi_y = min(y+1,ROWNO-1);
@@ -746,7 +746,7 @@ boolean pit_only;
         return FALSE;
 }
 
-STATIC_OVL void 
+static void 
 dig_up_grave (void)
 {
         struct obj *otmp;

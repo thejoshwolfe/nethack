@@ -384,7 +384,7 @@ boolean creation;
             m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);
 }
 
-STATIC_OVL void
+static void
 m_dowear_type(mon, flag, creation, racialexception)
 struct monst *mon;
 long flag;
@@ -506,7 +506,7 @@ which_armor (struct monst *mon, long flag)
 }
 
 /* remove an item of armor and then drop it */
-STATIC_OVL void 
+static void 
 m_lose_armor (struct monst *mon, struct obj *obj)
 {
         mon->misc_worn_check &= ~obj->owornmask;

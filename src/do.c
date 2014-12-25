@@ -245,7 +245,7 @@ doaltarobj (  /* obj is an object dropped on an altar */
         }
 }
 
-STATIC_OVL void 
+static void 
 trycall (struct obj *obj)
 {
         if(!objects[obj->otyp].oc_name_known &&
@@ -253,7 +253,7 @@ trycall (struct obj *obj)
            docall(obj);
 }
 
-STATIC_OVL void 
+static void 
 dosinkring (  /* obj is a ring being dropped over a kitchen sink */
     struct obj *obj
 )
@@ -621,7 +621,7 @@ doddrop()
 }
 
 /* Drop things from the hero's inventory, using a menu. */
-STATIC_OVL int 
+static int 
 menu_drop (int retry)
 {
     int n, i, n_dropped = 0;
@@ -869,7 +869,7 @@ doup()
 d_level save_dlevel = {0, 0};
 
 /* check that we can write out the current level */
-STATIC_OVL int 
+static int 
 currentlevel_rewrite (void)
 {
         int fd;
@@ -1309,7 +1309,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
         (void) pickup(1);
 }
 
-STATIC_OVL void 
+static void 
 final_level (void)
 {
         struct monst *mtmp;

@@ -50,7 +50,7 @@ STATIC_PTR int CFDECLSPEC do_comp(const void *vx, const void *vy) {
         return(x->lx > y->lx);
 }
 
-STATIC_OVL void finddpos(coord *cc, signed char xl,signed char yl,signed char xh,signed char yh) {
+static void finddpos(coord *cc, signed char xl,signed char yl,signed char xh,signed char yh) {
         signed char x, y;
 
         x = (xl == xh) ? xl : (xl + rn2(xh-xl+1));
@@ -78,7 +78,7 @@ void sort_rooms(void) {
         qsort((void *) rooms, (unsigned)nroom, sizeof(struct mkroom), do_comp);
 }
 
-STATIC_OVL void
+static void
 do_room_or_subroom(croom, lowx, lowy, hix, hiy, lit, rtype, special, is_room)
     struct mkroom *croom;
     int lowx, lowy;
@@ -187,7 +187,7 @@ boolean special;
         nsubroom++;
 }
 
-STATIC_OVL void 
+static void 
 makerooms (void)
 {
         boolean tried_vault = FALSE;
@@ -209,7 +209,7 @@ makerooms (void)
         return;
 }
 
-STATIC_OVL void
+static void
 join(a,b,nxcor)
 int a, b;
 boolean nxcor;
@@ -330,7 +330,7 @@ add_door (int x, int y, struct mkroom *aroom)
         for( ; broom->hx >= 0; broom++) broom->fdoor++;
 }
 
-STATIC_OVL void dosdoor(signed char x,signed char y,struct mkroom *aroom,int type) {
+static void dosdoor(signed char x,signed char y,struct mkroom *aroom,int type) {
         boolean shdoor = ((*in_rooms(x, y, SHOPBASE))? TRUE : FALSE);
 
         if(!IS_WALL(levl[x][y].typ)) /* avoid SDOORs on already made doors */
@@ -376,7 +376,7 @@ STATIC_OVL void dosdoor(signed char x,signed char y,struct mkroom *aroom,int typ
         add_door(x,y,aroom);
 }
 
-STATIC_OVL boolean
+static boolean
 place_niche(aroom,dy,xx,yy)
 struct mkroom *aroom;
 int *dy, *xx, *yy;
@@ -408,7 +408,7 @@ static const char *trap_engravings[TRAPNUM] = {
                         (char *)0,
 };
 
-STATIC_OVL void 
+static void 
 makeniche (int trap_type)
 {
         struct mkroom *aroom;
@@ -458,7 +458,7 @@ makeniche (int trap_type)
         }
 }
 
-STATIC_OVL void 
+static void 
 make_niches (void)
 {
         int ct = rnd((nroom>>1) + 1), dep = depth(&u.uz);
@@ -477,7 +477,7 @@ make_niches (void)
         }
 }
 
-STATIC_OVL void 
+static void 
 makevtele (void)
 {
         makeniche(TELEP_TRAP);
@@ -488,7 +488,7 @@ makevtele (void)
  * special) but it's easier to put it all in one place than make sure
  * each type initializes what it needs to separately.
  */
-STATIC_OVL void 
+static void 
 clear_level_structures (void)
 {
         static struct rm zerorm = { cmap_to_glyph(S_stone),
@@ -543,7 +543,7 @@ clear_level_structures (void)
         clear_regions();
 }
 
-STATIC_OVL void 
+static void 
 makelevel (void)
 {
         struct mkroom *croom, *troom;
@@ -752,7 +752,7 @@ makelevel (void)
  *      surrounding the rooms on the map.
  *      Also place kelp in water.
  */
-STATIC_OVL void 
+static void 
 mineralize (void)
 {
         s_level *sp;
@@ -917,7 +917,7 @@ topologize (struct mkroom *croom)
 }
 
 /* Find an unused room for a branch location. */
-STATIC_OVL struct mkroom *
+static struct mkroom *
 find_branch_room (coord *mp)
 {
     struct mkroom *croom = 0;
@@ -946,7 +946,7 @@ find_branch_room (coord *mp)
 }
 
 /* Find the room for (x,y).  Return null if not in a room. */
-STATIC_OVL struct mkroom * pos_to_room(signed char x, signed char y) {
+static struct mkroom * pos_to_room(signed char x, signed char y) {
     int i;
     struct mkroom *curr;
 
@@ -1017,7 +1017,7 @@ place_branch (
         made_branch = TRUE;
 }
 
-STATIC_OVL boolean bydoor(signed char x, signed char y) {
+static boolean bydoor(signed char x, signed char y) {
         int typ;
 
         if (isok(x+1, y)) {
@@ -1178,7 +1178,7 @@ void mkstairs(signed char x, signed char y, char up, struct mkroom *croom) {
         levl[x][y].ladder = up ? LA_UP : LA_DOWN;
 }
 
-STATIC_OVL void 
+static void 
 mkfount (int mazeflag, struct mkroom *croom)
 {
         coord m;
@@ -1201,7 +1201,7 @@ mkfount (int mazeflag, struct mkroom *croom)
         level.flags.nfountains++;
 }
 
-STATIC_OVL void 
+static void 
 mksink (struct mkroom *croom)
 {
         coord m;
@@ -1220,7 +1220,7 @@ mksink (struct mkroom *croom)
 }
 
 
-STATIC_OVL void 
+static void 
 mkaltar (struct mkroom *croom)
 {
         coord m;
@@ -1336,7 +1336,7 @@ mkinvokearea (void)
 /* Change level topology.  Boulders in the vicinity are eliminated.
  * Temporarily overrides vision in the name of a nice effect.
  */
-STATIC_OVL void mkinvpos(signed char x,signed char y,int dist) {
+static void mkinvpos(signed char x,signed char y,int dist) {
     struct trap *ttmp;
     struct obj *otmp;
     boolean make_rocks;
@@ -1412,7 +1412,7 @@ STATIC_OVL void mkinvpos(signed char x,signed char y,int dist) {
  *
  * Ludios will remain isolated until the branch is corrected by this function.
  */
-STATIC_OVL void mk_knox_portal(signed char x, signed char y) {
+static void mk_knox_portal(signed char x, signed char y) {
         extern int n_dgns;              /* from dungeon.c */
         d_level *source;
         branch *br;

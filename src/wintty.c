@@ -142,7 +142,7 @@ static const char default_menu_cmds[] = {
 
 
 /* clean up and quit */
-STATIC_OVL void 
+static void 
 bail (const char *mesg)
 {
     clearlocks();
@@ -152,7 +152,7 @@ bail (const char *mesg)
 }
 
 #if defined(SIGWINCH) && defined(CLIPPING)
-STATIC_OVL void winch(void) {
+static void winch(void) {
     int oldLI = LI, oldCO = CO, i;
     struct WinDesc *cw;
 
@@ -646,7 +646,7 @@ void tty_get_nh_event(void) {
     return;
 }
 
-STATIC_OVL void getret(void) {
+static void getret(void) {
         xputs("\n");
         if(flags.standout)
                 standoutbeg();
@@ -789,7 +789,7 @@ winid tty_create_nhwindow(int type) {
     return newid;
 }
 
-STATIC_OVL void erase_menu_or_text(winid window, struct WinDesc *cw, boolean clear) {
+static void erase_menu_or_text(winid window, struct WinDesc *cw, boolean clear) {
     if(cw->offx == 0)
         if(cw->offy) {
             tty_curs(window, 1, 0);
@@ -802,7 +802,7 @@ STATIC_OVL void erase_menu_or_text(winid window, struct WinDesc *cw, boolean cle
         docorner((int)cw->offx, cw->maxrow+1);
 }
 
-STATIC_OVL void free_window_info(struct WinDesc *cw, boolean free_data) {
+static void free_window_info(struct WinDesc *cw, boolean free_data) {
     int i;
 
     if (cw->data) {
@@ -883,7 +883,7 @@ void tty_clear_nhwindow(winid window) {
 }
 
 /* valid responses */
-STATIC_OVL void dmore(struct WinDesc *cw, const char *s) {
+static void dmore(struct WinDesc *cw, const char *s) {
     const char *prompt = cw->morestr ? cw->morestr : defmorestr;
     int offset = (cw->type == NHW_TEXT) ? 1 : 2;
 
@@ -899,7 +899,7 @@ STATIC_OVL void dmore(struct WinDesc *cw, const char *s) {
     xwaitforspace(s);
 }
 
-STATIC_OVL void set_item_state(winid window, int lineno, tty_menu_item *item) {
+static void set_item_state(winid window, int lineno, tty_menu_item *item) {
     char ch = item->selected ? (item->count == -1L ? '+' : '#') : '-';
     tty_curs(window, 4, lineno);
     term_start_attr(item->attr);
@@ -908,7 +908,7 @@ STATIC_OVL void set_item_state(winid window, int lineno, tty_menu_item *item) {
     term_end_attr(item->attr);
 }
 
-STATIC_OVL void set_all_on_page(winid window, tty_menu_item *page_start, tty_menu_item *page_end) {
+static void set_all_on_page(winid window, tty_menu_item *page_start, tty_menu_item *page_end) {
     tty_menu_item *curr;
     int n;
 
@@ -919,7 +919,7 @@ STATIC_OVL void set_all_on_page(winid window, tty_menu_item *page_start, tty_men
         }
 }
 
-STATIC_OVL void unset_all_on_page(winid window, tty_menu_item *page_start,
+static void unset_all_on_page(winid window, tty_menu_item *page_start,
         tty_menu_item *page_end)
 {
     tty_menu_item *curr;
@@ -934,7 +934,7 @@ STATIC_OVL void unset_all_on_page(winid window, tty_menu_item *page_start,
 }
 
 /* group accelerator, 0 => all */
-STATIC_OVL void invert_all_on_page(winid window, tty_menu_item *page_start,
+static void invert_all_on_page(winid window, tty_menu_item *page_start,
         tty_menu_item *page_end, char acc)
 {
     tty_menu_item *curr;
@@ -955,7 +955,7 @@ STATIC_OVL void invert_all_on_page(winid window, tty_menu_item *page_start,
  * Invert all entries that match the give group accelerator (or all if
  * zero).
  */
-STATIC_OVL void 
+static void 
 invert_all (
     winid window,
     tty_menu_item *page_start,
@@ -988,7 +988,7 @@ invert_all (
 }
 
 #ifdef MENU_COLOR
-STATIC_OVL boolean
+static boolean
 get_menu_coloring(str, color, attr)
 char *str;
 int *color, *attr;
@@ -1009,7 +1009,7 @@ int *color, *attr;
 }
 #endif /* MENU_COLOR */
 
-STATIC_OVL void
+static void
 process_menu_window(window, cw)
 winid window;
 struct WinDesc *cw;
@@ -1323,7 +1323,7 @@ struct WinDesc *cw;
     free((void *)morestr);
 }
 
-STATIC_OVL void
+static void
 process_text_window(window, cw)
 winid window;
 struct WinDesc *cw;
@@ -1559,7 +1559,7 @@ int x, y;       /* not signed char: perhaps signed char is unsigned and
     ttyDisplay->cury = y;
 }
 
-STATIC_OVL void
+static void
 tty_putsym(window, x, y, ch)
     winid window;
     int x, y;
@@ -1861,7 +1861,7 @@ tty_add_menu(window, glyph, identifier, ch, gch, attr, str, preselected)
 }
 
 /* Invert the given list, can handle NULL as an input. */
-STATIC_OVL tty_menu_item *
+static tty_menu_item *
 reverse(curr)
     tty_menu_item *curr;
 {

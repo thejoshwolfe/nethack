@@ -276,7 +276,7 @@ do_mname()
  * when there might be pointers around in unknown places. For now: only
  * when obj is in the inventory.
  */
-STATIC_OVL void 
+static void 
 do_oname (struct obj *obj)
 {
         char buf[BUFSZ], qbuf[QBUFSZ];

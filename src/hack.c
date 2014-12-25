@@ -52,7 +52,7 @@ const char *msg;
     return (revived);
 }
 
-STATIC_OVL int 
+static int 
 moverock (void)
 {
     signed char rx, ry, sx, sy;
@@ -296,7 +296,7 @@ moverock (void)
  *  Chew on a wall, door, or boulder.  Returns TRUE if still eating, FALSE
  *  when done.
  */
-STATIC_OVL int still_chewing(signed char x,signed char y) {
+static int still_chewing(signed char x,signed char y) {
     struct rm *lev = &levl[x][y];
     struct obj *boulder = sobj_at(BOULDER,x,y);
     const char *digtxt = (char *)0, *dmgtxt = (char *)0;
@@ -428,7 +428,7 @@ movobj (struct obj *obj, signed char ox, signed char oy)
 
 static const char fell_on_sink[] = "fell onto a sink";
 
-STATIC_OVL void 
+static void 
 dosinkfall (void)
 {
         struct obj *obj;
@@ -1537,7 +1537,7 @@ stillinwater:;
         }
 }
 
-STATIC_OVL boolean
+static boolean
 monstinroom(mdat,roomno)
 struct permonst *mdat;
 int roomno;
@@ -1642,7 +1642,7 @@ int x, y;
         return !has_subrooms;
 }
 
-STATIC_OVL void
+static void
 move_update(newlev)
 boolean newlev;
 {
@@ -2060,7 +2060,7 @@ unmul (const char *msg_override)
 #endif /* OVL2 */
 #ifdef OVL1
 
-STATIC_OVL void 
+static void 
 maybe_wail (void)
 {
     static short powers[] = { TELEPORT, SEE_INVIS, POISON_RES, COLD_RES,
