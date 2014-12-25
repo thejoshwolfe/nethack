@@ -1781,7 +1781,7 @@ extern void msleep(unsigned);
 # ifdef SHELL
 extern int dosh(void);
 # endif /* SHELL */
-# if defined(SHELL) || defined(DEF_PAGER) || defined(DEF_MAILREADER)
+# if defined(SHELL) || defined(DEF_MAILREADER)
 extern int child(int);
 # endif
 

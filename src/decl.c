@@ -8,9 +8,6 @@ int (*occupation)(void);
 const char *hname = 0;          /* name of the game (argv[0] of main) */
 int hackpid = 0;                /* current process id */
 int locknum = 0;                /* max num of simultaneous users */
-#ifdef DEF_PAGER
-char *catmore = 0;              /* default pager */
-#endif
 
 int bases[MAXOCLASSES] = DUMMY;
 

@@ -8,9 +8,6 @@ extern int (*afternmv)(void);
 extern const char *hname;
 extern int hackpid;
 extern int locknum;
-#ifdef DEF_PAGER
-extern char *catmore;
-#endif  /* DEF_PAGER */
 
 extern char SAVEF[];
 

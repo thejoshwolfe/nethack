@@ -40,7 +40,6 @@ NetHack, except that rounddiv may call panic().
         int             night           (void)
         int             midnight        (void)
 =*/
-#define Static static
 
 #ifdef OVLB
 boolean
@@ -146,7 +145,7 @@ s_suffix (              /* return a name converted to possessive */
     const char *s
 )
 {
-    Static char buf[BUFSZ];
+    static char buf[BUFSZ];
 
     Strcpy(buf, s);
     if(!strcmpi(buf, "it"))
@@ -218,7 +217,7 @@ visctrl (               /* make a displayable string from a character */
     char c
 )
 {
-    Static char ccc[3];
+    static char ccc[3];
 
     c &= 0177;
 
@@ -256,7 +255,7 @@ sitoa (         /* make a signed digit string from a number */
     int n
 )
 {
-    Static char buf[13];
+    static char buf[13];
 
     Sprintf(buf, (n < 0) ? "%d" : "+%d", n);
     return buf;

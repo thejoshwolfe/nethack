@@ -34,12 +34,7 @@
 # define curttyb2       curttyb
 
 
-#if defined(TTY_GRAPHICS) && (defined(SVR4))
-extern                  /* it is defined in libtermlib (libtermcap) */
-        short ospeed;   /* terminal baudrate; set by gettty */
-#else
 short   ospeed = 0;     /* gets around "not defined" error message */
-#endif
 
         char erase_char, intr_char, kill_char;
 static boolean settty_needed = FALSE;

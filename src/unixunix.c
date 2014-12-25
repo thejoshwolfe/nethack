@@ -189,7 +189,7 @@ int dosh(void) {
 }
 #endif /* SHELL */
 
-#if defined(SHELL) || defined(DEF_PAGER) || defined(DEF_MAILREADER)
+#if defined(SHELL) || defined(DEF_MAILREADER)
 int child(int wt) {
         int f;
         suspend_nhwindows((char *)0);   /* also calls end_screen() */
