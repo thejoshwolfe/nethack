@@ -16,12 +16,18 @@ def tabs_to_spaces(file_contents, tab_width):
   return "\n".join(lines)
 
 def main(paths, tab_width):
+  returncode = 0
   for path in paths:
     if path == "-":
       old_contents = sys.stdin.read()
     else:
       with open(path) as f:
-        old_contents = f.read()
+        try:
+          old_contents = f.read()
+        except UnicodeDecodeError as e:
+          sys.stderr.write("ERROR: {}: {}\n".format(path, str(e)))
+          returncode = 1
+          continue
     new_contents = tabs_to_spaces(old_contents, tab_width)
     if path == "-":
       # always output stdout
@@ -34,6 +40,7 @@ def main(paths, tab_width):
     with open(tmp_path, "w") as f:
       f.write(new_contents)
     os.rename(tmp_path, path)
+  return returncode
 
 def cli():
   import argparse
@@ -42,7 +49,7 @@ def cli():
   parser.add_argument("-t", "--tab-width", type=int, default=8, help="defaults to 8")
   args = parser.parse_args()
   if args.tab_width <= 0: parser.error("--tab-width must be positive")
-  main(args.files, args.tab_width)
+  sys.exit(main(args.files, args.tab_width))
 
 if __name__ == "__main__":
   cli()
