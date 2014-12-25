@@ -174,3 +174,8 @@ build/recover: $(RECOVER_OBJS)
 $(BUILD_DIR_CHILDREN): | build
 build:
 	mkdir -p $@
+
+.PHONY: clean
+clean:
+	rm -rf build
+	rm -rf run

@@ -11,7 +11,7 @@
  * Files expected to exist in the playground directory.
  */
 
-#define RECORD	      "record"	/* file containing list of topscorers */
+#define RECORD	      "run/record" /* file containing list of topscorers */
 #define HELP	      "help"	/* file containing command descriptions */
 #define SHELP	      "hh"	/* abbreviated form of the same */
 #define DEBUGHELP     "wizhelp" /* file containing debug mode cmds */

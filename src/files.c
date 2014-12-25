@@ -506,7 +506,7 @@ void compress_bonesfile(void) {
 /* set savefile name in OS-dependent manner from pre-existing plname,
  * avoiding troublesome characters */
 void set_savefile_name(void) {
-	Sprintf(SAVEF, "save/%d%s", (int)getuid(), plname);
+	Sprintf(SAVEF, "run/save/%d%s", (int)getuid(), plname);
 	regularize(SAVEF+5);	/* avoid . or / in name */
 }
 
@@ -636,7 +636,7 @@ get_saved_games (void)
 #if defined(UNIX) && defined(QT_GRAPHICS)
     int myuid=getuid();
     struct dirent **namelist;
-    int n = scandir("save", &namelist, 0, alphasort);;
+    int n = scandir("run/save", &namelist, 0, alphasort);;
     if ( n > 0 ) {
 	int i,j=0;
 	char** result = (char**)alloc((n+1)*sizeof(char*)); /* at most */

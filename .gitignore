@@ -1,7 +1,2 @@
 /build/
-
-/perm
-/dumps/
-/save/
-/logfile
-/record
+/run/

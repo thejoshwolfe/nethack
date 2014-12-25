@@ -41,7 +41,7 @@
 # endif
 #endif
 
-#define LOGFILE "logfile"	/* larger file for debugging purposes */
+#define LOGFILE "run/logfile" /* larger file for debugging purposes */
 #define NEWS "news"		/* the file containing the latest hack news */
 
 /*
@@ -165,7 +165,7 @@
 /*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
 #define AUTOPICKUP_EXCEPTIONS  /* exceptions to autopickup */
 #define DUMP_LOG
-#define DUMP_FN "dumps/%n.lastgame.txt"
+#define DUMP_FN "run/dumps/%n.lastgame.txt"
 
 /* End of Section 5 */
 

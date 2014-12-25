@@ -1,13 +1,13 @@
 #!/bin/sh
 
-mkdir -p dumps
-mkdir -p save
+mkdir -p run/dumps
+mkdir -p run/save
 
 # see files.c lock_file()
-touch perm
+touch run/perm
 
 # see topten.c topten()
-touch logfile
-touch record
+touch run/logfile
+touch run/record
 
 ./build/nethack

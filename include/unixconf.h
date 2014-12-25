@@ -29,7 +29,7 @@
 
 #include <time.h>
 
-#define HLOCK	"perm"	/* an empty file used for locking purposes */
+#define HLOCK	"run/perm" /* an empty file used for locking purposes */
 
 #ifndef REDO
 #define Getchar nhgetch
