@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, Pelias,
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, Pelias,
+#       and receive your quest assignment.
 #
 MAZE: "Bar-strt",' '
 FLAGS: noteleport,hardfloor
@@ -87,10 +87,10 @@ MONSTER:'O',"ogre",(42,09),hostile
 MONSTER:'O',"ogre",(42,10),hostile
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to infiltrate the Duali Oasis to go
-#	further towards your assigned quest.
+#       Here you have to infiltrate the Duali Oasis to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Bar-loca",' '
@@ -195,11 +195,11 @@ MONSTER:'T',"rock troll",random,hostile
 MONSTER:'T',random,random,hostile
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet Thoth Amon, your nemesis monster.  You have to
-#	defeat Thoth Amon in combat to gain the artifact you have
-#	been assigned to retrieve.
+#       Here you meet Thoth Amon, your nemesis monster.  You have to
+#       defeat Thoth Amon in combat to gain the artifact you have
+#       been assigned to retrieve.
 #
 
 MAZE: "Bar-goal", ' '
@@ -291,12 +291,12 @@ MONSTER:'T',random,random,hostile
 WALLIFY
 
 #
-#	The "fill" levels for the quest.
+#       The "fill" levels for the quest.
 #
-#	These levels are used to fill out any levels not occupied by specific
-#	levels as defined above. "filla" is the upper filler, between the
-#	start and locate levels, and "fillb" the lower between the locate
-#	and goal levels.
+#       These levels are used to fill out any levels not occupied by specific
+#       levels as defined above. "filla" is the upper filler, between the
+#       start and locate levels, and "fillb" the lower between the locate
+#       and goal levels.
 #
 
 MAZE: "Bar-fila" , ' '

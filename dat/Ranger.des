@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, Orion,
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, Orion,
+#       and receive your quest assignment.
 #
 MAZE: "Ran-strt",'.'
 FLAGS: noteleport,hardfloor,arboreal
@@ -90,10 +90,10 @@ MONSTER: 's',"scorpion",random,hostile
 
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to infiltrate the Cave of the Wumpus to go
-#	further towards your assigned quest.
+#       Here you have to infiltrate the Cave of the Wumpus to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Ran-loca",' '
@@ -172,11 +172,11 @@ MONSTER:'s',random,random,hostile
 
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet Scorpius, your nemesis monster.  You have to
-#	defeat Scorpius in combat to gain the artifact you have
-#	been assigned to retrieve.
+#       Here you meet Scorpius, your nemesis monster.  You have to
+#       defeat Scorpius in combat to gain the artifact you have
+#       been assigned to retrieve.
 #
 
 MAZE: "Ran-goal", ' '
@@ -280,12 +280,12 @@ MONSTER:'s',random,random,hostile
 WALLIFY
 
 #
-#	The "fill" levels for the quest.
+#       The "fill" levels for the quest.
 #
-#	These levels are used to fill out any levels not occupied by specific
-#	levels as defined above. "fila" is the upper filler, between the
-#	start and locate levels, and "filb" the lower between the locate
-#	and goal levels.
+#       These levels are used to fill out any levels not occupied by specific
+#       levels as defined above. "fila" is the upper filler, between the
+#       start and locate levels, and "filb" the lower between the locate
+#       and goal levels.
 #
 
 MAZE: "Ran-fila" , ' '

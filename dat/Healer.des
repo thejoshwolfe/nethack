@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, Hippocrates
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, Hippocrates
+#       and receive your quest assignment.
 #
 MAZE: "Hea-strt",' '
 FLAGS: noteleport,hardfloor
@@ -96,10 +96,10 @@ MONSTER: 'S',random,random,hostile
 MONSTER: 'S',random,random,hostile
 MONSTER: 'S',random,random,hostile
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to find the Temple of Coeus to go
-#	further towards your assigned quest.
+#       Here you have to find the Temple of Coeus to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Hea-loca",' '
@@ -195,11 +195,11 @@ MONSTER: 'S',random,random,hostile
 MONSTER: 'S',random,random,hostile
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet Cyclops your nemesis monster.  You have to
-#	defeat Cyclops in combat to gain the artifact you have
-#	been assigned to retrieve.
+#       Here you meet Cyclops your nemesis monster.  You have to
+#       defeat Cyclops in combat to gain the artifact you have
+#       been assigned to retrieve.
 #
 
 MAZE: "Hea-goal", 'P'
@@ -285,12 +285,12 @@ MONSTER: 'S',random,random,hostile
 MONSTER: 'S',random,random,hostile
 
 #
-#	The "fill" levels for the quest.
+#       The "fill" levels for the quest.
 #
-#	These levels are used to fill out any levels not occupied by specific
-#	levels as defined above. "filla" is the upper filler, between the
-#	start and locate levels, and "fillb" the lower between the locate
-#	and goal levels.
+#       These levels are used to fill out any levels not occupied by specific
+#       levels as defined above. "filla" is the upper filler, between the
+#       start and locate levels, and "fillb" the lower between the locate
+#       and goal levels.
 #
 
 MAZE: "Hea-fila" , 'P'

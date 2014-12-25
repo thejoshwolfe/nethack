@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, the Grand Master
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, the Grand Master
+#       and receive your quest assignment.
 #
 MAZE: "Mon-strt",' '
 FLAGS: noteleport,hardfloor
@@ -92,10 +92,10 @@ MONSTER: 'X',"xorn",(13,09)
 MONSTER: 'X',"xorn",(01,17)
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to locate the Monastery of the Earth-Lord to
-#	go further towards your assigned quest.
+#       Here you have to locate the Monastery of the Earth-Lord to
+#       go further towards your assigned quest.
 #
 
 MAZE: "Mon-loca",' '
@@ -183,11 +183,11 @@ MONSTER: 'X',"xorn",random
 MONSTER: 'X',"xorn",random
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet Master Kaen, your nemesis monster.  You have to
-#	defeat Master Kaen in combat to gain the artifact you have
-#	been assigned to retrieve.
+#       Here you meet Master Kaen, your nemesis monster.  You have to
+#       defeat Master Kaen in combat to gain the artifact you have
+#       been assigned to retrieve.
 #
 
 MAZE: "Mon-goal", ' '
@@ -257,12 +257,12 @@ MONSTER: 'X',"xorn",random
 MONSTER: 'X',"xorn",random
 
 #
-#	The "fill" levels for the quest.
+#       The "fill" levels for the quest.
 #
-#	These levels are used to fill out any levels not occupied by specific
-#	levels as defined above. "fila" is the upper filler, between the
-#	start and locate levels, and "filb" the lower between the locate
-#	and goal levels.
+#       These levels are used to fill out any levels not occupied by specific
+#       levels as defined above. "fila" is the upper filler, between the
+#       start and locate levels, and "filb" the lower between the locate
+#       and goal levels.
 #
 
 LEVEL: "Mon-fila"

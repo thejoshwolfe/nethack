@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, Twoflower
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, Twoflower
+#       and receive your quest assignment.
 #
 MAZE: "Tou-strt",' '
 FLAGS: noteleport,hardfloor
@@ -125,10 +125,10 @@ TRAP:random,random
 TRAP:random,random
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to find the Thieves' Guild Hall to go
-#	further towards your assigned quest.
+#       Here you have to find the Thieves' Guild Hall to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Tou-loca",' '
@@ -285,11 +285,11 @@ MONSTER:'s',random,random
 MONSTER:'s',random,random
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet the Master of Thieves your nemesis monster.  You have to
-#	defeat the Master of Thieves in combat to gain the artifact you have
-#	been assigned to retrieve.
+#       Here you meet the Master of Thieves your nemesis monster.  You have to
+#       defeat the Master of Thieves in combat to gain the artifact you have
+#       been assigned to retrieve.
 #
 
 MAZE: "Tou-goal", ' '
@@ -447,10 +447,10 @@ MONSTER:'@',"watchman",(33,10),hostile
 WALLIFY
 
 #
-#	The "fill" level for the quest.
+#       The "fill" level for the quest.
 #
-#	This level is used to fill out any levels not occupied by specific
-#	levels as defined above.
+#       This level is used to fill out any levels not occupied by specific
+#       levels as defined above.
 #
 
 MAZE: "Tou-fila" , ' '

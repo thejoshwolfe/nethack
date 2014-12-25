@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, Shaman Karnov
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, Shaman Karnov
+#       and receive your quest assignment.
 #
 MAZE: "Cav-strt",' '
 FLAGS: noteleport,hardfloor
@@ -84,10 +84,10 @@ MONSTER: 'h',"bugbear",(69,11),hostile
 WALLIFY
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to find the lair of Tiamat to go
-#	further towards your assigned quest.
+#       Here you have to find the lair of Tiamat to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Cav-loca",' '
@@ -179,11 +179,11 @@ MONSTER:'H',random,random,hostile
 WALLIFY
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet Tiamat your nemesis monster.  You have to
-#	defeat Tiamat in combat to gain the artifact you have
-#	been assigned to retrieve.
+#       Here you meet Tiamat your nemesis monster.  You have to
+#       defeat Tiamat in combat to gain the artifact you have
+#       been assigned to retrieve.
 #
 
 MAZE: "Cav-goal", ' '
@@ -240,12 +240,12 @@ MONSTER:'F',"shrieker",(45,11)
 WALLIFY
 
 #
-#	The "fill" levels for the quest.
+#       The "fill" levels for the quest.
 #
-#	These levels are used to fill out any levels not occupied by specific
-#	levels as defined above. "filla" is the upper filler, between the
-#	start and locate levels, and "fillb" the lower between the locate
-#	and goal levels.
+#       These levels are used to fill out any levels not occupied by specific
+#       levels as defined above. "filla" is the upper filler, between the
+#       start and locate levels, and "fillb" the lower between the locate
+#       and goal levels.
 #
 
 MAZE: "Cav-fila" , ' '

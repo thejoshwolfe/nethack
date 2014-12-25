@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, the Norn,
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, the Norn,
+#       and receive your quest assignment.
 #
 MAZE: "Val-strt",' '
 FLAGS: noteleport,hardfloor
@@ -76,10 +76,10 @@ MONSTER: 'H',"fire giant",(18,01),hostile
 MONSTER: 'H',"fire giant",(10,16),hostile
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to find the cave of Surtur to go
-#	further towards your assigned quest.
+#       Here you have to find the cave of Surtur to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Val-loca",' '
@@ -161,11 +161,11 @@ MONSTER:'H',"fire giant",random,hostile
 MONSTER:'H',random,random,hostile
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet Lord Surtur your nemesis monster.  You have to
-#	defeat Lord Surtur in combat to gain the artifact you have
-#	been assigned to retrieve.
+#       Here you meet Lord Surtur your nemesis monster.  You have to
+#       defeat Lord Surtur in combat to gain the artifact you have
+#       been assigned to retrieve.
 #
 
 MAZE: "Val-goal", 'L'
@@ -250,12 +250,12 @@ MONSTER:'H',"fire giant",random,hostile
 MONSTER:'H',random,random,hostile
 
 #
-#	The "fill" levels for the quest.
+#       The "fill" levels for the quest.
 #
-#	These levels are used to fill out any levels not occupied by specific
-#	levels as defined above. "filla" is the upper filler, between the
-#	start and locate levels, and "fillb" the lower between the locate
-#	and goal levels.
+#       These levels are used to fill out any levels not occupied by specific
+#       levels as defined above. "filla" is the upper filler, between the
+#       start and locate levels, and "fillb" the lower between the locate
+#       and goal levels.
 #
 
 MAZE: "Val-fila" , 'I'

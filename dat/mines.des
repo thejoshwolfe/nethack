@@ -1,7 +1,7 @@
-#	The "fill" level for the mines.
+#       The "fill" level for the mines.
 #
-#	This level is used to fill out any levels not occupied by
-#	specific levels as defined below.
+#       This level is used to fill out any levels not occupied by
+#       specific levels as defined below.
 #
 MAZE: "minefill" , ' '
 INIT_MAP: '.' , ' ' , true , true , random , true

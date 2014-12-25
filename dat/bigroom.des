@@ -83,7 +83,7 @@ MONSTER:random,random,random
 MONSTER:random,random,random
 MONSTER:random,random,random
 
-#	Here, just play with the lighting...
+#       Here, just play with the lighting...
 
 MAZE:"bigrm-2",' '
 GEOMETRY:center,center
@@ -175,7 +175,7 @@ MONSTER:random,random,random
 MONSTER:random,random,random
 MONSTER:random,random,random
 
-#	Now, let's get fancy...
+#       Now, let's get fancy...
 
 MAZE:"bigrm-3",' '
 GEOMETRY:center,center
@@ -345,7 +345,7 @@ MONSTER:random,random,random
 MONSTER:random,random,random
 MONSTER:random,random,random
 
-#	Try an oval room...
+#       Try an oval room...
 
 MAZE:"bigrm-5",' '
 GEOMETRY:center,center

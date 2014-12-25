@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, Lord Sato
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, Lord Sato
+#       and receive your quest assignment.
 #
 MAZE: "Sam-strt",' '
 FLAGS: noteleport,hardfloor
@@ -84,10 +84,10 @@ MONSTER: '@',"ninja",(68,02),hostile
 MONSTER:'E',"stalker",random
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to invade the Shogun's Castle to go
-#	further towards your assigned quest.
+#       Here you have to invade the Shogun's Castle to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Sam-loca",' '
@@ -218,7 +218,7 @@ MONSTER:'E',"stalker",random
 MONSTER:'E',"stalker",random
 MONSTER:'E',"stalker",random
 MONSTER:'E',"stalker",random
-#	"guards" for the central courtyard.
+#       "guards" for the central courtyard.
 MONSTER:'@',"samurai",(30,05),hostile
 MONSTER:'@',"samurai",(31,05),hostile
 MONSTER:'@',"samurai",(32,05),hostile
@@ -227,11 +227,11 @@ MONSTER:'@',"samurai",(33,14),hostile
 MONSTER:'@',"samurai",(34,14),hostile
 
 #
-#	The "goal" level for the quest.
+#       The "goal" level for the quest.
 #
-#	Here you meet Takauji, your nemesis monster.  You have to
-#	defeat him in combat to gain the artifact you have been
-#	assigned to retrieve.
+#       Here you meet Takauji, your nemesis monster.  You have to
+#       defeat him in combat to gain the artifact you have been
+#       assigned to retrieve.
 #
 
 MAZE: "Sam-goal", ' '
@@ -328,12 +328,12 @@ MONSTER:'E',"stalker",random
 
 
 #
-#	The "fill" levels for the quest.
+#       The "fill" levels for the quest.
 #
-#	These levels are used to fill out any levels not occupied by specific
-#	levels as defined above. "filla" is the upper filler, between the
-#	start and locate levels, and "fillb" the lower between the locate
-#	and goal levels.
+#       These levels are used to fill out any levels not occupied by specific
+#       levels as defined above. "filla" is the upper filler, between the
+#       start and locate levels, and "fillb" the lower between the locate
+#       and goal levels.
 #
 
 MAZE: "Sam-fila", ' '

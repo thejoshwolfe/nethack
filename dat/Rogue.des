@@ -1,7 +1,7 @@
-#	The "start" level for the quest.
+#       The "start" level for the quest.
 #
-#	Here you meet your (besieged) class leader, Master of Thieves
-#	and receive your quest assignment.
+#       Here you meet your (besieged) class leader, Master of Thieves
+#       and receive your quest assignment.
 #
 MAZE: "Rog-strt",' '
 FLAGS: noteleport, hardfloor, nommap
@@ -163,10 +163,10 @@ MONSTER: ':',"chameleon",random,hostile
 MONSTER: ':',"chameleon",random,hostile
 
 #
-#	The "locate" level for the quest.
+#       The "locate" level for the quest.
 #
-#	Here you have to find the entrance to the Assassins' Guild to go
-#	further towards your assigned quest.
+#       Here you have to find the entrance to the Assassins' Guild to go
+#       further towards your assigned quest.
 #
 
 MAZE: "Rog-loca",' '
@@ -264,12 +264,12 @@ MONSTER: ':',"chameleon",random,hostile
 MONSTER: ':',"chameleon",random,hostile
 
 #
-#	The "goal" level for the quest.  Teleportation and digging are
-#	disallowed.
+#       The "goal" level for the quest.  Teleportation and digging are
+#       disallowed.
 #
-#	You have to reach The Master Assassin via some means other than
-#	simple searching or digging since there is no path between your
-#	arrival point and his location.
+#       You have to reach The Master Assassin via some means other than
+#       simple searching or digging since there is no path between your
+#       arrival point and his location.
 #
 MAZE: "Rog-goal", ' '
 FLAGS: noteleport
@@ -378,10 +378,10 @@ MONSTER:';',"shark",(55,15),hostile
 MONSTER:';',"shark",(58,10),hostile
 
 #
-#	The "fill" level for the quest.
+#       The "fill" level for the quest.
 #
-#	This level is used to fill out any levels not occupied by specific
-#	levels as defined above.
+#       This level is used to fill out any levels not occupied by specific
+#       levels as defined above.
 #
 LEVEL: "Rog-fila"
 #
