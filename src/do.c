@@ -9,8 +9,8 @@ static void trycall(struct obj *);
 # endif /* OVLB */
 static void dosinkring(struct obj *);
 
-STATIC_PTR int drop(struct obj *);
-STATIC_PTR int wipeoff(void);
+static int drop(struct obj *);
+static int wipeoff(void);
 
 #ifdef OVL0
 static int menu_drop(int);
@@ -443,7 +443,7 @@ const char *word;
         return(TRUE);
 }
 
-STATIC_PTR
+static
 int
 drop(obj)
 struct obj *obj;
@@ -1545,7 +1545,7 @@ donull()
 #endif /* OVL3 */
 #ifdef OVLB
 
-STATIC_PTR int
+static int
 wipeoff()
 {
         if(u.ucreamed < 4)      u.ucreamed = 0;

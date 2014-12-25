@@ -6,7 +6,7 @@
 static void dowatersnakes(void);
 static void dowaterdemon(void);
 static void dowaternymph(void);
-STATIC_PTR void gush(int,int,void *);
+static void gush(int,int,void *);
 static void dofindgem(void);
 
 void 
@@ -97,7 +97,7 @@ dogushforth ( /* Gushing forth along LOS from (u.ux, u.uy) */
         }
 }
 
-STATIC_PTR void
+static void
 gush(x, y, poolcnt)
 int x, y;
 void * poolcnt;

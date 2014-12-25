@@ -277,13 +277,6 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 # define OVL3   /* lowest specified priority */
 # define OVLB   /* the base overlay segment */
 
-/* Macro for a few items that are only static if we're not overlaid.... */
-#if defined(USE_OVLx)
-# define STATIC_PTR
-#else
-# define STATIC_PTR static
-#endif
-
 /* The function argument to qsort() requires a particular
  * calling convention under WINCE which is not the default
  * in that environment.

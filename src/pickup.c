@@ -21,9 +21,9 @@ static int count_categories(struct obj *,int);
 static long carry_count(struct obj *,struct obj *,long,boolean,int *,int *);
 static int lift_object(struct obj *,struct obj *,long *,boolean);
 static boolean mbag_explodes(struct obj *,int);
-STATIC_PTR int in_container(struct obj *);
-STATIC_PTR int ck_bag(struct obj *);
-STATIC_PTR int out_container(struct obj *);
+static int in_container(struct obj *);
+static int ck_bag(struct obj *);
+static int out_container(struct obj *);
 static long mbag_item_gone(int,struct obj *);
 static void observe_quantum_cat(struct obj *);
 static int menu_loot(int, struct obj *, boolean);
@@ -1781,7 +1781,7 @@ static struct obj *current_container;
 #define Icebox (current_container->otyp == ICE_BOX)
 
 /* Returns: -1 to stop, 1 item was inserted, 0 item was not inserted. */
-STATIC_PTR int
+static int
 in_container(obj)
 struct obj *obj;
 {
@@ -1931,7 +1931,7 @@ struct obj *obj;
         return(current_container ? 1 : -1);
 }
 
-STATIC_PTR int
+static int
 ck_bag(obj)
 struct obj *obj;
 {
@@ -1939,7 +1939,7 @@ struct obj *obj;
 }
 
 /* Returns: -1 to stop, 1 item was removed, 0 item was not removed. */
-STATIC_PTR int
+static int
 out_container(obj)
 struct obj *obj;
 {

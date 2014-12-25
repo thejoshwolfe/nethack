@@ -2,11 +2,11 @@
 #include "hack.h"
 
 
-STATIC_PTR int eatmdone(void);
-STATIC_PTR int eatfood(void);
-STATIC_PTR void costly_tin(const char*);
-STATIC_PTR int opentin(void);
-STATIC_PTR int unfaint(void);
+static int eatmdone(void);
+static int eatfood(void);
+static void costly_tin(const char*);
+static int opentin(void);
+static int unfaint(void);
 
 #ifdef OVLB
 static const char *food_xname(struct obj *,boolean);
@@ -165,7 +165,7 @@ static struct {
 
 static char *eatmbuf = 0;       /* set by cpostfx() */
 
-STATIC_PTR
+static
 int
 eatmdone()              /* called after mimicing is over */
 {
@@ -363,7 +363,7 @@ do_reset_eat (void)
         newuhs(FALSE);
 }
 
-STATIC_PTR
+static
 int
 eatfood()               /* called each move during eating process */
 {
@@ -862,7 +862,7 @@ violated_vegetarian (void)
 
 /* common code to check and possibly charge for 1 context.tin.tin,
  * will split() context.tin.tin if necessary */
-STATIC_PTR void 
+static void 
 costly_tin (
     const char *verb            /* if 0, the verb is "open" */
 )
@@ -877,7 +877,7 @@ costly_tin (
         }
 }
 
-STATIC_PTR
+static
 int
 opentin()               /* called during each move whilst opening a tin */
 {
@@ -2062,7 +2062,7 @@ lesshungry (    /* called after eating (and after drinking fruit juice) */
         newuhs(FALSE);
 }
 
-STATIC_PTR
+static
 int
 unfaint()
 {

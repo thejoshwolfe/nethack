@@ -50,7 +50,7 @@ static boolean cursed_object_at(int, int);
 
 static signed char gtyp, gx, gy;    /* type and position of dog's current goal */
 
-STATIC_PTR void wantdoor(int, int, void *);
+static void wantdoor(int, int, void *);
 
 #ifdef OVLB
 static boolean
@@ -822,7 +822,7 @@ static boolean can_reach_location(struct monst *mon,
 #ifdef OVLB
 
 /*ARGSUSED*/    /* do_clear_area client */
-STATIC_PTR void
+static void
 wantdoor(x, y, distance)
 int x, y;
 void * distance;

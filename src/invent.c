@@ -14,8 +14,8 @@ static boolean only_here(struct obj *);
 static void compactify(char *);
 static boolean taking_off(const char *);
 static boolean putting_on(const char *);
-STATIC_PTR int ckunpaid(struct obj *);
-STATIC_PTR int ckvalidcat(struct obj *);
+static int ckunpaid(struct obj *);
+static int ckvalidcat(struct obj *);
 #ifdef DUMP_LOG
 static char display_pickinv(const char *,boolean, long *, boolean);
 #else
@@ -1092,7 +1092,7 @@ struct obj *otmp;
 #endif /* OVL1 */
 #ifdef OVLB
 
-STATIC_PTR int
+static int
 ckvalidcat(otmp)
 struct obj *otmp;
 {
@@ -1100,7 +1100,7 @@ struct obj *otmp;
         return((int)allow_category(otmp));
 }
 
-STATIC_PTR int
+static int
 ckunpaid(otmp)
 struct obj *otmp;
 {

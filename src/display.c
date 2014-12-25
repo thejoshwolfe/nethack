@@ -1348,7 +1348,7 @@ flush_screen (int cursor_on_u)
 
 #ifdef DUMP_LOG
 /* D: Added to dump screen to output file */
-STATIC_PTR unsigned char 
+static unsigned char 
 get_glyph_char (int glyph)
 {
     unsigned char   ch;

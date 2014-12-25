@@ -21,7 +21,7 @@ static int precheck(struct monst *,struct obj *);
 static void mzapmsg(struct monst *,struct obj *,boolean);
 static void mreadmsg(struct monst *,struct obj *);
 static void mquaffmsg(struct monst *,struct obj *);
-STATIC_PTR int mbhitm(struct monst *,struct obj *);
+static int mbhitm(struct monst *,struct obj *);
 static void mbhit(struct monst *,int,int (*)(MONST_P,OBJ_P),
         int (*)(OBJ_P,OBJ_P),struct obj *);
 static void you_aggravate(struct monst *);
@@ -1061,7 +1061,7 @@ struct monst *mtmp;
 #undef nomore
 }
 
-STATIC_PTR
+static
 int
 mbhitm(mtmp, otmp)
 struct monst *mtmp;

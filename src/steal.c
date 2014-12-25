@@ -1,7 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-STATIC_PTR int stealarm(void);
+static int stealarm(void);
 
 #ifdef OVLB
 static const char *equipname(struct obj *);
@@ -118,7 +118,7 @@ void stealgold (struct monst *mtmp) {
 unsigned int stealoid;          /* object to be stolen */
 unsigned int stealmid;          /* monster doing the stealing */
 
-STATIC_PTR int
+static int
 stealarm()
 {
         struct monst *mtmp;

@@ -14,37 +14,37 @@
 static int (*timed_occ_fn)(void);
 #endif /* OVL1 */
 
-STATIC_PTR int doprev_message(void);
-STATIC_PTR int timed_occupation(void);
-STATIC_PTR int doextcmd(void);
-STATIC_PTR int domonability(void);
-STATIC_PTR int dotravel(void);
+static int doprev_message(void);
+static int timed_occupation(void);
+static int doextcmd(void);
+static int domonability(void);
+static int dotravel(void);
 # ifdef WIZARD
-STATIC_PTR int wiz_wish(void);
-STATIC_PTR int wiz_identify(void);
-STATIC_PTR int wiz_map(void);
-STATIC_PTR int wiz_genesis(void);
-STATIC_PTR int wiz_where(void);
-STATIC_PTR int wiz_detect(void);
-STATIC_PTR int wiz_panic(void);
-STATIC_PTR int wiz_polyself(void);
-STATIC_PTR int wiz_level_tele(void);
-STATIC_PTR int wiz_level_change(void);
-STATIC_PTR int wiz_show_seenv(void);
-STATIC_PTR int wiz_show_vision(void);
-STATIC_PTR int wiz_mon_polycontrol(void);
-STATIC_PTR int wiz_show_wmodes(void);
+static int wiz_wish(void);
+static int wiz_identify(void);
+static int wiz_map(void);
+static int wiz_genesis(void);
+static int wiz_where(void);
+static int wiz_detect(void);
+static int wiz_panic(void);
+static int wiz_polyself(void);
+static int wiz_level_tele(void);
+static int wiz_level_change(void);
+static int wiz_show_seenv(void);
+static int wiz_show_vision(void);
+static int wiz_mon_polycontrol(void);
+static int wiz_show_wmodes(void);
 static void count_obj(struct obj *, long *, long *, boolean, boolean);
 static void obj_chain(winid, const char *, struct obj *, long *, long *);
 static void mon_invent_chain(winid, const char *, struct monst *, long *, long *);
 static void mon_chain(winid, const char *, struct monst *, long *, long *);
 static void contained(winid, const char *, long *, long *);
-STATIC_PTR int wiz_show_stats(void);
+static int wiz_show_stats(void);
 # endif
-STATIC_PTR int enter_explore_mode(void);
-STATIC_PTR int doattributes(void);
-STATIC_PTR int doconduct(void); /**/
-STATIC_PTR boolean minimal_enlightenment(void);
+static int enter_explore_mode(void);
+static int doattributes(void);
+static int doconduct(void); /**/
+static boolean minimal_enlightenment(void);
 
 #ifdef OVLB
 static void enlght_line(const char *,const char *,const char *);
@@ -59,14 +59,14 @@ static boolean help_dir(char,const char *);
 
 #ifdef OVL1
 
-STATIC_PTR int
+static int
 doprev_message()
 {
     return nh_doprev_message();
 }
 
 /* Count down by decrementing multi */
-STATIC_PTR int
+static int
 timed_occupation()
 {
         (*timed_occ_fn)();
@@ -178,7 +178,7 @@ savech (char ch)
 #endif /* OVL1 */
 #ifdef OVLB
 
-STATIC_PTR int
+static int
 doextcmd()      /* here after # - now read a full-word command */
 {
         int idx, retval;
@@ -329,7 +329,7 @@ extcmd_via_menu (void)  /* here after # - now show pick-list of possible command
 #endif
 
 /* #monster command - use special monster ability while polymorphed */
-STATIC_PTR int
+static int
 domonability()
 {
         if (can_breathe(youmonst.data)) return dobreathe();
@@ -359,7 +359,7 @@ domonability()
         return 0;
 }
 
-STATIC_PTR int
+static int
 enter_explore_mode()
 {
         if(!discover && !wizard) {
@@ -381,7 +381,7 @@ enter_explore_mode()
 
 /* ^W command - wish for something */
 /* Unlimited wishes for debug mode by Paul Polderman */
-STATIC_PTR int wiz_wish() {
+static int wiz_wish() {
         if (wizard) {
             boolean save_verbose = flags.verbose;
 
@@ -395,7 +395,7 @@ STATIC_PTR int wiz_wish() {
 }
 
 /* ^I command - identify hero's inventory */
-STATIC_PTR int
+static int
 wiz_identify()
 {
         if (wizard)     identify_pack(0);
@@ -404,7 +404,7 @@ wiz_identify()
 }
 
 /* ^F command - reveal the level map and any traps on it */
-STATIC_PTR int
+static int
 wiz_map()
 {
         if (wizard) {
@@ -426,7 +426,7 @@ wiz_map()
 }
 
 /* ^G command - generate monster(s); a count prefix will be honored */
-STATIC_PTR int
+static int
 wiz_genesis()
 {
         if (wizard)     (void) create_particular();
@@ -435,7 +435,7 @@ wiz_genesis()
 }
 
 /* ^O command - display dungeon layout */
-STATIC_PTR int
+static int
 wiz_where()
 {
         if (wizard) (void) print_dungeon(FALSE, (signed char *)0, (signed char *)0);
@@ -444,7 +444,7 @@ wiz_where()
 }
 
 /* ^E command - detect unseen (secret doors, traps, hidden monsters) */
-STATIC_PTR int
+static int
 wiz_detect()
 {
         if(wizard)  (void) findit();
@@ -453,7 +453,7 @@ wiz_detect()
 }
 
 /* ^V command - level teleport */
-STATIC_PTR int
+static int
 wiz_level_tele()
 {
         if (wizard)     level_tele();
@@ -462,7 +462,7 @@ wiz_level_tele()
 }
 
 /* #monpolycontrol command - choose new form for shapechangers, polymorphees */
-STATIC_PTR int 
+static int 
 wiz_mon_polycontrol (void)
 {
     iflags.mon_polycontrol = !iflags.mon_polycontrol;
@@ -472,7 +472,7 @@ wiz_mon_polycontrol (void)
 }
 
 /* #levelchange command - adjust hero's experience level */
-STATIC_PTR int 
+static int 
 wiz_level_change (void)
 {
     char buf[BUFSZ];
@@ -512,7 +512,7 @@ wiz_level_change (void)
 }
 
 /* #panic command - test program's panic handling */
-STATIC_PTR int 
+static int 
 wiz_panic (void)
 {
         if (yn("Do you want to call panic() and end your game?") == 'y')
@@ -521,7 +521,7 @@ wiz_panic (void)
 }
 
 /* #polyself command - change hero's form */
-STATIC_PTR int 
+static int 
 wiz_polyself (void)
 {
         polyself(TRUE);
@@ -529,7 +529,7 @@ wiz_polyself (void)
 }
 
 /* #seenv command */
-STATIC_PTR int 
+static int 
 wiz_show_seenv (void)
 {
         winid win;
@@ -571,7 +571,7 @@ wiz_show_seenv (void)
 }
 
 /* #vision command */
-STATIC_PTR int 
+static int 
 wiz_show_vision (void)
 {
         winid win;
@@ -608,7 +608,7 @@ wiz_show_vision (void)
 }
 
 /* #wmode command */
-STATIC_PTR int 
+static int 
 wiz_show_wmodes (void)
 {
         winid win;
@@ -1393,7 +1393,7 @@ minimal_enlightenment()
         return (n != -1);
 }
 
-STATIC_PTR int 
+static int 
 doattributes (void)
 {
         if (!minimal_enlightenment())
@@ -1406,7 +1406,7 @@ doattributes (void)
 /* KMH, #conduct
  * (shares enlightenment's tense handling)
  */
-STATIC_PTR int 
+static int 
 doconduct (void)
 {
         show_conduct(0);
@@ -2607,7 +2607,7 @@ readchar (void)
         return((char) sym);
 }
 
-STATIC_PTR int 
+static int 
 dotravel (void)
 {
         /* Keyboard travel command */

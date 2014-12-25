@@ -26,7 +26,7 @@ static void use_figurine(struct obj **);
 static void use_grease(struct obj *);
 static void use_trap(struct obj *);
 static void use_stone(struct obj *);
-STATIC_PTR int set_trap(void);          /* occupation callback */
+static int set_trap(void);          /* occupation callback */
 static int use_whip(struct obj *);
 static int use_pole(struct obj *);
 static int use_cream_pie(struct obj *);
@@ -2008,7 +2008,7 @@ use_trap (struct obj *otmp)
         return;
 }
 
-STATIC_PTR int 
+static int 
 set_trap (void)
 {
         struct obj *otmp = trapinfo.tobj;
