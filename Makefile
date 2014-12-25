@@ -6,6 +6,12 @@ GENERATED_LEVELS = build/asmodeus.lev build/baalz.lev build/bigrm-?.lev build/ca
   build/tower?.lev build/valley.lev build/wizard?.lev \
   build/astral.lev build/air.lev build/earth.lev build/fire.lev build/water.lev \
   build/???-goal.lev build/???-fil?.lev build/???-loca.lev build/???-strt.lev
+LEVEL_SOURCES = \
+  dat/bigroom.des dat/castle.des dat/endgame.des dat/gehennom.des dat/knox.des \
+  dat/medusa.des dat/mines.des dat/oracle.des dat/sokoban.des dat/tower.des \
+  dat/yendor.des dat/Arch.des dat/Barb.des dat/Caveman.des dat/Healer.des \
+  dat/Knight.des dat/Monk.des dat/Priest.des dat/Ranger.des dat/Rogue.des \
+  dat/Samurai.des dat/Tourist.des dat/Valkyrie.des dat/Wizard.des
 
 DATA_INPUTS1 = dat/help dat/hh dat/cmdhelp dat/history dat/opthelp dat/wizhelp build/dungeon
 DATA_INPUTS2 = build/data build/oracles dat/options build/quest.dat build/rumors
@@ -49,31 +55,10 @@ BUILD_DIR_CHILDREN += $(NETHACK_OBJS)
 
 all: build/nethack build/recover build/nhdat
 
-build/nhdat: build/dlb build/lev_comp $(DATA_INPUTS1) $(DATA_INPUTS2)
-	cd build && ./lev_comp ../dat/bigroom.des
-	cd build && ./lev_comp ../dat/castle.des
-	cd build && ./lev_comp ../dat/endgame.des
-	cd build && ./lev_comp ../dat/gehennom.des
-	cd build && ./lev_comp ../dat/knox.des
-	cd build && ./lev_comp ../dat/medusa.des
-	cd build && ./lev_comp ../dat/mines.des
-	cd build && ./lev_comp ../dat/oracle.des
-	cd build && ./lev_comp ../dat/sokoban.des
-	cd build && ./lev_comp ../dat/tower.des
-	cd build && ./lev_comp ../dat/yendor.des
-	cd build && ./lev_comp ../dat/Arch.des
-	cd build && ./lev_comp ../dat/Barb.des
-	cd build && ./lev_comp ../dat/Caveman.des
-	cd build && ./lev_comp ../dat/Healer.des
-	cd build && ./lev_comp ../dat/Knight.des
-	cd build && ./lev_comp ../dat/Monk.des
-	cd build && ./lev_comp ../dat/Priest.des
-	cd build && ./lev_comp ../dat/Ranger.des
-	cd build && ./lev_comp ../dat/Rogue.des
-	cd build && ./lev_comp ../dat/Samurai.des
-	cd build && ./lev_comp ../dat/Tourist.des
-	cd build && ./lev_comp ../dat/Valkyrie.des
-	cd build && ./lev_comp ../dat/Wizard.des
+# make is incapable of tracking the explosion of .lev files from lev_comp,
+# so bundle the entire operation here atomicly culminating in the complete archive.
+build/nhdat: build/lev_comp $(LEVEL_SOURCES) build/dlb $(DATA_INPUTS1) $(DATA_INPUTS2)
+	cd build && ./lev_comp $(foreach f,$(LEVEL_SOURCES),../$f)
 	./build/dlb cf build/nhdat $(DATDLB)
 
 build/makedefs: $(MAKEDEFS_OBJS)
