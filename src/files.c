@@ -783,20 +783,10 @@ uncompress (const char *filename)
 
 static int nesting = 0;
 
-#ifdef NO_FILE_LINKS
-static int lockfd;      /* for lock_file() to pass to unlock_file() */
-#endif
-
 #define HUP     if (!program_state.done_hup)
 
 STATIC_OVL char * make_lockname (const char *filename, char *lockname) {
-#ifdef NO_FILE_LINKS
-        Strcpy(lockname, LOCKDIR);
-        Strcat(lockname, "/");
-        Strcat(lockname, filename);
-#else
         Strcpy(lockname, filename);
-#endif
         Strcat(lockname, "_lock");
         return lockname;
 }
@@ -823,15 +813,9 @@ int retryct;
 
         lockname = make_lockname(filename, locknambuf);
         filename = fqname(filename, whichprefix, 0);
-#ifndef NO_FILE_LINKS   /* LOCKDIR should be subsumed by LOCKPREFIX */
         lockname = fqname(lockname, LOCKPREFIX, 2);
-#endif
 
-# ifdef NO_FILE_LINKS
-        while ((lockfd = open(lockname, O_RDWR|O_CREAT|O_EXCL, 0666)) == -1) {
-# else
         while (link(filename, lockname) == -1) {
-# endif
             int errnosv = errno;
 
             switch (errnosv) {  /* George Barbanis */
@@ -880,15 +864,10 @@ void unlock_file(const char *filename) {
 
         if (nesting == 1) {
                 lockname = make_lockname(filename, locknambuf);
-#ifndef NO_FILE_LINKS   /* LOCKDIR should be subsumed by LOCKPREFIX */
                 lockname = fqname(lockname, LOCKPREFIX, 2);
-#endif
 
                 if (unlink(lockname) < 0)
                         HUP raw_printf("Can't unlink %s.", lockname);
-# ifdef NO_FILE_LINKS
-                close(lockfd);
-# endif
 
         }
 
