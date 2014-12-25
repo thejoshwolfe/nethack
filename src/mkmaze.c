@@ -799,18 +799,11 @@ bound_digging (void)
         for (x = 0; x < COLNO; x++)
           for (y = 0; y < ROWNO; y++)
             if (y <= ymin || y >= ymax || x <= xmin || x >= xmax) {
-#ifdef DCC30_BUG
-                lev = &levl[x][y];
-                lev->wall_info |= W_NONDIGGABLE;
-#else
                 levl[x][y].wall_info |= W_NONDIGGABLE;
-#endif
             }
 }
 
-void 
-mkportal (signed char x, signed char y, signed char todnum, signed char todlevel)
-{
+void mkportal (signed char x, signed char y, signed char todnum, signed char todlevel) {
         /* a portal "trap" must be matched by a */
         /* portal in the destination dungeon/dlevel */
         struct trap *ttmp = maketrap(x, y, MAGIC_PORTAL);
