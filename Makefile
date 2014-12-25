@@ -26,7 +26,7 @@ LEV_COMP_OBJS = build/lev_yacc.o build/lev_lex.o build/lev_main.o build/alloc.o 
 RECOVER_OBJS = build/recover.o
 BUILD_DIR_CHILDREN += $(MAKEDEFS_OBJS) $(DLB_OBJS) $(DGN_COMP_OBJS) $(LEV_COMP_OBJS) $(RECOVER_OBJS)
 
-COMPILE_C = gcc -c -o $@ -MMD -MP -MF $@.d -Ibuild -Iinclude -g $<
+COMPILE_C = gcc -c -o $@ -MMD -MP -MF $@.d -Ibuild -Isrc -g $<
 
 MAKEDEFS = cd dat && ../build/makedefs
 
@@ -152,7 +152,7 @@ build/vis_tab.h: build/makedefs
 # makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
 build/vis_tab.c: build/vis_tab.h
 
-# recover can be used when INSURANCE is defined in include/config.h
+# recover can be used when INSURANCE is defined in config.h
 # and the checkpoint option is true
 build/recover: $(RECOVER_OBJS)
 	gcc -o $@ $(RECOVER_OBJS)
