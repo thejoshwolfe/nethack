@@ -101,39 +101,35 @@ dat/dungeon: util/dgn_comp dat/dungeon.def
 	cd dat && ../util/dgn_comp dungeon.def
 
 util/dgn_yacc.c: util/dgn_comp.y
-	mkdir -p util/dgn_yacc.tmp
-	cd util/dgn_yacc.tmp && yacc -d ../dgn_comp.y
-	mv util/dgn_yacc.tmp/y.tab.c util/dgn_yacc.c
-	mv util/dgn_yacc.tmp/y.tab.h include/dgn_comp.h
+	mkdir -p util/dgn.tmp
+	cd util/dgn.tmp && yacc -d ../dgn_comp.y
+	mv util/dgn.tmp/y.tab.c util/dgn_yacc.c
+	mv util/dgn.tmp/y.tab.h include/dgn_comp.h
 
 util/lev_yacc.c: util/lev_comp.y
-	mkdir -p util/lev_yacc.tmp
-	cd util/lev_yacc.tmp && yacc -d ../lev_comp.y
-	mv util/lev_yacc.tmp/y.tab.c util/lev_yacc.c
-	mv util/lev_yacc.tmp/y.tab.h include/lev_comp.h
+	mkdir -p util/lev.tmp
+	cd util/lev.tmp && yacc -d ../lev_comp.y
+	mv util/lev.tmp/y.tab.c util/lev_yacc.c
+	mv util/lev.tmp/y.tab.h include/lev_comp.h
 
 
 include/dgn_comp.h: util/dgn_yacc.c
 
 include/lev_comp.h: util/lev_yacc.c
 
-# see dgn_comp.l for WEIRD_LEX discussion
 util/dgn_lex.o: util/dgn_lex.c util/dgn_yacc.o
-	gcc -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus util/dgn_lex.c` -o $@ util/dgn_lex.c
 
-# see lev_comp.l for WEIRD_LEX discussion
-# egrep will return failure if it doesn't find anything, but we know there
-# is one "_cplusplus" inside a comment
 util/lev_lex.o: util/lev_lex.c $(HACK_H) util/lev_yacc.o
-	gcc -c $(CFLAGS) -DWEIRD_LEX=`egrep -c _cplusplus util/lev_lex.c` -o $@ util/lev_lex.c
 
 util/dgn_lex.c: util/dgn_comp.l
-	cd util && lex ../util/dgn_comp.l
-	mv util/lex.yy.c util/dgn_lex.c
+	mkdir -p util/dgn.tmp
+	cd util/dgn.tmp && lex ../dgn_comp.l
+	mv util/dgn.tmp/lex.yy.c util/dgn_lex.c
 
 util/lev_lex.c: util/lev_comp.l
-	cd util && lex ../util/lev_comp.l
-	mv util/lex.yy.c util/lev_lex.c
+	mkdir -p util/lev.tmp
+	cd util/lev.tmp && lex ../lev_comp.l
+	mv util/lev.tmp/lex.yy.c util/lev_lex.c
 
 util/dgn_comp: $(DGN_COMP_OBJS)
 	gcc -o $@ $(DGN_COMP_OBJS)

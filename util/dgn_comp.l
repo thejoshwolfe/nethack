@@ -1,65 +1,16 @@
 /* See LICENSE in the root of this project for change info */
 %{
-
 #define DGN_COMP
 
 #include "config.h"
 #include "dgn_comp.h"
 #include "dgn_file.h"
 
-/*
- * Most of these don't exist in flex, yywrap is macro and
- * yyunput is properly declared in flex.skel.
- */
-#if !defined(FLEX_SCANNER) && !defined(FLEXHACK_SCANNER)
-int yyback(int *,int);
-int yylook(void);
-int yyinput(void);
-int yywrap(void);
-int yylex(void);
-	/* Traditional lexes let yyunput() and yyoutput() default to int;
-	 * newer ones may declare them as void since they don't return
-	 * values.  For even more fun, the lex supplied as part of the
-	 * newer unbundled compiler for SunOS 4.x adds the void declarations
-	 * (under __STDC__ or _cplusplus ifdefs -- otherwise they remain
-	 * int) while the bundled lex and the one with the older unbundled
-	 * compiler do not.  To detect this, we need help from outside --
-	 * sys/unix/Makefile.utl.
-	 *
-	 * Digital UNIX is difficult and still has int in spite of all
-	 * other signs.
-	 */
-# if defined(NeXT) || defined(SVR4) || defined(_AIX32)
-#  define VOIDYYPUT
-# endif
-# if !defined(VOIDYYPUT)
-#  if !defined(BOS) && !defined(HISX) && !defined(_M_UNIX)
-#   define VOIDYYPUT
-#  endif
-# endif
-# if !defined(VOIDYYPUT) && defined(WEIRD_LEX)
-#  if defined(SUNOS4) && defined(__STDC__) && (WEIRD_LEX > 1)
-#   define VOIDYYPUT
-#  endif
-# endif
-# if defined(VOIDYYPUT) && defined(__osf__)
-#  undef VOIDYYPUT
-# endif
-# ifdef VOIDYYPUT
-void yyunput(int);
-void yyoutput(int);
-# else
-int yyunput(int);
-int yyoutput(int);
-# endif
-#endif	/* !FLEX_SCANNER && !FLEXHACK_SCANNER */
-
 #ifdef FLEX_SCANNER
 #define YY_MALLOC_DECL \
 	       void * malloc(size_t); \
 	       void * realloc(void *,size_t);
 #endif
-
 
 void init_yyin(FILE *);
 void init_yyout(FILE *);
