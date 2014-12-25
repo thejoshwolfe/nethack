@@ -137,11 +137,6 @@ static struct Bool_Opt
         {"splash_screen",     &iflags.wc_splash_screen, TRUE, DISP_IN_GAME},    /*WC*/
         {"tiled_map",     &iflags.wc_tiled_map, PREFER_TILED, DISP_IN_GAME},    /*WC*/
         {"time", &flags.time, FALSE, SET_IN_GAME},
-#ifdef TIMED_DELAY
-        {"timed_delay", &flags.nap, TRUE, SET_IN_GAME},
-#else
-        {"timed_delay", (boolean *)0, FALSE, SET_IN_GAME},
-#endif
         {"tombstone",&flags.tombstone, TRUE, SET_IN_GAME},
         {"toptenwin",&flags.toptenwin, FALSE, SET_IN_GAME},
         {"travel", &iflags.travelcmd, TRUE, SET_IN_GAME},

@@ -75,11 +75,6 @@ showscore  display your approximate accumulated score             [FALSE]
 Boolean option if HPMON was set at compile time:
 hpmon      color HP readout depending on how low it is            [FALSE]
 
-Boolean option if TIMED_DELAY was set at compile time (tty interface only):
-timed_delay    on unix, use a timer instead of sending extra
-               screen output when attempting to pause for
-               display effect.                                    [TRUE]
-
 Boolean option if USE_TILES was set at compile time:
 preload_tiles  control whether tiles get pre-loaded into RAM at the
                start of the game.  Doing so enhances performance

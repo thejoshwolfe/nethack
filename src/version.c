@@ -55,12 +55,7 @@ boolean check_version(struct version_info *version_data, const char *filename, b
                 pline("Version mismatch for file \"%s\".", filename);
             return FALSE;
         } else if (
-#ifndef IGNORED_FEATURES
                    version_data->feature_set != VERSION_FEATURES ||
-#else
-                   (version_data->feature_set & ~IGNORED_FEATURES) !=
-                          (VERSION_FEATURES & ~IGNORED_FEATURES) ||
-#endif
                    version_data->entity_count != VERSION_SANITY1 ||
                    version_data->struct_sizes != VERSION_SANITY2) {
             if (complain)

@@ -2,18 +2,6 @@
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
-#ifdef TTY_GRAPHICS
-/*
- * To enable the `timed_delay' option for using a timer rather than extra
- * screen output when pausing for display effect.  Requires that `msleep'
- * function be available (with time argument specified in milliseconds).
- * Various output devices can produce wildly varying delays when the
- * "extra output" method is used, but not all systems provide access to
- * a fine-grained timer.
- */
-#define TIMED_DELAY     /* usleep() */
-#endif
-
 /*
  * If you define MAIL, then the player will be notified of new mail
  * when it arrives.  If you also define DEF_MAILREADER then this will
@@ -48,8 +36,6 @@
 /* Use the high quality random number routines. */
 #define Rand()  random()
 
-#ifdef TIMED_DELAY
-# define msleep(k) usleep((k)*1000)
-#endif
+#define msleep(k) usleep((k)*1000)
 
 #endif /* UNIXCONF_H */

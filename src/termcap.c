@@ -449,30 +449,9 @@ static const short tmspc10[] = {                /* from termcap */
 
 /* delay 50 ms */
 void tty_delay_output(void) {
-#ifdef TIMED_DELAY
-        if (flags.nap) {
-                (void) fflush(stdout);
-                msleep(50);             /* sleep for 50 milliseconds */
-                return;
-        }
-#endif
-        /* BUG: if the padding character is visible, as it is on the 5620
-           then this looks terrible. */
-        if(flags.null)
-                /* cbosgd!cbcephus!pds for SYS V R2 */
-                tputs("$<50>", 1, (int (*)())xputc);
-
-        else if(ospeed > 0 && ospeed < SIZE(tmspc10) && nh_CM) {
-                /* delay by sending cm(here) an appropriate number of times */
-                int cmlen = strlen(tgoto(nh_CM, ttyDisplay->curx,
-                                                        ttyDisplay->cury));
-                int i = 500 + tmspc10[ospeed]/2;
-
-                while(i > 0) {
-                        cmov((int)ttyDisplay->curx, (int)ttyDisplay->cury);
-                        i -= cmlen*tmspc10[ospeed];
-                }
-        }
+    fflush(stdout);
+    msleep(50);             /* sleep for 50 milliseconds */
+    return;
 }
 
 #endif /* OVL1 */

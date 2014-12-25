@@ -1782,7 +1782,7 @@ extern void error(const char *,...);
 #ifdef UNIX
 extern void getlock(void);
 extern void regularize(char *);
-# if defined(TIMED_DELAY) && !defined(msleep)
+# if !defined(msleep)
 extern void msleep(unsigned);
 # endif
 # ifdef SHELL

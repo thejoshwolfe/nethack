@@ -305,21 +305,7 @@ do_rumors()
         return;
 }
 
-/*
- * 3.4.1: way back in 3.2.1 `flags.nap' became unconditional but
- * TIMED_DELAY was erroneously left in VERSION_FEATURES and has
- * been there up through 3.4.0.  Simply removing it now would
- * break save file compatibility with 3.4.0 files, so we will
- * explicitly mask it out during version checks.
- * This should go away in the next version update.
- */
-#define IGNORED_FEATURES        ( 0L \
-                                | (1L << 23)    /* TIMED_DELAY */ \
-                                )
-
-static void
-make_version()
-{
+static void make_version(void) {
         int i;
 
         /*
@@ -460,10 +446,6 @@ do_date()
                 version.incarnation, ul_sfx);
         Fprintf(ofp,"#define VERSION_FEATURES 0x%08lx%s\n",
                 version.feature_set, ul_sfx);
-#ifdef IGNORED_FEATURES
-        Fprintf(ofp,"#define IGNORED_FEATURES 0x%08lx%s\n",
-                (unsigned long) IGNORED_FEATURES, ul_sfx);
-#endif
         Fprintf(ofp,"#define VERSION_SANITY1 0x%08lx%s\n",
                 version.entity_count, ul_sfx);
         Fprintf(ofp,"#define VERSION_SANITY2 0x%08lx%s\n",
@@ -579,9 +561,6 @@ static const char *build_opts[] = {
 #endif
                 "sinks",
                 "terminal info library",
-#ifdef TIMED_DELAY
-                "timed wait for display effects",
-#endif
                 "tourists",
 #ifdef USER_SOUNDS
 # ifdef USER_SOUNDS_REGEX

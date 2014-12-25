@@ -168,7 +168,7 @@ void regularize(char * s) {
                 *lp = '_';
 }
 
-#if defined(TIMED_DELAY) && !defined(msleep)
+#if !defined(msleep)
 #include <poll.h>
 
 void msleep(unsigned msec) {
@@ -178,7 +178,7 @@ void msleep(unsigned msec) {
         if (msecs < 0) msecs = 0;       /* avoid infinite sleep */
         (void) poll(&unused, (unsigned long)0, msecs);
 }
-#endif /* TIMED_DELAY */
+#endif
 
 #ifdef SHELL
 int dosh(void) {

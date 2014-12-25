@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 /* If you change the flag structure make sure you increment EDITLEVEL in   */
 /* patchlevel.h if needed.  Changing the instance_flags structure does     */
 /* not require incrementing EDITLEVEL.                                     */
@@ -49,7 +50,6 @@ struct flag {
         boolean  move;
         boolean  mv;
         boolean  bypasses;      /* bypass flag is set on at least one fobj */
-        boolean  nap;           /* `timed_delay' option for display effects */
         boolean  nopick;        /* do not pickup objects (as when running) */
         boolean  null;          /* OK to send nulls to the terminal */
         boolean  perm_invent;   /* keep full inventories up until dismissed */
