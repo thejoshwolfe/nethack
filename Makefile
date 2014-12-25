@@ -41,7 +41,7 @@ NORMAL_ASS_O_FILES = src/allmain.o src/alloc.o src/apply.o src/artifact.o src/at
   src/steal.o src/steed.o src/teleport.o src/timeout.o src/topten.o src/track.o src/trap.o src/u_init.o \
   src/uhitm.o src/vault.o src/vision.o src/vis_tab.o src/weapon.o src/were.o src/wield.o src/windows.o \
   src/wizard.o src/worm.o src/worn.o src/write.o src/zap.o \
-  src/ioctl.o src/unixmain.o src/unixtty.o src/unixunix.o src/unixres.o \
+  src/ioctl.o src/unixmain.o src/unixtty.o src/unixunix.o \
   src/getline.o src/termcap.o src/topl.o src/wintty.o \
 	src/version.o
 

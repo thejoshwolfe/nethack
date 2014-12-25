@@ -1799,14 +1799,6 @@ extern int child(int);
 # endif
 #endif /* UNIX */
 
-/* ### unixres.c ### */
-
-#ifdef UNIX
-# ifdef GNOME_GRAPHICS 
-extern int hide_privileges(boolean);
-# endif
-#endif /* UNIX */
-
 /* ### vault.c ### */
 
 extern boolean grddead(struct monst *);
