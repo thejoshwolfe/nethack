@@ -382,9 +382,7 @@ monsndx (               /* return an index into the mons array */
 #ifdef OVL1
 
 
-int 
-name_to_mon (const char *in_str)
-{
+int name_to_mon (const char *in_str) {
         /* Be careful.  We must check the entire string in case it was
          * something such as "ettin zombie corpse".  The calling routine
          * doesn't know about the "corpse" until the monster name has
@@ -494,18 +492,14 @@ name_to_mon (const char *in_str)
 #ifdef OVL2
 
 /* returns 3 values (0=male, 1=female, 2=none) */
-int 
-gender (struct monst *mtmp)
-{
+int gender (struct monst *mtmp) {
         if (is_neuter(mtmp->data)) return 2;
         return mtmp->female;
 }
 
 /* Like gender(), but lower animals and such are still "it". */
 /* This is the one we want to use when printing messages. */
-int 
-pronoun_gender (struct monst *mtmp)
-{
+int pronoun_gender (struct monst *mtmp) {
         if (is_neuter(mtmp->data) || !canspotmon(mtmp)) return 2;
         return (humanoid(mtmp->data) || (mtmp->data->geno & G_UNIQ) ||
                 type_is_pname(mtmp->data)) ? (int)mtmp->female : 2;
@@ -515,10 +509,7 @@ pronoun_gender (struct monst *mtmp)
 #ifdef OVLB
 
 /* used for nearby monsters when you go to another level */
-boolean
-levl_follower(mtmp)
-struct monst *mtmp;
-{
+boolean levl_follower(struct monst *mtmp) {
         /* monsters with the Amulet--even pets--won't follow across levels */
         if (mon_has_amulet(mtmp)) return FALSE;
 
@@ -587,35 +578,15 @@ static const short grownups[][2] = {
         {NON_PM,NON_PM}
 };
 
-int 
-little_to_big (int montype)
-{
-#ifndef AIXPS2_BUG
+int little_to_big (int montype) {
         int i;
 
         for (i = 0; grownups[i][0] >= LOW_PM; i++)
                 if(montype == grownups[i][0]) return grownups[i][1];
         return montype;
-#else
-/* AIX PS/2 C-compiler 1.1.1 optimizer does not like the above for loop,
- * and causes segmentation faults at runtime.  (The problem does not
- * occur if -O is not used.)
- * lehtonen@cs.Helsinki.FI (Tapio Lehtonen) 28031990
- */
-        int i;
-        int monvalue;
-
-        monvalue = montype;
-        for (i = 0; grownups[i][0] >= LOW_PM; i++)
-                if(montype == grownups[i][0]) monvalue = grownups[i][1];
-
-        return monvalue;
-#endif
 }
 
-int 
-big_to_little (int montype)
-{
+int big_to_little (int montype) {
         int i;
 
         for (i = 0; grownups[i][0] >= LOW_PM; i++)
@@ -628,9 +599,7 @@ big_to_little (int montype)
  * Returns correct pointer for non-polymorphed and polymorphed
  * player.  It does not return a pointer to player role character.
  */
-const struct permonst *
-raceptr (struct monst *mtmp)
-{
+const struct permonst * raceptr (struct monst *mtmp) {
     if (mtmp == &youmonst && !Upolyd) return(&mons[urace.malenum]);
     else return(mtmp->data);
 }
@@ -643,9 +612,7 @@ static const char *ooze[4]      = { "ooze", "Ooze", "tremble", "Tremble" };
 static const char *immobile[4]  = { "wiggle", "Wiggle", "pulsate", "Pulsate" };
 static const char *crawl[4]     = { "crawl", "Crawl", "falter", "Falter" };
 
-const char *
-locomotion (const struct permonst *ptr, const char *def)
-{
+const char * locomotion (const struct permonst *ptr, const char *def) {
         int capitalize = (*def == highc(*def));
 
         return (
@@ -661,9 +628,7 @@ locomotion (const struct permonst *ptr, const char *def)
 
 }
 
-const char *
-stagger (const struct permonst *ptr, const char *def)
-{
+const char * stagger (const struct permonst *ptr, const char *def) {
         int capitalize = 2 + (*def == highc(*def));
 
         return (
@@ -680,9 +645,7 @@ stagger (const struct permonst *ptr, const char *def)
 }
 
 /* return a phrase describing the effect of fire attack on a type of monster */
-const char *
-on_fire (struct permonst *mptr, struct attack *mattk)
-{
+const char * on_fire (struct permonst *mptr, struct attack *mattk) {
     const char *what;
 
     switch (monsndx(mptr)) {
@@ -718,5 +681,3 @@ on_fire (struct permonst *mptr, struct attack *mattk)
 }
 
 #endif /* OVLB */
-
-/*mondata.c*/
