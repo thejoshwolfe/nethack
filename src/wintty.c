@@ -156,7 +156,6 @@ STATIC_OVL void winch(void) {
     int oldLI = LI, oldCO = CO, i;
     struct WinDesc *cw;
 
-    getwindowsz();
     if((oldLI != LI || oldCO != CO) && ttyDisplay) {
         ttyDisplay->rows = LI;
         ttyDisplay->cols = CO;

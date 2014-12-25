@@ -3,7 +3,6 @@
 
 #include <termios.h>
 #include <unistd.h>
-#define termstruct      termios
 
 # include <sys/ioctl.h>
 # undef delay_output    /* curses redefines this */
@@ -33,12 +32,22 @@
 # define inittyb2       inittyb
 # define curttyb2       curttyb
 
+static struct termios termio;
 
 short   ospeed = 0;     /* gets around "not defined" error message */
 
         char erase_char, intr_char, kill_char;
 static boolean settty_needed = FALSE;
-struct termstruct inittyb, curttyb;
+struct termios inittyb, curttyb;
+
+static void getioctls (void) {
+    tcgetattr(fileno(stdin), &termio);
+}
+
+static void setioctls(void) {
+    tcsetattr(fileno(stdin), TCSADRAIN, &termio);
+}
+
 
 static int speednum(speed_t speed) {
         switch (speed) {

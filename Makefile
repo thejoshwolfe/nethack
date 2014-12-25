@@ -48,7 +48,7 @@ NORMAL_ASS_O_FILES = build/allmain.o build/alloc.o build/apply.o build/artifact.
   build/steal.o build/steed.o build/teleport.o build/timeout.o build/topten.o build/track.o build/trap.o build/u_init.o \
   build/uhitm.o build/vault.o build/vision.o build/vis_tab.o build/weapon.o build/were.o build/wield.o build/windows.o \
   build/wizard.o build/worm.o build/worn.o build/write.o build/zap.o \
-  build/ioctl.o build/unixmain.o build/unixtty.o build/unixunix.o \
+  build/unixmain.o build/unixtty.o build/unixunix.o \
   build/getline.o build/termcap.o build/topl.o build/wintty.o \
 	build/version.o
 

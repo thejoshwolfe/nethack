@@ -733,12 +733,6 @@ extern void carry_obj_effects(struct obj *);
 extern const char *currency(long);
 extern void silly_thing(const char *,struct obj *);
 
-/* ### ioctl.c ### */
-
-extern void getwindowsz(void);
-extern void getioctls(void);
-extern void setioctls(void);
-
 /* ### light.c ### */
 
 extern void new_light_source(signed char, signed char, int, int, void *);
