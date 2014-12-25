@@ -1,7 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 /* This file collects some Unix dependencies */
 
-#include "hack.h"       /* mainly for index() which depends on BSD */
+#include "hack.h"
 
 #include <errno.h>
 #include <sys/stat.h>
