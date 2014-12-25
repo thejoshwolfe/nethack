@@ -1,49 +1,49 @@
-#	The quest text file for NetHack 3.4
+#       The quest text file for NetHack 3.4
 #
-#	These are the "standard" message numbers from qtext.h.  All class
-#	dialogue must have at least these entries.
+#       These are the "standard" message numbers from qtext.h.  All class
+#       dialogue must have at least these entries.
 #
-#	QT_FIRSTTIME	 1
-#	QT_NEXTTIME	 2
-#	QT_OTHERTIME	 3
+#       QT_FIRSTTIME     1
+#       QT_NEXTTIME      2
+#       QT_OTHERTIME     3
 #
-#	QT_GUARDTALK	 5	/* 5 random things guards say before quest */
-#	QT_GUARDTALK2	10	/* 5 random things guards say after quest */
+#       QT_GUARDTALK     5      /* 5 random things guards say before quest */
+#       QT_GUARDTALK2   10      /* 5 random things guards say after quest */
 #
-#	QT_FIRSTLEADER	15
-#	QT_NEXTLEADER	16
-#	QT_OTHERLEADER	17
-#	QT_LASTLEADER	18
-#	QT_BADLEVEL	19
-#	QT_BADALIGN	20
-#	QT_ASSIGNQUEST	21
+#       QT_FIRSTLEADER  15
+#       QT_NEXTLEADER   16
+#       QT_OTHERLEADER  17
+#       QT_LASTLEADER   18
+#       QT_BADLEVEL     19
+#       QT_BADALIGN     20
+#       QT_ASSIGNQUEST  21
 #
-#	QT_ENCOURAGE	25	/* 1-10 random encouragement messages */
+#       QT_ENCOURAGE    25      /* 1-10 random encouragement messages */
 #
-#	QT_FIRSTLOCATE	35
-#	QT_NEXTLOCATE	36
+#       QT_FIRSTLOCATE  35
+#       QT_NEXTLOCATE   36
 #
-#	QT_FIRSTACQUIRE	40
-#	QT_NEXTACQUIRE	41
+#       QT_FIRSTACQUIRE 40
+#       QT_NEXTACQUIRE  41
 #
-#	QT_FIRSTNEMESIS	50
-#	QT_NEXTNEMESIS	51
-#	QT_OTHERNEMESIS	52
-#	QT_NEMWANTSIT	53	/* you somehow got the artifact */
+#       QT_FIRSTNEMESIS 50
+#       QT_NEXTNEMESIS  51
+#       QT_OTHERNEMESIS 52
+#       QT_NEMWANTSIT   53      /* you somehow got the artifact */
 #
-#	QT_DISCOURAGE	60	/* 1-10 random maledictive messages */
+#       QT_DISCOURAGE   60      /* 1-10 random maledictive messages */
 #
-#	QT_GOTIT	70
+#       QT_GOTIT        70
 #
-#	QT_KILLEDNEM	80
-#	QT_OFFEREDIT	81
-#	QT_OFFEREDIT2	82	/* if you throw artifact to leader after #81 */
+#       QT_KILLEDNEM    80
+#       QT_OFFEREDIT    81
+#       QT_OFFEREDIT2   82      /* if you throw artifact to leader after #81 */
 #
-#	QT_POSTHANKS	90
-#	QT_HASAMULET	91
+#       QT_POSTHANKS    90
+#       QT_HASAMULET    91
 #
 #
-#	Archeologist
+#       Archeologist
 #
 %Cc Arc 00001
 You are suddenly in familiar surroundings.  The buildings in the distance
@@ -286,7 +286,7 @@ Amulet on that altar to fulfill your destiny.
 "Remember, your path now should always be upwards."
 %E
 #
-#	Barbarian
+#       Barbarian
 #
 %Cc Bar 00001
 Warily you scan your surroundings, all of your senses alert for signs
@@ -552,7 +552,7 @@ speaks of you.
 "This is all I know, %p.  I hope it will help you."
 %E
 #
-#	Cave(wo)man
+#       Cave(wo)man
 #
 %Cc Cav 00001
 You descend through a barely familiar stairwell that you remember
@@ -806,7 +806,7 @@ casts its influence throughout our world.
 "Sacrifice the Amulet on the altar.  Thus shall %d become supreme!"
 %E
 #
-#	Healer
+#       Healer
 #
 %Cc Hea 00001
 What sorcery has brought you back to %H?  The smell
@@ -1074,7 +1074,7 @@ to the astral, and there return the Amulet to %d.  Go forth and
 may our prayers be as a wind upon your back."
 %E
 #
-#	Knight
+#       Knight
 #
 %Cc Kni 00001
 You materialize in the shadows of %H.  Immediately, you notice
@@ -1560,7 +1560,7 @@ the Astral plane.  I suspect that I shall never see you again in this
 life, but I hope to at %ds feet."
 %E
 #
-#	Priest
+#       Priest
 #
 %Cc Pri 00001
 You find yourself standing in sight of %H.  Something
@@ -1806,7 +1806,7 @@ the Astral plane.  I suspect that I shall never see you again in this
 life, but I hope to at %ds feet."
 %E
 #
-#	Ranger
+#       Ranger
 #
 %Cc Ran 00001
 You arrive in familiar surroundings.  In the distance, you %x the
@@ -2066,7 +2066,7 @@ When you reach the temple, sacrifice the Amulet to %d.
 "Thus will you fulfill your destiny."
 %E
 #
-#	Rogue (with apologies to all Norsk speakers -dean)
+#       Rogue (with apologies to all Norsk speakers -dean)
 #
 %Cc Rog 00001
 Unexpectedly, you find yourself back in Ransmannsby, where you trained to
@@ -2307,7 +2307,7 @@ trinket you've got there up to the Astral plane.  From there, %d will
 show you what to do with it.  Once that's done, we will be invincible!"
 %E
 #
-#	Samurai
+#       Samurai
 #
 %Cc Sam 00001
 Even before your senses adjust, you recognize the kami of
@@ -2564,7 +2564,7 @@ for saki and stories when you have finished.
 "Go now, and may our prayers be a wind at your back."
 %E
 #
-#	Tourist
+#       Tourist
 #
 %Cc Tou 00001
 You breathe a sigh of relief as you find yourself back in the familiar
@@ -2814,7 +2814,7 @@ be spoken by the %gP with awe.  You are truly an inspiration to your
 %sp!"
 %E
 #
-#	Valkyrie
+#       Valkyrie
 #
 %Cc Val 00001
 You materialize at the base of a snowy hill.  Atop the hill sits
@@ -3057,7 +3057,7 @@ plane.  There you must offer the Amulet to %d.
 Amulet interferes with mine.  I hope for your success."
 %E
 #
-#	Wizard
+#       Wizard
 #
 %Cc Wiz 00001
 You are suddenly in familiar surroundings.  You notice what appears to
@@ -3314,7 +3314,7 @@ experienced before, so be prepared!
 "For this you were born, %s!  I am very proud of you."
 %E
 #
-#	General
+#       General
 #
 %Cc - 00001
 It is written in the Book of %d:
@@ -3355,7 +3355,7 @@ You again sense %l demanding your attendance.
 essential in locating the Amulet of Yendor."
 %E
 #
-#	Angelic maledictions.
+#       Angelic maledictions.
 #
 %Cp - 00010
 "Repent, and thou shalt be saved!"
@@ -3388,7 +3388,7 @@ essential in locating the Amulet of Yendor."
 "No one expects the Spanish Inquisition!"
 %E
 #
-#	Demonic maledictions.
+#       Demonic maledictions.
 #
 %Cp - 00030
 "I first mistook thee for a statue, when I regarded thy head of stone."
@@ -3451,7 +3451,7 @@ essential in locating the Amulet of Yendor."
 "Why search for the Amulet?  Thou wouldst but lose it, cretin."
 %E
 #
-#	Banishment message (for converted hero)
+#       Banishment message (for converted hero)
 #
 %Cc - 00060
 "You have betrayed all those who hold allegiance to %d, as you once did.
@@ -3466,38 +3466,38 @@ resides.
 Go now!  You are banished from this place.
 %E
 #
-#	TEST PATTERN
+#       TEST PATTERN
 #
 %Cc - 00099
- %p:	return(plname);
- %c:	return(pl_character);
- %r:	return((char *)rank_of(u.ulevel));
- %R:	return((char *)rank_of(MIN_QUEST_LEVEL));
- %s:	return((flags.female) ? "sister" : "brother" );
- %S:	return((flags.female) ? "daughter" : "son" );
- %l:	return((char *)ldrname());
- %i:	return(intermed());
- %o:	return(artiname());
- %n:	return((char *)neminame());
- %g:	return((char *)guardname());
- %G:	return((char *)align_gtitle(u.ualignbase[1]));
- %H:	return((char *)homebase());
- %a:	return(Alignnam(u.ualignbase[1]));
- %A:	return(Alignnam(u.ualign.type));
- %d:	return((char *)align_gname(u.ualignbase[1]));
- %D:	return((char *)align_gname(A_LAWFUL));
- %C:	return("chaotic");
- %N:	return("neutral");
- %L:	return("lawful");
- %x:	return((Blind) ? "sense" : "see");
- %Z:	return("The Dungeons of Doom");
- %%:	return(percent_sign);
- a suffix:	return an(root);
- A suffix:	return An(root);
- C suffix:	return capitalized(root);
- p suffix:	return makeplural(root);
- P suffix:	return makeplural(capitalized(root));
- s suffix:	return s_suffix(root);
- S suffix:	return s_suffix(capitalized(root));
- t suffix:	return strip_the_prefix(root);
+ %p:    return(plname);
+ %c:    return(pl_character);
+ %r:    return((char *)rank_of(u.ulevel));
+ %R:    return((char *)rank_of(MIN_QUEST_LEVEL));
+ %s:    return((flags.female) ? "sister" : "brother" );
+ %S:    return((flags.female) ? "daughter" : "son" );
+ %l:    return((char *)ldrname());
+ %i:    return(intermed());
+ %o:    return(artiname());
+ %n:    return((char *)neminame());
+ %g:    return((char *)guardname());
+ %G:    return((char *)align_gtitle(u.ualignbase[1]));
+ %H:    return((char *)homebase());
+ %a:    return(Alignnam(u.ualignbase[1]));
+ %A:    return(Alignnam(u.ualign.type));
+ %d:    return((char *)align_gname(u.ualignbase[1]));
+ %D:    return((char *)align_gname(A_LAWFUL));
+ %C:    return("chaotic");
+ %N:    return("neutral");
+ %L:    return("lawful");
+ %x:    return((Blind) ? "sense" : "see");
+ %Z:    return("The Dungeons of Doom");
+ %%:    return(percent_sign);
+ a suffix:      return an(root);
+ A suffix:      return An(root);
+ C suffix:      return capitalized(root);
+ p suffix:      return makeplural(root);
+ P suffix:      return makeplural(capitalized(root));
+ s suffix:      return s_suffix(root);
+ S suffix:      return s_suffix(capitalized(root));
+ t suffix:      return strip_the_prefix(root);
 %E

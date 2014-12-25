@@ -182,17 +182,17 @@ gender     Your starting gender (gender:male or gender:female).
 horsename  the name of your first horse  [NONE]
 menucolor  Set colors for menus. (menucolor:"regex_string"=color)
            If boolean option ``menucolors'' is true, menus will be shown
-	   with different colors.
-	   For example, setting ``menucolor:" blessed "=green'' shows
-	   all lines in a menu with the text " blessed " in green.
-	   The string is matched using regular expressions.
-	   Valid values for the color are black, red, green, brown, blue,
-	   magenta, cyan, gray, orange, lightgreen, yellow, lightblue,
-	   lightmagenta, lightcyan and white.
-	   You can define menucolor as many times as you wish; those
-	   defined later will take precedence.
-	   Instead of using this with OPTIONS, consider using
-	   MENUCOLOR="regex_string"=color in the configuration file.  [NONE]
+           with different colors.
+           For example, setting ``menucolor:" blessed "=green'' shows
+           all lines in a menu with the text " blessed " in green.
+           The string is matched using regular expressions.
+           Valid values for the color are black, red, green, brown, blue,
+           magenta, cyan, gray, orange, lightgreen, yellow, lightblue,
+           lightmagenta, lightcyan and white.
+           You can define menucolor as many times as you wish; those
+           defined later will take precedence.
+           Instead of using this with OPTIONS, consider using
+           MENUCOLOR="regex_string"=color in the configuration file.  [NONE]
 menu_*     create single character accelerators for menu commands.  Below
            is a list of all commands.  Each is followed by a list of window-
            ports that implement them:  'x' is X11, 't' is tty, 'g' is Gem,
