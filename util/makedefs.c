@@ -47,12 +47,9 @@ static	const char	SCCS_Id[] = "@(#)makedefs.c\t3.4\t2002/02/03";
 #define QTXT_O_FILE	"quest.dat"
 #define VIS_TAB_H	"vis_tab.h"
 #define VIS_TAB_C	"vis_tab.c"
-	/* locations for those files */
-#define INCLUDE_TEMPLATE	"../include/%s"
-#define SOURCE_TEMPLATE	"../src/%s"
-#define DGN_TEMPLATE		"../dat/%s"  /* where dungeon.pdf file goes */
-#define DATA_TEMPLATE	"../dat/%s"
-#define DATA_IN_TEMPLATE	"../dat/%s"
+/* locations for those files */
+#define OUTPUT_FILE_PATH_TEMPLATE "../build/%s"
+#define DATA_IN_TEMPLATE "../dat/%s"
 
 static const char
     *Dont_Edit_Code =
@@ -262,7 +259,7 @@ do_rumors()
 #ifdef FILE_PREFIX
 	Strcat(filename,file_prefix);
 #endif
-	Sprintf(eos(filename), DATA_TEMPLATE, RUMOR_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, RUMOR_FILE);
 	if (!(ofp = fopen(filename, WRTMODE))) {
 		perror(filename);
 		exit(EXIT_FAILURE);
@@ -444,7 +441,7 @@ do_date()
 #ifdef FILE_PREFIX
 	Strcat(filename,file_prefix);
 #endif
-	Sprintf(eos(filename), INCLUDE_TEMPLATE, DATE_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATE_FILE);
 	if (!(ofp = fopen(filename, WRTMODE))) {
 		perror(filename);
 		exit(EXIT_FAILURE);
@@ -634,7 +631,7 @@ void do_options(void) {
 #ifdef FILE_PREFIX
 	Strcat(filename,file_prefix);
 #endif
-	Sprintf(eos(filename), DATA_TEMPLATE, OPTIONS_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, OPTIONS_FILE);
 	if (!(ofp = fopen(filename, WRTMODE))) {
 		perror(filename);
 		exit(EXIT_FAILURE);
@@ -720,12 +717,12 @@ do_data()
 	long	txt_offset;
 	int	entry_cnt, line_cnt;
 
-	Sprintf(tempfile, DATA_TEMPLATE, "database.tmp");
+	Sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "database.tmp");
 	filename[0]='\0';
 #ifdef FILE_PREFIX
 	Strcat(filename,file_prefix);
 #endif
-	Sprintf(eos(filename), DATA_TEMPLATE, DATA_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATA_FILE);
 	Sprintf(infile, DATA_IN_TEMPLATE, DATA_FILE);
 	Strcat(infile, ".base");
 	if (!(ifp = fopen(infile, RDTMODE))) {		/* data.base */
@@ -858,12 +855,12 @@ do_oracles()
 	int	oracle_cnt;
 	int i;
 
-	Sprintf(tempfile, DATA_TEMPLATE, "oracles.tmp");
+	Sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "oracles.tmp");
 	filename[0]='\0';
 #ifdef FILE_PREFIX
 	Strcat(filename, file_prefix);
 #endif
-	Sprintf(eos(filename), DATA_TEMPLATE, ORACLE_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ORACLE_FILE);
 	Sprintf(infile, DATA_IN_TEMPLATE, ORACLE_FILE);
 	Strcat(infile, ".txt");
 	if (!(ifp = fopen(infile, RDTMODE))) {
@@ -1088,7 +1085,7 @@ do_monstr()
 #ifdef FILE_PREFIX
     Strcat(filename, file_prefix);
 #endif
-    Sprintf(eos(filename), SOURCE_TEMPLATE, MON_STR_C);
+    Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MON_STR_C);
     if (!(ofp = fopen(filename, WRTMODE))) {
 	perror(filename);
 	exit(EXIT_FAILURE);
@@ -1128,7 +1125,7 @@ do_permonst()
 #ifdef FILE_PREFIX
 	Strcat(filename, file_prefix);
 #endif
-	Sprintf(eos(filename), INCLUDE_TEMPLATE, MONST_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MONST_FILE);
 	if (!(ofp = fopen(filename, WRTMODE))) {
 		perror(filename);
 		exit(EXIT_FAILURE);
@@ -1377,7 +1374,7 @@ do_questtxt()
 #ifdef FILE_PREFIX
 	Strcat(filename, file_prefix);
 #endif
-	Sprintf(eos(filename), DATA_TEMPLATE, QTXT_O_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, QTXT_O_FILE);
 	if(!(ofp = fopen(filename, WRBMODE))) {
 		perror(filename);
 		Fclose(ifp);
@@ -1444,7 +1441,7 @@ do_objs()
 #ifdef FILE_PREFIX
 	Strcat(filename, file_prefix);
 #endif
-	Sprintf(eos(filename), INCLUDE_TEMPLATE, ONAME_FILE);
+	Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ONAME_FILE);
 	if (!(ofp = fopen(filename, WRTMODE))) {
 		perror(filename);
 		exit(EXIT_FAILURE);
@@ -1600,7 +1597,7 @@ do_vision()
 #ifdef FILE_PREFIX
     Strcat(filename, file_prefix);
 #endif
-    Sprintf(filename, INCLUDE_TEMPLATE, VIS_TAB_H);
+    Sprintf(filename, OUTPUT_FILE_PATH_TEMPLATE, VIS_TAB_H);
     if (!(ofp = fopen(filename, WRTMODE))) {
 	perror(filename);
 	exit(EXIT_FAILURE);
@@ -1623,10 +1620,10 @@ do_vision()
 #ifdef FILE_PREFIX
     Strcat(filename, file_prefix);
 #endif
-    Sprintf(filename, SOURCE_TEMPLATE, VIS_TAB_C);
+    Sprintf(filename, OUTPUT_FILE_PATH_TEMPLATE, VIS_TAB_C);
     if (!(ofp = fopen(filename, WRTMODE))) {
 	perror(filename);
-	Sprintf(filename, INCLUDE_TEMPLATE, VIS_TAB_H);
+	Sprintf(filename, OUTPUT_FILE_PATH_TEMPLATE, VIS_TAB_H);
 	Unlink(filename);
 	exit(EXIT_FAILURE);
     }

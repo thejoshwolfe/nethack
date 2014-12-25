@@ -1,5 +1,3 @@
 #!/bin/sh
 
-rm -f .gitignore
-git clean -fdq
-git checkout .gitignore
+rm -rf build

@@ -2,166 +2,170 @@ all:
 
 SHELL=/bin/sh
 
-GENERATED_LEVELS = dat/asmodeus.lev dat/baalz.lev dat/bigrm-?.lev dat/castle.lev dat/fakewiz?.lev \
-  dat/juiblex.lev dat/knox.lev dat/medusa-?.lev dat/minend-?.lev dat/minefill.lev \
-  dat/minetn-?.lev dat/oracle.lev dat/orcus.lev dat/sanctum.lev dat/soko?-?.lev \
-  dat/tower?.lev dat/valley.lev dat/wizard?.lev \
-  dat/astral.lev dat/air.lev dat/earth.lev dat/fire.lev dat/water.lev \
-  dat/???-goal.lev dat/???-fil?.lev dat/???-loca.lev dat/???-strt.lev
+GENERATED_LEVELS = build/asmodeus.lev build/baalz.lev build/bigrm-?.lev build/castle.lev build/fakewiz?.lev \
+  build/juiblex.lev build/knox.lev build/medusa-?.lev build/minend-?.lev build/minefill.lev \
+  build/minetn-?.lev build/oracle.lev build/orcus.lev build/sanctum.lev build/soko?-?.lev \
+  build/tower?.lev build/valley.lev build/wizard?.lev \
+  build/astral.lev build/air.lev build/earth.lev build/fire.lev build/water.lev \
+  build/???-goal.lev build/???-fil?.lev build/???-loca.lev build/???-strt.lev
 
-DATA_INPUTS1 = dat/help dat/hh dat/cmdhelp dat/history dat/opthelp dat/wizhelp dat/dungeon
-DATA_INPUTS2 = dat/data dat/oracles dat/options dat/quest.dat dat/rumors
+DATA_INPUTS1 = dat/help dat/hh dat/cmdhelp dat/history dat/opthelp dat/wizhelp build/dungeon
+DATA_INPUTS2 = build/data build/oracles dat/options build/quest.dat build/rumors
 DATDLB = $(DATA_INPUTS1) $(GENERATED_LEVELS) $(DATA_INPUTS2)
 
-MAKEDEFS_OBJS = util/makedefs.o src/monst.o src/objects.o
-DLB_OBJS = util/dlb_main.o src/dlb.o src/alloc.o util/panic.o
-DGN_COMP_OBJS = util/dgn_yacc.o util/dgn_lex.o util/dgn_main.o src/alloc.o util/panic.o
-LEV_COMP_OBJS = util/lev_yacc.o util/lev_lex.o util/lev_main.o src/alloc.o util/panic.o src/drawing.o src/decl.o src/monst.o src/objects.o
-RECOVER_OBJS = util/recover.o
+MAKEDEFS_OBJS = build/makedefs.o build/monst.o build/objects.o
+DLB_OBJS = build/dlb_main.o build/dlb.o build/alloc.o build/panic.o
+DGN_COMP_OBJS = build/dgn_yacc.o build/dgn_lex.o build/dgn_main.o build/alloc.o build/panic.o
+LEV_COMP_OBJS = build/lev_yacc.o build/lev_lex.o build/lev_main.o build/alloc.o build/panic.o build/drawing.o build/decl.o build/monst.o build/objects.o
+RECOVER_OBJS = build/recover.o
 
-CFLAGS = -Iinclude -g
+CFLAGS = -Ibuild -Iinclude -g
 
-MAKEDEFS = cd dat && ../util/makedefs
+MAKEDEFS = cd dat && ../build/makedefs
 
-HACK_H = include/onames.h include/pm.h
+HACK_H = build/onames.h build/pm.h
 
-MAKEDEFS_NEEDS_THESE = src/monst.o src/objects.o
-NORMAL_ASS_O_FILES = src/allmain.o src/alloc.o src/apply.o src/artifact.o src/attrib.o src/ball.o \
-  src/bones.o src/botl.o src/cmd.o src/dbridge.o src/decl.o src/detect.o src/dig.o src/display.o src/dlb.o \
-  src/do.o src/do_name.o src/do_wear.o src/dog.o src/dogmove.o src/dokick.o src/dothrow.o \
-  src/drawing.o src/dungeon.o src/eat.o src/end.o src/engrave.o src/exper.o src/explode.o \
-  src/files.o src/fountain.o src/hack.o src/hacklib.o src/invent.o src/light.o \
-  src/lock.o src/mail.o src/makemon.o src/mapglyph.o src/mcastu.o src/mhitm.o src/mhitu.o \
-  src/minion.o src/mklev.o src/mkmap.o \
-  src/mkmaze.o src/mkobj.o src/mkroom.o src/mon.o src/mondata.o src/monmove.o src/monstr.o \
-  src/mplayer.o src/mthrowu.o src/muse.o src/music.o src/o_init.o src/objnam.o src/options.o \
-  src/pager.o src/pickup.o src/pline.o src/polyself.o src/potion.o src/pray.o src/priest.o \
-  src/quest.o src/questpgr.o src/read.o src/rect.o src/region.o src/restore.o src/rip.o src/rnd.o \
-  src/role.o src/rumors.o src/save.o src/shk.o src/shknam.o src/sit.o src/sounds.o src/sp_lev.o src/spell.o \
-  src/steal.o src/steed.o src/teleport.o src/timeout.o src/topten.o src/track.o src/trap.o src/u_init.o \
-  src/uhitm.o src/vault.o src/vision.o src/vis_tab.o src/weapon.o src/were.o src/wield.o src/windows.o \
-  src/wizard.o src/worm.o src/worn.o src/write.o src/zap.o \
-  src/ioctl.o src/unixmain.o src/unixtty.o src/unixunix.o \
-  src/getline.o src/termcap.o src/topl.o src/wintty.o \
-	src/version.o
+MAKEDEFS_NEEDS_THESE = build/monst.o build/objects.o
+NORMAL_ASS_O_FILES = build/allmain.o build/alloc.o build/apply.o build/artifact.o build/attrib.o build/ball.o \
+  build/bones.o build/botl.o build/cmd.o build/dbridge.o build/decl.o build/detect.o build/dig.o build/display.o build/dlb.o \
+  build/do.o build/do_name.o build/do_wear.o build/dog.o build/dogmove.o build/dokick.o build/dothrow.o \
+  build/drawing.o build/dungeon.o build/eat.o build/end.o build/engrave.o build/exper.o build/explode.o \
+  build/files.o build/fountain.o build/hack.o build/hacklib.o build/invent.o build/light.o \
+  build/lock.o build/mail.o build/makemon.o build/mapglyph.o build/mcastu.o build/mhitm.o build/mhitu.o \
+  build/minion.o build/mklev.o build/mkmap.o \
+  build/mkmaze.o build/mkobj.o build/mkroom.o build/mon.o build/mondata.o build/monmove.o build/monstr.o \
+  build/mplayer.o build/mthrowu.o build/muse.o build/music.o build/o_init.o build/objnam.o build/options.o \
+  build/pager.o build/pickup.o build/pline.o build/polyself.o build/potion.o build/pray.o build/priest.o \
+  build/quest.o build/questpgr.o build/read.o build/rect.o build/region.o build/restore.o build/rip.o build/rnd.o \
+  build/role.o build/rumors.o build/save.o build/shk.o build/shknam.o build/sit.o build/sounds.o build/sp_lev.o build/spell.o \
+  build/steal.o build/steed.o build/teleport.o build/timeout.o build/topten.o build/track.o build/trap.o build/u_init.o \
+  build/uhitm.o build/vault.o build/vision.o build/vis_tab.o build/weapon.o build/were.o build/wield.o build/windows.o \
+  build/wizard.o build/worm.o build/worn.o build/write.o build/zap.o \
+  build/ioctl.o build/unixmain.o build/unixtty.o build/unixunix.o \
+  build/getline.o build/termcap.o build/topl.o build/wintty.o \
+	build/version.o
 
 NETHACK_OBJS = $(MAKEDEFS_NEEDS_THESE) $(NORMAL_ASS_O_FILES)
 
-all: src/nethack util/recover dat/nhdat
+all: build/nethack build/recover build/nhdat
 
-dat/nhdat: util/dlb util/lev_comp $(DATA_INPUTS1) $(DATA_INPUTS2)
-	cd dat && ../util/lev_comp bigroom.des
-	cd dat && ../util/lev_comp castle.des
-	cd dat && ../util/lev_comp endgame.des
-	cd dat && ../util/lev_comp gehennom.des
-	cd dat && ../util/lev_comp knox.des
-	cd dat && ../util/lev_comp medusa.des
-	cd dat && ../util/lev_comp mines.des
-	cd dat && ../util/lev_comp oracle.des
-	cd dat && ../util/lev_comp sokoban.des
-	cd dat && ../util/lev_comp tower.des
-	cd dat && ../util/lev_comp yendor.des
-	cd dat && ../util/lev_comp Arch.des
-	cd dat && ../util/lev_comp Barb.des
-	cd dat && ../util/lev_comp Caveman.des
-	cd dat && ../util/lev_comp Healer.des
-	cd dat && ../util/lev_comp Knight.des
-	cd dat && ../util/lev_comp Monk.des
-	cd dat && ../util/lev_comp Priest.des
-	cd dat && ../util/lev_comp Ranger.des
-	cd dat && ../util/lev_comp Rogue.des
-	cd dat && ../util/lev_comp Samurai.des
-	cd dat && ../util/lev_comp Tourist.des
-	cd dat && ../util/lev_comp Valkyrie.des
-	cd dat && ../util/lev_comp Wizard.des
-	cd dat && ../util/dlb cf nhdat $(notdir $(DATDLB))
+build/nhdat: build/dlb build/lev_comp $(DATA_INPUTS1) $(DATA_INPUTS2)
+	cd build && ./lev_comp ../dat/bigroom.des
+	cd build && ./lev_comp ../dat/castle.des
+	cd build && ./lev_comp ../dat/endgame.des
+	cd build && ./lev_comp ../dat/gehennom.des
+	cd build && ./lev_comp ../dat/knox.des
+	cd build && ./lev_comp ../dat/medusa.des
+	cd build && ./lev_comp ../dat/mines.des
+	cd build && ./lev_comp ../dat/oracle.des
+	cd build && ./lev_comp ../dat/sokoban.des
+	cd build && ./lev_comp ../dat/tower.des
+	cd build && ./lev_comp ../dat/yendor.des
+	cd build && ./lev_comp ../dat/Arch.des
+	cd build && ./lev_comp ../dat/Barb.des
+	cd build && ./lev_comp ../dat/Caveman.des
+	cd build && ./lev_comp ../dat/Healer.des
+	cd build && ./lev_comp ../dat/Knight.des
+	cd build && ./lev_comp ../dat/Monk.des
+	cd build && ./lev_comp ../dat/Priest.des
+	cd build && ./lev_comp ../dat/Ranger.des
+	cd build && ./lev_comp ../dat/Rogue.des
+	cd build && ./lev_comp ../dat/Samurai.des
+	cd build && ./lev_comp ../dat/Tourist.des
+	cd build && ./lev_comp ../dat/Valkyrie.des
+	cd build && ./lev_comp ../dat/Wizard.des
+	./build/dlb cf build/nhdat $(DATDLB)
 
-util/makedefs: $(MAKEDEFS_OBJS)
+build/makedefs: $(MAKEDEFS_OBJS)
 	gcc -o $@ $(MAKEDEFS_OBJS)
 
-%.o: %.c
+build/%.o: src/%.c
+	gcc -o $@ -c $(CFLAGS) $<
+build/%.o: util/%.c
+	gcc -o $@ -c $(CFLAGS) $<
+build/%.o: build/%.c
 	gcc -o $@ -c $(CFLAGS) $<
 
-dat/data: dat/data.base util/makedefs
+build/data: dat/data.base build/makedefs
 	$(MAKEDEFS) -d
 
-dat/rumors: dat/rumors.tru dat/rumors.fal util/makedefs
+build/rumors: dat/rumors.tru dat/rumors.fal build/makedefs
 	$(MAKEDEFS) -r
 
-dat/quest.dat: dat/quest.txt util/makedefs
+build/quest.dat: dat/quest.txt build/makedefs
 	$(MAKEDEFS) -q
 
-dat/oracles: dat/oracles.txt util/makedefs
+build/oracles: dat/oracles.txt build/makedefs
 	$(MAKEDEFS) -h
 
-util/dlb: $(DLB_OBJS)
+build/dlb: $(DLB_OBJS)
 	gcc -o $@ $(DLB_OBJS)
 
-dat/dungeon: util/dgn_comp dat/dungeon.def
-	cd dat && ../util/dgn_comp dungeon.def
+build/dungeon: build/dgn_comp dat/dungeon.def
+	./build/dgn_comp dat/dungeon.def $@
 
-util/dgn_yacc.c: util/dgn_comp.y
-	mkdir -p util/dgn.tmp
-	cd util/dgn.tmp && yacc -d ../dgn_comp.y
-	mv util/dgn.tmp/y.tab.c util/dgn_yacc.c
-	mv util/dgn.tmp/y.tab.h include/dgn_comp.h
+build/dgn_yacc.c: util/dgn_comp.y
+	mkdir -p build/dgn.tmp
+	cd build/dgn.tmp && yacc -d ../../util/dgn_comp.y
+	mv build/dgn.tmp/y.tab.c build/dgn_yacc.c
+	mv build/dgn.tmp/y.tab.h build/dgn_comp.h
 
-util/lev_yacc.c: util/lev_comp.y
-	mkdir -p util/lev.tmp
-	cd util/lev.tmp && yacc -d ../lev_comp.y
-	mv util/lev.tmp/y.tab.c util/lev_yacc.c
-	mv util/lev.tmp/y.tab.h include/lev_comp.h
+build/lev_yacc.c: util/lev_comp.y
+	mkdir -p build/lev.tmp
+	cd build/lev.tmp && yacc -d ../../util/lev_comp.y
+	mv build/lev.tmp/y.tab.c build/lev_yacc.c
+	mv build/lev.tmp/y.tab.h build/lev_comp.h
 
 
-include/dgn_comp.h: util/dgn_yacc.c
+build/dgn_comp.h: build/dgn_yacc.c
 
-include/lev_comp.h: util/lev_yacc.c
+build/lev_comp.h: build/lev_yacc.c
 
-util/dgn_lex.o: util/dgn_lex.c util/dgn_yacc.o
+build/dgn_lex.o: build/dgn_lex.c build/dgn_yacc.o
 
-util/lev_lex.o: util/lev_lex.c $(HACK_H) util/lev_yacc.o
+build/lev_lex.o: build/lev_lex.c $(HACK_H) build/lev_yacc.o
 
-util/dgn_lex.c: util/dgn_comp.l
-	mkdir -p util/dgn.tmp
-	cd util/dgn.tmp && lex ../dgn_comp.l
-	mv util/dgn.tmp/lex.yy.c util/dgn_lex.c
+build/dgn_lex.c: util/dgn_comp.l
+	mkdir -p build/dgn.tmp
+	cd build/dgn.tmp && lex ../../util/dgn_comp.l
+	mv build/dgn.tmp/lex.yy.c build/dgn_lex.c
 
-util/lev_lex.c: util/lev_comp.l
-	mkdir -p util/lev.tmp
-	cd util/lev.tmp && lex ../lev_comp.l
-	mv util/lev.tmp/lex.yy.c util/lev_lex.c
+build/lev_lex.c: util/lev_comp.l
+	mkdir -p build/lev.tmp
+	cd build/lev.tmp && lex ../../util/lev_comp.l
+	mv build/lev.tmp/lex.yy.c build/lev_lex.c
 
-util/dgn_comp: $(DGN_COMP_OBJS)
+build/dgn_comp: $(DGN_COMP_OBJS)
 	gcc -o $@ $(DGN_COMP_OBJS)
 
-util/lev_comp: $(LEV_COMP_OBJS)
+build/lev_comp: $(LEV_COMP_OBJS)
 	gcc -o $@ $(LEV_COMP_OBJS)
 
-util/lev_yacc.o: $(HACK_H)
+build/lev_yacc.o: $(HACK_H)
 
-util/lev_main.o: $(HACK_H)
+build/lev_main.o: $(HACK_H)
 
-include/onames.h: util/makedefs
+build/onames.h: build/makedefs
 	$(MAKEDEFS) -o
 
-include/pm.h: util/makedefs
+build/pm.h: build/makedefs
 	$(MAKEDEFS) -p
 
 $(NORMAL_ASS_O_FILES): $(HACK_H)
 
-src/nethack: $(NETHACK_OBJS)
+build/nethack: $(NETHACK_OBJS)
 	gcc -o $@ $(NETHACK_OBJS) -lncurses
 
-# makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
-src/vis_tab.c: include/vis_tab.h
-
-src/monstr.c: util/makedefs
+build/monstr.c: build/makedefs
 	$(MAKEDEFS) -m
 
-include/vis_tab.h: util/makedefs
+build/vis_tab.h: build/makedefs
 	$(MAKEDEFS) -z
+
+# makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
+build/vis_tab.c: build/vis_tab.h
 
 # recover can be used when INSURANCE is defined in include/config.h
 # and the checkpoint option is true
-util/recover: $(RECOVER_OBJS)
+build/recover: $(RECOVER_OBJS)
 	gcc -o $@ $(RECOVER_OBJS)
