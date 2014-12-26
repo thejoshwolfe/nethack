@@ -10,9 +10,6 @@
 extern void substitute_tiles(d_level *);       /* from tile.c */
 #endif
 
-#ifdef ZEROCOMP
-static int mgetc(void);
-#endif
 static void find_lev_obj(void);
 static void restlevchn(int);
 static void restdamage(int,boolean);
@@ -510,11 +507,7 @@ dorecover (int fd)
         u.usteed = (struct monst *)0;
 
         while(1) {
-#ifdef ZEROCOMP
-                if(mread(fd, (void *) &ltmp, sizeof ltmp) < 0)
-#else
                 if(read(fd, (void *) &ltmp, sizeof ltmp) != sizeof ltmp)
-#endif
                         break;
                 getlev(fd, 0, ltmp, FALSE);
                 rtmp = restlevelfile(fd, ltmp);
@@ -615,31 +608,7 @@ boolean ghostly;
             trickery(trickbuf);
         }
 
-#ifdef RLECOMP
-        {
-                short   i, j;
-                unsigned char   len;
-                struct rm r;
-
-                i = 0; j = 0; len = 0;
-                while(i < ROWNO) {
-                    while(j < COLNO) {
-                        if(len > 0) {
-                            levl[j][i] = r;
-                            len -= 1;
-                            j += 1;
-                        } else {
-                            mread(fd, (void *)&len, sizeof(unsigned char));
-                            mread(fd, (void *)&r, sizeof(struct rm));
-                        }
-                    }
-                    j = 0;
-                    i += 1;
-                }
-        }
-#else
         mread(fd, (void *) levl, sizeof(levl));
-#endif  /* RLECOMP */
 
         mread(fd, (void *)&omoves, sizeof(omoves));
         mread(fd, (void *)&upstair, sizeof(stairway));
@@ -863,65 +832,6 @@ boolean ghostly;
 }
 
 
-#ifdef ZEROCOMP
-#define RLESC '\0'      /* Leading character for run of RLESC's */
-
-#ifndef ZEROCOMP_BUFSIZ
-#define ZEROCOMP_BUFSIZ BUFSZ
-#endif
-static unsigned char inbuf[ZEROCOMP_BUFSIZ];
-static unsigned short inbufp = 0;
-static unsigned short inbufsz = 0;
-static short inrunlength = -1;
-static int mreadfd;
-
-static int
-mgetc (void)
-{
-    if (inbufp >= inbufsz) {
-        inbufsz = read(mreadfd, (void *)inbuf, sizeof inbuf);
-        if (!inbufsz) {
-            if (inbufp > sizeof inbuf)
-                error("EOF on file #%d.\n", mreadfd);
-            inbufp = 1 + sizeof inbuf;  /* exactly one warning :-) */
-            return -1;
-        }
-        inbufp = 0;
-    }
-    return inbuf[inbufp++];
-}
-
-void
-minit (void)
-{
-    inbufsz = 0;
-    inbufp = 0;
-    inrunlength = -1;
-}
-
-int
-mread (int fd, void *buf, unsigned len)
-{
-    /*int readlen = 0;*/
-    if (fd < 0) error("Restore error; mread attempting to read file %d.", fd);
-    mreadfd = fd;
-    while (len--) {
-        if (inrunlength > 0) {
-            inrunlength--;
-            *(*((char **)&buf))++ = '\0';
-        } else {
-            short ch = mgetc();
-            if (ch < 0) return -1; /*readlen;*/
-            if ((*(*(char **)&buf)++ = (char)ch) == RLESC) {
-                inrunlength = mgetc();
-            }
-        }
-        /*readlen++;*/
-    }
-    return 0; /*readlen;*/
-}
-
-#else /* ZEROCOMP */
 
 void minit(void) {
     return;
@@ -941,4 +851,3 @@ void mread(int fd, void *buf, unsigned int len) {
                 panic("Error reading level file.");
         }
 }
-#endif /* ZEROCOMP */

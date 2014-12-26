@@ -16,9 +16,6 @@
 #include <fcntl.h>
 #endif
 
-#ifdef ZEROCOMP
-static void bputc(int);
-#endif
 static void savelevchn(int,int);
 static void savedamage(int,int);
 static void saveobjchn(int,struct obj *,int);
@@ -97,14 +94,12 @@ int dosave0(void) {
 #endif
 
         HUP if (iflags.window_inited) {
-            uncompress(fq_save);
             fd = open_savefile();
             if (fd > 0) {
                 (void) close(fd);
                 clear_nhwindow(WIN_MESSAGE);
                 There("seems to be an old save file.");
                 if (yn("Overwrite the old file?") == 'n') {
-                    compress(fq_save);
                     return 0;
                 }
             }
@@ -178,7 +173,6 @@ int dosave0(void) {
         /* get rid of current level --jgm */
         delete_levelfile(ledger_no(&u.uz));
         delete_levelfile(0);
-        compress(fq_save);
         return(1);
 }
 
@@ -318,54 +312,7 @@ void savelev(int fd, signed char lev, int mode) {
             level_info[lev].flags |= VISITED;
         bwrite(fd,(void *) &hackpid,sizeof(hackpid));
         bwrite(fd,(void *) &lev,sizeof(lev));
-#ifdef RLECOMP
-        {
-            /* perform run-length encoding of rm structs */
-            struct rm *prm, *rgrm;
-            int x, y;
-            unsigned char match;
-
-            rgrm = &levl[0][0];         /* start matching at first rm */
-            match = 0;
-
-            for (y = 0; y < ROWNO; y++) {
-                for (x = 0; x < COLNO; x++) {
-                    prm = &levl[x][y];
-                    if (prm->glyph == rgrm->glyph
-                        && prm->typ == rgrm->typ
-                        && prm->seenv == rgrm->seenv
-                        && prm->horizontal == rgrm->horizontal
-                        && prm->flags == rgrm->flags
-                        && prm->lit == rgrm->lit
-                        && prm->waslit == rgrm->waslit
-                        && prm->roomno == rgrm->roomno
-                        && prm->edge == rgrm->edge) {
-                        match++;
-                        if (match > 254) {
-                            match = 254;        /* undo this match */
-                            goto writeout;
-                        }
-                    } else {
-                        /* the run has been broken,
-                         * write out run-length encoding */
-                    writeout:
-                        bwrite(fd, (void *)&match, sizeof(unsigned char));
-                        bwrite(fd, (void *)rgrm, sizeof(struct rm));
-                        /* start encoding again. we have at least 1 rm
-                         * in the next run, viz. this one. */
-                        match = 1;
-                        rgrm = prm;
-                    }
-                }
-            }
-            if (match > 0) {
-                bwrite(fd, (void *)&match, sizeof(unsigned char));
-                bwrite(fd, (void *)rgrm, sizeof(struct rm));
-            }
-        }
-#else
         bwrite(fd,(void *) levl,sizeof(levl));
-#endif /* RLECOMP */
 
         bwrite(fd,(void *) &monstermoves,sizeof(monstermoves));
         bwrite(fd,(void *) &upstair,sizeof(stairway));
@@ -404,120 +351,6 @@ void savelev(int fd, signed char lev, int mode) {
         if (mode != FREE_SAVE) bflush(fd);
 }
 
-#ifdef ZEROCOMP
-/* The runs of zero-run compression are flushed after the game state or a
- * level is written out.  This adds a couple bytes to a save file, where
- * the runs could be mashed together, but it allows gluing together game
- * state and level files to form a save file, and it means the flushing
- * does not need to be specifically called for every other time a level
- * file is written out.
- */
-
-#define RLESC '\0'    /* Leading character for run of LRESC's */
-#define flushoutrun(ln) (bputc(RLESC), bputc(ln), ln = -1)
-
-#ifndef ZEROCOMP_BUFSIZ
-# define ZEROCOMP_BUFSIZ BUFSZ
-#endif
-static unsigned char outbuf[ZEROCOMP_BUFSIZ];
-static unsigned short outbufp = 0;
-static short outrunlength = -1;
-static int bwritefd;
-static boolean compressing = FALSE;
-
-/*dbg()
-{
-    HUP printf("outbufp %d outrunlength %d\n", outbufp,outrunlength);
-}*/
-
-static void bputc(int c) {
-    if (outbufp >= sizeof outbuf) {
-        (void) write(bwritefd, outbuf, sizeof outbuf);
-        outbufp = 0;
-    }
-    outbuf[outbufp++] = (unsigned char)c;
-}
-
-/*ARGSUSED*/
-void
-bufon (int fd)
-{
-    compressing = TRUE;
-    return;
-}
-
-/*ARGSUSED*/
-void
-bufoff (int fd)
-{
-    if (outbufp) {
-        outbufp = 0;
-        panic("closing file with buffered data still unwritten");
-    }
-    outrunlength = -1;
-    compressing = FALSE;
-    return;
-}
-
-void
-bflush (  /* flush run and buffer */
-    int fd
-)
-{
-    bwritefd = fd;
-    if (outrunlength >= 0) {    /* flush run */
-        flushoutrun(outrunlength);
-    }
-
-    if (outbufp) {
-        if (write(fd, outbuf, outbufp) != outbufp) {
-            if (program_state.done_hup)
-                terminate(EXIT_FAILURE);
-            else
-                bclose(fd);     /* panic (outbufp != 0) */
-        }
-        outbufp = 0;
-    }
-}
-
-void
-bwrite (int fd, void *loc, unsigned num)
-{
-    unsigned char *bp = (unsigned char *)loc;
-
-    if (!compressing) {
-        if ((unsigned) write(fd, loc, num) != num) {
-            if (program_state.done_hup)
-                terminate(EXIT_FAILURE);
-            else
-                panic("cannot write %u bytes to file #%d", num, fd);
-        }
-    } else {
-        bwritefd = fd;
-        for (; num; num--, bp++) {
-            if (*bp == RLESC) { /* One more char in run */
-                if (++outrunlength == 0xFF) {
-                    flushoutrun(outrunlength);
-                }
-            } else {            /* end of run */
-                if (outrunlength >= 0) {        /* flush run */
-                    flushoutrun(outrunlength);
-                }
-                bputc(*bp);
-            }
-        }
-    }
-}
-
-void
-bclose (int fd)
-{
-    bufoff(fd);
-    (void) close(fd);
-    return;
-}
-
-#else /* ZEROCOMP */
 
 static int bw_fd = -1;
 static FILE *bw_FILE = 0;
@@ -575,7 +408,6 @@ void bclose(int fd) {
         (void) close(fd);
     return;
 }
-#endif /* ZEROCOMP */
 
 static void
 savelevchn (int fd, int mode)

@@ -48,10 +48,6 @@ extern int n_dgns;              /* from dungeon.c */
 
 static char *set_bonesfile_name(char *,d_level*);
 static char *set_bonestemp_name(void);
-#ifdef COMPRESS
-static void redirect(const char *,const char *,FILE *,boolean);
-static void docompress_file(const char *,boolean);
-#endif
 static char *make_lockname(const char *,char *);
 static FILE *fopen_config_file(const char *);
 static int get_uchars(FILE *,char *,char *,unsigned char *,boolean,int,const char *);
@@ -460,7 +456,6 @@ open_bonesfile (d_level *lev, char **bonesid)
 
         *bonesid = set_bonesfile_name(bones, lev);
         fq_bones = fqname(bones, BONESPREFIX, 0);
-        uncompress(fq_bones);   /* no effect if nonexistent */
         fd = open(fq_bones, O_RDONLY | O_BINARY, 0);
         return fd;
 }
@@ -473,12 +468,6 @@ delete_bonesfile (d_level *lev)
         return !(unlink(fqname(bones, BONESPREFIX, 0)) < 0);
 }
 
-
-/* assume we're compressing the recently read or created bonesfile, so the
- * file name is already set properly */
-void compress_bonesfile(void) {
-        compress(fqname(bones, BONESPREFIX, 0));
-}
 
 /* ----------  END BONES FILE HANDLING ----------- */
 
@@ -546,7 +535,6 @@ restore_saved_game (void)
         set_savefile_name();
         fq_save = fqname(SAVEF, SAVEPREFIX, 0);
 
-        uncompress(fq_save);
         if ((fd = open_savefile()) < 0) return fd;
 
         if (!uptodate(fd, fq_save)) {
@@ -572,192 +560,7 @@ void free_saved_games (char **saved) {
 /* ----------  END SAVE FILE HANDLING ----------- */
 
 
-/* ----------  BEGIN FILE COMPRESSION HANDLING ----------- */
 
-#ifdef COMPRESS
-
-static void
-redirect(filename, mode, stream, uncomp)
-const char *filename, *mode;
-FILE *stream;
-boolean uncomp;
-{
-        if (freopen(filename, mode, stream) == (FILE *)0) {
-                (void) fprintf(stderr, "freopen of %s for %scompress failed\n",
-                        filename, uncomp ? "un" : "");
-                terminate(EXIT_FAILURE);
-        }
-}
-
-/*
- * using system() is simpler, but opens up security holes and causes
- * problems on at least Interactive UNIX 3.0.1 (SVR3.2), where any
- * setuid is renounced by /bin/sh, so the files cannot be accessed.
- *
- * cf. child() in unixunix.c.
- */
-static void
-docompress_file(filename, uncomp)
-const char *filename;
-boolean uncomp;
-{
-        char cfn[80];
-        FILE *cf;
-        const char *args[10];
-# ifdef COMPRESS_OPTIONS
-        char opts[80];
-# endif
-        int i = 0;
-        int f;
-        boolean istty = !strncmpi(windowprocs.name, "tty", 3);
-
-        Strcpy(cfn, filename);
-# ifdef COMPRESS_EXTENSION
-        Strcat(cfn, COMPRESS_EXTENSION);
-# endif
-        /* when compressing, we know the file exists */
-        if (uncomp) {
-            if ((cf = fopen(cfn, RDBMODE)) == (FILE *)0)
-                    return;
-            (void) fclose(cf);
-        }
-
-        args[0] = COMPRESS;
-        if (uncomp) args[++i] = "-d";   /* uncompress */
-# ifdef COMPRESS_OPTIONS
-        {
-            /* we can't guarantee there's only one additional option, sigh */
-            char *opt;
-            boolean inword = FALSE;
-
-            Strcpy(opts, COMPRESS_OPTIONS);
-            opt = opts;
-            while (*opt) {
-                if ((*opt == ' ') || (*opt == '\t')) {
-                    if (inword) {
-                        *opt = '\0';
-                        inword = FALSE;
-                    }
-                } else if (!inword) {
-                    args[++i] = opt;
-                    inword = TRUE;
-                }
-                opt++;
-            }
-        }
-# endif
-        args[++i] = (char *)0;
-
-        /* If we don't do this and we are right after a y/n question *and*
-         * there is an error message from the compression, the 'y' or 'n' can
-         * end up being displayed after the error message.
-         */
-        if (istty)
-            mark_synch();
-        f = fork();
-        if (f == 0) {   /* child */
-                /* any error messages from the compression must come out after
-                 * the first line, because the more() to let the user read
-                 * them will have to clear the first line.  This should be
-                 * invisible if there are no error messages.
-                 */
-                if (istty)
-                    raw_print("");
-                /* run compressor without privileges, in case other programs
-                 * have surprises along the line of gzip once taking filenames
-                 * in GZIP.
-                 */
-                /* assume all compressors will compress stdin to stdout
-                 * without explicit filenames.  this is true of at least
-                 * compress and gzip, those mentioned in config.h.
-                 */
-                if (uncomp) {
-                        redirect(cfn, RDBMODE, stdin, uncomp);
-                        redirect(filename, WRBMODE, stdout, uncomp);
-                } else {
-                        redirect(filename, RDBMODE, stdin, uncomp);
-                        redirect(cfn, WRBMODE, stdout, uncomp);
-                }
-                (void) setgid(getgid());
-                (void) setuid(getuid());
-                (void) execv(args[0], (char *const *) args);
-                perror((char *)0);
-                (void) fprintf(stderr, "Exec to %scompress %s failed.\n",
-                        uncomp ? "un" : "", filename);
-                terminate(EXIT_FAILURE);
-        } else if (f == -1) {
-                perror((char *)0);
-                pline("Fork to %scompress %s failed.",
-                        uncomp ? "un" : "", filename);
-                return;
-        }
-        (void) signal(SIGINT, SIG_IGN);
-        (void) signal(SIGQUIT, SIG_IGN);
-        (void) wait((int *)&i);
-        (void) signal(SIGINT, done1);
-# ifdef WIZARD
-        if (wizard) (void) signal(SIGQUIT, SIG_DFL);
-# endif
-        if (i == 0) {
-            /* (un)compress succeeded: remove file left behind */
-            if (uncomp)
-                (void) unlink(cfn);
-            else
-                (void) unlink(filename);
-        } else {
-            /* (un)compress failed; remove the new, bad file */
-            if (uncomp) {
-                raw_printf("Unable to uncompress %s", filename);
-                (void) unlink(filename);
-            } else {
-                /* no message needed for compress case; life will go on */
-                (void) unlink(cfn);
-            }
-            /* Give them a chance to read any error messages from the
-             * compression--these would go to stdout or stderr and would get
-             * overwritten only in tty mode.  It's still ugly, since the
-             * messages are being written on top of the screen, but at least
-             * the user can read them.
-             */
-            if (istty)
-            {
-                clear_nhwindow(WIN_MESSAGE);
-                more();
-                /* No way to know if this is feasible */
-                /* doredraw(); */
-            }
-        }
-}
-#endif  /* COMPRESS */
-
-/* compress file */
-void
-compress (const char *filename)
-{
-#ifndef COMPRESS
-#if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
-# pragma unused(filename)
-#endif
-#else
-        docompress_file(filename, FALSE);
-#endif
-}
-
-
-/* uncompress file if it exists */
-void
-uncompress (const char *filename)
-{
-#ifndef COMPRESS
-#if (defined(macintosh) && (defined(__SC__) || defined(__MRC__))) || defined(__MWERKS__)
-# pragma unused(filename)
-#endif
-#else
-        docompress_file(filename, TRUE);
-#endif
-}
-
-/* ----------  END FILE COMPRESSION HANDLING ----------- */
 
 
 /* ----------  BEGIN FILE LOCKING HANDLING ----------- */

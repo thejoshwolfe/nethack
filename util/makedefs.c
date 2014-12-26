@@ -313,13 +313,6 @@ static void make_version(void) {
                         | (1L << 18)
                         | (1L << 19)
                         | (1L << 20)
-                /* data format [COMPRESS excluded] (27..31) */
-#ifdef ZEROCOMP
-                        | (1L << 27)
-#endif
-#ifdef RLECOMP
-                        | (1L << 28)
-#endif
                         );
         /*
          * Value used for object & monster sanity check.
@@ -440,12 +433,7 @@ static const char *build_opts[] = {
 #ifdef COM_COMPL
                 "command line completion",
 #endif
-#ifdef COMPRESS
-                "data file compression",
-#endif
-#ifdef DLB
                 "data librarian",
-#endif
 #ifdef WIZARD
                 "debug mode",
 #endif
@@ -467,9 +455,6 @@ static const char *build_opts[] = {
                 "tourists",
                 "variable playground",
                 "walled mazes",
-#ifdef ZEROCOMP
-                "zero-compressed save files",
-#endif
                 save_bones_compat_buf,
                 "basic NetHack features"
         };

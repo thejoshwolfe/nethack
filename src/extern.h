@@ -545,7 +545,6 @@ extern int create_bonesfile(d_level*,char **, char *);
 extern void commit_bonesfile(d_level *);
 extern int open_bonesfile(d_level*,char **);
 extern int delete_bonesfile(d_level*);
-extern void compress_bonesfile(void);
 extern void set_savefile_name(void);
 extern void save_savefile_name(int);
 #if defined(WIZARD)
@@ -555,8 +554,6 @@ extern int create_savefile(void);
 extern int open_savefile(void);
 extern int delete_savefile(void);
 extern int restore_saved_game(void);
-extern void compress(const char *);
-extern void uncompress(const char *);
 extern boolean lock_file(const char *,int,int);
 extern void unlock_file(const char *);
 extern void read_config_file(const char *);
@@ -1354,11 +1351,7 @@ extern void trickery(char *);
 extern void getlev(int,int,signed char,boolean);
 extern void minit(void);
 extern boolean lookup_id_mapping(unsigned, unsigned *);
-#ifdef ZEROCOMP
-extern int mread(int,void *,unsigned int);
-#else
 extern void mread(int,void *,unsigned int);
-#endif
 
 /* ### rip.c ### */
 

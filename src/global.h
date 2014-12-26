@@ -43,14 +43,6 @@ typedef signed char     boolean;                /* 0 or 1 */
 # endif
 #endif
 
-/* comment out to test effects of each #define -- these will probably
- * disappear eventually
- */
-#ifdef INTERNAL_COMP
-# define RLECOMP        /* run-length compression of levl array - JLee */
-# define ZEROCOMP       /* zero-run compression of everything - Olaf Seibert */
-#endif
-
 /* #define SPECIALIZATION */    /* do "specialized" version of new topology */
 
 

@@ -731,7 +731,6 @@ int main (int argc, char *argv[]) {
                             (void) delete_savefile();
                         else {
                             (void) chmod(fq_save,0660); /* back to readable */
-                            compress(fq_save);
                         }
                 }
                 flags.move = 0;
