@@ -257,9 +257,7 @@ extern void obj_no_longer_held(struct obj *);
 extern int doddrop(void);
 extern int dodown(void);
 extern int doup(void);
-#ifdef INSURANCE
 extern void save_currentstate(void);
-#endif
 extern void goto_level(d_level *,boolean,boolean,boolean);
 extern void schedule_goto(d_level *,boolean,boolean,int,
                              const char *,const char *);
@@ -536,9 +534,7 @@ extern int open_bonesfile(d_level*,char **);
 extern int delete_bonesfile(d_level*);
 extern void compress_bonesfile(void);
 extern void set_savefile_name(void);
-#ifdef INSURANCE
 extern void save_savefile_name(int);
-#endif
 #if defined(WIZARD)
 extern void set_error_savefile(void);
 #endif
@@ -1413,9 +1409,7 @@ extern int doconsult(struct monst *);
 extern int dosave(void);
 extern void hangup(int);
 extern int dosave0(void);
-#ifdef INSURANCE
 extern void savestateinlock(void);
-#endif
 extern void savelev(int,signed char,int);
 extern void bufon(int);
 extern void bufoff(int);

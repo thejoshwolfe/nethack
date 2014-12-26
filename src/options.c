@@ -34,11 +34,7 @@ static struct Bool_Opt
         {"autopickup", &flags.pickup, TRUE, SET_IN_GAME},
         {"autoquiver", &flags.autoquiver, FALSE, SET_IN_GAME},
         {"BIOS", (boolean *)0, FALSE, SET_IN_FILE},
-#ifdef INSURANCE
         {"checkpoint", &flags.ins_chkpt, TRUE, SET_IN_GAME},
-#else
-        {"checkpoint", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
         {"checkspace", (boolean *)0, FALSE, SET_IN_FILE},
         {"cmdassist", &iflags.cmdassist, TRUE, SET_IN_GAME},
         {"color",         &iflags.wc_color, FALSE, SET_IN_GAME},        /*WC*/

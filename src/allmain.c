@@ -488,9 +488,7 @@ void newgame(void) {
                 com_pager(1);
         }
 
-#ifdef INSURANCE
         save_currentstate();
-#endif
         program_state.something_worth_saving++; /* useful data now exists */
 
         /* Success! */

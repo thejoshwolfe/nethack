@@ -152,8 +152,7 @@ build/vis_tab.h: build/makedefs
 # makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
 build/vis_tab.c: build/vis_tab.h
 
-# recover can be used when INSURANCE is defined in config.h
-# and the checkpoint option is true
+# recover can be used when the checkpoint option is true
 build/recover: $(RECOVER_OBJS)
 	gcc -o $@ $(RECOVER_OBJS)
 

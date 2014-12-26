@@ -227,7 +227,6 @@ savegamestate (int fd, int mode)
         bflush(fd);
 }
 
-#ifdef INSURANCE
 void 
 savestateinlock (void)
 {
@@ -298,7 +297,6 @@ savestateinlock (void)
         }
         havestate = flags.ins_chkpt;
 }
-#endif
 
 void savelev(int fd, signed char lev, int mode) {
         /* if we're tearing down the current level without saving anything

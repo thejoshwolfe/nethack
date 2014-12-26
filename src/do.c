@@ -848,7 +848,6 @@ currentlevel_rewrite (void)
         return fd;
 }
 
-#ifdef INSURANCE
 void 
 save_currentstate (void)
 {
@@ -866,7 +865,6 @@ save_currentstate (void)
         /* write out non-level state */
         savestateinlock();
 }
-#endif
 
 void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean portal) {
         int fd, l_idx;
@@ -1249,9 +1247,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
             onquest();
         assign_level(&u.uz0, &u.uz); /* reset u.uz0 */
 
-#ifdef INSURANCE
         save_currentstate();
-#endif
 
         /* assume this will always return TRUE when changing level */
         (void) in_out_region(u.ux, u.uy);

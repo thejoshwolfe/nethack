@@ -491,13 +491,11 @@ void set_savefile_name(void) {
         regularize(SAVEF+5);    /* avoid . or / in name */
 }
 
-#ifdef INSURANCE
 void 
 save_savefile_name (int fd)
 {
         (void) write(fd, (void *) SAVEF, sizeof(SAVEF));
 }
-#endif
 
 
 #if defined(WIZARD)

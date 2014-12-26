@@ -61,13 +61,6 @@
 #endif
 
 /*
- *      Defining INSURANCE slows down level changes, but allows games that
- *      died due to program or system crashes to be resumed from the point
- *      of the last level change, after running a utility program.
- */
-#define INSURANCE       /* allow crashed game recovery */
-
-/*
  * Section 3:   Definitions that may vary with system type.
  *              For example, both signed char and unsigned char should be short ints on
  *              the AT&T 3B2/3B5/etc. family.

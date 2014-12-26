@@ -7,6 +7,8 @@ autopickup     automatically pick up objects you move over        [TRUE]
 autoquiver     when firing with an empty quiver, select some
                suitable inventory weapon to fill the quiver       [FALSE]
 BIOS           allow the use of IBM ROM BIOS calls                [FALSE]
+checkpoint     save game state after each level change, for       [TRUE]
+               possible recovery after program crash
 cmdassist      give help for errors on direction & other commands [TRUE]
 color          use different colors for objects on screen         [FALSE]
 confirm        ask before hitting tame or peaceful monsters       [TRUE]
@@ -59,12 +61,6 @@ verbose        print more commentary during the game              [TRUE]
 
 
 There are further boolean options controlled by compilation flags.
-
-Boolean option if INSURANCE was set at compile time:
-checkpoint save game state after each level change, for possible  [TRUE]
-           recovery after program crash
-
-
 
 
 Boolean option if USE_TILES was set at compile time:

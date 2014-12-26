@@ -328,9 +328,7 @@ static void make_version(void) {
                         | (1L << 11)
                 /* flag bits and/or other global variables (15..26) */
                         | (1L << 17)
-#ifdef INSURANCE
                         | (1L << 18)
-#endif
                         | (1L << 19)
                         | (1L << 20)
                 /* data format [COMPRESS excluded] (27..31) */
@@ -473,9 +471,7 @@ static const char *build_opts[] = {
 #endif
                 "Elbereth",
                 "experience points on status line",
-#ifdef INSURANCE
                 "insurance files for recovering from crashes",
-#endif
                 "Keystone Kops",
 #ifdef HOLD_LOCKFILE_OPEN
                 "exclusive lock on level 0 file",
