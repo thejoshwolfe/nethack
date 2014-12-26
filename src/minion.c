@@ -163,11 +163,7 @@ demon_talk (            /* returns 1 if it won't attack. */
             if (!tele_restrict(mtmp)) (void) rloc(mtmp, FALSE);
             return(1);
         }
-#ifndef GOLDOBJ
         cash = u.ugold;
-#else
-        cash = money_cnt(invent);
-#endif
         demand = (cash * (rnd(80) + 20 * Athome)) /
             (100 * (1 + (sgn(u.ualign.type) == sgn(mtmp->data->maligntyp))));
 
@@ -207,9 +203,6 @@ bribe (struct monst *mtmp)
 {
         char buf[BUFSZ];
         long offer;
-#ifdef GOLDOBJ
-        long umoney = money_cnt(invent);
-#endif
 
         getlin("How much will you offer?", buf);
         if (sscanf(buf, "%ld", &offer) != 1) offer = 0L;
@@ -223,7 +216,6 @@ bribe (struct monst *mtmp)
         } else if (offer == 0L) {
                 You("refuse.");
                 return 0L;
-#ifndef GOLDOBJ
         } else if (offer >= u.ugold) {
                 You("give %s all your gold.", mon_nam(mtmp));
                 offer = u.ugold;
@@ -232,15 +224,6 @@ bribe (struct monst *mtmp)
         }
         u.ugold -= offer;
         mtmp->mgold += offer;
-#else
-        } else if (offer >= umoney) {
-                You("give %s all your gold.", mon_nam(mtmp));
-                offer = umoney;
-        } else {
-                You("give %s %ld %s.", mon_nam(mtmp), offer, currency(offer));
-        }
-        (void) money2mon(mtmp, offer);
-#endif
         flags.botl = 1;
         return(offer);
 }

@@ -341,11 +341,7 @@ shkinit (       /* create a new shopkeeper in the given room */
         ESHK(shk)->visitct = 0;
         ESHK(shk)->following = 0;
         ESHK(shk)->billct = 0;
-#ifndef GOLDOBJ
         shk->mgold = 1000L + 30L*(long)rnd(100);        /* initial capital */
-#else
-        mkmonmoney(shk, 1000L + 30L*(long)rnd(100));    /* initial capital */
-#endif
         if (shp->shknms == shkrings)
             (void) mongets(shk, TOUCHSTONE);
         nameshk(shk, shp->shknms);

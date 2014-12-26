@@ -631,9 +631,6 @@ start_corpse_timeout (struct obj *body)
 void 
 bless (struct obj *otmp)
 {
-#ifdef GOLDOBJ
-        if (otmp->oclass == COIN_CLASS) return;
-#endif
         otmp->cursed = 0;
         otmp->blessed = 1;
         if (carried(otmp) && confers_luck(otmp))
@@ -658,9 +655,6 @@ unbless (struct obj *otmp)
 void 
 curse (struct obj *otmp)
 {
-#ifdef GOLDOBJ
-        if (otmp->oclass == COIN_CLASS) return;
-#endif
         otmp->blessed = 0;
         otmp->cursed = 1;
         /* welded two-handed weapon interferes with some armor removal */

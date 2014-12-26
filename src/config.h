@@ -132,7 +132,6 @@
  */
 #endif
 
-/*#define GOLDOBJ */    /* Gold is kept on obj chains - Helge Hafting */
 #define AUTOPICKUP_EXCEPTIONS  /* exceptions to autopickup */
 #define DUMP_LOG
 #define DUMP_FN "run/dumps/%n.lastgame.txt"

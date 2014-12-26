@@ -355,7 +355,6 @@ boolean with_you;
                 }
                 corpse = mkcorpstat(CORPSE, (struct monst *)0, mtmp->data,
                                 xlocale, ylocale, FALSE);
-#ifndef GOLDOBJ
                 if (mtmp->mgold) {
                     if (xlocale == 0 && ylocale == 0 && corpse) {
                         (void) get_obj_location(corpse, &xlocale, &ylocale, 0);
@@ -363,7 +362,6 @@ boolean with_you;
                     }
                     mtmp->mgold = 0L;
                 }
-#endif
                 mongone(mtmp);
             }
         }

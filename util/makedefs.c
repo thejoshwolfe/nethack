@@ -326,9 +326,6 @@ static void make_version(void) {
                 /* objects (10..14) */
                         | (1L << 10)
                         | (1L << 11)
-#ifdef GOLDOBJ
-                        | (1L << 12)
-#endif
                 /* flag bits and/or other global variables (15..26) */
                         | (1L << 17)
 #ifdef INSURANCE
@@ -482,9 +479,6 @@ static const char *build_opts[] = {
                 "Elbereth",
 #ifdef EXP_ON_BOTL
                 "experience points on status line",
-#endif
-#ifdef GOLDOBJ
-                "gold object in inventories",
 #endif
 #ifdef INSURANCE
                 "insurance files for recovering from crashes",

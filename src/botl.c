@@ -124,17 +124,10 @@ long
 botl_score (void)
 {
     int deepest = deepest_lev_reached(FALSE);
-#ifndef GOLDOBJ
     long ugold = u.ugold + hidden_gold();
 
     if ((ugold -= u.ugold0) < 0L) ugold = 0L;
     return ugold + u.urexp + (long)(50 * (deepest - 1))
-#else
-    long umoney = money_cnt(invent) + hidden_gold();
-
-    if ((umoney -= u.umoney0) < 0L) umoney = 0L;
-    return umoney + u.urexp + (long)(50 * (deepest - 1))
-#endif
                           + (long)(deepest > 30 ? 10000 :
                                    deepest > 20 ? 1000*(deepest - 20) : 0);
 }
@@ -257,19 +250,11 @@ bot2()
         Sprintf(nb = eos(newbot2),
 #ifdef HPMON
                 "%c:%-2ld HP:", oc_syms[COIN_CLASS],
-#ifndef GOLDOBJ
                 u.ugold
-#else
-                money_cnt(invent)
-#endif
                 );
 #else /* HPMON */
                 "%c:%-2ld HP:%d(%d) Pw:%d(%d) AC:%-2d", oc_syms[COIN_CLASS],
-#ifndef GOLDOBJ
                 u.ugold,
-#else
-                money_cnt(invent),
-#endif
                 hp, hpmax, u.uen, u.uenmax, u.uac);
 #endif /* HPMON */
 #ifdef HPMON
