@@ -36,7 +36,7 @@ struct attack {
 struct permonst {
         const char      *mname;                 /* full name */
         char            mlet;                   /* symbol */
-        signed char             mlevel,                 /* base monster level */
+        signed char     mlevel,                 /* base monster level */
                         mmove,                  /* move speed */
                         ac,                     /* (base) armor class */
                         mr;                     /* (base) magic resistance */
@@ -46,18 +46,18 @@ struct permonst {
         unsigned short  cwt,                    /* weight of corpse */
                         cnutrit;                /* its nutritional value */
         short           pxlth;                  /* length of extension */
-        unsigned char           msound;                 /* noise it makes (6 bits) */
-        unsigned char           msize;                  /* physical size (3 bits) */
-        unsigned char           mresists;               /* resistances */
-        unsigned char           mconveys;               /* conveyed by eating */
+        unsigned char   msound;                 /* noise it makes (6 bits) */
+        unsigned char   msize;                  /* physical size (3 bits) */
+        unsigned char   mresists;               /* resistances */
+        unsigned char   mconveys;               /* conveyed by eating */
         unsigned long   mflags1,                /* boolean bitflags */
                         mflags2;                /* more boolean bitflags */
         unsigned short  mflags3;                /* yet more boolean bitflags */
-        unsigned char           mcolor;                 /* color to use */
+        unsigned char   mcolor;                 /* color to use */
 };
 
-extern struct permonst
-                mons[];         /* the master list of monster types */
+/* the master list of monster types */
+extern struct permonst mons[];
 
 #define VERY_SLOW 3
 #define SLOW_SPEED 9

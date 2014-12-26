@@ -2,6 +2,12 @@
 #ifndef MONDATA_H
 #define MONDATA_H
 
+#include "global.h"
+#include "pm.h"
+#include "monsym.h"
+#include "you.h"
+#include "extern.h"
+
 #define verysmall(ptr)          ((ptr)->msize < MZ_SMALL)
 #define bigmonst(ptr)           ((ptr)->msize >= MZ_LARGE)
 
@@ -83,81 +89,174 @@
 #define is_bat(ptr)             ((ptr) == &mons[PM_BAT] || \
                                  (ptr) == &mons[PM_GIANT_BAT] || \
                                  (ptr) == &mons[PM_VAMPIRE_BAT])
-#define is_bird(ptr)            ((ptr)->mlet == S_BAT && !is_bat(ptr))
-#define is_giant(ptr)           (((ptr)->mflags2 & M2_GIANT) != 0L)
-#define is_golem(ptr)           ((ptr)->mlet == S_GOLEM)
-#define is_domestic(ptr)        (((ptr)->mflags2 & M2_DOMESTIC) != 0L)
-#define is_demon(ptr)           (((ptr)->mflags2 & M2_DEMON) != 0L)
-#define is_mercenary(ptr)       (((ptr)->mflags2 & M2_MERC) != 0L)
-#define is_male(ptr)            (((ptr)->mflags2 & M2_MALE) != 0L)
-#define is_female(ptr)          (((ptr)->mflags2 & M2_FEMALE) != 0L)
-#define is_neuter(ptr)          (((ptr)->mflags2 & M2_NEUTER) != 0L)
-#define is_wanderer(ptr)        (((ptr)->mflags2 & M2_WANDER) != 0L)
-#define always_hostile(ptr)     (((ptr)->mflags2 & M2_HOSTILE) != 0L)
-#define always_peaceful(ptr)    (((ptr)->mflags2 & M2_PEACEFUL) != 0L)
-#define race_hostile(ptr)       (((ptr)->mflags2 & urace.hatemask) != 0L)
-#define race_peaceful(ptr)      (((ptr)->mflags2 & urace.lovemask) != 0L)
-#define extra_nasty(ptr)        (((ptr)->mflags2 & M2_NASTY) != 0L)
-#define strongmonst(ptr)        (((ptr)->mflags2 & M2_STRONG) != 0L)
-#define can_breathe(ptr)        attacktype(ptr, AT_BREA)
-#define cantwield(ptr)          (nohands(ptr) || verysmall(ptr))
-#define could_twoweap(ptr)      ((ptr)->mattk[1].aatyp == AT_WEAP)
-#define cantweararm(ptr)        (breakarm(ptr) || sliparm(ptr))
-#define throws_rocks(ptr)       (((ptr)->mflags2 & M2_ROCKTHROW) != 0L)
-#define type_is_pname(ptr)      (((ptr)->mflags2 & M2_PNAME) != 0L)
-#define is_lord(ptr)            (((ptr)->mflags2 & M2_LORD) != 0L)
-#define is_prince(ptr)          (((ptr)->mflags2 & M2_PRINCE) != 0L)
-#define is_ndemon(ptr)          (is_demon(ptr) && \
-                                 (((ptr)->mflags2 & (M2_LORD|M2_PRINCE)) == 0L))
-#define is_dlord(ptr)           (is_demon(ptr) && is_lord(ptr))
-#define is_dprince(ptr)         (is_demon(ptr) && is_prince(ptr))
-#define is_minion(ptr)          ((ptr)->mflags2 & M2_MINION)
-#define likes_gold(ptr)         (((ptr)->mflags2 & M2_GREEDY) != 0L)
-#define likes_gems(ptr)         (((ptr)->mflags2 & M2_JEWELS) != 0L)
-#define likes_objs(ptr)         (((ptr)->mflags2 & M2_COLLECT) != 0L || \
-                                 is_armed(ptr))
-#define likes_magic(ptr)        (((ptr)->mflags2 & M2_MAGIC) != 0L)
-#define webmaker(ptr)           ((ptr) == &mons[PM_CAVE_SPIDER] || \
-                                 (ptr) == &mons[PM_GIANT_SPIDER])
-#define is_unicorn(ptr)         ((ptr)->mlet == S_UNICORN && likes_gems(ptr))
-#define is_longworm(ptr)        (((ptr) == &mons[PM_BABY_LONG_WORM]) || \
-                                 ((ptr) == &mons[PM_LONG_WORM]) || \
-                                 ((ptr) == &mons[PM_LONG_WORM_TAIL]))
-#define is_covetous(ptr)        ((ptr->mflags3 & M3_COVETOUS))
-#define infravision(ptr)        ((ptr->mflags3 & M3_INFRAVISION))
-#define infravisible(ptr)       ((ptr->mflags3 & M3_INFRAVISIBLE))
-#define is_mplayer(ptr)         (((ptr) >= &mons[PM_ARCHEOLOGIST]) && \
-                                 ((ptr) <= &mons[PM_WIZARD]))
-#define is_rider(ptr)           ((ptr) == &mons[PM_DEATH] || \
-                                 (ptr) == &mons[PM_FAMINE] || \
-                                 (ptr) == &mons[PM_PESTILENCE])
-#define is_placeholder(ptr)     ((ptr) == &mons[PM_ORC] || \
-                                 (ptr) == &mons[PM_GIANT] || \
-                                 (ptr) == &mons[PM_ELF] || \
-                                 (ptr) == &mons[PM_HUMAN])
+static inline boolean is_bird(struct permonst * ptr) {
+  return ptr->mlet == S_BAT && !is_bat(ptr);
+}
+static inline boolean is_giant(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_GIANT) != 0L;
+}
+static inline boolean is_golem(struct permonst * ptr) {
+  return ptr->mlet == S_GOLEM;
+}
+static inline boolean is_domestic(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_DOMESTIC) != 0L;
+}
+static inline boolean is_demon(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_DEMON) != 0L;
+}
+static inline boolean is_mercenary(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_MERC) != 0L;
+}
+static inline boolean is_male(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_MALE) != 0L;
+}
+static inline boolean is_female(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_FEMALE) != 0L;
+}
+static inline boolean is_neuter(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_NEUTER) != 0L;
+}
+static inline boolean is_wanderer(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_WANDER) != 0L;
+}
+static inline boolean always_hostile(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_HOSTILE) != 0L;
+}
+static inline boolean always_peaceful(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_PEACEFUL) != 0L;
+}
+static inline boolean race_hostile(struct permonst * ptr) {
+  return (ptr->mflags2 & urace.hatemask) != 0L;
+}
+static inline boolean race_peaceful(struct permonst * ptr) {
+  return (ptr->mflags2 & urace.lovemask) != 0L;
+}
+static inline boolean extra_nasty(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_NASTY) != 0L;
+}
+static inline boolean strongmonst(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_STRONG) != 0L;
+}
+static inline boolean can_breathe(struct permonst * ptr) {
+  return attacktype(ptr, AT_BREA);
+}
+static inline boolean cantwield(struct permonst * ptr) {
+  return nohands(ptr) || verysmall(ptr);
+}
+static inline boolean could_twoweap(struct permonst * ptr) {
+  return ptr->mattk[1].aatyp == AT_WEAP;
+}
+static inline boolean cantweararm(struct permonst * ptr) {
+  return breakarm(ptr) || sliparm(ptr);
+}
+static inline boolean throws_rocks(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_ROCKTHROW) != 0L;
+}
+static inline boolean type_is_pname(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_PNAME) != 0L;
+}
+static inline boolean is_lord(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_LORD) != 0L;
+}
+static inline boolean is_prince(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_PRINCE) != 0L;
+}
+static inline boolean is_ndemon(struct permonst * ptr) {
+  return is_demon(ptr) &&
+         (ptr->mflags2 & (M2_LORD|M2_PRINCE)) == 0L;
+}
+static inline boolean is_dlord(struct permonst * ptr) {
+  return is_demon(ptr) && is_lord(ptr);
+}
+static inline boolean is_dprince(struct permonst * ptr) {
+  return is_demon(ptr) && is_prince(ptr);
+}
+static inline boolean is_minion(struct permonst * ptr) {
+  return ptr->mflags2 & M2_MINION;
+}
+static inline boolean likes_gold(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_GREEDY) != 0L;
+}
+static inline boolean likes_gems(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_JEWELS) != 0L;
+}
+static inline boolean likes_objs(struct permonst * ptr){
+  return (ptr->mflags2 & M2_COLLECT) != 0L ||
+         is_armed(ptr);
+}
+static inline boolean likes_magic(struct permonst * ptr) {
+  return (ptr->mflags2 & M2_MAGIC) != 0L;
+}
+static inline boolean webmaker(struct permonst * ptr) {
+  return ptr == &mons[PM_CAVE_SPIDER] ||
+         ptr == &mons[PM_GIANT_SPIDER];
+}
+static inline boolean is_unicorn(struct permonst * ptr) {
+  return ptr->mlet == S_UNICORN && likes_gems(ptr);
+}
+static inline boolean is_longworm(struct permonst * ptr) {
+  return ptr == &mons[PM_BABY_LONG_WORM] ||
+         ptr == &mons[PM_LONG_WORM] ||
+         ptr == &mons[PM_LONG_WORM_TAIL];
+}
+static inline boolean is_covetous(struct permonst * ptr) {
+  return !!((ptr->mflags3 & M3_COVETOUS));
+}
+static inline boolean infravision(struct permonst * ptr) {
+  return !!((ptr->mflags3 & M3_INFRAVISION));
+}
+static inline boolean infravisible(struct permonst * ptr) {
+  return !!((ptr->mflags3 & M3_INFRAVISIBLE));
+}
+static inline boolean is_mplayer(struct permonst * ptr) {
+  return ptr >= &mons[PM_ARCHEOLOGIST] &&
+         ptr <= &mons[PM_WIZARD];
+}
+static inline boolean is_rider(struct permonst * ptr) {
+  return ptr == &mons[PM_DEATH] ||
+         ptr == &mons[PM_FAMINE] ||
+         ptr == &mons[PM_PESTILENCE];
+}
+static inline boolean is_placeholder(struct permonst * ptr) {
+  return ptr == &mons[PM_ORC] ||
+         ptr == &mons[PM_GIANT] ||
+         ptr == &mons[PM_ELF] ||
+         ptr == &mons[PM_HUMAN];
+}
 /* return TRUE if the monster tends to revive */
-#define is_reviver(ptr)         (is_rider(ptr) || (ptr)->mlet == S_TROLL)
+static inline boolean is_reviver(struct permonst * ptr) {
+  return is_rider(ptr) || ptr->mlet == S_TROLL;
+}
 
 /* this returns the light's range, or 0 if none; if we add more light emitting
    monsters, we'll likely have to add a new light range field to mons[] */
-#define emits_light(ptr)        (((ptr)->mlet == S_LIGHT || \
-                                  (ptr) == &mons[PM_FLAMING_SPHERE] || \
-                                  (ptr) == &mons[PM_SHOCKING_SPHERE] || \
-                                  (ptr) == &mons[PM_FIRE_VORTEX]) ? 1 : \
-                                 ((ptr) == &mons[PM_FIRE_ELEMENTAL]) ? 1 : 0)
+static inline int emits_light(struct permonst * ptr) {
+  return (ptr->mlet == S_LIGHT ||
+          ptr == &mons[PM_FLAMING_SPHERE] ||
+          ptr == &mons[PM_SHOCKING_SPHERE] ||
+          ptr == &mons[PM_FIRE_VORTEX]) ? 1 :
+         (ptr == &mons[PM_FIRE_ELEMENTAL]) ? 1 : 0;
 /*      [note: the light ranges above were reduced to 1 for performance...] */
-#define likes_lava(ptr)         (ptr == &mons[PM_FIRE_ELEMENTAL] || \
-                                 ptr == &mons[PM_SALAMANDER])
-#define pm_invisible(ptr) ((ptr) == &mons[PM_STALKER] || \
-                           (ptr) == &mons[PM_BLACK_LIGHT])
+}
+static inline boolean likes_lava(struct permonst * ptr) {
+  return ptr == &mons[PM_FIRE_ELEMENTAL] ||
+         ptr == &mons[PM_SALAMANDER];
+}
+static inline boolean pm_invisible(struct permonst * ptr) {
+  return ptr == &mons[PM_STALKER] ||
+         ptr == &mons[PM_BLACK_LIGHT];
+}
 
-/* could probably add more */
-#define likes_fire(ptr)         ((ptr) == &mons[PM_FIRE_VORTEX] || \
-                                  (ptr) == &mons[PM_FLAMING_SPHERE] || \
-                                 likes_lava(ptr))
+static inline boolean likes_fire(struct permonst * ptr) {
+  return ptr == &mons[PM_FIRE_VORTEX] ||
+         ptr == &mons[PM_FLAMING_SPHERE] ||
+         likes_lava(ptr);
+}
 
-#define touch_petrifies(ptr)    ((ptr) == &mons[PM_COCKATRICE] || \
-                                 (ptr) == &mons[PM_CHICKATRICE])
+static inline boolean touch_petrifies(struct permonst * ptr) {
+	return ptr == &mons[PM_COCKATRICE] ||
+         ptr == &mons[PM_CHICKATRICE];
+}
 
 #define is_mind_flayer(ptr)     ((ptr) == &mons[PM_MIND_FLAYER] || \
                                  (ptr) == &mons[PM_MASTER_MIND_FLAYER])
