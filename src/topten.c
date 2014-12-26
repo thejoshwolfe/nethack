@@ -6,16 +6,6 @@
 #include "extern.h"
 #include "winprocs.h"
 
-/*
- * Updating in place can leave junk at the end of the file in some
- * circumstances (if it shrinks and the O.S. doesn't have a straightforward
- * way to truncate it).  The trailing junk is harmless and the code
- * which reads the scores will ignore it.
- */
-#ifdef UPDATE_RECORD_IN_PLACE
-static long final_fpos;
-#endif
-
 // larger file for debugging purposes
 static const char * LOGFILE = "run/logfile";
 
@@ -33,9 +23,6 @@ static const char * LOGFILE = "run/logfile";
 #define PERS_IS_UID             /* delete for PERSMAX per name; now per uid */
 struct toptenentry {
         struct toptenentry *tt_next;
-#ifdef UPDATE_RECORD_IN_PLACE
-        long fpos;
-#endif
         long points;
         int deathdnum, deathlev;
         int maxlvl, hp, maxhp, deaths;
@@ -60,10 +47,6 @@ static void writeentry(FILE *,struct toptenentry *);
 static void free_ttlist(struct toptenentry *);
 static int classmon(char *,boolean);
 static int score_wanted(boolean, int,struct toptenentry *,int,const char **,int);
-#ifdef NO_SCAN_BRACK
-static void nsb_mung_line(char*);
-static void nsb_unmung_line(char*);
-#endif
 
 /* must fit with end.c; used in rip.c */
 const char * const killed_by_prefix[] = {
@@ -103,20 +86,10 @@ readentry(rfile,tt)
 FILE *rfile;
 struct toptenentry *tt;
 {
-#ifdef NO_SCAN_BRACK /* Version_ Pts DgnLevs_ Hp___ Died__Born id */
-        static const char fmt[] = "%d %d %d %ld %d %d %d %d %d %d %ld %ld %d%*c";
-        static const char fmt32[] = "%c%c %s %s%*c";
-        static const char fmt33[] = "%s %s %s %s %s %s%*c";
-#else
         static const char fmt[] = "%d.%d.%d %ld %d %d %d %d %d %d %ld %ld %d ";
         static const char fmt32[] = "%c%c %[^,],%[^\n]%*c";
         static const char fmt33[] = "%s %s %s %s %[^,],%[^\n]%*c";
-#endif
 
-#ifdef UPDATE_RECORD_IN_PLACE
-        /* note: fscanf() below must read the record's terminating newline */
-        final_fpos = tt->fpos = ftell(rfile);
-#endif
 #define TTFIELDS 13
         if(fscanf(rfile, fmt,
                         &tt->ver_major, &tt->ver_minor, &tt->patchlevel,
@@ -146,12 +119,6 @@ struct toptenentry *tt;
                                 tt->plrole, tt->plrace, tt->plgend,
                                 tt->plalign, tt->name, tt->death) != 6)
                         tt->points = 0;
-#ifdef NO_SCAN_BRACK
-                if(tt->points > 0) {
-                        nsb_unmung_line(tt->name);
-                        nsb_unmung_line(tt->death);
-                }
-#endif
         }
 
         /* check old score entries for Y2K problem and fix whenever found */
@@ -166,40 +133,21 @@ writeentry(rfile,tt)
 FILE *rfile;
 struct toptenentry *tt;
 {
-#ifdef NO_SCAN_BRACK
-        nsb_mung_line(tt->name);
-        nsb_mung_line(tt->death);
-                           /* Version_ Pts DgnLevs_ Hp___ Died__Born id */
-        (void) fprintf(rfile,"%d %d %d %ld %d %d %d %d %d %d %ld %ld %d ",
-#else
         (void) fprintf(rfile,"%d.%d.%d %ld %d %d %d %d %d %d %ld %ld %d ",
-#endif
                 tt->ver_major, tt->ver_minor, tt->patchlevel,
                 tt->points, tt->deathdnum, tt->deathlev,
                 tt->maxlvl, tt->hp, tt->maxhp, tt->deaths,
                 tt->deathdate, tt->birthdate, tt->uid);
         if (tt->ver_major < 3 ||
                         (tt->ver_major == 3 && tt->ver_minor < 3))
-#ifdef NO_SCAN_BRACK
-                (void) fprintf(rfile,"%c%c %s %s\n",
-#else
                 (void) fprintf(rfile,"%c%c %s,%s\n",
-#endif
                         tt->plrole[0], tt->plgend[0],
                         onlyspace(tt->name) ? "_" : tt->name, tt->death);
         else
-#ifdef NO_SCAN_BRACK
-                (void) fprintf(rfile,"%s %s %s %s %s %s\n",
-#else
                 (void) fprintf(rfile,"%s %s %s %s %s,%s\n",
-#endif
                         tt->plrole, tt->plrace, tt->plgend, tt->plalign,
                         onlyspace(tt->name) ? "_" : tt->name, tt->death);
 
-#ifdef NO_SCAN_BRACK
-        nsb_unmung_line(tt->name);
-        nsb_unmung_line(tt->death);
-#endif
 }
 
 static void
@@ -226,17 +174,7 @@ topten (int how)
         FILE *rfile;
         int flg = 0;
         boolean t0_used;
-#ifdef LOGFILE
-        FILE *lfile;
-#endif /* LOGFILE */
 
-/* Under DICE 3.0, this crashes the system consistently, apparently due to
- * corruption of *rfile somewhere.  Until I figure this out, just cut out
- * topten support entirely - at least then the game exits cleanly.  --AC
- */
-#ifdef _DCC
-        return;
-#endif
 
 /* If we are in the midst of a panic, cut out topten entirely.
  * topten uses alloc() several times, which will lead to
@@ -301,21 +239,6 @@ topten (int how)
         t0->birthdate = yyyymmdd(u.ubirthday);
         t0->deathdate = yyyymmdd((time_t)0L);
         t0->tt_next = 0;
-#ifdef UPDATE_RECORD_IN_PLACE
-        t0->fpos = -1L;
-#endif
-
-#ifdef LOGFILE          /* used for debugging (who dies of what, where) */
-        if (lock_file(LOGFILE, SCOREPREFIX, 10)) {
-            if(!(lfile = fopen_datafile(LOGFILE, "a", SCOREPREFIX))) {
-                HUP raw_print("Cannot open log file!");
-            } else {
-                writeentry(lfile, t0);
-                (void) fclose(lfile);
-            }
-            unlock_file(LOGFILE);
-        }
-#endif /* LOGFILE */
 
         if (wizard || discover) {
             if (how != PANICKED) HUP {
@@ -336,11 +259,7 @@ topten (int how)
         if (!lock_file(RECORD, SCOREPREFIX, 60))
                 goto destroywin;
 
-#ifdef UPDATE_RECORD_IN_PLACE
-        rfile = fopen_datafile(RECORD, "r+", SCOREPREFIX);
-#else
         rfile = fopen_datafile(RECORD, "r", SCOREPREFIX);
-#endif
 
         if (!rfile) {
                 HUP raw_print("Cannot open record file!");
@@ -367,9 +286,6 @@ topten (int how)
                 else
                         tprev->tt_next = t0;
                 t0->tt_next = t1;
-#ifdef UPDATE_RECORD_IN_PLACE
-                t0->fpos = t1->fpos;    /* insert here */
-#endif
                 t0_used = TRUE;
                 occ_cnt--;
                 flg++;          /* ask for a rewrite */
@@ -377,11 +293,7 @@ topten (int how)
 
             if(t1->points == 0) break;
             if(
-#ifdef PERS_IS_UID
                 t1->uid == t0->uid &&
-#else
-                strncmp(t1->name, t0->name, NAMSZ) == 0 &&
-#endif
                 !strncmp(t1->plrole, t0->plrole, ROLESZ) &&
                 --occ_cnt <= 0) {
                     if(rank0 < 0) {
@@ -414,10 +326,6 @@ topten (int how)
             }
         }
         if(flg) {       /* rewrite record file */
-#ifdef UPDATE_RECORD_IN_PLACE
-                (void) fseek(rfile, (t0->fpos >= 0 ?
-                                     t0->fpos : final_fpos), SEEK_SET);
-#else
                 (void) fclose(rfile);
                 if(!(rfile = fopen_datafile(RECORD, "w", SCOREPREFIX))){
                         HUP raw_print("Cannot write record file");
@@ -425,7 +333,6 @@ topten (int how)
                         free_ttlist(tt_head);
                         goto destroywin;
                 }
-#endif  /* UPDATE_RECORD_IN_PLACE */
                 if(!done_stopprint) if(rank0 > 0){
                     if(rank0 <= 10) {
                         topten_print("You made the top ten list!");
@@ -448,20 +355,13 @@ topten (int how)
         t1 = tt_head;
         for(rank = 1; t1->points != 0; rank++, t1 = t1->tt_next) {
             if(flg
-#ifdef UPDATE_RECORD_IN_PLACE
-                    && rank >= rank0
-#endif
                 ) writeentry(rfile, t1);
             if (done_stopprint) continue;
             if (rank > flags.end_top &&
                     (rank < rank0 - flags.end_around ||
                      rank > rank0 + flags.end_around) &&
                     (!flags.end_own ||
-#ifdef PERS_IS_UID
                                         t1->uid != t0->uid
-#else
-                                        strncmp(t1->name, t0->name, NAMSZ)
-#endif
                 )) continue;
             if (rank == rank0 - flags.end_around &&
                     rank0 > flags.end_top + flags.end_around + 1 &&
@@ -480,27 +380,6 @@ topten (int how)
         }
         if(rank0 >= rank) if(!done_stopprint)
                 outentry(0, t0, TRUE);
-#ifdef UPDATE_RECORD_IN_PLACE
-        if (flg) {
-# ifdef TRUNCATE_FILE
-            /* if a reasonable way to truncate a file exists, use it */
-            truncate_file(rfile);
-# else
-            /* use sentinel record rather than relying on truncation */
-            t1->points = 0L;    /* terminates file when read back in */
-            t1->ver_major = t1->ver_minor = t1->patchlevel = 0;
-            t1->uid = t1->deathdnum = t1->deathlev = 0;
-            t1->maxlvl = t1->hp = t1->maxhp = t1->deaths = 0;
-            t1->plrole[0] = t1->plrace[0] = t1->plgend[0] = t1->plalign[0] = '-';
-            t1->plrole[1] = t1->plrace[1] = t1->plgend[1] = t1->plalign[1] = 0;
-            t1->birthdate = t1->deathdate = yyyymmdd((time_t)0L);
-            Strcpy(t1->name, "@");
-            Strcpy(t1->death, "<eod>\n");
-            writeentry(rfile, t1);
-            (void) fflush(rfile);
-# endif /* TRUNCATE_FILE */
-        }
-#endif  /* UPDATE_RECORD_IN_PLACE */
         (void) fclose(rfile);
         unlock_file(RECORD);
         free_ttlist(tt_head);
@@ -693,10 +572,8 @@ int uid;
                             t1->patchlevel != PATCHLEVEL))
                 return 0;
 
-#ifdef PERS_IS_UID
         if (!playerct && t1->uid == uid)
                 return 1;
-#endif
 
         for (i = 0; i < playerct; i++) {
             if (players[i][0] == '-' && index("pr", players[i][1]) &&
@@ -736,9 +613,6 @@ prscore (int argc, char **argv)
         int i;
         char pbuf[BUFSZ];
         int uid = -1;
-#ifndef PERS_IS_UID
-        const char *player0;
-#endif
 
         if (argc < 2 || strncmp(argv[1], "-s", 2)) {
                 raw_printf("prscore: bad arguments (%d)", argc);
@@ -771,17 +645,9 @@ prscore (int argc, char **argv)
         }
 
         if (argc <= 1) {
-#ifdef PERS_IS_UID
                 uid = getuid();
                 playerct = 0;
                 players = (const char **)0;
-#else
-                player0 = plname;
-                if (!*player0)
-                        player0 = "hackplayer";
-                playerct = 1;
-                players = &player0;
-#endif
         } else {
                 playerct = --argc;
                 players = (const char **)++argv;
@@ -915,22 +781,3 @@ pickentry:
         (void) fclose(rfile);
         return otmp;
 }
-
-#ifdef NO_SCAN_BRACK
-/* Lattice scanf isn't up to reading the scorefile.  What */
-/* follows deals with that; I admit it's ugly. (KL) */
-/* Now generally available (KL) */
-static void
-nsb_mung_line (char *p)
-{
-        while ((p = index(p, ' ')) != 0) *p = '|';
-}
-
-static void
-nsb_unmung_line (char *p)
-{
-        while ((p = index(p, '|')) != 0) *p = ' ';
-}
-#endif /* NO_SCAN_BRACK */
-
-/*topten.c*/
