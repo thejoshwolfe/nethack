@@ -105,8 +105,6 @@
 
 #define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
 
-#define PARANOID
-
 
 /*
  * Section 5:  EXPERIMENTAL STUFF

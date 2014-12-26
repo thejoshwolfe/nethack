@@ -29,6 +29,7 @@ null           allow nulls to be sent to your terminal            [TRUE]
                try turning this option off (forcing NetHack to use its own
                delay code) if moving objects seem to teleport across rooms
 number_pad     use the number keys to move instead of yuhjklbn    [FALSE]
+paranoid_quit  ask for explicit 'yes' when quitting               [FALSE]
 perm_invent    keep inventory in a permanent window               [FALSE]
 prayconfirm    use confirmation prompt when #pray command issued  [TRUE]
 pushweapon     when wielding a new weapon, put your previously
@@ -64,8 +65,6 @@ checkpoint save game state after each level change, for possible  [TRUE]
            recovery after program crash
 
 
-Boolean option if PARANOID was set at compile time:
-paranoid_quit  ask for explicit 'yes' when quitting               [FALSE]
 
 
 Boolean option if USE_TILES was set at compile time:

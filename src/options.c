@@ -87,9 +87,7 @@ static struct Bool_Opt
         {"news", &iflags.news, TRUE, DISP_IN_GAME},
         {"null", &flags.null, TRUE, SET_IN_GAME},
         {"page_wait", (boolean *)0, FALSE, SET_IN_FILE},
-#ifdef PARANOID
         {"paranoid_hit", &iflags.paranoid_hit, FALSE, SET_IN_GAME},
-#endif
         {"perm_invent", &flags.perm_invent, FALSE, SET_IN_GAME},
         {"popup_dialog",  &iflags.wc_popup_dialog, FALSE, SET_IN_GAME}, /*WC*/
         {"prayconfirm", &flags.prayconfirm, TRUE, SET_IN_GAME},

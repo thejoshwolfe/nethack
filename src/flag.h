@@ -180,9 +180,7 @@ struct instance_flags {
         boolean lan_mail_fetched; /* mail is awaiting display */
 #endif
         char sortloot;          /* sort items to loot alphabetically */
-#ifdef PARANOID
         boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
-#endif
 
         boolean use_hpmon;
 

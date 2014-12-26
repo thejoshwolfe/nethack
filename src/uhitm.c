@@ -90,9 +90,7 @@ struct monst *mtmp;
 struct obj *wep;        /* uwep for attack(), null for kick_monster() */
 {
         char qbuf[QBUFSZ];
-#ifdef PARANOID
         char buf[BUFSZ];
-#endif
 
         /* if you're close enough to attack, alert any waiting monster */
         mtmp->mstrategy &= ~STRAT_WAITMASK;
@@ -193,7 +191,6 @@ struct obj *wep;        /* uwep for attack(), null for kick_monster() */
                         return(FALSE);
                 }
                 if (canspotmon(mtmp)) {
-#ifdef PARANOID
                         Sprintf(qbuf, "Really attack %s? [no/yes]",
                                 mon_nam(mtmp));
                         if (iflags.paranoid_hit) {
@@ -204,15 +201,12 @@ struct obj *wep;        /* uwep for attack(), null for kick_monster() */
                                   return(TRUE);
                                 }
                         } else {
-#endif
                         Sprintf(qbuf, "Really attack %s?", mon_nam(mtmp));
                         if (yn(qbuf) != 'y') {
                                 flags.move = 0;
                                 return(TRUE);
                         }
-#ifdef PARANOID
                         }
-#endif
                 }
         }
 
