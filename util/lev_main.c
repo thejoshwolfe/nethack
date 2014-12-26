@@ -1013,9 +1013,6 @@ specialmaze *maze_level;
         char lbuf[60];
 
         lbuf[0] = '\0';
-#ifdef PREFIX
-        Strcat(lbuf, PREFIX);
-#endif
         Strcat(lbuf, filename);
         Strcat(lbuf, LEV_EXT);
 
@@ -1425,32 +1422,3 @@ free_rooms (splev *lev)
         lev->rmonst = (char *)0;
         lev->nrmonst = 0;
 }
-
-#ifdef STRICT_REF_DEF
-/*
- * Any globals declared in hack.h and descendents which aren't defined
- * in the modules linked into lev_comp should be defined here.  These
- * definitions can be dummies:  their sizes shouldn't matter as long as
- * as their types are correct; actual values are irrelevant.
- */
-#define ARBITRARY_SIZE 1
-/* attrib.c */
-struct attribs attrmax, attrmin;
-/* files.c */
-const char *configfile;
-char lock[ARBITRARY_SIZE];
-char SAVEF[ARBITRARY_SIZE];
-/* termcap.c */
-struct tc_lcl_data tc_lcl_data;
-char *hilites[CLR_MAX];
-/* trap.c */
-const char *traps[TRAPNUM];
-/* window.c */
-struct window_procs windowprocs;
-/* xxxtty.c */
-# ifdef DEFINE_OSPEED
-short ospeed;
-# endif
-#endif  /* STRICT_REF_DEF */
-
-/*lev_main.c*/

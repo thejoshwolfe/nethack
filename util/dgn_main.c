@@ -20,9 +20,6 @@ int  yywrap(void);
 void init_yyin(FILE *);
 void init_yyout(FILE *);
 
-#ifdef AZTEC_36
-FILE *freopen(char *,char *,FILE *);
-#endif
 #define Fprintf (void)fprintf
 
 int main(int argc, char **argv) {
