@@ -46,50 +46,20 @@ static struct stat omstat,nmstat;
 static char *mailbox = (char *)0;
 static long laststattime;
 
-# if !defined(MAILPATH) && defined(AMS) /* Just a placeholder for AMS */
-#  define MAILPATH "/dev/null"
-# endif
-# if !defined(MAILPATH) && defined(__osf__)
-#  define MAILPATH "/var/spool/mail/"
-# endif
 /* Debian uses /var/mail, too. */
-# if !defined(MAILPATH)
-#  define MAILPATH "/var/mail/"
-# endif
-# if !defined(MAILPATH)
-#  define MAILPATH "/usr/mail/"
-# endif
+#if !defined(MAILPATH)
+#define MAILPATH "/var/mail/"
+#endif
 
 void getmailstatus(void) {
         if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
-#  ifdef MAILPATH
-#   ifdef AMS
-                struct passwd ppasswd;
-
-                (void) memcpy(&ppasswd, getpwuid(getuid()), sizeof(struct passwd));
-                if (ppasswd.pw_dir) {
-                     mailbox = (char *) alloc((unsigned) strlen(ppasswd.pw_dir)+sizeof(AMS_MAILBOX));
-                     Strcpy(mailbox, ppasswd.pw_dir);
-                     Strcat(mailbox, AMS_MAILBOX);
-                } else
-                  return;
-#   else
                 const char *pw_name = getpwuid(getuid())->pw_name;
                 mailbox = (char *) alloc(sizeof(MAILPATH)+strlen(pw_name));
                 Strcpy(mailbox, MAILPATH);
                 Strcat(mailbox, pw_name);
-#  endif /* AMS */
-#  else
-                return;
-#  endif
         }
         if(stat(mailbox, &omstat)){
-#  ifdef PERMANENT_MAILBOX
-                pline("Cannot get status of MAIL=\"%s\".", mailbox);
-                mailbox = 0;
-#  else
                 omstat.st_mtime = 0;
-#  endif
         }
 }
 
@@ -396,12 +366,7 @@ void ckmailstatus(void) {
 
         laststattime = moves;
         if(stat(mailbox, &nmstat)){
-#  ifdef PERMANENT_MAILBOX
-                pline("Cannot get status of MAIL=\"%s\" anymore.", mailbox);
-                mailbox = 0;
-#  else
                 nmstat.st_mtime = 0;
-#  endif
         } else if(nmstat.st_mtime > omstat.st_mtime) {
                 if (nmstat.st_size) {
                     static struct mail_info deliver = {
