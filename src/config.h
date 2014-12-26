@@ -111,7 +111,6 @@
 #define HPMON           /* Color HP monitor */
 #define SORTLOOT        /* Sort yer loot by alphabetical order, not index */
 
-/* #define SCORE_ON_BOTL */     /* added by Gary Erickson (erickson@ucivax) */
 
 /*
  * Section 5:  EXPERIMENTAL STUFF

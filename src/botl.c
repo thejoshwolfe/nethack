@@ -119,20 +119,6 @@ max_rank_sz (void)
 }
 
 
-#ifdef SCORE_ON_BOTL
-long 
-botl_score (void)
-{
-    int deepest = deepest_lev_reached(FALSE);
-    long ugold = u.ugold + hidden_gold();
-
-    if ((ugold -= u.ugold0) < 0L) ugold = 0L;
-    return ugold + u.urexp + (long)(50 * (deepest - 1))
-                          + (long)(deepest > 30 ? 10000 :
-                                   deepest > 20 ? 1000*(deepest - 20) : 0);
-}
-#endif
-
 void bot1str(char *newbot1)
 {
         char *nb;
@@ -177,10 +163,6 @@ void bot1str(char *newbot1)
                 ACURR(A_DEX), ACURR(A_CON), ACURR(A_INT), ACURR(A_WIS), ACURR(A_CHA));
         Sprintf(nb = eos(nb), (u.ualign.type == A_CHAOTIC) ? "  Chaotic" :
                         (u.ualign.type == A_NEUTRAL) ? "  Neutral" : "  Lawful");
-#ifdef SCORE_ON_BOTL
-        if (flags.showscore)
-            Sprintf(nb = eos(nb), " S:%ld", botl_score());
-#endif
 }
 static void 
 bot1 (void)

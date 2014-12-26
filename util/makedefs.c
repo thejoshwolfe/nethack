@@ -335,9 +335,6 @@ static void make_version(void) {
 #ifdef EXP_ON_BOTL
                         | (1L << 20)
 #endif
-#ifdef SCORE_ON_BOTL
-                        | (1L << 21)
-#endif
                 /* data format [COMPRESS excluded] (27..31) */
 #ifdef ZEROCOMP
                         | (1L << 27)
@@ -499,9 +496,6 @@ static const char *build_opts[] = {
                 "news file",
                 "redo command",
                 "saddles and riding",
-#ifdef SCORE_ON_BOTL
-                "score on status line",
-#endif
                 "seduction",
                 "sinks",
                 "terminal info library",

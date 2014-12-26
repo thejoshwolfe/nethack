@@ -59,9 +59,6 @@ struct flag {
 #ifdef EXP_ON_BOTL
         boolean  showexp;       /* show experience points */
 #endif
-#ifdef SCORE_ON_BOTL
-        boolean  showscore;     /* show score */
-#endif
         boolean  silent;        /* whether the bell rings or not */
         boolean  sortpack;      /* sorted inventory */
         boolean  soundok;       /* ok to tell about sounds heard */
