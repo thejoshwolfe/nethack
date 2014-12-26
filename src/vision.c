@@ -262,83 +262,6 @@ get_unused_cs (char ***rows, char **rmin, char **rmax)
 }
 
 
-#ifdef EXTEND_SPINE
-
-static int new_angle(struct rm *, unsigned char *, int, int);
-/*
- * new_angle()
- *
- * Return the new angle seen by the hero for this location.  The angle
- * bit is given in the value pointed at by sv.
- *
- * For T walls and crosswall, just setting the angle bit, even though
- * it is technically correct, doesn't look good.  If we can see the
- * next position beyond the current one and it is a wall that we can
- * see, then we want to extend a spine of the T to connect with the wall
- * that is beyond.  Example:
- *
- *       Correct, but ugly                         Extend T spine
- *
- *              | ...                                   | ...
- *              | ...   <-- wall beyond & floor -->     | ...
- *              | ...                                   | ...
- * Unseen   -->   ...                                   | ...
- * spine        +-...   <-- trwall & doorway    -->     +-...
- *              | ...                                   | ...
- *
- *
- *                 @    <-- hero                -->        @
- *
- *
- * We fake the above check by only checking if the horizontal &
- * vertical positions adjacent to the crosswall and T wall are
- * unblocked.  Then, _in general_ we can see beyond.  Generally,
- * this is good enough.
- *
- *      + When this function is called we don't have all of the seen
- *        information (we're doing a top down scan in vision_recalc).
- *        We would need to scan once to set all IN_SIGHT and COULD_SEE
- *        bits, then again to correctly set the seenv bits.
- *      + I'm trying to make this as cheap as possible.  The display &
- *        vision eat up too much CPU time.
- *
- *
- * Note:  Even as I write this, I'm still not convinced.  There are too
- *        many exceptions.  I may have to bite the bullet and do more
- *        checks.       - Dean 2/11/93
- */
-static int
-new_angle (struct rm *lev, unsigned char *sv, int row, int col)
-{
-    int res = *sv;
-
-    /*
-     * Do extra checks for crosswalls and T walls if we see them from
-     * an angle.
-     */
-    if (lev->typ >= CROSSWALL && lev->typ <= TRWALL) {
-        switch (res) {
-            case SV0:
-                if (col > 0       && viz_clear[row][col-1]) res |= SV7;
-                if (row > 0       && viz_clear[row-1][col]) res |= SV1;
-                break;
-            case SV2:
-                if (row > 0       && viz_clear[row-1][col]) res |= SV1;
-                if (col < COLNO-1 && viz_clear[row][col+1]) res |= SV3;
-                break;
-            case SV4:
-                if (col < COLNO-1 && viz_clear[row][col+1]) res |= SV3;
-                if (row < ROWNO-1 && viz_clear[row+1][col]) res |= SV5;
-                break;
-            case SV6:
-                if (row < ROWNO-1 && viz_clear[row+1][col]) res |= SV5;
-                if (col > 0       && viz_clear[row][col-1]) res |= SV7;
-                break;
-        }
-    }
-    return res;
-}
-#else
 /*
  * new_angle()
  *
@@ -348,8 +271,6 @@ new_angle (struct rm *lev, unsigned char *sv, int row, int col)
  * The other parameters are not used.
  */
 #define new_angle(lev, sv, row, col) (*sv)
-
-#endif
 
 
 /*

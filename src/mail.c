@@ -47,9 +47,7 @@ static char *mailbox = (char *)0;
 static long laststattime;
 
 /* Debian uses /var/mail, too. */
-#if !defined(MAILPATH)
-#define MAILPATH "/var/mail/"
-#endif
+static const char *MAILPATH = "/var/mail/";
 
 void getmailstatus(void) {
         if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
