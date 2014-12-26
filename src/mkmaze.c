@@ -544,24 +544,16 @@ makemaz (const char *s)
 
         level.flags.is_maze_lev = TRUE;
 
-#ifndef WALLIFIED_MAZE
-        for(x = 2; x < x_maze_max; x++)
-                for(y = 2; y < y_maze_max; y++)
-                        levl[x][y].typ = STONE;
-#else
         for(x = 2; x <= x_maze_max; x++)
                 for(y = 2; y <= y_maze_max; y++)
                         levl[x][y].typ = ((x % 2) && (y % 2)) ? STONE : HWALL;
-#endif
 
         maze0xy(&mm);
         walkfrom((int) mm.x, (int) mm.y);
         /* put a boulder at the maze center */
         (void) mksobj_at(BOULDER, (int) mm.x, (int) mm.y, TRUE, FALSE);
 
-#ifdef WALLIFIED_MAZE
         wallification(2, 2, x_maze_max, y_maze_max);
-#endif
         mazexy(&mm);
         mkstairs(mm.x, mm.y, 1, (struct mkroom *)0);            /* up */
         if (!Invocation_lev(&u.uz)) {
@@ -639,11 +631,7 @@ void walkfrom(int x, int y) {
 
         if(!IS_DOOR(levl[x][y].typ)) {
             /* might still be on edge of MAP, so don't overwrite */
-#ifndef WALLIFIED_MAZE
-            levl[x][y].typ = CORR;
-#else
             levl[x][y].typ = ROOM;
-#endif
             levl[x][y].flags = 0;
         }
 
@@ -654,11 +642,7 @@ void walkfrom(int x, int y) {
                 if(!q) return;
                 dir = dirs[rn2(q)];
                 move(&x,&y,dir);
-#ifndef WALLIFIED_MAZE
-                levl[x][y].typ = CORR;
-#else
                 levl[x][y].typ = ROOM;
-#endif
                 move(&x,&y,dir);
                 walkfrom(x,y);
         }
@@ -689,11 +673,7 @@ mazexy (        /* find random point in generated corridors,
             cc->y = 3 + 2*rn2((y_maze_max>>1) - 1);
             cpt++;
         } while (cpt < 100 && levl[cc->x][cc->y].typ !=
-#ifdef WALLIFIED_MAZE
                  ROOM
-#else
-                 CORR
-#endif
                 );
         if (cpt >= 100) {
                 int x, y;
@@ -703,11 +683,7 @@ mazexy (        /* find random point in generated corridors,
                         cc->x = 3 + 2 * x;
                         cc->y = 3 + 2 * y;
                         if (levl[cc->x][cc->y].typ ==
-#ifdef WALLIFIED_MAZE
                             ROOM
-#else
-                            CORR
-#endif
                            ) return;
                     }
                 panic("mazexy: can't find a place!");

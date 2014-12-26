@@ -92,8 +92,6 @@
  * complexity of the game but also to the size of the load module.
  */
 
-/* dungeon levels */
-#define WALLIFIED_MAZE  /* Fancy mazes - Jean-Christophe Collet */
 /* monsters & objects */
 
 #define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
