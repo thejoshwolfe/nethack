@@ -9,18 +9,11 @@
 #include "hack.h"
 #include "date.h"
 #include "sp_lev.h"
-#ifdef STRICT_REF_DEF
-#include "tcap.h"
-#endif
 #include "trap.h"
 #include "mkroom.h"
 #include "rm.h"
 #include "pm_props.h"
 #include "extern.h"
-
-#ifndef MPWTOOL
-# define SpinCursor(x)
-#endif
 
 #include <fcntl.h>
 #include <sys/file.h>
@@ -270,7 +263,6 @@ get_floor_type (char c)
 {
         int val;
 
-        SpinCursor(3);
         val = what_map_char(c);
         if(val == INVALID_TYPE) {
             val = ERR;
@@ -287,7 +279,6 @@ get_room_type (char *s)
 {
         int i;
 
-        SpinCursor(3);
         for(i=0; room_types[i].name; i++)
             if (!strcmp(s, room_types[i].name))
                 return ((int) room_types[i].type);
@@ -302,7 +293,6 @@ get_trap_type (char *s)
 {
         int i;
 
-        SpinCursor(3);
         for (i=0; trap_types[i].name; i++)
             if(!strcmp(s,trap_types[i].name))
                 return trap_types[i].type;
@@ -317,7 +307,6 @@ get_monster_id (char *s, char c)
 {
         int i, class;
 
-        SpinCursor(3);
         class = c ? def_char_to_monclass(c) : 0;
         if (class == MAXMCLASSES) return ERR;
 
@@ -339,7 +328,6 @@ get_object_id (
         int i, class;
         const char *objname;
 
-        SpinCursor(3);
         class = (c > 0) ? def_char_to_objclass(c) : 0;
         if (class == MAXOCLASSES) return ERR;
 
@@ -393,7 +381,6 @@ char c;
 char
 what_map_char (char c)
 {
-        SpinCursor(3);
         switch(c) {
                   case ' '  : return(STONE);
                   case '#'  : return(CORR);
@@ -509,7 +496,6 @@ wallify_map (void)
         unsigned int x, y, xx, yy, lo_xx, lo_yy, hi_xx, hi_yy;
 
         for (y = 0; y <= max_y_map; y++) {
-            SpinCursor(3);
             lo_yy = (y > 0) ? y - 1 : 0;
             hi_yy = (y < max_y_map) ? y + 1 : max_y_map;
             for (x = 0; x <= max_x_map; x++) {

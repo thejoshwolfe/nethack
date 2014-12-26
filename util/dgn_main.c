@@ -6,10 +6,6 @@
 
 #include "dlb.h"
 
-#ifndef MPWTOOL
-# define SpinCursor(x)
-#endif
-
 #define MAX_ERRORS 25
 
 extern int  yyparse(void);
@@ -87,9 +83,6 @@ void yywarning (const char *s)
 
 int yywrap (void)
 {
-  SpinCursor(3); /* Don't know if this is a good place to put it ?
-                    Is it called for our grammar ? Often enough ?
-                    Too often ? -- h+ */
   return 1;
 }
 
