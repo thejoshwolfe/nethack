@@ -84,7 +84,7 @@ collect_obj_classes(ilets, otmp, here, incl_gold, filter, itemcount)
 char ilets[];
 struct obj *otmp;
 boolean here, incl_gold;
-boolean (*filter)(OBJ_P);
+boolean (*filter)(struct obj *);
 int *itemcount;
 {
         int iletct = 0;
@@ -138,7 +138,7 @@ int *menu_on_demand;
         *one_at_a_time = *everything = m_seen = FALSE;
         iletct = collect_obj_classes(ilets, objs, here,
                                      incl_gold,
-                                     (boolean (*)(OBJ_P)) 0, &itemcount);
+                                     (boolean (*)(struct obj *)) 0, &itemcount);
         if (iletct == 0) {
                 return FALSE;
         } else if (iletct == 1) {
@@ -628,7 +628,7 @@ struct obj *olist;              /* the list to pick from */
 int qflags;                     /* options to control the query */
 menu_item **pick_list;          /* return list of items picked */
 int how;                        /* type of query */
-boolean (*allow)(OBJ_P);/* allow function */
+boolean (*allow)(struct obj *);/* allow function */
 {
         int i, j;
         int n;
@@ -2058,7 +2058,7 @@ ask_again2:
                         if (askchain((struct obj **)&current_container->cobj,
                                      (one_by_one ? (char *)0 : select),
                                      allflag, out_container,
-                                     (int (*)(OBJ_P))0,
+                                     (int (*)(struct obj *))0,
                                      0, "nodot"))
                             used = 1;
                     } else if (menu_on_request < 0) {

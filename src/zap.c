@@ -1644,7 +1644,7 @@ smell:
 
 /* returns nonzero if something was hit */
 int
-bhitpile (struct obj *obj, int (*fhito)( OBJ_P,  OBJ_P), int tx, int ty)
+bhitpile (struct obj *obj, int (*fhito)( struct obj *,  struct obj *), int tx, int ty)
 {
     int hitanything = 0;
     struct obj *otmp, *next_obj;
@@ -2528,8 +2528,8 @@ bhit (
     int ddy,
     int range,              /* direction and range */
     int weapon,                             /* see values in hack.h */
-    int (*fhitm)( MONST_P,  OBJ_P),   /* fns called when mon/obj hit */
-    int (*fhito)( OBJ_P,  OBJ_P),
+    int (*fhitm)( struct monst *,  struct obj *),   /* fns called when mon/obj hit */
+    int (*fhito)( struct obj *,  struct obj *),
     struct obj *obj                        /* object tossed/used */
 )
 {
