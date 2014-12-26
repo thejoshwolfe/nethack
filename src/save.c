@@ -554,17 +554,13 @@ savefruitchn (int fd, int mode)
 }
 
 /* also called by prscore(); this probably belongs in dungeon.c... */
-void
-free_dungeons (void)
-{
+void free_dungeons (void) {
         savelevchn(0, FREE_SAVE);
         save_dungeon(0, FALSE, TRUE);
         return;
 }
 
-void
-freedynamicdata (void)
-{
+void freedynamicdata (void) {
         unload_qtlist();
         free_invbuf();  /* let_to_name (invent.c) */
         free_youbuf();  /* You_buf,&c (pline.c) */

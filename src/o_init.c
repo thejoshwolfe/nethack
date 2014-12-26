@@ -12,34 +12,6 @@ static boolean interesting_to_discover(int);
 
 static short disco[NUM_OBJECTS] = DUMMY;
 
-#ifdef USE_TILES
-static void shuffle_tiles(void);
-extern short glyph2tile[];      /* from tile.c */
-
-/* Shuffle tile assignments to match descriptions, so a red potion isn't
- * displayed with a blue tile and so on.
- *
- * Tile assignments are not saved, and shouldn't be so that a game can
- * be resumed on an otherwise identical non-tile-using binary, so we have
- * to reshuffle the assignments from oc_descr_idx information when a game
- * is restored.  So might as well do that the first time instead of writing
- * another routine.
- */
-static void
-shuffle_tiles (void)
-{
-        int i;
-        short tmp_tilemap[NUM_OBJECTS];
-
-        for (i = 0; i < NUM_OBJECTS; i++)
-                tmp_tilemap[i] =
-                        glyph2tile[objects[i].oc_descr_idx + GLYPH_OBJ_OFF];
-
-        for (i = 0; i < NUM_OBJECTS; i++)
-                glyph2tile[i + GLYPH_OBJ_OFF] = tmp_tilemap[i];
-}
-#endif  /* USE_TILES */
-
 static void
 setgemprobs (d_level *dlev)
 {
@@ -163,9 +135,6 @@ char oclass;
         }
         /* shuffle descriptions */
         shuffle_all();
-#ifdef USE_TILES
-        shuffle_tiles();
-#endif
 }
 
 static void
@@ -282,9 +251,6 @@ restnames (int fd)
                 objects[i].oc_uname = (char *) alloc(len);
                 mread(fd, (void *)objects[i].oc_uname, len);
             }
-#ifdef USE_TILES
-        shuffle_tiles();
-#endif
 }
 
 void

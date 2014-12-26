@@ -63,11 +63,6 @@ verbose        print more commentary during the game              [TRUE]
 There are further boolean options controlled by compilation flags.
 
 
-Boolean option if USE_TILES was set at compile time:
-preload_tiles  control whether tiles get pre-loaded into RAM at the
-               start of the game.  Doing so enhances performance
-               of the tile graphics, but uses more memory.        [TRUE]
-
 Any Boolean option can be negated by prefixing it with a '!' or 'no'.
 
 

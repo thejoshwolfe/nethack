@@ -1546,11 +1546,6 @@ extern void rloco(struct obj *);
 extern int random_teleport_level(void);
 extern boolean u_teleport_mon(struct monst *,boolean);
 
-/* ### tile.c ### */
-#ifdef USE_TILES
-extern void substitute_tiles(d_level *);
-#endif
-
 /* ### timeout.c ### */
 
 extern void burn_away_slime(void);
