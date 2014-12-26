@@ -99,7 +99,6 @@ static char *version_string(char *);
 static char *version_id_string(char *,const char *);
 static char *xcrypt(const char *);
 static int check_control(char *);
-static char *without_control(char *);
 static boolean d_filter(char *);
 static boolean h_filter(char *);
 static boolean ranged_attk(struct permonst*);
@@ -814,12 +813,6 @@ check_control (char *s)
         return(-1);
 }
 
-static char *
-without_control (char *s)
-{
-        return(s + 1 + strlen(deflist[check_control(in_line)].defname));
-}
-
 static boolean
 ranged_attk(ptr)        /* returns TRUE if monster can attack at range */
         struct permonst *ptr;
@@ -978,7 +971,30 @@ do_permonst (void)
 
 
 /*      Start of Quest text file processing. */
-#include "qtext.h"
+#include "qtmsg.h"
+
+#define N_MSG   100             /* arbitrary */
+
+struct msghdr {
+        int     n_msg;
+        struct  qtmsg   qt_msg[N_MSG];
+};
+
+struct  qthdr {
+        int     n_hdr;
+        char    id[N_HDR][LEN_HDR];
+        long    offset[N_HDR];
+};
+
+/* Error message macros */
+#define CREC_IN_MSG     "Control record encountered during message - line %d\n"
+#define DUP_MSG         "Duplicate message number at line %d\n"
+#define END_NOT_IN_MSG  "End record encountered before message - line %d\n"
+#define TEXT_NOT_IN_MSG "Text encountered outside message - line %d\n"
+#define UNREC_CREC      "Unrecognized Control record at line %d\n"
+#define OUT_OF_HEADERS  "Too many message types (line %d)\nAdjust N_HDR in qtext.h and recompile.\n"
+#define OUT_OF_MESSAGES "Too many messages in class (line %d)\nAdjust N_MSG in qtext.h and recompile.\n"
+
 
 static struct qthdr     qt_hdr;
 static struct msghdr    msg_hdr[N_HDR];

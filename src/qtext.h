@@ -2,43 +2,7 @@
 #ifndef QTEXT_H
 #define QTEXT_H
 
-#define N_HDR   16              /* Maximum number of categories */
-                                /* (i.e., num roles + 1) */
-#define LEN_HDR 3               /* Maximum length of a category name */
-
-struct qtmsg {
-        int     msgnum;
-        char    delivery;
-        long    offset,
-                size;
-};
-
-#ifdef MAKEDEFS_C       /***** MAKEDEFS *****/
-
-#define N_MSG   100             /* arbitrary */
-
-struct msghdr {
-        int     n_msg;
-        struct  qtmsg   qt_msg[N_MSG];
-};
-
-struct  qthdr {
-        int     n_hdr;
-        char    id[N_HDR][LEN_HDR];
-        long    offset[N_HDR];
-};
-
-/* Error message macros */
-#define CREC_IN_MSG     "Control record encountered during message - line %d\n"
-#define DUP_MSG         "Duplicate message number at line %d\n"
-#define END_NOT_IN_MSG  "End record encountered before message - line %d\n"
-#define TEXT_NOT_IN_MSG "Text encountered outside message - line %d\n"
-#define UNREC_CREC      "Unrecognized Control record at line %d\n"
-#define OUT_OF_HEADERS  "Too many message types (line %d)\nAdjust N_HDR in qtext.h and recompile.\n"
-#define OUT_OF_MESSAGES "Too many messages in class (line %d)\nAdjust N_MSG in qtext.h and recompile.\n"
-
-
-#else   /***** !MAKEDEFS *****/
+#include "qtmsg.h"
 
 struct  qtlists {
         struct  qtmsg   *common,
@@ -101,6 +65,5 @@ struct  qtlists {
 #define QTN_DEMONIC     20
 
 #define QT_BANISHED     60
-#endif  /***** !MAKEDEFS *****/
 
 #endif /* QTEXT_H */
