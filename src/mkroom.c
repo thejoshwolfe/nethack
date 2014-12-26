@@ -217,9 +217,6 @@ fill_zoo (struct mkroom *sroom)
         int rmno = (sroom - rooms) + ROOMOFFSET;
         coord mm;
 
-#ifdef GCC_WARN
-        tx = ty = goldlim = 0;
-#endif
 
         sh = sroom->fdoor;
         switch(type) {

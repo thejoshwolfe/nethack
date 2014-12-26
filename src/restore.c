@@ -472,9 +472,6 @@ dorecover (int fd)
         int rtmp;
         struct obj *otmp;
 
-#ifdef STORE_PLNAME_IN_FILE
-        mread(fd, (void *) plname, PL_NSIZ);
-#endif
 
         restoring = TRUE;
         getlev(fd, 0, (signed char)0, FALSE);
@@ -509,9 +506,6 @@ dorecover (int fd)
 
         (void) lseek(fd, (off_t)0, 0);
         (void) uptodate(fd, (char *)0);         /* skip version info */
-#ifdef STORE_PLNAME_IN_FILE
-        mread(fd, (void *) plname, PL_NSIZ);
-#endif
         getlev(fd, 0, (signed char)0, FALSE);
         (void) close(fd);
 

@@ -24,9 +24,7 @@
 #define Unlink  (void) unlink
 #define rewind(fp) fseek((fp),0L,SEEK_SET)      /* guarantee a return value */
 
-#if !defined(GCC_WARN)
 static  const char      SCCS_Id[] = "@(#)makedefs.c\t3.4\t2002/02/03";
-#endif
 
         /* names of files to be generated */
 #define DATE_FILE       "date.h"

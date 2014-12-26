@@ -1569,7 +1569,7 @@ set_mimic_sym (         /* KAA, modified by ERS */
         else if (IS_ROOM(typ))
                 rt = OROOM,  roomno = 0;
 #endif
-        else    rt = 0; /* roomno < 0 case for GCC_WARN */
+        else    rt = 0;
 
         if (OBJ_AT(mx, my)) {
                 ap_type = M_AP_OBJECT;
