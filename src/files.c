@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "dlb.h"
-#include "config.h"
 #include "extern.h"
 #include "winprocs.h"
 
@@ -38,11 +37,9 @@ boolean nethack_thinks_it_is_open;      /* Does NetHack think it's open?       *
 } lftrack;
 #endif /*HOLD_LOCKFILE_OPEN*/
 
-#ifdef WIZARD
 #define WIZKIT_MAX 128
 static char wizkit[WIZKIT_MAX];
 static FILE *fopen_wizkit_file(void);
-#endif
 
 extern int n_dgns;              /* from dungeon.c */
 
@@ -441,10 +438,8 @@ void commit_bonesfile(d_level *lev) {
         tempname = fqname(tempname, BONESPREFIX, 1);
 
         ret = rename(tempname, fq_bones);
-#ifdef WIZARD
         if (wizard && ret != 0)
                 pline("couldn't rename %s to %s.", tempname, fq_bones);
-#endif
 }
 
 
@@ -488,12 +483,10 @@ save_savefile_name (int fd)
 }
 
 
-#if defined(WIZARD)
 /* change pre-existing savefile name to indicate an error savefile */
 void set_error_savefile(void) {
         Strcat(SAVEF, ".e");
 }
-#endif
 
 
 /* create save file, overwriting one if it already exists */
@@ -928,10 +921,8 @@ char            *tmp_levels;
             (void) get_uchars(fp, buf, bufp, translate, FALSE,
                                         WARNCOUNT, "WARNINGS");
             assign_warnings(translate);
-#ifdef WIZARD
         } else if (match_varname(buf, "WIZKIT", 6)) {
             (void) strncpy(wizkit, bufp, WIZKIT_MAX-1);
-#endif
         } else
                 return 0;
         return 1;
@@ -965,7 +956,6 @@ read_config_file (const char *filename)
         return;
 }
 
-#ifdef WIZARD
 static FILE *
 fopen_wizkit_file()
 {
@@ -1051,7 +1041,6 @@ read_wizkit (void)
         return;
 }
 
-#endif /*WIZARD*/
 
 /* ----------  END CONFIG FILE HANDLING ----------- */
 

@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "prop.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "timeout.h"
@@ -11,10 +10,8 @@ static void mkbox_cnts(struct obj *);
 static void obj_timer_checks(struct obj *, signed char, signed char, int);
 static void container_weight(struct obj *);
 static struct obj *save_mtraits(struct obj *, struct monst *);
-#ifdef WIZARD
 static const char *where_name(int);
 static void check_contained(struct obj *,const char *);
-#endif
 
 extern struct obj *thrownobj;           /* defined in dothrow.c */
 
@@ -1380,7 +1377,6 @@ dealloc_obj (struct obj *obj)
     free((void *) obj);
 }
 
-#ifdef WIZARD
 /* Check all object lists for consistency. */
 void
 obj_sanity_check (void)
@@ -1507,7 +1503,6 @@ check_contained (struct obj *container, const char *mesg)
                 fmt_ptr((void *)container, obj2_address));
     }
 }
-#endif /* WIZARD */
 
 
 /*mkobj.c*/

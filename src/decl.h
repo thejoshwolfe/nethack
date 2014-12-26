@@ -7,7 +7,6 @@
 #include "wintype.h"
 #include "objclass.h"
 #include "coord.h"
-#include "config.h"
 #include "quest.h"
 #include "spell.h"
 #include "pm.h"

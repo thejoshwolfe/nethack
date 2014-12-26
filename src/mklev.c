@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
@@ -651,9 +650,7 @@ makelevel (void)
     {
         int u_depth = depth(&u.uz);
 
-#ifdef WIZARD
         if(wizard && nh_getenv("SHOPTYPE")) mkroom(SHOPBASE); else
-#endif
         if (u_depth > 1 &&
             u_depth < depth(&medusa_level) &&
             nroom >= room_threshold &&
@@ -1434,9 +1431,7 @@ static void mk_knox_portal(signed char x, signed char y) {
 
         /* Already set or 2/3 chance of deferring until a later level. */
         if (source->dnum < n_dgns || (rn2(3)
-#ifdef WIZARD
                                       && !wizard
-#endif
                                       )) return;
 
         if (! (u.uz.dnum == oracle_level.dnum       /* in main dungeon */

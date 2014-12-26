@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #ifndef COLOR_H
 #define COLOR_H
-#include "config.h"
 
 /*
  * The color scheme used is tailored for an IBM PC.  It consists of the

@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "epri.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "display.h"
@@ -1557,7 +1556,6 @@ dopray (void)
     /* set up p_type and p_alignment */
     if (!can_pray(TRUE)) return 0;
 
-#ifdef WIZARD
     if (wizard && p_type >= 0) {
         if (yn("Force the gods to be pleased?") == 'y') {
             u.ublesscnt = 0;
@@ -1567,7 +1565,6 @@ dopray (void)
             if(p_type < 2) p_type = 3;
         }
     }
-#endif
     nomul(-3);
     nomovemsg = "You finish your prayer.";
     afternmv = prayer_done;

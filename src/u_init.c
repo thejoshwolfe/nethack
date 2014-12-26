@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 
@@ -735,10 +734,8 @@ u_init (void)
         if (discover)
                 ini_inv(Wishing);
 
-#ifdef WIZARD
         if (wizard)
                 read_wizkit();
-#endif
 
         u.ugold0 += hidden_gold();      /* in case sack has gold in it */
 

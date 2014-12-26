@@ -4,7 +4,6 @@
  * and some useful functions needed by yacc
  */
 
-#include "config.h"
 #include "dlb.h"
 
 #ifndef MPWTOOL

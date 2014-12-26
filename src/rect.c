@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "extern.h"
 
 int get_rect_ind(NhRect *);
@@ -130,9 +129,7 @@ void
 add_rect (NhRect *r)
 {
         if (rect_cnt >= MAXRECT) {
-#ifdef WIZARD
                 if (wizard) pline("MAXRECT may be too small.");
-#endif
                 return;
         }
         /* Check that this NhRect is not included in another one */

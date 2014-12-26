@@ -3,7 +3,6 @@
 #include "mfndpos.h"
 #include "edog.h"
 #include <ctype.h>
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "display.h"
@@ -2147,7 +2146,6 @@ select_newcham_form (struct monst *mon)
               }
                 break;
         }
-#ifdef WIZARD
         /* For debugging only: allow control of polymorphed monster; not saved */
         if (wizard && iflags.mon_polycontrol) {
                 char pprompt[BUFSZ], buf[BUFSZ];
@@ -2164,7 +2162,6 @@ select_newcham_form (struct monst *mon)
                 } while(++tries < 5);
                 if (tries==5) plines(thats_enough_tries);
         }
-#endif /*WIZARD*/
         if (mndx == NON_PM) mndx = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
         return mndx;
 }

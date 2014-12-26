@@ -4,7 +4,6 @@
 
 #include "global.h"
 #include "wintype.h"
-#include "config.h"
 
 #ifndef WINDOW_STRUCTS
 #define WINDOW_STRUCTS

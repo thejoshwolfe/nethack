@@ -1,5 +1,4 @@
 /* See LICENSE in the root of this project for change info */
-#include "config.h"
 #include "dlb.h"
 #include "extern.h"
 

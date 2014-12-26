@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
@@ -393,14 +392,10 @@ tele (void)
 
         /* Disable teleportation in stronghold && Vlad's Tower */
         if (level.flags.noteleport) {
-#ifdef WIZARD
                 if (!wizard) {
-#endif
                     pline("A mysterious force prevents you from teleporting!");
                     return;
-#ifdef WIZARD
                 }
-#endif
         }
 
         /* don't show trap if "Sorry..." */
@@ -411,9 +406,7 @@ tele (void)
             return;
         }
         if ((Teleport_control && !Stunned)
-#ifdef WIZARD
                             || wizard
-#endif
                                         ) {
             if (unconscious()) {
                 pline("Being unconscious, you cannot control your teleport.");
@@ -476,39 +469,29 @@ dotele (void)
                                 castit = TRUE;
                                 break;
                         }
-#ifdef WIZARD
                 if (!wizard) {
-#endif
                     if (!castit) {
                         if (!Teleportation)
                             You("don't know that spell.");
                         else You("are not able to teleport at will.");
                         return(0);
                     }
-#ifdef WIZARD
                 }
-#endif
             }
 
             if (u.uhunger <= 100 || ACURR(A_STR) < 6) {
-#ifdef WIZARD
                 if (!wizard) {
-#endif
                         You("lack the strength %s.",
                             castit ? "for a teleport spell" : "to teleport");
                         return 1;
-#ifdef WIZARD
                 }
-#endif
             }
 
             energy = objects[SPE_TELEPORT_AWAY].oc_level * 7 / 2 - 2;
             if (u.uen <= energy) {
-#ifdef WIZARD
                 if (wizard)
                         energy = u.uen;
                 else
-#endif
                 {
                         You("lack the energy %s.",
                             castit ? "for a teleport spell" : "to teleport");
@@ -525,9 +508,7 @@ dotele (void)
                 if (spelleffects(sp_no, TRUE))
                         return(1);
                 else
-#ifdef WIZARD
                     if (!wizard)
-#endif
                         return(0);
             } else {
                 u.uen -= energy;
@@ -558,17 +539,13 @@ level_tele (void)
         boolean force_dest = FALSE;
 
         if ((u.uhave.amulet || In_endgame(&u.uz) || In_sokoban(&u.uz))
-#ifdef WIZARD
                                                 && !wizard
-#endif
                                                         ) {
             You_feel("very disoriented for a moment.");
             return;
         }
         if ((Teleport_control && !Stunned)
-#ifdef WIZARD
            || wizard
-#endif
                 ) {
             char qbuf[BUFSZ];
             int trycnt = 0;
@@ -576,10 +553,8 @@ level_tele (void)
             Strcpy(qbuf, "To what level do you want to teleport?");
             do {
                 if (++trycnt == 2) {
-#ifdef WIZARD
                         if (wizard) Strcat(qbuf, " [type a number or ? for a menu]");
                         else
-#endif
                         Strcat(qbuf, " [type a number]");
                 }
                 getlin(qbuf, buf);
@@ -595,7 +570,6 @@ level_tele (void)
                     pline("Oops...");
                     goto random_levtport;
                 }
-#ifdef WIZARD
                 if (wizard && !strcmp(buf,"?")) {
                     signed char destlev = 0;
                     signed char destdnum = 0;
@@ -621,7 +595,6 @@ level_tele (void)
                         force_dest = TRUE;
                     } else return;
                 } else
-#endif
                 if ((newlev = lev_by_name(buf)) == 0) newlev = atoi(buf);
             } while (!newlev && !digit(buf[0]) &&
                      (buf[0] != '-' || !digit(buf[1])) &&
@@ -677,7 +650,6 @@ level_tele (void)
                 You("%s", shudder_for_moment);
                 return;
         }
-#ifdef WIZARD
         if (In_endgame(&u.uz)) {        /* must already be wizard */
             int llimit = dunlevs_in_dungeon(&u.uz);
 
@@ -690,7 +662,6 @@ level_tele (void)
             schedule_goto(&newlevel, FALSE, FALSE, 0, (char *)0, (char *)0);
             return;
         }
-#endif
 
         killer = 0;             /* still alive, so far... */
 
@@ -757,17 +728,13 @@ level_tele (void)
         } else if (u.uz.dnum == medusa_level.dnum &&
             newlev >= dungeons[u.uz.dnum].depth_start +
                                                 dunlevs_in_dungeon(&u.uz)) {
-#ifdef WIZARD
             if (!(wizard && force_dest))
-#endif
             find_hell(&newlevel);
         } else {
             /* if invocation did not yet occur, teleporting into
              * the last level of Gehennom is forbidden.
              */
-#ifdef WIZARD
                 if (!wizard)
-#endif
             if (Inhell && !u.uevent.invoked &&
                         newlev >= (dungeons[u.uz.dnum].depth_start +
                                         dunlevs_in_dungeon(&u.uz) - 1)) {
@@ -782,9 +749,7 @@ level_tele (void)
              * we must translate newlev to a number relative to the
              * current dungeon.
              */
-#ifdef WIZARD
             if (!(wizard && force_dest))
-#endif
             get_level(&newlevel, newlev);
         }
         schedule_goto(&newlevel, FALSE, FALSE, 0, (char *)0, (char *)0);

@@ -10,7 +10,6 @@
 #include "global.h"
 #include "objclass.h"
 #include "coord.h"
-#include "config.h"
 /*
  * Persistent flags that are saved and restored with the game.
  *
@@ -164,10 +163,8 @@ struct instance_flags {
 #ifdef SIMPLE_MAIL
         boolean simplemail;     /* simple mail format $NAME:$MESSAGE */
 #endif
-#ifdef WIZARD
         boolean  sanity_check;  /* run sanity checks */
         boolean  mon_polycontrol;       /* debug: control monster polymorphs */
-#endif
         char prevmsg_window;    /* type of old message window to use */
         boolean  extmenu;       /* extended commands use menu interface */
         char sortloot;          /* sort items to loot alphabetically */

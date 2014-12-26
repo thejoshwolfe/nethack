@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #define MAKEDEFS_C      /* use to conditionally include file sections */
 
-#include "config.h"
 #include "permonst.h"
 #include "objclass.h"
 #include "monsym.h"
@@ -372,13 +371,8 @@ do_date (void)
         Fprintf(ofp,"/*\tSCCS Id: @(#)date.h\t3.4\t2002/02/03 */\n\n");
         Fprintf(ofp, "%s", Dont_Edit_Code);
 
-#ifdef KR1ED
-        (void) time(&clocktim);
-        Strcpy(cbuf, ctime(&clocktim));
-#else
         (void) time((time_t *)&clocktim);
         Strcpy(cbuf, ctime((time_t *)&clocktim));
-#endif
         for (c = cbuf; *c; c++) if (*c == '\n') break;
         *c = '\0';      /* strip off the '\n' */
         Fprintf(ofp,"#define BUILD_DATE \"%s\"\n", cbuf);
@@ -433,9 +427,7 @@ static const char *build_opts[] = {
                 "command line completion",
 #endif
                 "data librarian",
-#ifdef WIZARD
                 "debug mode",
-#endif
                 "Elbereth",
                 "experience points on status line",
                 "insurance files for recovering from crashes",
@@ -905,7 +897,6 @@ do_monstr (void)
         exit(EXIT_FAILURE);
     }
     Fprintf(ofp,"%s", Dont_Edit_Code);
-    Fprintf(ofp,"#include \"config.h\"\n");
     Fprintf(ofp,"\nconst int monstr[] = {\n");
     for (ptr = &mons[0], j = 0; ptr->mlet; ptr++) {
 

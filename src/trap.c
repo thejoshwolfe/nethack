@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
@@ -3793,9 +3792,7 @@ lava_effects()
             You("fall into the lava!");
 
         usurvive = Lifesaved || discover;
-#ifdef WIZARD
         if (wizard) usurvive = TRUE;
-#endif
         for(obj = invent; obj; obj = obj2) {
             obj2 = obj->nobj;
             if(is_organic(obj) && !obj->oerodeproof) {

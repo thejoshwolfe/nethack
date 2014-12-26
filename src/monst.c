@@ -1,5 +1,4 @@
 /* See LICENSE in the root of this project for change info */
-#include "config.h"
 #include "permonst.h"
 #include "monsym.h"
 #include "dungeon.h"    /* prerequisite for eshk,vault,epri */

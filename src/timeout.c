@@ -2,7 +2,6 @@
 #include "timeout.h"
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "display.h"
@@ -1223,10 +1222,8 @@ do_storms (void)
  *              Stop all timers attached to obj.
  */
 
-#ifdef WIZARD
 static const char *kind_name(short);
 static void print_queue(winid, timer_element *);
-#endif
 static void insert_timer(timer_element *);
 static timer_element *remove_timer(timer_element **, short, void *);
 static void write_timer(int, timer_element *);
@@ -1263,7 +1260,6 @@ static const ttable timeout_funcs[NUM_TIME_FUNCS] = {
 #undef TTAB
 
 
-#if defined(WIZARD)
 
 static const char *
 kind_name (short kind)
@@ -1343,7 +1339,6 @@ timer_sanity_check (void)
         }
 }
 
-#endif /* WIZARD */
 
 
 /*

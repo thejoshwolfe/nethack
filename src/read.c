@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "display.h"
@@ -1416,7 +1415,6 @@ do_class_genocide (void)
                                 (buf[0] == DEF_INVISIBLE && buf[1] == '\0'))
         You("aren't permitted to genocide such monsters.");
                         else
-#ifdef WIZARD   /* to aid in topology testing; remove pesky monsters */
                           if (wizard && buf[0] == '*') {
                             struct monst *mtmp, *mtmp2;
 
@@ -1430,7 +1428,6 @@ do_class_genocide (void)
         pline("Eliminated %d monster%s.", gonecnt, plur(gonecnt));
                             return;
                         } else
-#endif
         pline("That symbol does not represent any monster.");
                         continue;
                 }
@@ -1730,7 +1727,6 @@ boolean revival;
         return FALSE;
 }
 
-#ifdef WIZARD
 /*
  * Make a new monster with the type controlled by the user.
  *
@@ -1806,7 +1802,6 @@ create_particular()
         }
         return madeany;
 }
-#endif /* WIZARD */
 
 
 /*read.c*/

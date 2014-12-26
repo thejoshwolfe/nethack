@@ -2,7 +2,6 @@
 
 #include "hack.h"
 #include "wintty.h"
-#include "config.h"
 #include "extern.h"
 #include "winprocs.h"
 

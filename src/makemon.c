@@ -3,7 +3,6 @@
 #include "epri.h"
 #include "emin.h"
 #include "edog.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "display.h"
@@ -1038,12 +1037,9 @@ struct permonst *mptr;          /* usually null; used for confused reading */
         int x, y;
         struct monst *mon;
         boolean known = FALSE;
-#ifdef WIZARD
         boolean ask = wizard;
-#endif
 
         while (cnt--) {
-#ifdef WIZARD
             if (ask) {
                 if (create_particular()) {
                     known = TRUE;
@@ -1051,7 +1047,6 @@ struct permonst *mptr;          /* usually null; used for confused reading */
                 }
                 else ask = FALSE;       /* ESC will shut off prompting */
             }
-#endif
             x = u.ux,  y = u.uy;
             /* if in water, try to encourage an aquatic monster
                by finding and then specifying another wet location */

@@ -28,8 +28,6 @@
 #define LEV_EXT ".lev"          /* extension for special level files */
 
 
-/* Assorted definitions that may depend on selections in config.h. */
-
 typedef signed char     boolean;                /* 0 or 1 */
 
 #ifndef TRUE            /* defined in some systems' native include files */
@@ -98,8 +96,7 @@ extern void nhfree(void *,const char *,int);
 extern long *alloc(unsigned int);               /* alloc.c */
 #endif
 
-/* Used for consistency checks of various data files; declare it here so
-   that utility programs which include config.h but not hack.h can see it. */
+/* Used for consistency checks of various data files; */
 struct version_info {
         unsigned long   incarnation;    /* actual version number */
         unsigned long   feature_set;    /* bitmask of config settings */

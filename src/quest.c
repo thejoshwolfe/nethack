@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "quest.h"
 #include "qtext.h"
-#include "config.h"
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
@@ -110,7 +109,6 @@ boolean talk;
     int purity;
     aligntyp original_alignment = u.ualignbase[A_ORIGINAL];
 
-#ifdef WIZARD
     if (wizard && talk) {
         if (u.ualign.type != original_alignment) {
             You("are currently %s instead of %s.",
@@ -124,7 +122,6 @@ boolean talk;
                 u.ualign.record = MIN_QUEST_ALIGN;
         }
     }
-#endif
     purity = (u.ualign.record >= MIN_QUEST_ALIGN &&
               u.ualign.type == original_alignment &&
               u.ualignbase[A_CURRENT] == original_alignment) ?  1 :

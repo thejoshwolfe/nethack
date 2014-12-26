@@ -13,7 +13,6 @@
 #include "mkroom.h"
 #include "rect.h"
 #include "region.h"
-#include "config.h"
 
 /* ### alloc.c ### */
 
@@ -139,9 +138,7 @@ extern void set_occupation(int (*)(void),const char *,int);
 extern char pgetchar(void);
 extern void pushch(char);
 extern void savech(char);
-#ifdef WIZARD
 extern void add_debug_extended_commands(void);
-#endif /* WIZARD */
 extern void rhack(char *);
 extern int doextlist(void);
 extern int extcmd_via_menu(void);
@@ -158,9 +155,7 @@ extern int isok(int,int);
 extern int get_adjacent_loc(const char *, const char *, signed char, signed char, coord *);
 extern const char *click_to_cmd(int,int,int);
 extern char readchar(void);
-#ifdef WIZARD
 extern void sanity_check(void);
-#endif
 extern char yn_function(const char *, const char *, char);
 
 /* ### dbridge.c ### */
@@ -443,9 +438,7 @@ extern int induced_align(int);
 extern boolean Invocation_lev(d_level *);
 extern signed char level_difficulty(void);
 extern signed char lev_by_name(const char *);
-#ifdef WIZARD
 extern signed char print_dungeon(boolean,signed char *,signed char *);
-#endif
 
 /* ### eat.c ### */
 
@@ -539,9 +532,7 @@ extern int open_bonesfile(d_level*,char **);
 extern int delete_bonesfile(d_level*);
 extern void set_savefile_name(void);
 extern void save_savefile_name(int);
-#if defined(WIZARD)
 extern void set_error_savefile(void);
-#endif
 extern int create_savefile(void);
 extern int open_savefile(void);
 extern int delete_savefile(void);
@@ -550,9 +541,7 @@ extern boolean lock_file(const char *,int,int);
 extern void unlock_file(const char *);
 extern void read_config_file(const char *);
 extern void check_recordfile(const char *);
-#if defined(WIZARD)
 extern void read_wizkit(void);
-#endif
 extern void paniclog(const char *, const char *);
 extern int validate_prefix_locations(char *);
 extern char** get_saved_games(void);
@@ -718,9 +707,7 @@ extern boolean obj_is_burning(struct obj *);
 extern void obj_split_light_source(struct obj *, struct obj *);
 extern void obj_merge_light_sources(struct obj *,struct obj *);
 extern int candle_light_range(struct obj *);
-#ifdef WIZARD
 extern int wiz_light_sources(void);
-#endif
 
 /* ### lock.c ### */
 
@@ -890,9 +877,7 @@ extern void add_to_buried(struct obj *);
 extern void dealloc_obj(struct obj *);
 extern void obj_ice_effects(int, int, boolean);
 extern long peek_at_iced_corpse_age(struct obj *);
-#ifdef WIZARD
 extern void obj_sanity_check(void);
-#endif
 
 /* ### mkroom.c ### */
 
@@ -1309,9 +1294,7 @@ extern void do_genocide(int);
 extern void punish(struct obj *);
 extern void unpunish(void);
 extern boolean cant_create(int *, boolean);
-#ifdef WIZARD
 extern boolean create_particular(void);
-#endif
 
 /* ### rect.c ### */
 
@@ -1592,10 +1575,8 @@ extern boolean obj_is_local(struct obj *);
 extern void save_timers(int,int,int);
 extern void restore_timers(int,int,boolean,long);
 extern void relink_timers(boolean);
-#ifdef WIZARD
 extern int wiz_timeout_queue(void);
 extern void timer_sanity_check(void);
-#endif
 
 /* ### topten.c ### */
 

@@ -1,12 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "config.h"
 #include "global.h"
 #include <stdlib.h>
 
-#if defined(MONITOR_HEAP) || defined(WIZARD)
 char *fmt_ptr(const void *,char *);
-#endif
 
 #ifdef MONITOR_HEAP
 #undef alloc
@@ -33,7 +30,6 @@ long * alloc(unsigned int lth) {
 }
 
 
-#if defined(MONITOR_HEAP) || defined(WIZARD)
 
 # ifdef MONITOR_PTR_FMT
 #  define PTR_FMT "%p"
@@ -51,7 +47,6 @@ fmt_ptr (const void *ptr, char *buf)
         return buf;
 }
 
-#endif
 
 #ifdef MONITOR_HEAP
 

@@ -6,7 +6,6 @@
 #include <signal.h>
 #endif
 #include "dlb.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "winprocs.h"
@@ -166,7 +165,6 @@ done2 (void)
                 }
                 return 0;
         }
-#if defined(WIZARD)
         if(wizard) {
             int c;
             const char *tmp = "Dump core?";
@@ -176,7 +174,6 @@ done2 (void)
                 NH_abort();
             } else if (c == 'q') done_stopprint++;
         }
-#endif
         done(QUIT);
         return 0;
 }
@@ -288,39 +285,25 @@ void panic (const char * str, ...) {
                   !program_state.something_worth_saving ?
                   "Program initialization has failed." :
                   "Suddenly, the dungeon collapses.");
-#if defined(WIZARD)
 # if defined(NOTIFY_NETHACK_BUGS)
         if (!wizard)
             raw_printf("Report the following error to \"%s\".",
                         "nethack-bugs@nethack.org");
         else if (program_state.something_worth_saving)
             raw_print("\nError save file being written.\n");
-# else
-        if (!wizard)
-            raw_printf("Report error to \"%s\"%s.",
-#  ifdef WIZARD_NAME    /*(KR1ED)*/
-                        WIZARD_NAME,
-#  else
-                        WIZARD,
-#  endif
-                        !program_state.something_worth_saving ? "" :
-                        " and it may be possible to rebuild.");
 # endif
         if (program_state.something_worth_saving) {
             set_error_savefile();
             (void) dosave0();
         }
-#endif
         {
             char buf[BUFSZ];
             Vsprintf(buf,str,the_args);
             raw_print(buf);
             paniclog("panic", buf);
         }
-#if defined(WIZARD)
         if (wizard)
             NH_abort(); /* generate core dump */
-#endif
     va_end(the_args);
         done(PANICKED);
 }
@@ -574,12 +557,10 @@ done (int how)
                 paniclog("trickery", killer);
                 killer = 0;
             }
-#ifdef WIZARD
             if (wizard) {
                 You("are a very tricky wizard, it seems.");
                 return;
             }
-#endif
         }
 
         /* kilbuf: used to copy killer in case it comes from something like
@@ -618,9 +599,7 @@ done (int how)
                 }
         }
         if ((
-#ifdef WIZARD
                         wizard ||
-#endif
                         discover) && (how <= GENOCIDED)) {
                 if(yn("Die?") == 'y') goto die;
                 pline("OK, so you don't %s.",
@@ -757,9 +736,7 @@ die:
         }
 
         if (bones_ok) {
-#ifdef WIZARD
             if (!wizard || yn("Save bones?") == 'y')
-#endif
                 savebones(corpse);
             /* corpse may be invalid pointer now so
                 ensure that it isn't used again */

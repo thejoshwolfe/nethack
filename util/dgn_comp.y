@@ -18,7 +18,6 @@
  #pragma alloca         /* keep leading space! */
 #endif
 
-#include "config.h"
 #include "date.h"
 #include "dgn_file.h"
 #include "global.h"

@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "lev.h"
 #include <ctype.h>
-#include "config.h"
 #include "extern.h"
 #include "winprocs.h"
 
@@ -779,12 +778,10 @@ doengrave (void)
                 break;
 
             case VENOM_CLASS:
-#ifdef WIZARD
                 if (wizard) {
                     pline("Writing a poison pen letter??");
                     break;
                 }
-#endif
             case ILLOBJ_CLASS:
                 impossible("You're engraving with an illegal object!");
                 break;

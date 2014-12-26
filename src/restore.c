@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "lev.h"
-#include "config.h"
 #include "extern.h"
 #include "winprocs.h"
 #include "timeout.h"
@@ -354,9 +353,7 @@ unsigned int *stuckid, *steedid;        /* STEED */
             /* for wizard mode, issue a reminder; for others, treat it
                as an attempt to cheat and refuse to restore this file */
             pline("Saved game was not yours.");
-#ifdef WIZARD
             if (!wizard)
-#endif
                 return FALSE;
         }
 
@@ -602,9 +599,7 @@ boolean ghostly;
                         hpid, pid);
             else
                 Sprintf(trickbuf, "This is level %d, not %d!", dlvl, lev);
-#ifdef WIZARD
             if (wizard) plines(trickbuf);
-#endif
             trickery(trickbuf);
         }
 

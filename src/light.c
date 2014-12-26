@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
-#include "config.h"
 #include "extern.h"
 #include "vision.h"
 #include "timeout.h"
@@ -553,7 +552,6 @@ candle_light_range (struct obj *obj)
     return radius;
 }
 
-#ifdef WIZARD
 extern char *fmt_ptr(const void *, char *);  /* from alloc.c */
 
 int
@@ -595,7 +593,6 @@ wiz_light_sources (void)
     return 0;
 }
 
-#endif /* WIZARD */
 
 
 /*light.c*/

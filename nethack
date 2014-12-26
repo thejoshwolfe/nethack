@@ -10,4 +10,4 @@ touch run/perm
 touch run/logfile
 touch run/record
 
-./build/nethack
+./build/nethack "$@"

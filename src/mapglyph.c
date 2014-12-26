@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "wintty.h"     /* for prototype of has_color() only */
 #include "color.h"
 #include "extern.h"

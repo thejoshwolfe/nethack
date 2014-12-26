@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "sp_lev.h"
 #include "lev.h"        /* save & restore info */
-#include "config.h"
 #include "extern.h"
 #include "display.h"
 
@@ -509,7 +508,6 @@ makemaz (const char *s)
 
         } else Strcpy(protofile, "");
 
-#ifdef WIZARD
         /* SPLEVTYPE format is "level-choice,level-choice"... */
         if (wizard && *protofile && sp && sp->rndlevs) {
             char *ep = getenv("SPLEVTYPE");     /* not nh_getenv */
@@ -531,7 +529,6 @@ makemaz (const char *s)
                 }
             }
         }
-#endif
 
         if(*protofile) {
             Strcat(protofile, LEV_EXT);

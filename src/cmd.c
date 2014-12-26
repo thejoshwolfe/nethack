@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "func_tab.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "winprocs.h"
@@ -27,7 +26,6 @@ static int timed_occupation(void);
 static int doextcmd(void);
 static int domonability(void);
 static int dotravel(void);
-# ifdef WIZARD
 static int wiz_wish(void);
 static int wiz_identify(void);
 static int wiz_map(void);
@@ -48,7 +46,6 @@ static void mon_invent_chain(winid, const char *, struct monst *, long *, long *
 static void mon_chain(winid, const char *, struct monst *, long *, long *);
 static void contained(winid, const char *, long *, long *);
 static int wiz_show_stats(void);
-# endif
 static int enter_explore_mode(void);
 static int doattributes(void);
 static int doconduct(void); /**/
@@ -376,7 +373,6 @@ enter_explore_mode (void)
         return 0;
 }
 
-#ifdef WIZARD
 
 /* ^W command - wish for something */
 /* Unlimited wishes for debug mode by Paul Polderman */
@@ -639,7 +635,6 @@ wiz_show_wmodes (void)
         return 0;
 }
 
-#endif /* WIZARD */
 
 
 /* -enlightenment and conduct- */
@@ -679,9 +674,7 @@ enlght_combatinc (const char *inctyp, int incamt, int final, char *outbuf)
         const char *modif, *bonus;
 
         if (final
-#ifdef WIZARD
                 || wizard
-#endif
           ) {
             Sprintf(numbuf, "%s%d",
                     (incamt > 0) ? "+" : "", incamt);
@@ -737,12 +730,10 @@ enlightenment (
         else if (u.ualign.record >= -3) you_have("strayed");
         else if (u.ualign.record >= -8) you_have("sinned");
         else you_have("transgressed");
-#ifdef WIZARD
         if (wizard) {
                 Sprintf(buf, " %d", u.ualign.record);
                 enl_msg("Your alignment ", "is", "was", buf);
         }
-#endif
 
         /*** Resistances to troubles ***/
         if (Fire_resistance) you_are("fire resistant");
@@ -789,14 +780,12 @@ enlightenment (
                 Sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
                 you_have(buf);
         }
-#if defined(WIZARD)
         if (Wounded_legs && u.usteed && wizard) {
             Strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0,
                     SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION, FALSE));
             *buf = highc(*buf);
             enl_msg(buf, " has", " had", " wounded legs");
         }
-#endif
         if (Sleeping) enl_msg("You ", "fall", "fell", " asleep");
         if (Hunger) enl_msg("You hunger", "", "ed", " rapidly");
 
@@ -861,9 +850,7 @@ enlightenment (
         }
         if (u.uswallow) {
             Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%u)", u.uswldtim);
-#endif
             you_are(buf);
         } else if (u.ustuck) {
             Sprintf(buf, "%s %s",
@@ -903,9 +890,7 @@ enlightenment (
         if (Upolyd) {
             if (u.umonnum == u.ulycn) Strcpy(buf, "in beast form");
             else Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%d)", u.mtimedone);
-#endif
             you_are(buf);
         }
         if (Unchanging) you_can("not change from your current form");
@@ -923,14 +908,10 @@ enlightenment (
             Sprintf(buf, "%s%slucky",
                     ltmp >= 10 ? "extremely " : ltmp >= 5 ? "very " : "",
                     Luck < 0 ? "un" : "");
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%d)", Luck);
-#endif
             you_are(buf);
         }
-#ifdef WIZARD
          else if (wizard) enl_msg("Your luck ", "is", "was", " zero");
-#endif
         if (u.moreluck > 0) you_have("extra luck");
         else if (u.moreluck < 0) you_have("reduced luck");
         if (carrying(LUCKSTONE) || stone_luck(TRUE)) {
@@ -944,9 +925,7 @@ enlightenment (
         if (u.ugangr) {
             Sprintf(buf, " %sangry with you",
                     u.ugangr > 6 ? "extremely " : u.ugangr > 3 ? "very " : "");
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%d)", u.ugangr);
-#endif
             enl_msg(u_gname(), " is", " was", buf);
         } else
             /*
@@ -956,9 +935,7 @@ enlightenment (
              */
           if (!final) {
             Sprintf(buf, "%ssafely pray", can_pray(FALSE) ? "" : "not ");
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%d)", u.ublesscnt);
-#endif
             you_can(buf);
         }
 
@@ -1034,12 +1011,10 @@ dump_enlightenment (int final)
         else if (u.ualign.record >= -3) dump(youhave, "strayed");
         else if (u.ualign.record >= -8) dump(youhave, "sinned");
         else dump("  You have ", "transgressed");
-#ifdef WIZARD
         if (wizard) {
                 Sprintf(buf, " %d", u.ualign.record);
                 dump("  Your alignment was ", buf);
         }
-#endif
 
         /*** Resistances to troubles ***/
         if (Fire_resistance) dump(youwere, "fire resistant");
@@ -1152,9 +1127,7 @@ dump_enlightenment (int final)
         }
         if (u.uswallow) {
             Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%u)", u.uswldtim);
-#endif
             dump(youwere, buf);
         } else if (u.ustuck) {
             Sprintf(buf, "%s %s",
@@ -1197,9 +1170,7 @@ dump_enlightenment (int final)
             if (u.umonnum == u.ulycn) Strcpy(buf, "in beast form");
             else Sprintf(buf, "polymorphed into %s",
                          an(youmonst.data->mname));
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%d)", u.mtimedone);
-#endif
             dump(youwere, buf);
         }
         if (Unchanging)
@@ -1220,9 +1191,7 @@ dump_enlightenment (int final)
                     Luck < 0 ? "un" : "", Luck);
             dump(youwere, buf);
         }
-#ifdef WIZARD
          else if (wizard) dump("  ", "Your luck was zero");
-#endif
         if (u.moreluck > 0) dump(youhad, "extra luck");
         else if (u.moreluck < 0) dump(youhad, "reduced luck");
         if (carrying(LUCKSTONE) || stone_luck(TRUE)) {
@@ -1236,9 +1205,7 @@ dump_enlightenment (int final)
         if (u.ugangr) {
             Sprintf(buf, " %sangry with you",
                 u.ugangr > 6 ? "extremely " : u.ugangr > 3 ? "very " : "");
-#ifdef WIZARD
             if (wizard) Sprintf(eos(buf), " (%d)", u.ugangr);
-#endif
             Sprintf(buf2, "%s was %s", u_gname(), buf);
             dump("  ", buf2);
         }
@@ -1425,25 +1392,21 @@ show_conduct (int final)
 
         if (!u.uconduct.weaphit)
             you_have_never("hit with a wielded weapon");
-#ifdef WIZARD
         else if (wizard) {
             Sprintf(buf, "used a wielded weapon %ld time%s",
                     u.uconduct.weaphit, plur(u.uconduct.weaphit));
             you_have_X(buf);
         }
-#endif
         if (!u.uconduct.killer)
             you_have_been("a pacifist");
 
         if (!u.uconduct.literate)
             you_have_been("illiterate");
-#ifdef WIZARD
         else if (wizard) {
             Sprintf(buf, "read items or engraved %ld time%s",
                     u.uconduct.literate, plur(u.uconduct.literate));
             you_have_X(buf);
         }
-#endif
 
         ngenocided = num_genocides();
         if (ngenocided == 0) {
@@ -1456,23 +1419,19 @@ show_conduct (int final)
 
         if (!u.uconduct.polypiles)
             you_have_never("polymorphed an object");
-#ifdef WIZARD
         else if (wizard) {
             Sprintf(buf, "polymorphed %ld item%s",
                     u.uconduct.polypiles, plur(u.uconduct.polypiles));
             you_have_X(buf);
         }
-#endif
 
         if (!u.uconduct.polyselfs)
             you_have_never("changed form");
-#ifdef WIZARD
         else if (wizard) {
             Sprintf(buf, "changed form %ld time%s",
                     u.uconduct.polyselfs, plur(u.uconduct.polyselfs));
             you_have_X(buf);
         }
-#endif
 
         if (!u.uconduct.wishes)
             you_have_X("used no wishes");
@@ -1522,25 +1481,21 @@ dump_conduct (int final)
                     u.uconduct.weaphit, plur(u.uconduct.weaphit));
             dump("", buf);
         }
-#ifdef WIZARD
         else if (wizard) {
             Sprintf(buf, "hit with a wielded weapon %ld time%s",
                     u.uconduct.weaphit, plur(u.uconduct.weaphit));
             dump("  You ", buf);
         }
-#endif
         if (!u.uconduct.killer)
             dump("", "  You were a pacifist");
 
         if (!u.uconduct.literate)
             dump("", "  You were illiterate");
-#ifdef WIZARD
         else if (wizard) {
             Sprintf(buf, "read items or engraved %ld time%s",
                     u.uconduct.literate, plur(u.uconduct.literate));
             dump("  You ", buf);
         }
-#endif
 
         ngenocided = num_genocides();
         if (ngenocided == 0) {
@@ -1591,23 +1546,17 @@ dump_conduct (int final)
 
 static const struct func_tab cmdlist[] = {
         {C('d'), FALSE, dokick}, /* "D" is for door!...?  Msg is in dokick.c */
-#ifdef WIZARD
         {C('e'), TRUE, wiz_detect},
         {C('f'), TRUE, wiz_map},
         {C('g'), TRUE, wiz_genesis},
         {C('i'), TRUE, wiz_identify},
-#endif
         {C('l'), TRUE, doredraw}, /* if number_pad is set */
-#ifdef WIZARD
         {C('o'), TRUE, wiz_where},
-#endif
         {C('p'), TRUE, doprev_message},
         {C('r'), TRUE, doredraw},
         {C('t'), TRUE, dotele},
-#ifdef WIZARD
         {C('v'), TRUE, wiz_level_tele},
         {C('w'), TRUE, wiz_wish},
-#endif
         {C('x'), TRUE, doattributes},
         {'a', FALSE, doapply},
         {'A', FALSE, doddoremarm},
@@ -1728,7 +1677,6 @@ struct ext_func_tab extcmdlist[] = {
                 doextversion, TRUE},
         {"wipe", "wipe off your face", dowipe, FALSE},
         {"?", "get this list of extended commands", doextlist, TRUE},
-#if defined(WIZARD)
         /*
          * There must be a blank entry here for every entry in the table
          * below.
@@ -1743,11 +1691,9 @@ struct ext_func_tab extcmdlist[] = {
         {(char *)0, (char *)0, donull, TRUE},
         {(char *)0, (char *)0, donull, TRUE},
         {(char *)0, (char *)0, donull, TRUE},
-#endif
         {(char *)0, (char *)0, donull, TRUE}    /* sentinel */
 };
 
-#if defined(WIZARD)
 static const struct ext_func_tab debug_extcmdlist[] = {
         {"levelchange", "change experience level", wiz_level_change, TRUE},
         {"lightsources", "show mobile light sources", wiz_light_sources, TRUE},
@@ -1949,7 +1895,6 @@ sanity_check (void)
 }
 
 
-#endif /* WIZARD */
 
 #define unctrl(c)       ((c) <= C('z') ? (0x60 | (c)) : (c))
 #define unmeta(c)       (0x7f & (c))
@@ -2276,9 +2221,7 @@ const char *msg;
             ctrl = (sym - 'A') + 1;
             if ((expl = dowhatdoes_core(ctrl, buf2))
                 && (!index(wiz_only_list, sym)
-#ifdef WIZARD
                     || wizard
-#endif
                              )) {
                 Sprintf(buf, "Are you trying to use ^%c%s?", sym,
                         index(wiz_only_list, sym) ? "" :

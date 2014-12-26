@@ -1,5 +1,4 @@
 /* See LICENSE in the root of this project for change info */
-/* We could include only config.h, except for the overlay definitions... */
 #include "hack.h"
 #include "extern.h"
 /*=

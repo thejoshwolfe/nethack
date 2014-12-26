@@ -115,7 +115,6 @@
 #include "display.h"
 #include "hack.h"
 #include "region.h"
-#include "config.h"
 #include "extern.h"
 #include "winprocs.h"
 

@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 
@@ -1452,9 +1451,7 @@ static const struct o_range o_ranges[] = {
         { "dragon scale mail",
                         ARMOR_CLASS,  GRAY_DRAGON_SCALE_MAIL, YELLOW_DRAGON_SCALE_MAIL },
         { "sword",      WEAPON_CLASS, SHORT_SWORD,    KATANA },
-#ifdef WIZARD
         { "venom",      VENOM_CLASS,  BLINDING_VENOM, ACID_VENOM },
-#endif
         { "gray stone", GEM_CLASS,    LUCKSTONE,      FLINT },
         { "grey stone", GEM_CLASS,    LUCKSTONE,      FLINT },
 };
@@ -1547,9 +1544,7 @@ makesingular (const char *oldstr)
                            !BSTRCMP(bp, p-15, "detect monsters") ||
                            !BSTRCMPI(bp, p-11, "Aesculapius") || /* staff */
                            !BSTRCMP(bp, p-10, "eucalyptus") ||
-#ifdef WIZARD
                            !BSTRCMP(bp, p-9, "iron bars") ||
-#endif
                            !BSTRCMP(bp, p-5, "aklys") ||
                            !BSTRCMP(bp, p-6, "fungus"))
                                 return bp;
@@ -1584,10 +1579,8 @@ boolean retry_inverted; /* optional extra "of" handling */
          * and the trap is "bear trap", so to let wizards wish for both we
          * must not fuzzymatch.
          */
-#ifdef WIZARD
         if (wizard && !strcmp(o_str, "beartrap"))
             return !strncmpi(o_str, u_str, 8);
-#endif
 
         /* ignore spaces & hyphens and upper/lower case when comparing */
         if (fuzzymatch(u_str, o_str, " -", TRUE)) return TRUE;
@@ -1785,9 +1778,7 @@ boolean from_user;
                            !strncmpi(bp,"blank ", l=6)) {
                         unlabeled = 1;
                 } else if(!strncmpi(bp, "poisoned ",l=9)
-#ifdef WIZARD
                           || (wizard && !strncmpi(bp, "trapped ",l=8))
-#endif
                           ) {
                         ispoisoned=1;
                 } else if(!strncmpi(bp, "greased ",l=8)) {
@@ -2013,9 +2004,7 @@ boolean from_user;
            !strcmpi(bp, "gold") || !strcmpi(bp, "money") ||
            !strcmpi(bp, "coin") || *bp == GOLD_SYM) {
                         if (cnt > 5000
-#ifdef WIZARD
                                         && !wizard
-#endif
                                                 ) cnt=5000;
                 if (cnt < 1) cnt=1;
                 if (from_user)
@@ -2026,11 +2015,7 @@ boolean from_user;
         }
         if (strlen(bp) == 1 &&
            (i = def_char_to_objclass(*bp)) < MAXOCLASSES && i > ILLOBJ_CLASS
-#ifdef WIZARD
             && (wizard || i != VENOM_CLASS)
-#else
-            && i != VENOM_CLASS
-#endif
             ) {
                 oclass = i;
                 goto any;
@@ -2215,7 +2200,6 @@ srch:
                 goto typfnd;
             }
         }
-#ifdef WIZARD
         /* Let wizards wish for traps --KAA */
         /* must come after objects check so wizards can still wish for
          * trap objects like beartraps
@@ -2321,7 +2305,6 @@ srch:
                     return &zeroobj;
                 }
         }
-#endif
         if(!oclass) return((struct obj *)0);
 any:
         if(!oclass) oclass = wrpsym[rn2((int)sizeof(wrpsym))];
@@ -2330,11 +2313,9 @@ typfnd:
 
         /* check for some objects that are not allowed */
         if (typ && objects[typ].oc_unique) {
-#ifdef WIZARD
             if (wizard)
                 ;       /* allow unique objects */
             else
-#endif
             switch (typ) {
                 case AMULET_OF_YENDOR:
                     typ = FAKE_AMULET_OF_YENDOR;
@@ -2353,18 +2334,14 @@ typfnd:
 
         /* catch any other non-wishable objects */
         if (objects[typ].oc_nowish
-#ifdef WIZARD
             && !wizard
-#endif
             )
             return((struct obj *)0);
 
         /* convert magic lamps to regular lamps before lighting them or setting
            the charges */
         if (typ == MAGIC_LAMP
-#ifdef WIZARD
                                 && !wizard
-#endif
                                                 )
             typ = OIL_LAMP;
 
@@ -2385,23 +2362,17 @@ typfnd:
 
         if(cnt > 0 && objects[typ].oc_merge && oclass != SPBOOK_CLASS &&
                 (cnt < rnd(6) ||
-#ifdef WIZARD
                 wizard ||
-#endif
                  (cnt <= 7 && Is_candle(otmp)) ||
                  (cnt <= 20 &&
                   ((oclass == WEAPON_CLASS && is_ammo(otmp))
                                 || typ == ROCK || is_missile(otmp)))))
                         otmp->quan = (long) cnt;
 
-#ifdef WIZARD
         if (oclass == VENOM_CLASS) otmp->spe = 1;
-#endif
 
         if (spesgn == 0) spe = otmp->spe;
-#ifdef WIZARD
         else if (wizard) /* no alteration to spe */ ;
-#endif
         else if (oclass == ARMOR_CLASS || oclass == WEAPON_CLASS ||
                  is_weptool(otmp) ||
                         (oclass==RING_CLASS && objects[typ].oc_charged)) {
@@ -2436,15 +2407,11 @@ typfnd:
                                 break;
                 case SCR_MAIL: otmp->spe = 1; break;
                 case WAN_WISHING:
-#ifdef WIZARD
                         if (!wizard) {
-#endif
                                 otmp->spe = (rn2(10) ? -1 : 0);
                                 break;
-#ifdef WIZARD
                         }
                         /* fall through, if wizard */
-#endif
                 default: otmp->spe = spe;
         }
 
@@ -2517,20 +2484,14 @@ typfnd:
         } else if (uncursed) {
                 otmp->blessed = 0;
                 otmp->cursed = (Luck < 0
-#ifdef WIZARD
                                          && !wizard
-#endif
                                                         );
         } else if (blessed) {
                 otmp->blessed = (Luck >= 0
-#ifdef WIZARD
                                          || wizard
-#endif
                                                         );
                 otmp->cursed = (Luck < 0
-#ifdef WIZARD
                                          && !wizard
-#endif
                                                         );
         } else if (spesgn < 0) {
                 curse(otmp);
@@ -2547,9 +2508,7 @@ typfnd:
             /* set erodeproof */
             if (erodeproof && !eroded && !eroded2)
                     otmp->oerodeproof = (Luck >= 0
-#ifdef WIZARD
                                              || wizard
-#endif
                                         );
         }
 
@@ -2557,9 +2516,7 @@ typfnd:
         if (oclass == WAND_CLASS) {
             /* prevent wishing abuse */
             if (otmp->otyp == WAN_WISHING
-#ifdef WIZARD
                     && !wizard
-#endif
                 ) rechrg = 1;
             otmp->recharged = (unsigned)rechrg;
         }
@@ -2600,9 +2557,7 @@ typfnd:
         /* and make them pay; charge them for the wish anyway! */
         if ((is_quest_artifact(otmp) ||
              (otmp->oartifact && rn2(nartifact_exist()) > 1))
-#ifdef WIZARD
             && !wizard
-#endif
             ) {
             artifact_exists(otmp, ONAME(otmp), FALSE);
             obfree(otmp, (struct obj *) 0);

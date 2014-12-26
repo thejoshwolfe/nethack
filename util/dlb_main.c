@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 // data librarian
 
-#include "config.h"
 #include "dlb.h"
 #if !defined(O_WRONLY)
 #include <fcntl.h>

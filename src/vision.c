@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "vision.h"
 #include "hack.h"
-#include "config.h"
 #include "extern.h"
 
 /* Circles ==================================================================*/
@@ -961,7 +960,7 @@ fill_point (int row, int col)
 
 /*===========================================================================*/
 /*===========================================================================*/
-/* Use either algorithm C or D.  See the config.h for more details. =========*/
+/* Use either algorithm C or D.                                     =========*/
 
 /*
  * Variables local to both Algorithms C and D.

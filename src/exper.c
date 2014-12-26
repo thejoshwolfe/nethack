@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "config.h"
 #include "pm_props.h"
 #include "extern.h"
 
@@ -110,13 +109,11 @@ losexp (                /* e.g., hit by drain life attack */
 {
         int num;
 
-#ifdef WIZARD
         /* override life-drain resistance when handling an explicit
            wizard mode request to reduce level; never fatal though */
         if (drainer && !strcmp(drainer, "#levelchange"))
             drainer = 0;
         else
-#endif
             if (resists_drli(&youmonst)) return;
 
         if (u.ulevel > 1) {

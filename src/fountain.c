@@ -2,7 +2,6 @@
 /* Code for drinking from fountains. */
 
 #include "hack.h"
-#include "config.h"
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
@@ -169,12 +168,10 @@ boolean isyou;
                         if(!mtmp) pline_The("flow reduces to a trickle.");
                         return;
                 }
-#ifdef WIZARD
                 if (isyou && wizard) {
                         if (yn("Dry up fountain?") == 'n')
                                 return;
                 }
-#endif
                 /* replace the fountain with ordinary floor */
                 levl[x][y].typ = ROOM;
                 levl[x][y].looted = 0;

@@ -2,7 +2,6 @@
 /* various code that was replicated in *main.c */
 
 #include "hack.h"
-#include "config.h"
 
 #ifndef NO_SIGNAL
 #include <signal.h>
@@ -38,9 +37,6 @@ extern void check_linux_console(void);
 extern void init_linux_cons(void);
 
 static void wd_message(void);
-#ifdef WIZARD
-static boolean wiz_error_flag = FALSE;
-#endif
 
 // the file containing the latest hack news
 static const char *NEWS = "news";
@@ -73,9 +69,7 @@ void moveloop(void) {
     monstr_init();      /* monster strengths */
     objects_init();
 
-#ifdef WIZARD
     if (wizard) add_debug_extended_commands();
-#endif
 
     (void) encumber_msg(); /* in case they auto-picked up something */
 
@@ -371,10 +365,8 @@ void moveloop(void) {
             }
         }
 
-#ifdef WIZARD
         if (iflags.sanity_check)
             sanity_check();
-#endif
 
 
         u.umoved = FALSE;
@@ -642,11 +634,9 @@ int main (int argc, char *argv[]) {
         process_options(argc, argv);    /* command line options */
 
         getmailstatus();
-#ifdef WIZARD
         if (wizard)
                 Strcpy(plname, "wizard");
         else
-#endif
         if(!*plname || !strncmp(plname, "player", 4)
                     || !strncmp(plname, "games", 4)) {
                 askname();
@@ -661,9 +651,7 @@ int main (int argc, char *argv[]) {
         plnamesuffix();         /* strip suffix from name; calls askname() */
                                 /* again if suffix was whole name */
                                 /* accepts any suffix */
-#ifdef WIZARD
         if(!wizard) {
-#endif
                 /*
                  * check for multiple games under the same name
                  * (if !locknum) or check max nr of players (otherwise)
@@ -673,12 +661,10 @@ int main (int argc, char *argv[]) {
                 if(!locknum)
                         Sprintf(lock, "%d%s", (int)getuid(), plname);
                 getlock();
-#ifdef WIZARD
         } else {
                 Sprintf(lock, "%d%s", (int)getuid(), plname);
                 getlock();
         }
-#endif /* WIZARD */
 
         dlb_init();     /* must be before newgame() */
 
@@ -702,12 +688,10 @@ int main (int argc, char *argv[]) {
         display_gamewindows();
 
         if ((fd = restore_saved_game()) >= 0) {
-#ifdef WIZARD
                 /* Since wizard is actually flags.debug, restoring might
                  * overwrite it.
                  */
                 boolean remember_wiz_mode = wizard;
-#endif
                 const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
                 (void) chmod(fq_save,0);        /* disallow parallel restores */
@@ -720,9 +704,7 @@ int main (int argc, char *argv[]) {
                 mark_synch();   /* flush output */
                 if(!dorecover(fd))
                         goto not_recovered;
-#ifdef WIZARD
                 if(!wizard && remember_wiz_mode) wizard = TRUE;
-#endif
                 check_special_room(FALSE);
                 wd_message();
 
@@ -763,36 +745,8 @@ static void process_options (int argc, char *argv[]) {
                 argc--;
                 switch(argv[0][1]){
                 case 'D':
-#ifdef WIZARD
-                        {
-                          char *user;
-                          int uid;
-                          struct passwd *pw = (struct passwd *)0;
-
-                          uid = getuid();
-                          user = getlogin();
-                          if (user) {
-                              pw = getpwnam(user);
-                              if (pw && (pw->pw_uid != uid)) pw = 0;
-                          }
-                          if (pw == 0) {
-                              user = nh_getenv("USER");
-                              if (user) {
-                                  pw = getpwnam(user);
-                                  if (pw && (pw->pw_uid != uid)) pw = 0;
-                              }
-                              if (pw == 0) {
-                                  pw = getpwuid(uid);
-                              }
-                          }
-                          if (pw && !strcmp(pw->pw_name,WIZARD)) {
-                              wizard = TRUE;
-                              break;
-                          }
-                        }
-                        /* otherwise fall thru to discover */
-                        wiz_error_flag = TRUE;
-#endif
+                    wizard = TRUE;
+                    break;
                 case 'X':
                         discover = TRUE;
                         break;
@@ -896,17 +850,6 @@ void port_help (void) {
 #endif
 
 static void wd_message (void) {
-#ifdef WIZARD
-        if (wiz_error_flag) {
-                pline("Only user \"%s\" may access debug (wizard) mode.",
-# ifndef KR1ED
-                        WIZARD);
-# else
-                        WIZARD_NAME);
-# endif
-                pline("Entering discovery mode instead.");
-        } else
-#endif
-        if (discover)
-                You("are in non-scoring discovery mode.");
+    if (discover)
+        You("are in non-scoring discovery mode.");
 }

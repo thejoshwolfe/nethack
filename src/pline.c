@@ -2,10 +2,7 @@
 #include <stdarg.h>
 #include "hack.h"
 #include "epri.h"
-#include "config.h"
-#ifdef WIZARD
 #include "edog.h"
-#endif
 #include "extern.h"
 #include "winprocs.h"
 
@@ -224,7 +221,6 @@ void mstatusline (struct monst *mtmp) {
 
         info[0] = 0;
         if (mtmp->mtame) {        Strcat(info, ", tame");
-#ifdef WIZARD
             if (wizard) {
                 Sprintf(eos(info), " (%d", mtmp->mtame);
                 if (!mtmp->isminion)
@@ -232,7 +228,6 @@ void mstatusline (struct monst *mtmp) {
                         EDOG(mtmp)->hungrytime, EDOG(mtmp)->apport);
                 Strcat(info, ")");
             }
-#endif
         }
         else if (mtmp->mpeaceful) Strcat(info, ", peaceful");
         if (mtmp->meating)        Strcat(info, ", eating");

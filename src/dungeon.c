@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "dgn_file.h"
 #include "dlb.h"
-#include "config.h"
 #include "extern.h"
 #include "winprocs.h"
 #include "display.h"
@@ -50,10 +49,8 @@ static void init_level(int,int,struct proto_dungeon *);
 static int possible_places(int, boolean *, struct proto_dungeon *);
 static signed char pick_level(boolean *, int);
 static boolean place_level(int, struct proto_dungeon *);
-#ifdef WIZARD
 static const char *br_string(int);
 static void print_branch(winid, int, int, int, boolean, struct lchoice *);
-#endif
 
 
 /* Save the dungeon structures. */
@@ -402,9 +399,7 @@ init_level (int dgn, int proto_index, struct proto_dungeon *pd)
     struct tmplevel *tlevel = &pd->tmplevel[proto_index];
 
     pd->final_lev[proto_index] = (s_level *) 0; /* no "real" level */
-#ifdef WIZARD
     if (!wizard)
-#endif
         if (tlevel->chance <= rn2(100)) return;
 
     pd->final_lev[proto_index] = new_level =
@@ -582,9 +577,7 @@ void init_dungeons(void) {
     for (i = 0; i < n_dgns; i++) {
         Fread((void *)&pd.tmpdungeon[i],
                     sizeof(struct tmpdungeon), 1, dgn_file);
-#ifdef WIZARD
         if(!wizard)
-#endif
           if(pd.tmpdungeon[i].chance && (pd.tmpdungeon[i].chance <= rn2(100))) {
         int j;
 
@@ -1340,9 +1333,7 @@ signed char lev_by_name(const char *nam) {
         (u.uz.dnum == medusa_level.dnum &&
             dlev.dnum == valley_level.dnum)) &&
         (    /* either wizard mode or else seen and not forgotten */
-#ifdef WIZARD
          wizard ||
-#endif
         (level_info[idx].flags & (FORGOTTEN|VISITED)) == VISITED)) {
         lev = depth(&slev->dlevel);
     }
@@ -1356,9 +1347,7 @@ signed char lev_by_name(const char *nam) {
         idxtoo = (idx >> 8) & 0x00FF;
         idx &= 0x00FF;
         if (  /* either wizard mode, or else _both_ sides of branch seen */
-#ifdef WIZARD
         wizard ||
-#endif
         ((level_info[idx].flags & (FORGOTTEN|VISITED)) == VISITED &&
          (level_info[idxtoo].flags & (FORGOTTEN|VISITED)) == VISITED)) {
         if (ledger_to_dnum(idxtoo) == u.uz.dnum) idx = idxtoo;
@@ -1371,7 +1360,6 @@ signed char lev_by_name(const char *nam) {
     return lev;
 }
 
-#ifdef WIZARD
 
 /* Convert a branch type to a string usable by print_dungeon(). */
 static const char *
@@ -1571,5 +1559,4 @@ signed char print_dungeon(boolean bymenu, signed char *rlev, signed char *rdgn) 
     destroy_nhwindow(win);
     return 0;
 }
-#endif /* WIZARD */
 
