@@ -1476,9 +1476,8 @@ clear:
         return(taken);
 }
 
-static void
-set_repo_loc(eshkp)
-struct eshk *eshkp;
+static void 
+set_repo_loc (struct eshk *eshkp)
 {
         signed char ox, oy;
 
@@ -1504,8 +1503,8 @@ struct eshk *eshkp;
 }
 
 /* called at game exit, after inventory disclosure but before making bones */
-void
-finish_paybill()
+void 
+finish_paybill (void)
 {
         struct obj *otmp;
         int ox = repo_location.x,
@@ -1525,8 +1524,7 @@ finish_paybill()
 
 /* find obj on one of the lists */
 static struct obj *
-bp_to_obj(bp)
-struct bill_x *bp;
+bp_to_obj (struct bill_x *bp)
 {
         struct obj *obj;
         unsigned int id = bp->bo_id;
@@ -1544,8 +1542,7 @@ struct bill_x *bp;
  * be any timeouts on the billobjs chain.
  */
 struct obj *
-find_oid(id)
-unsigned id;
+find_oid (unsigned id)
 {
         struct obj *obj;
         struct monst *mon, *mmtmp[3];
@@ -1570,10 +1567,11 @@ unsigned id;
 }
 
 /* calculate the value that the shk will charge for [one of] an object */
-static long
-get_cost(obj, shkp)
-struct obj *obj;
-struct monst *shkp;     /* if angry, impose a surcharge */
+static long 
+get_cost (
+    struct obj *obj,
+    struct monst *shkp     /* if angry, impose a surcharge */
+)
 {
         long tmp = getprice(obj, FALSE);
 
@@ -1682,9 +1680,8 @@ boolean unpaid_only;
         return(price);
 }
 
-long
-contained_gold(obj)
-struct obj *obj;
+long 
+contained_gold (struct obj *obj)
 {
         struct obj *otmp;
         long value = 0L;
@@ -1719,9 +1716,8 @@ boolean sale;
         }
 }
 
-void
-picked_container(obj)
-struct obj *obj;
+void 
+picked_container (struct obj *obj)
 {
         struct obj *otmp;
 
@@ -1738,10 +1734,8 @@ struct obj *obj;
 }
 
 /* calculate how much the shk will pay when buying [all of] an object */
-static long
-set_cost(obj, shkp)
-struct obj *obj;
-struct monst *shkp;
+static long 
+set_cost (struct obj *obj, struct monst *shkp)
 {
         long tmp = getprice(obj, TRUE) * obj->quan;
 
@@ -1771,9 +1765,10 @@ struct monst *shkp;
 
 
 /* called from doinv(invent.c) for inventory of unpaid objects */
-long
-unpaid_cost(unp_obj)
-struct obj *unp_obj;    /* known to be unpaid */
+long 
+unpaid_cost (
+    struct obj *unp_obj    /* known to be unpaid */
+)
 {
         struct bill_x *bp = (struct bill_x *)0;
         struct monst *shkp;
@@ -1831,9 +1826,8 @@ boolean dummy;
         obj->unpaid = 1;
 }
 
-static void
-add_to_billobjs(obj)
-    struct obj *obj;
+static void 
+add_to_billobjs (struct obj *obj)
 {
     if (obj->where != OBJ_FREE)
         panic("add_to_billobjs: obj not free");
@@ -1867,13 +1861,14 @@ struct monst *shkp;
 }
 
 /* shopkeeper tells you what you bought or sold, sometimes partly IDing it */
-static void
-shk_names_obj(shkp, obj, fmt, amt, arg)
-struct monst *shkp;
-struct obj *obj;
-const char *fmt;        /* "%s %ld %s %s", doname(obj), amt, plur(amt), arg */
-long amt;
-const char *arg;
+static void 
+shk_names_obj (
+    struct monst *shkp,
+    struct obj *obj,
+    const char *fmt,        /* "%s %ld %s %s", doname(obj), amt, plur(amt), arg */
+    long amt,
+    const char *arg
+)
 {
         char *obj_name, fmtbuf[BUFSZ];
         boolean was_unknown = !obj->dknown;
@@ -2010,9 +2005,8 @@ speak:
         }
 }
 
-void
-splitbill(obj, otmp)
-struct obj *obj, *otmp;
+void 
+splitbill (struct obj *obj, struct obj *otmp)
 {
         /* otmp has been split off from obj */
         struct bill_x *bp;
@@ -2048,10 +2042,8 @@ struct obj *obj, *otmp;
         }
 }
 
-static void
-sub_one_frombill(obj, shkp)
-struct obj *obj;
-struct monst *shkp;
+static void 
+sub_one_frombill (struct obj *obj, struct monst *shkp)
 {
         struct bill_x *bp;
 
@@ -2083,10 +2075,8 @@ struct monst *shkp;
 }
 
 /* recursive check of unpaid objects within nested containers. */
-void
-subfrombill(obj, shkp)
-struct obj *obj;
-struct monst *shkp;
+void 
+subfrombill (struct obj *obj, struct monst *shkp)
 {
         struct obj *otmp;
 
@@ -2226,9 +2216,8 @@ static int sell_how = SELL_NORMAL;
    shouldn't carry over from ordinary selling to credit selling */
 static boolean auto_credit = FALSE;
 
-void
-sellobj_state(deliberate)
-int deliberate;
+void 
+sellobj_state (int deliberate)
 {
         /* If we're deliberately dropping something, there's no automatic
            response to the shopkeeper's "want to sell" query; however, if we
@@ -2241,10 +2230,8 @@ int deliberate;
         auto_credit = FALSE;
 }
 
-void
-sellobj(obj, x, y)
-struct obj *obj;
-signed char x, y;
+void 
+sellobj (struct obj *obj, signed char x, signed char y)
 {
         struct monst *shkp;
         struct eshk *eshkp;
@@ -2449,9 +2436,10 @@ move_on:
         }
 }
 
-int
-doinvbill(mode)
-int mode;               /* 0: deliver count 1: paged */
+int 
+doinvbill (
+    int mode               /* 0: deliver count 1: paged */
+)
 {
 #ifdef  __SASC
         void sasc_bug(struct obj *, unsigned);
@@ -2576,9 +2564,7 @@ boolean shk_buying;
 
 /* shk catches thrown pick-axe */
 struct monst *
-shkcatch(obj, x, y)
-struct obj *obj;
-signed char x, y;
+shkcatch (struct obj *obj, signed char x, signed char y)
 {
         struct monst *shkp;
 
@@ -2609,10 +2595,8 @@ signed char x, y;
         return (struct monst *)0;
 }
 
-void
-add_damage(x, y, cost)
-signed char x, y;
-long cost;
+void 
+add_damage (signed char x, signed char y, long cost)
 {
         struct damage *tmp_dam;
         char *shops;
@@ -2880,9 +2864,8 @@ boolean catchup;        /* restoring a level */
 /*
  * shk_move: return 1: moved  0: didn't  -1: let m_move do it  -2: died
  */
-int
-shk_move(shkp)
-struct monst *shkp;
+int 
+shk_move (struct monst *shkp)
 {
         signed char gx,gy,omx,omy;
         int udist;
@@ -2989,9 +2972,8 @@ struct monst *shkp;
 }
 
 /* called after shopkeeper moves, in case the move causes re-entry into shop */
-void
-after_shk_move(shkp)
-struct monst *shkp;
+void 
+after_shk_move (struct monst *shkp)
 {
         struct eshk *eshkp = ESHK(shkp);
 
@@ -3012,9 +2994,8 @@ struct monst *mtmp;
 }
 
 /* You are digging in the shop. */
-void
-shopdig(fall)
-int fall;
+void 
+shopdig (int fall)
 {
     struct monst *shkp = shop_keeper(*u.ushops);
     int lang;
@@ -3277,8 +3258,7 @@ signed char x, y;
 /* called by dotalk(sounds.c) when #chatting; returns obj if location
    contains shop goods and shopkeeper is willing & able to speak */
 struct obj *
-shop_object(x, y)
-signed char x, y;
+shop_object (signed char x, signed char y)
 {
     struct obj *otmp;
     struct monst *shkp;
@@ -3296,9 +3276,8 @@ signed char x, y;
 }
 
 /* give price quotes for all objects linked to this one (ie, on this spot) */
-void
-price_quote(first_obj)
-struct obj *first_obj;
+void 
+price_quote (struct obj *first_obj)
 {
     struct obj *otmp;
     char buf[BUFSZ], price[40];
@@ -3344,9 +3323,7 @@ struct obj *first_obj;
 }
 
 static const char *
-shk_embellish(itm, cost)
-struct obj *itm;
-long cost;
+shk_embellish (struct obj *itm, long cost)
 {
     if (!rn2(3)) {
         int o, choice = rn2(5);
@@ -3386,9 +3363,8 @@ const char *Izchak_speaks[]={
     "%s comments about the Valley of the Dead as being a gateway."
 };
 
-void
-shk_chat(shkp)
-struct monst *shkp;
+void 
+shk_chat (struct monst *shkp)
 {
         struct eshk *eshk;
         if (!shkp->isshk) {
@@ -3553,17 +3529,14 @@ boolean altusage;
 }
 
 /* for using charges of unpaid objects "used in the normal manner" */
-void
-check_unpaid(otmp)
-struct obj *otmp;
+void 
+check_unpaid (struct obj *otmp)
 {
         check_unpaid_usage(otmp, FALSE);                /* normal item use */
 }
 
-void
-costly_gold(x, y, amount)
-signed char x, y;
-long amount;
+void 
+costly_gold (signed char x, signed char y, long amount)
 {
         long delta;
         struct monst *shkp;
@@ -3666,9 +3639,7 @@ signed char x, y;
 
 
 char *
-shk_your(buf, obj)
-char *buf;
-struct obj *obj;
+shk_your (char *buf, struct obj *obj)
 {
         if (!shk_owns(buf, obj) && !mon_owns(buf, obj))
             Strcpy(buf, carried(obj) ? "your" : "the");
@@ -3676,9 +3647,7 @@ struct obj *obj;
 }
 
 char *
-Shk_Your(buf, obj)
-char *buf;
-struct obj *obj;
+Shk_Your (char *buf, struct obj *obj)
 {
         (void) shk_your(buf, obj);
         *buf = highc(*buf);
@@ -3686,9 +3655,7 @@ struct obj *obj;
 }
 
 static char *
-shk_owns(buf, obj)
-char *buf;
-struct obj *obj;
+shk_owns (char *buf, struct obj *obj)
 {
         struct monst *shkp;
         signed char x, y;
@@ -3703,9 +3670,7 @@ struct obj *obj;
 }
 
 static char *
-mon_owns(buf, obj)
-char *buf;
-struct obj *obj;
+mon_owns (char *buf, struct obj *obj)
 {
         if (obj->where == OBJ_MINVENT)
             return strcpy(buf, s_suffix(mon_nam(obj->ocarry)));

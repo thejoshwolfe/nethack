@@ -294,11 +294,8 @@ dog_invent (struct monst *mtmp, struct edog *edog, int udist)
 /* set dog's goal -- gtyp, gx, gy
  * returns -1/0/1 (dog's desire to approach player) or -2 (abort move)
  */
-static int
-dog_goal(mtmp, edog, after, udist, whappr)
-struct monst *mtmp;
-struct edog *edog;
-int after, udist, whappr;
+static int 
+dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist, int whappr)
 {
         int omx, omy;
         boolean in_masters_sight, dog_has_minvent;
@@ -440,10 +437,11 @@ int after, udist, whappr;
 }
 
 /* return 0 (no move), 1 (move) or 2 (dead) */
-int
-dog_move(mtmp, after)
-struct monst *mtmp;
-int after;      /* this is extra fast monster movement */
+int 
+dog_move (
+    struct monst *mtmp,
+    int after      /* this is extra fast monster movement */
+)
 {
         int omx, omy;           /* original mtmp position */
         int appr, whappr, udist;
@@ -803,10 +801,8 @@ static boolean can_reach_location(struct monst *mon,
 
 
 /*ARGSUSED*/    /* do_clear_area client */
-static void
-wantdoor(x, y, distance)
-int x, y;
-void * distance;
+static void 
+wantdoor (int x, int y, void *distance)
 {
     int ndist;
 

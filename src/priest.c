@@ -523,9 +523,8 @@ boolean peaceful;
         return(roamer);
 }
 
-void
-reset_hostility(roamer)
-struct monst *roamer;
+void 
+reset_hostility (struct monst *roamer)
 {
         if(!(roamer->isminion && (roamer->data == &mons[PM_ALIGNED_PRIEST] ||
                                   roamer->data == &mons[PM_ANGEL])))
@@ -562,9 +561,10 @@ signed char x, y;
                          priest->mpeaceful);
 }
 
-void
-ghod_hitsu(priest)      /* when attacking "priest" in his temple */
-struct monst *priest;
+void 
+ghod_hitsu (      /* when attacking "priest" in his temple */
+    struct monst *priest
+)
 {
         int x, y, ax, ay, roomno = (int)temple_occupied(u.urooms);
         struct mkroom *troom;
@@ -622,8 +622,8 @@ struct monst *priest;
         exercise(A_WIS, FALSE);
 }
 
-void
-angry_priest()
+void 
+angry_priest (void)
 {
         struct monst *priest;
         struct rm *lev;
@@ -653,8 +653,8 @@ angry_priest()
  * When saving bones, find priests that aren't on their shrine level,
  * and remove them.   This avoids big problems when restoring bones.
  */
-void
-clearpriests()
+void 
+clearpriests (void)
 {
     struct monst *mtmp, *mtmp2;
 
