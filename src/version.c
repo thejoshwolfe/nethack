@@ -32,27 +32,18 @@ int doextversion(void) {
 }
 
 boolean check_version(struct version_info *version_data, const char *filename, boolean complain) {
-        if (
-#ifdef VERSION_COMPATIBILITY
-            version_data->incarnation < VERSION_COMPATIBILITY ||
-            version_data->incarnation > VERSION_NUMBER
-#else
-            version_data->incarnation != VERSION_NUMBER
-#endif
-          ) {
-            if (complain)
-                pline("Version mismatch for file \"%s\".", filename);
-            return FALSE;
-        } else if (
-                   version_data->feature_set != VERSION_FEATURES ||
-                   version_data->entity_count != VERSION_SANITY1 ||
-                   version_data->struct_sizes != VERSION_SANITY2) {
-            if (complain)
-                pline("Configuration incompatibility for file \"%s\".",
-                      filename);
-            return FALSE;
-        }
-        return TRUE;
+    if (version_data->incarnation != VERSION_NUMBER) {
+        if (complain)
+            pline("Version mismatch for file \"%s\".", filename);
+        return FALSE;
+    } else if (version_data->feature_set != VERSION_FEATURES || //
+            version_data->entity_count != VERSION_SANITY1 || //
+            version_data->struct_sizes != VERSION_SANITY2) {
+        if (complain)
+            pline("Configuration incompatibility for file \"%s\".", filename);
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /* this used to be based on file date and somewhat OS-dependant,
