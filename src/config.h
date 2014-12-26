@@ -52,28 +52,4 @@
 # define INTERNAL_COMP  /* control use of NetHack's compression routines */
 #endif
 
-/*
- * Section 3:   Definitions that may vary with system type.
- *              For example, both signed char and unsigned char should be short ints on
- *              the AT&T 3B2/3B5/etc. family.
- */
-
-/*
- * There are various choices for the NetHack vision system.  There is a
- * choice of two algorithms with the same behavior.  Defining VISION_TABLES
- * creates huge (60K) tables at compile time, drastically increasing data
- * size, but runs slightly faster than the alternate algorithm.
- *
- * If VISION_TABLES is not defined, things will be faster if you can use
- * MACRO_CPATH.  Some cpps, however, cannot deal with the size of the
- * functions that have been macroized.
- */
-
-/* #define VISION_TABLES */ /* use vision tables generated at compile time */
-#ifndef VISION_TABLES
-# ifndef NO_MACRO_CPATH
-#  define MACRO_CPATH   /* use clear_path macros instead of functions */
-# endif
-#endif
-
 #endif /* CONFIG_H */

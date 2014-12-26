@@ -1715,12 +1715,6 @@ extern unsigned long get_current_feature_ver(void);
 extern void append_port_id(char *);
 #endif
 
-/* ### vis_tab.c ### */
-
-#ifdef VISION_TABLES
-extern void vis_tab_init(void);
-#endif
-
 /* ### vision.c ### */
 
 extern void vision_init(void);
