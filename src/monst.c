@@ -11,10 +11,6 @@
 #define WT_ELF     800
 #define WT_DRAGON 4500
 
-#ifdef C
-#undef C
-#endif
-
 #include "color.h"
 #define C(color)        color
 #define HI_DOMESTIC     CLR_WHITE       /* use for player + friendlies */
@@ -82,7 +78,6 @@ void monst_init(void);
  * unconsciously. Use your common sense.
  */
 
-#ifndef SPLITMON_2
 struct permonst mons[] = {
 /*
  * ants
@@ -292,16 +287,6 @@ struct permonst mons[] = {
         SIZ(600, 300, 0, MS_BARK, MZ_MEDIUM), MR_FIRE, MR_FIRE,
         M1_ANIMAL|M1_NOHANDS|M1_CARNIVORE, M2_HOSTILE|M2_STRONG,
         M3_INFRAVISIBLE, CLR_RED),
-#ifdef CHARON
-    MON("Cerberus", S_DOG,
-        LVL(12, 10, 2, 20, -7), (G_HELL|G_UNIQ|1),
-        A(ATTK(AT_BITE, AD_PHYS, 3, 6), ATTK(AT_BITE, AD_PHYS, 3, 6),
-          ATTK(AT_BITE, AD_PHYS, 3, 6), NO_ATTK, NO_ATTK, NO_ATTK),
-        SIZ(1000, 350, 0, MS_BARK, MZ_LARGE), MR_FIRE, MR_FIRE,
-        M1_ANIMAL|M1_NOHANDS|M1_CARNIVORE,
-        M2_NOPOLY|M2_HOSTILE|M2_STRONG|M2_PNAME|M2_MALE, M3_INFRAVISIBLE,
-        CLR_RED),
-#endif
 /*
  * eyes
  */
@@ -1437,25 +1422,6 @@ struct permonst mons[] = {
         SIZ(750, 150, 0, MS_ORC, MZ_SMALL), 0, 0,
         M1_HUMANOID|M1_OMNIVORE, M2_GNOME|M2_PRINCE|M2_MALE|M2_COLLECT,
         M3_INFRAVISIBLE|M3_INFRAVISION, HI_LORD),
-#ifdef SPLITMON_1
-};
-#endif
-#endif /* !SPLITMON_2 */
-
-/* horrible kludge alert:
- * This is a compiler-specific kludge to allow the compilation of monst.o in
- * two pieces, by defining first SPLITMON_1 and then SPLITMON_2. The
- * resulting assembler files (monst1.s and monst2.s) are then run through
- * sed to change local symbols, concatenated together, and assembled to
- * produce monst.o. THIS ONLY WORKS WITH THE ATARI GCC, and should only
- * be done if you don't have enough memory to compile monst.o the "normal"
- * way.  --ERS
- */
-
-#ifndef SPLITMON_1
-#ifdef SPLITMON_2
-struct permonst _mons2[] = {
-#endif
 /*
  * giant Humanoids
  */
@@ -2438,17 +2404,6 @@ struct permonst _mons2[] = {
         M2_NOPOLY|M2_HUMAN|M2_STALK|M2_HOSTILE|M2_STRONG|M2_NASTY|M2_PNAME|
           M2_PRINCE|M2_MALE|M2_GREEDY|M2_JEWELS|M2_COLLECT|M2_MAGIC,
         M3_INFRAVISIBLE, HI_LORD),
-#ifdef CHARON
-    MON("Charon", S_HUMAN,
-        LVL(76, 18, -5, 120, 0), (G_HELL|G_NOCORPSE|G_NOGEN|G_UNIQ),
-        A(ATTK(AT_WEAP, AD_PHYS, 1, 8), ATTK(AT_TUCH, AD_PLYS, 1, 8),
-          NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
-        SIZ(WT_HUMAN, 400, 0, MS_FERRY, MZ_HUMAN),
-        MR_FIRE|MR_COLD|MR_POISON|MR_STONE, 0,
-        M1_BREATHLESS|M1_SEE_INVIS|M1_HUMANOID,
-        M2_NOPOLY|M2_HUMAN|M2_PEACEFUL|M2_PNAME|M2_MALE|M2_GREEDY|M2_COLLECT,
-        M3_INFRAVISIBLE, CLR_WHITE),
-#endif
 /*
  * ghosts
  */
@@ -3344,15 +3299,12 @@ struct permonst _mons2[] = {
         A(NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(0, 0, 0, 0, 0), 0, 0, 0L, 0L, 0, 0)
 };
-#endif /* !SPLITMON_1 */
 
-#ifndef SPLITMON_1
 /* dummy routine used to force linkage */
 void
 monst_init (void)
 {
     return;
 }
-#endif
 
 /*monst.c*/
