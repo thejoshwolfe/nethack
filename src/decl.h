@@ -14,6 +14,9 @@
 #include "you.h"
 #include "obj.h"
 
+#include "tcap.h"
+
+
 extern int (*occupation)(void);
 extern int (*afternmv)(void);
 
@@ -296,14 +299,6 @@ extern char **viz_array;                /* could see/in sight row pointers */
 extern winid WIN_MESSAGE, WIN_STATUS;
 extern winid WIN_MAP, WIN_INVEN;
 extern char toplines[];
-extern struct tc_gbl_data {     /* also declared in tcap.h */
-    char *tc_AS, *tc_AE;        /* graphics start and end (tty font swapping) */
-    int   tc_LI,  tc_CO;        /* lines and columns */
-} tc_gbl_data;
-#define AS tc_gbl_data.tc_AS
-#define AE tc_gbl_data.tc_AE
-#define LI tc_gbl_data.tc_LI
-#define CO tc_gbl_data.tc_CO
 
 /* xxxexplain[] is in drawing.c */
 extern const char * const monexplain[], invisexplain[], * const objexplain[], * const oclass_names[];

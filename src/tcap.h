@@ -7,8 +7,7 @@
 #include "global.h"
 #include "color.h"
 
-#ifndef DECL_H
-extern struct tc_gbl_data {   /* also declared in decl.h; defined in decl.c */
+extern struct tc_gbl_data {
     char *tc_AS, *tc_AE;        /* graphics start and end (tty font swapping) */
     int   tc_LI,  tc_CO;        /* lines and columns */
 } tc_gbl_data;
@@ -16,7 +15,6 @@ extern struct tc_gbl_data {   /* also declared in decl.h; defined in decl.c */
 #define AE tc_gbl_data.tc_AE
 #define LI tc_gbl_data.tc_LI
 #define CO tc_gbl_data.tc_CO
-#endif
 
 extern struct tc_lcl_data {   /* defined and set up in termcap.c */
     char *tc_CM, *tc_ND, *tc_CD;
