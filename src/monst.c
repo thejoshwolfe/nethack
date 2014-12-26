@@ -2491,7 +2491,7 @@ struct permonst _mons2[] = {
         M1_POIS|M1_THICK_HIDE,
         M2_DEMON|M2_STALK|M2_HOSTILE|M2_NASTY, M3_INFRAVISIBLE|M3_INFRAVISION,
         CLR_BROWN),
-# define SEDUCTION_ATTACKS \
+#define SEDUCTION_ATTACKS \
         A(ATTK(AT_BITE, AD_SSEX, 0, 0), ATTK(AT_CLAW, AD_PHYS, 1, 3), \
           ATTK(AT_CLAW, AD_PHYS, 1, 3), NO_ATTK, NO_ATTK, NO_ATTK)
     MON("succubus", S_DEMON,

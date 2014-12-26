@@ -37,9 +37,6 @@ experience (    /* return # of exp points for mtmp after nk killed */
     struct monst *mtmp,
     int nk
 )
-#if defined(macintosh) && (defined(__SC__) || defined(__MRC__))
-# pragma unused(nk)
-#endif
 {
         struct permonst *ptr = mtmp->data;
         int     i, tmp, tmp2;

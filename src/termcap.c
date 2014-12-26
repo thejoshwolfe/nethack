@@ -114,11 +114,7 @@ void tty_startup(int *wid, int *hgt) {
         if(!(BC = Tgetstr("le")))       /* both termcap and terminfo use le */
             error("Terminal must backspace.");
 
-# ifdef MINIMAL_TERM
-        HO = (char *)0;
-# else
         HO = Tgetstr("ho");
-# endif
         /*
          * LI and CO are set in ioctl.c via a TIOCGWINSZ if available.  If
          * the kernel has values for either we should use them rather than
@@ -486,17 +482,7 @@ void cl_eos(void) {
 
 #include <curses.h>
 
-#  ifdef COLOR_BLACK    /* trust include file */
 #undef COLOR_BLACK
-#  else
-#define COLOR_BLUE    1
-#define COLOR_GREEN   2
-#define COLOR_CYAN    3
-#define COLOR_RED     4
-#define COLOR_MAGENTA 5
-#define COLOR_YELLOW  6
-#define COLOR_WHITE   7
-#  endif
 #define COLOR_BLACK COLOR_BLUE
 
 const int ti_map[8] = {

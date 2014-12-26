@@ -241,7 +241,7 @@
 
 #define HSwimming               u.uprops[SWIMMING].intrinsic
 #define ESwimming               u.uprops[SWIMMING].extrinsic    /* [Tom] */
-# define Swimming               (HSwimming || ESwimming || \
+#define Swimming               (HSwimming || ESwimming || \
                                  is_swimmer(youmonst.data) || \
                                  (u.usteed && is_swimmer(u.usteed->data)))
         /* Get wet, don't go under water unless if amphibious */

@@ -51,14 +51,7 @@ typedef signed char     boolean;                /* 0 or 1 */
 
 /* Displayable name of this port; don't redefine if defined in *conf.h */
 #ifndef PORT_ID
-# define PORT_ID        "Unix"
-#endif
-
-#ifndef EXIT_SUCCESS
-# define EXIT_SUCCESS 0
-#endif
-#ifndef EXIT_FAILURE
-# define EXIT_FAILURE 1
+#define PORT_ID        "Unix"
 #endif
 
 #define Sprintf  (void) sprintf
@@ -69,21 +62,7 @@ typedef signed char     boolean;                /* 0 or 1 */
 #define Vsprintf (void) vsprintf
 
 
-/* primitive memory leak debugging; see alloc.c */
-#ifdef MONITOR_HEAP
-extern long *nhalloc(unsigned int,const char *,int);
-extern void nhfree(void *,const char *,int);
-# ifndef __FILE__
-#  define __FILE__ ""
-# endif
-# ifndef __LINE__
-#  define __LINE__ 0
-# endif
-# define alloc(a) nhalloc(a,__FILE__,(int)__LINE__)
-# define free(a) nhfree(a,__FILE__,(int)__LINE__)
-#else   /* !MONITOR_HEAP */
 extern long *alloc(unsigned int);               /* alloc.c */
-#endif
 
 /* Used for consistency checks of various data files; */
 struct version_info {

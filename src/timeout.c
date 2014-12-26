@@ -1240,12 +1240,8 @@ static unsigned long timer_id = 1;
 
 typedef struct {
     timeout_proc f, cleanup;
-#ifdef VERBOSE_TIMER
     const char *name;
-# define TTAB(a, b, c) {a,b,c}
-#else
-# define TTAB(a, b, c) {a,b}
-#endif
+#define TTAB(a, b, c) {a,b,c}
 } ttable;
 
 /* table of timeout functions */

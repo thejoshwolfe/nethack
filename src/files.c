@@ -12,6 +12,7 @@
 #include <errno.h>
 
 #define FQN_NUMBUF 4
+#define FQN_MAX_FILENAME 512
 static char fqn_filename_buffer[FQN_NUMBUF][FQN_MAX_FILENAME];
 
 char bones[] = "bonesnn.xxx";

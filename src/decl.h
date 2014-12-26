@@ -328,10 +328,6 @@ extern const char * const monexplain[], invisexplain[], * const objexplain[], * 
 #define CONFIGPREFIX    7
 #define TROUBLEPREFIX   8
 #define PREFIX_COUNT    9
-/* used in files.c; xxconf.h can override if needed */
-# ifndef FQN_MAX_FILENAME
-#define FQN_MAX_FILENAME 512
-# endif
 
 extern char *fqn_prefix[PREFIX_COUNT];
 extern char *fqn_prefix_names[PREFIX_COUNT];

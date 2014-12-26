@@ -273,13 +273,6 @@ void panic (const char * str, ...) {
                   !program_state.something_worth_saving ?
                   "Program initialization has failed." :
                   "Suddenly, the dungeon collapses.");
-# if defined(NOTIFY_NETHACK_BUGS)
-        if (!wizard)
-            raw_printf("Report the following error to \"%s\".",
-                        "nethack-bugs@nethack.org");
-        else if (program_state.something_worth_saving)
-            raw_print("\nError save file being written.\n");
-# endif
         if (program_state.something_worth_saving) {
             set_error_savefile();
             (void) dosave0();
