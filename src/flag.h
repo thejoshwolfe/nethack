@@ -86,11 +86,6 @@ struct flag {
         char     end_disclose[NUM_DISCLOSURE_OPTIONS + 1];  /* disclose various info
                                                                 upon exit */
         char     menu_style;    /* User interface style setting */
-#ifdef AMII_GRAPHICS
-        int numcols;
-        unsigned short amii_dripens[ 20 ]; /* DrawInfo Pens currently there are 13 in v39 */
-        AMII_COLOR_TYPE amii_curmap[ AMII_MAXCOLORS ]; /* colormap */
-#endif
 
         /* KMH, role patch -- Variables used during startup.
          *

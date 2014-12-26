@@ -4,10 +4,6 @@
 #include "extern.h"
 /* Relevent header information in rm.h and objclass.h. */
 
-#ifdef C
-#undef C
-#endif
-
 #define C(n) n
 
 #define g_FILLER(symbol) 0

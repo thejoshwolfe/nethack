@@ -1280,17 +1280,10 @@ print_queue (winid win, timer_element *base)
     } else {
         putstr(win, 0, "timeout  id   kind   call");
         for (curr = base; curr; curr = curr->next) {
-#ifdef VERBOSE_TIMER
-            Sprintf(buf, " %4ld   %4ld  %-6s %s(%s)",
-                curr->timeout, curr->tid, kind_name(curr->kind),
-                timeout_funcs[curr->func_index].name,
-                fmt_ptr((void *)curr->arg, arg_address));
-#else
             Sprintf(buf, " %4ld   %4ld  %-6s #%d(%s)",
                 curr->timeout, curr->tid, kind_name(curr->kind),
                 curr->func_index,
                 fmt_ptr((void *)curr->arg, arg_address));
-#endif
             putstr(win, 0, buf);
         }
     }

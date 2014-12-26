@@ -30,10 +30,8 @@
 
 typedef signed char     boolean;                /* 0 or 1 */
 
-#ifndef TRUE            /* defined in some systems' native include files */
 #define TRUE    ((boolean)1)
 #define FALSE   ((boolean)0)
-#endif
 
 #define strcmpi(a,b) strncmpi((a),(b),-1)
 
@@ -50,9 +48,7 @@ typedef signed char     boolean;                /* 0 or 1 */
 
 
 /* Displayable name of this port; don't redefine if defined in *conf.h */
-#ifndef PORT_ID
 #define PORT_ID        "Unix"
-#endif
 
 #define Sprintf  (void) sprintf
 #define Strcat   (void) strcat

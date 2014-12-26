@@ -38,11 +38,6 @@ static int n_ids_mapped = 0;
 static struct bucket *id_map = 0;
 
 
-#ifdef AMII_GRAPHICS
-void  amii_setpens(int) ;       /* use colors from save file */
-extern int amii_numcolors;
-#endif
-
 #include "quest.h"
 
 boolean restoring = FALSE;
