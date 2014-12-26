@@ -138,7 +138,7 @@ static char *eos(char *);
 /* input, output, tmp */
 static FILE *ifp, *ofp, *tfp;
 
-int 
+int
 main (int argc, char *argv[])
 {
         if ( (argc != 2)
@@ -163,7 +163,7 @@ main (int argc, char *argv[])
         return 0;
 }
 
-void 
+void
 do_makedefs (char *options)
 {
         boolean more_than_one;
@@ -217,7 +217,7 @@ do_makedefs (char *options)
                                         *options);
                                 (void) fflush(stderr);
                                 exit(EXIT_FAILURE);
-                
+
             }
             options++;
         }
@@ -244,7 +244,7 @@ xcrypt (const char *str)
         return buf;
 }
 
-void 
+void
 do_rumors (void)
 {
         char    infile[60];
@@ -379,7 +379,7 @@ version_id_string (char *outbuf, const char *build_date)
     return outbuf;
 }
 
-void 
+void
 do_date (void)
 {
         long clocktim = 0;
@@ -430,7 +430,7 @@ do_date (void)
 
 static char save_bones_compat_buf[BUFSZ];
 
-static void 
+static void
 build_savebones_compat_string (void)
 {
 #ifdef VERSION_COMPATIBILITY
@@ -582,7 +582,7 @@ text-b/text-c           at fseek(0x01234567L + 456L)
     *
     */
 
-void 
+void
 do_data (void)
 {
         char    infile[60], tempfile[60];
@@ -706,7 +706,7 @@ static const char *special_oracle[] = {
    "-----" lines.
  */
 
-void 
+void
 do_oracles (void)
 {
         char    infile[60], tempfile[60];
@@ -836,7 +836,7 @@ static  struct deflist {
 } deflist[] = {
               { 0, 0 } };
 
-static int 
+static int
 check_control (char *s)
 {
         int     i;
@@ -875,7 +875,7 @@ ranged_attk(ptr)        /* returns TRUE if monster can attack at range */
  * an approximation of monster strength.  It uses a similar method of
  * determination as "experience()" to arrive at the strength.
  */
-static int 
+static int
 mstrength (struct permonst *ptr)
 {
         int     i, tmp2, n, tmp = ptr->mlevel;
@@ -929,7 +929,7 @@ mstrength (struct permonst *ptr)
         return((tmp >= 0) ? tmp : 0);
 }
 
-void 
+void
 do_monstr (void)
 {
     struct permonst *ptr;
@@ -972,7 +972,7 @@ do_monstr (void)
     return;
 }
 
-void 
+void
 do_permonst (void)
 {
         int     i;
@@ -1040,7 +1040,7 @@ qt_control(s)
         return((boolean)(s[0] == '%' && (s[1] == 'C' || s[1] == 'E')));
 }
 
-static int 
+static int
 get_hdr (char *code)
 {
         int     i;
@@ -1079,7 +1079,7 @@ known_msg(num, id)
 }
 
 
-static void 
+static void
 new_msg (char *s, int num, int id)
 {
         struct  qtmsg   *qt_msg;
@@ -1096,7 +1096,7 @@ new_msg (char *s, int num, int id)
         }
 }
 
-static void 
+static void
 do_qt_control (char *s)
 {
         char code[BUFSZ];
@@ -1134,7 +1134,7 @@ do_qt_control (char *s)
         }
 }
 
-static void 
+static void
 do_qt_text (char *s)
 {
         if (!in_msg) {
@@ -1144,7 +1144,7 @@ do_qt_text (char *s)
         return;
 }
 
-static void 
+static void
 adjust_qt_hdrs (void)
 {
         int     i, j;
@@ -1165,7 +1165,7 @@ adjust_qt_hdrs (void)
         return;
 }
 
-static void 
+static void
 put_qt_hdrs (void)
 {
         int     i;
@@ -1191,7 +1191,7 @@ put_qt_hdrs (void)
         }
 }
 
-void 
+void
 do_questtxt (void)
 {
         Sprintf(filename, DATA_IN_TEMPLATE, QTXT_I_FILE);
@@ -1255,7 +1255,7 @@ limit (        /* limit a name to 30 characters length */
         return temp;
 }
 
-void 
+void
 do_objs (void)
 {
         int i, sum = 0;
@@ -1395,7 +1395,7 @@ eos (char *str)
  *      VISION_TABLES => generate tables
  */
 
-void 
+void
 do_vision (void)
 {
 #ifdef VISION_TABLES
@@ -1527,7 +1527,7 @@ do_vision (void)
  *
 \*--------------  vision tables  --------------*/
 
-static void 
+static void
 H_close_gen (void)
 {
     Fprintf(ofp,"\n/* Close */\n");
@@ -1544,7 +1544,7 @@ H_close_gen (void)
     return;
 }
 
-static void 
+static void
 H_far_gen (void)
 {
     Fprintf(ofp,"\n/* Far */\n");
@@ -1561,7 +1561,7 @@ H_far_gen (void)
     return;
 }
 
-static void 
+static void
 C_close_gen (void)
 {
     int i,dx,dy;
@@ -1621,7 +1621,7 @@ C_close_gen (void)
     return;
 }
 
-static void 
+static void
 C_far_gen (void)
 {
     int i,dx,dy;
@@ -1691,7 +1691,7 @@ C_far_gen (void)
  *  NOTE:  This had better *not* be called from a position on the
  *  same row as the hero.
  */
-static int 
+static int
 clear_path (int you_row, int you_col, int y2, int x2)
 {
     int dx, dy, s1, s2;

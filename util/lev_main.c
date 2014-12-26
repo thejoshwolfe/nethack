@@ -173,7 +173,7 @@ extern unsigned int max_x_map, max_y_map;
 
 extern int line_number, colon_line_number;
 
-int 
+int
 main (int argc, char **argv)
 {
         FILE *fin;
@@ -232,7 +232,7 @@ main (int argc, char **argv)
  * capitalized, to allow printing of the line containing the start of
  * the current declaration, instead of the beginning of the next declaration.
  */
-void 
+void
 yyerror (const char *s)
 {
         (void) fprintf(stderr, "%s: line %d : %s\n", fname,
@@ -246,7 +246,7 @@ yyerror (const char *s)
 /*
  * Just display a warning (that is : a non fatal error)
  */
-void 
+void
 yywarning (const char *s)
 {
         (void) fprintf(stderr, "%s: line %d : WARNING : %s\n",
@@ -256,7 +256,7 @@ yywarning (const char *s)
 /*
  * Stub needed for lex interface.
  */
-int 
+int
 yywrap (void)
 {
         return 1;
@@ -265,7 +265,7 @@ yywrap (void)
 /*
  * Find the type of floor, knowing its char representation.
  */
-int 
+int
 get_floor_type (char c)
 {
         int val;
@@ -282,7 +282,7 @@ get_floor_type (char c)
 /*
  * Find the type of a room in the table, knowing its name.
  */
-int 
+int
 get_room_type (char *s)
 {
         int i;
@@ -297,7 +297,7 @@ get_room_type (char *s)
 /*
  * Find the type of a trap in the table, knowing its name.
  */
-int 
+int
 get_trap_type (char *s)
 {
         int i;
@@ -312,7 +312,7 @@ get_trap_type (char *s)
 /*
  * Find the index of a monster in the table, knowing its name.
  */
-int 
+int
 get_monster_id (char *s, char c)
 {
         int i, class;
@@ -330,7 +330,7 @@ get_monster_id (char *s, char c)
 /*
  * Find the index of an object in the table, knowing its name.
  */
-int 
+int
 get_object_id (
     char *s,
     char c              /* class */
@@ -352,7 +352,7 @@ get_object_id (
         return ERR;
 }
 
-static void 
+static void
 init_obj_classes (void)
 {
         int i, class, prev_class;
@@ -390,7 +390,7 @@ char c;
 /*
  * Convert .des map letter into floor type.
  */
-char 
+char
 what_map_char (char c)
 {
         SpinCursor(3);
@@ -424,7 +424,7 @@ what_map_char (char c)
  * Yep! LEX gives us the map in a raw mode.
  * Just analyze it here.
  */
-void 
+void
 scan_map (char *map)
 {
         int i, len;
@@ -503,7 +503,7 @@ scan_map (char *map)
  */
 #define Map_point(x,y) *(tmppart[npart]->map[y] + x)
 
-void 
+void
 wallify_map (void)
 {
         unsigned int x, y, xx, yy, lo_xx, lo_yy, hi_xx, hi_yy;
@@ -592,7 +592,7 @@ check_subrooms()
  * Check that coordinates (x,y) are roomlike locations.
  * Print warning "str" if they aren't.
  */
-void 
+void
 check_coord (int x, int y, const char *str)
 {
     char ebuf[60];
@@ -607,7 +607,7 @@ check_coord (int x, int y, const char *str)
 /*
  * Here we want to store the maze part we just got.
  */
-void 
+void
 store_part (void)
 {
         unsigned i;
@@ -767,7 +767,7 @@ store_part (void)
 /*
  * Here we want to store the room part we just got.
  */
-void 
+void
 store_room (void)
 {
         unsigned i;
@@ -1367,7 +1367,7 @@ splev *lev;
  * levels have the fields freed as they're written; monsters, objects, and
  * engravings are freed as written for both styles, so not handled here.
  */
-void 
+void
 free_rooms (splev *lev)
 {
         room *r;

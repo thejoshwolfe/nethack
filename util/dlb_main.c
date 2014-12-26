@@ -65,7 +65,7 @@ static const char *list_file = LIBLISTFILE;
  *  C dir       chdir to dir (used ONCE, not like tar's -C)
  */
 
-static void 
+static void
 usage (void)
 {
     (void) printf("Usage: %s [ctxCIfv] arguments... [files...]\n", progname);
@@ -74,7 +74,7 @@ usage (void)
     xexit(EXIT_FAILURE);
 }
 
-static void 
+static void
 verbose_help (void)
 {
     static const char *long_help[] = {
@@ -113,7 +113,7 @@ static char * get_basename(char * path) {
   return path;
 }
 
-static void 
+static void
 Write (int out, char *buf, long len)
 {
     if (write(out,buf,len) != len) {
@@ -139,7 +139,7 @@ const char *filename, *mode;
     return fopen(filename, mode);
 }
 
-int 
+int
 main (int argc, char **argv)
 {
     int i, r;
@@ -434,7 +434,7 @@ main (int argc, char **argv)
     return 0;
 }
 
-static void 
+static void
 write_dlb_directory (int out, int nfiles, libdir *ld, long slen, long dir_size, long flen)
 {
     char buf[BUFSIZ];

@@ -36,7 +36,7 @@ char savename[SAVESIZE]; /* holds relative path of save file from playground */
 
 const char *dir = (char*)0;
 
-int 
+int
 main (int argc, char *argv[])
 {
         int argno;
@@ -73,7 +73,7 @@ main (int argc, char *argv[])
         if (dir
 #  ifdef HACKDIR
                 && strcmp(dir, HACKDIR)
-#  endif 
+#  endif
                 ) {
                 (void) setgid(getgid());
                 (void) setuid(getuid());
@@ -103,7 +103,7 @@ main (int argc, char *argv[])
 
 static char lock[256];
 
-void 
+void
 set_levelfile_name (int lev)
 {
         char *tf;
@@ -117,7 +117,7 @@ set_levelfile_name (int lev)
 static uid_t save_uid = -1;
 #endif
 
-int 
+int
 open_levelfile (int lev)
 {
         int fd;
@@ -146,7 +146,7 @@ open_levelfile (int lev)
         return fd;
 }
 
-int 
+int
 create_savefile (void)
 {
         int fd;
@@ -155,14 +155,14 @@ create_savefile (void)
 
 #ifdef SECURE
         if (fchown(fd, save_uid, -1) == -1) {
-                Fprintf(stderr, "could not chown %s to %i!\n", savename, 
+                Fprintf(stderr, "could not chown %s to %i!\n", savename,
                         save_uid);
         }
 #endif
         return fd;
 }
 
-void 
+void
 copy_bytes (int ifd, int ofd)
 {
         char buf[BUFSIZ];
@@ -178,7 +178,7 @@ copy_bytes (int ifd, int ofd)
         } while (nfrom == BUFSIZ);
 }
 
-int 
+int
 restore_savefile (char *basename)
 {
         int gfd, lfd, sfd;
