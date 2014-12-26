@@ -165,11 +165,7 @@ static struct Comp_Opt
         { "dogname",  "the name of your (first) dog (e.g., dogname:Fang)",
                                                 PL_PSIZ, DISP_IN_GAME },
         { "dumpfile", "where to dump data (e.g., dumpfile:/tmp/dump.nh)",
-#ifdef DUMP_FN
                                                 PL_PSIZ, DISP_IN_GAME },
-#else
-                                                PL_PSIZ, SET_IN_GAME },
-#endif
         { "dungeon",  "the symbols to use in drawing the dungeon map",
                                                 MAXDCHARS+1, SET_IN_FILE },
         { "effects",  "the symbols to use in drawing special effects",
@@ -1072,12 +1068,6 @@ boolean tinitial, tfrom_file;
 
         fullname = "dumpfile";
         if (match_optname(opts, fullname, 3, TRUE)) {
-#ifndef DUMP_FN
-                if (negated) bad_negation(fullname, FALSE);
-                else if ((op = string_for_opt(opts, !tfrom_file)) != 0
-                        && strlen(op) > 1)
-                        nmcpy(dump_fn, op, PL_PSIZ);
-#endif
                 return;
        }
 

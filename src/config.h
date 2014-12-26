@@ -131,7 +131,6 @@
 #endif
 
 #define AUTOPICKUP_EXCEPTIONS  /* exceptions to autopickup */
-#define DUMP_FN "run/dumps/%n.lastgame.txt"
 
 /* End of Section 5 */
 
