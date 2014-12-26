@@ -54,15 +54,15 @@ static char *parse(void);
 static boolean help_dir(char,const char *);
 
 
-static int
-doprev_message()
+static int 
+doprev_message (void)
 {
     return nh_doprev_message();
 }
 
 /* Count down by decrementing multi */
-static int
-timed_occupation()
+static int 
+timed_occupation (void)
 {
         (*timed_occ_fn)();
         if (multi > 0)
@@ -169,8 +169,8 @@ savech (char ch)
 }
 
 
-static int
-doextcmd()      /* here after # - now read a full-word command */
+static int 
+doextcmd (void)      /* here after # - now read a full-word command */
 {
         int idx, retval;
 
@@ -185,8 +185,8 @@ doextcmd()      /* here after # - now read a full-word command */
         return retval;
 }
 
-int
-doextlist()     /* here after #? - now list all full-word commands */
+int 
+doextlist (void)     /* here after #? - now list all full-word commands */
 {
         const struct ext_func_tab *efp;
         char     buf[BUFSZ];
@@ -320,8 +320,8 @@ extcmd_via_menu (void)  /* here after # - now show pick-list of possible command
 #endif
 
 /* #monster command - use special monster ability while polymorphed */
-static int
-domonability()
+static int 
+domonability (void)
 {
         if (can_breathe(youmonst.data)) return dobreathe();
         else if (attacktype(youmonst.data, AT_SPIT)) return dospit();
@@ -350,8 +350,8 @@ domonability()
         return 0;
 }
 
-static int
-enter_explore_mode()
+static int 
+enter_explore_mode (void)
 {
         if(!discover && !wizard) {
                 pline("Beware!  From explore mode there will be no return to normal game.");
@@ -372,7 +372,8 @@ enter_explore_mode()
 
 /* ^W command - wish for something */
 /* Unlimited wishes for debug mode by Paul Polderman */
-static int wiz_wish() {
+static int 
+wiz_wish (void) {
         if (wizard) {
             boolean save_verbose = flags.verbose;
 
@@ -386,8 +387,8 @@ static int wiz_wish() {
 }
 
 /* ^I command - identify hero's inventory */
-static int
-wiz_identify()
+static int 
+wiz_identify (void)
 {
         if (wizard)     identify_pack(0);
         else            pline("Unavailable command '^I'.");
@@ -395,8 +396,8 @@ wiz_identify()
 }
 
 /* ^F command - reveal the level map and any traps on it */
-static int
-wiz_map()
+static int 
+wiz_map (void)
 {
         if (wizard) {
             struct trap *t;
@@ -417,8 +418,8 @@ wiz_map()
 }
 
 /* ^G command - generate monster(s); a count prefix will be honored */
-static int
-wiz_genesis()
+static int 
+wiz_genesis (void)
 {
         if (wizard)     (void) create_particular();
         else            pline("Unavailable command '^G'.");
@@ -426,8 +427,8 @@ wiz_genesis()
 }
 
 /* ^O command - display dungeon layout */
-static int
-wiz_where()
+static int 
+wiz_where (void)
 {
         if (wizard) (void) print_dungeon(FALSE, (signed char *)0, (signed char *)0);
         else        pline("Unavailable command '^O'.");
@@ -435,8 +436,8 @@ wiz_where()
 }
 
 /* ^E command - detect unseen (secret doors, traps, hidden monsters) */
-static int
-wiz_detect()
+static int 
+wiz_detect (void)
 {
         if(wizard)  (void) findit();
         else        pline("Unavailable command '^E'.");
@@ -444,8 +445,8 @@ wiz_detect()
 }
 
 /* ^V command - level teleport */
-static int
-wiz_level_tele()
+static int 
+wiz_level_tele (void)
 {
         if (wizard)     level_tele();
         else            pline("Unavailable command '^V'.");

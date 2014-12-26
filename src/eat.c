@@ -152,9 +152,8 @@ static struct {
 
 static char *eatmbuf = 0;       /* set by cpostfx() */
 
-static
-int
-eatmdone()              /* called after mimicing is over */
+static int 
+eatmdone (void)              /* called after mimicing is over */
 {
         /* release `eatmbuf' */
         if (eatmbuf) {
@@ -350,9 +349,8 @@ do_reset_eat (void)
         newuhs(FALSE);
 }
 
-static
-int
-eatfood()               /* called each move during eating process */
+static int 
+eatfood (void)               /* called each move during eating process */
 {
         if(!victual.piece ||
          (!carried(victual.piece) && !obj_here(victual.piece, u.ux, u.uy))) {
@@ -862,9 +860,8 @@ costly_tin (
         }
 }
 
-static
-int
-opentin()               /* called during each move whilst opening a tin */
+static int 
+opentin (void)               /* called during each move whilst opening a tin */
 {
         int r;
         const char *what;
@@ -1040,8 +1037,8 @@ no_opener:
         return;
 }
 
-int
-Hear_again()            /* called when waking up after fainting */
+int 
+Hear_again (void)            /* called when waking up after fainting */
 {
         flags.soundok = 1;
         return 0;
@@ -1697,8 +1694,8 @@ edibility_prompts (struct obj *otmp)
         return 0;
 }
 
-int
-doeat()         /* generic "eat" command funtion (see cmd.c) */
+int 
+doeat (void)         /* generic "eat" command funtion (see cmd.c) */
 {
         struct obj *otmp;
         int basenutrit;                 /* nutrition of full item */
@@ -2039,9 +2036,8 @@ lesshungry (    /* called after eating (and after drinking fruit juice) */
         newuhs(FALSE);
 }
 
-static
-int
-unfaint()
+static int 
+unfaint (void)
 {
         (void) Hear_again();
         if(u.uhs > FAINTING)

@@ -990,10 +990,8 @@ gi_error:
     /*NOTREACHED*/
 }
 
-static void
-adjust_prefix(bufp, prefixid)
-char *bufp;
-int prefixid;
+static void 
+adjust_prefix (char *bufp, int prefixid)
 {
         char *ptr;
 
@@ -1134,9 +1132,8 @@ char            *tmp_levels;
         return 1;
 }
 
-void
-read_config_file(filename)
-const char *filename;
+void 
+read_config_file (const char *filename)
 {
 #define tmp_levels      (char *)0
 #define tmp_ramdisk     (char *)0
@@ -1212,8 +1209,8 @@ fopen_wizkit_file()
         return (FILE *)0;
 }
 
-void
-read_wizkit()
+void 
+read_wizkit (void)
 {
         FILE *fp;
         char *ep, buf[BUFSZ];

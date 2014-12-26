@@ -41,8 +41,8 @@ static void hack_artifacts(void);
 static boolean attacks(int,struct obj *);
 
 /* handle some special cases; must be called after u_init() */
-static void
-hack_artifacts()
+static void 
+hack_artifacts (void)
 {
         struct artifact *art;
         int alignmnt = aligns[flags.initalign].value;
@@ -65,25 +65,23 @@ hack_artifacts()
 }
 
 /* zero out the artifact existence list */
-void
-init_artifacts()
+void 
+init_artifacts (void)
 {
         (void) memset((void *) artiexist, 0, sizeof artiexist);
         (void) memset((void *) artidisco, 0, sizeof artidisco);
         hack_artifacts();
 }
 
-void
-save_artifacts(fd)
-int fd;
+void 
+save_artifacts (int fd)
 {
         bwrite(fd, (void *) artiexist, sizeof artiexist);
         bwrite(fd, (void *) artidisco, sizeof artidisco);
 }
 
-void
-restore_artifacts(fd)
-int fd;
+void 
+restore_artifacts (int fd)
 {
         mread(fd, (void *) artiexist, sizeof artiexist);
         mread(fd, (void *) artidisco, sizeof artidisco);
@@ -91,8 +89,7 @@ int fd;
 }
 
 const char *
-artiname(artinum)
-int artinum;
+artiname (int artinum)
 {
         if (artinum <= 0 || artinum > NROFARTIFACTS) return("");
         return(artilist[artinum].name);
@@ -157,10 +154,8 @@ make_artif: if (by_align) otmp = mksobj((int)a->otyp, TRUE, FALSE);
  * The object type of the artifact is returned in otyp if the return value
  * is non-NULL.
  */
-const char*
-artifact_name(name, otyp)
-const char *name;
-short *otyp;
+const char *
+artifact_name (const char *name, short *otyp)
 {
     const struct artifact *a;
     const char *aname;
@@ -216,8 +211,8 @@ boolean mod;
         return;
 }
 
-int
-nartifact_exist()
+int 
+nartifact_exist (void)
 {
     int a = 0;
     int n = SIZE(artiexist);
@@ -477,10 +472,8 @@ long wp_mask;
  * Ignores such things as gauntlets, assuming the artifact is not
  * fooled by such trappings.
  */
-int
-touch_artifact(obj,mon)
-    struct obj *obj;
-    struct monst *mon;
+int 
+touch_artifact (struct obj *obj, struct monst *mon)
 {
     const struct artifact *oart = get_artifact(obj);
     boolean badclass, badalign, self_willed, yours;
@@ -541,10 +534,8 @@ touch_artifact(obj,mon)
 
 
 /* decide whether an artifact's special attacks apply against mtmp */
-static int
-spec_applies(weap, mtmp)
-const struct artifact *weap;
-struct monst *mtmp;
+static int 
+spec_applies (const struct artifact *weap, struct monst *mtmp)
 {
         struct permonst *ptr;
         boolean yours;
@@ -598,9 +589,8 @@ struct monst *mtmp;
 }
 
 /* return the M2 flags of monster that an artifact's special attacks apply against */
-long
-spec_m2(otmp)
-struct obj *otmp;
+long 
+spec_m2 (struct obj *otmp)
 {
         const struct artifact *artifact = get_artifact(otmp);
         if (artifact)
@@ -609,10 +599,8 @@ struct obj *otmp;
 }
 
 /* special attack bonus */
-int
-spec_abon(otmp, mon)
-struct obj *otmp;
-struct monst *mon;
+int 
+spec_abon (struct obj *otmp, struct monst *mon)
 {
         const struct artifact *weap = get_artifact(otmp);
 
@@ -625,11 +613,8 @@ struct monst *mon;
 }
 
 /* special damage bonus */
-int
-spec_dbon(otmp, mon, tmp)
-struct obj *otmp;
-struct monst *mon;
-int tmp;
+int 
+spec_dbon (struct obj *otmp, struct monst *mon, int tmp)
 {
         const struct artifact *weap = get_artifact(otmp);
 
@@ -645,9 +630,8 @@ int tmp;
 }
 
 /* add identified artifact to discoveries list */
-void
-discover_artifact(m)
-signed char m;
+void 
+discover_artifact (signed char m)
 {
     int i;
 
@@ -1151,8 +1135,8 @@ static const char recharge_type[] = { ALLOW_COUNT, ALL_CLASSES, 0 };
 static const char invoke_types[] = { ALL_CLASSES, 0 };
                 /* #invoke: an "ugly check" filters out most objects */
 
-int
-doinvoke()
+int 
+doinvoke (void)
 {
     struct obj *obj;
 
@@ -1162,9 +1146,8 @@ doinvoke()
     return arti_invoke(obj);
 }
 
-static int
-arti_invoke(obj)
-    struct obj *obj;
+static int 
+arti_invoke (struct obj *obj)
 {
     const struct artifact *oart = get_artifact(obj);
 
@@ -1393,9 +1376,8 @@ artifact_light(obj)
 }
 
 /* KMH -- Talking artifacts are finally implemented */
-void
-arti_speak(obj)
-    struct obj *obj;
+void 
+arti_speak (struct obj *obj)
 {
         const struct artifact *oart = get_artifact(obj);
         const char *line;
@@ -1425,9 +1407,8 @@ unsigned char inv_prop;
 }
 
 /* Return the price sold to the hero of a given artifact or unique item */
-long
-arti_cost(otmp)
-struct obj *otmp;
+long 
+arti_cost (struct obj *otmp)
 {
         if (!otmp->oartifact)
             return ((long)objects[otmp->otyp].oc_cost);

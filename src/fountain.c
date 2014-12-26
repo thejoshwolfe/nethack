@@ -97,10 +97,8 @@ dogushforth ( /* Gushing forth along LOS from (u.ux, u.uy) */
         }
 }
 
-static void
-gush(x, y, poolcnt)
-int x, y;
-void * poolcnt;
+static void 
+gush (int x, int y, void *poolcnt)
 {
         struct monst *mtmp;
         struct trap *ttmp;

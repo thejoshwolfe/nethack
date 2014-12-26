@@ -1985,14 +1985,17 @@ left_side (
  * seen from the source location.  Initialize and fill the left most
  * and right most boundaries of what could be seen.
  */
-static void
-view_from(srow,scol,loc_cs_rows,left_most,right_most, range, func, arg)
-    int  srow, scol;                    /* source row and column */
-    char **loc_cs_rows;                 /* could_see array (row pointers) */
-    char *left_most, *right_most;       /* limits of what could be seen */
-    int range;          /* 0 if unlimited */
-    void (*func)(int,int,void *);
-    void * arg;
+static void 
+view_from (
+    int srow,
+    int scol,                    /* source row and column */
+    char **loc_cs_rows,                 /* could_see array (row pointers) */
+    char *left_most,
+    char *right_most,       /* limits of what could be seen */
+    int range,          /* 0 if unlimited */
+    void (*func)(int, int, void *),
+    void *arg
+)
 {
     int i;
     char         *rowp;
@@ -2392,15 +2395,17 @@ lside2:                                 /* used if q?_path() is a macro */
  * (srow,scol).  NOTE this is (y,x)!  Mark the visible locations in the
  * array provided.
  */
-static void
-view_from(srow, scol, loc_cs_rows, left_most, right_most, range, func, arg)
-    int  srow, scol;    /* starting row and column */
-    char **loc_cs_rows; /* pointers to the rows of the could_see array */
-    char *left_most;    /* min mark on each row */
-    char *right_most;   /* max mark on each row */
-    int range;          /* 0 if unlimited */
-    void (*func)(int,int,void *);
-    void * arg;
+static void 
+view_from (
+    int srow,
+    int scol,    /* starting row and column */
+    char **loc_cs_rows, /* pointers to the rows of the could_see array */
+    char *left_most,    /* min mark on each row */
+    char *right_most,   /* max mark on each row */
+    int range,          /* 0 if unlimited */
+    void (*func)(int, int, void *),
+    void *arg
+)
 {
     int i;              /* loop counter */
     char         *rowp;         /* optimization for setting could_see */
@@ -2487,11 +2492,8 @@ view_from(srow, scol, loc_cs_rows, left_most, right_most, range, func, arg)
  * will call "func" when necessary.  If the hero is the center, use the
  * vision matrix and reduce extra work.
  */
-void
-do_clear_area(scol,srow,range,func,arg)
-    int scol, srow, range;
-    void (*func)(int,int,void *);
-    void * arg;
+void 
+do_clear_area (int scol, int srow, int range, void (*func)(int, int, void *), void *arg)
 {
         /* If not centered on hero, do the hard work of figuring the area */
         if (scol != u.ux || srow != u.uy)

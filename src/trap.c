@@ -2188,9 +2188,11 @@ fill_pit (int x, int y)
         }
 }
 
-int
-float_down(hmask, emask)
-long hmask, emask;     /* might cancel timeout */
+int 
+float_down (
+    long hmask,
+    long emask     /* might cancel timeout */
+)
 {
         struct trap *trap = (struct trap *)0;
         d_level current_dungeon_level;
@@ -2852,8 +2854,8 @@ drain_en (int n)
         flags.botl = 1;
 }
 
-int
-dountrap()      /* disarm a trap */
+int 
+dountrap (void)      /* disarm a trap */
 {
         if (near_capacity() >= HVY_ENCUMBER) {
             pline("You're too strained to do that.");

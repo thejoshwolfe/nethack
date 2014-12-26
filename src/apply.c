@@ -1106,8 +1106,8 @@ light_cocktail (
 
 static const char cuddly[] = { TOOL_CLASS, GEM_CLASS, 0 };
 
-int
-dorub()
+int 
+dorub (void)
 {
         struct obj *obj = getobj(cuddly, "rub");
 
@@ -1145,8 +1145,8 @@ dorub()
         return 1;
 }
 
-int
-dojump()
+int 
+dojump (void)
 {
         /* Physical jump */
         return jump(0);
@@ -2666,8 +2666,8 @@ add_class (char *cl, char class)
         Strcat(cl, tmp);
 }
 
-int
-doapply()
+int 
+doapply (void)
 {
         struct obj *obj;
         int res = 1;

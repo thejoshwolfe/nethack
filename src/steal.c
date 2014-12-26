@@ -117,8 +117,8 @@ void stealgold (struct monst *mtmp) {
 unsigned int stealoid;          /* object to be stolen */
 unsigned int stealmid;          /* monster doing the stealing */
 
-static int
-stealarm()
+static int 
+stealarm (void)
 {
         struct monst *mtmp;
         struct obj *otmp;

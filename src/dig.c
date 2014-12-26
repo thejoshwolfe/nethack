@@ -199,8 +199,8 @@ dig_check(madeby, verbose, x, y)
         return(TRUE);
 }
 
-static int
-dig()
+static int 
+dig (void)
 {
         struct rm *lev;
         signed char dpx = digging.pos.x, dpy = digging.pos.y;

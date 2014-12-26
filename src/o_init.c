@@ -351,8 +351,8 @@ static short uniq_objs[] = {
         BELL_OF_OPENING,
 };
 
-int
-dodiscovered()                          /* free after Robert Viduya */
+int 
+dodiscovered (void)                          /* free after Robert Viduya */
 {
     int i, dis;
     int ct = 0;

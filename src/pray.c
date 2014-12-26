@@ -1100,8 +1100,8 @@ consume_offering (struct obj *otmp)
     exercise(A_WIS, TRUE);
 }
 
-int
-dosacrifice()
+int 
+dosacrifice (void)
 {
     struct obj *otmp;
     int value = 0;
@@ -1534,8 +1534,8 @@ boolean praying;        /* false means no messages should be given */
     return !praying ? (boolean)(p_type == 3 && !Inhell) : TRUE;
 }
 
-int
-dopray()
+int 
+dopray (void)
 {
     /* Confirm accidental slips of Alt-P */
     if (flags.prayconfirm)
@@ -1577,8 +1577,8 @@ dopray()
     return(1);
 }
 
-static int
-prayer_done()           /* M. Stephenson (1.0.3b) */
+static int 
+prayer_done (void)           /* M. Stephenson (1.0.3b) */
 {
     aligntyp alignment = p_aligntyp;
 
@@ -1630,8 +1630,8 @@ prayer_done()           /* M. Stephenson (1.0.3b) */
     return(1);
 }
 
-int
-doturn()
+int 
+doturn (void)
 {       /* Knights & Priest(esse)s only please */
 
         struct monst *mtmp, *mtmp2;

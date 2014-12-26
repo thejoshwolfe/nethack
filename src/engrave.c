@@ -400,8 +400,8 @@ static const char styluses[] =
  */
 
 /* return 1 if action took 1 (or more) moves, 0 if error or aborted */
-int
-doengrave()
+int 
+doengrave (void)
 {
         boolean dengr = FALSE;  /* TRUE if we wipe out the current engraving */
         boolean doblind = FALSE;/* TRUE if engraving blinds the player */

@@ -187,9 +187,8 @@ void tty_shutdown(void) {
         return;
 }
 
-void
-tty_number_pad(state)
-int state;
+void 
+tty_number_pad (int state)
 {
         switch (state) {
             case -1:    /* activate keypad mode (escape sequences) */
@@ -395,8 +394,8 @@ backsp (void)
         xputs(BC);
 }
 
-void
-tty_nhbell()
+void 
+tty_nhbell (void)
 {
         if (flags.silent) return;
         (void) putchar('\007');         /* curx does not change */

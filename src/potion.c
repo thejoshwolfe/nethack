@@ -310,8 +310,8 @@ ghost_from_bottle (void)
 
 /* "Quaffing is like drinking, except you spill more."  -- Terry Pratchett
  */
-int
-dodrink()
+int 
+dodrink (void)
 {
         struct obj *otmp;
         const char *potion_descr;

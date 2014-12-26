@@ -780,8 +780,8 @@ domonnoise (struct monst *mtmp)
 }
 
 
-int
-dotalk()
+int 
+dotalk (void)
 {
     int result;
     boolean save_soundok = flags.soundok;

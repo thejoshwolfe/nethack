@@ -601,8 +601,8 @@ kickstr (char *buf)
         return strcat(strcpy(buf, "kicking "), what);
 }
 
-int
-dokick()
+int 
+dokick (void)
 {
         int x, y;
         int avrg_attrib;

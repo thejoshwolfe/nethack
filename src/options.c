@@ -2353,8 +2353,8 @@ doset_add_menu (
 }
 
 /* Changing options via menu by Per Liboriussen */
-int
-doset()
+int 
+doset (void)
 {
         char buf[BUFSZ], buf2[BUFSZ];
         int i, pass, boolcount, pick_cnt, pick_idx, opt_indx;

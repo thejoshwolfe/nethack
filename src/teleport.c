@@ -436,8 +436,8 @@ tele (void)
         (void) safe_teleds(FALSE);
 }
 
-int
-dotele()
+int 
+dotele (void)
 {
         struct trap *trap;
 

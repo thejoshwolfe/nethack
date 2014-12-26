@@ -211,8 +211,8 @@ static const char ready_objs[] =
 static const char bullets[] =   /* (note: different from dothrow.c) */
         { ALL_CLASSES, ALLOW_NONE, GEM_CLASS, WEAPON_CLASS, 0 };
 
-int
-dowield()
+int 
+dowield (void)
 {
         struct obj *wep, *oldwep;
         int result;

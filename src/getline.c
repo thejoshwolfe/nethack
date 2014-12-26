@@ -23,10 +23,8 @@ extern char erase_char, kill_char;      /* from appropriate tty.c file */
  * Reading can be interrupted by an escape ('\033') - now the
  * resulting string is "\033".
  */
-void
-tty_getlin(query, bufp)
-const char *query;
-char *bufp;
+void 
+tty_getlin (const char *query, char *bufp)
 {
     hooked_tty_getlin(query, bufp, (getlin_hook_proc) 0);
 }
@@ -199,8 +197,8 @@ ext_cmd_getlin_hook(base)
  * Read in an extended command, doing command line completion.  We
  * stop when we have found enough characters to make a unique command.
  */
-int
-tty_get_ext_cmd()
+int 
+tty_get_ext_cmd (void)
 {
         int i;
         char buf[BUFSZ];

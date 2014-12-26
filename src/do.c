@@ -19,8 +19,8 @@ static const char drop_types[] =
         { ALLOW_COUNT, COIN_CLASS, ALL_CLASSES, 0 };
 
 /* 'd' command: drop one inventory item */
-int
-dodrop()
+int 
+dodrop (void)
 {
 #ifndef GOLDOBJ
         int result, i = (invent || u.ugold) ? 0 : (SIZE(drop_types) - 1);
@@ -428,10 +428,8 @@ const char *word;
         return(TRUE);
 }
 
-static
-int
-drop(obj)
-struct obj *obj;
+static int 
+drop (struct obj *obj)
 {
         if(!obj) return(0);
         if(!canletgo(obj,"drop"))
@@ -589,8 +587,8 @@ obj_no_longer_held (struct obj *obj)
 }
 
 /* 'D' command: drop several things */
-int
-doddrop()
+int 
+doddrop (void)
 {
         int result = 0;
 
@@ -715,8 +713,8 @@ menu_drop (int retry)
 /* on a ladder, used in goto_level */
 static boolean at_ladder = FALSE;
 
-int
-dodown()
+int 
+dodown (void)
 {
         struct trap *trap = 0;
         boolean stairs_down = ((u.ux == xdnstair && u.uy == ydnstair) ||
@@ -801,8 +799,8 @@ dodown()
         return(1);
 }
 
-int
-doup()
+int 
+doup (void)
 {
         if( (u.ux != xupstair || u.uy != yupstair)
              && (!xupladder || u.ux != xupladder || u.uy != yupladder)
@@ -1509,15 +1507,15 @@ revive_mon (void *arg, long timeout)
     }
 }
 
-int
-donull()
+int 
+donull (void)
 {
         return(1);      /* Do nothing, but let other things happen */
 }
 
 
-static int
-wipeoff()
+static int 
+wipeoff (void)
 {
         if(u.ucreamed < 4)      u.ucreamed = 0;
         else                    u.ucreamed -= 4;
@@ -1536,8 +1534,8 @@ wipeoff()
         return(1);              /* still busy */
 }
 
-int
-dowipe()
+int 
+dowipe (void)
 {
         if(u.ucreamed)  {
                 static char buf[39];

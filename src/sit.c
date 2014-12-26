@@ -32,8 +32,8 @@ take_gold (void)
 #endif
 }
 
-int
-dosit()
+int 
+dosit (void)
 {
         static const char sit_message[] = "sit on the %s.";
         struct trap *trap;

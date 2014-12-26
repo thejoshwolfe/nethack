@@ -181,9 +181,7 @@ struct obj *obj;
  * or doname() instead.
  */
 char *
-distant_name(obj, func)
-struct obj *obj;
-char *(*func)(OBJ_P);
+distant_name (struct obj *obj, char *(*func)( OBJ_P))
 {
         char *str;
 
@@ -214,8 +212,7 @@ boolean juice;  /* whether or not to append " juice" to the name */
 
 
 char *
-xname(obj)
-struct obj *obj;
+xname (struct obj *obj)
 #ifdef SORTLOOT
 {
         return xname2(obj, FALSE);
@@ -544,8 +541,7 @@ add_erosion_words (struct obj *obj, char *prefix)
 }
 
 char *
-doname(obj)
-struct obj *obj;
+doname (struct obj *obj)
 {
         boolean ispoisoned = FALSE;
         char prefix[PREFIX];
@@ -882,9 +878,7 @@ killer_xname (struct obj *obj)
  * Used if only one of a collection of objects is named (e.g. in eat.c).
  */
 const char *
-singular(otmp, func)
-struct obj *otmp;
-char *(*func)(OBJ_P);
+singular (struct obj *otmp, char *(*func)( OBJ_P))
 {
         long savequan;
         char *nam;

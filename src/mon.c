@@ -2369,9 +2369,8 @@ boolean msg;            /* "The oldmon turns into a newmon!" */
  * Return the monster number to use as the egg's corpsenm.  Return
  * NON_PM if the given monster can't be hatched.
  */
-int
-can_be_hatched(mnum)
-int mnum;
+int 
+can_be_hatched (int mnum)
 {
     /* ranger quest nemesis has the oviparous bit set, making it
        be possible to wish for eggs of that unique monster; turn
@@ -2425,9 +2424,8 @@ boolean egg;
 }
 
 /* kill off any eggs of genocided monsters */
-static void
-kill_eggs(obj_list)
-struct obj *obj_list;
+static void 
+kill_eggs (struct obj *obj_list)
 {
         struct obj *otmp;
 
@@ -2448,8 +2446,8 @@ struct obj *obj_list;
 }
 
 /* kill all members of genocided species */
-void
-kill_genocided_monsters()
+void 
+kill_genocided_monsters (void)
 {
         struct monst *mtmp, *mtmp2;
         boolean kill_cham[CHAM_MAX_INDX+1];
@@ -2488,10 +2486,8 @@ kill_genocided_monsters()
 }
 
 
-void
-golemeffects(mon, damtype, dam)
-struct monst *mon;
-int damtype, dam;
+void 
+golemeffects (struct monst *mon, int damtype, int dam)
 {
     int heal = 0, slow = 0;
 
@@ -2560,8 +2556,8 @@ boolean silent;
         return(FALSE);
 }
 
-void
-pacify_guards()
+void 
+pacify_guards (void)
 {
         struct monst *mtmp;
 
@@ -2573,10 +2569,8 @@ pacify_guards()
         }
 }
 
-void
-mimic_hit_msg(mtmp, otyp)
-struct monst *mtmp;
-short otyp;
+void 
+mimic_hit_msg (struct monst *mtmp, short otyp)
 {
         short ap = mtmp->mappearance;
 

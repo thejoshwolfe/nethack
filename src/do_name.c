@@ -209,8 +209,8 @@ christen_monst (struct monst *mtmp, const char *name)
         return(mtmp2);
 }
 
-int
-do_mname()
+int 
+do_mname (void)
 {
         char buf[BUFSZ];
         coord cc;
@@ -421,8 +421,8 @@ static const char callable[] = {
         SCROLL_CLASS, POTION_CLASS, WAND_CLASS, RING_CLASS, AMULET_CLASS,
         GEM_CLASS, SPBOOK_CLASS, ARMOR_CLASS, TOOL_CLASS, 0 };
 
-int
-ddocall()
+int 
+ddocall (void)
 {
         struct obj *obj;
         char    ch;

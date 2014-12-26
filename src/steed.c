@@ -616,10 +616,8 @@ dismount_steed (
         return;
 }
 
-void
-place_monster(mon, x, y)
-struct monst *mon;
-int x, y;
+void 
+place_monster (struct monst *mon, int x, int y)
 {
     if (mon == u.usteed ||
             /* special case is for convoluted vault guard handling */

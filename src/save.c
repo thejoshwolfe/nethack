@@ -34,8 +34,8 @@ extern struct menucoloring *menu_colorings;
 /* need to preserve these during save to avoid accessing freed memory */
 static unsigned ustuck_id = 0, usteed_id = 0;
 
-int
-dosave()
+int 
+dosave (void)
 {
         clear_nhwindow(WIN_MESSAGE);
         if(yn("Really save?") == 'n') {

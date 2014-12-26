@@ -737,20 +737,20 @@ do_look(quick)
 }
 
 
-int
-dowhatis()
+int 
+dowhatis (void)
 {
         return do_look(FALSE);
 }
 
-int
-doquickwhatis()
+int 
+doquickwhatis (void)
 {
         return do_look(TRUE);
 }
 
-int
-doidtrap()
+int 
+doidtrap (void)
 {
         struct trap *trap;
         int x, y, tt;

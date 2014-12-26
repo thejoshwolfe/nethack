@@ -307,8 +307,8 @@ raise_dead:
     return;
 }
 
-static int
-learn()
+static int 
+learn (void)
 {
         int i;
         short booktype;
@@ -569,8 +569,8 @@ getspell(spell_no)
 }
 
 /* the 'Z' command -- cast a spell */
-int
-docast()
+int 
+docast (void)
 {
         int spell_no;
 
@@ -1009,8 +1009,8 @@ losespells (void)
 }
 
 /* the '+' command -- view known spells */
-int
-dovspell()
+int 
+dovspell (void)
 {
         char qbuf[QBUFSZ];
         int splnum, othnum;

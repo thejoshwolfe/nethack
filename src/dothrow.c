@@ -179,8 +179,8 @@ throw_obj (struct obj *obj, int shotlimit)
 }
 
 
-int
-dothrow()
+int 
+dothrow (void)
 {
         struct obj *obj;
         int shotlimit;

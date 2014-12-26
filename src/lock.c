@@ -65,9 +65,8 @@ lock_action (void)
                 return xlock.box->otyp == CHEST ? actions[1] : actions[2];
 }
 
-static
-int
-picklock()      /* try to open/close a lock */
+static int 
+picklock (void)      /* try to open/close a lock */
 {
 
         if (xlock.box) {
@@ -120,9 +119,8 @@ picklock()      /* try to open/close a lock */
         return((xlock.usedtime = 0));
 }
 
-static
-int
-forcelock()     /* try to force a locked chest */
+static int 
+forcelock (void)     /* try to force a locked chest */
 {
 
         struct obj *otmp;
@@ -410,8 +408,8 @@ pick_lock ( /* pick a lock with a given object */
         return(1);
 }
 
-int
-doforce()               /* try to force a chest with your weapon */
+int 
+doforce (void)               /* try to force a chest with your weapon */
 {
         struct obj *otmp;
         int c, picktyp;
@@ -471,8 +469,8 @@ doforce()               /* try to force a chest with your weapon */
         return(1);
 }
 
-int
-doopen()                /* try to open a door */
+int 
+doopen (void)                /* try to open a door */
 {
         coord cc;
         struct rm *door;
@@ -577,8 +575,8 @@ objhere:        pline("%s's in the way.", Something);
         return(FALSE);
 }
 
-int
-doclose()               /* try to close a door */
+int 
+doclose (void)               /* try to close a door */
 {
         int x, y;
         struct rm *door;

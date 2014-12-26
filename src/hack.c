@@ -1745,8 +1745,8 @@ boolean newlev;
 }
 
 
-int
-dopickup()
+int 
+dopickup (void)
 {
         int count;
         struct trap *traphere = t_at(u.ux, u.uy);

@@ -127,9 +127,10 @@ dump (char *pre, char *str)
 #endif  /* DUMP_LOG */
 
 /*ARGSUSED*/
-void
-done1(sig_unused)   /* called as signal() handler, so sent at least one arg */
-int sig_unused;
+void 
+done1 (   /* called as signal() handler, so sent at least one arg */
+    int sig_unused
+)
 {
 #ifndef NO_SIGNAL
         (void) signal(SIGINT,SIG_IGN);
@@ -149,8 +150,8 @@ int sig_unused;
 
 
 /* "#quit" command or keyboard interrupt */
-int
-done2()
+int 
+done2 (void)
 {
         if(yn("Really quit?") == 'n') {
 #ifndef NO_SIGNAL
@@ -183,9 +184,10 @@ done2()
 
 #ifndef NO_SIGNAL
 /*ARGSUSED*/
-static void
-done_intr(sig_unused) /* called as signal() handler, so sent at least one arg */
-int sig_unused;
+static void 
+done_intr ( /* called as signal() handler, so sent at least one arg */
+    int sig_unused
+)
 {
         done_stopprint++;
         signal(SIGINT, SIG_IGN);

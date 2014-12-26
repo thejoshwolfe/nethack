@@ -1061,11 +1061,8 @@ struct monst *mtmp;
 #undef nomore
 }
 
-static
-int
-mbhitm(mtmp, otmp)
-struct monst *mtmp;
-struct obj *otmp;
+static int 
+mbhitm (struct monst *mtmp, struct obj *otmp)
 {
         int tmp;
 
@@ -1139,13 +1136,14 @@ struct obj *otmp;
  * zapping you, so we need a special function for it.  (Unless someone wants
  * to merge the two functions...)
  */
-static void
-mbhit(mon,range,fhitm,fhito,obj)
-struct monst *mon;                      /* monster shooting the wand */
-int range;                      /* direction and range */
-int (*fhitm)(MONST_P,OBJ_P);
-int (*fhito)(OBJ_P,OBJ_P);      /* fns called when mon/obj hit */
-struct obj *obj;                        /* 2nd arg to fhitm/fhito */
+static void 
+mbhit (
+    struct monst *mon,                      /* monster shooting the wand */
+    int range,                      /* direction and range */
+    int (*fhitm)( MONST_P,  OBJ_P),
+    int (*fhito)( OBJ_P,  OBJ_P),      /* fns called when mon/obj hit */
+    struct obj *obj                        /* 2nd arg to fhitm/fhito */
+)
 {
         struct monst *mtmp;
         struct obj *otmp;

@@ -142,8 +142,7 @@ static int wall_angle(struct rm *);
  * say, one can see blessed, etc.
  */
 struct obj *
-vobj_at(x,y)
-    signed char x,y;
+vobj_at (signed char x, signed char y)
 {
     struct obj *obj = level.objects[x][y];
 
@@ -1116,8 +1115,8 @@ curs_on_u (void)
     flush_screen(1);    /* Flush waiting glyphs & put cursor on hero */
 }
 
-int
-doredraw()
+int 
+doredraw (void)
 {
     docrt();
     return 0;

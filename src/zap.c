@@ -84,10 +84,8 @@ const char * const flash_types[] = {    /* also used in buzzmu(mcastu.c) */
 
 /* Routines for IMMEDIATE wands and spells. */
 /* bhitm: monster mtmp was hit by the effect of wand or spell otmp */
-int
-bhitm(mtmp, otmp)
-struct monst *mtmp;
-struct obj *otmp;
+int 
+bhitm (struct monst *mtmp, struct obj *otmp)
 {
         boolean wake = TRUE;    /* Most 'zaps' should wake monster */
         boolean reveal_invis = FALSE;

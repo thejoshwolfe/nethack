@@ -74,9 +74,8 @@ on_msg (struct obj *otmp)
  * The Type_off() functions call setworn() themselves.
  */
 
-static
-int
-Boots_on()
+static int 
+Boots_on (void)
 {
     long oldprop =
         u.uprops[objects[uarmf->otyp].oc_oprop].extrinsic & ~WORN_BOOTS;
@@ -122,8 +121,8 @@ Boots_on()
     return 0;
 }
 
-int
-Boots_off()
+int 
+Boots_off (void)
 {
     int otyp = uarmf->otyp;
     long oldprop = u.uprops[objects[otyp].oc_oprop].extrinsic & ~WORN_BOOTS;
@@ -272,9 +271,8 @@ Cloak_off (void)
     return 0;
 }
 
-static
-int
-Helmet_on()
+static int 
+Helmet_on (void)
 {
     switch(uarmh->otyp) {
         case FEDORA:
@@ -330,8 +328,8 @@ Helmet_on()
     return 0;
 }
 
-int
-Helmet_off()
+int 
+Helmet_off (void)
 {
     takeoff_mask &= ~W_ARMH;
 
@@ -372,9 +370,8 @@ Helmet_off()
     return 0;
 }
 
-static
-int
-Gloves_on()
+static int 
+Gloves_on (void)
 {
     long oldprop =
         u.uprops[objects[uarmg->otyp].oc_oprop].extrinsic & ~WORN_GLOVES;
@@ -398,8 +395,8 @@ Gloves_on()
     return 0;
 }
 
-int
-Gloves_off()
+int 
+Gloves_off (void)
 {
     long oldprop =
         u.uprops[objects[uarmg->otyp].oc_oprop].extrinsic & ~WORN_GLOVES;
@@ -528,15 +525,14 @@ Shirt_off (void)
  * is fire resistance, and we have to immediately set HFire_resistance in worn.c
  * since worn.c will check it before returning.
  */
-static
-int
-Armor_on()
+static int 
+Armor_on (void)
 {
     return 0;
 }
 
-int
-Armor_off()
+int 
+Armor_off (void)
 {
     takeoff_mask &= ~W_ARM;
     setworn((struct obj *)0, W_ARM);
@@ -1016,8 +1012,8 @@ static const char clothes[] = {ARMOR_CLASS, 0};
 static const char accessories[] = {RING_CLASS, AMULET_CLASS, TOOL_CLASS, FOOD_CLASS, 0};
 
 /* the 'T' command */
-int
-dotakeoff()
+int 
+dotakeoff (void)
 {
         struct obj *otmp = (struct obj *)0;
         int armorpieces = 0;
@@ -1075,8 +1071,8 @@ dotakeoff()
 }
 
 /* the 'R' command */
-int
-doremring()
+int 
+doremring (void)
 {
         struct obj *otmp = 0;
         int Accessories = 0;
@@ -1352,8 +1348,8 @@ boolean noisy;
 }
 
 /* the 'W' command */
-int
-dowear()
+int 
+dowear (void)
 {
         struct obj *otmp;
         int delay;
@@ -1412,8 +1408,8 @@ dowear()
         return(1);
 }
 
-int
-doputon()
+int 
+doputon (void)
 {
         struct obj *otmp;
         long mask = 0L;
@@ -1697,10 +1693,8 @@ unchanger (void)
 }
 
 /* occupation callback for 'A' */
-static
-int
-select_off(otmp)
-struct obj *otmp;
+static int 
+select_off (struct obj *otmp)
 {
         struct obj *why;
         char buf[BUFSZ];
@@ -1859,9 +1853,8 @@ do_takeoff (void)
 
 static const char *disrobing = "";
 
-static
-int
-take_off()
+static int 
+take_off (void)
 {
         int i;
         struct obj *otmp;
@@ -1951,8 +1944,8 @@ reset_remarm (void)
 }
 
 /* the 'A' command -- remove multiple worn items */
-int
-doddoremarm()
+int 
+doddoremarm (void)
 {
     int result = 0;
 

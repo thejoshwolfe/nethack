@@ -31,8 +31,8 @@ static void maybe_tame(struct monst *,struct obj *);
 
 static void set_lit(int,int,void *);
 
-int
-doread()
+int 
+doread (void)
 {
         struct obj *scroll;
         boolean confused;
@@ -1270,10 +1270,8 @@ wand_explode (struct obj *obj)
 /*
  * Low-level lit-field update routine.
  */
-static void
-set_lit(x,y,val)
-int x, y;
-void * val;
+static void 
+set_lit (int x, int y, void *val)
 {
         if (val)
             levl[x][y].lit = 1;

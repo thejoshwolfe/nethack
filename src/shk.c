@@ -1009,8 +1009,8 @@ cheapest_item (   /* delivers the cheapest item on the list */
         return(gmin);
 }
 
-int
-dopay()
+int 
+dopay (void)
 {
         struct eshk *eshkp;
         struct monst *shkp;

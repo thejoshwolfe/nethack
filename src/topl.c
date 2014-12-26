@@ -17,8 +17,8 @@ static void remember_topl(void);
 static void removetopl(int);
 
 
-int
-tty_doprev_message()
+int 
+tty_doprev_message (void)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
 
@@ -290,10 +290,8 @@ static void removetopl(int n) {
 
 extern char erase_char;         /* from xxxtty.c; don't need kill_char */
 
-char
-tty_yn_function(query,resp, def)
-const char *query,*resp;
-char def;
+char 
+tty_yn_function (const char *query, const char *resp, char def)
 /*
  *   Generic yes/no function. 'def' is the default (returned by space or
  *   return; 'esc' returns 'q', or 'n', or the default, depending on
