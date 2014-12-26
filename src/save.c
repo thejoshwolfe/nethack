@@ -557,10 +557,8 @@ savefruitchn (int fd, int mode)
 void
 free_dungeons (void)
 {
-#ifdef FREE_ALL_MEMORY
         savelevchn(0, FREE_SAVE);
         save_dungeon(0, FALSE, TRUE);
-#endif
         return;
 }
 
@@ -571,7 +569,6 @@ freedynamicdata (void)
         free_invbuf();  /* let_to_name (invent.c) */
         free_youbuf();  /* You_buf,&c (pline.c) */
         tmp_at(DISP_FREEMEM, 0);        /* temporary display effects */
-#ifdef FREE_ALL_MEMORY
 # define freeobjchn(X)  (saveobjchn(0, X, FREE_SAVE),  X = 0)
 # define freemonchn(X)  (savemonchn(0, X, FREE_SAVE),  X = 0)
 # define freetrapchn(X) (savetrapchn(0, X, FREE_SAVE), X = 0)
@@ -625,6 +622,5 @@ freedynamicdata (void)
         if (iflags.wc_tile_file) free(iflags.wc_tile_file);
         free_autopickup_exceptions();
 
-#endif  /* FREE_ALL_MEMORY */
         return;
 }
