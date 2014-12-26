@@ -5,6 +5,8 @@
 #include "pm_props.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "flag.h"
+#include "onames.h"
 
 // larger file for debugging purposes
 static const char * LOGFILE = "run/logfile";

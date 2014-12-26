@@ -4,6 +4,8 @@
 #include "dlb.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "youprop.h"
+#include "flag.h"
 
 /*      [note: this comment is fairly old, but still accurate for 3.1]
  * Rumors have been entirely rewritten to speed up the access.  This is

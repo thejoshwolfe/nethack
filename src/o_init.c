@@ -3,6 +3,8 @@
 #include "lev.h"        /* save & restore info */
 #include "extern.h"
 #include "winprocs.h"
+#include "onames.h"
+#include "flag.h"
 
 static void setgemprobs(d_level*);
 static void shuffle(int,int,boolean);

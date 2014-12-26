@@ -2,6 +2,7 @@
 #include "hack.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "flag.h"
 
 #include <termios.h>
 #include <unistd.h>

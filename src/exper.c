@@ -2,6 +2,8 @@
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "youprop.h"
+#include "flag.h"
 
 static long newuexp(int);
 static int enermod(int);

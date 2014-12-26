@@ -2,6 +2,8 @@
 #include "vision.h"
 #include "hack.h"
 #include "extern.h"
+#include "youprop.h"
+#include "flag.h"
 
 /* Circles ==================================================================*/
 

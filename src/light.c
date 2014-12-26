@@ -5,6 +5,7 @@
 #include "vision.h"
 #include "timeout.h"
 #include "winprocs.h"
+#include "onames.h"
 
 /*
  * Mobile light sources.

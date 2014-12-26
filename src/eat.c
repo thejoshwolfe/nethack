@@ -3,6 +3,8 @@
 #include "pm_props.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "youprop.h"
+#include "flag.h"
 
 
 static int eatmdone(void);

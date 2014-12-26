@@ -3,8 +3,6 @@
 #define HACK_H
 
 #include "coord.h"
-#include "youprop.h"
-#include "flag.h"
 
 #define TELL            1
 #define NOTELL          0
@@ -79,9 +77,6 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 #define KICKED_WEAPON   2
 #define FLASHED_LIGHT   3
 #define INVIS_BEAM      4
-
-#define MATCH_WARN_OF_MON(mon)   (Warn_of_mon && flags.warntype && \
-                                 (flags.warntype & (mon)->data->mflags2))
 
 #define NO_SPELL        0
 

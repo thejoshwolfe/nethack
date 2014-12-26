@@ -4,6 +4,7 @@
 #include "hack.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "flag.h"
 
 #include <errno.h>
 #include <sys/stat.h>

@@ -2,6 +2,7 @@
 #include "hack.h"
 #include "tcap.h"
 #include "extern.h"
+#include "flag.h"
 /* Relevent header information in rm.h and objclass.h. */
 
 #define C(n) n

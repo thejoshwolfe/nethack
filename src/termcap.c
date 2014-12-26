@@ -4,6 +4,7 @@
 #include "tcap.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "flag.h"
 
 /*
  * The following prototypes are from termcap.h.

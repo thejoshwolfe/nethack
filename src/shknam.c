@@ -4,7 +4,7 @@
 #include "hack.h"
 #include "eshk.h"
 #include "extern.h"
-
+#include "onames.h"
 
 static void mkshobj_at(const struct shclass *,int,int);
 static void nameshk(struct monst *,const char * const *);

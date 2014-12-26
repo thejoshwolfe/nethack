@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include "extern.h"
 #include "winprocs.h"
+#include "youprop.h"
+#include "flag.h"
 
 static struct engr *head_engr;
 

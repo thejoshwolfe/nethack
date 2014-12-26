@@ -4,6 +4,8 @@
 #include "extern.h"
 #include "winprocs.h"
 #include "timeout.h"
+#include "onames.h"
+#include "flag.h"
 
 static void find_lev_obj(void);
 static void restlevchn(int);

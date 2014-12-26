@@ -3,6 +3,8 @@
 #include "pm_props.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "onames.h"
+#include "flag.h"
 
 
 /*** Table of all roles ***/

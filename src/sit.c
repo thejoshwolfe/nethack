@@ -3,6 +3,8 @@
 #include "artifact.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "youprop.h"
+#include "flag.h"
 
 void
 take_gold (void)

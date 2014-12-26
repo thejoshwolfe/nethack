@@ -3,6 +3,8 @@
 #define DISPLAY_H
 #include "pm_props.h"
 #include "vision.h"
+#include "youprop.h"
+#include "flag.h"
 
 #define vobj_at(x,y) (level.objects[x][y])
 
@@ -20,6 +22,9 @@
       (Unblind_telepat &&                                             \
         (distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))))                  \
 )
+
+#define MATCH_WARN_OF_MON(mon)   (Warn_of_mon && flags.warntype && \
+                                 (flags.warntype & (mon)->data->mflags2))
 
 #define sensemon(mon) (tp_sensemon(mon) || Detect_monsters || MATCH_WARN_OF_MON(mon))
 

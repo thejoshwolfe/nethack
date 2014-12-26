@@ -5,6 +5,9 @@
 #include "pm_props.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "mondata.h"
+#include "youprop.h"
+#include "flag.h"
 
 void
 msummon (               /* mon summons a monster */

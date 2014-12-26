@@ -2,6 +2,8 @@
 #include "hack.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "onames.h"
+#include "youprop.h"
 
 static int cost(struct obj *);
 

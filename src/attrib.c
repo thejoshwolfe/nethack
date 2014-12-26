@@ -3,6 +3,8 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "youprop.h"
+#include "flag.h"
 
         /* part of the output on gain or loss of attribute */
 static

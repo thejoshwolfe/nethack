@@ -3,8 +3,9 @@
 #include "dlb.h"
 #include "extern.h"
 #include "winprocs.h"
-
 #include "wintty.h" /* more() */
+#include "youprop.h"
+#include "flag.h"
 
 #include <ctype.h>
 #include <fcntl.h>

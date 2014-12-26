@@ -13,6 +13,7 @@
 #include "rect.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "youprop.h"
 
 extern void mkmap(lev_init *);
 

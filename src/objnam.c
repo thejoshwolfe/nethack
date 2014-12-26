@@ -2,6 +2,9 @@
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "onames.h"
+#include "youprop.h"
+#include "flag.h"
 
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX  80      /* (56) */

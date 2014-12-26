@@ -5,7 +5,8 @@
 #include "edog.h"
 #include "extern.h"
 #include "winprocs.h"
-
+#include "youprop.h"
+#include "flag.h"
 
 static boolean no_repeat = FALSE;
 

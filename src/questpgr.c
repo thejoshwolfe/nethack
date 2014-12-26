@@ -1,13 +1,12 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "dlb.h"
-
-/*  quest-specific pager routines. */
-
 #include "qtext.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "winprocs.h"
+#include "youprop.h"
+#include "flag.h"
 
 #define QTEXT_FILE      "quest.dat"
 

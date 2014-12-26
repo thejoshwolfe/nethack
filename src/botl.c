@@ -6,6 +6,8 @@
 #include "extern.h"
 #include "winprocs.h"
 #include "color.h"
+#include "youprop.h"
+#include "flag.h"
 
 extern const char *hu_stat[];   /* defined in eat.c */
 

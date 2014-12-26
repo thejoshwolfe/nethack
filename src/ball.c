@@ -4,6 +4,8 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "youprop.h"
+#include "flag.h"
 
 static int bc_order(void);
 static void litter(void);
