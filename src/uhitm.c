@@ -28,11 +28,13 @@ static boolean override_confirmation = FALSE;
 
 #define PROJECTILE(obj) ((obj) && is_ammo(obj))
 
+#define useup_eggs(o)   { if (thrown) obfree(o,(struct obj *)0); \
+                          else useupall(o); \
+                          o = (struct obj *)0; }        /* now gone */
+
 /* modified from hurtarmor() in mhitu.c */
 /* This is not static because it is also used for monsters rusting monsters */
-void
-hurtmarmor (struct monst *mdef, int attk)
-{
+void hurtmarmor (struct monst *mdef, int attk) {
         int     hurt;
         struct obj *target;
 
@@ -736,9 +738,6 @@ hmon_hitmon (struct monst *mon, struct obj *obj, int thrown)
                         break;
                     case EGG:
                       {
-#define useup_eggs(o)   { if (thrown) obfree(o,(struct obj *)0); \
-                          else useupall(o); \
-                          o = (struct obj *)0; }        /* now gone */
                         long cnt = obj->quan;
 
                         tmp = 1;                /* nominal physical damage */
@@ -793,7 +792,6 @@ hmon_hitmon (struct monst *mon, struct obj *obj, int thrown)
                             }
                         }
                         break;
-#undef useup_eggs
                       }
                     case CLOVE_OF_GARLIC:       /* no effect against demons */
                         if (is_undead(mdat)) {

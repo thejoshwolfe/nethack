@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "sp_lev.h"
 #include "lev.h"        /* save & restore info */
@@ -24,9 +25,7 @@ static void setup_waterlevel(void);
 static void unsetup_waterlevel(void);
 
 
-static boolean 
-iswall (int x, int y)
-{
+static boolean iswall (int x, int y) {
     int type;
 
     if (!isok(x,y)) return FALSE;
@@ -35,9 +34,7 @@ iswall (int x, int y)
             type == SDOOR || type == IRONBARS);
 }
 
-static boolean 
-iswall_or_stone (int x, int y)
-{
+static boolean iswall_or_stone (int x, int y) {
     int type;
 
     /* out of bounds = stone */
@@ -49,9 +46,7 @@ iswall_or_stone (int x, int y)
 }
 
 /* return TRUE if out of bounds, wall or rock */
-static boolean 
-is_solid (int x, int y)
-{
+static boolean is_solid (int x, int y) {
     return (!isok(x,y) || IS_STWALL(levl[x][y].typ));
 }
 
