@@ -476,13 +476,6 @@ static const char *build_opts[] = {
 #endif
                 "log file",
                 "mail daemon",
-#ifdef MENU_COLOR
-# ifdef MENU_COLOR_REGEX
-                "menu colors via regular expressions",
-# else
-                "menu colors via pmatch",
-# endif
-#endif
                 "news file",
                 "redo command",
                 "saddles and riding",

@@ -174,9 +174,6 @@ struct instance_flags {
 #if defined(TTY_GRAPHICS)
         boolean  extmenu;       /* extended commands use menu interface */
 #endif
-#ifdef MENU_COLOR
-        boolean use_menu_color; /* use color in menus; only if wc_color */
-#endif
         char sortloot;          /* sort items to loot alphabetically */
         boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
 

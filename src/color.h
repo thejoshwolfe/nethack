@@ -3,12 +3,6 @@
 #define COLOR_H
 #include "config.h"
 
-#ifdef MENU_COLOR
-# ifdef MENU_COLOR_REGEX
-#  include <regex.h>
-# endif
-#endif
-
 /*
  * The color scheme used is tailored for an IBM PC.  It consists of the
  * standard 8 colors, folowed by their bright counterparts.  There are
@@ -52,17 +46,5 @@
 #define HI_MINERAL      CLR_GRAY
 #define DRAGON_SILVER   CLR_BRIGHT_CYAN
 #define HI_ZAP          CLR_BRIGHT_BLUE
-
-#ifdef MENU_COLOR
-struct menucoloring {
-# ifdef MENU_COLOR_REGEX
-    struct re_pattern_buffer match;
-# else
-    char *match;
-# endif
-    int color, attr;
-    struct menucoloring *next;
-};
-#endif /* MENU_COLOR */
 
 #endif /* COLOR_H */

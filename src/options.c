@@ -74,11 +74,6 @@ static struct Bool_Opt
         {"lootabc", &iflags.lootabc, FALSE, SET_IN_GAME},
         {"Macgraphics", NULL, FALSE, SET_IN_FILE},
         {"mail", &flags.biff, TRUE, SET_IN_GAME},
-#ifdef MENU_COLOR
-        {"menucolors", &iflags.use_menu_color, FALSE, SET_IN_GAME},
-#else
-        {"menucolors", (boolean *)0, FALSE, SET_IN_GAME},
-#endif
 #ifdef WIZARD
         /* for menu debugging only*/
         {"menu_tab_sep", &iflags.menu_tab_sep, FALSE, SET_IN_GAME},
@@ -815,119 +810,6 @@ duplicate_opt_detection (
         }
 }
 
-#ifdef MENU_COLOR
-extern struct menucoloring *menu_colorings;
-
-static const struct {
-   const char *name;
-   const int color;
-} colornames[] = {
-   {"black", CLR_BLACK},
-   {"red", CLR_RED},
-   {"green", CLR_GREEN},
-   {"brown", CLR_BROWN},
-   {"blue", CLR_BLUE},
-   {"magenta", CLR_MAGENTA},
-   {"cyan", CLR_CYAN},
-   {"gray", CLR_GRAY},
-   {"orange", CLR_ORANGE},
-   {"lightgreen", CLR_BRIGHT_GREEN},
-   {"yellow", CLR_YELLOW},
-   {"lightblue", CLR_BRIGHT_BLUE},
-   {"lightmagenta", CLR_BRIGHT_MAGENTA},
-   {"lightcyan", CLR_BRIGHT_CYAN},
-   {"white", CLR_WHITE}
-};
-
-static const struct {
-   const char *name;
-   const int attr;
-} attrnames[] = {
-     {"none", ATR_NONE},
-     {"bold", ATR_BOLD},
-     {"dim", ATR_DIM},
-     {"underline", ATR_ULINE},
-     {"blink", ATR_BLINK},
-     {"inverse", ATR_INVERSE}
-
-};
-
-/* parse '"regex_string"=color&attr' and add it to menucoloring */
-boolean
-add_menu_coloring(str)
-char *str;
-{
-    int i, c = NO_COLOR, a = ATR_NONE;
-    struct menucoloring *tmp;
-    char *tmps, *cs = strchr(str, '=');
-    const char *err = (char *)0;
-
-    if (!cs || !str) return FALSE;
-
-    tmps = cs;
-    tmps++;
-    while (*tmps && isspace(*tmps)) tmps++;
-
-    for (i = 0; i < SIZE(colornames); i++)
-        if (strstri(tmps, colornames[i].name) == tmps) {
-            c = colornames[i].color;
-            break;
-        }
-    if ((i == SIZE(colornames)) && (*tmps >= '0' && *tmps <='9'))
-        c = atoi(tmps);
-
-    if (c > 15) return FALSE;
-
-    tmps = strchr(str, '&');
-    if (tmps) {
-        tmps++;
-        while (*tmps && isspace(*tmps)) tmps++;
-        for (i = 0; i < SIZE(attrnames); i++)
-            if (strstri(tmps, attrnames[i].name) == tmps) {
-                a = attrnames[i].attr;
-                break;
-            }
-        if ((i == SIZE(attrnames)) && (*tmps >= '0' && *tmps <='9'))
-            a = atoi(tmps);
-    }
-
-    *cs = '\0';
-    tmps = str;
-    if ((*tmps == '"') || (*tmps == '\'')) {
-        cs--;
-        while (isspace(*cs)) cs--;
-        if (*cs == *tmps) {
-            *cs = '\0';
-            tmps++;
-        }
-    }
-
-    tmp = (struct menucoloring *)alloc(sizeof(struct menucoloring));
-#ifdef MENU_COLOR_REGEX
-    tmp->match.translate = 0;
-    tmp->match.fastmap = 0;
-    tmp->match.buffer = 0;
-    tmp->match.allocated = 0;
-    tmp->match.regs_allocated = REGS_FIXED;
-    err = re_compile_pattern(tmps, strlen(tmps), &tmp->match);
-#else
-    tmp->match = (char *)alloc(strlen(tmps)+1);
-    (void) memcpy((void *)tmp->match, (void *)tmps, strlen(tmps)+1);
-#endif
-    if (err) {
-        raw_printf("\nMenucolor regex error: %s\n", err);
-        wait_synch();
-        free(tmp);
-        return FALSE;
-    } else {
-        tmp->next = menu_colorings;
-        tmp->color = c;
-        tmp->attr = a;
-        menu_colorings = tmp;
-        return TRUE;
-    }
-}
-#endif /* MENU_COLOR */
 
 void
 parseoptions(opts, tinitial, tfrom_file)
@@ -1098,12 +980,6 @@ boolean tinitial, tfrom_file;
         /* menucolor:"regex_string"=color */
         fullname = "menucolor";
         if (match_optname(opts, fullname, 9, TRUE)) {
-#ifdef MENU_COLOR
-            if (negated) bad_negation(fullname, FALSE);
-            else if ((op = string_for_env_opt(fullname, opts, FALSE)) != 0)
-                if (!add_menu_coloring(op))
-                    badoption(opts);
-#endif
             return;
         }
 

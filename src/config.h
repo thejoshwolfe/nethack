@@ -80,18 +80,4 @@
 # endif
 #endif
 
-/*
- * Section 5:  EXPERIMENTAL STUFF
- *
- * Conditional compilation of new or experimental options are controlled here.
- * Enable any of these at your own risk -- there are almost certainly
- * bugs left here.
- */
-
-#ifdef TTY_GRAPHICS
-# define MENU_COLOR
-#endif
-
-/* End of Section 5 */
-
 #endif /* CONFIG_H */
