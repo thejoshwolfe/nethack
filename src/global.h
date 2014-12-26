@@ -35,11 +35,7 @@ typedef signed char     boolean;                /* 0 or 1 */
 #define FALSE   ((boolean)0)
 #endif
 
-#ifndef STRNCMPI
-# ifndef __SASC_60              /* SAS/C already shifts to stricmp */
-#  define strcmpi(a,b) strncmpi((a),(b),-1)
-# endif
-#endif
+#define strcmpi(a,b) strncmpi((a),(b),-1)
 
 #define SIZE(x) (int)(sizeof(x) / sizeof(x[0]))
 

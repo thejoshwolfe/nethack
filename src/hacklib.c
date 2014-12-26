@@ -341,7 +341,6 @@ pmatch_top:
         goto pmatch_top;        /* optimize tail recursion */
 }
 
-#ifndef STRNCMPI
 int
 strncmpi (      /* case insensitive counted string comparison */
     const char *s1,
@@ -360,9 +359,7 @@ strncmpi (      /* case insensitive counted string comparison */
     }
     return 0;                           /* s1 == s2 */
 }
-#endif  /* STRNCMPI */
 
-#ifndef STRSTRI
 
 char *
 strstri (       /* case insensitive substring search */
@@ -401,7 +398,6 @@ strstri (       /* case insensitive substring search */
     }
     return (char *) 0;  /* not found */
 }
-#endif  /* STRSTRI */
 
 /* compare two strings for equality, ignoring the presence of specified
    characters (typically whitespace) and possibly ignoring case */
