@@ -13,6 +13,9 @@
 static long final_fpos;
 #endif
 
+// larger file for debugging purposes
+static const char * LOGFILE = "run/logfile";
+
 #define done_stopprint program_state.stopprint
 
 #define newttentry() (struct toptenentry *) alloc(sizeof(struct toptenentry))

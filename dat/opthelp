@@ -23,6 +23,7 @@ lit_corridor   show a dark corridor as lit if in sight            [FALSE]
 lootabc        use a/b/c rather than o/i/b when looting           [FALSE]
 mail           enable the mail daemon                             [TRUE]
 menucolors     use different colors for menus                     [FALSE]
+news           print any news from game administrator on startup  [TRUE]
 null           allow nulls to be sent to your terminal            [TRUE]
                try turning this option off (forcing NetHack to use its own
                delay code) if moving objects seem to teleport across rooms
@@ -60,8 +61,6 @@ Boolean option if INSURANCE was set at compile time:
 checkpoint save game state after each level change, for possible  [TRUE]
            recovery after program crash
 
-Boolean option if NEWS was set at compile time:
-news       print any news from game administrator on startup      [TRUE]
 
 Boolean option if PARANOID was set at compile time:
 paranoid_quit  ask for explicit 'yes' when quitting               [FALSE]
@@ -231,7 +230,6 @@ traps      like dungeon, but for trap symbols
 
 windowtype windowing system to be used  [depends on operating system]
 
-Compound option if TTY_GRAPHICS was set at compile time:
 msg_window the type of message window to use:
            single      -- One message at a time
            full        -- Full window with all saved top line messages

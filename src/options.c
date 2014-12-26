@@ -90,11 +90,7 @@ static struct Bool_Opt
         {"menu_tab_sep", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
         {"mouse_support", &iflags.wc_mouse_support, TRUE, DISP_IN_GAME},        /*WC*/
-#ifdef NEWS
         {"news", &iflags.news, TRUE, DISP_IN_GAME},
-#else
-        {"news", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
         {"null", &flags.null, TRUE, SET_IN_GAME},
         {"page_wait", (boolean *)0, FALSE, SET_IN_FILE},
 #ifdef PARANOID

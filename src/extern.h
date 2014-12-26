@@ -1730,13 +1730,6 @@ extern void passive_obj(struct monst *,struct obj *,struct attack *);
 extern void stumble_onto_mimic(struct monst *);
 extern int flash_hits_mon(struct monst *,struct obj *);
 
-/* ### unixmain.c ### */
-
-# ifdef PORT_HELP
-extern void port_help(void);
-# endif
-
-
 /* ### unixtty.c ### */
 
 extern void gettty(void);

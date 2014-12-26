@@ -493,9 +493,7 @@ static const char *build_opts[] = {
 #ifdef HOLD_LOCKFILE_OPEN
                 "exclusive lock on level 0 file",
 #endif
-#ifdef LOGFILE
                 "log file",
-#endif
                 "mail daemon",
 #ifdef MENU_COLOR
 # ifdef MENU_COLOR_REGEX
@@ -504,9 +502,7 @@ static const char *build_opts[] = {
                 "menu colors via pmatch",
 # endif
 #endif
-#ifdef NEWS
                 "news file",
-#endif
                 "redo command",
                 "saddles and riding",
 #ifdef SCORE_ON_BOTL

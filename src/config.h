@@ -24,9 +24,9 @@
 
 /*
  * Section 2:   Some global parameters and filenames.
- *              Commenting out WIZARD, LOGFILE, NEWS or PANICLOG removes that
+ *              Commenting out WIZARD, PANICLOG removes that
  *              feature from the game; otherwise set the appropriate wizard
- *              name.  LOGFILE, NEWS and PANICLOG refer to files in the
+ *              name.  PANICLOG refer to files in the
  *              playground.
  */
 
@@ -39,17 +39,14 @@
 # endif
 #endif
 
-#define LOGFILE "run/logfile" /* larger file for debugging purposes */
-#define NEWS "news"             /* the file containing the latest hack news */
-
 /*
  *      If COMPRESS is defined, it should contain the full path name of your
  *      'compress' program.  Defining INTERNAL_COMP causes NetHack to do
  *      simpler byte-stream compression internally.  Both COMPRESS and
  *      INTERNAL_COMP create smaller bones/level/save files, but require
  *      additional code and time.  Currently, only UNIX fully implements
- *      COMPRESS; other ports should be able to uncompress save files a
- *      la unixmain.c if so inclined.
+ *      COMPRESS; other ports should be able to uncompress save files
+ *      if so inclined.
  *      If you define COMPRESS, you must also define COMPRESS_EXTENSION
  *      as the extension your compressor appends to filenames after
  *      compression.

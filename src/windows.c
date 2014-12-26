@@ -1,8 +1,7 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
-#ifdef TTY_GRAPHICS
 #include "wintty.h"
-#endif
 
 static void def_raw_print(const char *s);
 
@@ -13,9 +12,7 @@ struct win_choices {
     struct window_procs *procs;
     void (*ini_routine)(void);          /* optional (can be 0) */
 } winchoices[] = {
-#ifdef TTY_GRAPHICS
     { &tty_procs, win_tty_init },
-#endif
     { 0, 0 }            /* must be last */
 };
 
@@ -73,4 +70,3 @@ genl_preference_update (const char *pref)
            they support.
            Just return in this genl one. */
 }
-/*windows.c*/
