@@ -6,33 +6,29 @@
 #include <termios.h>
 #include <unistd.h>
 
-# include <sys/ioctl.h>
-# undef delay_output    /* curses redefines this */
-# include <curses.h>
-# define kill_sym       c_cc[VKILL]
-# define erase_sym      c_cc[VERASE]
-# define intr_sym       c_cc[VINTR]
-# ifdef TAB3    /* not a POSIX flag, but some have it anyway */
-#  define EXTABS        TAB3
-# else
-#  define EXTABS        0
-# endif
-# define tabflgs        c_oflag
-# define echoflgs       c_lflag
-# define cbrkflgs       c_lflag
-# define CBRKMASK       ICANON
-# define CBRKON         ! /* reverse condition */
-# define OSPEED(x)      (speednum(cfgetospeed(&x)))
-# define IS_7BIT(x)     ((x).c_cflag & CS7)
-# define inputflags     c_iflag
-# define STRIPHI        ISTRIP
-#  define GTTY(x)       (tcgetattr(0, x))
-#  define STTY(x)       (tcsetattr(0, TCSADRAIN, x))
-#  define GTTY2(x)      1
-#  define STTY2(x)      1
-#  define nonesuch      (fpathconf(0, _PC_VDISABLE))
-# define inittyb2       inittyb
-# define curttyb2       curttyb
+#include <sys/ioctl.h>
+#undef delay_output    /* curses redefines this */
+#include <curses.h>
+#define kill_sym       c_cc[VKILL]
+#define erase_sym      c_cc[VERASE]
+#define intr_sym       c_cc[VINTR]
+#define EXTABS        TAB3
+#define tabflgs        c_oflag
+#define echoflgs       c_lflag
+#define cbrkflgs       c_lflag
+#define CBRKMASK       ICANON
+#define CBRKON         ! /* reverse condition */
+#define OSPEED(x)      (speednum(cfgetospeed(&x)))
+#define IS_7BIT(x)     ((x).c_cflag & CS7)
+#define inputflags     c_iflag
+#define STRIPHI        ISTRIP
+#define GTTY(x)       (tcgetattr(0, x))
+#define STTY(x)       (tcsetattr(0, TCSADRAIN, x))
+#define GTTY2(x)      1
+#define STTY2(x)      1
+#define nonesuch      (fpathconf(0, _PC_VDISABLE))
+#define inittyb2       inittyb
+#define curttyb2       curttyb
 
 static struct termios termio;
 
@@ -144,26 +140,11 @@ int change = 0;
                  * here instead of in ioctl.c:getioctls() with the BSD
                  * equivalent
                  */
-#  ifdef VSUSP  /* real POSIX */
                 curttyb.c_cc[VSUSP] = nonesuch;
-#  else         /* other later SYSV */
-                curttyb.c_cc[VSWTCH] = nonesuch;
-#  endif
-# ifdef VDSUSP /* SunOS Posix extensions */
-                curttyb.c_cc[VDSUSP] = nonesuch;
-# endif
-# ifdef VREPRINT
                 curttyb.c_cc[VREPRINT] = nonesuch;
-# endif
-# ifdef VDISCARD
                 curttyb.c_cc[VDISCARD] = nonesuch;
-# endif
-# ifdef VWERASE
                 curttyb.c_cc[VWERASE] = nonesuch;
-# endif
-# ifdef VLNEXT
                 curttyb.c_cc[VLNEXT] = nonesuch;
-# endif
                 change++;
         }
         if(!IS_7BIT(inittyb)) curttyb.inputflags &=~ STRIPHI;
@@ -203,7 +184,7 @@ introff (void)          /* disable kbd interrupts if required*/
 
 
 
-# include <sys/vt.h>
+#include <sys/vt.h>
 
 int linux_flag_console = 0;
 
