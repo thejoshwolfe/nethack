@@ -8,6 +8,9 @@
 #include <fcntl.h>
 #include <signal.h>
 
+// an empty file used for locking purposes
+static const char *HLOCK = "run/perm";
+
 extern void linux_mapon(void);
 extern void linux_mapoff(void);
 
@@ -174,22 +177,7 @@ void msleep(unsigned msec) {
 }
 #endif
 
-#ifdef SHELL
-int dosh(void) {
-        char *str;
-        if(child(0)) {
-                if((str = getenv("SHELL")) != (char*)0)
-                        (void) execl(str, str, (char *)0);
-                else
-                        (void) execl("/bin/sh", "sh", (char *)0);
-                raw_print("sh: cannot execute.");
-                exit(EXIT_FAILURE);
-        }
-        return 0;
-}
-#endif /* SHELL */
-
-#if defined(SHELL) || defined(DEF_MAILREADER)
+#if defined(DEF_MAILREADER)
 int child(int wt) {
         int f;
         suspend_nhwindows((char *)0);   /* also calls end_screen() */

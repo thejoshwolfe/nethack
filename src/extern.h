@@ -1757,10 +1757,7 @@ extern void regularize(char *);
 # if !defined(msleep)
 extern void msleep(unsigned);
 # endif
-# ifdef SHELL
-extern int dosh(void);
-# endif /* SHELL */
-# if defined(SHELL) || defined(DEF_MAILREADER)
+# if defined(DEF_MAILREADER)
 extern int child(int);
 # endif
 

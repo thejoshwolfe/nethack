@@ -17,14 +17,10 @@
 
 #include <time.h>
 
-#define HLOCK   "run/perm" /* an empty file used for locking purposes */
-
 #ifndef REDO
 #define Getchar nhgetch
 #endif
 #define tgetch getchar
-
-#define SHELL           /* do not delete the '!' command */
 
 #include <string.h>
 #include <strings.h>
