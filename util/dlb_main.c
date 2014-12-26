@@ -33,10 +33,6 @@ static char *progname = default_progname;
 static const char *library_file = DLBFILE;
 static const char *list_file = LIBLISTFILE;
 
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
-
 #define MAX_DLB_FILES 200       /* max # of files we'll handle */
 #define DLB_VERS 1              /* version of dlb file we will write */
 
@@ -260,7 +256,7 @@ main (int argc, char **argv)
             }
             fseek(lib.fdata, lib.dir[i].foffset, SEEK_SET);
 
-            f = open(lib.dir[i].fname, O_WRONLY|O_TRUNC|O_BINARY|O_CREAT, 0640);
+            f = open(lib.dir[i].fname, O_WRONLY|O_TRUNC|O_CREAT, 0640);
             if (f < 0) {
                 printf("Can't create '%s'\n", lib.dir[i].fname);
                 xexit(EXIT_FAILURE);
@@ -356,7 +352,7 @@ main (int argc, char **argv)
          * the directory information yet.
          */
         for (i = 0, slen = 0, flen = 0; i < nfiles; i++) {
-            fd = open(ld[i].fname, O_RDONLY|O_BINARY, 0);
+            fd = open(ld[i].fname, O_RDONLY, 0);
             if (fd < 0) {
                 printf("Can't open %s\n", ld[i].fname);
                 xexit(EXIT_FAILURE);
@@ -370,7 +366,7 @@ main (int argc, char **argv)
         }
 
         /* open output file */
-        out = open(library_file, O_RDWR|O_TRUNC|O_BINARY|O_CREAT, 0660);
+        out = open(library_file, O_RDWR|O_TRUNC|O_CREAT, 0660);
         if (out < 0) {
             printf("Can't open %s for output\n", library_file);
             xexit(EXIT_FAILURE);
@@ -387,7 +383,7 @@ main (int argc, char **argv)
         flen = 0L;
         /* write each file */
         for (i = 0; i < nfiles; i++) {
-            fd = open(ld[i].fname, O_RDONLY|O_BINARY, 0);
+            fd = open(ld[i].fname, O_RDONLY, 0);
             if (fd < 0) {
                 printf("Can't open input file '%s'\n", ld[i].fname);
                 xexit(EXIT_FAILURE);

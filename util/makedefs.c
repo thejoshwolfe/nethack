@@ -432,9 +432,6 @@ static const char *build_opts[] = {
                 "experience points on status line",
                 "insurance files for recovering from crashes",
                 "Keystone Kops",
-#ifdef HOLD_LOCKFILE_OPEN
-                "exclusive lock on level 0 file",
-#endif
                 "log file",
                 "mail daemon",
                 "news file",
