@@ -5,15 +5,7 @@
  *  time NetHack creates those level files.
  */
 #include "global.h"
-#if !defined(O_WRONLY) && !defined(LSC) && !defined(AZTEC_C)
 #include <fcntl.h>
-#endif
-
-#ifdef SECURE
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#endif
 
 int restore_savefile(char *);
 void set_levelfile_name(int);
@@ -27,10 +19,6 @@ void copy_bytes(int,int);
 
 #define SAVESIZE        (PL_NSIZ + 13)  /* save/99999player.e */
 
-#if defined(EXEPATH)
-char *exepath(char *);
-#endif
-
 char savename[SAVESIZE]; /* holds relative path of save file from playground */
 
 const char *dir = (char*)0;
@@ -43,9 +31,6 @@ main (int argc, char *argv[])
 
         if (!dir) dir = getenv("NETHACKDIR");
         if (!dir) dir = getenv("HACKDIR");
-#if defined(EXEPATH)
-        if (!dir) dir = exepath(argv[0]);
-#endif
         if (argc == 1 || (argc == 2 && !strcmp(argv[1], "-"))) {
             Fprintf(stderr,
                 "Usage: %s [ -d directory ] base1 [ base2 ... ]\n", argv[0]);
@@ -68,20 +53,6 @@ main (int argc, char *argv[])
                 }
                 argno++;
         }
-#if defined(SECURE)
-        if (dir
-#  ifdef HACKDIR
-                && strcmp(dir, HACKDIR)
-#  endif
-                ) {
-                (void) setgid(getgid());
-                (void) setuid(getuid());
-        }
-#endif  /* SECURE */
-
-#ifdef HACKDIR
-        if (!dir) dir = HACKDIR;
-#endif
 
         if (dir && chdir((char *) dir) < 0) {
                 Fprintf(stderr, "%s: cannot chdir:", argv[0]);
@@ -112,36 +83,14 @@ set_levelfile_name (int lev)
         sprintf(tf, ".%d", lev);
 }
 
-#ifdef SECURE
-static uid_t save_uid = -1;
-#endif
-
 int
 open_levelfile (int lev)
 {
         int fd;
-#ifdef SECURE
-        struct stat level_stat;
-        uid_t uid;
-#endif
 
         set_levelfile_name(lev);
         fd = open(lock, O_RDONLY, 0);
         /* Security check: does the user calling recover own the file? */
-#ifdef SECURE
-        if (fd != -1) {
-                uid = getuid();
-                if (fstat(fd, &level_stat) == -1) {
-                        Fprintf(stderr, "No permission to stat level file %s.\n", lock);
-                        return -1;
-                }
-                if (uid != 0 && level_stat.st_uid != uid) {
-                        Fprintf(stderr, "You are not the owner of level file %s.\n", lock);
-                        return -1;
-                }
-                save_uid = level_stat.st_uid;
-        }
-#endif
         return fd;
 }
 
@@ -152,12 +101,6 @@ create_savefile (void)
 
         fd = creat(savename, 0660);
 
-#ifdef SECURE
-        if (fchown(fd, save_uid, -1) == -1) {
-                Fprintf(stderr, "could not chown %s to %i!\n", savename,
-                        save_uid);
-        }
-#endif
         return fd;
 }
 
@@ -286,29 +229,3 @@ restore_savefile (char *basename)
 
         return(0);
 }
-
-#ifdef EXEPATH
-# ifdef __DJGPP__
-#define PATH_SEPARATOR '/'
-# else
-#define PATH_SEPARATOR '\\'
-# endif
-
-#define EXEPATHBUFSZ 256
-char exepathbuf[EXEPATHBUFSZ];
-
-char *
-exepath (char *str)
-{
-        char *tmp, *tmp2;
-        int bsize;
-
-        if (!str) return (char *)0;
-        bsize = EXEPATHBUFSZ;
-        tmp = exepathbuf;
-        strcpy (tmp, str);
-        tmp2 = strrchr(tmp, PATH_SEPARATOR);
-        if (tmp2) *tmp2 = '\0';
-        return tmp;
-}
-#endif /* EXEPATH */
