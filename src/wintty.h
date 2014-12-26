@@ -5,9 +5,6 @@
 #include "global.h"
 #include "wintype.h"
 
-#ifndef WINDOW_STRUCTS
-#define WINDOW_STRUCTS
-
 /* menu structure */
 typedef struct tty_mi {
     struct tty_mi *next;
@@ -62,14 +59,9 @@ struct DisplayDesc {
     char dismiss_more;          /* extra character accepted at --More-- */
 };
 
-#endif /* WINDOW_STRUCTS */
-
 #define MAXWIN 20               /* maximum number of windows, cop-out */
 
 /* tty dependent window types */
-#ifdef NHW_BASE
-#undef NHW_BASE
-#endif
 #define NHW_BASE    6
 
 extern struct window_procs tty_procs;
@@ -95,9 +87,6 @@ extern void tty_startup(int*, int*);
 extern void tty_shutdown(void);
 extern void xputc(char);
 extern void xputs(const char *);
-#if defined(SCREEN_VGA) || defined(SCREEN_8514)
-extern void xputg(int, int, unsigned);
-#endif
 extern void cl_end(void);
 extern void clear_screen(void);
 extern void home(void);
