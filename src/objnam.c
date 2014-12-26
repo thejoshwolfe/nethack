@@ -10,9 +10,7 @@ static char *strprepend(char *,const char *);
 static boolean wishymatch(const char *,const char *,boolean);
 static char *nextobuf(void);
 static void add_erosion_words(struct obj *, char *);
-#ifdef SORTLOOT
 char * xname2(struct obj *, boolean);
-#endif
 
 struct Jitem {
         int item;
@@ -213,7 +211,6 @@ boolean juice;  /* whether or not to append " juice" to the name */
 
 char *
 xname (struct obj *obj)
-#ifdef SORTLOOT
 {
         return xname2(obj, FALSE);
 }
@@ -221,7 +218,6 @@ char *
 xname2(obj, ignore_oquan)
 struct obj *obj;
 boolean ignore_oquan;
-#endif
 {
         char *buf;
         int typ = obj->otyp;
@@ -458,9 +454,7 @@ boolean ignore_oquan;
         default:
                 Sprintf(buf,"glorkum %d %d %d", obj->oclass, typ, obj->spe);
         }
-#ifdef SORTLOOT
         if (!ignore_oquan)
-#endif
         if (obj->quan != 1L) Strcpy(buf, makeplural(buf));
 
         if (obj->onamelth && obj->dknown) {
@@ -817,7 +811,6 @@ cxname (struct obj *obj)
             return corpse_xname(obj, FALSE);
         return xname(obj);
 }
-#ifdef SORTLOOT
 char *
 cxname2 (struct obj *obj)
 {
@@ -825,7 +818,6 @@ cxname2 (struct obj *obj)
             return corpse_xname(obj, TRUE);
         return xname2(obj, TRUE);
 }
-#endif /* SORTLOOT */
 
 /* treat an object as fully ID'd when it might be used as reason for death */
 char *

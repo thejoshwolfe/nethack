@@ -1108,9 +1108,7 @@ extern char *doname(struct obj *);
 extern boolean not_fully_identified(struct obj *);
 extern char *corpse_xname(struct obj *,boolean);
 extern char *cxname(struct obj *);
-#ifdef SORTLOOT
 extern char *cxname2(struct obj *);
-#endif
 extern char *killer_xname(struct obj *);
 extern const char *singular(struct obj *,char *(*)(OBJ_P));
 extern char *an(const char *);

@@ -636,15 +636,11 @@ menu_item **pick_list;          /* return list of items picked */
 int how;                        /* type of query */
 boolean (*allow)(OBJ_P);/* allow function */
 {
-#ifdef SORTLOOT
         int i, j;
-#endif
         int n;
         winid win;
         struct obj *curr, *last;
-#ifdef SORTLOOT
         struct obj **oarray;
-#endif
         char *pack;
         anything any;
         boolean printed_type_name;
@@ -669,7 +665,6 @@ boolean (*allow)(OBJ_P);/* allow function */
             return 1;
         }
 
-#ifdef SORTLOOT
         /* Make a temporary array to store the objects sorted */
         oarray = (struct obj **)alloc(n*sizeof(struct obj*));
 
@@ -694,7 +689,6 @@ boolean (*allow)(OBJ_P);/* allow function */
               }
           }
         }
-#endif /* SORTLOOT */
 
         win = create_nhwindow(NHW_MENU);
         start_menu(win);
@@ -709,12 +703,8 @@ boolean (*allow)(OBJ_P);/* allow function */
         pack = flags.inv_order;
         do {
             printed_type_name = FALSE;
-#ifdef SORTLOOT
             for (i = 0; i < n; i++) {
                 curr = oarray[i];
-#else /* SORTLOOT */
-            for (curr = olist; curr; curr = FOLLOW(curr, qflags)) {
-#endif /* SORTLOOT */
                 if ((qflags & FEEL_COCKATRICE) && curr->otyp == CORPSE &&
                      will_feel_cockatrice(curr, FALSE)) {
                         destroy_nhwindow(win);  /* stop the menu and revert */
@@ -742,9 +732,7 @@ boolean (*allow)(OBJ_P);/* allow function */
             pack++;
         } while (qflags & INVORDER_SORT && *pack);
 
-#ifdef SORTLOOT
         free(oarray);
-#endif
         end_menu(win, qstr);
         n = select_menu(win, how, pick_list);
         destroy_nhwindow(win);

@@ -179,9 +179,7 @@ struct instance_flags {
         boolean lan_mail;       /* mail is initialized */
         boolean lan_mail_fetched; /* mail is awaiting display */
 #endif
-#ifdef SORTLOOT
         char sortloot;          /* sort items to loot alphabetically */
-#endif
 #ifdef PARANOID
         boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
 #endif

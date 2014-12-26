@@ -964,11 +964,9 @@ boolean identified, all_containers, want_dump;
 /* The original container_contents function */
 {
         struct obj *box, *obj;
-#ifdef SORTLOOT
         struct obj **oarray;
         int i,j,n;
         char *invlet;
-#endif /* SORTLOOT */
         char buf[BUFSZ];
 
         for (box = list; box; box = box->nobj) {
@@ -977,7 +975,6 @@ boolean identified, all_containers, want_dump;
                     continue;   /* wrong type of container */
                 } else if (box->cobj) {
                     winid tmpwin = create_nhwindow(NHW_MENU);
-#ifdef SORTLOOT
                     /* count the number of items */
                     for (n = 0, obj = box->cobj; obj; obj = obj->nobj) n++;
                     /* Make a temporary array to store the objects sorted */
@@ -1010,17 +1007,12 @@ boolean identified, all_containers, want_dump;
                     if (flags.sortpack) {
                       if (*++invlet) goto nextclass;
                     }
-#endif /* SORTLOOT */
                     Sprintf(buf, "Contents of %s:", the(xname(box)));
                     putstr(tmpwin, 0, buf);
                     putstr(tmpwin, 0, "");
                     if (dump_fp) dump("", buf);
-#ifdef SORTLOOT
                     for (i = 0; i < n; i++) {
                         obj = oarray[i];
-#else
-                    for (obj = box->cobj; obj; obj = obj->nobj) {
-#endif
                         if (identified) {
                             makeknown(obj->otyp);
                             obj->known = obj->bknown =

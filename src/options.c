@@ -237,9 +237,7 @@ static struct Comp_Opt
         { "scroll_amount", "amount to scroll map when scroll_margin is reached",
                                                 20, DISP_IN_GAME }, /*WC*/
         { "scroll_margin", "scroll map when this far from the edge", 20, DISP_IN_GAME }, /*WC*/
-#ifdef SORTLOOT
         { "sortloot", "sort object selection lists by description", 4, SET_IN_GAME },
-#endif
         { "suppress_alert", "suppress alerts about version-specific features",
                                                 8, SET_IN_GAME },
         { "tile_width", "width of tiles", 20, DISP_IN_GAME},    /*WC*/
@@ -451,9 +449,7 @@ initoptions (void)
         flags.pickup_types[0] = '\0';
         flags.pickup_burden = MOD_ENCUMBER;
 
-#ifdef SORTLOOT
         iflags.sortloot = 'n';
-#endif
 
         for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++)
                 flags.end_disclose[i] = DISCLOSE_PROMPT_DEFAULT_NO;
@@ -1807,7 +1803,6 @@ goodfruit:
             return;
         }
 
-#ifdef SORTLOOT
         fullname = "sortloot";
         if (match_optname(opts, fullname, 4, TRUE)) {
                 op = string_for_env_opt(fullname, opts, FALSE);
@@ -1823,7 +1818,6 @@ goodfruit:
                 }
                 return;
         }
-#endif /* SORTLOOT */
 
         fullname = "suppress_alert";
         if (match_optname(opts, fullname, 4, TRUE)) {
@@ -2214,11 +2208,9 @@ static const char *runmodes[] = {
         "teleport", "run", "walk", "crawl"
 };
 
-#ifdef SORTLOOT
 static const char *sortltype[] = {
         "none", "loot", "full"
 };
-#endif
 
 /*
  * Convert the given string of object classes to a string of default object
@@ -2619,7 +2611,6 @@ boolean setinitial,setfromfile;
         destroy_nhwindow(tmpwin);
         retval = TRUE;
     } 
-#ifdef TTY_GRAPHICS
       else if (!strcmp("msg_window", optname)) {
         /* by Christian W. Cooper */
         menu_item *window_pick = (menu_item *)0;
@@ -2644,7 +2635,6 @@ boolean setinitial,setfromfile;
         }
         destroy_nhwindow(tmpwin);
         retval = TRUE;
-#ifdef SORTLOOT
     } else if (!strcmp("sortloot", optname)) {
         const char *sortl_name;
         menu_item *sortl_pick = (menu_item *)0;
@@ -2663,9 +2653,7 @@ boolean setinitial,setfromfile;
         }
         destroy_nhwindow(tmpwin);
         retval = TRUE;
-#endif
     }
-#endif
      else if (!strcmp("align_message", optname) ||
                 !strcmp("align_status", optname)) {
         menu_item *window_pick = (menu_item *)0;
@@ -3036,7 +3024,6 @@ get_compopt_value (const char *optname, char *buf)
                 if (iflags.wc_scroll_margin) Sprintf(buf, "%d",iflags.wc_scroll_margin);
                 else Strcpy(buf, defopt);
         }
-#ifdef SORTLOOT
         else if (!strcmp(optname, "sortloot")) {
                 char *sortname = (char *)NULL;
                 for (i=0; i < SIZE(sortltype) && sortname==(char *)NULL; i++) {
@@ -3046,7 +3033,6 @@ get_compopt_value (const char *optname, char *buf)
                 if (sortname != (char *)NULL)
                    Sprintf(buf, "%s", sortname);
         }
-#endif
         else if (!strcmp(optname, "player_selection"))
                 Sprintf(buf, "%s", iflags.wc_player_selection ? "prompts" : "dialog");
         else if (!strcmp(optname, "suppress_alert")) {

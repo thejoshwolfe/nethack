@@ -108,7 +108,6 @@
 #define PARANOID
 
 #define HPMON           /* Color HP monitor */
-#define SORTLOOT        /* Sort yer loot by alphabetical order, not index */
 
 
 /*

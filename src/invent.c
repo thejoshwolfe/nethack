@@ -1509,10 +1509,8 @@ long* out_cnt;
 boolean want_dump;
 {
         struct obj *otmp;
-#ifdef SORTLOOT
         struct obj **oarray;
         int i, j;
-#endif
         char ilet, ret;
         char *invlet = flags.inv_order;
         int n, classcount;
@@ -1578,7 +1576,6 @@ boolean want_dump;
             return ret;
         }
 
-#ifdef SORTLOOT
         /* count the number of items */
         for (n = 0, otmp = invent; otmp; otmp = otmp->nobj)
           if(!lets || !*lets || index(lets, otmp->invlet)) n++;
@@ -1603,13 +1600,11 @@ boolean want_dump;
               oarray[i++] = otmp;
             }
           }
-#endif /* SORTLOOT */
 
         start_menu(win);
 nextclass:
         classcount = 0;
         any.a_void = 0;         /* set all bits to zero */
-#ifdef SORTLOOT
         for(i = 0; i < n; i++) {
           otmp = oarray[i];
           ilet = otmp->invlet;
@@ -1633,32 +1628,6 @@ nextclass:
             }
           }
         }
-#else /* SORTLOOT */
-        for(otmp = invent; otmp; otmp = otmp->nobj) {
-                ilet = otmp->invlet;
-                if(!lets || !*lets || index(lets, ilet)) {
-                        if (!flags.sortpack || otmp->oclass == *invlet) {
-                            if (flags.sortpack && !classcount) {
-                                any.a_void = 0;         /* zero */
-                                add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-                                    let_to_name(*invlet, FALSE), MENU_UNSELECTED);
-                                if (want_dump)
-                                    dump("  ", let_to_name(*invlet, FALSE));
-                                classcount++;
-                            }
-                            any.a_char = ilet;
-                            add_menu(win, obj_to_glyph(otmp),
-                                        &any, ilet, 0, ATR_NONE, doname(otmp),
-                                        MENU_UNSELECTED);
-                            if (want_dump) {
-                              char letbuf[7];
-                              sprintf(letbuf, "  %c - ", ilet);
-                              dump(letbuf, doname(otmp));
-                            }
-                        }
-                }
-        }
-#endif /* SORTLOOT */
         if (flags.sortpack) {
                 if (*++invlet) goto nextclass;
 #ifdef WIZARD
@@ -1668,9 +1637,7 @@ nextclass:
                 }
 #endif
         }
-#ifdef SORTLOOT
         free(oarray);
-#endif
         end_menu(win, (char *) 0);
 
         n = select_menu(win, want_reply ? PICK_ONE : PICK_NONE, &selected);
