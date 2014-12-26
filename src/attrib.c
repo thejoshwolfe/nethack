@@ -94,183 +94,7 @@ static long next_check = 600L;  /* arbitrary first setting */
 static void exerper(void);
 static void postadjabil(long *);
 
-/* adjust an attribute; return TRUE if change is made, FALSE otherwise */
-boolean
-adjattrib(ndx, incr, msgflg)
-        int     ndx, incr;
-        int     msgflg;     /* positive => no message, zero => message, and */
-{                           /* negative => conditional (msg if change made) */
-        if (Fixed_abil || !incr) return FALSE;
-
-        if ((ndx == A_INT || ndx == A_WIS)
-                                && uarmh && uarmh->otyp == DUNCE_CAP) {
-                if (msgflg == 0)
-                    Your("cap constricts briefly, then relaxes again.");
-                return FALSE;
-        }
-
-        if (incr > 0) {
-            if ((AMAX(ndx) >= ATTRMAX(ndx)) && (ACURR(ndx) >= AMAX(ndx))) {
-                if (msgflg == 0 && flags.verbose)
-                    pline("You're already as %s as you can get.",
-                          plusattr[ndx]);
-                ABASE(ndx) = AMAX(ndx) = ATTRMAX(ndx); /* just in case */
-                return FALSE;
-            }
-
-            ABASE(ndx) += incr;
-            if(ABASE(ndx) > AMAX(ndx)) {
-                incr = ABASE(ndx) - AMAX(ndx);
-                AMAX(ndx) += incr;
-                if(AMAX(ndx) > ATTRMAX(ndx))
-                    AMAX(ndx) = ATTRMAX(ndx);
-                ABASE(ndx) = AMAX(ndx);
-            }
-        } else {
-            if (ABASE(ndx) <= ATTRMIN(ndx)) {
-                if (msgflg == 0 && flags.verbose)
-                    pline("You're already as %s as you can get.",
-                          minusattr[ndx]);
-                ABASE(ndx) = ATTRMIN(ndx); /* just in case */
-                return FALSE;
-            }
-
-            ABASE(ndx) += incr;
-            if(ABASE(ndx) < ATTRMIN(ndx)) {
-                incr = ABASE(ndx) - ATTRMIN(ndx);
-                ABASE(ndx) = ATTRMIN(ndx);
-                AMAX(ndx) += incr;
-                if(AMAX(ndx) < ATTRMIN(ndx))
-                    AMAX(ndx) = ATTRMIN(ndx);
-            }
-        }
-        if (msgflg <= 0)
-            You_feel("%s%s!",
-                  (incr > 1 || incr < -1) ? "very ": "",
-                  (incr > 0) ? plusattr[ndx] : minusattr[ndx]);
-        flags.botl = 1;
-        if (moves > 1 && (ndx == A_STR || ndx == A_CON))
-                (void)encumber_msg();
-        return TRUE;
-}
-
-void
-gainstr (struct obj *otmp, int incr)
-{
-        int num = 1;
-
-        if(incr) num = incr;
-        else {
-            if(ABASE(A_STR) < 18) num = (rn2(4) ? 1 : rnd(6) );
-            else if (ABASE(A_STR) < STR18(85)) num = rnd(10);
-        }
-        (void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, TRUE);
-}
-
-void
-losestr (       /* may kill you; cause may be poison or monster like 'a' */
-    int num
-)
-{
-        int ustr = ABASE(A_STR) - num;
-
-        while(ustr < 3) {
-            ++ustr;
-            --num;
-            if (Upolyd) {
-                u.mh -= 6;
-                u.mhmax -= 6;
-            } else {
-                u.uhp -= 6;
-                u.uhpmax -= 6;
-            }
-        }
-        (void) adjattrib(A_STR, -num, TRUE);
-}
-
-void
-change_luck (signed char n)
-{
-        u.uluck += n;
-        if (u.uluck < 0 && u.uluck < LUCKMIN)   u.uluck = LUCKMIN;
-        if (u.uluck > 0 && u.uluck > LUCKMAX)   u.uluck = LUCKMAX;
-}
-
-int
-stone_luck(parameter)
-boolean parameter; /* So I can't think up of a good name.  So sue me. --KAA */
-{
-        struct obj *otmp;
-        long bonchance = 0;
-
-        for (otmp = invent; otmp; otmp = otmp->nobj)
-            if (confers_luck(otmp)) {
-                if (otmp->cursed) bonchance -= otmp->quan;
-                else if (otmp->blessed) bonchance += otmp->quan;
-                else if (parameter) bonchance += otmp->quan;
-            }
-
-        return sgn((int)bonchance);
-}
-
-/* there has just been an inventory change affecting a luck-granting item */
-void
-set_moreluck (void)
-{
-        int luckbon = stone_luck(TRUE);
-
-        if (!luckbon && !carrying(LUCKSTONE)) u.moreluck = 0;
-        else if (luckbon >= 0) u.moreluck = LUCKADD;
-        else u.moreluck = -LUCKADD;
-}
-
-
-void
-restore_attrib (void)
-{
-        int     i;
-
-        for(i = 0; i < A_MAX; i++) {    /* all temporary losses/gains */
-
-           if(ATEMP(i) && ATIME(i)) {
-                if(!(--(ATIME(i)))) { /* countdown for change */
-                    ATEMP(i) += ATEMP(i) > 0 ? -1 : 1;
-
-                    if(ATEMP(i)) /* reset timer */
-                        ATIME(i) = 100 / ACURR(A_CON);
-                }
-            }
-        }
-        (void)encumber_msg();
-}
-
-
 #define AVAL    50              /* tune value for exercise gains */
-
-void
-exercise(i, inc_or_dec)
-int     i;
-boolean inc_or_dec;
-{
-        if (i == A_INT || i == A_CHA) return;   /* can't exercise these */
-
-        /* no physical exercise while polymorphed; the body's temporary */
-        if (Upolyd && i != A_WIS) return;
-
-        if(abs(AEXE(i)) < AVAL) {
-                /*
-                 *      Law of diminishing returns (Part I):
-                 *
-                 *      Gain is harder at higher attribute values.
-                 *      79% at "3" --> 0% at "18"
-                 *      Loss is even at all levels (50%).
-                 *
-                 *      Note: *YES* ACURR is the right one to use.
-                 */
-                AEXE(i) += (inc_or_dec) ? (rn2(19) > ACURR(i)) : -rn2(2);
-        }
-        if (moves > 0 && (i == A_STR || i == A_CON)) (void)encumber_msg();
-}
 
 /* hunger values - from eat.c */
 #define SATIATED        0
@@ -281,122 +105,272 @@ boolean inc_or_dec;
 #define FAINTED         5
 #define STARVED         6
 
-static void
-exerper (void)
-{
-        if(!(moves % 10)) {
-                /* Hunger Checks */
+/* adjust an attribute; return TRUE if change is made, FALSE otherwise */
+//       int     msgflg;     /* positive => no message, zero => message, and */
+//                           /* negative => conditional (msg if change made) */
+boolean adjattrib(int ndx, int incr, int msgflg) {
+    if (Fixed_abil || !incr) return FALSE;
 
-                int hs = (u.uhunger > 1000) ? SATIATED :
-                         (u.uhunger > 150) ? NOT_HUNGRY :
-                         (u.uhunger > 50) ? HUNGRY :
-                         (u.uhunger > 0) ? WEAK : FAINTING;
+    if ((ndx == A_INT || ndx == A_WIS)
+            && uarmh && uarmh->otyp == DUNCE_CAP) {
+        if (msgflg == 0)
+            Your("cap constricts briefly, then relaxes again.");
+        return FALSE;
+    }
 
-                switch (hs) {
-                    case SATIATED:      exercise(A_DEX, FALSE);
-                                        if (Role_if(PM_MONK))
-                                            exercise(A_WIS, FALSE);
-                                        break;
-                    case NOT_HUNGRY:    exercise(A_CON, TRUE); break;
-                    case WEAK:          exercise(A_STR, FALSE);
-                                        if (Role_if(PM_MONK))   /* fasting */
-                                            exercise(A_WIS, TRUE);
-                                        break;
-                    case FAINTING:
-                    case FAINTED:       exercise(A_CON, FALSE); break;
-                }
-
-                /* Encumberance Checks */
-                switch (near_capacity()) {
-                    case MOD_ENCUMBER:  exercise(A_STR, TRUE); break;
-                    case HVY_ENCUMBER:  exercise(A_STR, TRUE);
-                                        exercise(A_DEX, FALSE); break;
-                    case EXT_ENCUMBER:  exercise(A_DEX, FALSE);
-                                        exercise(A_CON, FALSE); break;
-                }
-
+    if (incr > 0) {
+        if ((AMAX(ndx) >= ATTRMAX(ndx)) && (ACURR(ndx) >= AMAX(ndx))) {
+            if (msgflg == 0 && flags.verbose)
+                pline("You're already as %s as you can get.",
+                        plusattr[ndx]);
+            ABASE(ndx) = AMAX(ndx) = ATTRMAX(ndx); /* just in case */
+            return FALSE;
         }
 
-        /* status checks */
-        if(!(moves % 5)) {
-                if ((HClairvoyant & (INTRINSIC|TIMEOUT)) &&
-                        !BClairvoyant)                      exercise(A_WIS, TRUE);
-                if (HRegeneration)                      exercise(A_STR, TRUE);
-
-                if(Sick || Vomiting)     exercise(A_CON, FALSE);
-                if(Confusion || Hallucination)          exercise(A_WIS, FALSE);
-                if((Wounded_legs
-                    && !u.usteed
-                            ) || Fumbling || HStun)     exercise(A_DEX, FALSE);
+        ABASE(ndx) += incr;
+        if(ABASE(ndx) > AMAX(ndx)) {
+            incr = ABASE(ndx) - AMAX(ndx);
+            AMAX(ndx) += incr;
+            if(AMAX(ndx) > ATTRMAX(ndx))
+                AMAX(ndx) = ATTRMAX(ndx);
+            ABASE(ndx) = AMAX(ndx);
         }
+    } else {
+        if (ABASE(ndx) <= ATTRMIN(ndx)) {
+            if (msgflg == 0 && flags.verbose)
+                pline("You're already as %s as you can get.",
+                        minusattr[ndx]);
+            ABASE(ndx) = ATTRMIN(ndx); /* just in case */
+            return FALSE;
+        }
+
+        ABASE(ndx) += incr;
+        if(ABASE(ndx) < ATTRMIN(ndx)) {
+            incr = ABASE(ndx) - ATTRMIN(ndx);
+            ABASE(ndx) = ATTRMIN(ndx);
+            AMAX(ndx) += incr;
+            if(AMAX(ndx) < ATTRMIN(ndx))
+                AMAX(ndx) = ATTRMIN(ndx);
+        }
+    }
+    if (msgflg <= 0)
+        You_feel("%s%s!",
+                (incr > 1 || incr < -1) ? "very ": "",
+                (incr > 0) ? plusattr[ndx] : minusattr[ndx]);
+    flags.botl = 1;
+    if (moves > 1 && (ndx == A_STR || ndx == A_CON))
+        (void)encumber_msg();
+    return TRUE;
 }
 
-void
-exerchk (void)
-{
-        int     i, mod_val;
+void gainstr (struct obj *otmp, int incr) {
+    int num = 1;
 
-        /*      Check out the periodic accumulations */
-        exerper();
+    if(incr) num = incr;
+    else {
+        if(ABASE(A_STR) < 18) num = (rn2(4) ? 1 : rnd(6) );
+        else if (ABASE(A_STR) < STR18(85)) num = rnd(10);
+    }
+    (void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, TRUE);
+}
 
-        /*      Are we ready for a test?        */
-        if(moves >= next_check && !multi) {
+/* may kill you; cause may be poison or monster like 'a' */
+void losestr (int num) {
+    int ustr = ABASE(A_STR) - num;
+
+    while(ustr < 3) {
+        ++ustr;
+        --num;
+        if (Upolyd) {
+            u.mh -= 6;
+            u.mhmax -= 6;
+        } else {
+            u.uhp -= 6;
+            u.uhpmax -= 6;
+        }
+    }
+    (void) adjattrib(A_STR, -num, TRUE);
+}
+
+void change_luck (signed char n) {
+    u.uluck += n;
+    if (u.uluck < 0 && u.uluck < LUCKMIN)   u.uluck = LUCKMIN;
+    if (u.uluck > 0 && u.uluck > LUCKMAX)   u.uluck = LUCKMAX;
+}
+
+int stone_luck(boolean parameter) {
+    struct obj *otmp;
+    long bonchance = 0;
+
+    for (otmp = invent; otmp; otmp = otmp->nobj)
+        if (confers_luck(otmp)) {
+            if (otmp->cursed) bonchance -= otmp->quan;
+            else if (otmp->blessed) bonchance += otmp->quan;
+            else if (parameter) bonchance += otmp->quan;
+        }
+
+    return sgn((int)bonchance);
+}
+
+/* there has just been an inventory change affecting a luck-granting item */
+void set_moreluck (void) {
+    int luckbon = stone_luck(TRUE);
+
+    if (!luckbon && !carrying(LUCKSTONE)) u.moreluck = 0;
+    else if (luckbon >= 0) u.moreluck = LUCKADD;
+    else u.moreluck = -LUCKADD;
+}
+
+void restore_attrib (void) {
+    int     i;
+
+    for(i = 0; i < A_MAX; i++) {    /* all temporary losses/gains */
+
+        if(ATEMP(i) && ATIME(i)) {
+            if(!(--(ATIME(i)))) { /* countdown for change */
+                ATEMP(i) += ATEMP(i) > 0 ? -1 : 1;
+
+                if(ATEMP(i)) /* reset timer */
+                    ATIME(i) = 100 / ACURR(A_CON);
+            }
+        }
+    }
+    (void)encumber_msg();
+}
+
+
+void exercise(int i, boolean inc_or_dec) {
+    if (i == A_INT || i == A_CHA) return;   /* can't exercise these */
+
+    /* no physical exercise while polymorphed; the body's temporary */
+    if (Upolyd && i != A_WIS) return;
+
+    if(abs(AEXE(i)) < AVAL) {
+        /*
+         *      Law of diminishing returns (Part I):
+         *
+         *      Gain is harder at higher attribute values.
+         *      79% at "3" --> 0% at "18"
+         *      Loss is even at all levels (50%).
+         *
+         *      Note: *YES* ACURR is the right one to use.
+         */
+        AEXE(i) += (inc_or_dec) ? (rn2(19) > ACURR(i)) : -rn2(2);
+    }
+    if (moves > 0 && (i == A_STR || i == A_CON)) (void)encumber_msg();
+}
+
+static void exerper (void) {
+    if(!(moves % 10)) {
+        /* Hunger Checks */
+
+        int hs = (u.uhunger > 1000) ? SATIATED :
+            (u.uhunger > 150) ? NOT_HUNGRY :
+            (u.uhunger > 50) ? HUNGRY :
+            (u.uhunger > 0) ? WEAK : FAINTING;
+
+        switch (hs) {
+            case SATIATED:      exercise(A_DEX, FALSE);
+                                if (Role_if(PM_MONK))
+                                    exercise(A_WIS, FALSE);
+                                break;
+            case NOT_HUNGRY:    exercise(A_CON, TRUE); break;
+            case WEAK:          exercise(A_STR, FALSE);
+                                if (Role_if(PM_MONK))   /* fasting */
+                                    exercise(A_WIS, TRUE);
+                                break;
+            case FAINTING:
+            case FAINTED:       exercise(A_CON, FALSE); break;
+        }
+
+        /* Encumberance Checks */
+        switch (near_capacity()) {
+            case MOD_ENCUMBER:  exercise(A_STR, TRUE); break;
+            case HVY_ENCUMBER:  exercise(A_STR, TRUE);
+                                exercise(A_DEX, FALSE); break;
+            case EXT_ENCUMBER:  exercise(A_DEX, FALSE);
+                                exercise(A_CON, FALSE); break;
+        }
+
+    }
+
+    /* status checks */
+    if(!(moves % 5)) {
+        if ((HClairvoyant & (INTRINSIC|TIMEOUT)) &&
+                !BClairvoyant)                      exercise(A_WIS, TRUE);
+        if (HRegeneration)                      exercise(A_STR, TRUE);
+
+        if(Sick || Vomiting)     exercise(A_CON, FALSE);
+        if(Confusion || Hallucination)          exercise(A_WIS, FALSE);
+        if((Wounded_legs
+                    && !u.usteed
+           ) || Fumbling || HStun)     exercise(A_DEX, FALSE);
+    }
+}
+
+void exerchk (void) {
+    int     i, mod_val;
+
+    /*      Check out the periodic accumulations */
+    exerper();
+
+    /*      Are we ready for a test?        */
+    if(moves >= next_check && !multi) {
+        /*
+         *  Law of diminishing returns (Part II):
+         *
+         *  The effects of "exercise" and "abuse" wear
+         *  off over time.  Even if you *don't* get an
+         *  increase/decrease, you lose some of the
+         *  accumulated effects.
+         */
+        for(i = 0; i < A_MAX; AEXE(i++) /= 2) {
+
+            if(ABASE(i) >= 18 || !AEXE(i)) continue;
+            if(i == A_INT || i == A_CHA) continue;/* can't exercise these */
+
             /*
-             *  Law of diminishing returns (Part II):
+             *      Law of diminishing returns (Part III):
              *
-             *  The effects of "exercise" and "abuse" wear
-             *  off over time.  Even if you *don't* get an
-             *  increase/decrease, you lose some of the
-             *  accumulated effects.
+             *      You don't *always* gain by exercising.
+             *      [MRS 92/10/28 - Treat Wisdom specially for balance.]
              */
-            for(i = 0; i < A_MAX; AEXE(i++) /= 2) {
+            if(rn2(AVAL) > ((i != A_WIS) ? abs(AEXE(i)*2/3) : abs(AEXE(i))))
+                continue;
+            mod_val = sgn(AEXE(i));
 
-                if(ABASE(i) >= 18 || !AEXE(i)) continue;
-                if(i == A_INT || i == A_CHA) continue;/* can't exercise these */
-
-                /*
-                 *      Law of diminishing returns (Part III):
-                 *
-                 *      You don't *always* gain by exercising.
-                 *      [MRS 92/10/28 - Treat Wisdom specially for balance.]
-                 */
-                if(rn2(AVAL) > ((i != A_WIS) ? abs(AEXE(i)*2/3) : abs(AEXE(i))))
-                    continue;
-                mod_val = sgn(AEXE(i));
-
-                if(adjattrib(i, mod_val, -1)) {
-                    /* if you actually changed an attrib - zero accumulation */
-                    AEXE(i) = 0;
-                    /* then print an explanation */
-                    switch(i) {
+            if(adjattrib(i, mod_val, -1)) {
+                /* if you actually changed an attrib - zero accumulation */
+                AEXE(i) = 0;
+                /* then print an explanation */
+                switch(i) {
                     case A_STR: You((mod_val >0) ?
-                                    "must have been exercising." :
-                                    "must have been abusing your body.");
+                                        "must have been exercising." :
+                                        "must have been abusing your body.");
                                 break;
                     case A_WIS: You((mod_val >0) ?
-                                    "must have been very observant." :
-                                    "haven't been paying attention.");
+                                        "must have been very observant." :
+                                        "haven't been paying attention.");
                                 break;
                     case A_DEX: You((mod_val >0) ?
-                                    "must have been working on your reflexes." :
-                                    "haven't been working on reflexes lately.");
+                                        "must have been working on your reflexes." :
+                                        "haven't been working on reflexes lately.");
                                 break;
                     case A_CON: You((mod_val >0) ?
-                                    "must be leading a healthy life-style." :
-                                    "haven't been watching your health.");
+                                        "must be leading a healthy life-style." :
+                                        "haven't been watching your health.");
                                 break;
-                    }
                 }
             }
-            next_check += rn1(200,800);
         }
+        next_check += rn1(200,800);
+    }
 }
 
 /* next_check will otherwise have its initial 600L after a game restore */
 void reset_attribute_clock (void) {
     if (moves > 600L) next_check = moves + rn1(50,800);
 }
-
 
 void init_attr (int np) {
     int     i, x, tryct;
@@ -547,7 +521,6 @@ void adjabil (int oldlevel, int newlevel) {
     }
 }
 
-
 int newhp (void) {
     int     hp, conplus;
 
@@ -587,38 +560,34 @@ int newhp (void) {
     return((hp <= 0) ? 1 : hp);
 }
 
-
 signed char acurr(int x) {
-        int tmp = (u.abon.a[x] + u.atemp.a[x] + u.acurr.a[x]);
+    int tmp = (u.abon.a[x] + u.atemp.a[x] + u.acurr.a[x]);
 
-        if (x == A_STR) {
-                if (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER) return(125);
-                else return((signed char)((tmp >= 125) ? 125 : (tmp <= 3) ? 3 : tmp));
-        } else if (x == A_CHA) {
-                if (tmp < 18 && (youmonst.data->mlet == S_NYMPH ||
+    if (x == A_STR) {
+        if (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER) return(125);
+        else return((signed char)((tmp >= 125) ? 125 : (tmp <= 3) ? 3 : tmp));
+    } else if (x == A_CHA) {
+        if (tmp < 18 && (youmonst.data->mlet == S_NYMPH ||
                     u.umonnum==PM_SUCCUBUS || u.umonnum == PM_INCUBUS))
-                    return 18;
-        } else if (x == A_INT || x == A_WIS) {
-                /* yes, this may raise int/wis if player is sufficiently
-                 * stupid.  there are lower levels of cognition than "dunce".
-                 */
-                if (uarmh && uarmh->otyp == DUNCE_CAP) return(6);
-        }
-        return((signed char)((tmp >= 25) ? 25 : (tmp <= 3) ? 3 : tmp));
+            return 18;
+    } else if (x == A_INT || x == A_WIS) {
+        /* yes, this may raise int/wis if player is sufficiently
+         * stupid.  there are lower levels of cognition than "dunce".
+         */
+        if (uarmh && uarmh->otyp == DUNCE_CAP) return(6);
+    }
+    return((signed char)((tmp >= 25) ? 25 : (tmp <= 3) ? 3 : tmp));
 }
 
 /* condense clumsy ACURR(A_STR) value into value that fits into game formulas
- */
-signed char
-acurrstr (void)
-{
-        int str = ACURR(A_STR);
+*/
+signed char acurrstr (void) {
+    int str = ACURR(A_STR);
 
-        if (str <= 18) return((signed char)str);
-        if (str <= 121) return((signed char)(19 + str / 50)); /* map to 19-21 */
-        else return((signed char)(str - 100));
+    if (str <= 18) return((signed char)str);
+    if (str <= 121) return((signed char)(19 + str / 50)); /* map to 19-21 */
+    else return((signed char)(str - 100));
 }
-
 
 /* avoid possible problems with alignment overflow, and provide a centralized
  * location for any future alignment limits
@@ -636,4 +605,3 @@ void adjalign (int n) {
                 u.ualign.record = ALIGNLIM;
         }
 }
-
