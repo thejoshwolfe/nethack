@@ -326,9 +326,7 @@ static void make_version(void) {
                         | (1L <<  2)
                 /* monsters (5..9) */
                         | (1L <<  6)
-#ifdef MAIL
                         | (1L <<  7)
-#endif
                 /* objects (10..14) */
                         | (1L << 10)
                         | (1L << 11)
@@ -504,9 +502,7 @@ static const char *build_opts[] = {
 #ifdef LOGFILE
                 "log file",
 #endif
-#ifdef MAIL
                 "mail daemon",
-#endif
 #ifdef MENU_COLOR
 # ifdef MENU_COLOR_REGEX
                 "menu colors via regular expressions",

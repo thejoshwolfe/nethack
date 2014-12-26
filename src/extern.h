@@ -759,11 +759,9 @@ extern int doclose(void);
 
 /* ### mail.c ### */
 
-#ifdef MAIL
 extern void getmailstatus(void);
 extern void ckmailstatus(void);
 extern void readmail(struct obj *);
-#endif /* MAIL */
 
 /* ### makemon.c ### */
 
@@ -1756,9 +1754,6 @@ extern void getlock(void);
 extern void regularize(char *);
 # if !defined(msleep)
 extern void msleep(unsigned);
-# endif
-# if defined(DEF_MAILREADER)
-extern int child(int);
 # endif
 
 /* ### vault.c ### */

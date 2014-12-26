@@ -1010,9 +1010,7 @@ polyuse(objhdr, mat, minwt)
         otmp2 = otmp->nexthere;
         if (otmp == uball || otmp == uchain) continue;
         if (obj_resists(otmp, 0, 0)) continue;  /* preserve unique objects */
-#ifdef MAIL
         if (otmp->otyp == SCR_MAIL) continue;
-#endif
 
         if (((int) objects[otmp->otyp].oc_material == mat) ==
                 (rn2(minwt + 1) != 0)) {
@@ -1126,9 +1124,7 @@ struct obj *obj;
 {
         long i;
 
-#ifdef MAIL
         if (obj->otyp == SCR_MAIL) return;
-#endif
         obj_zapped = TRUE;
 
         if(poly_zapped < 0) {
@@ -1211,7 +1207,6 @@ poly_obj(obj, id)
         /* preserve inventory letter if in inventory */
         if (obj_location == OBJ_INVENT)
             otmp->invlet = obj->invlet;
-#ifdef MAIL
         /* You can't send yourself 100 mail messages and then
          * polymorph them into useful scrolls
          */
@@ -1219,7 +1214,6 @@ poly_obj(obj, id)
                 otmp->otyp = SCR_MAIL;
                 otmp->spe = 1;
         }
-#endif
 
         /* avoid abusing eggs laid by you */
         if (obj->otyp == EGG && obj->spe) {

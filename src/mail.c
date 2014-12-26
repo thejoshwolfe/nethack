@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-#ifdef MAIL
 #include <fcntl.h>
 #include <errno.h>
 #include "mail.h"
@@ -38,13 +37,8 @@ extern char *viz_rmin, *viz_rmax;       /* line-of-sight limits (vision.c) */
 
 #include <sys/stat.h>
 #include <pwd.h>
-/* DON'T trust all Unices to declare getpwuid() in <pwd.h> */
-#  if !defined(_BULL_SOURCE) && !defined(__sgi)
-#   if !defined(SUNOS4)
-/* DO trust all SVR4 to typedef uid_t in <sys/types.h> (probably to a long) */
 extern struct passwd *getpwuid(uid_t);
-#   endif
-#  endif
+
 static struct stat omstat,nmstat;
 static char *mailbox = (char *)0;
 static long laststattime;
@@ -413,12 +407,7 @@ void ckmailstatus(void) {
         } else if(nmstat.st_mtime > omstat.st_mtime) {
                 if (nmstat.st_size) {
                     static struct mail_info deliver = {
-#  ifndef NO_MAILREADER
                         MSG_MAIL, "I have some mail for you",
-#  else
-                        /* suppress creation and delivery of scroll of mail */
-                        MSG_OTHER, "You have some mail in the outside world",
-#  endif
                         0, 0
                     };
                     newmail(&deliver);
@@ -428,9 +417,6 @@ void ckmailstatus(void) {
 }
 
 void readmail(struct obj *otmp) {
-#ifdef DEF_MAILREADER
-        const char *mr = 0;
-#endif /* DEF_MAILREADER */
 #ifdef SIMPLE_MAIL
         if (iflags.simplemail)
         {
@@ -489,18 +475,7 @@ void readmail(struct obj *otmp) {
                 return;
         }
 # endif /* SIMPLE_MAIL */
-# ifdef DEF_MAILREADER
-        display_nhwindow(WIN_MESSAGE, FALSE);
-        if(!(mr = nh_getenv("MAILREADER")))
-                mr = DEF_MAILREADER;
-
-        if(child(1)){
-                (void) execl(mr, mr, (char *)0);
-                terminate(EXIT_FAILURE);
-        }
-# else
         display_file(mailbox, TRUE);
-# endif /* DEF_MAILREADER */
 
         /* get new stat; not entirely correct: there is a small time
            window where we do not see new mail */
@@ -525,12 +500,7 @@ void ckmailstatus (void) {
         laststattime = moves;
         if (lan_mail_check()) {
                     static struct mail_info deliver = {
-#  ifndef NO_MAILREADER
                         MSG_MAIL, "I have some mail for you",
-#  else
-                        /* suppress creation and delivery of scroll of mail */
-                        MSG_OTHER, "You have some mail in the outside world",
-#  endif
                         0, 0
                     };
                     newmail(&deliver);
@@ -547,6 +517,3 @@ readmail (struct obj *otmp)
 # endif /* LAN_MAIL */
 
 
-#endif /* MAIL */
-
-/*mail.c*/

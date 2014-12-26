@@ -20,9 +20,7 @@ struct flag {
         boolean  autodig;       /* MRKR: Automatically dig */
         boolean  autoquiver;    /* Automatically fill quiver */
         boolean  beginner;
-#ifdef MAIL
         boolean  biff;          /* enable checking for mail */
-#endif
         boolean  botl;          /* partially redo status line */
         boolean  botlx;         /* print an entirely new bottom line */
         boolean  confirm;       /* confirm before hitting tame monsters */

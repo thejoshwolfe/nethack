@@ -261,9 +261,7 @@ dog_invent (struct monst *mtmp, struct edog *edog, int udist)
                 }
         } else {
             if((obj=level.objects[omx][omy]) && !index(nofetch,obj->oclass)
-#ifdef MAIL
                         && obj->otyp != SCR_MAIL
-#endif
                                                                         ){
                 int edible = dogfood(mtmp, obj);
 

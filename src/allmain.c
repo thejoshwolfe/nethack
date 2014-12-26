@@ -369,9 +369,7 @@ void moveloop(void) {
                 rhack(save_cm);
             }
         } else if (multi == 0) {
-#ifdef MAIL
             ckmailstatus();
-#endif
             rhack((char *)0);
         }
         if (u.utotype)          /* change dungeon level */

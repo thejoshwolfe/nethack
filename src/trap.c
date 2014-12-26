@@ -2592,9 +2592,7 @@ boolean force, here;
                          */
                         continue;
                 } else if (obj->oclass == SCROLL_CLASS) {
-#ifdef MAIL
                     if (obj->otyp != SCR_MAIL)
-#endif
                     {
                         obj->otyp = SCR_BLANK_PAPER;
                         obj->spe = 0;

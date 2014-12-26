@@ -82,9 +82,7 @@ main (int argc, char *argv[])
 
         process_options(argc, argv);    /* command line options */
 
-#ifdef MAIL
         getmailstatus();
-#endif
 #ifdef WIZARD
         if (wizard)
                 Strcpy(plname, "wizard");

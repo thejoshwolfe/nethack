@@ -177,38 +177,6 @@ void msleep(unsigned msec) {
 }
 #endif
 
-#if defined(DEF_MAILREADER)
-int child(int wt) {
-        int f;
-        suspend_nhwindows((char *)0);   /* also calls end_screen() */
-        linux_mapon();
-        if((f = fork()) == 0){          /* child */
-                (void) setgid(getgid());
-                (void) setuid(getuid());
-                return(1);
-        }
-        if(f == -1) {   /* cannot fork */
-                pline("Fork failed.  Try again.");
-                return(0);
-        }
-        /* fork succeeded; wait for child to exit */
-        (void) signal(SIGINT,SIG_IGN);
-        (void) signal(SIGQUIT,SIG_IGN);
-        (void) wait( (int *) 0);
-        linux_mapoff();
-        (void) signal(SIGINT, (sighandler_t) done1);
-#ifdef WIZARD
-        if(wizard) (void) signal(SIGQUIT,SIG_DFL);
-#endif
-        if(wt) {
-                raw_print("");
-                wait_synch();
-        }
-        resume_nhwindows();
-        return(0);
-}
-#endif
-
 #ifdef GETRES_SUPPORT
 
 extern int nh_getresuid(uid_t *, uid_t *, uid_t *);

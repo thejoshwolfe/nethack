@@ -77,11 +77,7 @@ static struct Bool_Opt
         {"lit_corridor", &flags.lit_corridor, FALSE, SET_IN_GAME},
         {"lootabc", &iflags.lootabc, FALSE, SET_IN_GAME},
         {"Macgraphics", NULL, FALSE, SET_IN_FILE},
-#ifdef MAIL
         {"mail", &flags.biff, TRUE, SET_IN_GAME},
-#else
-        {"mail", (boolean *)0, TRUE, SET_IN_FILE},
-#endif
 #ifdef MENU_COLOR
         {"menucolors", &iflags.use_menu_color, FALSE, SET_IN_GAME},
 #else
