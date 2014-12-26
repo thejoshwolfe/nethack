@@ -111,8 +111,14 @@
  *      horizontal - Indicates whether the wall or door is horizontal or
  *                   vertical.
  */
+
+#include "display.h"
 #include "hack.h"
 #include "region.h"
+#include "config.h"
+#include "extern.h"
+#include "winprocs.h"
+
 #include <assert.h>
 
 static void display_monster(signed char,signed char,struct monst *,int,signed char);

@@ -1,6 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "epri.h"
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static int prayer_done(void);
 static struct obj *worst_cursed_item(void);

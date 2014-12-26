@@ -2,6 +2,10 @@
 #ifndef PERMONST_H
 #define PERMONST_H
 
+#include "align.h"
+#include "monattk.h"
+#include "monflag.h"
+
 /*      This structure covers all attack forms.
  *      aatyp is the gross attack type (eg. claw, bite, breath, ...)
  *      adtyp is the damage type (eg. physical, fire, cold, spell, ...)
@@ -28,12 +32,6 @@ struct attack {
  */
 
 #define WT_HUMAN        1450
-
-#ifndef ALIGN_H
-#include "align.h"
-#endif
-#include "monattk.h"
-#include "monflag.h"
 
 struct permonst {
         const char      *mname;                 /* full name */
@@ -66,11 +64,5 @@ extern struct permonst
 #define NORMAL_SPEED 12 /* movement rates */
 #define FAST_SPEED 15
 #define VERY_FAST 24
-
-#define NON_PM          PM_PLAYERMON            /* "not a monster" */
-#define LOW_PM          (NON_PM+1)              /* first monster in mons[] */
-#define SPECIAL_PM      PM_LONG_WORM_TAIL       /* [normal] < ~ < [special] */
-        /* mons[SPECIAL_PM] through mons[NUMMONS-1], inclusive, are
-           never generated randomly and cannot be polymorphed into */
 
 #endif /* PERMONST_H */

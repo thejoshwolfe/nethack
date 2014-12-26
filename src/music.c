@@ -24,6 +24,9 @@
  */
 
 #include "hack.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static void awaken_monsters(int);
 static void put_monsters_to_sleep(int);

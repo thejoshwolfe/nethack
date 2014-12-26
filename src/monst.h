@@ -2,6 +2,9 @@
 #ifndef MONST_H
 #define MONST_H
 
+#include "align.h"
+#include "coord.h"
+
 /* The weapon_check flag is used two ways:
  * 1) When calling mon_wield_item, is 2-6 depending on what is desired.
  * 2) Between calls to mon_wield_item, is 0 or 1 depending on whether or not
@@ -12,13 +15,13 @@
  * that there are enough situations which might make a monster change its
  * weapon that this is impractical.  --KAA
  */
-# define NO_WEAPON_WANTED 0
-# define NEED_WEAPON 1
-# define NEED_RANGED_WEAPON 2
-# define NEED_HTH_WEAPON 3
-# define NEED_PICK_AXE 4
-# define NEED_AXE 5
-# define NEED_PICK_OR_AXE 6
+#define NO_WEAPON_WANTED 0
+#define NEED_WEAPON 1
+#define NEED_RANGED_WEAPON 2
+#define NEED_HTH_WEAPON 3
+#define NEED_PICK_AXE 4
+#define NEED_AXE 5
+#define NEED_PICK_OR_AXE 6
 
 /* The following flags are used for the second argument to display_minventory
  * in invent.c:
@@ -29,10 +32,6 @@
  */
 #define MINV_NOLET 0x01
 #define MINV_ALL   0x02
-
-#ifndef ALIGN_H
-#include "align.h"
-#endif
 
 struct monst {
         struct monst *nmon;

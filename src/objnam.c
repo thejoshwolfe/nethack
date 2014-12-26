@@ -1,5 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
 
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX  80      /* (56) */

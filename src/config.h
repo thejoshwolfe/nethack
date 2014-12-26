@@ -7,10 +7,6 @@
  * Section 1:   Operating and window systems selection.
  */
 
-/* ensure _GNU_SOURCE is defined before including any system headers */
-# define _GNU_SOURCE
-
-
 /* Windowing systems...
  * Define all of those you want supported in your binary.
  * Some combinations make no sense.  See the installation document.
@@ -107,17 +103,10 @@
 
 #ifdef TTY_GRAPHICS
 # define MENU_COLOR
-# define MENU_COLOR_REGEX
-/* if MENU_COLOR_REGEX is defined, use regular expressions (GNU regex.h)
- * otherwise use pmatch() to match menu color lines.
- * pmatch() provides basic globbing: '*' and '?' wildcards.
- */
 #endif
 
 #define AUTOPICKUP_EXCEPTIONS  /* exceptions to autopickup */
 
 /* End of Section 5 */
-
-#include "global.h"     /* Define everything else according to choices above */
 
 #endif /* CONFIG_H */

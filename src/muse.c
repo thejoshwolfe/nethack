@@ -5,6 +5,9 @@
 
 #include "hack.h"
 #include "edog.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 extern const int monstr[];
 

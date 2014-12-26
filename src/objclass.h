@@ -2,6 +2,8 @@
 #ifndef OBJCLASS_H
 #define OBJCLASS_H
 
+#include "global.h"
+
 /* definition of a class of objects */
 
 struct objclass {

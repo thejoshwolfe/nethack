@@ -1,6 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "eshk.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 #define is_bigfoot(x)   ((x) == &mons[PM_SASQUATCH])
 #define martial()       (martial_bonus() || is_bigfoot(youmonst.data) || \

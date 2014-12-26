@@ -2,6 +2,9 @@
 
 #include "hack.h"
 #include "wintty.h"
+#include "config.h"
+#include "extern.h"
+#include "winprocs.h"
 
 static void def_raw_print(const char *s);
 

@@ -4,6 +4,11 @@
  */
 
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
+#include "timeout.h"
 
 static void simple_look(struct obj *,boolean);
 static boolean query_classes(char *,boolean *,boolean *,

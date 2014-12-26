@@ -2,6 +2,7 @@
 #ifndef RM_H
 #define RM_H
 
+#include "decl.h"
 /*
  * The dungeon presentation graphics code and data structures were rewritten
  * and generalized for NetHack's release 2 by Eric S. Raymond (eric@snark)

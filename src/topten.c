@@ -2,6 +2,9 @@
 #include "hack.h"
 #include "dlb.h"
 #include "patchlevel.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "winprocs.h"
 
 /*
  * Updating in place can leave junk at the end of the file in some

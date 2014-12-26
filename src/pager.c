@@ -4,6 +4,10 @@
 
 #include "hack.h"
 #include "dlb.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static boolean is_swallow_sym(int);
 static int append_str(char *, const char *);

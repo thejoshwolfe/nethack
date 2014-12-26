@@ -7,6 +7,10 @@
 #ifndef FLAG_H
 #define FLAG_H
 
+#include "global.h"
+#include "objclass.h"
+#include "coord.h"
+#include "config.h"
 /*
  * Persistent flags that are saved and restored with the game.
  *

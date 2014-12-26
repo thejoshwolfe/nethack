@@ -1,5 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
 
 int get_rect_ind(NhRect *);
 

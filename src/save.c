@@ -2,6 +2,12 @@
 #include "hack.h"
 #include "lev.h"
 #include "quest.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
+#include "timeout.h"
+#include "color.h"
 
 #ifndef NO_SIGNAL
 #include <signal.h>

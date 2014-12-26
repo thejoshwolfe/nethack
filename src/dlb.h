@@ -2,6 +2,9 @@
 #ifndef DLB_H
 #define DLB_H
 
+#include <stdio.h>
+#include "global.h"
+
 /* directory structure in memory */
 typedef struct dlb_directory {
     char *fname;        /* file name as seen from calling code */

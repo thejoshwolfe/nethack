@@ -1,6 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "vault.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static struct monst *findgd(void);
 

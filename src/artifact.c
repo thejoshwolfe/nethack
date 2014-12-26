@@ -2,6 +2,12 @@
 #include "hack.h"
 #include "artifact.h"
 #include "artilist.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "winprocs.h"
+#include "display.h"
+#include "vision.h"
+
 /*
  * Note:  both artilist[] and artiexist[] have a dummy element #0,
  *        so loops over them should normally start at #1.  The primary

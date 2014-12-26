@@ -2,6 +2,8 @@
 #ifndef VAULT_H
 #define VAULT_H
 
+#include "dungeon.h"
+
 #define FCSIZ   (ROWNO+COLNO)
 struct fakecorridor {
         signed char fx,fy,ftyp;

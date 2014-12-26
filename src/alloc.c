@@ -1,10 +1,8 @@
 /* See LICENSE in the root of this project for change info */
-#define ALLOC_C         /* comment line for pre-compiled headers */
-/* since this file is also used in auxiliary programs, don't include all the
- * function declarations for all of nethack
- */
-#define EXTERN_H        /* comment line for pre-compiled headers */
+
 #include "config.h"
+#include "global.h"
+#include <stdlib.h>
 
 #if defined(MONITOR_HEAP) || defined(WIZARD)
 char *fmt_ptr(const void *,char *);

@@ -1,6 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "func_tab.h"
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "winprocs.h"
+#include "display.h"
+#include "vision.h"
+
 /*
  * Some systems may have getchar() return EOF for various reasons, and
  * we should not quit before seeing at least NR_OF_EOFS consecutive EOFs.

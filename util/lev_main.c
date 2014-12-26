@@ -12,6 +12,11 @@
 #ifdef STRICT_REF_DEF
 #include "tcap.h"
 #endif
+#include "trap.h"
+#include "mkroom.h"
+#include "rm.h"
+#include "pm_props.h"
+#include "extern.h"
 
 #ifndef MPWTOOL
 # define SpinCursor(x)

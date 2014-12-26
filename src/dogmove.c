@@ -3,6 +3,8 @@
 
 #include "mfndpos.h"
 #include "edog.h"
+#include "extern.h"
+#include "display.h"
 
 extern boolean notonhead;
 

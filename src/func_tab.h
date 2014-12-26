@@ -2,6 +2,8 @@
 #ifndef FUNC_TAB_H
 #define FUNC_TAB_H
 
+#include "global.h"
+
 struct func_tab {
         char f_char;
         boolean can_if_buried;

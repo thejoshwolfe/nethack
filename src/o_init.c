@@ -1,6 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "lev.h"        /* save & restore info */
+#include "extern.h"
+#include "winprocs.h"
 
 static void setgemprobs(d_level*);
 static void shuffle(int,int,boolean);

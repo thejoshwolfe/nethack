@@ -1,6 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "prop.h"
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "timeout.h"
+#include "vision.h"
 
 static void mkbox_cnts(struct obj *);
 static void obj_timer_checks(struct obj *, signed char, signed char, int);

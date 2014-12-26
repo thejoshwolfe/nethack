@@ -5,6 +5,10 @@
  *      code for monsters.
  */
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static int enhance_skill(boolean);
 

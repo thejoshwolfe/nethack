@@ -2,6 +2,19 @@
 #ifndef EXTERN_H
 #define EXTERN_H
 
+#include "obj.h"
+#include "trap.h"
+#include "monst.h"
+#include "global.h"
+#include "rm.h"
+#include "permonst.h"
+#include "skills.h"
+#include "engrave.h"
+#include "mkroom.h"
+#include "rect.h"
+#include "region.h"
+#include "config.h"
+
 /* ### alloc.c ### */
 
 extern char *fmt_ptr(const void *,char *);

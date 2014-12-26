@@ -1,6 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "lev.h"
+#include "config.h"
+#include "extern.h"
+#include "winprocs.h"
+#include "timeout.h"
 
 #ifdef USE_TILES
 extern void substitute_tiles(d_level *);       /* from tile.c */

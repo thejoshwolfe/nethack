@@ -1,5 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static void m_lose_armor(struct monst *,struct obj *);
 static void m_dowear_type(struct monst *,long, boolean, boolean);

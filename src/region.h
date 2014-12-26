@@ -2,8 +2,10 @@
 #ifndef REGION_H
 #define REGION_H
 
-/* generic callback function */
+#include "global.h"
+#include "rect.h"
 
+/* generic callback function */
 typedef boolean (*callback_proc)(void *, void *);
 
 /*

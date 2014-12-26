@@ -1,6 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "lev.h"
+#include "extern.h"
+#include "display.h"
 
 #define newseg()                (struct wseg *) alloc(sizeof(struct wseg))
 #define dealloc_seg(wseg)       free((void *) (wseg))

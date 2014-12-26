@@ -1,7 +1,15 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "edog.h"
-
+#include "objclass.h"
+#include "obj.h"
+#include "youprop.h"
+#include "decl.h"
+#include "extern.h"
+#include "display.h"
+#include "vision.h"
+#include "winprocs.h"
+#include "timeout.h"
 
 static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,

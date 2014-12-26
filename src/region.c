@@ -1,6 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "lev.h"
+#include "extern.h"
+#include "display.h"
 
 /*
  * This should really go into the level structure, but

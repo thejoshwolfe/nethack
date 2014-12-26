@@ -2,6 +2,8 @@
 #ifndef EMIN_H
 #define EMIN_H
 
+#include "align.h"
+
 struct emin {
         aligntyp min_align;     /* alignment of minion */
 };

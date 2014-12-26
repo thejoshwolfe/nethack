@@ -11,6 +11,8 @@
  */
 
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
 
 static boolean isbig(struct mkroom *);
 static struct mkroom * pick_room(boolean);

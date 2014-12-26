@@ -21,6 +21,7 @@
 #include "config.h"
 #include "date.h"
 #include "dgn_file.h"
+#include "global.h"
 
 void yyerror(const char *);
 void yywarning(const char *);

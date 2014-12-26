@@ -1,6 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
+#include "config.h"
+#include "extern.h"
+#include "vision.h"
+#include "timeout.h"
+#include "winprocs.h"
 
 /*
  * Mobile light sources.

@@ -1,11 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "date.h"
-/*
- * All the references to the contents of patchlevel.h have been moved
- * into makedefs....
- */
 #include "patchlevel.h"
+#include "extern.h"
+#include "winprocs.h"
 
 /* fill buffer with short version (so caller can avoid including date.h) */
 char * version_string (char *buf) {

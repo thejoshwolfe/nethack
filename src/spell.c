@@ -1,5 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static signed char delay;               /* moves left for this spell */
 static struct obj *book;        /* last/current book being xscribed */

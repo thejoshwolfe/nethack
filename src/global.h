@@ -3,12 +3,16 @@
 #define GLOBAL_H
 
 #include <stdio.h>
+#include <time.h>
+#include <string.h>
+#include <strings.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 
-/*
- * Files expected to exist in the playground directory.
- */
-
+/* Files expected to exist in the playground directory. */
 #define RECORD        "run/record" /* file containing list of topscorers */
 #define HELP          "help"    /* file containing command descriptions */
 #define SHELP         "hh"      /* abbreviated form of the same */
@@ -65,17 +69,6 @@ typedef signed char     boolean;                /* 0 or 1 */
 #define LARGEST_INT     32767
 
 
-
-#include "coord.h"
-
-#include <time.h>
-
-#include <string.h>
-#include <strings.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
 
 /* Displayable name of this port; don't redefine if defined in *conf.h */
 #ifndef PORT_ID

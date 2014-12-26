@@ -2,6 +2,10 @@
 #ifndef EPRI_H
 #define EPRI_H
 
+#include "align.h"
+#include "coord.h"
+#include "dungeon.h"
+
 struct epri {
         aligntyp shralign;      /* alignment of priest's shrine */
                                 /* leave as first field to match emin */

@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "extern.h"
 
 static const char *dev_name(void);
 static void get_mplname(struct monst *, char *);

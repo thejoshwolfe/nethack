@@ -1,6 +1,12 @@
 /* See LICENSE in the root of this project for change info */
+#include "timeout.h"
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static void stoned_dialogue(void);
 static void vomiting_dialogue(void);

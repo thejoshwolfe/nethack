@@ -2,6 +2,9 @@
 #include "hack.h"
 #include "lev.h"
 #include <ctype.h>
+#include "config.h"
+#include "extern.h"
+#include "winprocs.h"
 
 static struct engr *head_engr;
 

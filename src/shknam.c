@@ -3,6 +3,7 @@
 
 #include "hack.h"
 #include "eshk.h"
+#include "extern.h"
 
 
 static void mkshobj_at(const struct shclass *,int,int);

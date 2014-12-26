@@ -8,6 +8,10 @@
  */
 
 #include "hack.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static void polyman(const char *,const char *);
 static void break_armor(void);

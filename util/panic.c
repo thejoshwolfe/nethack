@@ -6,6 +6,7 @@
 
 #include <stdarg.h>
 #include "config.h"
+#include "global.h"
 
 #ifdef AZTEC
 #define abort() exit()

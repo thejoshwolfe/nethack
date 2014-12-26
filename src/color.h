@@ -1,6 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #ifndef COLOR_H
 #define COLOR_H
+#include "config.h"
 
 #ifdef MENU_COLOR
 # ifdef MENU_COLOR_REGEX

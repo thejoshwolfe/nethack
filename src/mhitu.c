@@ -1,6 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "artifact.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static struct obj *otmp;
 

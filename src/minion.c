@@ -2,6 +2,9 @@
 #include "hack.h"
 #include "emin.h"
 #include "epri.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "winprocs.h"
 
 void 
 msummon (               /* mon summons a monster */

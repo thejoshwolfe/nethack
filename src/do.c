@@ -3,6 +3,11 @@
 
 #include "hack.h"
 #include "lev.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
+#include "timeout.h"
 
 static void trycall(struct obj *);
 static void dosinkring(struct obj *);

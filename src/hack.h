@@ -2,7 +2,9 @@
 #ifndef HACK_H
 #define HACK_H
 
-#include "config.h"
+#include "coord.h"
+#include "youprop.h"
+#include "flag.h"
 
 #define TELL            1
 #define NOTELL          0
@@ -69,16 +71,6 @@
 #define ESCAPED         14
 #define ASCENDED        15
 
-#include "align.h"
-#include "dungeon.h"
-#include "monsym.h"
-#include "mkroom.h"
-#include "objclass.h"
-#include "youprop.h"
-#include "wintype.h"
-#include "decl.h"
-#include "timeout.h"
-
 extern coord bhitpos;   /* place where throw or zap hits or stops */
 
 /* types of calls to bhit() */
@@ -90,18 +82,6 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 
 #define MATCH_WARN_OF_MON(mon)   (Warn_of_mon && flags.warntype && \
                                  (flags.warntype & (mon)->data->mflags2))
-
-#include "trap.h"
-#include "flag.h"
-#include "rm.h"
-#include "vision.h"
-#include "display.h"
-#include "engrave.h"
-#include "rect.h"
-#include "region.h"
-
-#include "extern.h"
-#include "winprocs.h"
 
 #define NO_SPELL        0
 

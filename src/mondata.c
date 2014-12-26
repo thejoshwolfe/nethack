@@ -2,6 +2,9 @@
 #include "hack.h"
 #include "eshk.h"
 #include "epri.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
 
 /*      These routines provide basic data for any type of monster. */
 

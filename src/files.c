@@ -1,6 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "dlb.h"
+#include "config.h"
+#include "extern.h"
+#include "winprocs.h"
 
 #ifdef TTY_GRAPHICS
 #include "wintty.h" /* more() */
@@ -699,7 +702,7 @@ boolean uncomp;
         (void) signal(SIGINT, SIG_IGN);
         (void) signal(SIGQUIT, SIG_IGN);
         (void) wait((int *)&i);
-        (void) signal(SIGINT, (sighandler_t) done1);
+        (void) signal(SIGINT, done1);
 # ifdef WIZARD
         if (wizard) (void) signal(SIGQUIT, SIG_DFL);
 # endif
@@ -986,6 +989,23 @@ gi_error:
         }
     }
     /*NOTREACHED*/
+}
+
+/*
+ * Add a slash to any name not ending in /. There must
+ * be room for the /
+ */
+static void append_slash (char *name) {
+        char *ptr;
+
+        if (!*name)
+                return;
+        ptr = name + (strlen(name) - 1);
+        if (*ptr != '/') {
+                *++ptr = '/';
+                *++ptr = '\0';
+        }
+        return;
 }
 
 static void 

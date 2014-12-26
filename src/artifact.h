@@ -2,6 +2,9 @@
 #ifndef ARTIFACT_H
 #define ARTIFACT_H
 
+#include "align.h"
+#include "permonst.h"
+
 #define SPFX_NONE   0x0000000L  /* no special effects, just a bonus */
 #define SPFX_NOGEN  0x0000001L  /* item is special, bequeathed by gods */
 #define SPFX_RESTR  0x0000002L  /* item is restricted - can't be named */

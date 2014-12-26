@@ -2,6 +2,10 @@
 #ifndef WINTTY_H
 #define WINTTY_H
 
+#include "global.h"
+#include "wintype.h"
+#include "config.h"
+
 #ifndef WINDOW_STRUCTS
 #define WINDOW_STRUCTS
 

@@ -1,6 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-
+#include "config.h"
+#include "extern.h"
+#include "display.h"
 
 
 /* Monsters that might be ridden */

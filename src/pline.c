@@ -2,9 +2,12 @@
 #include <stdarg.h>
 #include "hack.h"
 #include "epri.h"
+#include "config.h"
 #ifdef WIZARD
 #include "edog.h"
 #endif
+#include "extern.h"
+#include "winprocs.h"
 
 
 static boolean no_repeat = FALSE;

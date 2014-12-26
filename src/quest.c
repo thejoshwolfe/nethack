@@ -1,10 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-
-/*  quest dungeon branch routines. */
-
 #include "quest.h"
 #include "qtext.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 #define Not_firsttime   (on_level(&u.uz0, &u.uz))
 #define Qstat(x)        (quest_status.x)

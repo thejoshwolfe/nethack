@@ -2,6 +2,10 @@
 #include "hack.h"
 #include "dgn_file.h"
 #include "dlb.h"
+#include "config.h"
+#include "extern.h"
+#include "winprocs.h"
+#include "display.h"
 
 
 #define DUNGEON_FILE    "dungeon"

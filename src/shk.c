@@ -1,6 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "eshk.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 #define PAY_SOME    2
 #define PAY_BUY     1

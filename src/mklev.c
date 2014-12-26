@@ -1,5 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 /* for UNIX, Rand #def'd to (long)lrand48() or (long)random() */
 /* croom->lx etc are signed char (width <= int), so % arith ensures that */

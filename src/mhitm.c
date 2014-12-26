@@ -2,6 +2,8 @@
 #include "hack.h"
 #include "artifact.h"
 #include "edog.h"
+#include "extern.h"
+#include "display.h"
 
 extern boolean notonhead;
 

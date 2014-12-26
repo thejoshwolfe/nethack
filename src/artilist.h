@@ -7,6 +7,11 @@
 static const char *artifact_names[] = {
 #else
 /* in artifact.c, set up the actual artifact list structure */
+#include "artifact.h"
+#include "onames.h"
+#include "monsym.h"
+#include "prop.h"
+#include "pm_props.h"
 
 #define A(nam,typ,s1,s2,mt,atk,dfn,cry,inv,al,cl,rac,cost) \
  { typ, nam, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost }

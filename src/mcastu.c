@@ -1,5 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "extern.h"
+#include "display.h"
 
 /* monster mage spells */
 #define MGC_PSI_BOLT     0

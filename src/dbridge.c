@@ -8,6 +8,8 @@
  */
 
 #include "hack.h"
+#include "extern.h"
+#include "display.h"
 
 static void get_wall_for_db(int *, int *);
 static struct entity *e_at(int, int);

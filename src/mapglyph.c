@@ -1,9 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
 #if defined(TTY_GRAPHICS)
 #include "wintty.h"     /* for prototype of has_color() only */
 #endif
 #include "color.h"
+#include "extern.h"
+#include "display.h"
+
 #define HI_DOMESTIC CLR_WHITE   /* monst.c */
 
 int explcolors[] = {

@@ -1,14 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #ifndef DISPLAY_H
 #define DISPLAY_H
-
-#ifndef VISION_H
+#include "pm_props.h"
 #include "vision.h"
-#endif
-
-#ifndef MONDATA_H
-#include "mondata.h"    /* for mindless() */
-#endif
 
 #define vobj_at(x,y) (level.objects[x][y])
 

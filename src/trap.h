@@ -4,6 +4,9 @@
 #ifndef TRAP_H
 #define TRAP_H
 
+#include "dungeon.h"
+#include "coord.h"
+
 union vlaunchinfo {
         short v_launch_otyp;    /* type of object to be triggered */
         coord v_launch2;        /* secondary launch point (for boulders) */

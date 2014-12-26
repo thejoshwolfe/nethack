@@ -1,5 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "winprocs.h"
+#include "display.h"
+#include "timeout.h"
 
 #define NOINVSYM        '#'
 #define CONTAINED_SYM   '>'     /* designator for inside a container */

@@ -3,6 +3,9 @@
 #include "mfndpos.h"
 #include "artifact.h"
 #include "epri.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
 
 extern boolean notonhead;
 

@@ -1,7 +1,12 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "edog.h"
-
+#include "extern.h"
+#include "vision.h"
+#include "winprocs.h"
+#include "display.h"
+#include "vision.h"
+#include "timeout.h"
 
 static boolean did_dig_msg;
 

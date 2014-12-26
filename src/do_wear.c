@@ -1,5 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "extern.h"
+#include "winprocs.h"
+#include "display.h"
 
 
 static long takeoff_mask = 0L;

@@ -2,12 +2,21 @@
 /* various code that was replicated in *main.c */
 
 #include "hack.h"
+#include "config.h"
 
 #ifndef NO_SIGNAL
 #include <signal.h>
 #endif
 
 #include "dlb.h"
+#include "pm_props.h"
+#include "flag.h"
+#include "decl.h"
+#include "permonst.h"
+#include "rm.h"
+#include "youprop.h"
+#include "extern.h"
+#include "winprocs.h"
 
 #include <sys/stat.h>
 #include <signal.h>
@@ -462,7 +471,7 @@ void newgame(void) {
         u_init();
 
 #ifndef NO_SIGNAL
-        (void) signal(SIGINT, (sighandler_t) done1);
+        (void) signal(SIGINT, done1);
 #endif
         if(iflags.news) display_file(NEWS, FALSE);
         load_qtlist();  /* load up the quest text info */
@@ -625,9 +634,9 @@ int main (int argc, char *argv[]) {
          * It seems you really want to play.
          */
         u.uhp = 1;      /* prevent RIP on early quits */
-        (void) signal(SIGHUP, (sighandler_t) hangup);
+        (void) signal(SIGHUP, hangup);
 #ifdef SIGXCPU
-        (void) signal(SIGXCPU, (sighandler_t) hangup);
+        (void) signal(SIGXCPU, hangup);
 #endif
 
         process_options(argc, argv);    /* command line options */
@@ -702,7 +711,7 @@ int main (int argc, char *argv[]) {
                 const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
                 (void) chmod(fq_save,0);        /* disallow parallel restores */
-                (void) signal(SIGINT, (sighandler_t) done1);
+                (void) signal(SIGINT, done1);
                 if(iflags.news) {
                     display_file(NEWS, FALSE);
                     iflags.news = FALSE; /* in case dorecover() fails */
@@ -901,21 +910,4 @@ static void wd_message (void) {
 #endif
         if (discover)
                 You("are in non-scoring discovery mode.");
-}
-
-/*
- * Add a slash to any name not ending in /. There must
- * be room for the /
- */
-void append_slash (char *name) {
-        char *ptr;
-
-        if (!*name)
-                return;
-        ptr = name + (strlen(name) - 1);
-        if (*ptr != '/') {
-                *++ptr = '/';
-                *++ptr = '\0';
-        }
-        return;
 }

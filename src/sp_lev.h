@@ -2,6 +2,9 @@
 #ifndef SP_LEV_H
 #define SP_LEV_H
 
+#include "global.h"
+#include "align.h"
+
     /* wall directions */
 #define W_NORTH         1
 #define W_SOUTH         2

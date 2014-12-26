@@ -1,5 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static boolean tele_jump_ok(int,int,int,int);
 static boolean teleok(int,int,boolean);

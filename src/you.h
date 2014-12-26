@@ -3,11 +3,11 @@
 #define YOU_H
 
 #include "attrib.h"
-#include "monst.h"
-#ifndef PROP_H
-#include "prop.h"               /* (needed here for util/makedefs.c) */
-#endif
+#include "align.h"
+#include "prop.h"
 #include "skills.h"
+#include "dungeon.h"
+#include "global.h"
 
 /*** Substructures ***/
 

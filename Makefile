@@ -26,7 +26,10 @@ LEV_COMP_OBJS = build/lev_yacc.o build/lev_lex.o build/lev_main.o build/alloc.o 
 RECOVER_OBJS = build/recover.o
 BUILD_DIR_CHILDREN += $(MAKEDEFS_OBJS) $(DLB_OBJS) $(DGN_COMP_OBJS) $(LEV_COMP_OBJS) $(RECOVER_OBJS)
 
-COMPILE_C = gcc -c -o $@ -MMD -MP -MF $@.d -Ibuild -Isrc -g $<
+C_FLAGS = -Ibuild -Isrc -g -Wimplicit-function-declaration -Werror
+# TODO: remove this and make all id fields not pointers
+C_FLAGS += -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
+COMPILE_C = gcc -c -o $@ -MMD -MP -MF $@.d $(C_FLAGS) $<
 
 MAKEDEFS = cd dat && ../build/makedefs
 

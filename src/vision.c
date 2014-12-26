@@ -1,5 +1,8 @@
 /* See LICENSE in the root of this project for change info */
+#include "vision.h"
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
 
 /* Circles ==================================================================*/
 

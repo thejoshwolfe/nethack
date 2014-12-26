@@ -2,6 +2,10 @@
 /* Code for drinking from fountains. */
 
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static void dowatersnakes(void);
 static void dowaterdemon(void);

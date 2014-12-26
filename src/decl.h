@@ -2,6 +2,19 @@
 #ifndef DECL_H
 #define DECL_H
 
+#include "dungeon.h"
+#include "monsym.h"
+#include "wintype.h"
+#include "objclass.h"
+#include "coord.h"
+#include "config.h"
+#include "quest.h"
+#include "spell.h"
+#include "pm.h"
+#include "monst.h"
+#include "you.h"
+#include "obj.h"
+
 extern int (*occupation)(void);
 extern int (*afternmv)(void);
 
@@ -102,7 +115,6 @@ extern dungeon dungeons[];
 extern s_level *sp_levchn;
 #define dunlev_reached(x)       (dungeons[(x)->dnum].dunlev_ureached)
 
-#include "quest.h"
 extern struct q_score quest_status;
 
 extern char pl_character[PL_CSIZ];
@@ -192,10 +204,8 @@ extern boolean in_steed_dismounting;
 
 extern const int shield_static[];
 
-#include "spell.h"
 extern struct spell spl_book[]; /* sized in decl.c */
 
-#include "color.h"
 extern const int zapcolors[];
 
 extern const char def_oc_syms[MAXOCLASSES];     /* default class symbols */
@@ -203,7 +213,6 @@ extern unsigned char oc_syms[MAXOCLASSES];              /* current class symbols
 extern const char def_monsyms[MAXMCLASSES];     /* default class symbols */
 extern unsigned char monsyms[MAXMCLASSES];              /* current class symbols */
 
-#include "obj.h"
 extern struct obj *invent,
         *uarm, *uarmc, *uarmh, *uarms, *uarmg, *uarmf,
         *uarmu,                         /* under-wear, so to speak */
@@ -216,13 +225,8 @@ extern struct obj *migrating_objs;
 extern struct obj *billobjs;
 extern struct obj zeroobj;              /* init'd and defined in decl.c */
 
-#include "you.h"
 extern struct you u;
 
-#include "onames.h"
-#ifndef PM_H            /* (pm.h has already been included via youprop.h) */
-#include "pm.h"
-#endif
 
 extern struct monst youmonst;   /* init'd and defined in decl.c */
 extern struct monst *mydogs, *migrating_mons;

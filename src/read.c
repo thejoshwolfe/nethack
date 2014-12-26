@@ -1,5 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 /* KMH -- Copied from pray.c; this really belongs in a header file */
 #define DEVOUT 14

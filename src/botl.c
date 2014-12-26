@@ -1,6 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "wintty.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "winprocs.h"
+#include "color.h"
 
 extern const char *hu_stat[];   /* defined in eat.c */
 

@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "extern.h"
 
 #define UTSZ    50
 

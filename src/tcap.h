@@ -4,6 +4,9 @@
 #ifndef TCAP_H
 #define TCAP_H
 
+#include "global.h"
+#include "color.h"
+
 #ifndef DECL_H
 extern struct tc_gbl_data {   /* also declared in decl.h; defined in decl.c */
     char *tc_AS, *tc_AE;        /* graphics start and end (tty font swapping) */

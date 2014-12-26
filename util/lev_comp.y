@@ -20,6 +20,9 @@
 
 #include "hack.h"
 #include "sp_lev.h"
+#include "rm.h"
+#include "mkroom.h"
+#include "pm_props.h"
 
 #define MAX_REGISTERS   10
 #define ERR             (-1)

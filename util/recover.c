@@ -5,6 +5,7 @@
  *  time NetHack creates those level files.
  */
 #include "config.h"
+#include "global.h"
 #if !defined(O_WRONLY) && !defined(LSC) && !defined(AZTEC_C)
 #include <fcntl.h>
 #endif

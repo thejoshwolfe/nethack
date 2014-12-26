@@ -2,6 +2,8 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
+#include "global.h"
+
 typedef struct d_flags {        /* dungeon/level type flags */
         unsigned town: 1;      /* is this a town? (levels only) */
         unsigned hellish: 1;   /* is this part of hell? */

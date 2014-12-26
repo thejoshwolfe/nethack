@@ -5,6 +5,8 @@
 #include "hack.h"
 #include "lev_comp.h"
 #include "sp_lev.h"
+#include "rm.h"
+#include "engrave.h"
 
 #ifdef FLEX_SCANNER
 #define YY_MALLOC_DECL \

@@ -3,6 +3,10 @@
 #include "epri.h"
 #include "emin.h"
 #include "edog.h"
+#include "config.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
 
 static struct monst zeromonst;
 

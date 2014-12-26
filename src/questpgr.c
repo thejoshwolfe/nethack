@@ -5,6 +5,9 @@
 /*  quest-specific pager routines. */
 
 #include "qtext.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "winprocs.h"
 
 #define QTEXT_FILE      "quest.dat"
 

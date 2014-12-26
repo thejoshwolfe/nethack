@@ -2,6 +2,8 @@
 #ifndef EDOG_H
 #define EDOG_H
 
+#include "coord.h"
+
 /*      various types of food, the lower, the better liked.     */
 
 #define DOGFOOD 0

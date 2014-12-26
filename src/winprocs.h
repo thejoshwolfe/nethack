@@ -2,6 +2,9 @@
 #ifndef WINPROCS_H
 #define WINPROCS_H
 
+#include "wintype.h"
+#include "global.h"
+
 struct window_procs {
     const char *name;
     unsigned long wincap;       /* window port capability options supported */

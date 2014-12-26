@@ -6,10 +6,11 @@
 #include "permonst.h"
 #include "mondata.h"
 #include "pm.h"
+#include "onames.h"
+#include "decl.h"
 
 
-/* KMH, intrinsics patch.
- * Reorganized and rewritten for >32-bit properties.
+/*
  * HXxx refers to intrinsic bitfields while in human form.
  * EXxx refers to extrinsic bitfields from worn objects.
  * BXxx refers to the cause of the property being blocked.

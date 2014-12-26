@@ -1,6 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "tcap.h"
+#include "extern.h"
 /* Relevent header information in rm.h and objclass.h. */
 
 #ifdef C

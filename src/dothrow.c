@@ -3,6 +3,10 @@
 
 #include "hack.h"
 #include "edog.h"
+#include "pm_props.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 static int throw_obj(struct obj *,int);
 static void autoquiver(void);

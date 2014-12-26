@@ -5,6 +5,7 @@
 #include "config.h"
 #include "dgn_comp.h"
 #include "dgn_file.h"
+#include "extern.h"
 
 #ifdef FLEX_SCANNER
 #define YY_MALLOC_DECL \

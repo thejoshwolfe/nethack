@@ -2,6 +2,10 @@
 #ifndef ESHK_H
 #define ESHK_H
 
+#include "global.h"
+#include "coord.h"
+#include "dungeon.h"
+
 #define REPAIR_DELAY    5       /* minimum delay between shop damage & repair */
 
 #define BILLSZ  200

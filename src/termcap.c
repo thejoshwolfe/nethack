@@ -2,6 +2,19 @@
 #include "hack.h"
 #include "wintty.h"
 #include "tcap.h"
+#include "extern.h"
+#include "winprocs.h"
+
+/*
+ * The following prototypes are from termcap.h.
+ * We can't just include it though because of namespace collisions for UP and delay_output, among others.
+ */
+extern char * tgetstr (const char *, char **);
+extern char * tgoto (const char *, int, int);
+extern int tgetent (char *, const char *);
+extern int tgetflag (const char *);
+extern int tgetnum (const char *);
+extern int tputs (const char *, int, int (*)(int));
 
 
 #define Tgetstr(key) (tgetstr(key,&tbufptr))

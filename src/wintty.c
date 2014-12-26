@@ -9,11 +9,11 @@
 #include "hack.h"
 #include "dlb.h"
 #include "patchlevel.h"
-
-
 #include "tcap.h"
-
 #include "wintty.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 extern char mapped_menu_cmds[]; /* from options.c */
 

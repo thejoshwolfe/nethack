@@ -6,6 +6,9 @@
 
 #include "hack.h"
 #include "artifact.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 extern boolean known;   /* from read.c */
 

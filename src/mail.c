@@ -4,6 +4,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #include "mail.h"
+#include "extern.h"
+#include "display.h"
+#include "winprocs.h"
 
 /*
  * Notify user when new mail has arrived.  Idea by Merlyn Leroy.

@@ -2,6 +2,9 @@
 /* This file collects some Unix dependencies */
 
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
+#include "winprocs.h"
 
 #include <errno.h>
 #include <sys/stat.h>

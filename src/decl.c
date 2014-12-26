@@ -1,5 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
+#include "config.h"
+#include "extern.h"
+#include "display.h"
+#include "color.h"
 
 int (*afternmv)(void);
 int (*occupation)(void);
