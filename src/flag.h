@@ -16,10 +16,6 @@
  */
 
 struct flag {
-#ifdef AMIFLUSH
-        boolean  altmeta;       /* use ALT keys as META */
-        boolean  amiflush;      /* kill typeahead */
-#endif
         boolean  autodig;       /* MRKR: Automatically dig */
         boolean  autoquiver;    /* Automatically fill quiver */
         boolean  beginner;
@@ -31,9 +27,6 @@ struct flag {
 #define wizard   flags.debug
         boolean  end_own;       /* list all own scores */
         boolean  explore;       /* in exploration mode */
-#ifdef OPT_DISPMAP
-        boolean  fast_map;      /* use optimized, less flexible map display */
-#endif
 #define discover flags.explore
         boolean  female;
         boolean  forcefight;
