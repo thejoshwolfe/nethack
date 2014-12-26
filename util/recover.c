@@ -150,7 +150,7 @@ create_savefile (void)
 {
         int fd;
 
-        fd = creat(savename, FCMASK);
+        fd = creat(savename, 0660);
 
 #ifdef SECURE
         if (fchown(fd, save_uid, -1) == -1) {

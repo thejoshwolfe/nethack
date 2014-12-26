@@ -108,7 +108,6 @@ set_occupation (int (*fn)(void), const char *txt, int xtime)
         return;
 }
 
-#ifdef REDO
 
 static char popch(void);
 
@@ -168,7 +167,6 @@ savech (char ch)
         }
         return;
 }
-#endif /* REDO */
 
 
 static int
@@ -1967,7 +1965,6 @@ rhack (char *cmd)
                 flags.move = FALSE;
                 return;
         }
-#ifdef REDO
         if (*cmd == DOAGAIN && !in_doagain && saveq[0]) {
                 in_doagain = TRUE;
                 stail = 0;
@@ -1976,11 +1973,7 @@ rhack (char *cmd)
                 return;
         }
         /* Special case of *cmd == ' ' handled better below */
-        if(!*cmd || *cmd == (char)0377)
-#else
-        if(!*cmd || *cmd == (char)0377 || (!flags.rest_on_space && *cmd == ' '))
-#endif
-        {
+        if(!*cmd || *cmd == (char)0377) {
                 nhbell();
                 flags.move = FALSE;
                 return;         /* probably we just had an interrupt */
@@ -2233,16 +2226,12 @@ getdir (const char *s)
 {
         char dirsym;
 
-#ifdef REDO
         if(in_doagain || *readchar_queue)
             dirsym = readchar();
         else
-#endif
             dirsym = yn_function ((s && *s != '^') ? s : "In what direction?",
                                         (char *)0, '\0');
-#ifdef REDO
         savech(dirsym);
-#endif
         if(dirsym == '.' || dirsym == 's')
                 u.dx = u.dy = u.dz = 0;
         else if(!movecmd(dirsym) && !u.dz) {
@@ -2491,14 +2480,12 @@ static char * parse (void) {
         if (foo == '\033') {   /* esc cancels count (TH) */
             clear_nhwindow(WIN_MESSAGE);
             multi = last_multi = 0;
-# ifdef REDO
         } else if (foo == DOAGAIN || in_doagain) {
             multi = last_multi;
         } else {
             last_multi = multi;
             savech(0);  /* reset input queue */
             savech((char)foo);
-# endif
         }
 
         if (multi) {
@@ -2512,9 +2499,7 @@ static char * parse (void) {
         if (foo == 'g' || foo == 'G' || foo == 'm' || foo == 'M' ||
             foo == 'F' || (iflags.num_pad && (foo == '5' || foo == '-'))) {
             foo = readchar();
-#ifdef REDO
             savech((char)foo);
-#endif
             in_line[1] = foo;
             in_line[2] = 0;
         }
@@ -2544,11 +2529,7 @@ readchar (void)
         if ( *readchar_queue )
             sym = *readchar_queue++;
         else
-#ifdef REDO
             sym = in_doagain ? Getchar() : nh_poskey(&x, &y, &mod);
-#else
-            sym = Getchar();
-#endif
 
 # ifdef NR_OF_EOFS
         if (sym == EOF) {

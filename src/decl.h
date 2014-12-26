@@ -24,9 +24,7 @@ extern unsigned char warnsyms[WARNCOUNT];
 extern int x_maze_max, y_maze_max;
 extern int otg_temp;
 
-#ifdef REDO
 extern int in_doagain;
-#endif
 
 extern struct dgn_topology {            /* special dungeon levels for speed */
     d_level     d_oracle_level;

@@ -2,13 +2,8 @@
 #ifndef UNIXCONF_H
 #define UNIXCONF_H
 
-#define FCMASK  0660    /* file creation mask */
-
 #include <time.h>
 
-#ifndef REDO
-#define Getchar nhgetch
-#endif
 #define tgetch getchar
 
 #include <string.h>

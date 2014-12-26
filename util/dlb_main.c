@@ -371,7 +371,7 @@ main (int argc, char **argv)
         }
 
         /* open output file */
-        out = open(library_file, O_RDWR|O_TRUNC|O_BINARY|O_CREAT, FCMASK);
+        out = open(library_file, O_RDWR|O_TRUNC|O_BINARY|O_CREAT, 0660);
         if (out < 0) {
             printf("Can't open %s for output\n", library_file);
             xexit(EXIT_FAILURE);

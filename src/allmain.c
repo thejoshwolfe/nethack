@@ -212,11 +212,9 @@ void moveloop(void) {
                                 if (!next_to_u()) {
                                     check_leash(old_ux, old_uy);
                                 }
-#ifdef REDO
                                 /* clear doagain keystrokes */
                                 pushch(0);
                                 savech(0);
-#endif
                             }
                         }
                         /* delayed change may not be valid anymore */
@@ -400,10 +398,8 @@ stop_occupation (void)
 /* fainting stops your occupation, there's no reason to sync.
                 sync_hunger();
 */
-#ifdef REDO
                 nomul(0);
                 pushch(0);
-#endif
         }
 }
 

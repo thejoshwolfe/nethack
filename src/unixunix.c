@@ -142,7 +142,7 @@ void getlock(void) {
         }
 
 gotlock:
-        fd = creat(fq_lock, FCMASK);
+        fd = creat(fq_lock, 0660);
         unlock_file(HLOCK);
         if(fd == -1) {
                 error("cannot creat lock file (%s).", fq_lock);

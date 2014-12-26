@@ -45,7 +45,7 @@ main (int argc, char *argv[])
 
         hname = argv[0];
         hackpid = getpid();
-        (void) umask(0777 & ~FCMASK);
+        (void) umask(0777 & ~0660);
 
         choose_windows(DEFAULT_WINDOW_SYS);
 
@@ -173,7 +173,7 @@ main (int argc, char *argv[])
                         if(yn("Do you want to keep the save file?") == 'n')
                             (void) delete_savefile();
                         else {
-                            (void) chmod(fq_save,FCMASK); /* back to readable */
+                            (void) chmod(fq_save,0660); /* back to readable */
                             compress(fq_save);
                         }
                 }

@@ -132,11 +132,9 @@ extern void bot2str(char *);
 
 extern void reset_occupations(void);
 extern void set_occupation(int (*)(void),const char *,int);
-#ifdef REDO
 extern char pgetchar(void);
 extern void pushch(char);
 extern void savech(char);
-#endif
 #ifdef WIZARD
 extern void add_debug_extended_commands(void);
 #endif /* WIZARD */

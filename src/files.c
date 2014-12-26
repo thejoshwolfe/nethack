@@ -250,7 +250,7 @@ int create_levelfile(int lev, char errbuf[]) {
         set_levelfile_name(lock, lev);
         fq_lock = fqname(lock, LEVELPREFIX, 0);
 
-    fd = creat(fq_lock, FCMASK);
+    fd = creat(fq_lock, 0660);
 
         if (fd >= 0)
             level_info[lev].flags |= LFILE_EXISTS;
@@ -333,13 +333,13 @@ open_levelfile_exclusively (const char *name, int lev, int oflag)
                         lftrack.nethack_thinks_it_is_open = TRUE;
                 } else {
                         really_close();
-                        fd = sopen(name, oflag,SH_DENYRW, FCMASK);
+                        fd = sopen(name, oflag,SH_DENYRW, 0660);
                         lftrack.fd = fd;
                         lftrack.oflag = oflag;
                         lftrack.nethack_thinks_it_is_open = TRUE;
                 }
         } else {
-                        fd = sopen(name, oflag,SH_DENYRW, FCMASK);
+                        fd = sopen(name, oflag,SH_DENYRW, 0660);
                         lftrack.fd = fd;
                         lftrack.oflag = oflag;
                         if (fd >= 0)
@@ -424,7 +424,7 @@ create_bonesfile (d_level *lev, char **bonesid, char errbuf[])
         file = set_bonestemp_name();
         file = fqname(file, BONESPREFIX, 0);
 
-        fd = creat(file, FCMASK);
+        fd = creat(file, 0660);
         if (fd < 0 && errbuf) /* failure explanation */
             Sprintf(errbuf,
                     "Cannot create bones \"%s\", id %s (errno %d).",
@@ -514,7 +514,7 @@ int create_savefile(void) {
         int fd;
 
         fq_save = fqname(SAVEF, SAVEPREFIX, 0);
-        fd = creat(fq_save, FCMASK);
+        fd = creat(fq_save, 0660);
         return fd;
 }
 
@@ -1264,7 +1264,7 @@ void check_recordfile(const char *dir) {
         fd = open(fq_record, O_RDWR, 0);
         if (fd >= 0) {
             (void) close(fd);   /* RECORD is accessible */
-        } else if ((fd = open(fq_record, O_CREAT|O_RDWR, FCMASK)) >= 0) {
+        } else if ((fd = open(fq_record, O_CREAT|O_RDWR, 0660)) >= 0) {
             (void) close(fd);   /* RECORD newly created */
         } else {
             raw_printf("Warning: cannot write scoreboard file %s: %s", fq_record, strerror(errno));

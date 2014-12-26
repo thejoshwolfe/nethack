@@ -118,12 +118,9 @@
 /* monsters & objects */
 #define SEDUCE          /* Succubi/incubi seduction, by KAA, suggested by IM */
 /* I/O */
-#define REDO            /* support for redoing last command - DGK */
 #define CLIPPING        /* allow smaller screens -- ERS */
 
-#ifdef REDO
-# define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
-#endif
+#define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
 
 #define EXP_ON_BOTL     /* Show experience on bottom line */
 #define PARANOID

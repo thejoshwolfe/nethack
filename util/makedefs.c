@@ -513,9 +513,7 @@ static const char *build_opts[] = {
 #ifdef NEWS
                 "news file",
 #endif
-#ifdef REDO
                 "redo command",
-#endif
                 "saddles and riding",
 #ifdef SCORE_ON_BOTL
                 "score on status line",
