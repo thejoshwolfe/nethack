@@ -109,11 +109,7 @@ static struct Bool_Opt
 #else
         {"sanity_check", (boolean *)0, FALSE, SET_IN_FILE},
 #endif
-#ifdef EXP_ON_BOTL
         {"showexp", &flags.showexp, FALSE, SET_IN_GAME},
-#else
-        {"showexp", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
         {"showrace", &iflags.showrace, FALSE, SET_IN_GAME},
         {"silent", &flags.silent, TRUE, SET_IN_GAME},
         {"softkeyboard", &iflags.wc2_softkeyboard, FALSE, SET_IN_FILE},
@@ -2162,9 +2158,7 @@ goodfruit:
                         if (initial) return;
 
                         if ((boolopt[i].addr) == &flags.time
-#ifdef EXP_ON_BOTL
                          || (boolopt[i].addr) == &flags.showexp
-#endif
                             )
                             flags.botl = TRUE;
 

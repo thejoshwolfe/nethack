@@ -105,7 +105,6 @@
 
 #define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
 
-#define EXP_ON_BOTL     /* Show experience on bottom line */
 #define PARANOID
 
 #define HPMON           /* Color HP monitor */

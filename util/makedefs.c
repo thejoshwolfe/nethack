@@ -332,9 +332,7 @@ static void make_version(void) {
                         | (1L << 18)
 #endif
                         | (1L << 19)
-#ifdef EXP_ON_BOTL
                         | (1L << 20)
-#endif
                 /* data format [COMPRESS excluded] (27..31) */
 #ifdef ZEROCOMP
                         | (1L << 27)
@@ -474,9 +472,7 @@ static const char *build_opts[] = {
                 "debug mode",
 #endif
                 "Elbereth",
-#ifdef EXP_ON_BOTL
                 "experience points on status line",
-#endif
 #ifdef INSURANCE
                 "insurance files for recovering from crashes",
 #endif

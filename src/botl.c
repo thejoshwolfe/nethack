@@ -254,10 +254,8 @@ char* newbot2;
 
         if (Upolyd)
                 Sprintf(nb = eos(nb), " HD:%d", mons[u.umonnum].mlevel);
-#ifdef EXP_ON_BOTL
         else if(flags.showexp)
                 Sprintf(nb = eos(nb), " Xp:%u/%-1ld", u.ulevel,u.uexp);
-#endif
         else
                 Sprintf(nb = eos(nb), " Exp:%u", u.ulevel);
 
