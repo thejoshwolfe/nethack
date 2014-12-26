@@ -26,10 +26,11 @@ LEV_COMP_OBJS = build/lev_yacc.o build/lev_lex.o build/lev_main.o build/alloc.o 
 RECOVER_OBJS = build/recover.o
 BUILD_DIR_CHILDREN += $(MAKEDEFS_OBJS) $(DLB_OBJS) $(DGN_COMP_OBJS) $(LEV_COMP_OBJS) $(RECOVER_OBJS)
 
+CC = gcc
 C_FLAGS = -Ibuild -Isrc -g -Wimplicit-function-declaration -Werror
 # TODO: remove this and make all id fields not pointers
 C_FLAGS += -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
-COMPILE_C = gcc -c -o $@ -MMD -MP -MF $@.d $(C_FLAGS) $<
+COMPILE_C = $(CC) -c -o $@ -MMD -MP -MF $@.d $(C_FLAGS) $<
 
 MAKEDEFS = cd dat && ../build/makedefs
 
@@ -67,7 +68,7 @@ build/nhdat: build/lev_comp $(LEVEL_SOURCES) build/dlb $(DATA_INPUTS1) $(DATA_IN
 	./build/dlb cf build/nhdat $(DATDLB)
 
 build/makedefs: $(MAKEDEFS_OBJS)
-	gcc -o $@ $(MAKEDEFS_OBJS)
+	$(CC) -o $@ $(MAKEDEFS_OBJS)
 
 build/%.o: src/%.c
 	$(COMPILE_C)
@@ -89,7 +90,7 @@ build/oracles: dat/oracles.txt build/makedefs
 	$(MAKEDEFS) -h
 
 build/dlb: $(DLB_OBJS)
-	gcc -o $@ $(DLB_OBJS)
+	$(CC) -o $@ $(DLB_OBJS)
 
 build/dungeon: build/dgn_comp dat/dungeon.def
 	./build/dgn_comp dat/dungeon.def $@
@@ -126,10 +127,10 @@ build/lev_lex.c: util/lev_comp.l
 	mv build/lev.tmp/lex.yy.c build/lev_lex.c
 
 build/dgn_comp: $(DGN_COMP_OBJS)
-	gcc -o $@ $(DGN_COMP_OBJS)
+	$(CC) -o $@ $(DGN_COMP_OBJS)
 
 build/lev_comp: $(LEV_COMP_OBJS)
-	gcc -o $@ $(LEV_COMP_OBJS)
+	$(CC) -o $@ $(LEV_COMP_OBJS)
 
 build/lev_yacc.o: $(HACK_H)
 
@@ -144,14 +145,14 @@ build/pm.h: build/makedefs
 $(NORMAL_ASS_O_FILES): $(HACK_H)
 
 build/nethack: $(NETHACK_OBJS)
-	gcc -o $@ $(NETHACK_OBJS) -lncurses
+	$(CC) -o $@ $(NETHACK_OBJS) -lncurses
 
 build/monstr.c: build/makedefs
 	$(MAKEDEFS) -m
 
 # recover can be used when the checkpoint option is true
 build/recover: $(RECOVER_OBJS)
-	gcc -o $@ $(RECOVER_OBJS)
+	$(CC) -o $@ $(RECOVER_OBJS)
 
 
 $(BUILD_DIR_CHILDREN): | build
