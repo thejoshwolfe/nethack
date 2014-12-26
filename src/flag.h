@@ -168,12 +168,8 @@ struct instance_flags {
         boolean  sanity_check;  /* run sanity checks */
         boolean  mon_polycontrol;       /* debug: control monster polymorphs */
 #endif
-#ifdef TTY_GRAPHICS
         char prevmsg_window;    /* type of old message window to use */
-#endif
-#if defined(TTY_GRAPHICS)
         boolean  extmenu;       /* extended commands use menu interface */
-#endif
         char sortloot;          /* sort items to loot alphabetically */
         boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
 
@@ -247,9 +243,7 @@ struct instance_flags {
 /*
  * Old deprecated names
  */
-#ifdef TTY_GRAPHICS
 #define eight_bit_tty wc_eight_bit_input
-#endif
 
 #define use_color wc_color
 #define hilite_pet wc_hilite_pet

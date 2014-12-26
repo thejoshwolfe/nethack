@@ -1,9 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "config.h"
-#if defined(TTY_GRAPHICS)
 #include "wintty.h"     /* for prototype of has_color() only */
-#endif
 #include "color.h"
 #include "extern.h"
 #include "display.h"
@@ -19,10 +17,6 @@ int explcolors[] = {
         CLR_ORANGE,     /* fiery   */
         CLR_WHITE,      /* frosty  */
 };
-
-#if !defined(TTY_GRAPHICS)
-#define has_color(n)  TRUE
-#endif
 
 #define zap_color(n)  color = iflags.use_color ? zapcolors[n] : NO_COLOR
 #define cmap_color(n) color = iflags.use_color ? defsyms[n].color : NO_COLOR

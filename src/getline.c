@@ -4,7 +4,6 @@
 #include "extern.h"
 #include "winprocs.h"
 
-#ifdef TTY_GRAPHICS
 
 #include "wintty.h"
 #include "func_tab.h"
@@ -233,4 +232,3 @@ tty_get_ext_cmd (void)
 }
 
 
-#endif /* TTY_GRAPHICS */

@@ -8,9 +8,7 @@ static void center(int, char *);
 
 extern const char * const killed_by_prefix[];   /* from topten.c */
 
-#if defined(TTY_GRAPHICS)
-# define TEXT_TOMBSTONE
-#endif
+#define TEXT_TOMBSTONE
 
 #ifdef TEXT_TOMBSTONE
 

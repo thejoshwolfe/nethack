@@ -218,7 +218,6 @@ doextlist (void)     /* here after #? - now list all full-word commands */
         return 0;
 }
 
-#if defined(TTY_GRAPHICS)
 #define MAX_EXT_CMD 40          /* Change if we ever have > 40 ext cmds */
 /*
  * This is currently used only by the tty port and is
@@ -327,7 +326,6 @@ extcmd_via_menu (void)  /* here after # - now show pick-list of possible command
     }
     return ret;
 }
-#endif
 
 /* #monster command - use special monster ability while polymorphed */
 static int

@@ -2,18 +2,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-
-/*
- * Section 1:   Operating and window systems selection.
- */
-
-/* Windowing systems...
- * Define all of those you want supported in your binary.
- * Some combinations make no sense.  See the installation document.
- */
-
-#define TTY_GRAPHICS    /* good old tty based graphics */
-
 /*
  * Section 2:   Some global parameters and filenames.
  *              Commenting out WIZARD, PANICLOG removes that

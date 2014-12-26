@@ -4,7 +4,6 @@
 #include "extern.h"
 #include "winprocs.h"
 
-#ifdef TTY_GRAPHICS
 
 #include "tcap.h"
 #include "wintty.h"
@@ -433,8 +432,3 @@ tty_yn_function (const char *query, const char *resp, char def)
 
         return q;
 }
-
-
-#endif /* TTY_GRAPHICS */
-
-/*topl.c*/

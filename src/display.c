@@ -1369,29 +1369,7 @@ get_glyph_char (int glyph)
     return ch;
 }
 
-#ifdef TTY_GRAPHICS
 extern const char * compress_str(const char *);
-#else
-const char *
-compress_str ( /* copied from win/tty/wintty.c */
-    const char *str
-)
-{
-        static char cbuf[BUFSZ];
-        /* compress in case line too long */
-        if((int)strlen(str) >= 80) {
-                const char *bp0 = str;
-                char *bp1 = cbuf;
-
-                do {
-                        if(*bp0 != ' ' || bp0[1] != ' ')
-                                *bp1++ = *bp0;
-                } while(*bp0++);
-        } else
-            return str;
-        return cbuf;
-}
-#endif /* TTY_GRAPHICS */
 
 /* Take a screen dump */
 void

@@ -183,27 +183,23 @@ int change = 0;
 void
 intron (void)           /* enable kbd interupts if enabled when game started */
 {
-#ifdef TTY_GRAPHICS
         /* Ugly hack to keep from changing tty modes for non-tty games -dlc */
         if (!strcmp(windowprocs.name, "tty") &&
             intr_char != nonesuch && curttyb2.intr_sym != '\003') {
             curttyb2.intr_sym = '\003';
             setctty();
         }
-#endif
 }
 
 void
 introff (void)          /* disable kbd interrupts if required*/
 {
-#ifdef TTY_GRAPHICS
         /* Ugly hack to keep from changing tty modes for non-tty games -dlc */
         if (!strcmp(windowprocs.name, "tty") &&
            curttyb2.intr_sym != nonesuch) {
             curttyb2.intr_sym = nonesuch;
             setctty();
         }
-#endif
 }
 
 
@@ -218,19 +214,15 @@ void check_linux_console(void);
 void init_linux_cons(void);
 
 void linux_mapon (void) {
-# ifdef TTY_GRAPHICS
         if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
                 write(1, "\033(B", 3);
         }
-# endif
 }
 
 void linux_mapoff (void) {
-# ifdef TTY_GRAPHICS
         if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
                 write(1, "\033(U", 3);
         }
-# endif
 }
 
 void check_linux_console (void) {
@@ -242,14 +234,12 @@ void check_linux_console (void) {
 }
 
 void init_linux_cons (void) {
-# ifdef TTY_GRAPHICS
         if (!strcmp(windowprocs.name, "tty") && linux_flag_console) {
                 atexit(linux_mapon);
                 linux_mapoff();
                 if (has_colors())
                         iflags.use_color = TRUE;
         }
-# endif
 }
 
 
