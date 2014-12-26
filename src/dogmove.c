@@ -52,9 +52,8 @@ static signed char gtyp, gx, gy;    /* type and position of dog's current goal *
 
 static void wantdoor(int, int, void *);
 
-static boolean
-cursed_object_at(x, y)
-int x, y;
+static boolean 
+cursed_object_at (int x, int y)
 {
         struct obj *otmp;
 
@@ -189,10 +188,8 @@ int dog_eat(struct monst *mtmp, struct obj *obj, int x, int y, boolean devour) {
 
 
 /* hunger effects -- returns TRUE on starvation */
-static boolean
-dog_hunger(mtmp, edog)
-struct monst *mtmp;
-struct edog *edog;
+static boolean 
+dog_hunger (struct monst *mtmp, struct edog *edog)
 {
         if (monstermoves > edog->hungrytime + 500) {
             if (!carnivorous(mtmp->data) && !herbivorous(mtmp->data)) {

@@ -286,9 +286,8 @@ restore_light_sources (int fd)
 }
 
 /* Relink all lights that are so marked. */
-void
-relink_light_sources(ghostly)
-    boolean ghostly;
+void 
+relink_light_sources (boolean ghostly)
 {
     char which;
     unsigned nid;
@@ -325,10 +324,8 @@ relink_light_sources(ghostly)
  * sources that would be written.  If write_it is true, actually write
  * the light source out.
  */
-static int
-maybe_write_ls(fd, range, write_it)
-    int fd, range;
-    boolean write_it;
+static int 
+maybe_write_ls (int fd, int range, boolean write_it)
 {
     int count = 0, is_global;
     light_source *ls;
@@ -406,8 +403,8 @@ obj_move_light_source (struct obj *src, struct obj *dest)
 }
 
 /* return true if there exist any light sources */
-boolean
-any_light_source()
+boolean 
+any_light_source (void)
 {
     return light_base != (light_source *) 0;
 }
@@ -449,18 +446,16 @@ snuff_light_source (int x, int y)
 }
 
 /* Return TRUE if object sheds any light at all. */
-boolean
-obj_sheds_light(obj)
-    struct obj *obj;
+boolean 
+obj_sheds_light (struct obj *obj)
 {
     /* so far, only burning objects shed light */
     return obj_is_burning(obj);
 }
 
 /* Return TRUE if sheds light AND will be snuffed by end_burn(). */
-boolean
-obj_is_burning(obj)
-    struct obj *obj;
+boolean 
+obj_is_burning (struct obj *obj)
 {
     return (obj->lamplit &&
                 (obj->otyp == MAGIC_LAMP || ignitable(obj) || artifact_light(obj)));

@@ -148,13 +148,8 @@ pass_three (signed char bg_typ, signed char fg_typ)
  * if anyroom is TRUE, use IS_ROOM to check room membership instead of
  * exactly matching levl[sx][sy].typ and walls are included as well.
  */
-void
-flood_fill_rm(sx, sy, rmno, lit, anyroom)
-    int sx;
-    int sy;
-    int rmno;
-    boolean lit;
-    boolean anyroom;
+void 
+flood_fill_rm (int sx, int sy, int rmno, boolean lit, boolean anyroom)
 {
     int i;
     int nx;

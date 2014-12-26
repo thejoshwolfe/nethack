@@ -81,15 +81,8 @@ void sort_rooms(void) {
         qsort((void *) rooms, (unsigned)nroom, sizeof(struct mkroom), do_comp);
 }
 
-static void
-do_room_or_subroom(croom, lowx, lowy, hix, hiy, lit, rtype, special, is_room)
-    struct mkroom *croom;
-    int lowx, lowy;
-    int hix, hiy;
-    boolean lit;
-    signed char rtype;
-    boolean special;
-    boolean is_room;
+static void 
+do_room_or_subroom (struct mkroom *croom, int lowx, int lowy, int hix, int hiy, boolean lit, signed char rtype, boolean special, boolean is_room)
 {
         int x, y;
         struct rm *lev;
@@ -154,12 +147,8 @@ do_room_or_subroom(croom, lowx, lowy, hix, hiy, lit, rtype, special, is_room)
 }
 
 
-void
-add_room(lowx, lowy, hix, hiy, lit, rtype, special)
-int lowx, lowy, hix, hiy;
-boolean lit;
-signed char rtype;
-boolean special;
+void 
+add_room (int lowx, int lowy, int hix, int hiy, boolean lit, signed char rtype, boolean special)
 {
         struct mkroom *croom;
 
@@ -171,13 +160,8 @@ boolean special;
         nroom++;
 }
 
-void
-add_subroom(proom, lowx, lowy, hix, hiy, lit, rtype, special)
-struct mkroom *proom;
-int lowx, lowy, hix, hiy;
-boolean lit;
-signed char rtype;
-boolean special;
+void 
+add_subroom (struct mkroom *proom, int lowx, int lowy, int hix, int hiy, boolean lit, signed char rtype, boolean special)
 {
         struct mkroom *croom;
 
@@ -212,10 +196,8 @@ makerooms (void)
         return;
 }
 
-static void
-join(a,b,nxcor)
-int a, b;
-boolean nxcor;
+static void 
+join (int a, int b, boolean nxcor)
 {
         coord cc,tt, org, dest;
         signed char tx, ty, xx, yy;
@@ -379,10 +361,8 @@ static void dosdoor(signed char x,signed char y,struct mkroom *aroom,int type) {
         add_door(x,y,aroom);
 }
 
-static boolean
-place_niche(aroom,dy,xx,yy)
-struct mkroom *aroom;
-int *dy, *xx, *yy;
+static boolean 
+place_niche (struct mkroom *aroom, int *dy, int *xx, int *yy)
 {
         coord dd;
 
@@ -1034,9 +1014,8 @@ dodoor (int x, int y, struct mkroom *aroom)
         dosdoor(x,y,aroom,rn2(8) ? DOOR : SDOOR);
 }
 
-boolean
-occupied(x, y)
-signed char x, y;
+boolean 
+occupied (signed char x, signed char y)
 {
         return((boolean)(t_at(x, y)
                 || IS_FURNITURE(levl[x][y].typ)

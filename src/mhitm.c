@@ -1217,11 +1217,8 @@ mswingsm (struct monst *magr, struct monst *mdef, struct obj *otemp)
  * Passive responses by defenders.  Does not replicate responses already
  * handled above.  Returns same values as mattackm.
  */
-static int
-passivemm(magr,mdef,mhit,mdead)
-struct monst *magr, *mdef;
-boolean mhit;
-int mdead;
+static int 
+passivemm (struct monst *magr, struct monst *mdef, boolean mhit, int mdead)
 {
         struct permonst *mddat = mdef->data;
         struct permonst *madat = magr->data;

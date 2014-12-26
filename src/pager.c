@@ -16,9 +16,8 @@ static int do_look(boolean);
 static boolean help_menu(int *);
 
 /* Returns "true" for characters that could represent a monster's stomach. */
-static boolean
-is_swallow_sym(c)
-int c;
+static boolean 
+is_swallow_sym (int c)
 {
     int i;
     for (i = S_sw_tl; i <= S_sw_br; i++)
@@ -288,11 +287,8 @@ lookat (int x, int y, char *buf, char *monbuf)
  *       lcase() for data.base lookup so that we can have a clean key.
  *       Therefore, we create a copy of inp _just_ for data.base lookup.
  */
-static void
-checkfile(inp, pm, user_typed_name, without_asking)
-    char *inp;
-    struct permonst *pm;
-    boolean user_typed_name, without_asking;
+static void 
+checkfile (char *inp, struct permonst *pm, boolean user_typed_name, boolean without_asking)
 {
     dlb *fp;
     char buf[BUFSZ], newstr[BUFSZ];
@@ -444,9 +440,10 @@ bad_data_file:  impossible("'data' file in wrong format");
 /* also used by getpos hack in do_name.c */
 const char what_is_an_unknown_object[] = "an unknown object";
 
-static int
-do_look(quick)
-    boolean quick;      /* use cursor && don't search for "more info" */
+static int 
+do_look (
+    boolean quick      /* use cursor && don't search for "more info" */
+)
 {
     char    out_str[BUFSZ], look_buf[BUFSZ];
     const char *x_str, *firstmatch = 0;
@@ -856,9 +853,8 @@ static const char *help_menu_items[] = {
         (char *)0
 };
 
-static boolean
-help_menu(sel)
-        int *sel;
+static boolean 
+help_menu (int *sel)
 {
         winid tmpwin = create_nhwindow(NHW_MENU);
         int i, n;

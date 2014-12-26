@@ -140,11 +140,8 @@ precheck (struct monst *mon, struct obj *obj)
         return 0;
 }
 
-static void
-mzapmsg(mtmp, otmp, self)
-struct monst *mtmp;
-struct obj *otmp;
-boolean self;
+static void 
+mzapmsg (struct monst *mtmp, struct obj *otmp, boolean self)
 {
         if (!canseemon(mtmp)) {
                 if (flags.soundok)
@@ -242,9 +239,8 @@ mquaffmsg (struct monst *mtmp, struct obj *otmp)
 /* Select a defensive item/action for a monster.  Returns TRUE iff one is
  * found.
  */
-boolean
-find_defensive(mtmp)
-struct monst *mtmp;
+boolean 
+find_defensive (struct monst *mtmp)
 {
         struct obj *obj = 0;
         struct trap *t;
@@ -947,9 +943,8 @@ rnd_defensive_item (struct monst *mtmp)
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
  */
-boolean
-find_offensive(mtmp)
-struct monst *mtmp;
+boolean 
+find_offensive (struct monst *mtmp)
 {
         struct obj *obj;
         boolean ranged_stuff = lined_up(mtmp);
@@ -1483,9 +1478,8 @@ rnd_offensive_item (struct monst *mtmp)
 #define MUSE_BULLWHIP 8
 #define MUSE_POT_POLYMORPH 9
 
-boolean
-find_misc(mtmp)
-struct monst *mtmp;
+boolean 
+find_misc (struct monst *mtmp)
 {
         struct obj *obj;
         struct permonst *mdat = mtmp->data;
@@ -1853,10 +1847,8 @@ rnd_misc_item (struct monst *mtmp)
         return 0;
 }
 
-boolean
-searches_for_item(mon, obj)
-struct monst *mon;
-struct obj *obj;
+boolean 
+searches_for_item (struct monst *mon, struct obj *obj)
 {
         int typ = obj->otyp;
 
@@ -1935,10 +1927,8 @@ struct obj *obj;
         return FALSE;
 }
 
-boolean
-mon_reflects(mon,str)
-struct monst *mon;
-const char *str;
+boolean 
+mon_reflects (struct monst *mon, const char *str)
 {
         struct obj *orefl = which_armor(mon, W_ARMS);
 
@@ -1975,9 +1965,8 @@ const char *str;
         return FALSE;
 }
 
-boolean
-ureflects (fmt, str)
-const char *fmt, *str;
+boolean 
+ureflects (const char *fmt, const char *str)
 {
         /* Check from outermost to innermost objects */
         if (EReflecting & W_ARMS) {
@@ -2011,10 +2000,8 @@ const char *fmt, *str;
 
 
 /* TRUE if the monster ate something */
-boolean
-munstone(mon, by_you)
-struct monst *mon;
-boolean by_you;
+boolean 
+munstone (struct monst *mon, boolean by_you)
 {
         struct obj *obj;
 
@@ -2032,12 +2019,8 @@ boolean by_you;
         return FALSE;
 }
 
-static void
-mon_consume_unstone(mon, obj, by_you, stoning)
-struct monst *mon;
-struct obj *obj;
-boolean by_you;
-boolean stoning;
+static void 
+mon_consume_unstone (struct monst *mon, struct obj *obj, boolean by_you, boolean stoning)
 {
     int nutrit = (obj->otyp == CORPSE) ? dog_nutrition(mon, obj) : 0;
     /* also sets meating */

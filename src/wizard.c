@@ -138,10 +138,8 @@ which_arti (int mask)
  *      since bell, book, candle, and amulet are all objects, not really
  *      artifacts right now.    [MRS]
  */
-static boolean
-mon_has_arti(mtmp, otyp)
-        struct monst *mtmp;
-        short   otyp;
+static boolean 
+mon_has_arti (struct monst *mtmp, short otyp)
 {
         struct obj *otmp;
 
@@ -183,9 +181,8 @@ on_ground (short otyp)
         return((struct obj *)0);
 }
 
-static boolean
-you_have(mask)
-        int mask;
+static boolean 
+you_have (int mask)
 {
         switch(mask) {
             case M3_WANTSAMUL:  return(boolean)(u.uhave.amulet);

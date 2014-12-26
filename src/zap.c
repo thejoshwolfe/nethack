@@ -374,11 +374,8 @@ probe_monster (struct monst *mtmp)
  * from turn to turn.  This function returns FALSE if the position
  * is not available or subject to the constraints above.
  */
-boolean
-get_obj_location(obj, xp, yp, locflags)
-struct obj *obj;
-signed char *xp, *yp;
-int locflags;
+boolean 
+get_obj_location (struct obj *obj, signed char *xp, signed char *yp, int locflags)
 {
         switch (obj->where) {
             case OBJ_INVENT:
@@ -412,11 +409,13 @@ int locflags;
         return FALSE;
 }
 
-boolean
-get_mon_location(mon, xp, yp, locflags)
-struct monst *mon;
-signed char *xp, *yp;
-int locflags;   /* non-zero means get location even if monster is buried */
+boolean 
+get_mon_location (
+    struct monst *mon,
+    signed char *xp,
+    signed char *yp,
+    int locflags   /* non-zero means get location even if monster is buried */
+)
 {
         if (mon == &youmonst) {
             *xp = u.ux;
@@ -868,9 +867,8 @@ cancel_item (struct obj *obj)
 /* Remove a positive enchantment or charge from obj,
  * possibly carried by you or a monster
  */
-boolean
-drain_item(obj)
-struct obj *obj;
+boolean 
+drain_item (struct obj *obj)
 {
         boolean u_ring;
 
@@ -938,10 +936,12 @@ struct obj *obj;
 }
 
 
-boolean
-obj_resists(obj, ochance, achance)
-struct obj *obj;
-int ochance, achance;   /* percent chance for ordinary objects, artifacts */
+boolean 
+obj_resists (
+    struct obj *obj,
+    int ochance,
+    int achance   /* percent chance for ordinary objects, artifacts */
+)
 {
         if (obj->otyp == AMULET_OF_YENDOR ||
             obj->otyp == SPE_BOOK_OF_THE_DEAD ||
@@ -956,9 +956,8 @@ int ochance, achance;   /* percent chance for ordinary objects, artifacts */
         }
 }
 
-boolean
-obj_shudders(obj)
-struct obj *obj;
+boolean 
+obj_shudders (struct obj *obj)
 {
         int     zap_odds;
 
@@ -1795,10 +1794,8 @@ dozap (void)
         return(1);
 }
 
-int
-zapyourself(obj, ordinary)
-struct obj *obj;
-boolean ordinary;
+int 
+zapyourself (struct obj *obj, boolean ordinary)
 {
         int     damage = 0;
         char buf[BUFSZ];
@@ -2077,9 +2074,10 @@ boolean ordinary;
  * Return TRUE if the steed was hit by the wand.
  * Return FALSE if the steed was not hit by the wand.
  */
-static boolean
-zap_steed(obj)
-struct obj *obj;        /* wand or spell */
+static boolean 
+zap_steed (
+    struct obj *obj        /* wand or spell */
+)
 {
         int steedhit = FALSE;
 
@@ -2140,11 +2138,8 @@ struct obj *obj;        /* wand or spell */
  * effect is too strong.  currently non-hero monsters do not zap
  * themselves with cancellation.
  */
-boolean
-cancel_monst(mdef, obj, youattack, allow_cancel_kill, self_cancel)
-struct monst    *mdef;
-struct obj      *obj;
-boolean                 youattack, allow_cancel_kill, self_cancel;
+boolean 
+cancel_monst (struct monst *mdef, struct obj *obj, boolean youattack, boolean allow_cancel_kill, boolean self_cancel)
 {
         boolean youdefend = (mdef == &youmonst);
         static const char writing_vanishes[] =
@@ -2200,9 +2195,10 @@ boolean                 youattack, allow_cancel_kill, self_cancel;
 }
 
 /* you've zapped an immediate type wand up or down */
-static boolean
-zap_updown(obj)
-struct obj *obj;        /* wand or spell */
+static boolean 
+zap_updown (
+    struct obj *obj        /* wand or spell */
+)
 {
         boolean striking = FALSE, disclose = FALSE;
         int x, y, xx, yy, ptmp;
@@ -3067,11 +3063,13 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
  * burn scrolls and spellbooks on floor at position x,y
  * return the number of scrolls and spellbooks burned
  */
-int
-burn_floor_paper(x, y, give_feedback, u_caused)
-int x, y;
-boolean give_feedback;  /* caller needs to decide about visibility checks */
-boolean u_caused;
+int 
+burn_floor_paper (
+    int x,
+    int y,
+    boolean give_feedback,  /* caller needs to decide about visibility checks */
+    boolean u_caused
+)
 {
         struct obj *obj, *obj2;
         long i, scrquan, delquan;
@@ -3418,11 +3416,8 @@ melt_ice (signed char x, signed char y)
  * Sets shopdamage to TRUE if a shop door is destroyed, and returns the
  * amount by which range is reduced (the latter is just ignored by fireballs)
  */
-int
-zap_over_floor(x, y, type, shopdamage)
-signed char x, y;
-int type;
-boolean *shopdamage;
+int 
+zap_over_floor (signed char x, signed char y, int type, boolean *shopdamage)
 {
         struct monst *mon;
         int abstype = abs(type) % 10;
@@ -3641,9 +3636,8 @@ fracture_rock (      /* fractured by pick-axe or wand of striking */
 }
 
 /* handle statue hit by striking/force bolt/pick-axe */
-boolean
-break_statue(obj)
-struct obj *obj;
+boolean 
+break_statue (struct obj *obj)
 {
         /* [obj is assumed to be on floor, so no get_obj_location() needed] */
         struct trap *trap = t_at(obj->ox, obj->oy);

@@ -27,8 +27,8 @@ static void dig_up_grave(void);
 #define DIGTYP_TREE       5
 
 
-static boolean
-rm_waslit()
+static boolean 
+rm_waslit (void)
 {
     signed char x, y;
 
@@ -137,8 +137,8 @@ dig_typ (struct obj *otmp, signed char x, signed char y)
                         DIGTYP_ROCK : DIGTYP_UNDIGGABLE);
 }
 
-boolean
-is_digging()
+boolean 
+is_digging (void)
 {
         if (occupation == dig) {
             return TRUE;
@@ -1025,9 +1025,8 @@ void watch_dig(struct monst *mtmp, signed char x, signed char y, boolean zap) {
 
 
 /* Return TRUE if monster died, FALSE otherwise.  Called from m_move(). */
-boolean
-mdig_tunnel(mtmp)
-struct monst *mtmp;
+boolean 
+mdig_tunnel (struct monst *mtmp)
 {
         struct rm *here;
         int pile = rnd(12);

@@ -47,10 +47,8 @@ incr_itimeout (long *which, int incr)
     set_itimeout(which, itimeout_incr(*which, incr));
 }
 
-void
-make_confused(xtime,talk)
-long xtime;
-boolean talk;
+void 
+make_confused (long xtime, boolean talk)
 {
         long old = HConfusion;
 
@@ -64,10 +62,8 @@ boolean talk;
         set_itimeout(&HConfusion, xtime);
 }
 
-void
-make_stunned(xtime,talk)
-long xtime;
-boolean talk;
+void 
+make_stunned (long xtime, boolean talk)
 {
         long old = HStun;
 
@@ -89,12 +85,13 @@ boolean talk;
         set_itimeout(&HStun, xtime);
 }
 
-void
-make_sick(xtime, cause, talk, type)
-long xtime;
-const char *cause;      /* sickness cause */
-boolean talk;
-int type;
+void 
+make_sick (
+    long xtime,
+    const char *cause,      /* sickness cause */
+    boolean talk,
+    int type
+)
 {
         long old = Sick;
 
@@ -136,10 +133,8 @@ int type;
             u.usick_cause[0] = 0;
 }
 
-void
-make_vomiting(xtime, talk)
-long xtime;
-boolean talk;
+void 
+make_vomiting (long xtime, boolean talk)
 {
         long old = Vomiting;
 
@@ -152,10 +147,8 @@ boolean talk;
 static const char vismsg[] = "vision seems to %s for a moment but is %s now.";
 static const char eyemsg[] = "%s momentarily %s.";
 
-void
-make_blinded(xtime, talk)
-long xtime;
-boolean talk;
+void 
+make_blinded (long xtime, boolean talk)
 {
         long old = Blinded;
         boolean u_could_see, can_see_now;
@@ -230,11 +223,12 @@ boolean talk;
         }
 }
 
-boolean
-make_hallucinated(xtime, talk, mask)
-long xtime;     /* nonzero if this is an attempt to turn on hallucination */
-boolean talk;
-long mask;      /* nonzero if resistance status should change by mask */
+boolean 
+make_hallucinated (
+    long xtime,     /* nonzero if this is an attempt to turn on hallucination */
+    boolean talk,
+    long mask      /* nonzero if resistance status should change by mask */
+)
 {
         long old = HHallucination;
         boolean changed = 0;
@@ -887,10 +881,8 @@ peffects (struct obj *otmp)
         return(-1);
 }
 
-void
-healup(nhp, nxtra, curesick, cureblind)
-        int nhp, nxtra;
-        boolean curesick, cureblind;
+void 
+healup (int nhp, int nxtra, boolean curesick, boolean cureblind)
 {
         if (nhp) {
                 if (Upolyd) {
@@ -936,11 +928,8 @@ bottlename (void)
         return bottlenames[rn2(SIZE(bottlenames))];
 }
 
-void
-potionhit(mon, obj, your_fault)
-struct monst *mon;
-struct obj *obj;
-boolean your_fault;
+void 
+potionhit (struct monst *mon, struct obj *obj, boolean your_fault)
 {
         const char *botlnam = bottlename();
         boolean isyou = (mon == &youmonst);
@@ -1396,9 +1385,8 @@ mixtype (struct obj *o1, struct obj *o2)
 }
 
 
-boolean
-get_wet(obj)
-struct obj *obj;
+boolean 
+get_wet (struct obj *obj)
 /* returns TRUE if something happened (potion should be used up) */
 {
         char Your_buf[BUFSZ];

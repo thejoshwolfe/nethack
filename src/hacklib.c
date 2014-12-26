@@ -41,16 +41,18 @@ NetHack, except that rounddiv may call panic().
         int             midnight        (void)
 =*/
 
-boolean
-digit(c)                /* is 'c' a digit? */
-    char c;
+boolean 
+digit (                /* is 'c' a digit? */
+    char c
+)
 {
     return((boolean)('0' <= c && c <= '9'));
 }
 
-boolean
-letter(c)               /* is 'c' a letter?  note: '@' classed as letter */
-    char c;
+boolean 
+letter (               /* is 'c' a letter?  note: '@' classed as letter */
+    char c
+)
 {
     return((boolean)(('@' <= c && c <= 'Z') || ('a' <= c && c <= 'z')));
 }
@@ -169,9 +171,10 @@ xcrypt (        /* trivial text encryption routine (see makedefs) */
     return buf;
 }
 
-boolean
-onlyspace(s)            /* is a string entirely whitespace? */
-    const char *s;
+boolean 
+onlyspace (            /* is a string entirely whitespace? */
+    const char *s
+)
 {
     for (; *s; s++)
         if (*s != ' ' && *s != '\t') return FALSE;
@@ -307,9 +310,13 @@ dist2 ( /* square of euclidean distance between pair of pts */
     return dx * dx + dy * dy;
 }
 
-boolean
-online2(x0, y0, x1, y1) /* are two points lined up (on a straight line)? */
-    int x0, y0, x1, y1;
+boolean 
+online2 ( /* are two points lined up (on a straight line)? */
+    int x0,
+    int y0,
+    int x1,
+    int y1
+)
 {
     int dx = x0 - x1, dy = y0 - y1;
     /*  If either delta is zero then they're on an orthogonal line,
@@ -319,9 +326,11 @@ online2(x0, y0, x1, y1) /* are two points lined up (on a straight line)? */
 }
 
 
-boolean
-pmatch(patrn, strng)    /* match a string against a pattern */
-    const char *patrn, *strng;
+boolean 
+pmatch (    /* match a string against a pattern */
+    const char *patrn,
+    const char *strng
+)
 {
     char s, p;
   /*
@@ -397,11 +406,8 @@ strstri (       /* case insensitive substring search */
 
 /* compare two strings for equality, ignoring the presence of specified
    characters (typically whitespace) and possibly ignoring case */
-boolean
-fuzzymatch(s1, s2, ignore_chars, caseblind)
-    const char *s1, *s2;
-    const char *ignore_chars;
-    boolean caseblind;
+boolean 
+fuzzymatch (const char *s1, const char *s2, const char *ignore_chars, boolean caseblind)
 {
     char c1, c2;
 
@@ -502,8 +508,8 @@ phase_of_the_moon (void)                /* 0-7, with 0: new, 4: full */
         return( (((((diy + epact) * 6) + 11) % 177) / 22) & 7 );
 }
 
-boolean
-friday_13th()
+boolean 
+friday_13th (void)
 {
         struct tm *lt = getlt();
 

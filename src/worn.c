@@ -202,11 +202,8 @@ mon_adjust_speed (
 }
 
 /* armor put on or taken off; might be magical variety */
-void
-update_mon_intrinsics(mon, obj, on, silently)
-struct monst *mon;
-struct obj *obj;
-boolean on, silently;
+void 
+update_mon_intrinsics (struct monst *mon, struct obj *obj, boolean on, boolean silently)
 {
     int unseen;
     unsigned char mask;
@@ -347,10 +344,8 @@ find_mac (struct monst *mon)
  * players to influence what gets worn.  Putting on a shirt underneath
  * already worn body armor is too obviously buggy...
  */
-void
-m_dowear(mon, creation)
-struct monst *mon;
-boolean creation;
+void 
+m_dowear (struct monst *mon, boolean creation)
 {
 #define RACE_EXCEPTION TRUE
         /* Note the restrictions here are the same as in dowear in do_wear.c
@@ -385,12 +380,8 @@ boolean creation;
             m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);
 }
 
-static void
-m_dowear_type(mon, flag, creation, racialexception)
-struct monst *mon;
-long flag;
-boolean creation;
-boolean racialexception;
+static void 
+m_dowear_type (struct monst *mon, long flag, boolean creation, boolean racialexception)
 {
         struct obj *old, *best, *obj;
         int m_delay = 0;
@@ -560,10 +551,8 @@ bypass_obj (struct obj *obj)
         flags.bypasses = TRUE;
 }
 
-void
-mon_break_armor(mon, polyspot)
-struct monst *mon;
-boolean polyspot;
+void 
+mon_break_armor (struct monst *mon, boolean polyspot)
 {
         struct obj *otmp;
         struct permonst *mdat = mon->data;

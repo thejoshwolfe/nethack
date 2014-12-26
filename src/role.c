@@ -494,9 +494,8 @@ static int race_alignmentcount(int);
 static char randomstr[] = "random";
 
 
-boolean
-validrole(rolenum)
-        int rolenum;
+boolean 
+validrole (int rolenum)
 {
         return (rolenum >= 0 && rolenum < SIZE(roles)-1);
 }
@@ -541,9 +540,8 @@ str2role (char *str)
 }
 
 
-boolean
-validrace(rolenum, racenum)
-        int rolenum, racenum;
+boolean 
+validrace (int rolenum, int racenum)
 {
         /* Assumes validrole */
         return (racenum >= 0 && racenum < SIZE(races)-1 &&
@@ -604,9 +602,8 @@ str2race (char *str)
 }
 
 
-boolean
-validgend(rolenum, racenum, gendnum)
-        int rolenum, racenum, gendnum;
+boolean 
+validgend (int rolenum, int racenum, int gendnum)
 {
         /* Assumes validrole and validrace */
         return (gendnum >= 0 && gendnum < ROLE_GENDERS &&
@@ -668,9 +665,8 @@ str2gend (char *str)
 }
 
 
-boolean
-validalign(rolenum, racenum, alignnum)
-        int rolenum, racenum, alignnum;
+boolean 
+validalign (int rolenum, int racenum, int alignnum)
 {
         /* Assumes validrole and validrace */
         return (alignnum >= 0 && alignnum < ROLE_ALIGNS &&
@@ -732,9 +728,8 @@ str2align (char *str)
 }
 
 /* is rolenum compatible with any racenum/gendnum/alignnum constraints? */
-boolean
-ok_role(rolenum, racenum, gendnum, alignnum)
-int rolenum, racenum, gendnum, alignnum;
+boolean 
+ok_role (int rolenum, int racenum, int gendnum, int alignnum)
 {
     int i;
     short allow;
@@ -797,9 +792,8 @@ pick_role (int racenum, int gendnum, int alignnum, int pickhow)
 }
 
 /* is racenum compatible with any rolenum/gendnum/alignnum constraints? */
-boolean
-ok_race(rolenum, racenum, gendnum, alignnum)
-int rolenum, racenum, gendnum, alignnum;
+boolean 
+ok_race (int rolenum, int racenum, int gendnum, int alignnum)
 {
     int i;
     short allow;
@@ -863,9 +857,8 @@ pick_race (int rolenum, int gendnum, int alignnum, int pickhow)
 
 /* is gendnum compatible with any rolenum/racenum/alignnum constraints? */
 /* gender and alignment are not comparable (and also not constrainable) */
-boolean
-ok_gend(rolenum, racenum, gendnum, alignnum)
-int rolenum, racenum, gendnum, alignnum;
+boolean 
+ok_gend (int rolenum, int racenum, int gendnum, int alignnum)
 {
     int i;
     short allow;
@@ -924,9 +917,8 @@ pick_gend (int rolenum, int racenum, int alignnum, int pickhow)
 
 /* is alignnum compatible with any rolenum/racenum/gendnum constraints? */
 /* alignment and gender are not comparable (and also not constrainable) */
-boolean
-ok_align(rolenum, racenum, gendnum, alignnum)
-int rolenum, racenum, gendnum, alignnum;
+boolean 
+ok_align (int rolenum, int racenum, int gendnum, int alignnum)
 {
     int i;
     short allow;

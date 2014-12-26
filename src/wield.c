@@ -380,10 +380,11 @@ dowieldquiver (void)
 
 /* used for #rub and for applying pick-axe, whip, grappling hook, or polearm */
 /* (moved from apply.c) */
-boolean
-wield_tool(obj, verb)
-struct obj *obj;
-const char *verb;       /* "rub",&c */
+boolean 
+wield_tool (
+    struct obj *obj,
+    const char *verb       /* "rub",&c */
+)
 {
     const char *what;
     boolean more_than_1;
@@ -575,11 +576,12 @@ untwoweapon (void)
 }
 
 /* Maybe rust object, or corrode it if acid damage is called for */
-void
-erode_obj(target, acid_dmg, fade_scrolls)
-struct obj *target;             /* object (e.g. weapon or armor) to erode */
-boolean acid_dmg;
-boolean fade_scrolls;
+void 
+erode_obj (
+    struct obj *target,             /* object (e.g. weapon or armor) to erode */
+    boolean acid_dmg,
+    boolean fade_scrolls
+)
 {
         int erosion;
         struct monst *victim;

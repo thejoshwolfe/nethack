@@ -1119,9 +1119,8 @@ _q3_path (int srow, int scol, int y2, int x2)
  *              m_canseeu()
  *              do_light_sources()
  */
-boolean
-clear_path(col1,row1,col2,row2)
-    int col1, row1, col2, row2;
+boolean 
+clear_path (int col1, int row1, int col2, int row2)
 {
     int result;
 

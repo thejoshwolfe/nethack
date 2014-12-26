@@ -358,9 +358,8 @@ init_obj_classes (void)
 /*
  * Is the character 'c' a valid monster class ?
  */
-boolean
-check_monster_char(c)
-char c;
+boolean 
+check_monster_char (char c)
 {
         return (def_char_to_monclass(c) != MAXMCLASSES);
 }
@@ -368,9 +367,8 @@ char c;
 /*
  * Is the character 'c' a valid object class ?
  */
-boolean
-check_object_char(c)
-char c;
+boolean 
+check_object_char (char c)
 {
         return (def_char_to_objclass(c) != MAXOCLASSES);
 }
@@ -517,8 +515,8 @@ wallify_map (void)
 /*
  * We need to check the subrooms apartenance to an existing room.
  */
-boolean
-check_subrooms()
+boolean 
+check_subrooms (void)
 {
         unsigned i, j, n_subrooms;
         boolean found, ok = TRUE;
@@ -867,11 +865,8 @@ store_room (void)
 /*
  * Output some info common to all special levels.
  */
-static boolean
-write_common_data(fd, typ, init, flgs)
-int fd, typ;
-lev_init *init;
-long flgs;
+static boolean 
+write_common_data (int fd, int typ, lev_init *init, long flgs)
 {
         char c;
         unsigned char len;
@@ -896,11 +891,8 @@ long flgs;
 /*
  * Output monster info, which needs string fixups, then release memory.
  */
-static boolean
-write_monsters(fd, nmonster_p, monsters_p)
-int fd;
-char *nmonster_p;
-monster ***monsters_p;
+static boolean 
+write_monsters (int fd, char *nmonster_p, monster ***monsters_p)
 {
         monster *m;
         char *name, *appr;
@@ -936,11 +928,8 @@ monster ***monsters_p;
 /*
  * Output object info, which needs string fixup, then release memory.
  */
-static boolean
-write_objects(fd, nobject_p, objects_p)
-int fd;
-char *nobject_p;
-object ***objects_p;
+static boolean 
+write_objects (int fd, char *nobject_p, object ***objects_p)
 {
         object *o;
         char *name;
@@ -970,11 +959,8 @@ object ***objects_p;
 /*
  * Output engraving info, which needs string fixup, then release memory.
  */
-static boolean
-write_engravings(fd, nengraving_p, engravings_p)
-int fd;
-char *nengraving_p;
-engraving ***engravings_p;
+static boolean 
+write_engravings (int fd, char *nengraving_p, engraving ***engravings_p)
 {
         engraving *e;
         char *engr;
@@ -1003,11 +989,8 @@ engraving ***engravings_p;
  * Open and write maze or rooms file, based on which pointer is non-null.
  * Return TRUE on success, FALSE on failure.
  */
-boolean
-write_level_file(filename, room_level, maze_level)
-char *filename;
-splev *room_level;
-specialmaze *maze_level;
+boolean 
+write_level_file (char *filename, splev *room_level, specialmaze *maze_level)
 {
         int fout;
         char lbuf[60];
@@ -1036,10 +1019,8 @@ specialmaze *maze_level;
  * Here we write the structure of the maze in the specified file (fd).
  * Also, we have to free the memory allocated via alloc().
  */
-static boolean
-write_maze(fd, maze)
-int fd;
-specialmaze *maze;
+static boolean 
+write_maze (int fd, specialmaze *maze)
 {
         short i,j;
         mazepart *pt;
@@ -1236,10 +1217,8 @@ specialmaze *maze;
 /*
  * Here we write the structure of the room level in the specified file (fd).
  */
-static boolean
-write_rooms(fd, lev)
-int fd;
-splev *lev;
+static boolean 
+write_rooms (int fd, splev *lev)
 {
         short i,j, size;
         room *pt;

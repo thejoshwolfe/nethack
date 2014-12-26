@@ -18,9 +18,8 @@ static const char *lock_action(void);
 static boolean obstructed(int,int);
 static void chest_shatter_msg(struct obj *);
 
-boolean
-picking_lock(x, y)
-        int *x, *y;
+boolean 
+picking_lock (int *x, int *y)
 {
         if (occupation == picklock) {
             *x = u.ux + u.dx;
@@ -32,9 +31,8 @@ picking_lock(x, y)
         }
 }
 
-boolean
-picking_at(x, y)
-int x, y;
+boolean 
+picking_at (int x, int y)
 {
         return (boolean)(occupation == picklock && xlock.door == &levl[x][y]);
 }
@@ -555,10 +553,8 @@ doopen (void)                /* try to open a door */
         return(1);
 }
 
-static
-boolean
-obstructed(x,y)
-int x, y;
+static boolean 
+obstructed (int x, int y)
 {
         struct monst *mtmp = m_at(x, y);
 
@@ -668,9 +664,11 @@ doclose (void)               /* try to close a door */
         return(1);
 }
 
-boolean                 /* box obj was hit with spell effect otmp */
-boxlock(obj, otmp)      /* returns true if something happened */
-struct obj *obj, *otmp; /* obj *is* a box */
+boolean 
+boxlock (      /* returns true if something happened */
+    struct obj *obj,
+    struct obj *otmp /* obj *is* a box */
+)
 {
         boolean res = 0;
 
@@ -704,10 +702,12 @@ struct obj *obj, *otmp; /* obj *is* a box */
         return res;
 }
 
-boolean                 /* Door/secret door was hit with spell effect otmp */
-doorlock(otmp,x,y)      /* returns true if something happened */
-struct obj *otmp;
-int x, y;
+boolean 
+doorlock (      /* returns true if something happened */
+    struct obj *otmp,
+    int x,
+    int y
+)
 {
         struct rm *door = &levl[x][y];
         boolean res = TRUE;

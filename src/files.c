@@ -8,7 +8,6 @@
 
 #include <ctype.h>
 #include <fcntl.h>
-
 #include <errno.h>
 
 #define FQN_NUMBUF 4
@@ -490,11 +489,8 @@ static char * make_lockname (const char *filename, char *lockname) {
 
 
 /* lock a file */
-    boolean
-lock_file(filename, whichprefix, retryct)
-    const char *filename;
-    int whichprefix;
-    int retryct;
+    boolean 
+lock_file (const char *filename, int whichprefix, int retryct)
 {
     char locknambuf[BUFSZ];
     const char *lockname;
@@ -638,15 +634,16 @@ static FILE * fopen_config_file(const char *filename) {
  * NOTE: zeros are inserted unless modlist is TRUE, in which case the list
  *  location is unchanged.  Callers must handle zeros if modlist is FALSE.
  */
-    static int
-get_uchars(fp, buf, bufp, list, modlist, size, name)
-    FILE *fp;           /* input file pointer */
-    char *buf;          /* read buffer, must be of size BUFSZ */
-    char *bufp;         /* current pointer */
-    unsigned char *list;        /* return list */
-    boolean modlist;    /* TRUE: list is being modified in place */
-    int  size;          /* return list size */
-    const char *name;           /* name of option for error message */
+    static int 
+get_uchars (
+    FILE *fp,           /* input file pointer */
+    char *buf,          /* read buffer, must be of size BUFSZ */
+    char *bufp,         /* current pointer */
+    unsigned char *list,        /* return list */
+    boolean modlist,    /* TRUE: list is being modified in place */
+    int size,          /* return list size */
+    const char *name           /* name of option for error message */
+)
 {
     unsigned int num = 0;
     int count = 0;
@@ -729,12 +726,8 @@ adjust_prefix (char *bufp, int prefixid)
 #define match_varname(INP,NAM,LEN) match_optname(INP, NAM, LEN, TRUE)
 
 /*ARGSUSED*/
-    int
-parse_config_line(fp, buf, tmp_ramdisk, tmp_levels)
-    FILE            *fp;
-    char            *buf;
-    char            *tmp_ramdisk;
-    char            *tmp_levels;
+    int 
+parse_config_line (FILE *fp, char *buf, char *tmp_ramdisk, char *tmp_levels)
 {
     char            *bufp, *altp;
     unsigned char   translate[MAXPCHARS];
@@ -871,7 +864,7 @@ read_config_file (const char *filename)
 }
 
     static FILE *
-fopen_wizkit_file()
+fopen_wizkit_file (void)
 {
     FILE *fp;
     char    tmp_wizkit[BUFSZ];

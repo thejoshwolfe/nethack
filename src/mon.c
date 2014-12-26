@@ -738,10 +738,8 @@ mpickgold (struct monst *mtmp)
     }
 }
 
-boolean
-mpickstuff(mtmp, str)
-        struct monst *mtmp;
-        const char *str;
+boolean 
+mpickstuff (struct monst *mtmp, const char *str)
 {
         struct obj *otmp, *otmp2;
 
@@ -817,10 +815,8 @@ int max_mon_load (struct monst *mtmp) {
 }
 
 /* for restricting monsters' object-pickup */
-boolean
-can_carry(mtmp,otmp)
-struct monst *mtmp;
-struct obj *otmp;
+boolean 
+can_carry (struct monst *mtmp, struct obj *otmp)
 {
         int otyp = otmp->otyp, newload = otmp->owt;
         struct permonst *mdat = mtmp->data;
@@ -1083,10 +1079,8 @@ mm_aggression (
         return 0L;
 }
 
-boolean
-monnear(mon, x, y)
-struct monst *mon;
-int x,y;
+boolean 
+monnear (struct monst *mon, int x, int y)
 /* Is the square close enough for the monster to move or attack into? */
 {
         int distance = dist2(mon->mx, mon->my, x, y);
@@ -1320,11 +1314,12 @@ mondead (struct monst *mtmp)
 }
 
 /* TRUE if corpse might be dropped, magr may die if mon was swallowed */
-boolean
-corpse_chance(mon, magr, was_swallowed)
-struct monst *mon;
-struct monst *magr;                     /* killer, if swallowed */
-boolean was_swallowed;                  /* digestion */
+boolean 
+corpse_chance (
+    struct monst *mon,
+    struct monst *magr,                     /* killer, if swallowed */
+    boolean was_swallowed                  /* digestion */
+)
 {
         struct permonst *mdat = mon->data;
         int i, tmp;
@@ -1754,11 +1749,13 @@ mnexto (        /* Make monster mtmp next to you (if possible) */
  *      1 - if a monster was moved from x, y to put mtmp at x, y.
  *      0 - in most cases.
  */
-boolean
-mnearto(mtmp,x,y,move_other)
-struct monst *mtmp;
-signed char x, y;
-boolean move_other;     /* make sure mtmp gets to x, y! so move m_at(x, y) */
+boolean 
+mnearto (
+    struct monst *mtmp,
+    signed char x,
+    signed char y,
+    boolean move_other     /* make sure mtmp gets to x, y! so move m_at(x, y) */
+)
 {
         struct monst *othermon = (struct monst *)0;
         signed char newx, newy;
@@ -2061,9 +2058,8 @@ restore_cham (struct monst *mon)
 }
 
 /* unwatched hiders may hide again; if so, a 1 is returned.  */
-static boolean
-restrap(mtmp)
-struct monst *mtmp;
+static boolean 
+restrap (struct monst *mtmp)
 {
         if(mtmp->cham || mtmp->mcan || mtmp->m_ap_type ||
            cansee(mtmp->mx, mtmp->my) || rn2(3) || (mtmp == u.ustuck) ||
@@ -2085,9 +2081,8 @@ struct monst *mtmp;
 short *animal_list = 0;         /* list of PM values for animal monsters */
 int animal_list_count;
 
-void
-mon_animal_list(construct)
-boolean construct;
+void 
+mon_animal_list (boolean construct)
 {
         if (construct) {
             short animal_temp[SPECIAL_PM];
@@ -2167,12 +2162,13 @@ select_newcham_form (struct monst *mon)
 }
 
 /* make a chameleon look like a new monster; returns 1 if it actually changed */
-int
-newcham(mtmp, mdat, polyspot, msg)
-struct monst *mtmp;
-struct permonst *mdat;
-boolean polyspot;       /* change is the result of wand or spell of polymorph */
-boolean msg;            /* "The oldmon turns into a newmon!" */
+int 
+newcham (
+    struct monst *mtmp,
+    struct permonst *mdat,
+    boolean polyspot,       /* change is the result of wand or spell of polymorph */
+    boolean msg            /* "The oldmon turns into a newmon!" */
+)
 {
         int mhp, hpn, hpd;
         int mndx, tryct;
@@ -2375,10 +2371,11 @@ can_be_hatched (int mnum)
 }
 
 /* type of egg laid by #sit; usually matches parent */
-int
-egg_type_from_parent(mnum, force_ordinary)
-int mnum;       /* parent monster; caller must handle lays_eggs() check */
-boolean force_ordinary;
+int 
+egg_type_from_parent (
+    int mnum,       /* parent monster; caller must handle lays_eggs() check */
+    boolean force_ordinary
+)
 {
     if (force_ordinary || !BREEDER_EGG) {
         if (mnum == PM_QUEEN_BEE) mnum = PM_KILLER_BEE;
@@ -2389,10 +2386,8 @@ boolean force_ordinary;
 
 /* decide whether an egg of the indicated monster type is viable; */
 /* also used to determine whether an egg or tin can be created... */
-boolean
-dead_species(m_idx, egg)
-int m_idx;
-boolean egg;
+boolean 
+dead_species (int m_idx, boolean egg)
 {
         /*
          * For monsters with both baby and adult forms, genociding either
@@ -2499,9 +2494,8 @@ golemeffects (struct monst *mon, int damtype, int dam)
     }
 }
 
-boolean
-angry_guards(silent)
-boolean silent;
+boolean 
+angry_guards (boolean silent)
 {
         struct monst *mtmp;
         int ct = 0, nct = 0, sct = 0, slct = 0;

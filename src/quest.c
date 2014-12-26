@@ -89,22 +89,21 @@ artitouch (void)
 }
 
 /* external hook for do.c (level change check) */
-boolean
-ok_to_quest()
+boolean 
+ok_to_quest (void)
 {
         return((boolean)((Qstat(got_quest) || Qstat(got_thanks)))
                         && (is_pure(FALSE) > 0));
 }
 
-static boolean
-not_capable()
+static boolean 
+not_capable (void)
 {
         return((boolean)(u.ulevel < MIN_QUEST_LEVEL));
 }
 
-static int
-is_pure(talk)
-boolean talk;
+static int 
+is_pure (boolean talk)
 {
     int purity;
     aligntyp original_alignment = u.ualignbase[A_ORIGINAL];
@@ -135,9 +134,8 @@ boolean talk;
  * This assumes that the hero is currently _in_ the quest dungeon and that
  * there is a single branch to and from it.
  */
-static void
-expulsion(seal)
-boolean seal;
+static void 
+expulsion (boolean seal)
 {
     branch *br;
     d_level *dest;

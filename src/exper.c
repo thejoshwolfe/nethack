@@ -165,9 +165,10 @@ newexplevel (void)
             pluslvl(TRUE);
 }
 
-void
-pluslvl(incr)
-boolean incr;   /* true iff via incremental experience growth */
+void 
+pluslvl (
+    boolean incr   /* true iff via incremental experience growth */
+)
 {               /*      (false for potion of gain level)      */
         int num;
 
@@ -208,9 +209,10 @@ boolean incr;   /* true iff via incremental experience growth */
 /* compute a random amount of experience points suitable for the hero's
    experience level:  base number of points needed to reach the current
    level plus a random portion of what it takes to get to the next level */
-long
-rndexp(gaining)
-boolean gaining;        /* gaining XP via potion vs setting XP for polyself */
+long 
+rndexp (
+    boolean gaining        /* gaining XP via potion vs setting XP for polyself */
+)
 {
         long minexp, maxexp, diff, factor, result;
 

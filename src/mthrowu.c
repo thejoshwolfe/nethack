@@ -88,11 +88,8 @@ thitu (
  * Returns 0 if object still exists (not destroyed).
  */
 
-static int
-drop_throw(obj, ohit, x, y)
-struct obj *obj;
-boolean ohit;
-int x,y;
+static int 
+drop_throw (struct obj *obj, boolean ohit, int x, int y)
 {
         int retvalu = 1;
         int create;
@@ -131,14 +128,13 @@ int x,y;
 
 /* an object launched by someone/thing other than player attacks a monster;
    return 1 if the object has stopped moving (hit or its range used up) */
-int
-ohitmon(mtmp, otmp, range, verbose)
-struct monst *mtmp;     /* accidental target */
-struct obj *otmp;       /* missile; might be destroyed by drop_throw */
-int range;              /* how much farther will object travel if it misses */
-                        /* Use -1 to signify to keep going even after hit, */
-                        /* unless its gone (used for rolling_boulder_traps) */
-boolean verbose;  /* give message(s) even when you can't see what happened */
+int 
+ohitmon (
+    struct monst *mtmp,     /* accidental target */
+    struct obj *otmp,       /* missile; might be destroyed by drop_throw */
+    int range,              /* how much farther will object travel if it misses */
+    boolean verbose  /* give message(s) even when you can't see what happened */
+)
 {
         int damage, tmp;
         boolean vis, ismimic;
@@ -686,9 +682,8 @@ breamu (                        /* monster breathes at you (ranged) */
         return(1);
 }
 
-boolean
-linedup(ax, ay, bx, by)
-signed char ax, ay, bx, by;
+boolean 
+linedup (signed char ax, signed char ay, signed char bx, signed char by)
 {
         tbx = ax - bx;  /* These two values are set for use */
         tby = ay - by;  /* after successful return.         */
@@ -705,9 +700,10 @@ signed char ax, ay, bx, by;
         return FALSE;
 }
 
-boolean
-lined_up(mtmp)          /* is mtmp in position to use ranged attack? */
-        struct monst *mtmp;
+boolean 
+lined_up (          /* is mtmp in position to use ranged attack? */
+    struct monst *mtmp
+)
 {
         return(linedup(mtmp->mux,mtmp->muy,mtmp->mx,mtmp->my));
 }
@@ -727,12 +723,14 @@ m_carrying (struct monst *mtmp, int type)
 }
 
 /* TRUE iff thrown/kicked/rolled object doesn't pass through iron bars */
-boolean
-hits_bars(obj_p, x, y, always_hit, whodidit)
-struct obj **obj_p;     /* *obj_p will be set to NULL if object breaks */
-int x, y;
-int always_hit; /* caller can force a hit for items which would fit through */
-int whodidit;   /* 1==hero, 0=other, -1==just check whether it'll pass thru */
+boolean 
+hits_bars (
+    struct obj **obj_p,     /* *obj_p will be set to NULL if object breaks */
+    int x,
+    int y,
+    int always_hit, /* caller can force a hit for items which would fit through */
+    int whodidit   /* 1==hero, 0=other, -1==just check whether it'll pass thru */
+)
 {
     struct obj *otmp = *obj_p;
     int obj_type = otmp->otyp;

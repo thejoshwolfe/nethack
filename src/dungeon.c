@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "dgn_file.h"
 #include "dlb.h"
@@ -296,10 +297,8 @@ correct_branch_type (struct tmpbranch *tbr)
  * extract_first is true, then the branch is already part of the list
  * but needs to be repositioned.
  */
-void
-insert_branch(new_branch, extract_first)
-   branch *new_branch;
-   boolean extract_first;
+void 
+insert_branch (branch *new_branch, boolean extract_first)
 {
     branch *curr, *prev;
     long new_val, curr_val, prev_val;
@@ -423,11 +422,12 @@ init_level (int dgn, int proto_index, struct proto_dungeon *pd)
     new_level->next    = (s_level *) 0;
 }
 
-static int
-possible_places(idx, map, pd)
-    int idx;        /* prototype index */
-    boolean *map;    /* array MAXLEVEL+1 in length */
-    struct proto_dungeon *pd;
+static int 
+possible_places (
+    int idx,        /* prototype index */
+    boolean *map,    /* array MAXLEVEL+1 in length */
+    struct proto_dungeon *pd
+)
 {
     int i, start, count;
     s_level *lev = pd->final_lev[idx];
@@ -455,10 +455,11 @@ possible_places(idx, map, pd)
 }
 
 /* Pick the nth TRUE entry in the given boolean array. */
-static signed char
-pick_level(map, nth)
-    boolean *map;    /* an array MAXLEVEL+1 in size */
-    int nth;
+static signed char 
+pick_level (
+    boolean *map,    /* an array MAXLEVEL+1 in size */
+    int nth
+)
 {
     int i;
     for (i = 1; i <= MAXLEVEL; i++)
@@ -475,10 +476,8 @@ pick_level(map, nth)
  * all possible places have been tried.  If all possible places have
  * been exausted, return false.
  */
-static boolean
-place_level(proto_index, pd)
-    int proto_index;
-    struct proto_dungeon *pd;
+static boolean 
+place_level (int proto_index, struct proto_dungeon *pd)
 {
     boolean map[MAXLEVEL+1];    /* valid levels are 1..MAXLEVEL inclusive */
     s_level *lev;
@@ -783,9 +782,10 @@ dunlevs_in_dungeon (    /* return the lowest level number for *this* dungeon*/
     return(dungeons[lev->dnum].num_dunlevs);
 }
 
-signed char
-deepest_lev_reached(noquest) /* return the lowest level explored in the game*/
-boolean noquest;
+signed char 
+deepest_lev_reached ( /* return the lowest level explored in the game*/
+    boolean noquest
+)
 {
     /* this function is used for three purposes: to provide a factor
      * of difficulty in monster generation; to provide a factor of
@@ -872,9 +872,11 @@ signed char depth(d_level *lev) {
     return((signed char)( dungeons[lev->dnum].depth_start + lev->dlevel - 1));
 }
 
-boolean
-on_level(lev1, lev2)    /* are "lev1" and "lev2" actually the same? */
-d_level    *lev1, *lev2;
+boolean 
+on_level (    /* are "lev1" and "lev2" actually the same? */
+    d_level *lev1,
+    d_level *lev2
+)
 {
     return((boolean)((lev1->dnum == lev2->dnum) && (lev1->dlevel == lev2->dlevel)));
 }
@@ -909,9 +911,8 @@ Is_branchlev (d_level *lev)
 }
 
 /* goto the next level (or appropriate dungeon) */
-void
-next_level(at_stairs)
-boolean    at_stairs;
+void 
+next_level (boolean at_stairs)
 {
     if (at_stairs && u.ux == sstairs.sx && u.uy == sstairs.sy) {
         /* Taking a down dungeon branch. */
@@ -927,9 +928,8 @@ boolean    at_stairs;
 }
 
 /* goto the previous level (or appropriate dungeon) */
-void
-prev_level(at_stairs)
-boolean    at_stairs;
+void 
+prev_level (boolean at_stairs)
 {
     if (at_stairs && u.ux == sstairs.sx && u.uy == sstairs.sy) {
         /* Taking an up dungeon branch. */
@@ -994,9 +994,8 @@ void u_on_dnstairs(void) {
         u_on_sstairs();
 }
 
-boolean
-On_stairs(x, y)
-signed char x, y;
+boolean 
+On_stairs (signed char x, signed char y)
 {
     return((boolean)((x == xupstair && y == yupstair) ||
            (x == xdnstair && y == ydnstair) ||
@@ -1005,16 +1004,14 @@ signed char x, y;
            (x == sstairs.sx && y == sstairs.sy)));
 }
 
-boolean
-Is_botlevel(lev)
-d_level *lev;
+boolean 
+Is_botlevel (d_level *lev)
 {
     return((boolean)(lev->dlevel == dungeons[lev->dnum].num_dunlevs));
 }
 
-boolean
-Can_dig_down(lev)
-d_level *lev;
+boolean 
+Can_dig_down (d_level *lev)
 {
     return((boolean)(!level.flags.hardfloor
         && !Is_botlevel(lev) && !Invocation_lev(lev)));
@@ -1025,9 +1022,8 @@ d_level *lev;
  * stronghold level.  Normally, the bottom level of a dungeon resists
  * both digging and falling.
  */
-boolean
-Can_fall_thru(lev)
-d_level *lev;
+boolean 
+Can_fall_thru (d_level *lev)
 {
     return((boolean)(Can_dig_down(lev) || Is_stronghold(lev)));
 }
@@ -1038,10 +1034,8 @@ d_level *lev;
  * level that has a stairwell style branch to the next higher dungeon.
  * Checks for amulets and such must be done elsewhere.
  */
-boolean
-Can_rise_up(x, y, lev)
-int    x, y;
-d_level *lev;
+boolean 
+Can_rise_up (int x, int y, d_level *lev)
 {
     /* can't rise up from inside the top of the Wizard's tower */
     /* KMH -- or in sokoban */
@@ -1111,17 +1105,19 @@ get_level (d_level *newlevel, int levnum)
 }
 
 
-boolean
-In_quest(lev)    /* are you in the quest dungeon? */
-d_level *lev;
+boolean 
+In_quest (    /* are you in the quest dungeon? */
+    d_level *lev
+)
 {
     return((boolean)(lev->dnum == quest_dnum));
 }
 
 
-boolean
-In_mines(lev)    /* are you in the mines dungeon? */
-d_level    *lev;
+boolean 
+In_mines (    /* are you in the mines dungeon? */
+    d_level *lev
+)
 {
     return((boolean)(lev->dnum == mines_dnum));
 }
@@ -1159,9 +1155,8 @@ dungeon_branch (const char *s)
  *
  * Assumes that end1 is always the "parent".
  */
-boolean
-at_dgn_entrance(s)
-    const char *s;
+boolean 
+at_dgn_entrance (const char *s)
 {
     branch *br;
 
@@ -1169,26 +1164,30 @@ at_dgn_entrance(s)
     return((boolean)(on_level(&u.uz, &br->end1) ? TRUE : FALSE));
 }
 
-boolean
-In_V_tower(lev)    /* is `lev' part of Vlad's tower? */
-d_level    *lev;
+boolean 
+In_V_tower (    /* is `lev' part of Vlad's tower? */
+    d_level *lev
+)
 {
     return((boolean)(lev->dnum == tower_dnum));
 }
 
-boolean
-On_W_tower_level(lev)    /* is `lev' a level containing the Wizard's tower? */
-d_level    *lev;
+boolean 
+On_W_tower_level (    /* is `lev' a level containing the Wizard's tower? */
+    d_level *lev
+)
 {
     return (boolean)(Is_wiz1_level(lev) ||
              Is_wiz2_level(lev) ||
              Is_wiz3_level(lev));
 }
 
-boolean
-In_W_tower(x, y, lev)    /* is <x,y> of `lev' inside the Wizard's tower? */
-int    x, y;
-d_level    *lev;
+boolean 
+In_W_tower (    /* is <x,y> of `lev' inside the Wizard's tower? */
+    int x,
+    int y,
+    d_level *lev
+)
 {
     if (!On_W_tower_level(lev)) return FALSE;
     /*
@@ -1205,9 +1204,10 @@ d_level    *lev;
 }
 
 
-boolean
-In_hell(lev)    /* are you in one of the Hell levels? */
-d_level    *lev;
+boolean 
+In_hell (    /* are you in one of the Hell levels? */
+    d_level *lev
+)
 {
     return((boolean)(dungeons[lev->dnum].flags.hellish));
 }
@@ -1222,9 +1222,11 @@ find_hell (    /* sets *lev to be the gateway to Gehennom... */
     lev->dlevel = 1;
 }
 
-void
-goto_hell(at_stairs, falling)    /* go directly to hell... */
-boolean    at_stairs, falling;
+void 
+goto_hell (    /* go directly to hell... */
+    boolean at_stairs,
+    boolean falling
+)
 {
     d_level lev;
 
@@ -1276,9 +1278,8 @@ induced_align (int pct)
 }
 
 
-boolean
-Invocation_lev(lev)
-d_level *lev;
+boolean 
+Invocation_lev (d_level *lev)
 {
     return((boolean)(In_hell(lev) &&
         lev->dlevel == (dungeons[lev->dnum].num_dunlevs - 1)));
@@ -1375,14 +1376,8 @@ br_string (int type)
 }
 
 /* Print all child branches between the lower and upper bounds. */
-static void
-print_branch(win, dnum, lower_bound, upper_bound, bymenu, lchoices)
-    winid win;
-    int   dnum;
-    int   lower_bound;
-    int   upper_bound;
-    boolean bymenu;
-    struct lchoice *lchoices;
+static void 
+print_branch (winid win, int dnum, int lower_bound, int upper_bound, boolean bymenu, struct lchoice *lchoices)
 {
     branch *br;
     char buf[BUFSZ];

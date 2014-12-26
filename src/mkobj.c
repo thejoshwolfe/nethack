@@ -317,10 +317,7 @@ static const char dknowns[] = {
 };
 
 struct obj *
-mksobj(otyp, init, artif)
-int otyp;
-boolean init;
-boolean artif;
+mksobj (int otyp, boolean init, boolean artif)
 {
         int mndx, tryct;
         struct obj *otmp;
@@ -820,12 +817,14 @@ mkgold (long amount, int x, int y)
  * resurrection.
  */
 struct obj *
-mkcorpstat(objtype, mtmp, ptr, x, y, init)
-int objtype;    /* CORPSE or STATUE */
-struct monst *mtmp;
-struct permonst *ptr;
-int x, y;
-boolean init;
+mkcorpstat (
+    int objtype,    /* CORPSE or STATUE */
+    struct monst *mtmp,
+    struct permonst *ptr,
+    int x,
+    int y,
+    boolean init
+)
 {
         struct obj *otmp;
 
@@ -915,9 +914,7 @@ save_mtraits (struct obj *obj, struct monst *mtmp)
  * the one contained within the obj.
  */
 struct monst *
-get_mtraits(obj, copyof)
-struct obj *obj;
-boolean copyof;
+get_mtraits (struct obj *obj, boolean copyof)
 {
         struct monst *mtmp = (struct monst *)0;
         struct monst *mnew = (struct monst *)0;
@@ -979,9 +976,8 @@ mk_named_object (
         return(otmp);
 }
 
-boolean
-is_flammable(otmp)
-struct obj *otmp;
+boolean 
+is_flammable (struct obj *otmp)
 {
         int otyp = otmp->otyp;
         int omat = objects[otyp].oc_material;
@@ -992,9 +988,8 @@ struct obj *otmp;
         return((boolean)((omat <= WOOD && omat != LIQUID) || omat == PLASTIC));
 }
 
-boolean
-is_rottable(otmp)
-struct obj *otmp;
+boolean 
+is_rottable (struct obj *otmp)
 {
         int otyp = otmp->otyp;
 

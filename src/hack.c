@@ -16,10 +16,8 @@ static void move_update(boolean);
 #define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
 
 
-boolean
-revive_nasty(x, y, msg)
-int x,y;
-const char *msg;
+boolean 
+revive_nasty (int x, int y, const char *msg)
 {
     struct obj *otmp, *otmp2;
     struct monst *mtmp;
@@ -461,28 +459,24 @@ dosinkfall (void)
         HLevitation--;
 }
 
-boolean
-may_dig(x,y)
-signed char x,y;
+boolean 
+may_dig (signed char x, signed char y)
 /* intended to be called only on ROCKs */
 {
     return (boolean)(!(IS_STWALL(levl[x][y].typ) &&
                         (levl[x][y].wall_info & W_NONDIGGABLE)));
 }
 
-boolean
-may_passwall(x,y)
-signed char x,y;
+boolean 
+may_passwall (signed char x, signed char y)
 {
    return (boolean)(!(IS_STWALL(levl[x][y].typ) &&
                         (levl[x][y].wall_info & W_NONPASSWALL)));
 }
 
 
-boolean
-bad_rock(mdat,x,y)
-struct permonst *mdat;
-signed char x,y;
+boolean 
+bad_rock (struct permonst *mdat, signed char x, signed char y)
 {
         return((boolean) ((In_sokoban(&u.uz) && sobj_at(BOULDER,x,y)) ||
                (IS_ROCK(levl[x][y].typ)
@@ -490,9 +484,8 @@ signed char x,y;
                     && !(passes_walls(mdat) && may_passwall(x,y)))));
 }
 
-boolean
-invocation_pos(x, y)
-signed char x, y;
+boolean 
+invocation_pos (signed char x, signed char y)
 {
         return((boolean)(Invocation_lev(&u.uz) && x == inv_pos.x && y == inv_pos.y));
 }
@@ -501,10 +494,8 @@ signed char x, y;
 /* return TRUE if (dx,dy) is an OK place to move
  * mode is one of DO_MOVE, TEST_MOVE or TEST_TRAV
  */
-boolean
-test_move(ux, uy, dx, dy, mode)
-int ux, uy, dx, dy;
-int mode;
+boolean 
+test_move (int ux, int uy, int dx, int dy, int mode)
 {
     int x = ux+dx;
     int y = uy+dy;
@@ -659,9 +650,8 @@ int mode;
  * inaccessible locations as valid intermediate path points.
  * Returns TRUE if a path was found.
  */
-static boolean
-findtravelpath(guess)
-boolean guess;
+static boolean 
+findtravelpath (boolean guess)
 {
     /* if travel to adjacent, reachable location, use normal movement rules */
     if (!guess && iflags.travel1 && distmin(u.ux, u.uy, u.tx, u.ty) == 1) {
@@ -1378,9 +1368,8 @@ invocation_message (void)
 }
 
 
-void
-spoteffects(pick)
-boolean pick;
+void 
+spoteffects (boolean pick)
 {
         struct monst *mtmp;
 
@@ -1485,10 +1474,8 @@ stillinwater:;
         }
 }
 
-static boolean
-monstinroom(mdat,roomno)
-struct permonst *mdat;
-int roomno;
+static boolean 
+monstinroom (struct permonst *mdat, int roomno)
 {
         struct monst *mtmp;
 
@@ -1566,9 +1553,8 @@ in_rooms (signed char x, signed char y, int typewanted)
 }
 
 /* is (x,y) in a town? */
-boolean
-in_town(x, y)
-int x, y;
+boolean 
+in_town (int x, int y)
 {
         s_level *slev = Is_special(&u.uz);
         struct mkroom *sroom;
@@ -1590,9 +1576,8 @@ int x, y;
         return !has_subrooms;
 }
 
-static void
-move_update(newlev)
-boolean newlev;
+static void 
+move_update (boolean newlev)
 {
         char *ptr1, *ptr2, *ptr3, *ptr4;
 
@@ -1632,9 +1617,8 @@ boolean newlev;
         *ptr2 = '\0';
 }
 
-void
-check_special_room(newlev)
-boolean newlev;
+void 
+check_special_room (boolean newlev)
 {
         struct monst *mtmp;
         char *ptr;
@@ -2031,11 +2015,8 @@ maybe_wail (void)
     }
 }
 
-void
-losehp(n, knam, k_format)
-int n;
-const char *knam;
-boolean k_format;
+void 
+losehp (int n, const char *knam, boolean k_format)
 {
         if (Upolyd) {
                 u.mh -= n;
@@ -2148,9 +2129,8 @@ max_capacity (void)
     return (wt - (2 * wc));
 }
 
-boolean
-check_capacity(str)
-const char *str;
+boolean 
+check_capacity (const char *str)
 {
     if(near_capacity() >= EXT_ENCUMBER) {
         if(str)

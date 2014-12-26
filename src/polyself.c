@@ -206,9 +206,8 @@ dead: /* we come directly here if their experience level went to 0 or less */
         (void) encumber_msg();
 }
 
-void
-polyself(forcecontrol)
-boolean forcecontrol;
+void 
+polyself (boolean forcecontrol)
 {
         char buf[BUFSZ];
         int old_light, new_light;
@@ -1085,9 +1084,8 @@ uunstick (void)
         u.ustuck = 0;
 }
 
-void
-skinback(silently)
-boolean silently;
+void 
+skinback (boolean silently)
 {
         if (uskin) {
                 if (!silently) Your("skin returns to its original form.");

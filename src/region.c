@@ -40,10 +40,8 @@ static callback_proc callbacks[] = {
 };
 
 /* Should be inlined. */
-boolean
-inside_rect(r, x, y)
-NhRect *r;
-int x, y;
+boolean 
+inside_rect (NhRect *r, int x, int y)
 {
     return (x >= r->lx && x <= r->hx && y >= r->ly && y <= r->hy);
 }
@@ -51,10 +49,8 @@ int x, y;
 /*
  * Check if a point is inside a region.
  */
-boolean
-inside_region(reg, x, y)
-NhRegion *reg;
-int x, y;
+boolean 
+inside_region (NhRegion *reg, int x, int y)
 {
     int i;
 
@@ -191,10 +187,8 @@ remove_mon_from_reg (NhRegion *reg, struct monst *mon)
  * It's probably quicker to check with the region internal list
  * than to check for coordinates.
  */
-boolean
-mon_in_region(reg, mon)
-NhRegion *reg;
-struct monst *mon;
+boolean 
+mon_in_region (NhRegion *reg, struct monst *mon)
 {
     int i;
 
@@ -356,10 +350,8 @@ run_regions (void)
 /*
  * check whether player enters/leaves one or more regions.
  */
-boolean
-in_out_region(x, y)
-signed char
-    x, y;
+boolean 
+in_out_region (signed char x, signed char y)
 {
     int i, f_indx;
 
@@ -407,10 +399,8 @@ signed char
 /*
  * check wether a monster enters/leaves one or more region.
 */
-boolean
-m_in_out_region(mon, x, y)
-struct monst *mon;
-signed char x, y;
+boolean 
+m_in_out_region (struct monst *mon, signed char x, signed char y)
 {
     int i, f_indx;
 
@@ -560,10 +550,11 @@ skip_lots:
         clear_regions();
 }
 
-void
-rest_regions(fd, ghostly)
-int fd;
-boolean ghostly; /* If a bones file restore */
+void 
+rest_regions (
+    int fd,
+    boolean ghostly /* If a bones file restore */
+)
 {
     int i, j;
     unsigned n;
@@ -678,10 +669,8 @@ reset_region_mids (NhRegion *reg)
  * Here is an example of an expire function that may prolong
  * region life after some mods...
  */
-boolean
-expire_gas_cloud(p1, p2)
-void * p1;
-void * p2;
+boolean 
+expire_gas_cloud (void *p1, void *p2)
 {
     NhRegion *reg;
     int damage;
@@ -699,10 +688,8 @@ void * p2;
     return TRUE;                /* OK, it's gone, you can free it! */
 }
 
-boolean
-inside_gas_cloud(p1, p2)
-void * p1;
-void * p2;
+boolean 
+inside_gas_cloud (void *p1, void *p2)
 {
     NhRegion *reg;
     struct monst *mtmp;

@@ -18,13 +18,8 @@ static boolean has_shrine(struct monst *);
  * Move for priests and shopkeepers.  Called from shk_move() and pri_move().
  * Valid returns are  1: moved  0: didn't  -1: let m_move do it  -2: died.
  */
-int
-move_special(mtmp,in_his_shop,appr,uondoor,avoid,omx,omy,gx,gy)
-struct monst *mtmp;
-boolean in_his_shop;
-signed char appr;
-boolean uondoor,avoid;
-signed char omx,omy,gx,gy;
+int 
+move_special (struct monst *mtmp, boolean in_his_shop, signed char appr, boolean uondoor, boolean avoid, signed char omx, signed char omy, signed char gx, signed char gy)
 {
         signed char nx,ny,nix,niy;
         signed char i;
@@ -171,12 +166,14 @@ pri_move (struct monst *priest)
 }
 
 /* exclusively for mktemple() */
-void
-priestini(lvl, sroom, sx, sy, sanctum)
-d_level *lvl;
-struct mkroom *sroom;
-int sx, sy;
-boolean sanctum;   /* is it the seat of the high priest? */
+void 
+priestini (
+    d_level *lvl,
+    struct mkroom *sroom,
+    int sx,
+    int sy,
+    boolean sanctum   /* is it the seat of the high priest? */
+)
 {
         struct monst *priest;
         struct obj *otmp;
@@ -273,16 +270,14 @@ priestname (
         return(pname);
 }
 
-boolean
-p_coaligned(priest)
-struct monst *priest;
+boolean 
+p_coaligned (struct monst *priest)
 {
         return((boolean)(u.ualign.type == ((int)EPRI(priest)->shralign)));
 }
 
-static boolean
-has_shrine(pri)
-struct monst *pri;
+static boolean 
+has_shrine (struct monst *pri)
 {
         struct rm *lev;
 
@@ -494,11 +489,7 @@ priest_talk (struct monst *priest)
 }
 
 struct monst *
-mk_roamer(ptr, alignment, x, y, peaceful)
-struct permonst *ptr;
-aligntyp alignment;
-signed char x, y;
-boolean peaceful;
+mk_roamer (struct permonst *ptr, aligntyp alignment, signed char x, signed char y, boolean peaceful)
 {
         struct monst *roamer;
         boolean coaligned = (u.ualign.type == alignment);
@@ -539,10 +530,12 @@ reset_hostility (struct monst *roamer)
         newsym(roamer->mx, roamer->my);
 }
 
-boolean
-in_your_sanctuary(mon, x, y)
-struct monst *mon;      /* if non-null, <mx,my> overrides <x,y> */
-signed char x, y;
+boolean 
+in_your_sanctuary (
+    struct monst *mon,      /* if non-null, <mx,my> overrides <x,y> */
+    signed char x,
+    signed char y
+)
 {
         char roomno;
         struct monst *priest;
@@ -668,10 +661,8 @@ clearpriests (void)
 }
 
 /* munge priest-specific structure when restoring -dlc */
-void
-restpriest(mtmp, ghostly)
-struct monst *mtmp;
-boolean ghostly;
+void 
+restpriest (struct monst *mtmp, boolean ghostly)
 {
     if(u.uz.dlevel) {
         if (ghostly)

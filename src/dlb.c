@@ -108,9 +108,10 @@ extern char *eos(char *);
  *
  * Return TRUE on success, FALSE on failure.
  */
-static boolean
-readlibdir(lp)
-    library *lp;    /* library pointer to fill in */
+static boolean 
+readlibdir (
+    library *lp    /* library pointer to fill in */
+)
 {
     int i;
     char *sp;
@@ -156,11 +157,8 @@ readlibdir(lp)
  * Look for the file in our directory structure.  Return 1 if successful,
  * 0 if not found.  Fill in the size and starting position.
  */
-static boolean
-find_file(name, lib, startp, sizep)
-    const char *name;
-    library **lib;
-    long *startp, *sizep;
+static boolean 
+find_file (const char *name, library **lib, long *startp, long *sizep)
 {
     int i, j;
     library *lp;
@@ -231,10 +229,8 @@ static void lib_dlb_cleanup(void) {
     close_library(&dlb_libs[i]);
 }
 
-static boolean
-lib_dlb_fopen(dp, name, mode)
-    dlb *dp;
-    const char *name, *mode;
+static boolean 
+lib_dlb_fopen (dlb *dp, const char *name, const char *mode)
 {
     long start, size;
     library *lp;

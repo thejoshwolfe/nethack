@@ -142,10 +142,8 @@ dofindgem (void) /* Find a gem in the sparkling waters. */
         exercise(A_WIS, TRUE);                  /* a discovery! */
 }
 
-void
-dryup(x, y, isyou)
-signed char x, y;
-boolean isyou;
+void 
+dryup (signed char x, signed char y, boolean isyou)
 {
         if (IS_FOUNTAIN(levl[x][y].typ) &&
             (!rn2(3) || FOUNTAIN_IS_WARNED(x,y))) {

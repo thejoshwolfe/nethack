@@ -80,9 +80,8 @@ find_lev_obj (void)
 /* Things that were marked "in_use" when the game was saved (ex. via the
  * infamous "HUP" cheat) get used up here.
  */
-void
-inven_inuse(quietly)
-boolean quietly;
+void 
+inven_inuse (boolean quietly)
 {
         struct obj *otmp, *otmp2;
 
@@ -126,10 +125,8 @@ restlevchn (int fd)
         }
 }
 
-static void
-restdamage(fd, ghostly)
-int fd;
-boolean ghostly;
+static void 
+restdamage (int fd, boolean ghostly)
 {
         int counter;
         struct damage *tmp_dam;
@@ -170,9 +167,7 @@ boolean ghostly;
 }
 
 static struct obj *
-restobjchn(fd, ghostly, frozen)
-int fd;
-boolean ghostly, frozen;
+restobjchn (int fd, boolean ghostly, boolean frozen)
 {
         struct obj *otmp, *otmp2 = 0;
         struct obj *first = (struct obj *)0;
@@ -220,9 +215,7 @@ boolean ghostly, frozen;
 }
 
 static struct monst *
-restmonchn(fd, ghostly)
-int fd;
-boolean ghostly;
+restmonchn (int fd, boolean ghostly)
 {
         struct monst *mtmp, *mtmp2 = 0;
         struct monst *first = (struct monst *)0;
@@ -328,11 +321,12 @@ ghostfruit (struct obj *otmp)
         else otmp->spe = fruitadd(oldf->fname);
 }
 
-static
-boolean
-restgamestate(fd, stuckid, steedid)
-int fd;
-unsigned int *stuckid, *steedid;        /* STEED */
+static boolean 
+restgamestate (
+    int fd,
+    unsigned int *stuckid,
+    unsigned int *steedid        /* STEED */
+)
 {
         /* discover is actually flags.explore */
         boolean remember_discover = discover;
@@ -548,11 +542,8 @@ trickery (char *reason)
         done(TRICKED);
 }
 
-void
-getlev(fd, pid, lev, ghostly)
-int fd, pid;
-signed char lev;
-boolean ghostly;
+void 
+getlev (int fd, int pid, signed char lev, boolean ghostly)
 {
         struct trap *trap;
         struct monst *mtmp;
@@ -757,9 +748,8 @@ add_id_mapping (unsigned gid, unsigned nid)
  * in the new ID value.  Otherwise, return false and return -1 in the new
  * ID.
  */
-boolean
-lookup_id_mapping(gid, nidp)
-    unsigned gid, *nidp;
+boolean 
+lookup_id_mapping (unsigned gid, unsigned *nidp)
 {
     int i;
     struct bucket *curr;
@@ -783,9 +773,8 @@ lookup_id_mapping(gid, nidp)
     return FALSE;
 }
 
-static void
-reset_oattached_mids(ghostly)
-boolean ghostly;
+static void 
+reset_oattached_mids (boolean ghostly)
 {
     struct obj *otmp;
     unsigned oldid, nid;

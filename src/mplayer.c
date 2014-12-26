@@ -103,10 +103,7 @@ mk_mplayer_armor (struct monst *mon, short typ)
 }
 
 struct monst *
-mk_mplayer(ptr, x, y, special)
-struct permonst *ptr;
-signed char x, y;
-boolean special;
+mk_mplayer (struct permonst *ptr, signed char x, signed char y, boolean special)
 {
         struct monst *mtmp;
         char nam[PL_NSIZ];
@@ -274,10 +271,8 @@ boolean special;
  * developers array, otherwise a bunch of Adams and Eves will
  * fill up the overflow.
  */
-void
-create_mplayers(num, special)
-int num;
-boolean special;
+void 
+create_mplayers (int num, boolean special)
 {
         int pm, x, y;
         struct monst fakemon;

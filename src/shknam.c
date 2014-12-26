@@ -419,10 +419,8 @@ stock_room (int shp_indx, struct mkroom *sroom)
 
 
 /* does shkp's shop stock this item type? */
-boolean
-saleable(shkp, obj)
-struct monst *shkp;
-struct obj *obj;
+boolean 
+saleable (struct monst *shkp, struct obj *obj)
 {
     int i, shp_indx = ESHK(shkp)->shoptype - SHOPBASE;
     const struct shclass *shp = &shtypes[shp_indx];

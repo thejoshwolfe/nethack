@@ -17,10 +17,8 @@ static boolean in_fcorridor(struct monst *,int,int);
 static void move_gold(struct obj *,int);
 static void wallify_vault(struct monst *);
 
-static boolean
-clear_fcorr(grd, forceshow)
-struct monst *grd;
-boolean forceshow;
+static boolean 
+clear_fcorr (struct monst *grd, boolean forceshow)
 {
         int fcx, fcy, fcbeg;
         struct monst *mtmp;
@@ -65,9 +63,10 @@ restfakecorr (struct monst *grd)
         if(clear_fcorr(grd, FALSE)) mongone(grd);
 }
 
-boolean
-grddead(grd)                            /* called in mon.c */
-struct monst *grd;
+boolean 
+grddead (                            /* called in mon.c */
+    struct monst *grd
+)
 {
         boolean dispose = clear_fcorr(grd, TRUE);
 
@@ -83,10 +82,8 @@ struct monst *grd;
         return(dispose);
 }
 
-static boolean
-in_fcorridor(grd, x, y)
-struct monst *grd;
-int x, y;
+static boolean 
+in_fcorridor (struct monst *grd, int x, int y)
 {
         int fci;
 
@@ -731,8 +728,8 @@ hidden_gold (void)
         return(value);
 }
 
-boolean
-gd_sound()  /* prevent "You hear footsteps.." when inappropriate */
+boolean 
+gd_sound (void)  /* prevent "You hear footsteps.." when inappropriate */
 {
         struct monst *grd = findgd();
 

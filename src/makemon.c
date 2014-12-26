@@ -31,9 +31,8 @@ extern const int monstr[];
 #define toostrong(monindx, lev) (monstr[monindx] > lev)
 #define tooweak(monindx, lev)   (monstr[monindx] < lev)
 
-boolean
-is_home_elemental(ptr)
-struct permonst *ptr;
+boolean 
+is_home_elemental (struct permonst *ptr)
 {
         if (ptr->mlet == S_ELEMENTAL)
             switch (monsndx(ptr)) {
@@ -48,9 +47,8 @@ struct permonst *ptr;
 /*
  * Return true if the given monster cannot exist on this elemental level.
  */
-static boolean
-wrong_elem_type(ptr)
-    struct permonst *ptr;
+static boolean 
+wrong_elem_type (struct permonst *ptr)
 {
     if (ptr->mlet == S_ELEMENTAL) {
         return((boolean)(!is_home_elemental(ptr)));
@@ -702,11 +700,8 @@ clone_mon (
  * Returns FALSE propagation unsuccessful
  *         TRUE  propagation successful
  */
-boolean
-propagate(mndx, tally, ghostly)
-int mndx;
-boolean tally;
-boolean ghostly;
+boolean 
+propagate (int mndx, boolean tally, boolean ghostly)
 {
         boolean result;
         unsigned char lim = mbirth_limit(mndx);
@@ -1000,10 +995,11 @@ mbirth_limit (int mndx)
 
 /* used for wand/scroll/spell of create monster */
 /* returns TRUE iff you know monsters have been created */
-boolean
-create_critters(cnt, mptr)
-int cnt;
-struct permonst *mptr;          /* usually null; used for confused reading */
+boolean 
+create_critters (
+    int cnt,
+    struct permonst *mptr          /* usually null; used for confused reading */
+)
 {
         coord c;
         int x, y;
@@ -1032,9 +1028,8 @@ struct permonst *mptr;          /* usually null; used for confused reading */
 }
 
 
-static boolean
-uncommon(mndx)
-int mndx;
+static boolean 
+uncommon (int mndx)
 {
         if (mons[mndx].geno & (G_NOGEN | G_UNIQ)) return TRUE;
         if (mvitals[mndx].mvflags & G_GONE) return TRUE;
@@ -1420,9 +1415,8 @@ golemhp (int type)
  *      Alignment vs. yours determines monster's attitude to you.
  *      ( some "animal" types are co-aligned, but also hungry )
  */
-boolean
-peace_minded(ptr)
-struct permonst *ptr;
+boolean 
+peace_minded (struct permonst *ptr)
 {
         aligntyp mal = ptr->maligntyp, ual = u.ualign.type;
 

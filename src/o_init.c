@@ -38,10 +38,8 @@ setgemprobs (d_level *dlev)
 }
 
 /* shuffle descriptions on objects o_low to o_high */
-static void
-shuffle(o_low, o_high, domaterial)
-        int o_low, o_high;
-        boolean domaterial;
+static void 
+shuffle (int o_low, int o_high, boolean domaterial)
 {
         int i, j, num_to_shuffle;
         short sw;
@@ -253,11 +251,8 @@ restnames (int fd)
             }
 }
 
-void
-discover_object(oindx, mark_as_known, credit_hero)
-int oindx;
-boolean mark_as_known;
-boolean credit_hero;
+void 
+discover_object (int oindx, boolean mark_as_known, boolean credit_hero)
 {
     if (!objects[oindx].oc_name_known) {
         int dindx, acls = objects[oindx].oc_class;
@@ -302,9 +297,8 @@ undiscover_object (int oindx)
     }
 }
 
-static boolean
-interesting_to_discover(i)
-int i;
+static boolean 
+interesting_to_discover (int i)
 {
         /* Pre-discovered objects are now printed with a '*' */
     return((boolean)(objects[i].oc_uname != (char *)0 ||

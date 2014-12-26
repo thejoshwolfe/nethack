@@ -104,9 +104,8 @@ spell_let_to_idx (char ilet)
 }
 
 /* TRUE: book should be destroyed by caller */
-static boolean
-cursed_book(bp)
-        struct obj *bp;
+static boolean 
+cursed_book (struct obj *bp)
 {
         int lev = objects[bp->otyp].oc_level;
 
@@ -174,9 +173,8 @@ cursed_book(bp)
 }
 
 /* study while confused: returns TRUE if the book is destroyed */
-static boolean
-confused_book(spellbook)
-struct obj *spellbook;
+static boolean 
+confused_book (struct obj *spellbook)
 {
         boolean gone = FALSE;
 
@@ -529,9 +527,8 @@ age_spells (void)
  * Return TRUE if a spell was picked, with the spell index in the return
  * parameter.  Otherwise return FALSE.
  */
-static boolean
-getspell(spell_no)
-        int *spell_no;
+static boolean 
+getspell (int *spell_no)
 {
         int nspells, idx;
         char ilet, lets[BUFSZ], qbuf[QBUFSZ];
@@ -701,10 +698,8 @@ spell_backfire (int spell)
     return;
 }
 
-int
-spelleffects(spell, atme)
-int spell;
-boolean atme;
+int 
+spelleffects (int spell, boolean atme)
 {
         int energy, damage, chance, n, intell;
         int skill, role_skill;
@@ -1036,11 +1031,12 @@ dovspell (void)
         return 0;
 }
 
-static boolean
-dospellmenu(prompt, splaction, spell_no)
-const char *prompt;
-int splaction;  /* SPELLMENU_CAST, SPELLMENU_VIEW, or spl_book[] index */
-int *spell_no;
+static boolean 
+dospellmenu (
+    const char *prompt,
+    int splaction,  /* SPELLMENU_CAST, SPELLMENU_VIEW, or spl_book[] index */
+    int *spell_no
+)
 {
         winid tmpwin;
         int i, n, how;

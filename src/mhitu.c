@@ -74,11 +74,12 @@ hitmsg (struct monst *mtmp, struct attack *mattk)
             }
 }
 
-static void
-missmu(mtmp, nearmiss, mattk)           /* monster missed you */
-struct monst *mtmp;
-boolean nearmiss;
-struct attack *mattk;
+static void 
+missmu (           /* monster missed you */
+    struct monst *mtmp,
+    boolean nearmiss,
+    struct attack *mattk
+)
 {
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
@@ -206,11 +207,12 @@ wildmiss (              /* monster attacked your displaced image */
                 Monnam(mtmp));
 }
 
-void
-expels(mtmp, mdat, message)
-struct monst *mtmp;
-struct permonst *mdat; /* if mtmp is polymorphed, mdat != mtmp->data */
-boolean message;
+void 
+expels (
+    struct monst *mtmp,
+    struct permonst *mdat, /* if mtmp is polymorphed, mdat != mtmp->data */
+    boolean message
+)
 {
         if (message) {
                 if (is_animal(mdat))
@@ -734,9 +736,8 @@ hurtarmor (int attk)
 }
 
 
-static boolean
-diseasemu(mdat)
-struct permonst *mdat;
+static boolean 
+diseasemu (struct permonst *mdat)
 {
         if (Sick_resistance) {
                 You_feel("a slight illness.");
@@ -749,10 +750,8 @@ struct permonst *mdat;
 }
 
 /* check whether slippery clothing protects from hug or wrap attack */
-static boolean
-u_slip_free(mtmp, mattk)
-struct monst *mtmp;
-struct attack *mattk;
+static boolean 
+u_slip_free (struct monst *mtmp, struct attack *mattk)
 {
         struct obj *obj = (uarmc ? uarmc : uarm);
 
@@ -1760,11 +1759,12 @@ gulpmu (        /* monster swallows you, or damage if u.uswallow */
         return(1);
 }
 
-static int
-explmu(mtmp, mattk, ufound)     /* monster explodes in your face */
-struct monst *mtmp;
-struct attack  *mattk;
-boolean ufound;
+static int 
+explmu (     /* monster explodes in your face */
+    struct monst *mtmp,
+    struct attack *mattk,
+    boolean ufound
+)
 {
     if (mtmp->mcan) return(0);
 

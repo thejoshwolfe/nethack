@@ -88,10 +88,11 @@ hurtmarmor (struct monst *mdef, int attk)
 }
 
 /* FALSE means it's OK to attack */
-boolean
-attack_checks(mtmp, wep)
-struct monst *mtmp;
-struct obj *wep;        /* uwep for attack(), null for kick_monster() */
+boolean 
+attack_checks (
+    struct monst *mtmp,
+    struct obj *wep        /* uwep for attack(), null for kick_monster() */
+)
 {
         char qbuf[QBUFSZ];
         char buf[BUFSZ];
@@ -294,9 +295,8 @@ find_roll_to_hit (struct monst *mtmp)
 
 /* try to attack; return FALSE if monster evaded */
 /* u.dx and u.dy must be set */
-boolean
-attack(mtmp)
-struct monst *mtmp;
+boolean 
+attack (struct monst *mtmp)
 {
         signed char tmp;
         struct permonst *mdat = mtmp->data;
@@ -413,11 +413,12 @@ atk_done:
         return(TRUE);
 }
 
-static boolean
-known_hitum(mon, mhit, uattk)   /* returns TRUE if monster still lives */
-struct monst *mon;
-int *mhit;
-struct attack *uattk;
+static boolean 
+known_hitum (   /* returns TRUE if monster still lives */
+    struct monst *mon,
+    int *mhit,
+    struct attack *uattk
+)
 {
         boolean malive = TRUE;
 
@@ -473,11 +474,12 @@ struct attack *uattk;
         return(malive);
 }
 
-static boolean
-hitum(mon, tmp, uattk)          /* returns TRUE if monster still lives */
-struct monst *mon;
-int tmp;
-struct attack *uattk;
+static boolean 
+hitum (          /* returns TRUE if monster still lives */
+    struct monst *mon,
+    int tmp,
+    struct attack *uattk
+)
 {
         boolean malive;
         int mhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
@@ -488,11 +490,12 @@ struct attack *uattk;
         return(malive);
 }
 
-boolean                 /* general "damage monster" routine */
-hmon(mon, obj, thrown)          /* return TRUE if mon still alive */
-struct monst *mon;
-struct obj *obj;
-int thrown;
+boolean 
+hmon (          /* return TRUE if mon still alive */
+    struct monst *mon,
+    struct obj *obj,
+    int thrown
+)
 {
         boolean result, anger_guards;
 
@@ -507,11 +510,8 @@ int thrown;
 }
 
 /* guts of hmon() */
-static boolean
-hmon_hitmon(mon, obj, thrown)
-struct monst *mon;
-struct obj *obj;
-int thrown;
+static boolean 
+hmon_hitmon (struct monst *mon, struct obj *obj, int thrown)
 {
         int tmp;
         struct permonst *mdat = mon->data;
@@ -1056,9 +1056,8 @@ int thrown;
         return((boolean)(destroyed ? FALSE : TRUE));
 }
 
-static boolean
-shade_aware(obj)
-struct obj *obj;
+static boolean 
+shade_aware (struct obj *obj)
 {
         if (!obj) return FALSE;
         /*
@@ -1079,10 +1078,8 @@ struct obj *obj;
 
 /* check whether slippery clothing protects from hug or wrap attack */
 /* [currently assumes that you are the attacker] */
-static boolean
-m_slips_free(mdef, mattk)
-struct monst *mdef;
-struct attack *mattk;
+static boolean 
+m_slips_free (struct monst *mdef, struct attack *mattk)
 {
         struct obj *obj;
 
@@ -1883,10 +1880,11 @@ missum (struct monst *mdef, struct attack *mattk)
                 wakeup(mdef);
 }
 
-static boolean
-hmonas(mon, tmp)                /* attack monster as a monster. */
-struct monst *mon;
-int tmp;
+static boolean 
+hmonas (                /* attack monster as a monster. */
+    struct monst *mon,
+    int tmp
+)
 {
         struct attack *mattk, alt_attk;
         int     i, sum[NATTK], hittmp = 0;

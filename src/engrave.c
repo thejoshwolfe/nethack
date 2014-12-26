@@ -126,8 +126,8 @@ wipeout_text (
         while (lth && engr[lth-1] == ' ') engr[--lth] = 0;
 }
 
-boolean
-can_reach_floor()
+boolean 
+can_reach_floor (void)
 {
         return (boolean)(!u.uswallow &&
                         /* Restricted/unskilled riders can't reach the floor */

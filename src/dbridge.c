@@ -26,9 +26,8 @@ static boolean e_jumps(struct entity *);
 static void do_entity(struct entity *);
 
 
-boolean
-is_pool(x,y)
-int x,y;
+boolean 
+is_pool (int x, int y)
 {
     signed char ltyp;
 
@@ -40,9 +39,8 @@ int x,y;
     return FALSE;
 }
 
-boolean
-is_lava(x,y)
-int x,y;
+boolean 
+is_lava (int x, int y)
 {
     signed char ltyp;
 
@@ -54,9 +52,8 @@ int x,y;
     return FALSE;
 }
 
-boolean
-is_ice(x,y)
-int x,y;
+boolean 
+is_ice (int x, int y)
 {
     signed char ltyp;
 
@@ -107,9 +104,8 @@ is_drawbridge_wall (int x, int y)
  * drawbridge "wall" is UP in the location x, y
  * (instead of UP or DOWN, as with is_drawbridge_wall).
  */
-boolean
-is_db_wall(x,y)
-int x,y;
+boolean 
+is_db_wall (int x, int y)
 {
         return((boolean)( levl[x][y].typ == DBWALL ));
 }
@@ -119,9 +115,8 @@ int x,y;
  * Return true with x,y pointing to the drawbridge if x,y initially indicate
  * a drawbridge or drawbridge wall.
  */
-boolean
-find_drawbridge(x,y)
-int *x,*y;
+boolean 
+find_drawbridge (int *x, int *y)
 {
         int dir;
 
@@ -306,10 +301,8 @@ E_phrase (struct entity *etmp, const char *verb)
  * Simple-minded "can it be here?" routine
  */
 
-static boolean
-e_survives_at(etmp, x, y)
-struct entity *etmp;
-int x, y;
+static boolean 
+e_survives_at (struct entity *etmp, int x, int y)
 {
         if (noncorporeal(etmp->edata))
                 return(TRUE);
@@ -392,9 +385,8 @@ e_died (struct entity *etmp, int dest, int how)
  * These are never directly affected by a bridge or portcullis.
  */
 
-static boolean
-automiss(etmp)
-struct entity *etmp;
+static boolean 
+automiss (struct entity *etmp)
 {
         return (boolean)((is_u(etmp) ? Passes_walls :
                         passes_walls(etmp->edata)) || noncorporeal(etmp->edata));
@@ -434,9 +426,8 @@ static boolean e_missed(struct entity *etmp, boolean chunks) {
  * Can etmp jump from death?
  */
 
-static boolean
-e_jumps(etmp)
-struct entity *etmp;
+static boolean 
+e_jumps (struct entity *etmp)
 {
         int tmp = 4;            /* out of 10 */
 

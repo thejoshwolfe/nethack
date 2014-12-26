@@ -181,9 +181,8 @@ p_glow2 (struct obj *otmp, const char *color)
 
 /* Is the object chargeable?  For purposes of inventory display; it is */
 /* possible to be able to charge things for which this returns FALSE. */
-boolean
-is_chargeable(obj)
-struct obj *obj;
+boolean 
+is_chargeable (struct obj *obj)
 {
         if (obj->oclass == WAND_CLASS) return TRUE;
         /* known && !uname is possible after amnesia/mind flayer */
@@ -1281,10 +1280,8 @@ set_lit (int x, int y, void *val)
         }
 }
 
-void
-litroom(on,obj)
-boolean on;
-struct obj *obj;
+void 
+litroom (boolean on, struct obj *obj)
 {
         char is_lit;    /* value is irrelevant; we use its address
                            as a `not null' flag for set_lit() */
@@ -1709,10 +1706,8 @@ unpunish (void)
  * normal locations -- if the player tries to create one elsewhere, or to revive
  * one, the disoriented creature becomes a zombie
  */
-boolean
-cant_create(mtype, revival)
-int *mtype;
-boolean revival;
+boolean 
+cant_create (int *mtype, boolean revival)
 {
 
         /* SHOPKEEPERS can be revived now */
@@ -1734,8 +1729,8 @@ boolean revival;
  * "strange object" (']') symbol produces a random monster rather
  * than a mimic; this behavior quirk is useful so don't "fix" it...
  */
-boolean
-create_particular()
+boolean 
+create_particular (void)
 {
         char buf[BUFSZ], *bufp, monclass = MAXMCLASSES;
         int which, tries, i;

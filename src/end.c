@@ -289,10 +289,8 @@ void panic (const char * str, ...) {
         done(PANICKED);
 }
 
-static boolean
-should_query_disclose_option(category, defquery)
-int category;
-char *defquery;
+static boolean 
+should_query_disclose_option (int category, char *defquery)
 {
     int idx;
     char *dop = index(disclosure_options, category);
@@ -327,10 +325,8 @@ char *defquery;
     return TRUE;
 }
 
-static void
-disclose(how,taken)
-int how;
-boolean taken;
+static void 
+disclose (int how, boolean taken)
 {
         char    c = 0, defquery;
         char    qbuf[QBUFSZ];
@@ -483,11 +479,12 @@ sort_valuables (
 }
 
 /* called twice; first to calculate total, then to list relevant items */
-static void
-artifact_score(list, counting, endwin)
-struct obj *list;
-boolean counting;       /* true => add up points; false => display them */
-winid endwin;
+static void 
+artifact_score (
+    struct obj *list,
+    boolean counting,       /* true => add up points; false => display them */
+    winid endwin
+)
 {
     char pbuf[BUFSZ];
     struct obj *otmp;
@@ -911,17 +908,14 @@ die:
 }
 
 
-void
-container_contents(list, identified, all_containers)
-struct obj *list;
-boolean identified, all_containers;
+void 
+container_contents (struct obj *list, boolean identified, boolean all_containers)
 {
         do_containerconts(list, identified, all_containers, FALSE);
 }
 
-void do_containerconts(list, identified, all_containers, want_dump)
-struct obj *list;
-boolean identified, all_containers, want_dump;
+void 
+do_containerconts (struct obj *list, boolean identified, boolean all_containers, boolean want_dump)
 /* The original container_contents function */
 {
         struct obj *box, *obj;
@@ -1016,19 +1010,14 @@ void terminate(int status) {
         nethack_exit(status);
 }
 
-static void
-list_vanquished(defquery, ask)
-char defquery;
-boolean ask;
+static void 
+list_vanquished (char defquery, boolean ask)
 {
   do_vanquished(defquery, ask, FALSE);
 }
 
-void
-do_vanquished(defquery, ask, want_dump)
-int defquery;
-boolean ask;
-boolean want_dump;
+void 
+do_vanquished (int defquery, boolean ask, boolean want_dump)
 {
     int i, lev;
     int ntypes = 0, max_lev = 0, nkilled;
@@ -1115,11 +1104,8 @@ num_genocides (void)
     return n;
 }
 
-static void
-list_genocided(defquery, ask, want_dump)
-int defquery;
-boolean ask;
-boolean want_dump;
+static void 
+list_genocided (int defquery, boolean ask, boolean want_dump)
 {
     int i;
     int ngenocided;

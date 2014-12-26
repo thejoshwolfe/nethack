@@ -764,9 +764,8 @@ u_init (void)
 }
 
 /* skills aren't initialized, so we use the role-specific skill lists */
-static boolean
-restricted_spell_discipline(otyp)
-int otyp;
+static boolean 
+restricted_spell_discipline (int otyp)
 {
     const struct def_skill *skills;
     int this_skill = spell_skilltype(otyp);

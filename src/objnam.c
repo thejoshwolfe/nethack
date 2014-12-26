@@ -163,9 +163,8 @@ simple_typename (int otyp)
     return bufp;
 }
 
-boolean
-obj_is_pname(obj)
-struct obj *obj;
+boolean 
+obj_is_pname (struct obj *obj)
 {
     return((boolean)(obj->dknown && obj->known && obj->onamelth &&
                      /* Since there aren't any objects which are both
@@ -195,8 +194,9 @@ distant_name (struct obj *obj, char *(*func)( struct obj *))
 /* convert player specified fruit name into corresponding fruit juice name
    ("slice of pizza" -> "pizza juice" rather than "slice of pizza juice") */
 char *
-fruitname(juice)
-boolean juice;  /* whether or not to append " juice" to the name */
+fruitname (
+    boolean juice  /* whether or not to append " juice" to the name */
+)
 {
     char *buf = nextobuf();
     const char *fruit_nam = strstri(pl_fruit, " of ");
@@ -217,9 +217,7 @@ xname (struct obj *obj)
         return xname2(obj, FALSE);
 }
 char *
-xname2(obj, ignore_oquan)
-struct obj *obj;
-boolean ignore_oquan;
+xname2 (struct obj *obj, boolean ignore_oquan)
 {
         char *buf;
         int typ = obj->otyp;
@@ -489,9 +487,8 @@ mshot_xname (struct obj *obj)
 
 
 /* used for naming "the unique_item" instead of "a unique_item" */
-boolean
-the_unique_obj(obj)
-struct obj *obj;
+boolean 
+the_unique_obj (struct obj *obj)
 {
     if (!obj->dknown)
         return FALSE;
@@ -762,9 +759,8 @@ ring:
 
 
 /* used from invent.c */
-boolean
-not_fully_identified(otmp)
-struct obj *otmp;
+boolean 
+not_fully_identified (struct obj *otmp)
 {
     /* check fundamental ID hallmarks first */
     if (!otmp->known || !otmp->dknown ||
@@ -791,9 +787,10 @@ struct obj *otmp;
 }
 
 char *
-corpse_xname(otmp, ignore_oquan)
-struct obj *otmp;
-boolean ignore_oquan;   /* to force singular */
+corpse_xname (
+    struct obj *otmp,
+    boolean ignore_oquan   /* to force singular */
+)
 {
         char *nambuf = nextobuf();
 
@@ -1569,11 +1566,12 @@ makesingular (const char *oldstr)
 }
 
 /* compare user string against object name string using fuzzy matching */
-static boolean
-wishymatch(u_str, o_str, retry_inverted)
-const char *u_str;      /* from user, so might be variant spelling */
-const char *o_str;      /* from objects[], so is in canonical form */
-boolean retry_inverted; /* optional extra "of" handling */
+static boolean 
+wishymatch (
+    const char *u_str,      /* from user, so might be variant spelling */
+    const char *o_str,      /* from objects[], so is in canonical form */
+    boolean retry_inverted /* optional extra "of" handling */
+)
 {
         /* special case: wizards can wish for traps.  The object is "beartrap"
          * and the trap is "bear trap", so to let wizards wish for both we
@@ -1674,10 +1672,7 @@ struct alt_spellings {
  * If from_user is false, we're reading from the wizkit, nothing was typed in.
  */
 struct obj *
-readobjnam(bp, no_wish, from_user)
-char *bp;
-struct obj *no_wish;
-boolean from_user;
+readobjnam (char *bp, struct obj *no_wish, boolean from_user)
 {
         char *p;
         int i;

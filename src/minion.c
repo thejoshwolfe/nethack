@@ -84,10 +84,8 @@ msummon (               /* mon summons a monster */
         }
 }
 
-void
-summon_minion(alignment, talk)
-aligntyp alignment;
-boolean talk;
+void 
+summon_minion (aligntyp alignment, boolean talk)
 {
     struct monst *mon;
     int mnum;

@@ -190,10 +190,8 @@ found_it:;
         }
 }
 
-static boolean
-is_ok_location(x, y, humidity)
-signed char x, y;
-int humidity;
+static boolean 
+is_ok_location (signed char x, signed char y, int humidity)
 {
         int typ;
 
@@ -282,10 +280,8 @@ get_free_room_loc (signed char *x, signed char *y, struct mkroom *croom)
         *x = try_x,  *y = try_y;
 }
 
-boolean
-check_room(lowx, ddx, lowy, ddy, vault)
-signed char *lowx, *ddx, *lowy, *ddy;
-boolean vault;
+boolean 
+check_room (signed char *lowx, signed char *ddx, signed char *lowy, signed char *ddy, boolean vault)
 {
         int x,y,hix = *lowx + *ddx, hiy = *lowy + *ddy;
         struct rm *lev;
@@ -333,12 +329,8 @@ chk:
  * This is still very incomplete...
  */
 
-boolean
-create_room(x,y,w,h,xal,yal,rtype,rlit)
-signed char     x,y;
-signed char     w,h;
-signed char     xal,yal;
-signed char     rtype, rlit;
+boolean 
+create_room (signed char x, signed char y, signed char w, signed char h, signed char xal, signed char yal, signed char rtype, signed char rlit)
 {
         signed char     xabs, yabs;
         int     wtmp, htmp, xaltmp, yaltmp, xtmp, ytmp;
@@ -1202,11 +1194,8 @@ static boolean search_door(struct mkroom *croom, signed char *x, signed char *y,
  * Dig a corridor between two points.
  */
 
-boolean
-dig_corridor(org,dest,nxcor,ftyp,btyp)
-coord *org, *dest;
-boolean nxcor;
-signed char ftyp, btyp;
+boolean 
+dig_corridor (coord *org, coord *dest, boolean nxcor, signed char ftyp, signed char btyp)
 {
         int dx=0, dy=0, dix, diy, cct;
         struct rm *crm;
@@ -1389,10 +1378,8 @@ create_corridor (corridor *c)
  * Fill a room (shop, zoo, etc...) with appropriate stuff.
  */
 
-void
-fill_room(croom, prefilled)
-struct mkroom *croom;
-boolean prefilled;
+void 
+fill_room (struct mkroom *croom, boolean prefilled)
 {
         if (!croom || croom->rtype == OROOM)
             return;
@@ -1716,9 +1703,8 @@ load_one_engraving (dlb *fd, engraving *e)
         e->engr.str[size] = '\0';
 }
 
-static boolean
-load_rooms(fd)
-dlb *fd;
+static boolean 
+load_rooms (dlb *fd)
 {
         signed char             nrooms, ncorr;
         char            n;
@@ -1970,9 +1956,8 @@ maze1xy (coord *m, int humidity)
  * Could be cleaner, but it works.
  */
 
-static boolean
-load_maze(fd)
-dlb *fd;
+static boolean 
+load_maze (dlb *fd)
 {
     signed char   x, y, typ;
     boolean prefilled, room_not_needed;
@@ -2524,9 +2509,8 @@ dlb *fd;
  * General loader
  */
 
-boolean
-load_special(name)
-const char *name;
+boolean 
+load_special (const char *name)
 {
         dlb *fd;
         boolean result = FALSE;

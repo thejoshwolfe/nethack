@@ -35,27 +35,25 @@ attacktype_fordmg (struct permonst *ptr, int atyp, int dtyp)
     return (struct attack *)0;
 }
 
-boolean
-attacktype(ptr, atyp)
-struct permonst *ptr;
-int atyp;
+boolean 
+attacktype (struct permonst *ptr, int atyp)
 {
     return attacktype_fordmg(ptr, atyp, AD_ANY) ? TRUE : FALSE;
 }
 
 
-boolean
-poly_when_stoned(ptr)
-    struct permonst *ptr;
+boolean 
+poly_when_stoned (struct permonst *ptr)
 {
     return((boolean)(is_golem(ptr) && ptr != &mons[PM_STONE_GOLEM] &&
             !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD)));
             /* allow G_EXTINCT */
 }
 
-boolean
-resists_drli(mon)       /* returns TRUE if monster is drain-life resistant */
-struct monst *mon;
+boolean 
+resists_drli (       /* returns TRUE if monster is drain-life resistant */
+    struct monst *mon
+)
 {
         struct permonst *ptr = mon->data;
         struct obj *wep = ((mon == &youmonst) ? uwep : MON_WEP(mon));
@@ -65,9 +63,10 @@ struct monst *mon;
                          (wep && wep->oartifact && defends(AD_DRLI, wep)));
 }
 
-boolean
-resists_magm(mon)       /* TRUE if monster is magic-missile resistant */
-struct monst *mon;
+boolean 
+resists_magm (       /* TRUE if monster is magic-missile resistant */
+    struct monst *mon
+)
 {
         struct permonst *ptr = mon->data;
         struct obj *o;
@@ -90,9 +89,8 @@ struct monst *mon;
 }
 
 /* TRUE iff monster is resistant to light-induced blindness */
-boolean
-resists_blnd(mon)
-struct monst *mon;
+boolean 
+resists_blnd (struct monst *mon)
 {
         struct permonst *ptr = mon->data;
         boolean is_you = (mon == &youmonst);
@@ -199,9 +197,10 @@ boolean can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, st
 }
 
 
-boolean
-ranged_attk(ptr)        /* returns TRUE if monster can attack at range */
-struct permonst *ptr;
+boolean 
+ranged_attk (        /* returns TRUE if monster can attack at range */
+    struct permonst *ptr
+)
 {
         int i, atyp;
         long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
@@ -221,9 +220,8 @@ struct permonst *ptr;
         return FALSE;
 }
 
-boolean
-hates_silver(ptr)
-struct permonst *ptr;
+boolean 
+hates_silver (struct permonst *ptr)
 /* returns TRUE if monster is especially affected by silver weapons */
 {
         return((boolean)(is_were(ptr) || ptr->mlet==S_VAMPIRE || is_demon(ptr) ||
@@ -232,9 +230,8 @@ struct permonst *ptr;
 }
 
 /* true iff the type of monster pass through iron bars */
-boolean
-passes_bars(mptr)
-struct permonst *mptr;
+boolean 
+passes_bars (struct permonst *mptr)
 {
     return (boolean) (passes_walls(mptr) || amorphous(mptr) ||
                       is_whirly(mptr) || verysmall(mptr) ||
@@ -242,9 +239,10 @@ struct permonst *mptr;
 }
 
 
-boolean
-can_track(ptr)          /* returns TRUE if monster can track well */
-        struct permonst *ptr;
+boolean 
+can_track (          /* returns TRUE if monster can track well */
+    struct permonst *ptr
+)
 {
         if (uwep && uwep->oartifact == ART_EXCALIBUR)
                 return TRUE;
@@ -253,17 +251,19 @@ can_track(ptr)          /* returns TRUE if monster can track well */
 }
 
 
-boolean
-sliparm(ptr)    /* creature will slide out of armor */
-        struct permonst *ptr;
+boolean 
+sliparm (    /* creature will slide out of armor */
+    struct permonst *ptr
+)
 {
         return((boolean)(is_whirly(ptr) || ptr->msize <= MZ_SMALL ||
                          noncorporeal(ptr)));
 }
 
-boolean
-breakarm(ptr)   /* creature will break out of armor */
-        struct permonst *ptr;
+boolean 
+breakarm (   /* creature will break out of armor */
+    struct permonst *ptr
+)
 {
         return ((bigmonst(ptr) || (ptr->msize > MZ_SMALL && !humanoid(ptr)) ||
                 /* special cases of humanoids that cannot wear body armor */
@@ -271,9 +271,10 @@ breakarm(ptr)   /* creature will break out of armor */
               && !sliparm(ptr));
 }
 
-boolean
-sticks(ptr)     /* creature sticks other creatures it hits */
-        struct permonst *ptr;
+boolean 
+sticks (     /* creature sticks other creatures it hits */
+    struct permonst *ptr
+)
 {
         return((boolean)(dmgtype(ptr,AD_STCK) || dmgtype(ptr,AD_WRAP) ||
                 attacktype(ptr,AT_HUGS)));
@@ -312,10 +313,8 @@ dmgtype_fromattack (struct permonst *ptr, int dtyp, int atyp)
     return (struct attack *)0;
 }
 
-boolean
-dmgtype(ptr, dtyp)
-struct permonst *ptr;
-int dtyp;
+boolean 
+dmgtype (struct permonst *ptr, int dtyp)
 {
     return dmgtype_fromattack(ptr, dtyp, AT_ANY) ? TRUE : FALSE;
 }

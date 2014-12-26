@@ -1246,10 +1246,11 @@ process_text_window (winid window, struct WinDesc *cw)
 }
 
 /*ARGSUSED*/
-void
-tty_display_nhwindow(window, blocking)
-    winid window;
-    boolean blocking;   /* with ttys, all windows are blocking */
+void 
+tty_display_nhwindow (
+    winid window,
+    boolean blocking   /* with ttys, all windows are blocking */
+)
 {
     struct WinDesc *cw = 0;
 
@@ -1663,16 +1664,17 @@ tty_start_menu (winid window)
  * Add a menu item to the beginning of the menu list.  This list is reversed
  * later.
  */
-void
-tty_add_menu(window, glyph, identifier, ch, gch, attr, str, preselected)
-    winid window;       /* window to use, must be of type NHW_MENU */
-    int glyph;          /* glyph to display with item (unused) */
-    const anything *identifier; /* what to return if selected */
-    char ch;            /* keyboard accelerator (0 = pick our own) */
-    char gch;           /* group accelerator (0 = no group) */
-    int attr;           /* attribute for string (like tty_putstr()) */
-    const char *str;    /* menu string */
-    boolean preselected; /* item is marked as selected */
+void 
+tty_add_menu (
+    winid window,       /* window to use, must be of type NHW_MENU */
+    int glyph,          /* glyph to display with item (unused) */
+    const anything *identifier, /* what to return if selected */
+    char ch,            /* keyboard accelerator (0 = pick our own) */
+    char gch,           /* group accelerator (0 = no group) */
+    int attr,           /* attribute for string (like tty_putstr()) */
+    const char *str,    /* menu string */
+    boolean preselected /* item is marked as selected */
+)
 {
     struct WinDesc *cw = 0;
     tty_menu_item *item;

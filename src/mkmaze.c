@@ -24,9 +24,8 @@ static void setup_waterlevel(void);
 static void unsetup_waterlevel(void);
 
 
-static boolean
-iswall(x,y)
-int x,y;
+static boolean 
+iswall (int x, int y)
 {
     int type;
 
@@ -36,9 +35,8 @@ int x,y;
             type == SDOOR || type == IRONBARS);
 }
 
-static boolean
-iswall_or_stone(x,y)
-    int x,y;
+static boolean 
+iswall_or_stone (int x, int y)
 {
     int type;
 
@@ -51,9 +49,8 @@ iswall_or_stone(x,y)
 }
 
 /* return TRUE if out of bounds, wall or rock */
-static boolean
-is_solid(x,y)
-    int x, y;
+static boolean 
+is_solid (int x, int y)
 {
     return (!isok(x,y) || IS_STWALL(levl[x][y].typ));
 }
@@ -190,10 +187,8 @@ wallification (int x1, int y1, int x2, int y2)
             }
 }
 
-static boolean
-okay(x,y,dir)
-int x,y;
-int dir;
+static boolean 
+okay (int x, int y, int dir)
 {
         move(&x,&y,dir);
         move(&x,&y,dir);
@@ -218,10 +213,8 @@ maze0xy (       /* find random starting point for maze generation */
  *      pos is inside restricted region (lx,ly,hx,hy) OR
  *      NOT (pos is corridor and a maze level OR pos is a room OR pos is air)
  */
-boolean
-bad_location(x, y, lx, ly, hx, hy)
-    signed char x, y;
-    signed char lx, ly, hx, hy;
+boolean 
+bad_location (signed char x, signed char y, signed char lx, signed char ly, signed char hx, signed char hy)
 {
     return((boolean)(occupied(x, y) ||
            within_bounded_area(x,y, lx,ly, hx,hy) ||
@@ -1161,11 +1154,8 @@ mk_bubble (int x, int y, int n)
  * in the immediate neighborhood of one, he/she may get sucked inside.
  * This property also makes leaving a bubble slightly difficult.
  */
-static void
-mv_bubble(b,dx,dy,ini)
-struct bubble *b;
-int dx, dy;
-boolean ini;
+static void 
+mv_bubble (struct bubble *b, int dx, int dy, boolean ini)
 {
         int x, y, i, j, colli = 0;
         struct container *cons, *ctemp;

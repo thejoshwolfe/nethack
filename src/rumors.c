@@ -62,10 +62,11 @@ init_rumors (dlb *fp)
  * of them contain such references anyway.
  */
 char *
-getrumor(truth, rumor_buf, exclude_cookie)
-int truth; /* 1=true, -1=false, 0=either */
-char *rumor_buf;
-boolean exclude_cookie;
+getrumor (
+    int truth, /* 1=true, -1=false, 0=either */
+    char *rumor_buf,
+    boolean exclude_cookie
+)
 {
         dlb     *rumors;
         long tidbit, beginning;
@@ -226,10 +227,8 @@ restore_oracles (int fd)
         }
 }
 
-void
-outoracle(special, delphi)
-boolean special;
-boolean delphi;
+void 
+outoracle (boolean special, boolean delphi)
 {
         char    line[COLNO];
         char    *endp;

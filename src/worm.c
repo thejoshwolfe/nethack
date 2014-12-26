@@ -134,11 +134,8 @@ initworm (struct monst *worm, int wseg_count)
  *  Get rid of all worm segments on and following the given pointer curr.
  *  The display may or may not need to be updated as we free the segments.
  */
-static
-void
-toss_wsegs(curr, display_update)
-    struct wseg *curr;
-    boolean display_update;
+static void 
+toss_wsegs (struct wseg *curr, boolean display_update)
 {
     struct wseg *seg;
 
@@ -424,10 +421,8 @@ see_wsegs (struct monst *worm)
  *
  *  Display all of the segments of the given worm for detection.
  */
-void
-detect_wsegs(worm, use_detection_glyph)
-    struct monst *worm;
-    boolean use_detection_glyph;
+void 
+detect_wsegs (struct monst *worm, boolean use_detection_glyph)
 {
     int num;
     struct wseg *curr = wtails[worm->wormno];
@@ -707,9 +702,8 @@ create_worm_tail (int num_segs)
  *  invisibility and telepathy (which should only show the head anyway).
  *  Mostly used in the canseemon() macro.
  */
-boolean
-worm_known(worm)
-struct monst *worm;
+boolean 
+worm_known (struct monst *worm)
 {
     struct wseg *curr = wtails[worm->wormno];
 

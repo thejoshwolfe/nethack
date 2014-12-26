@@ -41,11 +41,8 @@ static boolean spell_would_be_useless(struct monst *,unsigned int,int);
 extern const char * const flash_types[];        /* from zap.c */
 
 /* feedback when frustrated monster couldn't cast a spell */
-static
-void
-cursetxt(mtmp, undirected)
-struct monst *mtmp;
-boolean undirected;
+static void 
+cursetxt (struct monst *mtmp, boolean undirected)
 {
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
             const char *point_msg;  /* spellcasting monsters are impolite */
@@ -152,12 +149,8 @@ choose_clerical_spell (int spellnum)
  * 1: successful spell
  * 0: unsuccessful spell
  */
-int
-castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
-        struct monst *mtmp;
-        struct attack *mattk;
-        boolean thinks_it_foundyou;
-        boolean foundyou;
+int 
+castmu (struct monst *mtmp, struct attack *mattk, boolean thinks_it_foundyou, boolean foundyou)
 {
         int     dmg, ml = mtmp->m_lev;
         int ret;
@@ -646,11 +639,8 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
     if (dmg) mdamageu(mtmp, dmg);
 }
 
-static
-boolean
-is_undirected_spell(adtyp, spellnum)
-unsigned int adtyp;
-int spellnum;
+static boolean 
+is_undirected_spell (unsigned int adtyp, int spellnum)
 {
     if (adtyp == AD_SPEL) {
         switch (spellnum) {
@@ -677,12 +667,8 @@ int spellnum;
 }
 
 /* Some spells are useless under some circumstances. */
-static
-boolean
-spell_would_be_useless(mtmp, adtyp, spellnum)
-struct monst *mtmp;
-unsigned int adtyp;
-int spellnum;
+static boolean 
+spell_would_be_useless (struct monst *mtmp, unsigned int adtyp, int spellnum)
 {
     /* Some spells don't require the player to really be there and can be cast
      * by the monster when you're invisible, yet still shouldn't be cast when

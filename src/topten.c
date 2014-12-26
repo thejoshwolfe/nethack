@@ -81,10 +81,8 @@ observable_depth (d_level *lev)
             return depth(lev);
 }
 
-static void
-readentry(rfile,tt)
-FILE *rfile;
-struct toptenentry *tt;
+static void 
+readentry (FILE *rfile, struct toptenentry *tt)
 {
         static const char fmt[] = "%d.%d.%d %ld %d %d %d %d %d %d %ld %ld %d ";
         static const char fmt32[] = "%c%c %[^,],%[^\n]%*c";
@@ -128,10 +126,8 @@ struct toptenentry *tt;
         }
 }
 
-static void
-writeentry(rfile,tt)
-FILE *rfile;
-struct toptenentry *tt;
+static void 
+writeentry (FILE *rfile, struct toptenentry *tt)
 {
         (void) fprintf(rfile,"%d.%d.%d %ld %d %d %d %d %d %d %ld %ld %d ",
                 tt->ver_major, tt->ver_minor, tt->patchlevel,
@@ -409,11 +405,8 @@ outheader (void)
 }
 
 /* so>0: standout line; so=0: ordinary line */
-static void
-outentry(rank, t1, so)
-struct toptenentry *t1;
-int rank;
-boolean so;
+static void 
+outentry (int rank, struct toptenentry *t1, boolean so)
 {
         boolean second_line = TRUE;
         char linebuf[BUFSZ];
@@ -556,14 +549,8 @@ boolean so;
         dump(" ", linebuf[0]==' '? linebuf+1: linebuf);
 }
 
-static int
-score_wanted(current_ver, rank, t1, playerct, players, uid)
-boolean current_ver;
-int rank;
-struct toptenentry *t1;
-int playerct;
-const char **players;
-int uid;
+static int 
+score_wanted (boolean current_ver, int rank, struct toptenentry *t1, int playerct, const char **players, int uid)
 {
         int i;
 
@@ -709,10 +696,8 @@ prscore (int argc, char **argv)
         free_ttlist(tt_head);
 }
 
-static int
-classmon(plch, fem)
-        char *plch;
-        boolean fem;
+static int 
+classmon (char *plch, boolean fem)
 {
         int i;
 

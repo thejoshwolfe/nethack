@@ -89,9 +89,8 @@ rnd_rect (void)
  * otherwise returns FALSE
  */
 
-static boolean
-intersect(r1, r2, r3)
-NhRect *r1, *r2, *r3;
+static boolean 
+intersect (NhRect *r1, NhRect *r2, NhRect *r3)
 {
         if (r2->lx > r1->hx || r2->ly > r1->hy ||
             r2->hx < r1->lx || r2->hy < r1->ly)

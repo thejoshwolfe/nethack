@@ -226,10 +226,8 @@ doit:
  *  Return TRUE if caught (the gold taken care of), FALSE otherwise.
  *  The gold object is *not* attached to the fobj chain!
  */
-boolean
-ghitm(mtmp, gold)
-struct monst *mtmp;
-struct obj *gold;
+boolean 
+ghitm (struct monst *mtmp, struct obj *gold)
 {
         boolean msg_given = FALSE;
 

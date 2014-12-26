@@ -111,11 +111,8 @@ boolean boulder_hits_pool(struct obj *otmp, int rx, int ry, boolean pushing) {
  * called with the object not in any chain.  Returns TRUE if the object goes
  * away.
  */
-boolean
-flooreffects(obj,x,y,verb)
-struct obj *obj;
-int x,y;
-const char *verb;
+boolean 
+flooreffects (struct obj *obj, int x, int y, const char *verb)
 {
         struct trap *t;
         struct monst *mtmp;
@@ -382,10 +379,8 @@ giveback:
 
 
 /* some common tests when trying to drop or throw items */
-boolean
-canletgo(obj,word)
-struct obj *obj;
-const char *word;
+boolean 
+canletgo (struct obj *obj, const char *word)
 {
         if(obj->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL)){
                 if (*word)

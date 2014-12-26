@@ -351,10 +351,8 @@ nh_timeout (void)
 }
 
 
-void
-fall_asleep(how_long, wakeup_msg)
-int how_long;
-boolean wakeup_msg;
+void 
+fall_asleep (int how_long, boolean wakeup_msg)
 {
         stop_occupation();
         nomul(how_long);
@@ -987,10 +985,8 @@ burn_object (void *arg, long timeout)
  *
  * This is a "silent" routine - it should not print anything out.
  */
-void
-begin_burn(obj, already_lit)
-        struct obj *obj;
-        boolean already_lit;
+void 
+begin_burn (struct obj *obj, boolean already_lit)
 {
         int radius = 3;
         long turns = 0;
@@ -1080,10 +1076,8 @@ begin_burn(obj, already_lit)
  * Stop a burn timeout on the given object if timer attached.  Darken
  * light source.
  */
-void
-end_burn(obj, timer_attached)
-        struct obj *obj;
-        boolean timer_attached;
+void 
+end_burn (struct obj *obj, boolean timer_attached)
 {
         if (!obj->lamplit) {
             impossible("end_burn: obj %s not lit", xname(obj));
@@ -1358,12 +1352,8 @@ run_timers (void)
 /*
  * Start a timer.  Return TRUE if successful.
  */
-boolean
-start_timer(when, kind, func_index, arg)
-long when;
-short kind;
-short func_index;
-void * arg;
+boolean 
+start_timer (long when, short kind, short func_index, void *arg)
 {
     timer_element *gnu;
 
@@ -1567,9 +1557,8 @@ write_timer (int fd, timer_element *timer)
  * Return TRUE if the object will stay on the level when the level is
  * saved.
  */
-boolean
-obj_is_local(obj)
-    struct obj *obj;
+boolean 
+obj_is_local (struct obj *obj)
 {
     switch (obj->where) {
         case OBJ_INVENT:
@@ -1588,9 +1577,8 @@ obj_is_local(obj)
  * Return TRUE if the given monster will stay on the level when the
  * level is saved.
  */
-static boolean
-mon_is_local(mon)
-struct monst *mon;
+static boolean 
+mon_is_local (struct monst *mon)
 {
     struct monst *curr;
 
@@ -1607,9 +1595,8 @@ struct monst *mon;
  * Return TRUE if the timer is attached to something that will stay on the
  * level when the level is saved.
  */
-static boolean
-timer_is_local(timer)
-    timer_element *timer;
+static boolean 
+timer_is_local (timer_element *timer)
 {
     switch (timer->kind) {
         case TIMER_LEVEL:       return TRUE;
@@ -1626,10 +1613,8 @@ timer_is_local(timer)
  * Part of the save routine.  Count up the number of timers that would
  * be written.  If write_it is true, actually write the timer.
  */
-static int
-maybe_write_timer(fd, range, write_it)
-    int fd, range;
-    boolean write_it;
+static int 
+maybe_write_timer (int fd, int range, boolean write_it)
 {
     int count = 0;
     timer_element *curr;
@@ -1709,11 +1694,13 @@ save_timers (int fd, int mode, int range)
  * Pull in the structures from disk, but don't recalculate the object and
  * monster pointers.
  */
-void
-restore_timers(fd, range, ghostly, adjust)
-    int fd, range;
-    boolean ghostly;    /* restoring from a ghost level */
-    long adjust;        /* how much to adjust timeout */
+void 
+restore_timers (
+    int fd,
+    int range,
+    boolean ghostly,    /* restoring from a ghost level */
+    long adjust        /* how much to adjust timeout */
+)
 {
     int count;
     timer_element *curr;
@@ -1734,9 +1721,8 @@ restore_timers(fd, range, ghostly, adjust)
 
 
 /* reset all timers that are marked for reseting */
-void
-relink_timers(ghostly)
-    boolean ghostly;
+void 
+relink_timers (boolean ghostly)
 {
     timer_element *curr;
     unsigned nid;

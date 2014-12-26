@@ -123,8 +123,7 @@ eos (char *s)
 
 /* open_library(dlb.c) needs this (which normally comes from src/files.c) */
 FILE *
-fopen_datafile(filename, mode)
-const char *filename, *mode;
+fopen_datafile (const char *filename, const char *mode)
 {
     return fopen(filename, mode);
 }

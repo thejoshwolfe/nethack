@@ -144,9 +144,8 @@ intermed (void) /* return your intermediate target string */
         return (urole.intermed);
 }
 
-boolean
-is_quest_artifact(otmp)
-struct obj *otmp;
+boolean 
+is_quest_artifact (struct obj *otmp)
 {
         return((boolean)(otmp->oartifact == urole.questarti));
 }

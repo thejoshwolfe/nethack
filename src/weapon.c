@@ -493,10 +493,8 @@ select_hwep (   /* select a hand to hand weapon for the monster */
 /* Called after polymorphing a monster, robbing it, etc....  Monsters
  * otherwise never unwield stuff on their own.  Might print message.
  */
-void
-possibly_unwield(mon, polyspot)
-struct monst *mon;
-boolean polyspot;
+void 
+possibly_unwield (struct monst *mon, boolean polyspot)
 {
         struct obj *obj, *mw_tmp;
 
@@ -744,10 +742,8 @@ slots_required (int skill)
 
 /* return true if this skill can be advanced */
 /*ARGSUSED*/
-static boolean
-can_advance(skill, speedy)
-int skill;
-boolean speedy;
+static boolean 
+can_advance (int skill, boolean speedy)
 {
     return !P_RESTRICTED(skill)
             && P_SKILL(skill) < P_MAX_SKILL(skill) && (
@@ -759,9 +755,8 @@ boolean speedy;
 }
 
 /* return true if this skill could be advanced if more slots were available */
-static boolean
-could_advance(skill)
-int skill;
+static boolean 
+could_advance (int skill)
 {
     return !P_RESTRICTED(skill)
             && P_SKILL(skill) < P_MAX_SKILL(skill) && (
@@ -772,9 +767,8 @@ int skill;
 
 /* return true if this skill has reached its maximum and there's been enough
    practice to become eligible for the next step if that had been possible */
-static boolean
-peaked_skill(skill)
-int skill;
+static boolean 
+peaked_skill (int skill)
 {
     return !P_RESTRICTED(skill)
             && P_SKILL(skill) >= P_MAX_SKILL(skill) && (

@@ -1250,8 +1250,8 @@ dump_enlightenment (int final)
  * to help refresh them about who/what they are.
  * Returns FALSE if menu cancelled (dismissed with ESC), TRUE otherwise.
  */
-    static boolean
-minimal_enlightenment()
+    static boolean 
+minimal_enlightenment (void)
 {
     winid tmpwin;
     menu_item *selected;

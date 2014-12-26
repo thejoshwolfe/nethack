@@ -76,9 +76,8 @@ const char *hu_stat[] = {
  * Decide whether a particular object can be eaten by the possibly
  * polymorphed character.  Not used for monster checks.
  */
-boolean
-is_edible(obj)
-struct obj *obj;
+boolean 
+is_edible (struct obj *obj)
 {
         /* protect invocation tools but not Rider corpses (handled elsewhere)*/
      /* if (obj->oclass != FOOD_CLASS && obj_resists(obj, 0, 0)) */
@@ -173,9 +172,7 @@ eatmdone (void)              /* called after mimicing is over */
 
 /* ``[the(] singular(food, xname) [)]'' with awareness of unique monsters */
 static const char *
-food_xname(food, the_pfx)
-struct obj *food;
-boolean the_pfx;
+food_xname (struct obj *food, boolean the_pfx)
 {
         const char *result;
         int mnum = food->corpsenm;
@@ -372,9 +369,8 @@ eatfood (void)               /* called each move during eating process */
         }
 }
 
-static void
-done_eating(message)
-boolean message;
+static void 
+done_eating (boolean message)
 {
         victual.piece->in_use = TRUE;
         occupation = 0; /* do this early, so newuhs() knows we're done */
@@ -396,10 +392,8 @@ boolean message;
         victual.fullwarn = victual.eating = victual.doreset = FALSE;
 }
 
-static boolean
-maybe_cannibal(pm, allowmsg)
-int pm;
-boolean allowmsg;
+static boolean 
+maybe_cannibal (int pm, boolean allowmsg)
 {
         if (!CANNIBAL_ALLOWED() && your_race(&mons[pm])) {
                 if (allowmsg) {
@@ -2046,8 +2040,8 @@ unfaint (void)
 }
 
 
-boolean
-is_fainted()
+boolean 
+is_fainted (void)
 {
         return((boolean)(u.uhs == FAINTED));
 }
@@ -2058,9 +2052,10 @@ reset_faint (void)      /* call when a faint must be prematurely terminated */
         if(is_fainted()) nomul(0);
 }
 
-void
-newuhs(incr)            /* compute and comment on your (new?) hunger status */
-boolean incr;
+void 
+newuhs (            /* compute and comment on your (new?) hunger status */
+    boolean incr
+)
 {
         unsigned newhs;
         static unsigned save_hs;
@@ -2355,9 +2350,8 @@ consume_oeaten (struct obj *obj, int amt)
 
 /* called when eatfood occupation has been interrupted,
    or in the case of theft, is about to be interrupted */
-boolean
-maybe_finished_meal(stopping)
-boolean stopping;
+boolean 
+maybe_finished_meal (boolean stopping)
 {
         /* in case consume_oeaten() has decided that the food is all gone */
         if (occupation == eatfood && victual.usedtime >= victual.reqtime) {

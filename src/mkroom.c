@@ -29,9 +29,8 @@ static void rest_room(int,struct mkroom *);
 extern const struct shclass shtypes[];  /* defined in shknam.c */
 
 
-static boolean
-isbig(sroom)
-struct mkroom *sroom;
+static boolean 
+isbig (struct mkroom *sroom)
 {
         int area = (sroom->hx - sroom->lx + 1)
                            * (sroom->hy - sroom->ly + 1);
@@ -167,8 +166,7 @@ gottype:
 }
 
 static struct mkroom *
-pick_room(strict)
-boolean strict;
+pick_room (boolean strict)
 /* pick an unused room, preferably with only one door */
 {
         struct mkroom *sroom;
@@ -368,11 +366,8 @@ fill_zoo (struct mkroom *sroom)
 }
 
 /* make a swarm of undead around mm */
-void
-mkundead(mm, revive_corpses, mm_flags)
-coord *mm;
-boolean revive_corpses;
-int mm_flags;
+void 
+mkundead (coord *mm, boolean revive_corpses, int mm_flags)
 {
         int cnt = (level_difficulty() + 1)/10 + rnd(5);
         struct permonst *mdat;
@@ -492,9 +487,8 @@ mktemple (void)
         level.flags.has_temple = 1;
 }
 
-boolean
-nexttodoor(sx,sy)
-int sx, sy;
+boolean 
+nexttodoor (int sx, int sy)
 {
         int dx, dy;
         struct rm *lev;
@@ -507,9 +501,8 @@ int sx, sy;
         return(FALSE);
 }
 
-boolean
-has_dnstairs(sroom)
-struct mkroom *sroom;
+boolean 
+has_dnstairs (struct mkroom *sroom)
 {
         if (sroom == dnstairs_room)
                 return TRUE;
@@ -518,9 +511,8 @@ struct mkroom *sroom;
         return FALSE;
 }
 
-boolean
-has_upstairs(sroom)
-struct mkroom *sroom;
+boolean 
+has_upstairs (struct mkroom *sroom)
 {
         if (sroom == upstairs_room)
                 return TRUE;
@@ -542,19 +534,15 @@ somey (struct mkroom *croom)
         return rn2(croom->hy-croom->ly+1) + croom->ly;
 }
 
-boolean
-inside_room(croom, x, y)
-struct mkroom *croom;
-signed char x, y;
+boolean 
+inside_room (struct mkroom *croom, signed char x, signed char y)
 {
         return((boolean)(x >= croom->lx-1 && x <= croom->hx+1 &&
                 y >= croom->ly-1 && y <= croom->hy+1));
 }
 
-boolean
-somexy(croom, c)
-struct mkroom *croom;
-coord *c;
+boolean 
+somexy (struct mkroom *croom, coord *c)
 {
         int try_cnt = 0;
         int i;

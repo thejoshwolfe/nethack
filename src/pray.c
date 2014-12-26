@@ -1021,9 +1021,8 @@ pleased (aligntyp g_align)
 /* either blesses or curses water on the altar,
  * returns true if it found any water here.
  */
-static boolean
-water_prayer(bless_water)
-    boolean bless_water;
+static boolean 
+water_prayer (boolean bless_water)
 {
     struct obj* otmp;
     long changed = 0;
@@ -1490,9 +1489,10 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
 
 
 /* determine prayer results in advance; also used for enlightenment */
-boolean
-can_pray(praying)
-boolean praying;        /* false means no messages should be given */
+boolean 
+can_pray (
+    boolean praying        /* false means no messages should be given */
+)
 {
     int alignment;
 
@@ -1824,9 +1824,8 @@ altar_wrath (int x, int y)
 }
 
 /* assumes isok() at one space away, but not necessarily at two */
-static boolean
-blocked_boulder(dx,dy)
-int dx,dy;
+static boolean 
+blocked_boulder (int dx, int dy)
 {
     struct obj *otmp;
     long count = 0L;

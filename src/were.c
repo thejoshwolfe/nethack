@@ -80,12 +80,13 @@ new_were (struct monst *mon)
         possibly_unwield(mon, FALSE);
 }
 
-int
-were_summon(ptr,yours,visible,genbuf)   /* were-creature (even you) summons a horde */
-struct permonst *ptr;
-boolean yours;
-int *visible;                   /* number of visible helpers created */
-char *genbuf;
+int 
+were_summon (   /* were-creature (even you) summons a horde */
+    struct permonst *ptr,
+    boolean yours,
+    int *visible,                   /* number of visible helpers created */
+    char *genbuf
+)
 {
         int i, typ, pm = monsndx(ptr);
         struct monst *mtmp;
@@ -141,9 +142,8 @@ you_were (void)
         (void) polymon(u.ulycn);
 }
 
-void
-you_unwere(purify)
-boolean purify;
+void 
+you_unwere (boolean purify)
 {
         if (purify) {
             You_feel("purified.");

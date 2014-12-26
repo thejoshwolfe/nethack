@@ -66,9 +66,8 @@ void getmailstatus(void) {
  * Pick coordinates for a starting position for the mail daemon.  Called
  * from newmail() and newphone().
  */
-static boolean
-md_start(startp)
-    coord *startp;
+static boolean 
+md_start (coord *startp)
 {
     coord testcc;       /* scratch coordinates */
     int row;            /* current row we are checking */
@@ -167,10 +166,11 @@ retry:
  * enexto().  Use enexto() as a last resort because enexto() chooses
  * its point randomly, which is not what we want.
  */
-static boolean
-md_stop(stopp, startp)
-    coord *stopp;       /* stopping position (we fill it in) */
-    coord *startp;      /* starting positon (read only) */
+static boolean 
+md_stop (
+    coord *stopp,       /* stopping position (we fill it in) */
+    coord *startp      /* starting positon (read only) */
+)
 {
     int x, y, distance, min_distance = -1;
 
@@ -211,10 +211,12 @@ static const char *mail_text[] = {
  * FALSE if the md gets stuck in a position where there is a monster.  Return
  * TRUE otherwise.
  */
-static boolean
-md_rush(md,tx,ty)
-    struct monst *md;
-    int tx, ty;         /* destination of mail daemon */
+static boolean 
+md_rush (
+    struct monst *md,
+    int tx,
+    int ty         /* destination of mail daemon */
+)
 {
     struct monst *mon;                  /* displaced monster */
     int dx, dy;         /* direction counters */

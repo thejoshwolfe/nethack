@@ -338,12 +338,8 @@ hitfloor (struct obj *obj)
  * and return FALSE.  If stopped early, dest_cc will be the location
  * before the failed callback.
  */
-boolean
-walk_path(src_cc, dest_cc, check_proc, arg)
-    coord *src_cc;
-    coord *dest_cc;
-    boolean (*check_proc)(void *, int, int);
-    void * arg;
+boolean 
+walk_path (coord *src_cc, coord *dest_cc, boolean (*check_proc)(void *, int, int), void *arg)
 {
     int x, y, dx, dy, x_change, y_change, err, i, prev_x, prev_y;
     boolean keep_going = TRUE;
@@ -422,10 +418,8 @@ walk_path(src_cc, dest_cc, check_proc, arg)
  *      o bounce off walls
  *      o let jumps go over boulders
  */
-boolean
-hurtle_step(arg, x, y)
-    void * arg;
-    int x, y;
+boolean 
+hurtle_step (void *arg, int x, int y)
 {
     int ox, oy, *range = (int *)arg;
     struct obj *obj;
@@ -541,10 +535,8 @@ hurtle_step(arg, x, y)
     return TRUE;
 }
 
-static boolean
-mhurtle_step(arg, x, y)
-    void * arg;
-    int x, y;
+static boolean 
+mhurtle_step (void *arg, int x, int y)
 {
         struct monst *mon = (struct monst *)arg;
 
@@ -789,9 +781,8 @@ static boolean toss_up(struct obj *obj, boolean hitsroof) {
 }
 
 /* return true for weapon meant to be thrown; excludes ammo */
-static boolean
-throwing_weapon(obj)
-struct obj *obj;
+static boolean 
+throwing_weapon (struct obj *obj)
 {
         return (is_missile(obj) || is_spear(obj) ||
                 /* daggers and knife (excludes scalpel) */
@@ -1464,12 +1455,9 @@ nopick:
  * The hero causes breakage of an object (throwing, dropping it, etc.)
  * Return 0 if the object didn't break, 1 if the object broke.
  */
-int
-hero_breaks(obj, x, y, from_invent)
-struct obj *obj;
-signed char x, y;               /* object location (ox, oy may not be right) */
-boolean from_invent;    /* thrown or dropped by player; maybe on shop bill */
-{
+// signed char x, y;               /* object location (ox, oy may not be right) */
+// boolean from_invent;    /* thrown or dropped by player; maybe on shop bill */
+int hero_breaks(struct obj *obj, signed char x, signed char y, boolean from_invent) {
         boolean in_view = !Blind;
         if (!breaktest(obj)) return 0;
         breakmsg(obj, in_view);
@@ -1571,9 +1559,8 @@ static void breakobj(struct obj *obj, signed char x, signed char y,
  * Check to see if obj is going to break, but don't actually break it.
  * Return 0 if the object isn't going to break, 1 if it is.
  */
-boolean
-breaktest(obj)
-struct obj *obj;
+boolean 
+breaktest (struct obj *obj)
 {
         if (obj_resists(obj, 1, 99)) return 0;
         if (objects[obj->otyp].oc_material == GLASS && !obj->oartifact &&
@@ -1593,10 +1580,8 @@ struct obj *obj;
         }
 }
 
-static void
-breakmsg(obj, in_view)
-struct obj *obj;
-boolean in_view;
+static void 
+breakmsg (struct obj *obj, boolean in_view)
 {
         const char *to_pieces;
 

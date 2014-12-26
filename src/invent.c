@@ -418,10 +418,11 @@ useup (struct obj *obj)
 }
 
 /* use one charge from an item and possibly incur shop debt for it */
-void
-consume_obj_charge(obj, maybe_unpaid)
-struct obj *obj;
-boolean maybe_unpaid;   /* false if caller handles shop billing */
+void 
+consume_obj_charge (
+    struct obj *obj,
+    boolean maybe_unpaid   /* false if caller handles shop billing */
+)
 {
         if (maybe_unpaid) check_unpaid(obj);
         obj->spe -= 1;
@@ -555,8 +556,8 @@ currency (long amount)
         else return "zorkmids";
 }
 
-boolean
-have_lizard()
+boolean 
+have_lizard (void)
 {
         struct obj *otmp;
 
@@ -580,10 +581,8 @@ o_on (unsigned int id, struct obj *objchn)
         return((struct obj *) 0);
 }
 
-boolean
-obj_here(obj, x, y)
-struct obj *obj;
-int x, y;
+boolean 
+obj_here (struct obj *obj, int x, int y)
 {
         struct obj *otmp;
 
@@ -648,17 +647,15 @@ compactify (char *buf)
 }
 
 /* match the prompt for either 'T' or 'R' command */
-static boolean
-taking_off(action)
-const char *action;
+static boolean 
+taking_off (const char *action)
 {
     return !strcmp(action, "take off") || !strcmp(action, "remove");
 }
 
 /* match the prompt for either 'W' or 'P' command */
-static boolean
-putting_on(action)
-const char *action;
+static boolean 
+putting_on (const char *action)
 {
     return !strcmp(action, "wear") || !strcmp(action, "put on");
 }
@@ -1006,15 +1003,14 @@ ckunpaid (struct obj *otmp)
         return((int)(otmp->unpaid));
 }
 
-boolean
-wearing_armor()
+boolean 
+wearing_armor (void)
 {
         return((boolean)(uarm || uarmc || uarmf || uarmg || uarmh || uarms || uarmu));
 }
 
-boolean
-is_worn(otmp)
-struct obj *otmp;
+boolean 
+is_worn (struct obj *otmp)
 {
     return((boolean)(!!(otmp->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL |
                         W_SADDLE |
@@ -1027,12 +1023,14 @@ static const char removeables[] =
 /* interactive version of getobj - used for Drop, Identify and */
 /* Takeoff (A). Return the number of times fn was called successfully */
 /* If combo is TRUE, we just use this to get a category list */
-int
-ggetobj(word, fn, mx, combo, resultflags)
-const char *word;
-int (*fn)(struct obj *), mx;
-boolean combo;          /* combination menu flag */
-unsigned *resultflags;
+int 
+ggetobj (
+    const char *word,
+    int (*fn)(struct obj *),
+    int mx,
+    boolean combo,          /* combination menu flag */
+    unsigned *resultflags
+)
 {
         int (*ckfn)(struct obj *) = (int (*)(struct obj *)) 0;
         boolean (*filter)(struct obj *) = (boolean (*)(struct obj *)) 0;
@@ -1417,13 +1415,14 @@ prinv (const char *prefix, struct obj *obj, long quan)
 
 
 char *
-xprname(obj, txt, let, dot, cost, quan)
-struct obj *obj;
-const char *txt;        /* text to print instead of obj */
-char let;               /* inventory letter */
-boolean dot;            /* append period; (dot && cost => Iu) */
-long cost;              /* cost (for inventory of unpaid or expended items) */
-long quan;              /* if non-0, print this quantity, not obj->quan */
+xprname (
+    struct obj *obj,
+    const char *txt,        /* text to print instead of obj */
+    char let,               /* inventory letter */
+    boolean dot,            /* append period; (dot && cost => Iu) */
+    long cost,              /* cost (for inventory of unpaid or expended items) */
+    long quan              /* if non-0, print this quantity, not obj->quan */
+)
 {
     static char li[BUFSZ];
     boolean use_invlet = flags.invlet_constant && let != CONTAINED_SYM;
@@ -1504,12 +1503,8 @@ find_unpaid (struct obj *list, struct obj **last_found)
  * inventory and return a count as well as a letter. If out_cnt is not null,
  * any count returned from the menu selection is placed here.
  */
-static char
-display_pickinv(lets, want_reply, out_cnt, want_dump)
-const char *lets;
-boolean want_reply;
-long* out_cnt;
-boolean want_dump;
+static char 
+display_pickinv (const char *lets, boolean want_reply, long *out_cnt, boolean want_dump)
 {
         struct obj *otmp;
         struct obj **oarray;
@@ -1660,10 +1655,8 @@ nextclass:
  * Returns the letter identifier of a selected item, or 0 if nothing
  * was selected.
  */
-char
-display_inventory(lets, want_reply)
-const char *lets;
-boolean want_reply;
+char 
+display_inventory (const char *lets, boolean want_reply)
 {
         return display_pickinv(lets, want_reply, (long *)0
                                 , FALSE
@@ -1671,10 +1664,8 @@ boolean want_reply;
 }
 
 /* See display_inventory. This is the same thing WITH dumpfile creation */
-char
-dump_inventory(lets, want_reply)
-const char *lets;
-boolean want_reply;
+char 
+dump_inventory (const char *lets, boolean want_reply)
 {
   return display_pickinv(lets, want_reply, (long *)0, TRUE);
 }
@@ -1826,9 +1817,8 @@ dounpaid (void)
 /* query objlist callback: return TRUE if obj type matches "this_type" */
 static int this_type;
 
-static boolean
-this_type_only(obj)
-    struct obj *obj;
+static boolean 
+this_type_only (struct obj *obj)
 {
     return (obj->oclass == this_type);
 }
@@ -2002,10 +1992,11 @@ dfeature_at (int x, int y, char *buf)
 
 /* look at what is here; if there are many objects (5 or more),
    don't show them unless obj_cnt is 0 */
-int
-look_here(obj_cnt, picked_some)
-int obj_cnt;    /* obj_cnt > 0 implies that autopickup is in progess */
-boolean picked_some;
+int 
+look_here (
+    int obj_cnt,    /* obj_cnt > 0 implies that autopickup is in progess */
+    boolean picked_some
+)
 {
         struct obj *otmp;
         struct trap *trap;
@@ -2122,10 +2113,8 @@ dolook (void)
         return look_here(0, FALSE);
 }
 
-boolean
-will_feel_cockatrice(otmp, force_touch)
-struct obj *otmp;
-boolean force_touch;
+boolean 
+will_feel_cockatrice (struct obj *otmp, boolean force_touch)
 {
         if ((Blind || force_touch) && !uarmg && !Stone_resistance &&
                 (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])))
@@ -2133,10 +2122,8 @@ boolean force_touch;
         return FALSE;
 }
 
-void
-feel_cockatrice(otmp, force_touch)
-struct obj *otmp;
-boolean force_touch;
+void 
+feel_cockatrice (struct obj *otmp, boolean force_touch)
 {
         char kbuf[BUFSZ];
 
@@ -2164,9 +2151,11 @@ stackobj (struct obj *obj)
         return;
 }
 
-static boolean
-mergable(otmp, obj)     /* returns TRUE if obj  & otmp can be merged */
-        struct obj *otmp, *obj;
+static boolean 
+mergable (     /* returns TRUE if obj  & otmp can be merged */
+    struct obj *otmp,
+    struct obj *obj
+)
 {
         if (obj->otyp != otmp->otyp) return FALSE;
         if (obj->unpaid != otmp->unpaid ||
@@ -2309,9 +2298,8 @@ dopramulet (void)
         return 0;
 }
 
-static boolean
-tool_in_use(obj)
-struct obj *obj;
+static boolean 
+tool_in_use (struct obj *obj)
 {
         if ((obj->owornmask & (W_TOOL
                         | W_SADDLE
@@ -2407,9 +2395,7 @@ static char *invbuf = (char *)0;
 static unsigned invbufsiz = 0;
 
 char *
-let_to_name(let,unpaid)
-char let;
-boolean unpaid;
+let_to_name (char let, boolean unpaid)
 {
         const char *class_name;
         const char *pos;
@@ -2564,9 +2550,8 @@ invdisp_nothing (const char *hdr, const char *txt)
 }
 
 /* query_objlist callback: return things that could possibly be worn/wielded */
-static boolean
-worn_wield_only(obj)
-struct obj *obj;
+static boolean 
+worn_wield_only (struct obj *obj)
 {
     return (obj->oclass == WEAPON_CLASS
                 || obj->oclass == ARMOR_CLASS
@@ -2681,9 +2666,8 @@ display_cinventory (struct obj *obj)
 /* query objlist callback: return TRUE if obj is at given location */
 static coord only;
 
-static boolean
-only_here(obj)
-    struct obj *obj;
+static boolean 
+only_here (struct obj *obj)
 {
     return (obj->ox == only.x && obj->oy == only.y);
 }
@@ -2694,10 +2678,8 @@ only_here(obj)
  *
  * Currently, this is only used with a wand of probing zapped downwards.
  */
-int
-display_binventory(x, y, as_if_seen)
-int x, y;
-boolean as_if_seen;
+int 
+display_binventory (int x, int y, boolean as_if_seen)
 {
         struct obj *obj;
         menu_item *selected = 0;
