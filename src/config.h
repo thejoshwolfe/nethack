@@ -14,10 +14,6 @@
 
 #define TTY_GRAPHICS    /* good old tty based graphics */
 
-/* Debian default window system is always tty; they have to set their
- * own if they want another one (or just use the scripts */
-#define DEFAULT_WINDOW_SYS "tty"
-
 /*
  * Section 2:   Some global parameters and filenames.
  *              Commenting out WIZARD, PANICLOG removes that
