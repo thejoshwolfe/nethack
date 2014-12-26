@@ -6,15 +6,12 @@
 
 extern boolean notonhead;
 
-#ifdef OVL0
 
 static int disturb(struct monst *);
 static void distfleeck(struct monst *,int *,int *,int *);
 static int m_arrival(struct monst *);
 static void watch_on_duty(struct monst *);
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 boolean /* TRUE : mtmp died */
 mb_trapped(mtmp)
@@ -39,8 +36,6 @@ struct monst *mtmp;
         return(FALSE);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 static void 
 watch_on_duty (struct monst *mtmp)
@@ -72,8 +67,6 @@ watch_on_duty (struct monst *mtmp)
         }
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 int 
 dochugw (struct monst *mtmp)
@@ -101,8 +94,6 @@ dochugw (struct monst *mtmp)
         return(rd);
 }
 
-#endif /* OVL1 */
-#ifdef OVL2
 
 boolean
 onscary(x, y, mtmp)
@@ -121,8 +112,6 @@ struct monst *mtmp;
                              && IS_ALTAR(levl[x][y].typ)));
 }
 
-#endif /* OVL2 */
-#ifdef OVL0
 
 /* regenerate lost hit points */
 void
@@ -1173,8 +1162,6 @@ postmov:
         return(mmoved);
 }
 
-#endif /* OVL0 */
-#ifdef OVL2
 
 boolean
 closed_door(x, y)
@@ -1191,8 +1178,6 @@ int x, y;
         return((boolean)(ACCESSIBLE(levl[x][y].typ) && !closed_door(x, y)));
 }
 
-#endif /* OVL2 */
-#ifdef OVL0
 
 /* decide where the monster thinks you are standing */
 void 
@@ -1315,6 +1300,5 @@ struct monst *mtmp;
         return TRUE;
 }
 
-#endif /* OVL0 */
 
 /*monmove.c*/

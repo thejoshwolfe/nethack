@@ -4,23 +4,16 @@
 #include "hack.h"
 #include "lev.h"
 
-# ifdef OVLB
 static void trycall(struct obj *);
-# endif /* OVLB */
 static void dosinkring(struct obj *);
 
 static int drop(struct obj *);
 static int wipeoff(void);
 
-#ifdef OVL0
 static int menu_drop(int);
-#endif
-#ifdef OVL2
 static int currentlevel_rewrite(void);
 static void final_level(void);
-#endif
 
-#ifdef OVLB
 
 static const char drop_types[] =
         { ALLOW_COUNT, COIN_CLASS, ALL_CLASSES, 0 };
@@ -43,8 +36,6 @@ dodrop()
         return result;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* Called when a boulder is dropped, thrown, or pushed.  If it ends up
  * in a pool, it either fills the pool up or sinks away.  In either case,
@@ -219,8 +210,6 @@ const char *verb;
         return FALSE;
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 void 
 doaltarobj (  /* obj is an object dropped on an altar */
@@ -395,8 +384,6 @@ giveback:
                 useup(obj);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* some common tests when trying to drop or throw items */
 boolean
@@ -726,8 +713,6 @@ menu_drop (int retry)
     return n_dropped;
 }
 
-#endif /* OVL0 */
-#ifdef OVL2
 
 /* on a ladder, used in goto_level */
 static boolean at_ladder = FALSE;
@@ -1429,8 +1414,6 @@ deferred_goto (void)
             free((void *)dfr_post_msg),  dfr_post_msg = 0;
 }
 
-#endif /* OVL2 */
-#ifdef OVL3
 
 /*
  * Return TRUE if we created a monster for the corpse.  If successful, the
@@ -1542,8 +1525,6 @@ donull()
         return(1);      /* Do nothing, but let other things happen */
 }
 
-#endif /* OVL3 */
-#ifdef OVLB
 
 static int
 wipeoff()
@@ -1629,6 +1610,5 @@ heal_legs (void)
         (void)encumber_msg();
 }
 
-#endif /* OVLB */
 
 /*do.c*/

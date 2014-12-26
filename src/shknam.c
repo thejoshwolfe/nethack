@@ -4,10 +4,6 @@
 #include "hack.h"
 #include "eshk.h"
 
-#ifndef OVLB
-extern const struct shclass shtypes[];
-
-#else
 
 static void mkshobj_at(const struct shclass *,int,int);
 static void nameshk(struct monst *,const char * const *);
@@ -110,9 +106,6 @@ static const char * const shktools[] = {
     "Yelpur", "Nosnehpets", "Stewe", "Renrut", "_Zlaw", "Nosalnef",
     "Rewuorb", "Rellenk", "Yad", "Cire Htims", "Y-crad", "Nenilukah",
     "Corsh", "Aned",
-#ifdef OVERLAY
-    "Erreip", "Nehpets", "Mron", "Snivek", "Lapu", "Kahztiy",
-#endif
     0
 };
 
@@ -427,8 +420,6 @@ stock_room (int shp_indx, struct mkroom *sroom)
     level.flags.has_shop = TRUE;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* does shkp's shop stock this item type? */
 boolean
@@ -462,6 +453,5 @@ get_shop_item (int type)
         return shp->iprobs[i].itype;
 }
 
-#endif /* OVL0 */
 
 /*shknam.c*/

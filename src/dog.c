@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "edog.h"
 
-#ifdef OVLB
 
 static int pet_type(void);
 
@@ -445,8 +444,6 @@ void mon_catchup_elapsed_time (struct monst *mtmp, long nmv) {
         else mtmp->mhp += imv;
 }
 
-#endif /* OVLB */
-#ifdef OVL2
 
 /* called when you move to another level */
 void
@@ -547,8 +544,6 @@ boolean pets_only;      /* true for ascension or final escape */
         }
 }
 
-#endif /* OVL2 */
-#ifdef OVLB
 
 void 
 migrate_to_level (
@@ -607,8 +602,6 @@ migrate_to_level (
         mtmp->mx = mtmp->my = 0;        /* this implies migration */
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* return quality of food; the lower the better */
 /* fungi will eat even tainted food */
@@ -706,8 +699,6 @@ dogfood (struct monst *mon, struct obj *obj)
         }
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 struct monst *
 tamedog (struct monst *mtmp, struct obj *obj)
@@ -899,6 +890,5 @@ abuse_dog (struct monst *mtmp)
         }
 }
 
-#endif /* OVLB */
 
 /*dog.c*/

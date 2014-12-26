@@ -11,7 +11,6 @@
 static void do_positionbar(void);
 #endif
 
-#ifdef OVL0
 
 void moveloop(void) {
     int moveamt = 0, wtcap = 0, change = 0;
@@ -393,8 +392,6 @@ void moveloop(void) {
     }
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 void 
 stop_occupation (void)
@@ -414,8 +411,6 @@ stop_occupation (void)
         }
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void display_gamewindows(void) {
     WIN_MESSAGE = create_nhwindow(NHW_MESSAGE);
@@ -577,6 +572,5 @@ do_positionbar (void)
 }
 #endif
 
-#endif /* OVLB */
 
 /*allmain.c*/

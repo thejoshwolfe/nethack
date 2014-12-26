@@ -10,7 +10,6 @@
 
 extern const int monstr[];
 
-#ifdef OVLB
 
 static short which_arti(int);
 static boolean mon_has_arti(struct monst *,short);
@@ -41,8 +40,6 @@ static const unsigned wizapp[] = {
         PM_TRAPPER
 };
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* If you've found the Amulet, make the Wizard appear after some time */
 /* Also, give hints about portal locations, if amulet is worn/wielded -dlc */
@@ -85,8 +82,6 @@ amulet (void)
             }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 int 
 mon_has_amulet (struct monst *mtmp)
@@ -614,6 +609,5 @@ cuss (struct monst *mtmp)
         }
 }
 
-#endif /* OVLB */
 
 /*wizard.c*/

@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "edog.h"
 
-#ifdef OVLB
 
 static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,
@@ -481,8 +480,6 @@ get_mleash (    /* assuming mtmp->mleashed has been checked */
         return((struct obj *)0);
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 boolean
 next_to_u()
@@ -514,8 +511,6 @@ next_to_u()
         return(TRUE);
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 void 
 check_leash (signed char x, signed char y)
@@ -574,8 +569,6 @@ check_leash (signed char x, signed char y)
         }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 #define WEAK    3       /* from eat.c */
 
@@ -2963,6 +2956,5 @@ unfixable_trouble_count(is_horn)
         return unfixable_trbl;
 }
 
-#endif /* OVLB */
 
 /*apply.c*/

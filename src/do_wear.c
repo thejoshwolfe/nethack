@@ -1,11 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-#ifndef OVLB
-
-static long takeoff_mask, taking_off;
-
-#else /* OVLB */
 
 static long takeoff_mask = 0L;
 static long taking_off = 0L;
@@ -1545,9 +1540,7 @@ doputon()
         return(1);
 }
 
-#endif /* OVLB */
 
-#ifdef OVL0
 
 void 
 find_ac (void)
@@ -1572,8 +1565,6 @@ find_ac (void)
         }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 void 
 glibr (void)
@@ -2113,6 +2104,5 @@ adj_abon (struct obj *otmp, signed char delta)
         }
 }
 
-#endif /* OVLB */
 
 /*do_wear.c*/

@@ -6,7 +6,6 @@
 static int utcnt, utpnt;
 static coord utrack[UTSZ];
 
-#ifdef OVLB
 
 void 
 initrack (void)
@@ -14,8 +13,6 @@ initrack (void)
         utcnt = utpnt = 0;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* add to track */
 void 
@@ -28,8 +25,6 @@ settrack (void)
         utpnt++;
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 coord *
 gettrack (int x, int y)
@@ -58,6 +53,5 @@ gettrack (int x, int y)
     return (coord *)0;
 }
 
-#endif /* OVL0 */
 
 /*track.c*/

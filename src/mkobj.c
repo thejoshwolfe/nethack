@@ -4,14 +4,12 @@
 
 static void mkbox_cnts(struct obj *);
 static void obj_timer_checks(struct obj *, signed char, signed char, int);
-#ifdef OVL1
 static void container_weight(struct obj *);
 static struct obj *save_mtraits(struct obj *, struct monst *);
 #ifdef WIZARD
 static const char *where_name(int);
 static void check_contained(struct obj *,const char *);
 #endif
-#endif /* OVL1 */
 
 extern struct obj *thrownobj;           /* defined in dothrow.c */
 
@@ -20,7 +18,6 @@ struct icp {
     char iclass;        /* item class */
 };
 
-#ifdef OVL1
 
 const struct icp mkobjprobs[] = {
 {10, WEAPON_CLASS},
@@ -311,8 +308,6 @@ bill_dummy_object (struct obj *otmp)
         return;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 static const char dknowns[] = {
                 WAND_CLASS, RING_CLASS, POTION_CLASS, SCROLL_CLASS,
@@ -703,8 +698,6 @@ uncurse (struct obj *otmp)
         return;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 void 
 blessorcurse (struct obj *otmp, int chance)
@@ -721,8 +714,6 @@ blessorcurse (struct obj *otmp, int chance)
         return;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 int 
 bcsign (struct obj *otmp)
@@ -730,8 +721,6 @@ bcsign (struct obj *otmp)
         return(!!otmp->blessed - !!otmp->cursed);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /*
  *  Calculate the weight of the given object.  This will recursively follow
@@ -805,8 +794,6 @@ rnd_treefruit_at (int x, int y)
 {
         return mksobj_at(treefruits[rn2(SIZE(treefruits))], x, y, TRUE, FALSE);
 }
-#endif /* OVL0 */
-#ifdef OVLB
 
 struct obj *
 mkgold (long amount, int x, int y)
@@ -825,8 +812,6 @@ mkgold (long amount, int x, int y)
     return (gold);
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* return TRUE if the corpse has special timing */
 #define special_corpse(num)  (((num) == PM_LIZARD)              \
@@ -963,8 +948,6 @@ boolean copyof;
         return mnew;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /* make an object named after someone listed in the scoreboard file */
 struct obj *
@@ -1028,8 +1011,6 @@ struct obj *otmp;
                         objects[otyp].oc_material != LIQUID));
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /*
  * These routines maintain the single-linked lists headed in level.objects[][]
@@ -1534,6 +1515,5 @@ check_contained (struct obj *container, const char *mesg)
 }
 #endif /* WIZARD */
 
-#endif /* OVL1 */
 
 /*mkobj.c*/

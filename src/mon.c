@@ -6,18 +6,13 @@
 
 static boolean restrap(struct monst *);
 static long mm_aggression(struct monst *,struct monst *);
-#ifdef OVL2
 static int pick_animal(void);
 static int select_newcham_form(struct monst *);
 static void kill_eggs(struct obj *);
-#endif
 
 #define LEVEL_SPECIFIC_NOCORPSE(mdat) \
            (level.flags.graveyard && is_undead(mdat) && rn2(3))
 
-#ifndef OVLB
-static short cham_to_pm[];
-#else
 static struct obj *make_corpse(struct monst *);
 static void m_detach(struct monst *, struct permonst *);
 static void lifesaved_monster(struct monst *);
@@ -280,8 +275,6 @@ make_corpse (struct monst *mtmp)
         return obj;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 
 /* check mtmp and water/lava for compatibility, 0 (survived), 1 (died) */
@@ -540,8 +533,6 @@ movemon (void)
     return somebody_can_move;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 #define mstoning(obj)   (ofood(obj) && \
                                         (touch_petrifies(&mons[(obj)->corpsenm]) || \
@@ -756,8 +747,6 @@ mpickgold (struct monst *mtmp)
         }
     }
 }
-#endif /* OVLB */
-#ifdef OVL2
 
 boolean
 mpickstuff(mtmp, str)
@@ -802,8 +791,6 @@ mpickstuff(mtmp, str)
         return FALSE;
 }
 
-#endif /* OVL2 */
-#ifdef OVL0
 
 int curr_mon_load (struct monst *mtmp) {
         int curload = 0;
@@ -1088,8 +1075,6 @@ impossible("A monster looked at a very strange trap of type %d.", ttmp->ttyp);
         return(cnt);
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 /* Monster against monster special attacks; for the specified monster
    combinations, this allows one monster to attack another adjacent one
@@ -1147,8 +1132,6 @@ dmonsfree (void)
     iflags.purge_monsters = 0;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /* called when monster is moved to larger structure */
 void replmon (struct monst *mtmp, struct monst *mtmp2) {
@@ -1943,8 +1926,6 @@ m_respond (struct monst *mtmp)
     }
 }
 
-#endif /* OVLB */
-#ifdef OVL2
 
 void 
 setmangry (struct monst *mtmp)
@@ -2526,8 +2507,6 @@ kill_genocided_monsters()
         kill_eggs(level.buriedobjlist);
 }
 
-#endif /* OVL2 */
-#ifdef OVLB
 
 void
 golemeffects(mon, damtype, dam)
@@ -2635,6 +2614,5 @@ short otyp;
                 break;
         }
 }
-#endif /* OVLB */
 
 /*mon.c*/

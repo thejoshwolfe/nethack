@@ -7,12 +7,6 @@ static int drop_throw(struct obj *,boolean,int,int);
 
 #define POLE_LIM 5      /* How far monsters can use pole-weapons */
 
-#ifndef OVLB
-
-static const char *breathwep[];
-
-#else /* OVLB */
-
 /*
  * Keep consistent with breath weapons in zap.c, and AD_* in monattk.h.
  */
@@ -131,8 +125,6 @@ int x,y;
         return retvalu;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* an object launched by someone/thing other than player attacks a monster;
    return 1 if the object has stopped moving (hit or its range used up) */
@@ -456,8 +448,6 @@ m_throw (
         }
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /* Remove an item from the monster's inventory and destroy it. */
 void 
@@ -477,8 +467,6 @@ m_useup (struct monst *mon, struct obj *obj)
         }
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* monster attempts ranged weapon attack against player */
 void 
@@ -610,8 +598,6 @@ thrwmu (struct monst *mtmp)
         nomul(0);
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 int 
 spitmu (                /* monster spits substance at you */
@@ -653,8 +639,6 @@ spitmu (                /* monster spits substance at you */
         return 0;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 int 
 breamu (                        /* monster breathes at you (ranged) */
@@ -725,8 +709,6 @@ lined_up(mtmp)          /* is mtmp in position to use ranged attack? */
         return(linedup(mtmp->mux,mtmp->muy,mtmp->mx,mtmp->my));
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 /* Check if a monster is carrying a particular item.
  */
@@ -816,6 +798,5 @@ int whodidit;   /* 1==hero, 0=other, -1==just check whether it'll pass thru */
     return hits;
 }
 
-#endif /* OVL0 */
 
 /*mthrowu.c*/

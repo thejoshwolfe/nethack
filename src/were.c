@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-#ifdef OVL0
 
 void 
 were_change (struct monst *mon)
@@ -31,8 +30,6 @@ were_change (struct monst *mon)
         }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 static int counter_were(int);
 
@@ -154,6 +151,5 @@ boolean purify;
             rehumanize();
 }
 
-#endif /* OVLB */
 
 /*were.c*/

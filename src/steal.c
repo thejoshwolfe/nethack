@@ -3,7 +3,6 @@
 
 static int stealarm(void);
 
-#ifdef OVLB
 static const char *equipname(struct obj *);
 static void mdrop_obj(struct monst *,struct obj *,boolean);
 
@@ -395,8 +394,6 @@ gotobj:
         return((multi < 0) ? 0 : 1);
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* Returns 1 if otmp is free'd, 0 otherwise. */
 int 
@@ -436,8 +433,6 @@ mpickobj (struct monst *mtmp, struct obj *otmp)
     return freed_otmp;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void 
 stealamulet (struct monst *mtmp)
@@ -482,8 +477,6 @@ stealamulet (struct monst *mtmp)
     }
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* drop one object taken from a (possibly dead) monster's inventory */
 static void
@@ -596,6 +589,5 @@ boolean is_pet;         /* If true, pet should keep wielded/worn items */
                 newsym(omx, omy);
 }
 
-#endif /* OVL0 */
 
 /*steal.c*/

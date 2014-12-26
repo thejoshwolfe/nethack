@@ -8,7 +8,6 @@
 /* this matches the categorizations shown by enlightenment */
 #define ALGN_SINNED     (-4)    /* worse than strayed */
 
-#ifdef OVLB
 
 static boolean histemple_at(struct monst *,signed char,signed char);
 static boolean has_shrine(struct monst *);
@@ -106,9 +105,7 @@ pick_move:
         return(0);
 }
 
-#endif /* OVLB */
 
-#ifdef OVL0
 
 char 
 temple_occupied (char *array)
@@ -121,8 +118,6 @@ temple_occupied (char *array)
         return('\0');
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 static boolean histemple_at(struct monst *priest, signed char x, signed char y) {
         return((boolean)((EPRI(priest)->shroom == *in_rooms(x, y, TEMPLE)) &&
@@ -705,6 +700,5 @@ boolean ghostly;
     }
 }
 
-#endif /* OVLB */
 
 /*priest.c*/

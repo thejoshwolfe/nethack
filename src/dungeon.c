@@ -3,7 +3,6 @@
 #include "dgn_file.h"
 #include "dlb.h"
 
-#ifdef OVL1
 
 #define DUNGEON_FILE    "dungeon"
 
@@ -869,8 +868,6 @@ ledger_to_dlev (signed char ledgerno)
     return((signed char)(ledgerno - dungeons[ledger_to_dnum(ledgerno)].ledger_start));
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 /* returns the depth of a level, in floors below the surface    */
 /* (note levels in different dungeons can have the same depth).    */
@@ -885,8 +882,6 @@ d_level    *lev1, *lev2;
     return((boolean)((lev1->dnum == lev2->dnum) && (lev1->dlevel == lev2->dlevel)));
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 /* is this level referenced in the special level chain? */
 s_level *
@@ -1123,8 +1118,6 @@ get_level (d_level *newlevel, int levnum)
     newlevel->dlevel = levnum;
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 boolean
 In_quest(lev)    /* are you in the quest dungeon? */
@@ -1133,8 +1126,6 @@ d_level *lev;
     return((boolean)(lev->dnum == quest_dnum));
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 boolean
 In_mines(lev)    /* are you in the mines dungeon? */
@@ -1221,8 +1212,6 @@ d_level    *lev;
     return FALSE;
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 boolean
 In_hell(lev)    /* are you in one of the Hell levels? */
@@ -1231,8 +1220,6 @@ d_level    *lev;
     return((boolean)(dungeons[lev->dnum].flags.hellish));
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 void 
 find_hell (    /* sets *lev to be the gateway to Gehennom... */
@@ -1279,8 +1266,6 @@ assign_rnd_level (    /* dest = src + rn1(range) */
         dest->dlevel = 1;
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 int 
 induced_align (int pct)
@@ -1298,8 +1283,6 @@ induced_align (int pct)
     return(Align2amask(al));
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 boolean
 Invocation_lev(lev)
@@ -1591,4 +1574,3 @@ signed char print_dungeon(boolean bymenu, signed char *rlev, signed char *rdgn) 
 }
 #endif /* WIZARD */
 
-#endif /* OVL1 */

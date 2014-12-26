@@ -12,7 +12,6 @@
         ((mndx) == urace.malenum || \
          (urace.femalenum != NON_PM && (mndx) == urace.femalenum))
 
-#ifdef OVLB
 
 boolean known;
 
@@ -1814,6 +1813,5 @@ create_particular()
 }
 #endif /* WIZARD */
 
-#endif /* OVLB */
 
 /*read.c*/

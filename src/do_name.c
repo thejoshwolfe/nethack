@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-#ifdef OVLB
 
 static void do_oname(struct obj *);
 static void getpos_help(boolean,const char *);
@@ -513,8 +512,6 @@ docall (struct obj *obj)
         }
 }
 
-#endif /*OVLB*/
-#ifdef OVL0
 
 static const char * const ghostnames[] = {
         /* these names should have length < PL_NSIZ */
@@ -731,8 +728,6 @@ boolean called;
         }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 char *
 l_monnam (struct monst *mtmp)
@@ -741,8 +736,6 @@ l_monnam (struct monst *mtmp)
                 mtmp->mnamelth ? SUPPRESS_SADDLE : 0, TRUE));
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 char *
 mon_nam (struct monst *mtmp)
@@ -805,8 +798,6 @@ y_monnam (struct monst *mtmp)
         return x_monnam(mtmp, prefix, (char *)0, suppression_flag, FALSE);
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 char *
 Adjmonnam (struct monst *mtmp, const char *adj)
@@ -930,9 +921,7 @@ rndmonnam (void)
         return mons[name].mname;
 }
 
-#endif /* OVLB */
 
-#ifdef OVL2
 
 static const char * const hcolors[] = {
         "ultraviolet", "infrared", "bluish-orange",
@@ -988,6 +977,5 @@ coyotename (struct monst *mtmp, char *buf)
     }
     return buf;
 }
-#endif /* OVL2 */
 
 /*do_name.c*/

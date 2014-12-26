@@ -7,7 +7,6 @@ static struct monst *findgd(void);
 #define g_monnam(mtmp) \
         x_monnam(mtmp, ARTICLE_NONE, (char *)0, SUPPRESS_IT, FALSE)
 
-#ifdef OVLB
 
 static boolean clear_fcorr(struct monst *,boolean);
 static void restfakecorr(struct monst *);
@@ -106,8 +105,6 @@ findgd (void)
         return((struct monst *)0);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 char 
 vault_occupied (char *array)
@@ -334,8 +331,6 @@ fnd:
     }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 static void 
 move_gold (struct obj *gold, int vroom)
@@ -798,6 +793,5 @@ gd_sound()  /* prevent "You hear footsteps.." when inappropriate */
         else return((boolean)(grd == (struct monst *)0));
 }
 
-#endif /* OVLB */
 
 /*vault.c*/

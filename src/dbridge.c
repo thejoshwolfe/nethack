@@ -9,7 +9,6 @@
 
 #include "hack.h"
 
-#ifdef OVLB
 static void get_wall_for_db(int *, int *);
 static struct entity *e_at(int, int);
 static void m_to_e(struct monst *, int, int, struct entity *);
@@ -23,9 +22,7 @@ static boolean automiss(struct entity *);
 static boolean e_missed(struct entity *, boolean);
 static boolean e_jumps(struct entity *);
 static void do_entity(struct entity *);
-#endif /* OVLB */
 
-#ifdef OVL0
 
 boolean
 is_pool(x,y)
@@ -69,9 +66,7 @@ int x,y;
     return FALSE;
 }
 
-#endif /* OVL0 */
 
-#ifdef OVL1
 
 /*
  * We want to know whether a wall (or a door) is the portcullis (passageway)
@@ -143,8 +138,6 @@ int *x,*y;
         return FALSE;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /*
  * Find the drawbridge wall associated with a drawbridge.
@@ -819,4 +812,3 @@ destroy_drawbridge (int x, int y)
         }
 }
 
-#endif /* OVLB */

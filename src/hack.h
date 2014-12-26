@@ -269,18 +269,5 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 
 /* negative armor class is randomly weakened to prevent invulnerability */
 #define AC_VALUE(AC)    ((AC) >= 0 ? (AC) : -rnd(-(AC)))
-
-/* If not compiling an overlay, compile everything. */
-# define OVL0   /* highest priority */
-# define OVL1
-# define OVL2
-# define OVL3   /* lowest specified priority */
-# define OVLB   /* the base overlay segment */
-
-/* The function argument to qsort() requires a particular
- * calling convention under WINCE which is not the default
- * in that environment.
- */
-#define CFDECLSPEC
  
 #endif /* HACK_H */

@@ -6,7 +6,6 @@
 
 extern boolean notonhead;
 
-#ifdef OVL0
 
 static boolean dog_hunger(struct monst *,struct edog *);
 static int dog_invent(struct monst *,struct edog *,int);
@@ -44,7 +43,6 @@ DROPPABLES (struct monst *mon)
 
 static const char nofetch[] = { BALL_CLASS, CHAIN_CLASS, ROCK_CLASS, 0 };
 
-#endif /* OVL0 */
 
 static boolean cursed_object_at(int, int);
 
@@ -52,7 +50,6 @@ static signed char gtyp, gx, gy;    /* type and position of dog's current goal *
 
 static void wantdoor(int, int, void *);
 
-#ifdef OVLB
 static boolean
 cursed_object_at(x, y)
 int x, y;
@@ -188,8 +185,6 @@ int dog_eat(struct monst *mtmp, struct obj *obj, int x, int y, boolean devour) {
         return 1;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* hunger effects -- returns TRUE on starvation */
 static boolean
@@ -818,8 +813,6 @@ static boolean can_reach_location(struct monst *mon,
     return FALSE;
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 /*ARGSUSED*/    /* do_clear_area client */
 static void
@@ -836,6 +829,5 @@ void * distance;
     }
 }
 
-#endif /* OVLB */
 
 /*dogmove.c*/

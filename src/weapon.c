@@ -29,13 +29,6 @@ static int enhance_skill(boolean);
 
 static void give_may_advance_msg(int);
 
-#ifndef OVLB
-
-static const short skill_names_indices[];
-static const char *odd_skill_names[];
-static const char *barehands_or_martial[];
-
-#else   /* OVLB */
 
 static const short skill_names_indices[P_NUM_SKILLS] = {
         0,                DAGGER,         KNIFE,        AXE,
@@ -92,19 +85,16 @@ give_may_advance_msg (int skill)
                 "fighting ");
 }
 
-#endif  /* OVLB */
 
 static boolean can_advance(int, boolean);
 static boolean could_advance(int);
 static boolean peaked_skill(int);
 static int slots_required(int);
 
-#ifdef OVL1
 
 static char *skill_level_name(int,char *);
 static void skill_advance(int);
 
-#endif  /* OVL1 */
 
 #define P_NAME(type) ((skill_names_indices[type] > 0) ? \
                       OBJ_NAME(objects[skill_names_indices[type]]) : \
@@ -112,7 +102,6 @@ static void skill_advance(int);
                         barehands_or_martial[martial_bonus()] : \
                         odd_skill_names[-skill_names_indices[type]])
 
-#ifdef OVLB
 static const char kebabable[] = {
         S_XORN, S_DRAGON, S_JABBERWOCK, S_NAGA, S_GIANT, '\0'
 };
@@ -310,8 +299,6 @@ dmgval (struct obj *otmp, struct monst *mon)
         return(tmp);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 static struct obj *oselect(struct monst *,int);
 #define Oselect(x)      if ((otmp = oselect(mtmp, x)) != 0) return(otmp);
@@ -697,8 +684,6 @@ abon (void)             /* attack bonus for strength & dexterity */
         else return(sbon + dex-14);
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 int 
 dbon (void)             /* damage bonus for strength */
@@ -1054,8 +1039,6 @@ unrestrict_weapon_skill (int skill)
     }
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void 
 use_skill (int skill, int degree)
@@ -1356,6 +1339,5 @@ setmnotwielded (struct monst *mon, struct obj *obj)
     obj->owornmask &= ~W_WEP;
 }
 
-#endif /* OVLB */
 
 /*weapon.c*/

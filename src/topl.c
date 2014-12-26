@@ -16,7 +16,6 @@ static void topl_putsym(char);
 static void remember_topl(void);
 static void removetopl(int);
 
-#ifdef OVLB
 
 int
 tty_doprev_message()
@@ -114,8 +113,6 @@ tty_doprev_message()
     return 0;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 static void 
 redotoplin (const char *str)
@@ -164,8 +161,6 @@ addtopl (const char *s)
     ttyDisplay->toplin = 1;
 }
 
-#endif /* OVL1 */
-#ifdef OVL2
 
 void 
 more (void)
@@ -438,7 +433,6 @@ char def;
         return q;
 }
 
-#endif /* OVL2 */
 
 #endif /* TTY_GRAPHICS */
 

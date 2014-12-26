@@ -6,7 +6,6 @@
 #include "edog.h"
 #endif
 
-#ifdef OVLB
 
 static boolean no_repeat = FALSE;
 
@@ -360,5 +359,4 @@ self_invis_message (void)
                 "can't see yourself");
 }
 
-#endif /* OVLB */
 /*pline.c*/

@@ -8,7 +8,6 @@ static void costly_tin(const char*);
 static int opentin(void);
 static int unfaint(void);
 
-#ifdef OVLB
 static const char *food_xname(struct obj *,boolean);
 static void choke(struct obj *);
 static void recalc_wt(void);
@@ -35,7 +34,6 @@ static boolean maybe_cannibal(int,boolean);
 
 char msgbuf[BUFSZ];
 
-#endif /* OVLB */
 
 /* hunger texts used on bottom line (each 8 chars long) */
 #define SATIATED        0
@@ -49,13 +47,6 @@ char msgbuf[BUFSZ];
 /* also used to see if you're allowed to eat cats and dogs */
 #define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC))
 
-#ifndef OVLB
-
-static const char comestibles[];
-static const char allobj[];
-static boolean force_save_hs;
-
-#else
 
 static const char comestibles[] = { FOOD_CLASS, 0 };
 
@@ -77,8 +68,6 @@ const char *hu_stat[] = {
         "Starved "
 };
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /*
  * Decide whether a particular object can be eaten by the possibly
@@ -108,8 +97,6 @@ struct obj *obj;
         return (boolean)(obj->oclass == FOOD_CLASS);
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void 
 init_uhunger (void)
@@ -1962,8 +1949,6 @@ bite (void)
         return 0;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 void 
 gethungry (void)        /* as time goes by - called by moveloop() and domove() */
@@ -2006,8 +1991,6 @@ gethungry (void)        /* as time goes by - called by moveloop() and domove() *
         newuhs(TRUE);
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 void 
 morehungry (    /* called after vomiting and after performing feats of magic */
@@ -2074,8 +2057,6 @@ unfaint()
         return 0;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 boolean
 is_fainted()
@@ -2218,8 +2199,6 @@ boolean incr;
         }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 /* Returns an object representing food.  Object may be either on floor or
  * in inventory.
@@ -2387,8 +2366,6 @@ consume_oeaten (struct obj *obj, int amt)
     }
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* called when eatfood occupation has been interrupted,
    or in the case of theft, is about to be interrupted */
@@ -2405,6 +2382,5 @@ boolean stopping;
         return FALSE;
 }
 
-#endif /* OVL1 */
 
 /*eat.c*/

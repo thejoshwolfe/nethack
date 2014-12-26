@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "edog.h"
 
-#ifdef OVLB
 
 static boolean did_dig_msg;
 
@@ -1042,8 +1041,6 @@ watch_dig(mtmp, x, y, zap)
         }
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* Return TRUE if monster died, FALSE otherwise.  Called from m_move(). */
 boolean
@@ -1118,8 +1115,6 @@ struct monst *mtmp;
         return FALSE;
 }
 
-#endif /* OVL0 */
-#ifdef OVL3
 
 /* digging via wand zap or spell cast */
 void zap_dig(void) {
@@ -1421,4 +1416,3 @@ rot_corpse (
 }
 
 
-#endif /* OVL3 */

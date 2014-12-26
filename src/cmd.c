@@ -10,9 +10,7 @@
 #define CMD_TRAVEL (char)0x90
 
 
-#ifdef OVL1
 static int (*timed_occ_fn)(void);
-#endif /* OVL1 */
 
 static int doprev_message(void);
 static int timed_occupation(void);
@@ -46,18 +44,15 @@ static int doattributes(void);
 static int doconduct(void); /**/
 static boolean minimal_enlightenment(void);
 
-#ifdef OVLB
 static void enlght_line(const char *,const char *,const char *);
 static char *enlght_combatinc(const char *,int,int,char *);
 static void end_of_input(void);
-#endif /* OVLB */
 
 static const char* readchar_queue="";
 
 static char *parse(void);
 static boolean help_dir(char,const char *);
 
-#ifdef OVL1
 
 static int
 doprev_message()
@@ -175,8 +170,6 @@ savech (char ch)
 }
 #endif /* REDO */
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 static int
 doextcmd()      /* here after # - now read a full-word command */
@@ -1595,8 +1588,6 @@ dump_conduct (int final)
 }
 #endif /* DUMP_LOG */
 
-#endif /* OVLB */
-#ifdef OVL1
 
 #ifndef M
 # define M(c)           ((c) - 128)
@@ -2364,8 +2355,6 @@ const char *msg;
         return TRUE;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void 
 confdir (void)
@@ -2376,8 +2365,6 @@ confdir (void)
         return;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 int 
 isok (int x, int y)
@@ -2551,8 +2538,6 @@ static char * parse (void) {
         return(in_line);
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 static void end_of_input (void) {
 #ifndef NOSAVEONHANGUP
@@ -2564,8 +2549,6 @@ static void end_of_input (void) {
         terminate(EXIT_SUCCESS);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 char 
 readchar (void)
@@ -2635,8 +2618,6 @@ dotravel (void)
         return 0;
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 /*
  *   Parameter validator for generic yes/no function to prevent
  *   the core from sending too long a prompt string to the
@@ -2659,6 +2640,5 @@ yn_function (const char *query, const char *resp, char def)
         Strcat(qbuf,"...");
         return (*windowprocs.win_yn_function)(qbuf, resp, def);
 }
-#endif
 
 /*cmd.c*/

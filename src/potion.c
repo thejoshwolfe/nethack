@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-#ifdef OVLB
 boolean notonhead = FALSE;
 
 static int nothing, unkn;
@@ -1983,6 +1982,5 @@ split_mon (
         return mtmp2;
 }
 
-#endif /* OVLB */
 
 /*potion.c*/

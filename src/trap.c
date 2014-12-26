@@ -25,15 +25,6 @@ static int steedintrap(struct trap *, struct obj *);
 static boolean keep_saddle_with_steedcorpse(unsigned, struct obj *, struct obj *);
 #endif
 
-#ifndef OVLB
-static const char *a_your[2];
-static const char *A_Your[2];
-static const char tower_of_flame[];
-static const char *A_gush_of_water_hits;
-static const char * const blindgas[6];
-
-#else
-
 static const char * const a_your[2] = { "a", "your" };
 static const char * const A_Your[2] = { "A", "Your" };
 static const char tower_of_flame[] = "tower of flame";
@@ -41,9 +32,6 @@ static const char * const A_gush_of_water_hits = "A gush of water hits";
 static const char * const blindgas[6] = 
         {"humid", "odorless", "pungent", "chilling", "acrid", "biting"};
 
-#endif /* OVLB */
-
-#ifdef OVLB
 
 /* called when you're hit by fire (dofiretrap,buzz,zapyourself,explode) */
 boolean                 /* returns TRUE if hit on torso */
@@ -1275,8 +1263,6 @@ blow_up_landmine (struct trap *trap)
         seetrap(trap);                  /* and it isn't concealed */
 }
 
-#endif /* OVLB */
-#ifdef OVL3
 
 /*
  * Move obj from (x1,y1) to (x2,y2)
@@ -1514,8 +1500,6 @@ launch_obj (short otyp, int x1, int y1, int x2, int y2, int style)
                 return 2;
 }
 
-#endif /* OVL3 */
-#ifdef OVLB
 
 void 
 seetrap (struct trap *trap)
@@ -1526,8 +1510,6 @@ seetrap (struct trap *trap)
         }
 }
 
-#endif /* OVLB */
-#ifdef OVL3
 
 static int mkroll_launch(struct trap *ttmp, signed char x, signed char y,
         short otyp, long ocount)
@@ -1604,8 +1586,6 @@ static boolean isclearpath(coord *cc, int distance, signed char dx, signed char 
         cc->y = y;
         return TRUE;
 }
-#endif /* OVL3 */
-#ifdef OVL1
 
 int 
 mintrap (struct monst *mtmp)
@@ -2119,8 +2099,6 @@ glovecheck:                 target = which_armor(mtmp, W_ARMG);
         return mtmp->mtrapped;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /* Combine cockatrice checks into single functions to avoid repeating code. */
 void 
@@ -2953,8 +2931,6 @@ dountrap()      /* disarm a trap */
         }
         return untrap(FALSE);
 }
-#endif /* OVLB */
-#ifdef OVL2
 
 /* Probability of disabling a trap.  Helge Hafting */
 static int 
@@ -3539,8 +3515,6 @@ boolean force;
                 return(1);
         }
 }
-#endif /* OVL2 */
-#ifdef OVLB
 
 /* only called when the player is doing something to the chest directly */
 boolean
@@ -3721,8 +3695,6 @@ boolean disarm;
         return FALSE;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 struct trap *
 t_at (int x, int y)
@@ -3735,8 +3707,6 @@ t_at (int x, int y)
         return((struct trap *)0);
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 void 
 deltrap (struct trap *trap)
@@ -3951,6 +3921,5 @@ burn_stuff:
     return(FALSE);
 }
 
-#endif /* OVLB */
 
 /*trap.c*/

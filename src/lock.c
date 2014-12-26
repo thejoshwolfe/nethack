@@ -11,7 +11,6 @@ static struct xlock_s {
         int picktyp, chance, usedtime;
 } xlock;
 
-#ifdef OVLB
 
 static const char *lock_action(void);
 static boolean obstructed(int,int);
@@ -203,8 +202,6 @@ forcelock()     /* try to force a locked chest */
         return((xlock.usedtime = 0));
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 void 
 reset_pick (void)
@@ -214,8 +211,6 @@ reset_pick (void)
         xlock.box = 0;
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 int 
 pick_lock ( /* pick a lock with a given object */
@@ -876,6 +871,5 @@ chest_shatter_msg (struct obj *otmp)
         pline("%s %s!", An(thing), disposition);
 }
 
-#endif /* OVLB */
 
 /*lock.c*/

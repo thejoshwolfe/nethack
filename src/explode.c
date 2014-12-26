@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-#ifdef OVL0
 
 /* Note: Arrays are column first, while the screen is row first */
 static int expl[3][3] = {
@@ -375,8 +374,6 @@ explode (
         if (i < 50) i = 50;     /* in case random damage is very small */
         wake_nearto(x, y, i);
 }
-#endif /* OVL0 */
-#ifdef OVL1
 
 struct scatter_chain {
         struct scatter_chain *next;     /* pointer to next scatter item */
@@ -575,6 +572,5 @@ splatter_burning_oil (int x, int y)
     explode(x, y, ZT_SPELL_O_FIRE, d(4,4), BURNING_OIL, EXPL_FIERY);
 }
 
-#endif /* OVL1 */
 
 /*explode.c*/

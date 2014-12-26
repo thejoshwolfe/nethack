@@ -4,13 +4,11 @@
 #define NOINVSYM        '#'
 #define CONTAINED_SYM   '>'     /* designator for inside a container */
 
-#ifdef OVL1
 static void reorder_invent(void);
 static boolean mergable(struct obj *,struct obj *);
 static void invdisp_nothing(const char *,const char *);
 static boolean worn_wield_only(struct obj *);
 static boolean only_here(struct obj *);
-#endif /* OVL1 */
 static void compactify(char *);
 static boolean taking_off(const char *);
 static boolean putting_on(const char *);
@@ -21,16 +19,13 @@ static char display_pickinv(const char *,boolean, long *, boolean);
 #else
 static char display_pickinv(const char *,boolean, long *);
 #endif /* DUMP_LOG */
-#ifdef OVLB
 static boolean this_type_only(struct obj *);
 static void dounpaid(void);
 static struct obj *find_unpaid(struct obj *,struct obj **);
 static void menu_identify(int);
 static boolean tool_in_use(struct obj *);
-#endif /* OVLB */
 static char obj_to_let(struct obj *);
 
-#ifdef OVLB
 
 static int lastinvnr = 51;      /* 0 ... 51 (never saved&restored) */
 
@@ -79,8 +74,6 @@ assigninvlet (struct obj *otmp)
         lastinvnr = i;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 /* note: assumes ASCII; toggling a bit puts lowercase in front of uppercase */
 #define inv_rank(o) ((o)->invlet ^ 040)
@@ -343,8 +336,6 @@ carry_obj_effects (struct obj *obj)
         }
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /* Add an item to the inventory unless we're fumbling or it refuses to be
  * held (via touch_artifact), and give a message.
@@ -454,8 +445,6 @@ boolean maybe_unpaid;   /* false if caller handles shop billing */
         if (obj->known) update_inventory();
 }
 
-#endif /* OVLB */
-#ifdef OVL3
 
 /*
 Adjust hero's attributes as if this object was being removed from the
@@ -530,8 +519,6 @@ delallobj (int x, int y)
         }
 }
 
-#endif /* OVL3 */
-#ifdef OVL2
 
 /* destroy object in fobj chain (if unpaid, it remains on the bill) */
 void 
@@ -556,8 +543,6 @@ delobj (struct obj *obj)
         obfree(obj, (struct obj *) 0);  /* frees contents also */
 }
 
-#endif /* OVL2 */
-#ifdef OVL0
 
 struct obj *
 sobj_at (int n, int x, int y)
@@ -570,8 +555,6 @@ sobj_at (int n, int x, int y)
         return((struct obj *)0);
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 struct obj *
 carrying (int type)
@@ -628,8 +611,6 @@ int x, y;
         return(FALSE);
 }
 
-#endif /* OVLB */
-#ifdef OVL2
 
 struct obj *
 g_at (int x, int y)
@@ -642,8 +623,6 @@ g_at (int x, int y)
         return((struct obj *)0);
 }
 
-#endif /* OVL2 */
-#ifdef OVLB
 #ifndef GOLDOBJ
 /* Make a gold object from the hero's gold. */
 struct obj *
@@ -659,8 +638,6 @@ mkgoldobj (long q)
         return(otmp);
 }
 #endif
-#endif /* OVLB */
-#ifdef OVL1
 
 static void 
 compactify (char *buf)
@@ -1089,8 +1066,6 @@ struct obj *otmp;
         }
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 static int
 ckvalidcat(otmp)
@@ -1513,8 +1488,6 @@ int id_limit;
     update_inventory();
 }
 
-#endif /* OVLB */
-#ifdef OVL2
 
 static char
 obj_to_let(obj) /* should of course only be called for things in invent */
@@ -1547,8 +1520,6 @@ long quan;
               xprname(obj, (char *)0, obj_to_let(obj), TRUE, 0L, quan));
 }
 
-#endif /* OVL2 */
-#ifdef OVL1
 
 char *
 xprname(obj, txt, let, dot, cost, quan)
@@ -1594,8 +1565,6 @@ long quan;              /* if non-0, print this quantity, not obj->quan */
     return li;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /* the 'i' command */
 int
@@ -2378,8 +2347,6 @@ boolean force_touch;
         }
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 void
 stackobj(obj)
@@ -2491,8 +2458,6 @@ doprgold()
         return 0;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 int
 doprwep()
@@ -2630,10 +2595,8 @@ long numused;
             u.uundetected = OBJ_AT(u.ux, u.uy);
 }
 
-#endif /* OVLB */
 
 
-#ifdef OVL1
 
 /*
  * Conversion from a class to a string for printing.
@@ -2695,8 +2658,6 @@ free_invbuf()
         invbufsiz = 0;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void
 reassign()
@@ -2709,8 +2670,6 @@ reassign()
         lastinvnr = i;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 int
 doorganize()    /* inventory organizer by Del Lamb */
@@ -2999,6 +2958,5 @@ boolean as_if_seen;
         return n;
 }
 
-#endif /* OVL1 */
 
 /*invent.c*/

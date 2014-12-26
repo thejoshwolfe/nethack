@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "wintty.h"
 
-#ifdef OVL0
 extern const char *hu_stat[];   /* defined in eat.c */
 
 const char * const enc_stat[] = {
@@ -16,7 +15,6 @@ const char * const enc_stat[] = {
 
 static void bot1(void);
 static void bot2(void);
-#endif /* OVL0 */
 
 /* MAXCO must hold longest uncompressed status line, and must be larger
  * than COLNO
@@ -32,15 +30,10 @@ static void bot2(void);
 #define MAXCO (COLNO+20)
 #endif
 
-#ifndef OVLB
-static int mrank_sz;
-#else /* OVLB */
 static int mrank_sz = 0; /* loaded by max_rank_sz (from u_init) */
-#endif /* OVLB */
 
 static const char *rank(void);
 
-#ifdef OVL1
 
 /* convert experience level (1..30) to rank index (0..8) */
 int 
@@ -112,8 +105,6 @@ title_to_mon (const char *str, int *rank_indx, int *title_length)
         return NON_PM;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void 
 max_rank_sz (void)
@@ -127,8 +118,6 @@ max_rank_sz (void)
         return;
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 #ifdef SCORE_ON_BOTL
 long 
@@ -362,6 +351,5 @@ bot (void)
         flags.botl = flags.botlx = 0;
 }
 
-#endif /* OVL0 */
 
 /*botl.c*/

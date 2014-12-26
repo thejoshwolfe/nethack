@@ -11,16 +11,12 @@ static char * e_atr2str(int);
 
 void cmov(int, int);
 void nocmov(int, int);
-# ifdef OVLB
 static void init_hilite(void);
 static void kill_hilite(void);
-# endif /* OVLB */
 
-#ifdef OVLB
         /* (see tcap.h) -- nh_CM, nh_ND, nh_CD, nh_HI,nh_HE, nh_US,nh_UE,
                                 ul_hack */
 struct tc_lcl_data tc_lcl_data = { 0, 0, 0, 0,0, 0,0, FALSE };
-#endif /* OVLB */
 
 static char *HO, *CL, *CE, *UP, *XD, *BC, *SO, *SE, *TI, *TE;
 static char *VS, *VE;
@@ -28,23 +24,16 @@ static char *ME;
 static char *MR;
 static char *MD;
 static int SG;
-#ifdef OVLB
 static char PC = '\0';
-#else /* OVLB */
-static char PC;
-#endif /* OVLB */
 static char tbuf[512];
 
 char *hilites[CLR_MAX]; /* terminal escapes for the various colors */
 
-#ifdef OVLB
 static char *KS = (char *)0, *KE = (char *)0;   /* keypad sequences */
 static char nullstr[] = "";
-#endif /* OVLB */
 
 extern boolean HE_resets_AS;
 
-#ifdef OVLB
 
 void tty_startup(int *wid, int *hgt) {
         int i;
@@ -285,14 +274,6 @@ void tty_end_screen(void) {
 
 /* Cursor movements */
 
-#endif /* OVLB */
-
-#ifdef OVL0
-/* Note to OVLx tinkerers.  The placement of this overlay controls the location
-   of the function xputc().  This function is not currently in trampoli.[ch]
-   files for what is deemed to be performance reasons.  If this define is moved
-   and or xputc() is taken out of the ROOT overlay, then action must be taken
-   in trampoli.[ch]. */
 
 void nocmov (int x, int y) {
         if ((int) ttyDisplay->cury > y) {
@@ -344,7 +325,6 @@ void cmov (int x, int y) {
         ttyDisplay->curx = x;
 }
 
-/* See note at OVLx ifdef above.   xputc() is a special function. */
 void xputc (char c) {
         (void) putchar(c);
 }
@@ -370,8 +350,6 @@ void cl_end(void) {
         }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 void 
 clear_screen (void)
@@ -385,8 +363,6 @@ clear_screen (void)
         }
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 void 
 home (void)
@@ -412,8 +388,6 @@ standoutend (void)
         if(SE) xputs(SE);
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 void 
 backsp (void)
@@ -429,8 +403,6 @@ tty_nhbell()
         (void) fflush(stdout);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 void graph_on(void) {
         if (AS) xputs(AS);
@@ -440,8 +412,6 @@ void graph_off(void) {
         if (AE) xputs(AE);
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 static const short tmspc10[] = {                /* from termcap */
         0, 2000, 1333, 909, 743, 666, 500, 333, 166, 83, 55, 41, 20, 10, 5
@@ -454,8 +424,6 @@ void tty_delay_output(void) {
     return;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 void cl_eos(void) {
     /* free after Robert Viduya */
@@ -652,5 +620,4 @@ int has_color(int color) {
 }
 
 
-#endif /* OVLB */
 

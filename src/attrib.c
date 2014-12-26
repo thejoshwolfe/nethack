@@ -3,7 +3,6 @@
 
 #include "hack.h"
 
-#ifdef OVLB
 
         /* part of the output on gain or loss of attribute */
 static
@@ -225,8 +224,6 @@ set_moreluck (void)
         else u.moreluck = -LUCKADD;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 void 
 restore_attrib (void)
@@ -247,8 +244,6 @@ restore_attrib (void)
         (void)encumber_msg();
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 #define AVAL    50              /* tune value for exercise gains */
 
@@ -594,8 +589,6 @@ int newhp (void) {
     return((hp <= 0) ? 1 : hp);
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 signed char acurr(int x) {
         int tmp = (u.abon.a[x] + u.atemp.a[x] + u.acurr.a[x]);
@@ -628,8 +621,6 @@ acurrstr (void)
         else return((signed char)(str - 100));
 }
 
-#endif /* OVL0 */
-#ifdef OVL2
 
 /* avoid possible problems with alignment overflow, and provide a centralized
  * location for any future alignment limits
@@ -648,4 +639,3 @@ void adjalign (int n) {
         }
 }
 
-#endif /* OVL2 */

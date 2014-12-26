@@ -1,9 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-#ifdef OVL1
 static void maybe_wail(void);
-#endif /*OVL1*/
 static int moverock(void);
 static int still_chewing(signed char,signed char);
 static void dosinkfall(void);
@@ -14,7 +12,6 @@ static void move_update(boolean);
 
 #define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
 
-#ifdef OVL2
 
 boolean
 revive_nasty(x, y, msg)
@@ -413,8 +410,6 @@ static int still_chewing(signed char x,signed char y) {
     return 0;
 }
 
-#endif /* OVL2 */
-#ifdef OVLB
 
 void 
 movobj (struct obj *obj, signed char ox, signed char oy)
@@ -496,8 +491,6 @@ signed char x,y;
                         (levl[x][y].wall_info & W_NONPASSWALL)));
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 boolean
 bad_rock(mdat,x,y)
@@ -517,8 +510,6 @@ signed char x, y;
         return((boolean)(Invocation_lev(&u.uz) && x == inv_pos.x && y == inv_pos.y));
 }
 
-#endif /* OVL1 */
-#ifdef OVL3
 
 /* return TRUE if (dx,dy) is an OK place to move
  * mode is one of DO_MOVE, TEST_MOVE or TEST_TRAV
@@ -1425,8 +1416,6 @@ invocation_message (void)
         }
 }
 
-#endif /* OVL3 */
-#ifdef OVL2
 
 void
 spoteffects(pick)
@@ -1799,8 +1788,6 @@ boolean newlev;
         return;
 }
 
-#endif /* OVL2 */
-#ifdef OVLB
 
 int
 dopickup()
@@ -1877,8 +1864,6 @@ dopickup()
         return (pickup(-count));
 }
 
-#endif /* OVLB */
-#ifdef OVL2
 
 /* stop running if we see something interesting */
 /* turn around a corner if that is the only way we can proceed */
@@ -2057,8 +2042,6 @@ unmul (const char *msg_override)
         afternmv = 0;
 }
 
-#endif /* OVL2 */
-#ifdef OVL1
 
 static void 
 maybe_wail (void)
@@ -2232,8 +2215,6 @@ const char *str;
     return 0;
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 int 
 inv_cnt (void)
@@ -2264,6 +2245,5 @@ money_cnt (struct obj *otmp)
         return 0;
 }
 #endif
-#endif /* OVLB */
 
 /*hack.c*/

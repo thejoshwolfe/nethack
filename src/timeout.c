@@ -11,7 +11,6 @@ static void see_lamp_flicker(struct obj *, const char *);
 static void lantern_message(struct obj *);
 static void cleanup_burn(void *,long);
 
-#ifdef OVLB
 
 /* He is being petrified - dialogue by inmet!tower */
 static const char * const stoned_texts[] = {
@@ -151,8 +150,6 @@ burn_away_slime (void)
 }
 
 
-#endif /* OVLB */
-#ifdef OVL0
 
 void 
 nh_timeout (void)
@@ -350,8 +347,6 @@ nh_timeout (void)
         run_timers();
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 void
 fall_asleep(how_long, wakeup_msg)
@@ -1111,8 +1106,6 @@ end_burn(obj, timer_attached)
             impossible("end_burn: obj %s not timed!", xname(obj));
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 /*
  * Cleanup a burning object if timer stopped.
@@ -1137,8 +1130,6 @@ cleanup_burn (void *arg, long expire_time)
         update_inventory();
 }
 
-#endif /* OVL0 */
-#ifdef OVL1
 
 void 
 do_storms (void)
@@ -1179,10 +1170,8 @@ do_storms (void)
     } else
         You_hear("a rumbling noise.");
 }
-#endif /* OVL1 */
 
 
-#ifdef OVL0
 /* ------------------------------------------------------------------------- */
 /*
  * Generic Timeout Functions.
@@ -1789,6 +1778,5 @@ relink_timers(ghostly)
     }
 }
 
-#endif /* OVL0 */
 
 /*timeout.c*/

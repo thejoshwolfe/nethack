@@ -7,9 +7,7 @@
 #define NUMOBUF 12
 
 static char *strprepend(char *,const char *);
-#ifdef OVLB
 static boolean wishymatch(const char *,const char *,boolean);
-#endif
 static char *nextobuf(void);
 static void add_erosion_words(struct obj *, char *);
 #ifdef SORTLOOT
@@ -29,11 +27,6 @@ struct Jitem {
                            typ != BLACK_OPAL &&         \
                            typ != EMERALD && typ != OPAL)))
 
-#ifndef OVLB
-
-static struct Jitem Japanese_items[];
-
-#else /* OVLB */
 
 static struct Jitem Japanese_items[] = {
         { SHORT_SWORD, "wakizashi" },
@@ -51,11 +44,9 @@ static struct Jitem Japanese_items[] = {
         {0, "" }
 };
 
-#endif /* OVLB */
 
 static const char *Japanese_item_name(int i);
 
-#ifdef OVL1
 
 static char *
 strprepend (char *s, const char *pref)
@@ -71,8 +62,6 @@ strprepend (char *s, const char *pref)
         return(s);
 }
 
-#endif /* OVL1 */
-#ifdef OVLB
 
 /* manage a pool of BUFSZ buffers, so callers don't have to */
 static char *
@@ -223,8 +212,6 @@ boolean juice;  /* whether or not to append " juice" to the name */
     return buf;
 }
 
-#endif /* OVLB */
-#ifdef OVL1
 
 char *
 xname(obj)
@@ -507,8 +494,6 @@ mshot_xname (struct obj *obj)
     return onm;
 }
 
-#endif /* OVL1 */
-#ifdef OVL0
 
 /* used for naming "the unique_item" instead of "a unique_item" */
 boolean
@@ -790,8 +775,6 @@ ring:
         return(bp);
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 /* used from invent.c */
 boolean
@@ -1242,8 +1225,6 @@ static const char wrpsym[] = {
         FOOD_CLASS
 };
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /* Plural routine; chiefly used for user-defined fruits.  We have to try to
  * account for everything reasonable the player has; something unreasonable
@@ -1471,18 +1452,12 @@ bottom: if (excess) Strcpy(eos(str), excess);
         return str;
 }
 
-#endif /* OVL0 */
 
 struct o_range {
         const char *name, oclass;
         int  f_o_range, l_o_range;
 };
 
-#ifndef OVLB
-
-static const struct o_range o_ranges[];
-
-#else /* OVLB */
 
 /* wishable subranges of objects */
 static const struct o_range o_ranges[] = {
@@ -2761,6 +2736,5 @@ mimic_obj_name (struct monst *mtmp)
         }
         return "whatcha-may-callit";
 }
-#endif /* OVLB */
 
 /*objnam.c*/

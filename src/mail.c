@@ -34,10 +34,7 @@ int mailckfreq = 0;
 
 extern char *viz_rmin, *viz_rmax;       /* line-of-sight limits (vision.c) */
 
-#ifdef OVL0
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 #include <sys/stat.h>
 #include <pwd.h>
@@ -99,8 +96,6 @@ void getmailstatus(void) {
         }
 }
 
-#endif /* OVLB */
-#ifdef OVL0
 
 /*
  * Pick coordinates for a starting position for the mail daemon.  Called
@@ -551,7 +546,6 @@ readmail (struct obj *otmp)
 
 # endif /* LAN_MAIL */
 
-#endif /* OVL0 */
 
 #endif /* MAIL */
 

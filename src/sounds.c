@@ -2,14 +2,11 @@
 #include "hack.h"
 #include "edog.h"
 
-#ifdef OVLB
 
 static int domonnoise(struct monst *);
 static int dochat(void);
 
-#endif /* OVLB */
 
-#ifdef OVL0
 
 static int mon_in_room(struct monst *,int);
 
@@ -234,8 +231,6 @@ dosounds (void)
     }
 }
 
-#endif /* OVL0 */
-#ifdef OVLB
 
 static const char * const h_sounds[] = {
     "beep", "boing", "sing", "belche", "creak", "cough", "rattle",
@@ -890,4 +885,3 @@ dochat (void)
     return domonnoise(mtmp);
 }
 
-#endif /* OVLB */
