@@ -317,12 +317,10 @@ mattackm (struct monst *magr, struct monst *mdef)
                 break;
 
             case AT_ENGL:
-#ifdef STEED
                 if (u.usteed && (mdef == u.usteed)) {
                     strike = 0;
                     break;
                 } 
-#endif
                 /* Engulfing attacks are directed at the hero if
                  * possible. -dlc
                  */
@@ -833,9 +831,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                     mdef->mstrategy &= ~STRAT_WAITFORU;
                     (void) rloc(mdef, FALSE);
                     if (vis && !canspotmon(mdef)
-#ifdef STEED
                         && mdef != u.usteed
-#endif
                         )
                         pline("%s suddenly disappears!", mdef_Monnam);
                 }
@@ -995,12 +991,10 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                         Strcpy(mdefnambuf, x_monnam(mdef, ARTICLE_THE, (char *)0, 0, FALSE));
 
                         otmp = obj;
-#ifdef STEED
                         if (u.usteed == mdef &&
                                         otmp == which_armor(mdef, W_SADDLE))
                                 /* "You can no longer ride <steed>." */
                                 dismount_steed(DISMOUNT_POLY);
-#endif
                         obj_extract_self(otmp);
                         if (otmp->owornmask) {
                                 mdef->misc_worn_check &= ~otmp->owornmask;

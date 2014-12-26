@@ -777,14 +777,12 @@ enlightenment (
         }
         if (Fumbling) enl_msg("You fumble", "", "d", "");
         if (Wounded_legs
-#ifdef STEED
             && !u.usteed
-#endif
                           ) {
                 Sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
                 you_have(buf);
         }
-#if defined(WIZARD) && defined(STEED)
+#if defined(WIZARD)
         if (Wounded_legs && u.usteed && wizard) {
             Strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0, 
                     SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION, FALSE));
@@ -847,7 +845,6 @@ enlightenment (
         if (Breathless) you_can("survive without air");
         else if (Amphibious) you_can("breathe water");
         if (Passes_walls) you_can("walk through walls");
-#ifdef STEED
         /* If you die while dismounting, u.usteed is still set.  Since several
          * places in the done() sequence depend on u.usteed, just detect this
          * special case. */
@@ -855,7 +852,6 @@ enlightenment (
             Sprintf(buf, "riding %s", y_monnam(u.usteed));
             you_are(buf);
         }
-#endif
         if (u.uswallow) {
             Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
 #ifdef WIZARD
@@ -1076,14 +1072,11 @@ dump_enlightenment (int final)
         }
         if (Fumbling) dump("  ", "You fumbled");
         if (Wounded_legs
-#ifdef STEED
             && !u.usteed
-#endif
                           ) {
                 Sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
                 dump(youhad, buf);
         }
-#ifdef STEED
         if (Wounded_legs && u.usteed) {
             Strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0, 
                     SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION, FALSE));
@@ -1091,7 +1084,6 @@ dump_enlightenment (int final)
             Strcat(buf, " had wounded legs");
             dump("  ", buf);
         }
-#endif
         if (Sleeping) dump("  ", "You fell asleep");
         if (Hunger) dump("  ", "You hungered rapidly");
 
@@ -1148,12 +1140,10 @@ dump_enlightenment (int final)
         if (Breathless) dump(youcould, "survive without air");
         else if (Amphibious) dump(youcould, "breathe water");
         if (Passes_walls) dump(youcould, "walk through walls");
-#ifdef STEED
         if (u.usteed && (final < 2 || strcmp(killer, "riding accident"))) {
             Sprintf(buf, "riding %s", y_monnam(u.usteed));
             dump(youwere, buf);
         }
-#endif
         if (u.uswallow) {
             Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
 #ifdef WIZARD
@@ -1728,9 +1718,7 @@ struct ext_func_tab extcmdlist[] = {
         {"offer", "offer a sacrifice to the gods", dosacrifice, FALSE},
         {"pray", "pray to the gods for help", dopray, TRUE},
         {"quit", "exit without saving current game", done2, TRUE},
-#ifdef STEED
         {"ride", "ride (or stop riding) a monster", doride, FALSE},
-#endif
         {"rub", "rub a lamp or a stone", dorub, FALSE},
         {"sit", "sit down", dosit, FALSE},
         {"turn", "turn undead", doturn, TRUE},

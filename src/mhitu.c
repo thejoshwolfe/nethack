@@ -314,7 +314,6 @@ mattacku (struct monst *mtmp)
             if(u.uinvulnerable) return (0); /* stomachs can't hurt you! */
         }
 
-#ifdef STEED
         else if (u.usteed) {
                 if (mtmp == u.usteed)
                         /* Your steed won't attack you */
@@ -332,7 +331,6 @@ mattacku (struct monst *mtmp)
                         return (!!(mattackm(u.usteed, mtmp) & MM_DEF_DIED));
                 }
         }
-#endif
 
         if (u.uundetected && !range2 && foundyou && !u.uswallow) {
                 u.uundetected = 0;
@@ -815,12 +813,10 @@ magic_negation (struct monst *mon)
         if (armor && armpro < objects[armor->otyp].a_can)
             armpro = objects[armor->otyp].a_can;
 
-#ifdef STEED
         /* this one is really a stretch... */
         armor = (mon == &youmonst) ? 0 : which_armor(mon, W_SADDLE);
         if (armor && armpro < objects[armor->otyp].a_can)
             armpro = objects[armor->otyp].a_can;
-#endif
 
         return armpro;
 }
@@ -1108,9 +1104,7 @@ dopois:
                  * [FIXME: why can't a flying attacker overcome this?]
                  */
                   if (
-#ifdef STEED
                         u.usteed ||
-#endif
                                     Levitation || Flying) {
                     pline("%s tries to reach your %s %s!", Monnam(mtmp),
                           sidestr, body_part(LEG));
@@ -1604,7 +1598,6 @@ gulpmu (        /* monster swallows you, or damage if u.uswallow */
                 place_monster(mtmp, u.ux, u.uy);
                 u.ustuck = mtmp;
                 newsym(mtmp->mx,mtmp->my);
-#ifdef STEED
                 if (is_animal(mtmp->data) && u.usteed) {
                         char buf[BUFSZ];
                         /* Too many quirks presently if hero and steed
@@ -1616,7 +1609,6 @@ gulpmu (        /* monster swallows you, or damage if u.uswallow */
                                 Monnam(mtmp), buf);
                         dismount_steed(DISMOUNT_ENGULFED);
                 } else
-#endif
                 pline("%s engulfs you!", Monnam(mtmp));
                 stop_occupation();
                 reset_occupations();    /* behave as if you had moved */

@@ -419,14 +419,12 @@ const char *word;
                                         body_part(HAND));
                 return(FALSE);
         }
-#ifdef STEED
         if (obj->owornmask & W_SADDLE) {
                 if (*word)
                         You("cannot %s %s you are sitting on.", word,
                                 something);
                 return (FALSE);
         }
-#endif
         return(TRUE);
 }
 
@@ -725,7 +723,6 @@ dodown()
                     (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up)),
                 ladder_down = (u.ux == xdnladder && u.uy == ydnladder);
 
-#ifdef STEED
         if (u.usteed && !u.usteed->mcanmove) {
                 pline("%s won't move!", Monnam(u.usteed));
                 return(0);
@@ -733,7 +730,6 @@ dodown()
                 pline("%s is still eating.", Monnam(u.usteed));
                 return(0);
         } else
-#endif
         if (Levitation) {
             if ((HLevitation & I_SPECIAL) || (ELevitation & W_ARTI)) {
                 /* end controlled levitation */
@@ -816,7 +812,6 @@ doup()
                 You_cant("go up here.");
                 return(0);
         }
-#ifdef STEED
         if (u.usteed && !u.usteed->mcanmove) {
                 pline("%s won't move!", Monnam(u.usteed));
                 return(0);
@@ -824,7 +819,6 @@ doup()
                 pline("%s is still eating.", Monnam(u.usteed));
                 return(0);
         } else
-#endif
         if(u.ustuck) {
                 You("are %s, and cannot go up.",
                         !u.uswallow ? "being held" : is_animal(u.ustuck->data) ?
@@ -1119,12 +1113,10 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
                             freeinv(uball);
                         }
                     }
-#ifdef STEED
                     /* falling off steed has its own losehp() call */
                     if (u.usteed)
                         dismount_steed(DISMOUNT_FELL);
                     else
-#endif
                         losehp(rnd(3), "falling downstairs", KILLED_BY);
                     selftouch("Falling, you");
                 } else if (u.dz && at_ladder)
@@ -1169,9 +1161,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
         initrack();
 
         if ((mtmp = m_at(u.ux, u.uy)) != 0
-#ifdef STEED
                 && mtmp != u.usteed
-#endif
                 ) {
             /* There's a monster at your target destination; it might be one
                which accompanied you--see mon_arrive(dogmove.c)--or perhaps
@@ -1592,9 +1582,7 @@ heal_legs (void)
                         flags.botl = 1;
                 }
 
-#ifdef STEED
                 if (!u.usteed)
-#endif
                 {
                         /* KMH, intrinsics patch */
                         if((EWounded_legs & BOTH_SIDES) == BOTH_SIDES) {

@@ -331,9 +331,7 @@ static void make_version(void) {
 #endif
                 /* objects (10..14) */
                         | (1L << 10)
-#ifdef STEED
                         | (1L << 11)
-#endif
 #ifdef GOLDOBJ
                         | (1L << 12)
 #endif
@@ -522,9 +520,7 @@ static const char *build_opts[] = {
 #ifdef REDO
                 "redo command",
 #endif
-#ifdef STEED
                 "saddles and riding",
-#endif
 #ifdef SCORE_ON_BOTL
                 "score on status line",
 #endif

@@ -2,7 +2,6 @@
 #include "hack.h"
 
 
-#ifdef STEED
 
 /* Monsters that might be ridden */
 static const char steeds[] = {
@@ -633,6 +632,5 @@ int x, y;
     level.monsters[x][y] = mon;
 }
 
-#endif /* STEED */
 
 /*steed.c*/

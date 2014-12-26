@@ -210,7 +210,6 @@ use_stethoscope (struct obj *obj)
         last_used_move = moves;
         last_used_movement = youmonst.movement;
 
-#ifdef STEED
         if (u.usteed && u.dz > 0) {
                 if (interference) {
                         pline("%s interferes.", Monnam(u.ustuck));
@@ -219,7 +218,6 @@ use_stethoscope (struct obj *obj)
                         mstatusline(u.usteed);
                 return res;
         } else
-#endif
         if (u.uswallow && (u.dx || u.dy || u.dz)) {
                 mstatusline(u.ustuck);
                 return res;
@@ -405,13 +403,11 @@ use_leash (struct obj *obj)
         if(!get_adjacent_loc((char *)0, (char *)0, u.ux, u.uy, &cc)) return;
 
         if((cc.x == u.ux) && (cc.y == u.uy)) {
-#ifdef STEED
                 if (u.usteed && u.dz > 0) {
                     mtmp = u.usteed;
                     spotmon = 1;
                     goto got_target;
                 }
-#endif
                 pline("Leash yourself?  Very funny...");
                 return;
         }
@@ -422,9 +418,7 @@ use_leash (struct obj *obj)
         }
 
         spotmon = canspotmon(mtmp);
-#ifdef STEED
  got_target:
-#endif
 
         if(!mtmp->mtame) {
             if(!spotmon)
@@ -504,10 +498,8 @@ next_to_u()
                         }
                 }
         }
-#ifdef STEED
         /* no pack mules for the Amulet */
         if (u.usteed && mon_has_amulet(u.usteed)) return FALSE;
-#endif
         return(TRUE);
 }
 
@@ -1219,23 +1211,19 @@ jump (
                 const char *bp = body_part(LEG);
 
                 if (wl == BOTH_SIDES) bp = makeplural(bp);
-#ifdef STEED
                 if (u.usteed)
                     pline("%s is in no shape for jumping.", Monnam(u.usteed));
                 else
-#endif
                 Your("%s%s %s in no shape for jumping.",
                      (wl == LEFT_SIDE) ? "left " :
                         (wl == RIGHT_SIDE) ? "right " : "",
                      bp, (wl == BOTH_SIDES) ? "are" : "is");
                 return 0;
         }
-#ifdef STEED
         else if (u.usteed && u.utrap) {
                 pline("%s is stuck in a trap.", Monnam(u.usteed));
                 return (0);
         }
-#endif
 
         pline("Where do you want to jump?");
         cc.x = u.ux;
@@ -1963,7 +1951,6 @@ use_trap (struct obj *otmp)
             trapinfo.time_needed += (tmp > 12) ? 1 : (tmp > 7) ? 2 : 4;
         /*[fumbling and/or confusion and/or cursed object check(s)
            should be incorporated here instead of in set_trap]*/
-#ifdef STEED
         if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
             boolean chance;
 
@@ -1993,7 +1980,6 @@ use_trap (struct obj *otmp)
                 return;
             }
         }
-#endif
         You("begin setting %s %s.",
             shk_your(buf, otmp),
             defsyms[trap_to_defsym(what_trap(ttyp))].explanation);
@@ -2083,18 +2069,14 @@ use_whip (struct obj *obj)
     } else if ((!u.dx && !u.dy) || (u.dz > 0)) {
         int dam;
 
-#ifdef STEED
         /* Sometimes you hit your steed by mistake */
         if (u.usteed && !rn2(proficient + 2)) {
             You("whip %s!", mon_nam(u.usteed));
             kick_steed();
             return 1;
         }
-#endif
         if (Levitation
-#ifdef STEED
                         || u.usteed
-#endif
                 ) {
             /* Have a shot at snaring something on the floor */
             otmp = level.objects[u.ux][u.uy];
@@ -2760,11 +2742,9 @@ doapply()
         case LEASH:
                 use_leash(obj);
                 break;
-#ifdef STEED
         case SADDLE:
                 res = use_saddle(obj);
                 break;
-#endif
         case MAGIC_WHISTLE:
                 use_magic_whistle(obj);
                 break;
@@ -2936,9 +2916,7 @@ unfixable_trouble_count(is_horn)
         if (Stoned) unfixable_trbl++;
         if (Strangled) unfixable_trbl++;
         if (Wounded_legs
-#ifdef STEED
                     && !u.usteed
-#endif
                                 ) unfixable_trbl++;
         if (Slimed) unfixable_trbl++;
         /* lycanthropy is not desirable, but it doesn't actually make you feel

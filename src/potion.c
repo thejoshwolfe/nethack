@@ -74,11 +74,9 @@ boolean talk;
         }
         if (xtime && !old) {
                 if (talk) {
-#ifdef STEED
                         if (u.usteed)
                                 You("wobble in the saddle.");
                         else
-#endif
                         You("%s...", stagger(youmonst.data, "stagger"));
                 }
         }
@@ -582,10 +580,8 @@ peffects (struct obj *otmp)
                 else {
                     if (Levitation || Is_airlevel(&u.uz)||Is_waterlevel(&u.uz))
                         You("are motionlessly suspended.");
-#ifdef STEED
                     else if (u.usteed)
                         You("are frozen in place!");
-#endif
                     else
                         Your("%s are frozen to the %s!",
                              makeplural(body_part(FOOT)), surface(u.ux, u.uy));
@@ -712,9 +708,7 @@ peffects (struct obj *otmp)
                 break;
         case POT_SPEED:
                 if(Wounded_legs && !otmp->cursed
-#ifdef STEED
                    && !u.usteed /* heal_legs() would heal steeds legs */
-#endif
                                                 ) {
                         heal_legs();
                         unkn++;
@@ -1524,11 +1518,9 @@ int dodip(void) {
                 if (yn(qbuf) == 'y') {
                     if (Levitation) {
                         floating_above(tmp);
-#ifdef STEED
                     } else if (u.usteed && !is_swimmer(u.usteed->data) &&
                             P_SKILL(P_RIDING) < P_BASIC) {
                         rider_cant_reach(); /* not skilled enough to reach */
-#endif
                     } else {
                         (void) get_wet(obj);
                         if (obj->otyp == POT_ACID) useup(obj);

@@ -419,10 +419,8 @@ unsigned int *stuckid, *steedid;        /* STEED */
         restore_oracles(fd);
         if (u.ustuck)
                 mread(fd, (void *) stuckid, sizeof (*stuckid));
-#ifdef STEED
         if (u.usteed)
                 mread(fd, (void *) steedid, sizeof (*steedid));
-#endif
         mread(fd, (void *) pl_character, sizeof pl_character);
 
         mread(fd, (void *) pl_fruit, sizeof pl_fruit);
@@ -455,7 +453,6 @@ restlevelstate (
                 if (!mtmp) panic("Cannot find the monster ustuck.");
                 u.ustuck = mtmp;
         }
-#ifdef STEED
         if (steedid) {
                 for (mtmp = fmon; mtmp; mtmp = mtmp->nmon)
                         if (mtmp->m_id == steedid) break;
@@ -463,7 +460,6 @@ restlevelstate (
                 u.usteed = mtmp;
                 remove_monster(mtmp->mx, mtmp->my);
         }
-#endif
 }
 
 static int restlevelfile(int fd, signed char ltmp) {
@@ -517,9 +513,7 @@ dorecover (int fd)
          * place_monster() on other levels
          */
         u.ustuck = (struct monst *)0;
-#ifdef STEED
         u.usteed = (struct monst *)0;
-#endif
 
         while(1) {
 #ifdef ZEROCOMP

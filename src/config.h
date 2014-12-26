@@ -117,7 +117,6 @@
 #define WALLIFIED_MAZE  /* Fancy mazes - Jean-Christophe Collet */
 /* monsters & objects */
 #define SEDUCE          /* Succubi/incubi seduction, by KAA, suggested by IM */
-#define STEED           /* Riding steeds */
 /* I/O */
 #define REDO            /* support for redoing last command - DGK */
 #define CLIPPING        /* allow smaller screens -- ERS */

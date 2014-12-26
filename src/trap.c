@@ -20,10 +20,8 @@ static int help_monster_out(struct monst *, struct trap *);
 static boolean thitm(int,struct monst *,struct obj *,int,boolean);
 static int mkroll_launch(struct trap *,signed char,signed char,short,long);
 static boolean isclearpath(coord *, int, signed char, signed char);
-#ifdef STEED
 static int steedintrap(struct trap *, struct obj *);
 static boolean keep_saddle_with_steedcorpse(unsigned, struct obj *, struct obj *);
-#endif
 
 static const char * const a_your[2] = { "a", "your" };
 static const char * const A_Your[2] = { "A", "Your" };
@@ -522,7 +520,6 @@ boolean shatter;
         return mtmp;
 }
 
-#ifdef STEED
 static boolean
 keep_saddle_with_steedcorpse(steed_mid, objchn, saddle)
 unsigned steed_mid;
@@ -551,7 +548,6 @@ struct obj *objchn, *saddle;
         }
         return FALSE;
 }
-#endif /*STEED*/
 
 void 
 dotrap (struct trap *trap, unsigned trflags)
@@ -599,9 +595,7 @@ dotrap (struct trap *trap, unsigned trflags)
             }
         }
 
-#ifdef STEED
         if (u.usteed) u.usteed->mtrapseen |= (1 << (ttype-1));
-#endif
 
         switch(ttype) {
             case ARROW_TRAP:
@@ -618,10 +612,8 @@ dotrap (struct trap *trap, unsigned trflags)
                 otmp->quan = 1L;
                 otmp->owt = weight(otmp);
                 otmp->opoisoned = 0;
-#ifdef STEED
                 if (u.usteed && !rn2(2) && steedintrap(trap, otmp)) /* nothing */;
                 else
-#endif
                 if (thitu(8, dmgval(otmp, &youmonst), otmp, "arrow")) {
                     obfree(otmp, (struct obj *)0);
                 } else {
@@ -645,10 +637,8 @@ dotrap (struct trap *trap, unsigned trflags)
                 otmp->quan = 1L;
                 otmp->owt = weight(otmp);
                 if (!rn2(6)) otmp->opoisoned = 1;
-#ifdef STEED
                 if (u.usteed && !rn2(2) && steedintrap(trap, otmp)) /* nothing */;
                 else
-#endif
                 if (thitu(7, dmgval(otmp, &youmonst), otmp, "little dart")) {
                     if (otmp->opoisoned)
                         poisoned("dart", A_CON, "little dart", -10);
@@ -724,9 +714,7 @@ dotrap (struct trap *trap, unsigned trflags)
                     break;
                 }
                 if(
-#ifdef STEED
                    !u.usteed &&
-#endif
                    youmonst.data->msize <= MZ_SMALL) {
                     pline("%s bear trap closes harmlessly over you.",
                             A_Your[trap->madeby_u]);
@@ -734,13 +722,11 @@ dotrap (struct trap *trap, unsigned trflags)
                 }
                 u.utrap = rn1(4, 4);
                 u.utraptype = TT_BEARTRAP;
-#ifdef STEED
                 if (u.usteed) {
                     pline("%s bear trap closes on %s %s!",
                         A_Your[trap->madeby_u], s_suffix(mon_nam(u.usteed)),
                         mbodypart(u.usteed, FOOT));
                 } else
-#endif
                 {
                     pline("%s bear trap closes on your %s!",
                             A_Your[trap->madeby_u], body_part(FOOT));
@@ -758,9 +744,7 @@ dotrap (struct trap *trap, unsigned trflags)
                 }
                 pline("A cloud of gas puts you to sleep!");
                 fall_asleep(-rnd(25), TRUE);
-#ifdef STEED
                 (void) steedintrap(trap, (struct obj *)0);
-#endif
                 break;
 
             case RUST_TRAP:
@@ -846,7 +830,6 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                 }
                 if (!In_sokoban(&u.uz)) {
                     char verbbuf[BUFSZ];
-#ifdef STEED
                     if (u.usteed) {
                         if ((trflags & RECURSIVETRAP) != 0)
                             Sprintf(verbbuf, "and %s fall",
@@ -859,7 +842,6 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                                          u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE,
                                          "poor", SUPPRESS_SADDLE, FALSE));
                     } else
-#endif
                     Strcpy(verbbuf,"fall");
                     You("%s into %s pit!", verbbuf, a_your[trap->madeby_u]);
                 }
@@ -873,7 +855,6 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                     pline("How pitiful.  Isn't that the pits?");
                 if (ttype == SPIKED_PIT) {
                     const char *predicament = "on a set of sharp iron spikes";
-#ifdef STEED
                     if (u.usteed) {
                         pline("%s lands %s!",
                                 upstart(x_monnam(u.usteed,
@@ -881,15 +862,12 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                                          "poor", SUPPRESS_SADDLE, FALSE)),
                               predicament);
                     } else
-#endif
                     You("land %s!", predicament);
                 }
                 if (!Passes_walls)
                     u.utrap = rn1(6,2);
                 u.utraptype = TT_PIT;
-#ifdef STEED
                 if (!steedintrap(trap, (struct obj *)0)) {
-#endif
                 if (ttype == SPIKED_PIT) {
                     losehp(rnd(10),"fell into a pit of iron spikes",
                         NO_KILLER_PREFIX);
@@ -906,9 +884,7 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                 vision_full_recalc = 1; /* vision limits change */
                 exercise(A_STR, FALSE);
                 exercise(A_DEX, FALSE);
-#ifdef STEED
                 }
-#endif
                 break;
             case HOLE:
             case TRAPDOOR:
@@ -957,14 +933,12 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                 if (webmsgok) {
                     char verbbuf[BUFSZ];
                     verbbuf[0] = '\0';
-#ifdef STEED
                     if (u.usteed)
                         Sprintf(verbbuf,"lead %s",
                                 x_monnam(u.usteed,
                                          u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE,
                                          "poor", SUPPRESS_SADDLE, FALSE));
                     else
-#endif
                         
                     Sprintf(verbbuf, "%s", Levitation ? (const char *)"float" :
                                 locomotion(youmonst.data, "stumble"));
@@ -977,7 +951,6 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                 {
                     int str = ACURR(A_STR);
 
-#ifdef STEED
                     /* If mounted, the steed gets trapped.  Use mintrap
                      * to do all the work.  If mtrapped is set as a result,
                      * unset it and set utrap instead.  In the case of a
@@ -1002,7 +975,6 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
 
                         webmsgok = FALSE; /* mintrap printed the messages */
                     }
-#endif
                     if (str <= 3) u.utrap = rn1(6,6);
                     else if (str < 6) u.utrap = rn1(6,4);
                     else if (str < 9) u.utrap = rn1(4,4);
@@ -1034,9 +1006,7 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                     Your("body absorbs some of the magical energy!");
                     u.uen = (u.uenmax += 2);
                 } else domagictrap();
-#ifdef STEED
                 (void) steedintrap(trap, (struct obj *)0);
-#endif
                 break;
 
             case ANTI_MAGIC:
@@ -1050,14 +1020,12 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
             case POLY_TRAP: {
                 char verbbuf[BUFSZ];
                 seetrap(trap);
-#ifdef STEED
                 if (u.usteed)
                         Sprintf(verbbuf, "lead %s",
                                 x_monnam(u.usteed,
                                          u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE,
                                          (char *)0, SUPPRESS_SADDLE, FALSE));
                 else
-#endif
                  Sprintf(verbbuf,"%s",
                     Levitation ? (const char *)"float" :
                     locomotion(youmonst.data, "step"));
@@ -1067,9 +1035,7 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                     You_feel("momentarily different.");
                     /* Trap did nothing; don't remove it --KAA */
                 } else {
-#ifdef STEED
                     (void) steedintrap(trap, (struct obj *)0);
-#endif
                     deltrap(trap);      /* delete trap before polymorph */
                     newsym(u.ux,u.uy);  /* get rid of trap symbol */
                     You_feel("a change coming over you.");
@@ -1078,10 +1044,8 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                 break;
             }
             case LANDMINE: {
-#ifdef STEED
                 unsigned steed_mid = 0;
                 struct obj *saddle = 0;
-#endif
                 if (Levitation || Flying) {
                     if (!already_seen && rn2(3)) break;
                     seetrap(trap);
@@ -1096,7 +1060,6 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                             already_seen ? a_your[trap->madeby_u] : "",
                             already_seen ? " land mine" : "it");
                 } else {
-#ifdef STEED
                     /* prevent landmine from killing steed, throwing you to
                      * the ground, and you being affected again by the same
                      * mine because it hasn't been deleted yet
@@ -1104,26 +1067,21 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                     static boolean recursive_mine = FALSE;
 
                     if (recursive_mine) break;
-#endif
                     seetrap(trap);
                     pline("KAABLAMM!!!  You triggered %s land mine!",
                                             a_your[trap->madeby_u]);
-#ifdef STEED
                     if (u.usteed) steed_mid = u.usteed->m_id;
                     recursive_mine = TRUE;
                     (void) steedintrap(trap, (struct obj *)0);
                     recursive_mine = FALSE;
                     saddle = sobj_at(SADDLE,u.ux, u.uy);
-#endif
                     set_wounded_legs(LEFT_SIDE, rn1(35, 41));
                     set_wounded_legs(RIGHT_SIDE, rn1(35, 41));
                     exercise(A_DEX, FALSE);
                 }
                 blow_up_landmine(trap);
-#ifdef STEED
                 if (steed_mid && saddle && !u.usteed)
                         (void)keep_saddle_with_steedcorpse(steed_mid, fobj, saddle);
-#endif
                 newsym(u.ux,u.uy);              /* update trap symbol */
                 losehp(rnd(16), "land mine", KILLED_BY_AN);
                 /* fall recursively into the pit... */
@@ -1155,7 +1113,6 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
         }
 }
 
-#ifdef STEED
 static int 
 steedintrap (struct trap *trap, struct obj *otmp)
 {
@@ -1243,7 +1200,6 @@ steedintrap (struct trap *trap, struct obj *otmp)
         else if(steedhit) return 1;
         else return 0;
 }
-#endif /*STEED*/
 
 /* some actions common to both player and monsters for triggered landmine */
 void 
@@ -1642,10 +1598,8 @@ mintrap (struct monst *mtmp)
                                    In_sokoban(&u.uz) && !trap->madeby_u);
             const char *fallverb;
 
-#ifdef STEED
             /* true when called from dotrap, inescapable is not an option */
             if (mtmp == u.usteed) inescapable = TRUE;
-#endif
             if (!inescapable &&
                     ((mtmp->mtrapseen & (1 << (tt-1))) != 0 ||
                         (tt == HOLE && !mindless(mtmp->data)))) {
@@ -1661,10 +1615,8 @@ mintrap (struct monst *mtmp)
 
             in_sight = canseemon(mtmp);
             see_it = cansee(mtmp->mx, mtmp->my);
-#ifdef STEED
             /* assume hero can tell what's going on for the steed */
             if (mtmp == u.usteed) in_sight = TRUE;
-#endif
             switch (tt) {
                 case ARROW_TRAP:
                         if (trap->once && trap->tseen && !rn2(15)) {
@@ -2210,7 +2162,6 @@ float_up (void)
                 You("gain control over your movements.");
         else
                 You("start to float in the air!");
-#ifdef STEED
         if (u.usteed && !is_floater(u.usteed->data) &&
                                                 !is_flyer(u.usteed->data)) {
             if (Lev_at_will)
@@ -2220,7 +2171,6 @@ float_up (void)
                 dismount_steed(DISMOUNT_GENERIC);
             }
         }
-#endif
         return;
 }
 
@@ -2303,9 +2253,7 @@ long hmask, emask;     /* might cancel timeout */
                 You_feel("heavier.");
             /* u.uinwater msgs already in spoteffects()/drown() */
             else if (!u.uinwater && !no_msg) {
-#ifdef STEED
                 if (!(emask & W_SADDLE))
-#endif
                 {
                     boolean sokoban_trap = (In_sokoban(&u.uz) && trap);
                     if (Hallucination)
@@ -2327,9 +2275,7 @@ long hmask, emask;     /* might cancel timeout */
                              */
                             You("fall over.");
                             losehp(rnd(2), "dangerous winds", KILLED_BY);
-#ifdef STEED
                             if (u.usteed) dismount_steed(DISMOUNT_FELL);
-#endif
                             selftouch("As you fall, you");
                         }
                     }
@@ -2828,13 +2774,11 @@ drown()
                                 return(TRUE);
                 } else pline_The("attempted teleport spell fails.");
         }
-#ifdef STEED
         if (u.usteed) {
                 dismount_steed(DISMOUNT_GENERIC);
                 if(!is_pool(u.ux,u.uy))
                         return(TRUE);
         }
-#endif
         crawl_ok = FALSE;
         x = y = 0;              /* lint suppression */
         /* if sleeping, wake up now so that we don't crawl out of water
@@ -3034,12 +2978,10 @@ boolean force_failure;
         }
         /* untrappable traps are located on the ground. */
         if (!can_reach_floor()) {
-#ifdef STEED
                 if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
                         You("aren't skilled enough to reach from %s.",
                                 mon_nam(u.usteed));
                 else
-#endif
                 You("are unable to reach the %s!",
                         defsyms[trap_to_defsym(ttype)].explanation);
                 return 0;
@@ -3059,12 +3001,10 @@ boolean force_failure;
                                 if (ttmp2) {
                                     pline_The("webbing sticks to you. You're caught too!");
                                     dotrap(ttmp2, NOWEBMSG);
-#ifdef STEED
                                     if (u.usteed && u.utrap) {
                                         /* you, not steed, are trapped */
                                         dismount_steed(DISMOUNT_FELL);
                                     }
-#endif
                                 }
                             } else
                                 pline("%s remains entangled.", Monnam(mtmp));
@@ -3413,13 +3353,11 @@ boolean force;
                         case 'q': return(0);
                         case 'n': continue;
                     }
-#ifdef STEED
                     if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
                         You("aren't skilled enough to reach from %s.",
                                 mon_nam(u.usteed));
                         return(0);
                     }
-#endif
                     if((otmp->otrapped && (force || (!confused
                                 && rn2(MAXULEV + 1 - u.ulevel) < 10)))
                        || (!force && confused && !rn2(3))) {
