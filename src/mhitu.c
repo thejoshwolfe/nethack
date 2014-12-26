@@ -1964,26 +1964,6 @@ gazemu (        /* monster gazes at you */
                     if (dmg) mdamageu(mtmp, dmg);
                 }
                 break;
-#ifdef PM_BEHOLDER /* work in progress */
-            case AD_SLEE:
-                if(!mtmp->mcan && canseemon(mtmp) &&
-                   couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee &&
-                   multi >= 0 && !rn2(5) && !Sleep_resistance) {
-
-                    fall_asleep(-rnd(10), TRUE);
-                    pline("%s gaze makes you very sleepy...",
-                          s_suffix(Monnam(mtmp)));
-                }
-                break;
-            case AD_SLOW:
-                if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee &&
-                   (HFast & (INTRINSIC|TIMEOUT)) &&
-                   !defends(AD_SLOW, uwep) && !rn2(4))
-
-                    u_slow_down();
-                    stop_occupation();
-                break;
-#endif
             default: impossible("Gaze attack %d?", mattk->adtyp);
                 break;
         }
