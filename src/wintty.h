@@ -162,9 +162,6 @@ extern char tty_message_menu(char,int,const char *);
 extern void tty_update_inventory(void);
 extern void tty_mark_synch(void);
 extern void tty_wait_synch(void);
-#ifdef POSITIONBAR
-extern void tty_update_positionbar(char *);
-#endif
 extern void tty_print_glyph(winid,signed char,signed char,int);
 extern void tty_raw_print(const char *);
 extern void tty_raw_print_bold(const char *);

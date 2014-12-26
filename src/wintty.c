@@ -44,9 +44,6 @@ struct window_procs tty_procs = {
     tty_update_inventory,
     tty_mark_synch,
     tty_wait_synch,
-#ifdef POSITIONBAR
-    tty_update_positionbar,
-#endif
     tty_print_glyph,
     tty_raw_print,
     tty_raw_print_bold,
@@ -2132,10 +2129,6 @@ int tty_nh_poskey(int *x, int *y, int *mod) {
 void win_tty_init(void) {
     return;
 }
-
-#ifdef POSITIONBAR
-void tty_update_positionbar(char *posbar) { }
-#endif
 
 /*
  * Allocate a copy of the given string.  If null, return a string of

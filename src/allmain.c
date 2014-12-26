@@ -22,10 +22,6 @@
 #include <fcntl.h>
 #endif
 
-#ifdef POSITIONBAR
-static void do_positionbar(void);
-#endif
-
 extern struct passwd *getpwuid(uid_t);
 extern struct passwd *getpwnam(const char *);
 static boolean whoami(void);
@@ -76,9 +72,6 @@ void moveloop(void) {
 
     for(;;) {
         get_nh_event();
-#ifdef POSITIONBAR
-        do_positionbar();
-#endif
 
         didmove = flags.move;
         if(didmove) {
@@ -520,62 +513,6 @@ void welcome(boolean new_game) {
           Hello((struct monst *) 0), plname, buf, urace.adj,
           (currentgend && urole.name.f) ? urole.name.f : urole.name.m);
 }
-
-#ifdef POSITIONBAR
-static void
-do_positionbar (void)
-{
-        static char pbar[COLNO];
-        char *p;
-
-        p = pbar;
-        /* up stairway */
-        if (upstair.sx &&
-           (glyph_to_cmap(level.locations[upstair.sx][upstair.sy].glyph) ==
-            S_upstair ||
-            glyph_to_cmap(level.locations[upstair.sx][upstair.sy].glyph) ==
-            S_upladder)) {
-                *p++ = '<';
-                *p++ = upstair.sx;
-        }
-        if (sstairs.sx &&
-           (glyph_to_cmap(level.locations[sstairs.sx][sstairs.sy].glyph) ==
-            S_upstair ||
-            glyph_to_cmap(level.locations[sstairs.sx][sstairs.sy].glyph) ==
-            S_upladder)) {
-                *p++ = '<';
-                *p++ = sstairs.sx;
-        }
-
-        /* down stairway */
-        if (dnstair.sx &&
-           (glyph_to_cmap(level.locations[dnstair.sx][dnstair.sy].glyph) ==
-            S_dnstair ||
-            glyph_to_cmap(level.locations[dnstair.sx][dnstair.sy].glyph) ==
-            S_dnladder)) {
-                *p++ = '>';
-                *p++ = dnstair.sx;
-        }
-        if (sstairs.sx &&
-           (glyph_to_cmap(level.locations[sstairs.sx][sstairs.sy].glyph) ==
-            S_dnstair ||
-            glyph_to_cmap(level.locations[sstairs.sx][sstairs.sy].glyph) ==
-            S_dnladder)) {
-                *p++ = '>';
-                *p++ = sstairs.sx;
-        }
-
-        /* hero location */
-        if (u.ux) {
-                *p++ = '@';
-                *p++ = u.ux;
-        }
-        /* fence post */
-        *p = 0;
-
-        update_positionbar(pbar);
-}
-#endif
 
 int main (int argc, char *argv[]) {
         int fd;
