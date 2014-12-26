@@ -243,5 +243,3 @@ A(0, 0, 0, 0, 0, NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 0L )
 #undef  ELEC
 #undef  STUN
 #endif
-
-/*artilist.h*/

@@ -18,9 +18,7 @@
 #include <sys/stat.h>
 #include <signal.h>
 #include <pwd.h>
-#ifndef O_RDONLY
 #include <fcntl.h>
-#endif
 
 extern struct passwd *getpwuid(uid_t);
 extern struct passwd *getpwnam(const char *);
@@ -56,8 +54,8 @@ void moveloop(void) {
 
 
     /* Note:  these initializers don't do anything except guarantee that
-            we're linked properly.
-    */
+       we're linked properly.
+       */
     decl_init();
     monst_init();
     monstr_init();      /* monster strengths */
@@ -100,7 +98,7 @@ void moveloop(void) {
                         mtmp->movement += mcalcmove(mtmp);
 
                     if(!rn2(u.uevent.udemigod ? 25 :
-                            (depth(&u.uz) > depth(&stronghold_level)) ? 50 : 70))
+                                (depth(&u.uz) > depth(&stronghold_level)) ? 50 : 70))
                         (void) makemon((struct permonst *)0, 0, 0, NO_MM_FLAGS);
 
                     /* calculate how much time passed. */
@@ -170,12 +168,12 @@ void moveloop(void) {
                         if (u.mh < 1)
                             rehumanize();
                         else if (Regeneration ||
-                                    (wtcap < MOD_ENCUMBER && !(moves%20))) {
+                                (wtcap < MOD_ENCUMBER && !(moves%20))) {
                             flags.botl = 1;
                             u.mh++;
                         }
                     } else if (u.uhp < u.uhpmax &&
-                         (wtcap < MOD_ENCUMBER || !u.umoved || Regeneration)) {
+                            (wtcap < MOD_ENCUMBER || !u.umoved || Regeneration)) {
                         if (u.ulevel > 9 && !(moves % 3)) {
                             int heal, Con = (int) ACURR(A_CON);
 
@@ -190,8 +188,8 @@ void moveloop(void) {
                             if(u.uhp > u.uhpmax)
                                 u.uhp = u.uhpmax;
                         } else if (Regeneration ||
-                             (u.ulevel <= 9 &&
-                              !(moves % ((MAXULEV+12) / (u.ulevel+2) + 1)))) {
+                                (u.ulevel <= 9 &&
+                                 !(moves % ((MAXULEV+12) / (u.ulevel+2) + 1)))) {
                             flags.botl = 1;
                             u.uhp++;
                         }
@@ -213,10 +211,10 @@ void moveloop(void) {
                     }
 
                     if ((u.uen < u.uenmax) &&
-                        ((wtcap < MOD_ENCUMBER &&
-                          (!(moves%((MAXULEV + 8 - u.ulevel) *
-                                    (Role_if(PM_WIZARD) ? 3 : 4) / 6))))
-                         || Energy_regeneration)) {
+                            ((wtcap < MOD_ENCUMBER &&
+                              (!(moves%((MAXULEV + 8 - u.ulevel) *
+                                        (Role_if(PM_WIZARD) ? 3 : 4) / 6))))
+                             || Energy_regeneration)) {
                         u.uen += rn1((int)(ACURR(A_WIS) + ACURR(A_INT)) / 15 + 1,1);
                         if (u.uen > u.uenmax)  u.uen = u.uenmax;
                         flags.botl = 1;
@@ -237,12 +235,12 @@ void moveloop(void) {
                         }
                         /* delayed change may not be valid anymore */
                         if ((change == 1 && !Polymorph) ||
-                            (change == 2 && u.ulycn == NON_PM))
+                                (change == 2 && u.ulycn == NON_PM))
                             change = 0;
                         if(Polymorph && !rn2(100))
                             change = 1;
                         else if (u.ulycn >= LOW_PM && !Upolyd &&
-                                 !rn2(80 - (20 * night())))
+                                !rn2(80 - (20 * night())))
                             change = 2;
                         if (change && !Unchanging) {
                             if (multi >= 0) {
@@ -328,16 +326,16 @@ void moveloop(void) {
             if ((*occupation)() == 0)
                 occupation = 0;
             if (monster_nearby()) {
-            stop_occupation();
-            reset_eat();
+                stop_occupation();
+                reset_eat();
             }
             continue;
         }
 
         if ((u.uhave.amulet || Clairvoyant) &&
-            !In_endgame(&u.uz) && !BClairvoyant &&
-            !(moves % 15) && !rn2(2))
-                do_vicinity_map();
+                !In_endgame(&u.uz) && !BClairvoyant &&
+                !(moves % 15) && !rn2(2))
+            do_vicinity_map();
 
         if(u.utrap && u.utraptype == TT_LAVA) {
             if(!is_lava(u.ux,u.uy))
@@ -398,23 +396,19 @@ void moveloop(void) {
     }
 }
 
-
-void
-stop_occupation (void)
-{
-        if(occupation) {
-                if (!maybe_finished_meal(TRUE))
-                    You("stop %s.", occtxt);
-                occupation = 0;
-                flags.botl = 1; /* in case u.uhs changed */
-/* fainting stops your occupation, there's no reason to sync.
-                sync_hunger();
-*/
-                nomul(0);
-                pushch(0);
-        }
+void stop_occupation (void) {
+    if(occupation) {
+        if (!maybe_finished_meal(TRUE))
+            You("stop %s.", occtxt);
+        occupation = 0;
+        flags.botl = 1; /* in case u.uhs changed */
+        /* fainting stops your occupation, there's no reason to sync.
+           sync_hunger();
+           */
+        nomul(0);
+        pushch(0);
+    }
 }
-
 
 void display_gamewindows(void) {
     WIN_MESSAGE = create_nhwindow(NHW_MESSAGE);
@@ -433,57 +427,57 @@ void display_gamewindows(void) {
 }
 
 void newgame(void) {
-        int i;
+    int i;
 
-        flags.ident = 1;
+    flags.ident = 1;
 
-        for (i = 0; i < NUMMONS; i++)
-                mvitals[i].mvflags = mons[i].geno & G_NOCORPSE;
+    for (i = 0; i < NUMMONS; i++)
+        mvitals[i].mvflags = mons[i].geno & G_NOCORPSE;
 
-        init_objects();         /* must be before u_init() */
+    init_objects();         /* must be before u_init() */
 
-        flags.pantheon = -1;    /* role_init() will reset this */
-        role_init();            /* must be before init_dungeons(), u_init(),
-                                 * and init_artifacts() */
+    flags.pantheon = -1;    /* role_init() will reset this */
+    role_init();            /* must be before init_dungeons(), u_init(),
+                             * and init_artifacts() */
 
-        init_dungeons();        /* must be before u_init() to avoid rndmonst()
-                                 * creating odd monsters for any tins and eggs
-                                 * in hero's initial inventory */
-        init_artifacts();       /* before u_init() in case $WIZKIT specifies
-                                 * any artifacts */
-        u_init();
+    init_dungeons();        /* must be before u_init() to avoid rndmonst()
+                             * creating odd monsters for any tins and eggs
+                             * in hero's initial inventory */
+    init_artifacts();       /* before u_init() in case $WIZKIT specifies
+                             * any artifacts */
+    u_init();
 
-        (void) signal(SIGINT, done1);
-        if(iflags.news) display_file(NEWS, FALSE);
-        load_qtlist();  /* load up the quest text info */
-/*      quest_init();*/ /* Now part of role_init() */
+    (void) signal(SIGINT, done1);
+    if(iflags.news) display_file(NEWS, FALSE);
+    load_qtlist();  /* load up the quest text info */
+    /*      quest_init();*/ /* Now part of role_init() */
 
-        mklev();
-        u_on_upstairs();
-        vision_reset();         /* set up internals for level (after mklev) */
-        check_special_room(FALSE);
+    mklev();
+    u_on_upstairs();
+    vision_reset();         /* set up internals for level (after mklev) */
+    check_special_room(FALSE);
 
-        flags.botlx = 1;
+    flags.botlx = 1;
 
-        /* Move the monster from under you or else
-         * makedog() will fail when it calls makemon().
-         *                      - ucsfcgl!kneller
-         */
-        if(MON_AT(u.ux, u.uy)) mnexto(m_at(u.ux, u.uy));
-        (void) makedog();
-        docrt();
+    /* Move the monster from under you or else
+     * makedog() will fail when it calls makemon().
+     *                      - ucsfcgl!kneller
+     */
+    if(MON_AT(u.ux, u.uy)) mnexto(m_at(u.ux, u.uy));
+    (void) makedog();
+    docrt();
 
-        if (flags.legacy) {
-                flush_screen(1);
-                com_pager(1);
-        }
+    if (flags.legacy) {
+        flush_screen(1);
+        com_pager(1);
+    }
 
-        save_currentstate();
-        program_state.something_worth_saving++; /* useful data now exists */
+    save_currentstate();
+    program_state.something_worth_saving++; /* useful data now exists */
 
-        /* Success! */
-        welcome(TRUE);
-        return;
+    /* Success! */
+    welcome(TRUE);
+    return;
 }
 
 /* show "welcome [back] to nethack" message at program startup */
@@ -509,269 +503,253 @@ void welcome(boolean new_game) {
         Sprintf(eos(buf), " %s", genders[currentgend].adj);
 
     pline(new_game ? "%s %s, welcome to NetHack!  You are a%s %s %s."
-                   : "%s %s, the%s %s %s, welcome back to NetHack!",
-          Hello((struct monst *) 0), plname, buf, urace.adj,
-          (currentgend && urole.name.f) ? urole.name.f : urole.name.m);
+            : "%s %s, the%s %s %s, welcome back to NetHack!",
+            Hello((struct monst *) 0), plname, buf, urace.adj,
+            (currentgend && urole.name.f) ? urole.name.f : urole.name.m);
 }
 
 int main (int argc, char *argv[]) {
-        int fd;
-        boolean exact_username;
+    int fd;
+    boolean exact_username;
 
-        hname = argv[0];
-        hackpid = getpid();
-        (void) umask(0777 & ~0660);
+    hname = argv[0];
+    hackpid = getpid();
+    (void) umask(0777 & ~0660);
 
-        choose_windows("tty");
+    choose_windows("tty");
 
-        if(argc > 1) {
-            /*
-             * Now we know the directory containing 'record' and
-             * may do a prscore().  Exclude `-style' - it's a Qt option.
-             */
-            if (!strncmp(argv[1], "-s", 2) && strncmp(argv[1], "-style", 6)) {
-                prscore(argc, argv);
-                exit(EXIT_SUCCESS);
+    if(argc > 1) {
+        /*
+         * Now we know the directory containing 'record' and
+         * may do a prscore().  Exclude `-style' - it's a Qt option.
+         */
+        if (!strncmp(argv[1], "-s", 2) && strncmp(argv[1], "-style", 6)) {
+            prscore(argc, argv);
+            exit(EXIT_SUCCESS);
+        }
+    }
+
+    /*
+     * Change directories before we initialize the window system so
+     * we can find the tile file.
+     */
+
+    check_linux_console();
+    initoptions();
+    init_nhwindows(&argc,argv);
+    exact_username = whoami();
+    init_linux_cons();
+
+    /*
+     * It seems you really want to play.
+     */
+    u.uhp = 1;      /* prevent RIP on early quits */
+    signal(SIGHUP, hangup);
+    signal(SIGXCPU, hangup);
+
+    process_options(argc, argv);    /* command line options */
+
+    getmailstatus();
+    if (wizard)
+        Strcpy(plname, "wizard");
+    else
+        if(!*plname || !strncmp(plname, "player", 4)
+                || !strncmp(plname, "games", 4)) {
+            askname();
+        } else if (exact_username) {
+            /* guard against user names with hyphens in them */
+            int len = strlen(plname);
+            /* append the current role, if any, so that last dash is ours */
+            if (++len < sizeof plname)
+                (void)strncat(strcat(plname, "-"),
+                        pl_character, sizeof plname - len - 1);
+        }
+    plnamesuffix();         /* strip suffix from name; calls askname() */
+    /* again if suffix was whole name */
+    /* accepts any suffix */
+    if(!wizard) {
+        /*
+         * check for multiple games under the same name
+         * (if !locknum) or check max nr of players (otherwise)
+         */
+        (void) signal(SIGQUIT,SIG_IGN);
+        (void) signal(SIGINT,SIG_IGN);
+        if(!locknum)
+            Sprintf(lock, "%d%s", (int)getuid(), plname);
+        getlock();
+    } else {
+        Sprintf(lock, "%d%s", (int)getuid(), plname);
+        getlock();
+    }
+
+    dlb_init();     /* must be before newgame() */
+
+    /*
+     * Initialization of the boundaries of the mazes
+     * Both boundaries have to be even.
+     */
+    x_maze_max = COLNO-1;
+    if (x_maze_max % 2)
+        x_maze_max--;
+    y_maze_max = ROWNO-1;
+    if (y_maze_max % 2)
+        y_maze_max--;
+
+    /*
+     *  Initialize the vision system.  This must be before mklev() on a
+     *  new game or before a level restore on a saved game.
+     */
+    vision_init();
+
+    display_gamewindows();
+
+    if ((fd = restore_saved_game()) >= 0) {
+        /* Since wizard is actually flags.debug, restoring might
+         * overwrite it.
+         */
+        boolean remember_wiz_mode = wizard;
+        const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
+
+        (void) chmod(fq_save,0);        /* disallow parallel restores */
+        (void) signal(SIGINT, done1);
+        if(iflags.news) {
+            display_file(NEWS, FALSE);
+            iflags.news = FALSE; /* in case dorecover() fails */
+        }
+        pline("Restoring save file...");
+        mark_synch();   /* flush output */
+        if(!dorecover(fd))
+            goto not_recovered;
+        if(!wizard && remember_wiz_mode) wizard = TRUE;
+        check_special_room(FALSE);
+        wd_message();
+
+        if (discover || wizard) {
+            if(yn("Do you want to keep the save file?") == 'n')
+                (void) delete_savefile();
+            else {
+                (void) chmod(fq_save,0660); /* back to readable */
             }
         }
-
-        /*
-         * Change directories before we initialize the window system so
-         * we can find the tile file.
-         */
-
-        check_linux_console();
-        initoptions();
-        init_nhwindows(&argc,argv);
-        exact_username = whoami();
-        init_linux_cons();
-
-        /*
-         * It seems you really want to play.
-         */
-        u.uhp = 1;      /* prevent RIP on early quits */
-        (void) signal(SIGHUP, hangup);
-#ifdef SIGXCPU
-        (void) signal(SIGXCPU, hangup);
-#endif
-
-        process_options(argc, argv);    /* command line options */
-
-        getmailstatus();
-        if (wizard)
-                Strcpy(plname, "wizard");
-        else
-        if(!*plname || !strncmp(plname, "player", 4)
-                    || !strncmp(plname, "games", 4)) {
-                askname();
-        } else if (exact_username) {
-                /* guard against user names with hyphens in them */
-                int len = strlen(plname);
-                /* append the current role, if any, so that last dash is ours */
-                if (++len < sizeof plname)
-                        (void)strncat(strcat(plname, "-"),
-                                      pl_character, sizeof plname - len - 1);
-        }
-        plnamesuffix();         /* strip suffix from name; calls askname() */
-                                /* again if suffix was whole name */
-                                /* accepts any suffix */
-        if(!wizard) {
-                /*
-                 * check for multiple games under the same name
-                 * (if !locknum) or check max nr of players (otherwise)
-                 */
-                (void) signal(SIGQUIT,SIG_IGN);
-                (void) signal(SIGINT,SIG_IGN);
-                if(!locknum)
-                        Sprintf(lock, "%d%s", (int)getuid(), plname);
-                getlock();
-        } else {
-                Sprintf(lock, "%d%s", (int)getuid(), plname);
-                getlock();
-        }
-
-        dlb_init();     /* must be before newgame() */
-
-        /*
-         * Initialization of the boundaries of the mazes
-         * Both boundaries have to be even.
-         */
-        x_maze_max = COLNO-1;
-        if (x_maze_max % 2)
-                x_maze_max--;
-        y_maze_max = ROWNO-1;
-        if (y_maze_max % 2)
-                y_maze_max--;
-
-        /*
-         *  Initialize the vision system.  This must be before mklev() on a
-         *  new game or before a level restore on a saved game.
-         */
-        vision_init();
-
-        display_gamewindows();
-
-        if ((fd = restore_saved_game()) >= 0) {
-                /* Since wizard is actually flags.debug, restoring might
-                 * overwrite it.
-                 */
-                boolean remember_wiz_mode = wizard;
-                const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
-
-                (void) chmod(fq_save,0);        /* disallow parallel restores */
-                (void) signal(SIGINT, done1);
-                if(iflags.news) {
-                    display_file(NEWS, FALSE);
-                    iflags.news = FALSE; /* in case dorecover() fails */
-                }
-                pline("Restoring save file...");
-                mark_synch();   /* flush output */
-                if(!dorecover(fd))
-                        goto not_recovered;
-                if(!wizard && remember_wiz_mode) wizard = TRUE;
-                check_special_room(FALSE);
-                wd_message();
-
-                if (discover || wizard) {
-                        if(yn("Do you want to keep the save file?") == 'n')
-                            (void) delete_savefile();
-                        else {
-                            (void) chmod(fq_save,0660); /* back to readable */
-                        }
-                }
-                flags.move = 0;
-        } else {
+        flags.move = 0;
+    } else {
 not_recovered:
-                player_selection();
-                newgame();
-                wd_message();
+        player_selection();
+        newgame();
+        wd_message();
 
-                flags.move = 0;
-                set_wear();
-                (void) pickup(1);
-        }
+        flags.move = 0;
+        set_wear();
+        (void) pickup(1);
+    }
 
-        moveloop();
-        exit(EXIT_SUCCESS);
-        /*NOTREACHED*/
-        return(0);
+    moveloop();
+    exit(EXIT_SUCCESS);
+    /*NOTREACHED*/
+    return(0);
 }
 
 static void process_options (int argc, char *argv[]) {
-        int i;
+    int i;
 
 
-        /*
-         * Process options.
-         */
-        while(argc > 1 && argv[1][0] == '-'){
-                argv++;
-                argc--;
-                switch(argv[0][1]){
-                case 'D':
-                    wizard = TRUE;
-                    break;
-                case 'X':
-                        discover = TRUE;
-                        break;
-                case 'n':
-                        iflags.news = FALSE;
-                        break;
-                case 'u':
-                        if(argv[0][2])
-                          (void) strncpy(plname, argv[0]+2, sizeof(plname)-1);
-                        else if(argc > 1) {
-                          argc--;
-                          argv++;
-                          (void) strncpy(plname, argv[0], sizeof(plname)-1);
-                        } else
-                                raw_print("Player name expected after -u");
-                        break;
-                case 'I':
-                case 'i':
-                        if (!strncmpi(argv[0]+1, "IBM", 3))
-                                switch_graphics(IBM_GRAPHICS);
-                        break;
-            /*  case 'D': */
-                case 'd':
-                        if (!strncmpi(argv[0]+1, "DEC", 3))
-                                switch_graphics(DEC_GRAPHICS);
-                        break;
-                case 'p': /* profession (role) */
-                        if (argv[0][2]) {
-                            if ((i = str2role(&argv[0][2])) >= 0)
-                                flags.initrole = i;
-                        } else if (argc > 1) {
-                                argc--;
-                                argv++;
-                            if ((i = str2role(argv[0])) >= 0)
-                                flags.initrole = i;
-                        }
-                        break;
-                case 'r': /* race */
-                        if (argv[0][2]) {
-                            if ((i = str2race(&argv[0][2])) >= 0)
-                                flags.initrace = i;
-                        } else if (argc > 1) {
-                                argc--;
-                                argv++;
-                            if ((i = str2race(argv[0])) >= 0)
-                                flags.initrace = i;
-                        }
-                        break;
-                case '@':
-                        flags.randomall = 1;
-                        break;
-                default:
-                        if ((i = str2role(&argv[0][1])) >= 0) {
-                            flags.initrole = i;
-                                break;
-                        }
-                        /* else raw_printf("Unknown option: %s", *argv); */
+    /*
+     * Process options.
+     */
+    while(argc > 1 && argv[1][0] == '-'){
+        argv++;
+        argc--;
+        switch(argv[0][1]){
+            case 'D':
+                wizard = TRUE;
+                break;
+            case 'X':
+                discover = TRUE;
+                break;
+            case 'n':
+                iflags.news = FALSE;
+                break;
+            case 'u':
+                if(argv[0][2])
+                    (void) strncpy(plname, argv[0]+2, sizeof(plname)-1);
+                else if(argc > 1) {
+                    argc--;
+                    argv++;
+                    (void) strncpy(plname, argv[0], sizeof(plname)-1);
+                } else
+                    raw_print("Player name expected after -u");
+                break;
+            case 'I':
+            case 'i':
+                if (!strncmpi(argv[0]+1, "IBM", 3))
+                    switch_graphics(IBM_GRAPHICS);
+                break;
+                /*  case 'D': */
+            case 'd':
+                if (!strncmpi(argv[0]+1, "DEC", 3))
+                    switch_graphics(DEC_GRAPHICS);
+                break;
+            case 'p': /* profession (role) */
+                if (argv[0][2]) {
+                    if ((i = str2role(&argv[0][2])) >= 0)
+                        flags.initrole = i;
+                } else if (argc > 1) {
+                    argc--;
+                    argv++;
+                    if ((i = str2role(argv[0])) >= 0)
+                        flags.initrole = i;
                 }
+                break;
+            case 'r': /* race */
+                if (argv[0][2]) {
+                    if ((i = str2race(&argv[0][2])) >= 0)
+                        flags.initrace = i;
+                } else if (argc > 1) {
+                    argc--;
+                    argv++;
+                    if ((i = str2race(argv[0])) >= 0)
+                        flags.initrace = i;
+                }
+                break;
+            case '@':
+                flags.randomall = 1;
+                break;
+            default:
+                if ((i = str2role(&argv[0][1])) >= 0) {
+                    flags.initrole = i;
+                    break;
+                }
+                /* else raw_printf("Unknown option: %s", *argv); */
         }
+    }
 
-        if(argc > 1)
-                locknum = atoi(argv[1]);
-#ifdef MAX_NR_OF_PLAYERS
-        if(!locknum || locknum > MAX_NR_OF_PLAYERS)
-                locknum = MAX_NR_OF_PLAYERS;
-#endif
+    if(argc > 1)
+        locknum = atoi(argv[1]);
 }
 
 static boolean whoami(void) {
-        /*
-         * Who am i? Algorithm: 1. Use name as specified in NETHACKOPTIONS
-         *                      2. Use $USER or $LOGNAME        (if 1. fails)
-         *                      3. Use getlogin()               (if 2. fails)
-         * The resulting name is overridden by command line options.
-         * If everything fails, or if the resulting name is some generic
-         * account like "games", "play", "player", "hack" then eventually
-         * we'll ask him.
-         * Note that we trust the user here; it is possible to play under
-         * somebody else's name.
-         */
-        char *s;
+    /*
+     * Who am i? Algorithm: 1. Use name as specified in NETHACKOPTIONS
+     *                      2. Use $USER or $LOGNAME        (if 1. fails)
+     *                      3. Use getlogin()               (if 2. fails)
+     * The resulting name is overridden by command line options.
+     * If everything fails, or if the resulting name is some generic
+     * account like "games", "play", "player", "hack" then eventually
+     * we'll ask him.
+     * Note that we trust the user here; it is possible to play under
+     * somebody else's name.
+     */
+    char *s;
 
-        if (*plname) return FALSE;
-        if(/* !*plname && */ (s = nh_getenv("USER")))
-                (void) strncpy(plname, s, sizeof(plname)-1);
-        if(!*plname && (s = nh_getenv("LOGNAME")))
-                (void) strncpy(plname, s, sizeof(plname)-1);
-        if(!*plname && (s = getlogin()))
-                (void) strncpy(plname, s, sizeof(plname)-1);
-        return TRUE;
+    if (*plname) return FALSE;
+    if(/* !*plname && */ (s = nh_getenv("USER")))
+        (void) strncpy(plname, s, sizeof(plname)-1);
+    if(!*plname && (s = nh_getenv("LOGNAME")))
+        (void) strncpy(plname, s, sizeof(plname)-1);
+    if(!*plname && (s = getlogin()))
+        (void) strncpy(plname, s, sizeof(plname)-1);
+    return TRUE;
 }
-
-#ifdef PORT_HELP
-void port_help (void) {
-        /*
-         * Display unix-specific help.   Just show contents of the helpfile
-         * named by PORT_HELP.
-         */
-        display_file(PORT_HELP, TRUE);
-}
-#endif
 
 static void wd_message (void) {
     if (discover)

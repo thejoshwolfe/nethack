@@ -14,9 +14,6 @@ static struct permonst * lookat(int, int, char *, char *);
 static void checkfile(char *,struct permonst *,boolean,boolean);
 static int do_look(boolean);
 static boolean help_menu(int *);
-#ifdef PORT_HELP
-extern void port_help(void);
-#endif
 
 /* Returns "true" for characters that could represent a monster's stomach. */
 static boolean
@@ -853,13 +850,7 @@ static const char *help_menu_items[] = {
 /* 6*/  "Longer explanation of game options.",
 /* 7*/  "List of extended commands.",
 /* 8*/  "The NetHack license.",
-#ifdef PORT_HELP
-        "%s-specific help and commands.",
-#define PORT_HELP_ID 100
-#define WIZHLP_SLOT 10
-#else
 #define WIZHLP_SLOT 9
-#endif
         "List of wizard-mode commands.",
         "",
         (char *)0
@@ -870,9 +861,6 @@ help_menu(sel)
         int *sel;
 {
         winid tmpwin = create_nhwindow(NHW_MENU);
-#ifdef PORT_HELP
-        char helpbuf[QBUFSZ];
-#endif
         int i, n;
         menu_item *selected;
         anything any;
@@ -882,15 +870,6 @@ help_menu(sel)
         if (!wizard) help_menu_items[WIZHLP_SLOT] = "",
                      help_menu_items[WIZHLP_SLOT+1] = (char *)0;
         for (i = 0; help_menu_items[i]; i++)
-#ifdef PORT_HELP
-            /* port-specific line has a %s in it for the PORT_ID */
-            if (help_menu_items[i][0] == '%') {
-                Sprintf(helpbuf, help_menu_items[i], PORT_ID);
-                any.a_int = PORT_HELP_ID + 1;
-                add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                         helpbuf, MENU_UNSELECTED);
-            } else
-#endif
             {
                 any.a_int = (*help_menu_items[i]) ? i+1 : 0;
                 add_menu(tmpwin, NO_GLYPH, &any, 0, 0,
@@ -923,9 +902,6 @@ int dohelp(void) {
                         case  8:  display_file(LICENSE, TRUE);  break;
                         /* handle slot 9 or 10 */
                         default: display_file("wizhelp", TRUE);  break;
-#ifdef PORT_HELP
-                        case PORT_HELP_ID:  port_help();  break;
-#endif
                 }
         }
         return 0;
