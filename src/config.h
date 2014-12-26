@@ -81,19 +81,6 @@
 #endif
 
 /*
- * Section 4:  THE FUN STUFF!!!
- *
- * Conditional compilation of special options are controlled here.
- * If you define the following flags, you will add not only to the
- * complexity of the game but also to the size of the load module.
- */
-
-/* monsters & objects */
-
-#define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
-
-
-/*
  * Section 5:  EXPERIMENTAL STUFF
  *
  * Conditional compilation of new or experimental options are controlled here.
