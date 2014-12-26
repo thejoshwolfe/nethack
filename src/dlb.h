@@ -25,13 +25,7 @@ typedef struct dlb_library {
 } library;
 
 /* library definitions */
-# ifndef DLBFILE
-#  define DLBFILE       "build/nhdat"
-# endif
-
-# ifndef FILENAME_CMP
-#  define FILENAME_CMP  strcmp                  /* case sensitive */
-# endif
+#define DLBFILE "build/nhdat"
 
 
 typedef struct dlb_handle {
@@ -52,23 +46,5 @@ int dlb_fseek(dlb *,long,int);
 char *dlb_fgets(char *,int,dlb *);
 int dlb_fgetc(dlb *);
 long dlb_ftell(dlb *);
-
-
-/* various other I/O stuff we don't want to replicate everywhere */
-
-#ifndef SEEK_SET
-# define SEEK_SET 0
-#endif
-#ifndef SEEK_CUR
-# define SEEK_CUR 1
-#endif
-#ifndef SEEK_END
-# define SEEK_END 2
-#endif
-
-#define RDTMODE "r"
-#define WRTMODE "w+"
-#define RDBMODE "r"
-#define WRBMODE "w+"
 
 #endif  /* DLB_H */

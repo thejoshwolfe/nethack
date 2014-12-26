@@ -235,7 +235,7 @@ do_rumors (void)
         Strcat(filename,file_prefix);
 #endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, RUMOR_FILE);
-        if (!(ofp = fopen(filename, WRTMODE))) {
+        if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }
@@ -243,7 +243,7 @@ do_rumors (void)
 
         Sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
         Strcat(infile, ".tru");
-        if (!(ifp = fopen(infile, RDTMODE))) {
+        if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
                 Fclose(ofp);
                 Unlink(filename);       /* kill empty output file */
@@ -264,7 +264,7 @@ do_rumors (void)
 
         Sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
         Strcat(infile, ".fal");
-        if (!(ifp = fopen(infile, RDTMODE))) {
+        if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
                 Fclose(ofp);
                 Unlink(filename);       /* kill incomplete output file */
@@ -364,7 +364,7 @@ do_date (void)
         Strcat(filename,file_prefix);
 #endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATE_FILE);
-        if (!(ofp = fopen(filename, WRTMODE))) {
+        if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }
@@ -461,7 +461,7 @@ void do_options(void) {
         Strcat(filename,file_prefix);
 #endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, OPTIONS_FILE);
-        if (!(ofp = fopen(filename, WRTMODE))) {
+        if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }
@@ -550,16 +550,16 @@ do_data (void)
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATA_FILE);
         Sprintf(infile, DATA_IN_TEMPLATE, DATA_FILE);
         Strcat(infile, ".base");
-        if (!(ifp = fopen(infile, RDTMODE))) {          /* data.base */
+        if (!(ifp = fopen(infile, "r"))) {          /* data.base */
                 perror(infile);
                 exit(EXIT_FAILURE);
         }
-        if (!(ofp = fopen(filename, WRTMODE))) {        /* data */
+        if (!(ofp = fopen(filename, "w+"))) {        /* data */
                 perror(filename);
                 Fclose(ifp);
                 exit(EXIT_FAILURE);
         }
-        if (!(tfp = fopen(tempfile, WRTMODE))) {        /* database.tmp */
+        if (!(tfp = fopen(tempfile, "w+"))) {        /* database.tmp */
                 perror(tempfile);
                 Fclose(ifp);
                 Fclose(ofp);
@@ -675,16 +675,16 @@ do_oracles (void)
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ORACLE_FILE);
         Sprintf(infile, DATA_IN_TEMPLATE, ORACLE_FILE);
         Strcat(infile, ".txt");
-        if (!(ifp = fopen(infile, RDTMODE))) {
+        if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
                 exit(EXIT_FAILURE);
         }
-        if (!(ofp = fopen(filename, WRTMODE))) {
+        if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 Fclose(ifp);
                 exit(EXIT_FAILURE);
         }
-        if (!(tfp = fopen(tempfile, WRTMODE))) {        /* oracles.tmp */
+        if (!(tfp = fopen(tempfile, "w+"))) {        /* oracles.tmp */
                 perror(tempfile);
                 Fclose(ifp);
                 Fclose(ofp);
@@ -889,7 +889,7 @@ do_monstr (void)
     Strcat(filename, file_prefix);
 #endif
     Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MON_STR_C);
-    if (!(ofp = fopen(filename, WRTMODE))) {
+    if (!(ofp = fopen(filename, "w+"))) {
         perror(filename);
         exit(EXIT_FAILURE);
     }
@@ -928,7 +928,7 @@ do_permonst (void)
         Strcat(filename, file_prefix);
 #endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MONST_FILE);
-        if (!(ofp = fopen(filename, WRTMODE))) {
+        if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }
@@ -1163,7 +1163,7 @@ void
 do_questtxt (void)
 {
         Sprintf(filename, DATA_IN_TEMPLATE, QTXT_I_FILE);
-        if(!(ifp = fopen(filename, RDTMODE))) {
+        if(!(ifp = fopen(filename, "r"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }
@@ -1173,7 +1173,7 @@ do_questtxt (void)
         Strcat(filename, file_prefix);
 #endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, QTXT_O_FILE);
-        if(!(ofp = fopen(filename, WRBMODE))) {
+        if(!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 Fclose(ifp);
                 exit(EXIT_FAILURE);
@@ -1238,7 +1238,7 @@ do_objs (void)
         Strcat(filename, file_prefix);
 #endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ONAME_FILE);
-        if (!(ofp = fopen(filename, WRTMODE))) {
+        if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }

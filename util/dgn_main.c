@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     perror(infile);
     return 1;
   }
-  FILE * fout = freopen(outfile, WRBMODE, stdout);
+  FILE * fout = freopen(outfile, "w+", stdout);
   if (!fout) {
     Fprintf(stderr, "Can't open %s for output.\n", outfile);
     perror(outfile);

@@ -172,7 +172,7 @@ find_file(name, lib, startp, sizep)
     for (i = 0; i < MAX_LIBS && dlb_libs[i].fdata; i++) {
     lp = &dlb_libs[i];
     for (j = 0; j < lp->nentries; j++) {
-        if (FILENAME_CMP(name, lp->dir[j].fname) == 0) {
+        if (strcmp(name, lp->dir[j].fname) == 0) {
         *lib = lp;
         *startp = lp->dir[j].foffset;
         *sizep = lp->dir[j].fsize;
@@ -192,7 +192,7 @@ find_file(name, lib, startp, sizep)
 boolean open_library(const char *lib_name, library *lp) {
     boolean status = FALSE;
 
-    lp->fdata = fopen_datafile(lib_name, RDBMODE, DATAPREFIX);
+    lp->fdata = fopen_datafile(lib_name, "r", DATAPREFIX);
     if (lp->fdata) {
         if (readlibdir(lp)) {
             status = TRUE;
@@ -224,12 +224,6 @@ static boolean lib_dlb_init(void) {
 
     /* To open more than one library, add open library calls here. */
     if (!open_library(DLBFILE, &dlb_libs[0])) return FALSE;
-#ifdef DLBFILE2
-    if (!open_library(DLBFILE2, &dlb_libs[1]))  {
-    close_library(&dlb_libs[0]);
-    return FALSE;
-    }
-#endif
     return TRUE;
 }
 

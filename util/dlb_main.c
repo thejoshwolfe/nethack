@@ -243,9 +243,9 @@ main (int argc, char **argv)
                 /* if files are listed, see if current is wanted */
                 int c;
                 for (c = ap; c < argc; c++)
-                    if (!FILENAME_CMP(lib.dir[i].fname, argv[c])) break;
+                    if (!strcmp(lib.dir[i].fname, argv[c])) break;
                 if (c == argc) continue;        /* skip */
-            } else if (!FILENAME_CMP(lib.dir[i].fname, DLB_DIRECTORY)) {
+            } else if (!strcmp(lib.dir[i].fname, DLB_DIRECTORY)) {
                 /*
                  * Don't extract the directory unless the user
                  * specifically asks for it.

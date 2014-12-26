@@ -542,7 +542,7 @@ void init_dungeons(void) {
 
     pd.n_levs = pd.n_brs = 0;
 
-    dgn_file = dlb_fopen(DUNGEON_FILE, RDBMODE);
+    dgn_file = dlb_fopen(DUNGEON_FILE, "r");
     if (!dgn_file) {
         char tbuf[BUFSZ];
         Sprintf(tbuf, "Cannot open dungeon description - \"%s", DUNGEON_FILE);

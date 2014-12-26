@@ -69,7 +69,7 @@ load_qtlist (void)
         char    qt_classes[N_HDR][LEN_HDR];
         long    qt_offsets[N_HDR];
 
-        msg_file = dlb_fopen(QTEXT_FILE, RDBMODE);
+        msg_file = dlb_fopen(QTEXT_FILE, "r");
         if (!msg_file)
             panic("CANNOT OPEN QUEST TEXT FILE %s.", QTEXT_FILE);
 

@@ -2541,7 +2541,7 @@ const char *name;
         char c;
         struct version_info vers_info;
 
-        fd = dlb_fopen(name, RDBMODE);
+        fd = dlb_fopen(name, "r");
         if (!fd) return FALSE;
 
         Fread((void *) &vers_info, sizeof vers_info, 1, fd);
