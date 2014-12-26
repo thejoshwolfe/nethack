@@ -434,9 +434,7 @@ int locflags;   /* non-zero means get location even if monster is buried */
 
 /* used by revive() and animate_statue() */
 struct monst *
-montraits(obj,cc)
-struct obj *obj;
-coord *cc;
+montraits (struct obj *obj, coord *cc)
 {
         struct monst *mtmp = (struct monst *)0;
         struct monst *mtmp2 = (struct monst *)0;

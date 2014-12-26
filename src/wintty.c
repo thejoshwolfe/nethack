@@ -903,10 +903,8 @@ invert_all (
     }
 }
 
-static void
-process_menu_window(window, cw)
-winid window;
-struct WinDesc *cw;
+static void 
+process_menu_window (winid window, struct WinDesc *cw)
 {
     tty_menu_item *page_start, *page_end, *curr;
     long count;
@@ -1200,10 +1198,8 @@ struct WinDesc *cw;
     free((void *)morestr);
 }
 
-static void
-process_text_window(window, cw)
-winid window;
-struct WinDesc *cw;
+static void 
+process_text_window (winid window, struct WinDesc *cw)
 {
     int i, n, attr;
     char *cp;
@@ -1318,9 +1314,8 @@ tty_display_nhwindow(window, blocking)
     cw->active = 1;
 }
 
-void
-tty_dismiss_nhwindow(window)
-    winid window;
+void 
+tty_dismiss_nhwindow (winid window)
 {
     struct WinDesc *cw = 0;
 
@@ -1361,9 +1356,8 @@ tty_dismiss_nhwindow(window)
     cw->flags = 0;
 }
 
-void
-tty_destroy_nhwindow(window)
-    winid window;
+void 
+tty_destroy_nhwindow (winid window)
 {
     struct WinDesc *cw = 0;
 
@@ -1382,11 +1376,13 @@ tty_destroy_nhwindow(window)
     wins[window] = 0;
 }
 
-void
-tty_curs(window, x, y)
-winid window;
-int x, y;       /* not signed char: perhaps signed char is unsigned and
+void 
+tty_curs (
+    winid window,
+    int x,
+    int y       /* not signed char: perhaps signed char is unsigned and
                            curx-x would be unsigned as well */
+)
 {
     struct WinDesc *cw = 0;
     int cx = ttyDisplay->curx;
@@ -1429,11 +1425,8 @@ int x, y;       /* not signed char: perhaps signed char is unsigned and
     ttyDisplay->cury = y;
 }
 
-static void
-tty_putsym(window, x, y, ch)
-    winid window;
-    int x, y;
-    char ch;
+static void 
+tty_putsym (winid window, int x, int y, char ch)
 {
     struct WinDesc *cw = 0;
 
@@ -1476,11 +1469,8 @@ compress_str (const char *str)
         return cbuf;
 }
 
-void
-tty_putstr(window, attr, str)
-    winid window;
-    int attr;
-    const char *str;
+void 
+tty_putstr (winid window, int attr, const char *str)
 {
     struct WinDesc *cw = 0;
     char *ob;
@@ -1661,9 +1651,8 @@ void tty_display_file(const char *fname, boolean complain) {
     }
 }
 
-void
-tty_start_menu(window)
-    winid window;
+void 
+tty_start_menu (winid window)
 {
     tty_clear_nhwindow(window);
     return;
@@ -1727,8 +1716,7 @@ tty_add_menu(window, glyph, identifier, ch, gch, attr, str, preselected)
 
 /* Invert the given list, can handle NULL as an input. */
 static tty_menu_item *
-reverse(curr)
-    tty_menu_item *curr;
+reverse (tty_menu_item *curr)
 {
     tty_menu_item *next, *head = 0;
 
@@ -1747,10 +1735,11 @@ reverse(curr)
  * keyboard accelerators as needed.  Finally we decide on the width and
  * height of the window.
  */
-void
-tty_end_menu(window, prompt)
-    winid window;       /* menu to use */
-    const char *prompt; /* prompt to for menu */
+void 
+tty_end_menu (
+    winid window,       /* menu to use */
+    const char *prompt /* prompt to for menu */
+)
 {
     struct WinDesc *cw = 0;
     tty_menu_item *curr;
@@ -1842,11 +1831,8 @@ tty_end_menu(window, prompt)
         cw->maxrow = cw->rows = cw->nitems + 1;
 }
 
-int
-tty_select_menu(window, how, menu_list)
-    winid window;
-    int how;
-    menu_item **menu_list;
+int 
+tty_select_menu (winid window, int how, menu_item **menu_list)
 {
     struct WinDesc *cw = 0;
     tty_menu_item *curr;

@@ -749,13 +749,14 @@ boolean (*allow)(struct obj *);/* allow function */
  * allow menu-based category (class) selection (for Drop,take off etc.)
  *
  */
-int
-query_category(qstr, olist, qflags, pick_list, how)
-const char *qstr;               /* query string */
-struct obj *olist;              /* the list to pick from */
-int qflags;                     /* behaviour modification flags */
-menu_item **pick_list;          /* return list of items picked */
-int how;                        /* type of query */
+int 
+query_category (
+    const char *qstr,               /* query string */
+    struct obj *olist,              /* the list to pick from */
+    int qflags,                     /* behaviour modification flags */
+    menu_item **pick_list,          /* return list of items picked */
+    int how                        /* type of query */
+)
 {
         int n;
         winid win;
