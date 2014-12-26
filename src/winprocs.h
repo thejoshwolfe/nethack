@@ -44,10 +44,6 @@ struct window_procs {
     int (*win_get_ext_cmd)(void);
     void (*win_number_pad)(int);
     void (*win_delay_output)(void);
-#ifdef CHANGE_COLOR
-    void (*win_change_color)(int,long,int);
-    char * (*win_get_color_string)(void);
-#endif
 
     /* other defs that really should go away (they're tty specific) */
     void (*win_start_screen)(void);
@@ -97,10 +93,6 @@ extern struct window_procs windowprocs;
 #define get_ext_cmd (*windowprocs.win_get_ext_cmd)
 #define number_pad (*windowprocs.win_number_pad)
 #define delay_output (*windowprocs.win_delay_output)
-#ifdef CHANGE_COLOR
-#define change_color (*windowprocs.win_change_color)
-#define get_color_string (*windowprocs.win_get_color_string)
-#endif
 
 /* 3.4.2: There is a real yn_function() in the core now, which does
  *        some buffer length validation on the parameters prior to

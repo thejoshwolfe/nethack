@@ -190,10 +190,6 @@ static struct Comp_Opt
                                                 MAXOCLASSES, SET_IN_FILE },
         { "packorder", "the inventory order of the items in your pack",
                                                 MAXOCLASSES, SET_IN_GAME },
-#ifdef CHANGE_COLOR
-        { "palette",  "palette (00c/880/-fff is blue/yellow/reverse white)",
-                                                15 , SET_IN_GAME },
-#endif
         { "petattr",  "attributes for highlighting pets", 12, SET_IN_FILE },
         { "pettype",  "your preferred initial pet type", 4, DISP_IN_GAME },
         { "pickup_burden",  "maximum burden picked up before prompt",
@@ -1075,58 +1071,6 @@ boolean tinitial, tfrom_file;
                 } else if (negated) bad_negation(fullname, TRUE);
                 return;
         }
-#ifdef CHANGE_COLOR
-        if (match_optname(opts, "palette", 3, TRUE)
-                                                        ) {
-            int color_number, color_incr;
-
-                if (negated) {
-                    bad_negation("palette", FALSE);
-                    return;
-                }
-                color_number = 0;
-                color_incr = 1;
-            if ((op = string_for_opt(opts, FALSE)) != (char *)0) {
-                char *pt = op;
-                int cnt, tmp, reverse;
-                long rgb;
-
-                while (*pt && color_number >= 0) {
-                    cnt = 3;
-                    rgb = 0L;
-                    if (*pt == '-') {
-                        reverse = 1;
-                        pt++;
-                    } else {
-                        reverse = 0;
-                    }
-                    while (cnt-- > 0) {
-                        if (*pt && *pt != '/') {
-                            rgb <<= 8;
-                            tmp = *(pt++);
-                            if (isalpha(tmp)) {
-                                tmp = (tmp + 9) & 0xf;  /* Assumes ASCII... */
-                            } else {
-                                tmp &= 0xf;     /* Digits in ASCII too... */
-                            }
-                            /* Add an extra so we fill f -> ff and 0 -> 00 */
-                            rgb += tmp << 4;
-                            rgb += tmp;
-                        }
-                    }
-                    if (*pt == '/') {
-                        pt++;
-                    }
-                    change_color(color_number, rgb, reverse);
-                    color_number += color_incr;
-                }
-            }
-            if (!initial) {
-                need_redraw = TRUE;
-            }
-            return;
-        }
-#endif /* CHANGE_COLOR */
 
         if (match_optname(opts, "fruit", 2, TRUE)) {
                 char empty_str = '\0';
@@ -2778,10 +2722,6 @@ get_compopt_value (const char *optname, char *buf)
                 oc_to_str(flags.inv_order, ocl);
                 Sprintf(buf, "%s", ocl);
              }
-#ifdef CHANGE_COLOR
-        else if (!strcmp(optname, "palette"))
-                Sprintf(buf, "%s", get_color_string());
-#endif
         else if (!strcmp(optname, "pettype"))
                 Sprintf(buf, "%s", (preferred_pet == 'c') ? "cat" :
                                 (preferred_pet == 'd') ? "dog" :
