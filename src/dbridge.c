@@ -161,11 +161,7 @@ get_wall_for_db (int *x, int *y)
  *     flag must be put to TRUE if we want the drawbridge to be opened.
  */
 
-boolean
-create_drawbridge(x,y,dir,flag)
-int x,y,dir;
-boolean flag;
-{
+boolean create_drawbridge(int x,int y,int dir,boolean flag) {
         int x2,y2;
         boolean horiz;
         boolean lava = levl[x][y].typ == LAVAPOOL; /* assume initialized map */
@@ -408,11 +404,7 @@ struct entity *etmp;
  * Does falling drawbridge or portcullis miss etmp?
  */
 
-static boolean
-e_missed(etmp, chunks)
-struct entity *etmp;
-boolean chunks;
-{
+static boolean e_missed(struct entity *etmp, boolean chunks) {
         int misses;
 
         if (automiss(etmp))

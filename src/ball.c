@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 /* Ball & Chain =============================================================*/
 
 #include "hack.h"
@@ -7,9 +8,7 @@
 static int bc_order(void);
 static void litter(void);
 
-void
-ballfall (void)
-{
+void ballfall (void) {
         boolean gets_hit;
 
         gets_hit = (((uball->ox != u.ux) || (uball->oy != u.uy)) &&
@@ -93,9 +92,7 @@ ballfall (void)
  *
  *  Should not be called while swallowed.
  */
-void
-placebc (void)
-{
+void placebc (void) {
     if (!uchain || !uball) {
         impossible("Where are your ball and chain?");
         return;
@@ -119,9 +116,7 @@ placebc (void)
     newsym(u.ux,u.uy);
 }
 
-void
-unplacebc (void)
-{
+void unplacebc (void) {
     if (u.uswallow) return;     /* ball&chain not placed while swallowed */
 
     if (!carried(uball)) {
@@ -144,9 +139,7 @@ unplacebc (void)
  *  Return the stacking of the hero's ball & chain.  This assumes that the
  *  hero is being punished.
  */
-static int
-bc_order (void)
-{
+static int bc_order (void) {
     struct obj *obj;
 
     if (uchain->ox != uball->ox || uchain->oy != uball->oy || carried(uball)
@@ -167,9 +160,7 @@ bc_order (void)
  *  The hero is either about to go blind or already blind and just punished.
  *  Set up the ball and chain variables so that the ball and chain are "felt".
  */
-void
-set_bc (int already_blind)
-{
+void set_bc (int already_blind) {
     int ball_on_floor = !carried(uball);
 
     u.bc_order = bc_order();                            /* get the order */
@@ -213,7 +204,6 @@ set_bc (int already_blind)
     }
 }
 
-
 /*
  *  move_bc()
  *
@@ -224,8 +214,7 @@ set_bc (int already_blind)
  *
  *  Should not be called while swallowed.
  */
-void
-move_bc (
+void move_bc (
     int before,
     int control,
     signed char ballx,
@@ -358,14 +347,10 @@ move_bc (
  * drag the chain, while an identical-looking movement must drag both the ball
  * and chain.
  */
-boolean
-drag_ball(x, y, bc_control, ballx, bally, chainx, chainy, cause_delay,
-    allow_drag)
-signed char x, y;
-int *bc_control;
-signed char *ballx, *bally, *chainx, *chainy;
-boolean *cause_delay;
-boolean allow_drag;
+boolean drag_ball(signed char x, signed char y,
+    int *bc_control, signed char *ballx, signed char *bally,
+    signed char *chainx, signed char *chainy, boolean *cause_delay,
+    boolean allow_drag)
 {
         struct trap *t = (struct trap *)0;
         boolean already_in_rock;
@@ -641,9 +626,7 @@ drag:
  *
  *  Should not be called while swallowed.
  */
-void
-drop_ball (signed char x, signed char y)
-{
+void drop_ball (signed char x, signed char y) {
     if (Blind) {
         u.bc_order = bc_order();                        /* get the order */
                                                         /* pick up glyph */
@@ -722,10 +705,7 @@ drop_ball (signed char x, signed char y)
     }
 }
 
-
-static void
-litter (void)
-{
+static void litter (void) {
         struct obj *otmp = invent, *nextobj;
         int capacity = weight_cap();
 

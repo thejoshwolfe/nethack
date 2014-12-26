@@ -13,11 +13,7 @@ static void getpos_help(boolean,const char *);
 extern const char what_is_an_unknown_object[];          /* from pager.c */
 
 /* the response for '?' help request in getpos() */
-static void
-getpos_help(force, goal)
-boolean force;
-const char *goal;
-{
+static void getpos_help(boolean force, const char *goal) {
     char sbuf[BUFSZ];
     boolean doing_what_is;
     winid tmpwin = create_nhwindow(NHW_MENU);
@@ -40,12 +36,7 @@ const char *goal;
     destroy_nhwindow(tmpwin);
 }
 
-int
-getpos(cc, force, goal)
-coord *cc;
-boolean force;
-const char *goal;
-{
+int getpos(coord *cc, boolean force, const char *goal) {
     int result = 0;
     int cx, cy, i, c;
     int sidx, tx, ty;
@@ -535,23 +526,24 @@ rndghostname (void)
 /* Bug: if the monster is a priest or shopkeeper, not every one of these
  * options works, since those are special cases.
  */
-char *
-x_monnam(mtmp, article, adjective, suppress, called)
+/*
 struct monst *mtmp;
 int article;
-/* ARTICLE_NONE, ARTICLE_THE, ARTICLE_A: obvious
+ ARTICLE_NONE, ARTICLE_THE, ARTICLE_A: obvious
  * ARTICLE_YOUR: "your" on pets, "the" on everything else
  *
  * If the monster would be referred to as "it" or if the monster has a name
  * _and_ there is no adjective, "invisible", "saddled", etc., override this
  * and always use no article.
- */
+ 
 const char *adjective;
 int suppress;
-/* SUPPRESS_IT, SUPPRESS_INVISIBLE, SUPPRESS_HALLUCINATION, SUPPRESS_SADDLE.
+ SUPPRESS_IT, SUPPRESS_INVISIBLE, SUPPRESS_HALLUCINATION, SUPPRESS_SADDLE.
  * EXACT_NAME: combination of all the above
- */
-boolean called;
+ 
+*/
+char * x_monnam(struct monst *mtmp, int article, const char *adjective,
+        int suppress, boolean called)
 {
         static char buf[BUFSZ];
         struct permonst *mdat = mtmp->data;

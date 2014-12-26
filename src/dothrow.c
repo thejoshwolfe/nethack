@@ -686,11 +686,7 @@ static void check_shop_obj(struct obj *obj, signed char x, signed char y, boolea
  *
  * Returns FALSE if the object is gone.
  */
-static boolean
-toss_up(obj, hitsroof)
-struct obj *obj;
-boolean hitsroof;
-{
+static boolean toss_up(struct obj *obj, boolean hitsroof) {
     const char *almost;
     /* note: obj->quan == 1 */
 
@@ -823,12 +819,9 @@ sho_obj_return_to_u (struct obj *obj)
     }
 }
 
-void
-throwit(obj, wep_mask, twoweap)
-struct obj *obj;
-long wep_mask;  /* used to re-equip returning boomerang */
-boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
-{
+// long wep_mask;  /* used to re-equip returning boomerang */
+// boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
+void throwit(struct obj *obj, long wep_mask, boolean twoweap) {
         struct monst *mon;
         int range, urange;
         boolean impaired = (Confusion || Stunned || Blind ||
@@ -1072,12 +1065,7 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
 }
 
 /* an object may hit a monster; various factors adjust the chance of hitting */
-int
-omon_adj(mon, obj, mon_notices)
-struct monst *mon;
-struct obj *obj;
-boolean mon_notices;
-{
+int omon_adj(struct monst *mon, struct obj *obj, boolean mon_notices) {
         int tmp = 0;
 
         /* size of target affects the chance of hitting */

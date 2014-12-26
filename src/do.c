@@ -42,12 +42,7 @@ dodrop (void)
  * in a pool, it either fills the pool up or sinks away.  In either case,
  * it's gone for good...  If the destination is not a pool, returns FALSE.
  */
-boolean
-boulder_hits_pool(otmp, rx, ry, pushing)
-struct obj *otmp;
-int rx, ry;
-boolean pushing;
-{
+boolean boulder_hits_pool(struct obj *otmp, int rx, int ry, boolean pushing) {
         if (!otmp || otmp->otyp != BOULDER)
             impossible("Not a boulder?");
         else if (!Is_waterlevel(&u.uz) && (is_pool(rx,ry) || is_lava(rx,ry))) {
@@ -1324,12 +1319,8 @@ static char *dfr_pre_msg = 0,   /* plines() before level change */
             *dfr_post_msg = 0;  /* plines() after level change */
 
 /* change levels at the end of this turn, after monsters finish moving */
-void
-schedule_goto(tolev, at_stairs, falling, portal_flag, pre_msg, post_msg)
-d_level *tolev;
-boolean at_stairs, falling;
-int portal_flag;
-const char *pre_msg, *post_msg;
+void schedule_goto(d_level *tolev, boolean at_stairs, boolean falling,
+        int portal_flag, const char *pre_msg, const char *post_msg)
 {
         int typmask = 0100;             /* non-zero triggers `deferred_goto' */
 
@@ -1349,9 +1340,7 @@ const char *pre_msg, *post_msg;
 }
 
 /* handle something like portal ejection */
-void
-deferred_goto (void)
-{
+void deferred_goto (void) {
         if (!on_level(&u.uz, &u.utolev)) {
             d_level dest;
             int typmask = u.utotype; /* save it; goto_level zeroes u.utotype */
@@ -1381,10 +1370,7 @@ deferred_goto (void)
  * Return TRUE if we created a monster for the corpse.  If successful, the
  * corpse is gone.
  */
-boolean
-revive_corpse(corpse)
-struct obj *corpse;
-{
+boolean revive_corpse(struct obj *corpse) {
     struct monst *mtmp, *mcarry;
     boolean is_uwep, chewed;
     signed char where;

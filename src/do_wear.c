@@ -761,11 +761,7 @@ Ring_on (struct obj *obj)
     }
 }
 
-static void
-Ring_off_or_gone(obj,gone)
-struct obj *obj;
-boolean gone;
-{
+static void Ring_off_or_gone(struct obj *obj, boolean gone) {
     long mask = (obj->owornmask & W_RING);
     int old_attrib, which;
 
@@ -864,21 +860,15 @@ boolean gone;
     }
 }
 
-void
-Ring_off (struct obj *obj)
-{
+void Ring_off (struct obj *obj) {
         Ring_off_or_gone(obj,FALSE);
 }
 
-void
-Ring_gone (struct obj *obj)
-{
+void Ring_gone (struct obj *obj) {
         Ring_off_or_gone(obj,TRUE);
 }
 
-void
-Blindf_on (struct obj *otmp)
-{
+void Blindf_on (struct obj *otmp) {
         boolean already_blind = Blind, changed = FALSE;
 
         if (otmp == uwep)
@@ -1204,12 +1194,7 @@ already_wearing2 (const char *cc1, const char *cc2)
  *         noisy (if TRUE give error messages, otherwise be quiet about it)
  * output: mask (otmp's armor type)
  */
-int
-canwearobj(otmp,mask,noisy)
-struct obj *otmp;
-long *mask;
-boolean noisy;
-{
+int canwearobj(struct obj *otmp, long *mask, boolean noisy) {
     int err = 0;
     const char *which;
 
@@ -1645,11 +1630,7 @@ some_armor (struct monst *victim)
 }
 
 /* erode some arbitrary armor worn by the victim */
-void
-erode_armor(victim, acid_dmg)
-struct monst *victim;
-boolean acid_dmg;
-{
+void erode_armor(struct monst *victim, boolean acid_dmg) {
         struct obj *otmph = some_armor(victim);
 
         if (otmph && (otmph != uarmf)) {

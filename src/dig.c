@@ -44,12 +44,7 @@ rm_waslit()
  * boulders in the name of a nice effect.  Vision will get fixed up again
  * immediately after the effect is complete.
  */
-static void
-mkcavepos(x, y, dist, waslit, rockit)
-    signed char x,y;
-    int dist;
-    boolean waslit, rockit;
-{
+static void mkcavepos(signed char x, signed char y, int dist, boolean waslit, boolean rockit) {
     struct rm *lev;
 
     if(!isok(x,y)) return;
@@ -83,10 +78,7 @@ mkcavepos(x, y, dist, waslit, rockit)
     else newsym(x,y);
 }
 
-static void
-mkcavearea(rockit)
-boolean rockit;
-{
+static void mkcavearea(boolean rockit) {
     int dist;
     signed char xmin = u.ux, xmax = u.ux;
     signed char ymin = u.uy, ymax = u.uy;
@@ -157,12 +149,7 @@ is_digging()
 #define BY_YOU          (&youmonst)
 #define BY_OBJECT       ((struct monst *)0)
 
-boolean
-dig_check(madeby, verbose, x, y)
-        struct monst    *madeby;
-        boolean         verbose;
-        int             x, y;
-{
+boolean dig_check(struct monst *madeby, boolean verbose, int x, int y) {
         struct trap *ttmp = t_at(x, y);
         const char *verb = (madeby == BY_YOU && uwep && is_axe(uwep)) ? "chop" : "dig in";
 
@@ -632,10 +619,7 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
 }
 
 /* return TRUE if digging succeeded, FALSE otherwise */
-boolean
-dighole(pit_only)
-boolean pit_only;
-{
+boolean dighole(boolean pit_only) {
         struct trap *ttmp = t_at(u.ux, u.uy);
         struct rm *lev = &levl[u.ux][u.uy];
         struct obj *boulder_here;
@@ -998,12 +982,7 @@ use_pick_axe2 (struct obj *obj)
  * If mtmp is assumed to be a watchman, a watchman is found if mtmp == 0
  * zap == TRUE if wand/spell of digging, FALSE otherwise (chewing)
  */
-void
-watch_dig(mtmp, x, y, zap)
-    struct monst *mtmp;
-    signed char x, y;
-    boolean zap;
-{
+void watch_dig(struct monst *mtmp, signed char x, signed char y, boolean zap) {
         struct rm *lev = &levl[x][y];
 
         if (in_town(x, y) &&

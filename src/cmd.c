@@ -1735,13 +1735,8 @@ static const char template[] = "%-18s %4ld  %6ld";
 static const char count_str[] = "                   count  bytes";
 static const char separator[] = "------------------ -----  ------";
 
-    static void
-count_obj(chain, total_count, total_size, top, recurse)
-    struct obj *chain;
-    long *total_count;
-    long *total_size;
-    boolean top;
-    boolean recurse;
+static void count_obj(struct obj *chain, long *total_count, long *total_size,
+        boolean top, boolean recurse)
 {
     long count, size;
     struct obj *obj;
@@ -1758,8 +1753,8 @@ count_obj(chain, total_count, total_size, top, recurse)
     *total_size += size;
 }
 
-    static void
-obj_chain (winid win, const char *src, struct obj *chain, long *total_count, long *total_size)
+static void obj_chain (winid win, const char *src, struct obj *chain,
+        long *total_count, long *total_size)
 {
     char buf[BUFSZ];
     long count = 0, size = 0;
@@ -1771,8 +1766,8 @@ obj_chain (winid win, const char *src, struct obj *chain, long *total_count, lon
     putstr(win, 0, buf);
 }
 
-    static void
-mon_invent_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
+static void mon_invent_chain (winid win, const char *src, struct monst *chain,
+        long *total_count, long *total_size)
 {
     char buf[BUFSZ];
     long count = 0, size = 0;
@@ -1786,9 +1781,7 @@ mon_invent_chain (winid win, const char *src, struct monst *chain, long *total_c
     putstr(win, 0, buf);
 }
 
-    static void
-contained (winid win, const char *src, long *total_count, long *total_size)
-{
+static void contained (winid win, const char *src, long *total_count, long *total_size) {
     char buf[BUFSZ];
     long count = 0, size = 0;
     struct monst *mon;
@@ -1809,8 +1802,8 @@ contained (winid win, const char *src, long *total_count, long *total_size)
     putstr(win, 0, buf);
 }
 
-    static void
-mon_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
+static void mon_chain (winid win, const char *src, struct monst *chain,
+        long *total_count, long *total_size)
 {
     char buf[BUFSZ];
     long count, size;
@@ -1829,9 +1822,7 @@ mon_chain (winid win, const char *src, struct monst *chain, long *total_count, l
 /*
  * Display memory usage of all monsters and objects on the level.
  */
-    static int
-wiz_show_stats (void)
-{
+static int wiz_show_stats (void) {
     char buf[BUFSZ];
     winid win;
     long total_obj_size = 0, total_obj_count = 0;

@@ -198,11 +198,7 @@ losedogs (void)
 }
 
 /* called from resurrect() in addition to losedogs() */
-void
-mon_arrive(mtmp, with_you)
-struct monst *mtmp;
-boolean with_you;
-{
+void mon_arrive(struct monst *mtmp, boolean with_you) {
         struct trap *t;
         signed char xlocale, ylocale, xyloc, xyflags, wander;
         int num_segs;
@@ -441,10 +437,8 @@ void mon_catchup_elapsed_time (struct monst *mtmp, long nmv) {
 
 
 /* called when you move to another level */
-void
-keepdogs(pets_only)
-boolean pets_only;      /* true for ascension or final escape */
-{
+/* true for ascension or final escape */
+void keepdogs(boolean pets_only) {
         struct monst *mtmp, *mtmp2;
         struct obj *obj;
         int num_segs;
@@ -533,9 +527,7 @@ boolean pets_only;      /* true for ascension or final escape */
         }
 }
 
-
-void
-migrate_to_level (
+void migrate_to_level (
     struct monst *mtmp,
     signed char tolev,  /* destination level */
     signed char xyloc,  /* MIGR_xxx destination xy location: */
@@ -789,11 +781,7 @@ tamedog (struct monst *mtmp, struct obj *obj)
  * If you abused the pet at all while alive, it revives untame.
  * If the pet wasn't abused and was very tame, it might revive tame.
  */
-void
-wary_dog(mtmp, was_dead)
-struct monst *mtmp;
-boolean was_dead;
-{
+void wary_dog(struct monst *mtmp, boolean was_dead) {
     struct edog *edog;
     boolean quietly = was_dead;
 
