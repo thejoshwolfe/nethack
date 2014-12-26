@@ -9,4 +9,4 @@
         /* mons[SPECIAL_PM] through mons[NUMMONS-1], inclusive, are
            never generated randomly and cannot be polymorphed into */
 
-#endif
+#endif /* PM_PROPS_H */

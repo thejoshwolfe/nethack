@@ -13,4 +13,4 @@ struct qtmsg {
                 size;
 };
 
-#endif
+#endif /* QTMSG_H */
