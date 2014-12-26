@@ -5,8 +5,8 @@ struct trobj {
         short trotyp;
         signed char trspe;
         char trclass;
-        Bitfield(trquan,6);
-        Bitfield(trbless,2);
+        unsigned trquan:6;
+        unsigned trbless:2;
 };
 
 static void ini_inv(struct trobj *);

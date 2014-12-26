@@ -50,11 +50,6 @@ typedef signed char     boolean;                /* 0 or 1 */
 /* #define SPECIALIZATION */    /* do "specialized" version of new topology */
 
 
-#ifdef BITFIELDS
-#define Bitfield(x,n)   unsigned x:n
-#else
-#define Bitfield(x,n)   unsigned char x
-#endif
 
 #define OBJ_P struct obj*
 #define MONST_P struct monst*

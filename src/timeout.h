@@ -35,7 +35,7 @@ typedef struct fe {
     short kind;                 /* kind of use */
     short func_index;           /* what to call when we time out */
     void * arg;         /* pointer to timeout argument */
-    Bitfield (needs_fixup,1);   /* does arg need to be patched? */
+    unsigned needs_fixup:1;   /* does arg need to be patched? */
 } timer_element;
 
 #endif /* TIMEOUT_H */
