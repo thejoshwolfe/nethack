@@ -909,10 +909,8 @@ int how;                        /* type of query */
         return n;
 }
 
-static int
-count_categories(olist, qflags)
-struct obj *olist;
-int qflags;
+static int 
+count_categories (struct obj *olist, int qflags)
 {
         char *pack;
         boolean counted_category;
@@ -1141,9 +1139,7 @@ boolean telekinesis;
  * last_restort is expected to be very short.
  */
 const char *
-safe_qbuf(qbuf, padlength, planA, planB, last_resort)
-const char *qbuf, *planA, *planB, *last_resort;
-unsigned padlength;
+safe_qbuf (const char *qbuf, unsigned padlength, const char *planA, const char *planB, const char *last_resort)
 {
         /* convert size_t (or int for ancient systems) to ordinary unsigned */
         unsigned len_qbuf = (unsigned)strlen(qbuf),
@@ -1291,8 +1287,7 @@ boolean telekinesis;    /* not picking it up directly by hand */
  * Gold never reaches this routine.
  */
 struct obj *
-pick_obj(otmp)
-struct obj *otmp;
+pick_obj (struct obj *otmp)
 {
         obj_extract_self(otmp);
         if (!u.uswallow && otmp != uball && costly_spot(otmp->ox, otmp->oy)) {
@@ -1322,8 +1317,8 @@ struct obj *otmp;
  * prints a message if encumbrance changed since the last check and
  * returns the new encumbrance value (from near_capacity()).
  */
-int
-encumber_msg()
+int 
+encumber_msg (void)
 {
     static int oldcap = UNENCUMBERED;
     int newcap = near_capacity();
@@ -1421,8 +1416,8 @@ int x, y;
         return FALSE;
 }
 
-int
-doloot()        /* loot a container on the floor or loot saddle from mon. */
+int 
+doloot (void)        /* loot a container on the floor or loot saddle from mon. */
 {
     struct obj *cobj, *nobj;
     int c = -1;
@@ -1658,9 +1653,8 @@ static struct obj *current_container;
 #define Icebox (current_container->otyp == ICE_BOX)
 
 /* Returns: -1 to stop, 1 item was inserted, 0 item was not inserted. */
-static int
-in_container(obj)
-struct obj *obj;
+static int 
+in_container (struct obj *obj)
 {
         boolean floor_container = !carried(current_container);
         boolean was_unpaid = FALSE;
@@ -1808,17 +1802,15 @@ struct obj *obj;
         return(current_container ? 1 : -1);
 }
 
-static int
-ck_bag(obj)
-struct obj *obj;
+static int 
+ck_bag (struct obj *obj)
 {
         return current_container && obj != current_container;
 }
 
 /* Returns: -1 to stop, 1 item was removed, 0 item was not removed. */
-static int
-out_container(obj)
-struct obj *obj;
+static int 
+out_container (struct obj *obj)
 {
         struct obj *otmp;
         boolean is_gold = (obj->oclass == COIN_CLASS);
@@ -1893,10 +1885,8 @@ struct obj *obj;
 }
 
 /* an object inside a cursed bag of holding is being destroyed */
-static long
-mbag_item_gone(held, item)
-int held;
-struct obj *item;
+static long 
+mbag_item_gone (int held, struct obj *item)
 {
     struct monst *shkp;
     long loss = 0L;
@@ -1915,9 +1905,8 @@ struct obj *item;
     return loss;
 }
 
-static void
-observe_quantum_cat(box)
-struct obj *box;
+static void 
+observe_quantum_cat (struct obj *box)
 {
     static const char sc[] = "Schroedinger's Cat";
     struct obj *deadcat;
@@ -1958,10 +1947,8 @@ struct obj *box;
 
 #undef Icebox
 
-int
-use_container(obj, held)
-struct obj *obj;
-int held;
+int 
+use_container (struct obj *obj, int held)
 {
         struct obj *curr, *otmp;
         struct obj *u_gold = (struct obj *)0;

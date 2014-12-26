@@ -1467,9 +1467,8 @@ tty_putsym(window, x, y, ch)
 }
 
 
-const char*
-compress_str(str)
-const char *str;
+const char *
+compress_str (const char *str)
 {
         static char cbuf[BUFSZ];
         /* compress in case line too long */
@@ -1895,11 +1894,8 @@ tty_select_menu(window, how, menu_list)
 }
 
 /* special hack for treating top line --More-- as a one item menu */
-char
-tty_message_menu(let, how, mesg)
-char let;
-int how;
-const char *mesg;
+char 
+tty_message_menu (char let, int how, const char *mesg)
 {
     /* "menu" without selection; use ordinary pline, no more() */
     if (how == PICK_NONE) {
@@ -1927,20 +1923,20 @@ const char *mesg;
     return ((how == PICK_ONE && morc == let) || morc == '\033') ? morc : '\0';
 }
 
-void
-tty_update_inventory()
+void 
+tty_update_inventory (void)
 {
     return;
 }
 
-void
-tty_mark_synch()
+void 
+tty_mark_synch (void)
 {
     (void) fflush(stdout);
 }
 
-void
-tty_wait_synch()
+void 
+tty_wait_synch (void)
 {
     /* we just need to make sure all windows are synch'd */
     if(!ttyDisplay || ttyDisplay->rawprint) {
@@ -1963,9 +1959,8 @@ tty_wait_synch()
     }
 }
 
-void
-docorner(xmin, ymax)
-    int xmin, ymax;
+void 
+docorner (int xmin, int ymax)
 {
     int y;
     struct WinDesc *cw = wins[WIN_MAP];
@@ -1990,8 +1985,8 @@ docorner(xmin, ymax)
     }
 }
 
-void
-end_glyphout()
+void 
+end_glyphout (void)
 {
     if (GFlag) {
         GFlag = FALSE;
@@ -2151,8 +2146,7 @@ void tty_update_positionbar(char *posbar) { }
  * This is an exact duplicate of copy_of() in X11/winmenu.c.
  */
 static char *
-copy_of(s)
-    const char *s;
+copy_of (const char *s)
 {
     if (!s) s = "";
     return strcpy((char *) alloc((unsigned) (strlen(s) + 1)), s);

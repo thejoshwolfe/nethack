@@ -200,8 +200,8 @@ describe_level (char *buf)
         return ret;
 }
 
-void bot2str(newbot2)
-char* newbot2;
+void 
+bot2str (char *newbot2)
 {
         char *nb;
         int hp, hpmax;

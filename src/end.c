@@ -1148,8 +1148,8 @@ boolean want_dump;
 }
 
 /* number of monster species which have been genocided */
-int
-num_genocides()
+int 
+num_genocides (void)
 {
     int i, n = 0;
 
