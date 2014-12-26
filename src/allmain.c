@@ -606,7 +606,7 @@ int main (int argc, char *argv[]) {
         hackpid = getpid();
         (void) umask(0777 & ~0660);
 
-        choose_windows("sys");
+        choose_windows("tty");
 
         if(argc > 1) {
             /*

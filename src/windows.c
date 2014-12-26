@@ -27,7 +27,7 @@ void choose_windows(const char *s) {
     char *ow; const char *wt;
     int i;
 
-    if (!strcmp(s, "sys") && (ow = getenv("OVERRIDEWIN")))
+    if (!strcmp(s, "tty") && (ow = getenv("OVERRIDEWIN")))
       wt = ow;
     else
       wt = s;

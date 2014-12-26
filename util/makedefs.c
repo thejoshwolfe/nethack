@@ -544,7 +544,7 @@ void do_options(void) {
             Fprintf(ofp,"%s", str),  length += strlen(str);
             Fprintf(ofp, ","),  length++;
         }
-        Fprintf(ofp, "\n%swith a default of %s.", indent, "sys");
+        Fprintf(ofp, "\n%swith a default of %s.", indent, "tty");
         Fprintf(ofp,"\n\n");
 
         Fclose(ofp);
