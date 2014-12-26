@@ -14,9 +14,6 @@
  * Addition of the leading space seems to prevent barfage for now,
  * and AIX will still see the directive.
  */
-#ifdef _AIX
- #pragma alloca         /* keep leading space! */
-#endif
 
 #include "hack.h"
 #include "sp_lev.h"

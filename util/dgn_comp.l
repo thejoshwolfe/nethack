@@ -6,11 +6,9 @@
 #include "dgn_file.h"
 #include "extern.h"
 
-#ifdef FLEX_SCANNER
 #define YY_MALLOC_DECL \
                void * malloc(size_t); \
                void * realloc(void *,size_t);
-#endif
 
 void init_yyin(FILE *);
 void init_yyout(FILE *);
@@ -68,11 +66,9 @@ RNDCHLEVEL      return(RNDCHLEVEL);
 void init_yyin( input_f )
 FILE *input_f;
 {
-#if defined(FLEX_SCANNER) || defined(FLEXHACK_SCANNER)
         if (yyin)
             yyrestart(input_f);
         else
-#endif
             yyin = input_f;
 }
 /* analogous routine (for completeness) */

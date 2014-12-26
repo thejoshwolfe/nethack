@@ -14,10 +14,6 @@
  * and AIX will still see the directive in its non-standard locale.
  */
 
-#ifdef _AIX
- #pragma alloca         /* keep leading space! */
-#endif
-
 #include "date.h"
 #include "dgn_file.h"
 #include "global.h"
