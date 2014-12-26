@@ -238,12 +238,6 @@ static struct Comp_Opt
         { "traps",    "the symbols to use in drawing traps",
                                                 MAXTCHARS+1, SET_IN_FILE },
         { "vary_msgcount", "show more old messages at a time", 20, DISP_IN_GAME }, /*WC*/
-#ifdef VIDEOSHADES
-        { "videocolors", "color mappings for internal screen routines",
-                                                40, DISP_IN_GAME },
-        { "videoshades", "gray shades to map to black/gray/white",
-                                                32, DISP_IN_GAME },
-#endif
         { "windowcolors",  "the foreground/background colors of windows",       /*WC*/
                                                 80, DISP_IN_GAME },
         { "windowtype", "windowing system to use", WINTYPELEN, DISP_IN_GAME },
@@ -251,11 +245,6 @@ static struct Comp_Opt
 };
 
 static boolean need_redraw; /* for doset() */
-
-#ifdef VIDEOSHADES
-extern char *shade[3];            /* in sys/msdos/video.c */
-extern char ttycolors[CLR_MAX];   /* in sys/msdos/video.c */
-#endif
 
 static char def_inv_order[MAXOCLASSES] = {
         COIN_CLASS, AMULET_CLASS, WEAPON_CLASS, ARMOR_CLASS, FOOD_CLASS,
@@ -1819,38 +1808,6 @@ goodfruit:
                 return;
         }
         
-#ifdef VIDEOSHADES
-        /* videocolors:string */
-        fullname = "videocolors";
-        if (match_optname(opts, fullname, 6, TRUE) ||
-            match_optname(opts, "videocolours", 10, TRUE)) {
-                if (negated) {
-                        bad_negation(fullname, FALSE);
-                        return;
-                }
-                else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
-                        return;
-                }
-                if (!assign_videocolors(opts))
-                        badoption(opts);
-                return;
-        }
-        /* videoshades:string */
-        fullname = "videoshades";
-        if (match_optname(opts, fullname, 6, TRUE)) {
-                if (negated) {
-                        bad_negation(fullname, FALSE);
-                        return;
-                }
-                else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
-                        return;
-                }
-                if (!assign_videoshades(opts))
-                        badoption(opts);
-                return;
-        }
-#endif /* VIDEOSHADES */
-
         /* WINCAP
          * map_mode:[tiles|ascii4x6|ascii6x8|ascii8x8|ascii16x8|ascii7x12|ascii8x12|
                         ascii16x12|ascii12x16|ascii10x18|fit_to_screen] */
@@ -2151,12 +2108,6 @@ goodfruit:
                         else if ((boolopt[i].addr) == &flags.invlet_constant) {
                             if (flags.invlet_constant) reassign();
                         }
-#ifdef LAN_MAIL
-                        else if ((boolopt[i].addr) == &flags.biff) {
-                            if (flags.biff) lan_mail_init();
-                            else lan_mail_finish();
-                        }
-#endif
                         else if ((boolopt[i].addr) == &flags.lit_corridor) {
                             /*
                              * All corridor squares seen via night vision or
@@ -3060,19 +3011,6 @@ get_compopt_value (const char *optname, char *buf)
                 if (iflags.wc_vary_msgcount) Sprintf(buf, "%d",iflags.wc_vary_msgcount);
                 else Strcpy(buf, defopt);
         }
-#ifdef VIDEOSHADES
-        else if (!strcmp(optname, "videoshades"))
-                Sprintf(buf, "%s-%s-%s", shade[0],shade[1],shade[2]);
-        else if (!strcmp(optname, "videocolors"))
-                Sprintf(buf, "%d-%d-%d-%d-%d-%d-%d-%d-%d-%d-%d-%d",
-                        ttycolors[CLR_RED], ttycolors[CLR_GREEN],
-                        ttycolors[CLR_BROWN], ttycolors[CLR_BLUE],
-                        ttycolors[CLR_MAGENTA], ttycolors[CLR_CYAN],
-                        ttycolors[CLR_ORANGE], ttycolors[CLR_BRIGHT_GREEN],
-                        ttycolors[CLR_YELLOW], ttycolors[CLR_BRIGHT_BLUE],
-                        ttycolors[CLR_BRIGHT_MAGENTA],
-                        ttycolors[CLR_BRIGHT_CYAN]);
-#endif /* VIDEOSHADES */
         else if (!strcmp(optname,"windowborders"))
                 Sprintf(buf, "%s", iflags.wc2_windowborders == 1     ? "1=on" :
                                    iflags.wc2_windowborders == 2             ? "2=off" :

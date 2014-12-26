@@ -175,10 +175,6 @@ struct instance_flags {
 #ifdef MENU_COLOR
         boolean use_menu_color; /* use color in menus; only if wc_color */
 #endif
-#ifdef LAN_FEATURES
-        boolean lan_mail;       /* mail is initialized */
-        boolean lan_mail_fetched; /* mail is awaiting display */
-#endif
         char sortloot;          /* sort items to loot alphabetically */
         boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
 

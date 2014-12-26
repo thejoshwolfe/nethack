@@ -1066,19 +1066,6 @@ extern boolean munstone(struct monst *,boolean);
 extern void awaken_soldiers(void);
 extern int do_play_instrument(struct obj *);
 
-/* ### nhlan.c ### */
-#ifdef LAN_FEATURES
-extern void init_lan_features(void);
-extern char *lan_username(void);
-# ifdef LAN_MAIL
-extern boolean lan_mail_check(void);
-extern void lan_mail_read(struct obj *);
-extern void lan_mail_init(void);
-extern void lan_mail_finish(void);
-extern void lan_mail_terminate(void);
-# endif
-#endif
-
 /* ### o_init.c ### */
 
 extern void init_objects(void);
@@ -1724,13 +1711,6 @@ extern unsigned long get_feature_notice_ver(char *);
 extern unsigned long get_current_feature_ver(void);
 #ifdef RUNTIME_PORT_ID
 extern void append_port_id(char *);
-#endif
-
-/* ### video.c ### */
-
-#ifdef VIDEOSHADES
-extern int assign_videoshades(char *);
-extern int assign_videocolors(char *);
 #endif
 
 /* ### vis_tab.c ### */

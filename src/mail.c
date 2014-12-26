@@ -487,33 +487,3 @@ bail:
         pline("It appears to be all gibberish."); /* bail out _professionally_ */
 #endif
 }
-
-# ifdef LAN_MAIL
-
-void ckmailstatus (void) {
-        static int laststattime = 0;
-        
-        if(u.uswallow || !flags.biff
-                    || moves < laststattime + mailckfreq)
-                return;
-
-        laststattime = moves;
-        if (lan_mail_check()) {
-                    static struct mail_info deliver = {
-                        MSG_MAIL, "I have some mail for you",
-                        0, 0
-                    };
-                    newmail(&deliver);
-        }
-}
-
-/*ARGSUSED*/
-void 
-readmail (struct obj *otmp)
-{
-        lan_mail_read(otmp);
-}
-
-# endif /* LAN_MAIL */
-
-
