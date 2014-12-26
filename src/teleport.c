@@ -231,7 +231,7 @@ boolean allow_drag;
                 ball_still_in_range = FALSE;
 
         /* If they have to move the ball, then drag if allow_drag is true;
-         * otherwise they are teleporting, so unplacebc().  
+         * otherwise they are teleporting, so unplacebc().
          * If they don't have to move the ball, then always "drag" whether or
          * not allow_drag is true, because we are calling that function, not
          * to drag, but to move the chain.  *However* there are some dumb
@@ -344,7 +344,7 @@ boolean allow_drag;
                 return FALSE;
 }
 
-static void 
+static void
 vault_tele (void)
 {
         struct mkroom *croom = search_special(VAULT);
@@ -386,7 +386,7 @@ boolean force_it;
         return TRUE;
 }
 
-void 
+void
 tele (void)
 {
         coord cc;
@@ -440,7 +440,7 @@ tele (void)
         (void) safe_teleds(FALSE);
 }
 
-int 
+int
 dotele (void)
 {
         struct trap *trap;
@@ -548,7 +548,7 @@ dotele (void)
 }
 
 
-void 
+void
 level_tele (void)
 {
         int newlev;
@@ -793,7 +793,7 @@ level_tele (void)
         if (u.utotype && !flags.mon_moving) deferred_goto();
 }
 
-void 
+void
 domagicportal (struct trap *ttmp)
 {
         struct d_level target_level;
@@ -824,7 +824,7 @@ domagicportal (struct trap *ttmp)
                       (char *)0);
 }
 
-void 
+void
 tele_trap (struct trap *trap)
 {
         if (In_endgame(&u.uz) || Antimagic) {
@@ -841,7 +841,7 @@ tele_trap (struct trap *trap)
                 tele();
 }
 
-void 
+void
 level_tele_trap (struct trap *trap)
 {
         You("%s onto a level teleport trap!",
@@ -916,7 +916,7 @@ struct monst *mtmp;
  * migrating_mon.  Worm tails are always placed randomly around the head of
  * the worm.
  */
-void 
+void
 rloc_to (struct monst *mtmp, int x, int y)
 {
         int oldx = mtmp->mx, oldy = mtmp->my;
@@ -1010,7 +1010,7 @@ boolean suppress_impossible;
         return TRUE;
 }
 
-static void 
+static void
 mvault_tele (struct monst *mtmp)
 {
         struct mkroom *croom = search_special(VAULT);
@@ -1037,7 +1037,7 @@ struct monst *mon;
         return FALSE;
 }
 
-void 
+void
 mtele_trap (struct monst *mtmp, struct trap *trap, int in_sight)
 {
         char *monname;
@@ -1135,7 +1135,7 @@ int in_sight;
 }
 
 
-void 
+void
 rloco (struct obj *obj)
 {
         signed char tx, ty, otx, oty;
@@ -1183,7 +1183,7 @@ rloco (struct obj *obj)
 }
 
 /* Returns an absolute depth */
-int 
+int
 random_teleport_level (void)
 {
         int nlev, max_depth, min_depth,

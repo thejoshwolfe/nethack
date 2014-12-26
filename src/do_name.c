@@ -208,7 +208,7 @@ christen_monst (struct monst *mtmp, const char *name)
         return(mtmp2);
 }
 
-int 
+int
 do_mname (void)
 {
         char buf[BUFSZ];
@@ -270,7 +270,7 @@ do_mname (void)
  * when there might be pointers around in unknown places. For now: only
  * when obj is in the inventory.
  */
-static void 
+static void
 do_oname (struct obj *obj)
 {
         char buf[BUFSZ], qbuf[QBUFSZ];
@@ -420,7 +420,7 @@ static const char callable[] = {
         SCROLL_CLASS, POTION_CLASS, WAND_CLASS, RING_CLASS, AMULET_CLASS,
         GEM_CLASS, SPBOOK_CLASS, ARMOR_CLASS, TOOL_CLASS, 0 };
 
-int 
+int
 ddocall (void)
 {
         struct obj *obj;
@@ -458,7 +458,7 @@ ddocall (void)
         return 0;
 }
 
-void 
+void
 docall (struct obj *obj)
 {
         char buf[BUFSZ], qbuf[QBUFSZ];
@@ -566,7 +566,7 @@ boolean called;
 
         do_hallu = Hallucination && !(suppress & SUPPRESS_HALLUCINATION);
         do_invis = mtmp->minvis && !(suppress & SUPPRESS_INVISIBLE);
-        do_it = !canspotmon(mtmp) && 
+        do_it = !canspotmon(mtmp) &&
             article != ARTICLE_YOUR &&
             !program_state.gameover &&
             mtmp != u.usteed &&
@@ -715,7 +715,7 @@ boolean called;
 char *
 l_monnam (struct monst *mtmp)
 {
-        return(x_monnam(mtmp, ARTICLE_NONE, (char *)0, 
+        return(x_monnam(mtmp, ARTICLE_NONE, (char *)0,
                 mtmp->mnamelth ? SUPPRESS_SADDLE : 0, TRUE));
 }
 
@@ -947,7 +947,7 @@ static const char * const coynames[] = {
         "Caninus Nervous Rex","Grotesques Appetitus",
         "Nemesis Riduclii","Canis latrans"
 };
-        
+
 char *
 coyotename (struct monst *mtmp, char *buf)
 {

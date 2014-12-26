@@ -7,7 +7,7 @@
 static int bc_order(void);
 static void litter(void);
 
-void 
+void
 ballfall (void)
 {
         boolean gets_hit;
@@ -93,7 +93,7 @@ ballfall (void)
  *
  *  Should not be called while swallowed.
  */
-void 
+void
 placebc (void)
 {
     if (!uchain || !uball) {
@@ -119,7 +119,7 @@ placebc (void)
     newsym(u.ux,u.uy);
 }
 
-void 
+void
 unplacebc (void)
 {
     if (u.uswallow) return;     /* ball&chain not placed while swallowed */
@@ -144,7 +144,7 @@ unplacebc (void)
  *  Return the stacking of the hero's ball & chain.  This assumes that the
  *  hero is being punished.
  */
-static int 
+static int
 bc_order (void)
 {
     struct obj *obj;
@@ -167,7 +167,7 @@ bc_order (void)
  *  The hero is either about to go blind or already blind and just punished.
  *  Set up the ball and chain variables so that the ball and chain are "felt".
  */
-void 
+void
 set_bc (int already_blind)
 {
     int ball_on_floor = !carried(uball);
@@ -224,7 +224,7 @@ set_bc (int already_blind)
  *
  *  Should not be called while swallowed.
  */
-void 
+void
 move_bc (
     int before,
     int control,
@@ -408,7 +408,7 @@ boolean allow_drag;
  */
 #define SKIP_TO_DRAG { *chainx = oldchainx; *chainy = oldchainy; \
     move_bc(0, *bc_control, *ballx, *bally, *chainx, *chainy); \
-    goto drag; } 
+    goto drag; }
             if (IS_CHAIN_ROCK(u.ux, u.uy) || IS_CHAIN_ROCK(*chainx, *chainy)
                         || IS_CHAIN_ROCK(uball->ox, uball->oy))
                 already_in_rock = TRUE;
@@ -507,7 +507,7 @@ boolean allow_drag;
                     if (IS_CHAIN_ROCK(*chainx, *chainy) && !already_in_rock)
                         SKIP_TO_DRAG;
                     break;
-                
+
                 /* ball is one space diagonal from player.  Check for the
                  * following special case:
                  *   @
@@ -544,7 +544,7 @@ boolean allow_drag;
                     *chainx = x;
                     *chainy = y;
                     break;
-                
+
                 default: impossible("bad chain movement");
                     break;
             }
@@ -641,7 +641,7 @@ drag:
  *
  *  Should not be called while swallowed.
  */
-void 
+void
 drop_ball (signed char x, signed char y)
 {
     if (Blind) {
@@ -723,7 +723,7 @@ drop_ball (signed char x, signed char y)
 }
 
 
-static void 
+static void
 litter (void)
 {
         struct obj *otmp = invent, *nextobj;

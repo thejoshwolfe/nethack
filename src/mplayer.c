@@ -61,7 +61,7 @@ dev_name (void)
         return(developers[i]);
 }
 
-static void 
+static void
 get_mplname (struct monst *mtmp, char *nam)
 {
         boolean fmlkind = is_female(mtmp->data);
@@ -84,7 +84,7 @@ get_mplname (struct monst *mtmp, char *nam)
                             (boolean)mtmp->female));
 }
 
-static void 
+static void
 mk_mplayer_armor (struct monst *mon, short typ)
 {
         struct obj *obj;
@@ -303,7 +303,7 @@ boolean special;
         }
 }
 
-void 
+void
 mplayer_talk (struct monst *mtmp)
 {
         static const char *same_class_msg[3] = {

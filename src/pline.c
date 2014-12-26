@@ -278,7 +278,7 @@ void mstatusline (struct monst *mtmp) {
                 info);
 }
 
-void 
+void
 ustatusline (void)
 {
         char info[BUFSZ];
@@ -349,7 +349,7 @@ ustatusline (void)
                 info);
 }
 
-void 
+void
 self_invis_message (void)
 {
         pline("%s %s.",

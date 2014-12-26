@@ -117,7 +117,7 @@ but that's really hard.
 #define on_shrine()     ((levl[u.ux][u.uy].altarmask & AM_SHRINE) != 0)
 #define a_align(x,y)    ((aligntyp)Amask2align(levl[x][y].altarmask & AM_MASK))
 
-static int 
+static int
 in_trouble (void)
 {
         struct obj *otmp;
@@ -256,7 +256,7 @@ worst_cursed_item (void)
     return otmp;
 }
 
-static void 
+static void
 fix_worst_trouble (int trouble)
 {
         int i;
@@ -468,7 +468,7 @@ decurse:
  * bathroom walls, but who is foiled by bathrobes." --Bertrand Russell, 1943
  * Divine wrath, dungeon walls, and armor follow the same principle.
  */
-static void 
+static void
 god_zaps_you (aligntyp resp_god)
 {
         if (u.uswallow) {
@@ -539,7 +539,7 @@ god_zaps_you (aligntyp resp_god)
         }
 }
 
-static void 
+static void
 fry_by_god (aligntyp resp_god)
 {
         char killerbuf[64];
@@ -551,7 +551,7 @@ fry_by_god (aligntyp resp_god)
         done(DIED);
 }
 
-static void 
+static void
 angrygods (aligntyp resp_god)
 {
         int     maxanger;
@@ -618,7 +618,7 @@ angrygods (aligntyp resp_god)
 }
 
 /* helper to print "str appears at your feet", or appropriate */
-static void 
+static void
 at_your_feet (const char *str)
 {
         if (Blind) str = Something;
@@ -634,7 +634,7 @@ at_your_feet (const char *str)
         }
 }
 
-static void 
+static void
 gcrownu (void)
 {
     struct obj *obj;
@@ -782,7 +782,7 @@ gcrownu (void)
     return;
 }
 
-static void 
+static void
 pleased (aligntyp g_align)
 {
         /* don't use p_trouble, worst trouble may get fixed while praying */
@@ -1051,7 +1051,7 @@ water_prayer(bless_water)
     return((boolean)(changed > 0L));
 }
 
-static void 
+static void
 godvoice (aligntyp g_align, const char *words)
 {
     const char *quot = "";
@@ -1064,14 +1064,14 @@ godvoice (aligntyp g_align, const char *words)
           godvoices[rn2(SIZE(godvoices))], quot, words, quot);
 }
 
-static void 
+static void
 gods_angry (aligntyp g_align)
 {
     godvoice(g_align, "Thou hast angered me.");
 }
 
 /* The g_align god is upset with you. */
-static void 
+static void
 gods_upset (aligntyp g_align)
 {
         if(g_align == u.ualign.type) u.ugangr++;
@@ -1081,7 +1081,7 @@ gods_upset (aligntyp g_align)
 
 static const char sacrifice_types[] = { FOOD_CLASS, AMULET_CLASS, 0 };
 
-static void 
+static void
 consume_offering (struct obj *otmp)
 {
     if (Hallucination)
@@ -1105,7 +1105,7 @@ consume_offering (struct obj *otmp)
     exercise(A_WIS, TRUE);
 }
 
-int 
+int
 dosacrifice (void)
 {
     struct obj *otmp;
@@ -1539,7 +1539,7 @@ boolean praying;        /* false means no messages should be given */
     return !praying ? (boolean)(p_type == 3 && !Inhell) : TRUE;
 }
 
-int 
+int
 dopray (void)
 {
     /* Confirm accidental slips of Alt-P */
@@ -1582,7 +1582,7 @@ dopray (void)
     return(1);
 }
 
-static int 
+static int
 prayer_done (void)           /* M. Stephenson (1.0.3b) */
 {
     aligntyp alignment = p_aligntyp;
@@ -1635,7 +1635,7 @@ prayer_done (void)           /* M. Stephenson (1.0.3b) */
     return(1);
 }
 
-int 
+int
 doturn (void)
 {       /* Knights & Priest(esse)s only please */
 
@@ -1810,7 +1810,7 @@ align_gtitle (aligntyp alignment)
     return result;
 }
 
-void 
+void
 altar_wrath (int x, int y)
 {
     aligntyp altaralign = a_align(x,y);

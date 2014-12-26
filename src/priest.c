@@ -109,7 +109,7 @@ pick_move:
 
 
 
-char 
+char
 temple_occupied (char *array)
 {
         char *ptr;
@@ -129,7 +129,7 @@ static boolean histemple_at(struct monst *priest, signed char x, signed char y) 
 /*
  * pri_move: return 1: moved  0: didn't  -1: let m_move do it  -2: died
  */
-int 
+int
 pri_move (struct monst *priest)
 {
         signed char gx,gy,omx,omy;
@@ -309,7 +309,7 @@ findpriest (char roomno)
 }
 
 /* called from check_special_room() when the player enters the temple room */
-void 
+void
 intemple (int roomno)
 {
         struct monst *priest = findpriest((char)roomno);
@@ -387,7 +387,7 @@ intemple (int roomno)
        }
 }
 
-void 
+void
 priest_talk (struct monst *priest)
 {
         boolean coaligned = p_coaligned(priest);
@@ -505,7 +505,7 @@ boolean peaceful;
 
         if (ptr != &mons[PM_ALIGNED_PRIEST] && ptr != &mons[PM_ANGEL])
                 return((struct monst *)0);
-        
+
         if (MON_AT(x, y)) (void) rloc(m_at(x, y), FALSE);       /* insurance */
 
         if (!(roamer = makemon(ptr, x, y, NO_MM_FLAGS)))
@@ -525,7 +525,7 @@ boolean peaceful;
         return(roamer);
 }
 
-void 
+void
 reset_hostility (struct monst *roamer)
 {
         if(!(roamer->isminion && (roamer->data == &mons[PM_ALIGNED_PRIEST] ||
@@ -563,7 +563,7 @@ signed char x, y;
                          priest->mpeaceful);
 }
 
-void 
+void
 ghod_hitsu (      /* when attacking "priest" in his temple */
     struct monst *priest
 )
@@ -624,7 +624,7 @@ ghod_hitsu (      /* when attacking "priest" in his temple */
         exercise(A_WIS, FALSE);
 }
 
-void 
+void
 angry_priest (void)
 {
         struct monst *priest;
@@ -655,7 +655,7 @@ angry_priest (void)
  * When saving bones, find priests that aren't on their shrine level,
  * and remove them.   This avoids big problems when restoring bones.
  */
-void 
+void
 clearpriests (void)
 {
     struct monst *mtmp, *mtmp2;

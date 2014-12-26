@@ -22,7 +22,7 @@ char *new_locations;
 int min_rx, max_rx, min_ry, max_ry; /* rectangle bounds for regions */
 static int n_loc_filled;
 
-static void 
+static void
 init_map (signed char bg_typ)
 {
         int i,j;
@@ -32,7 +32,7 @@ init_map (signed char bg_typ)
                 levl[i][j].typ = bg_typ;
 }
 
-static void 
+static void
 init_fill (signed char bg_typ, signed char fg_typ)
 {
         int i,j;
@@ -50,7 +50,7 @@ init_fill (signed char bg_typ, signed char fg_typ)
         }
 }
 
-static signed char 
+static signed char
 get_map (int col, int row, signed char bg_typ)
 {
         if (col <= 0 || row < 0 || col > WIDTH || row >= HEIGHT)
@@ -63,7 +63,7 @@ static int dirs[16] = {
      0, -1 /**/,              0, 1 /**/,
      1, -1 /**/,  1, 0 /**/,  1, 1};
 
-static void 
+static void
 pass_one (signed char bg_typ, signed char fg_typ)
 {
         int i,j;
@@ -96,7 +96,7 @@ pass_one (signed char bg_typ, signed char fg_typ)
 
 #define new_loc(i,j)    *(new_locations+ ((j)*(WIDTH+1)) + (i))
 
-static void 
+static void
 pass_two (signed char bg_typ, signed char fg_typ)
 {
         int i,j;
@@ -119,7 +119,7 @@ pass_two (signed char bg_typ, signed char fg_typ)
                 levl[i][j].typ = new_loc(i,j);
 }
 
-static void 
+static void
 pass_three (signed char bg_typ, signed char fg_typ)
 {
         int i,j;
@@ -237,7 +237,7 @@ flood_fill_rm(sx, sy, rmno, lit, anyroom)
  *      If we have drawn a map without walls, this allows us to
  *      auto-magically wallify it.  Taken from lev_main.c.
  */
-static void 
+static void
 wallify_map (void)
 {
 
@@ -355,7 +355,7 @@ static void finish_map(signed char fg_typ, signed char bg_typ, boolean lit, bool
  * region are already cleared, and roomno and irregular fields outside the
  * region are all set.
  */
-void 
+void
 remove_rooms (int lx, int ly, int hx, int hy)
 {
     int i;
@@ -384,7 +384,7 @@ remove_rooms (int lx, int ly, int hx, int hy)
  * level structure contents corresponding to roomno have already been reset.
  * Currently handles only the removal of rooms that have no subrooms.
  */
-static void 
+static void
 remove_room (unsigned roomno)
 {
     struct mkroom *croom = &rooms[roomno];
@@ -416,7 +416,7 @@ remove_room (unsigned roomno)
 #define N_P2_ITER       1       /* tune map generation via this value */
 #define N_P3_ITER       2       /* tune map smoothing via this value */
 
-void 
+void
 mkmap (lev_init *init_lev)
 {
         signed char     bg_typ = init_lev->bg,

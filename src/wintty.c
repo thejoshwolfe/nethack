@@ -123,7 +123,7 @@ static const char default_menu_cmds[] = {
 
 
 /* clean up and quit */
-static void 
+static void
 bail (const char *mesg)
 {
     clearlocks();
@@ -219,7 +219,7 @@ void tty_player_selection(void) {
                  * bottom of the window.
                  */
                 tty_clear_nhwindow(BASE_WINDOW);
-            
+
             if (pick4u != 'y' && pick4u != 'n') {
 give_up:        /* Quit */
                 if (selected) free((void *) selected);
@@ -269,9 +269,9 @@ give_up:        /* Quit */
                                         Strcpy(rolenamebuf, roles[i].name.m);
                                         Strcat(rolenamebuf, "/");
                                         Strcat(rolenamebuf, roles[i].name.f);
-                                } else 
+                                } else
                                         Strcpy(rolenamebuf, roles[i].name.m);
-                        }       
+                        }
                         add_menu(win, NO_GLYPH, &any, thisch,
                             0, ATR_NONE, an(rolenamebuf), MENU_UNSELECTED);
                         lastch = thisch;
@@ -301,7 +301,7 @@ give_up:        /* Quit */
             (void)  root_plselection_prompt(plbuf, QBUFSZ - 1,
                         flags.initrole, flags.initrace, flags.initgend, flags.initalign);
         }
-        
+
         /* Select a race, if necessary */
         /* force compatibility with role, try for compatibility with
          * pre-selected gender/alignment */
@@ -880,7 +880,7 @@ static void invert_all_on_page(winid window, tty_menu_item *page_start,
  * Invert all entries that match the give group accelerator (or all if
  * zero).
  */
-static void 
+static void
 invert_all (
     winid window,
     tty_menu_item *page_start,
@@ -2041,7 +2041,7 @@ void tty_print_glyph(winid window, signed char x, signed char y, int glyph) {
     boolean reverse_on = FALSE;
     int     color;
     unsigned special;
-    
+
     /* map glyph to character and color */
     mapglyph(glyph, &ch, &color, &special, x, y);
 

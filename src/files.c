@@ -91,7 +91,7 @@ fname_encode (const char *legal, char quotechar, char *s, char *callerbuf, int b
         sp = s;
         op = callerbuf;
         *op = '\0';
-        
+
         while (*sp) {
                 /* Do we have room for one more character or encoding? */
                 if ((bufsz - cnt) <= 4) return callerbuf;
@@ -142,11 +142,11 @@ fname_decode (char quotechar, char *s, char *callerbuf, int bufsz)
                         sp++;
                         for (k=0; k < 16; ++k) if (*sp == hexdigits[k]) break;
                         if (k >= 16) return callerbuf;  /* impossible, so bail */
-                        calc = k << 4; 
+                        calc = k << 4;
                         sp++;
                         for (k=0; k < 16; ++k) if (*sp == hexdigits[k]) break;
                         if (k >= 16) return callerbuf;  /* impossible, so bail */
-                        calc += k; 
+                        calc += k;
                         sp++;
                         *op++ = calc;
                         *op = '\0';
@@ -181,7 +181,7 @@ const char * fqname(const char * basename, int whichprefix, int buffnum) {
 
 /* reasonbuf must be at least BUFSZ, supplied by caller */
 /*ARGSUSED*/
-int 
+int
 validate_prefix_locations (char *reasonbuf)
 {
         FILE *fp;
@@ -210,7 +210,7 @@ validate_prefix_locations (char *reasonbuf)
                                 fqn_prefix[prefcnt], errno, details);
                         paniclog(panicbuf1, panicbuf2);
                         failcount++;
-                }       
+                }
         }
         if (failcount)
                 return 0;
@@ -318,7 +318,7 @@ void clearlocks(void) {
 }
 
 #ifdef HOLD_LOCKFILE_OPEN
-static int 
+static int
 open_levelfile_exclusively (const char *name, int lev, int oflag)
 {
         int reslt, fd;
@@ -351,7 +351,7 @@ open_levelfile_exclusively (const char *name, int lev, int oflag)
         return fd;
 }
 
-void 
+void
 really_close (void)
 {
         int fd = lftrack.fd;
@@ -362,7 +362,7 @@ really_close (void)
         return;
 }
 
-int 
+int
 close (int fd)
 {
         if (lftrack.fd == fd) {
@@ -374,7 +374,7 @@ close (int fd)
         return _close(fd);
 }
 #endif
-        
+
 /* ----------  END LEVEL FILE HANDLING ----------- */
 
 
@@ -416,7 +416,7 @@ set_bonestemp_name (void)
         return lock;
 }
 
-int 
+int
 create_bonesfile (d_level *lev, char **bonesid, char errbuf[])
 {
         const char *file;
@@ -454,7 +454,7 @@ void commit_bonesfile(d_level *lev) {
 }
 
 
-int 
+int
 open_bonesfile (d_level *lev, char **bonesid)
 {
         const char *fq_bones;
@@ -468,7 +468,7 @@ open_bonesfile (d_level *lev, char **bonesid)
 }
 
 
-int 
+int
 delete_bonesfile (d_level *lev)
 {
         (void) set_bonesfile_name(bones, lev);
@@ -494,7 +494,7 @@ void set_savefile_name(void) {
         regularize(SAVEF+5);    /* avoid . or / in name */
 }
 
-void 
+void
 save_savefile_name (int fd)
 {
         (void) write(fd, (void *) SAVEF, sizeof(SAVEF));
@@ -539,7 +539,7 @@ int delete_savefile(void) {
 
 
 /* try to open up a save file and prepare to restore it */
-int 
+int
 restore_saved_game (void)
 {
         const char *fq_save;
@@ -741,7 +741,7 @@ boolean uncomp;
 #endif  /* COMPRESS */
 
 /* compress file */
-void 
+void
 compress (const char *filename)
 {
 #ifndef COMPRESS
@@ -755,7 +755,7 @@ compress (const char *filename)
 
 
 /* uncompress file if it exists */
-void 
+void
 uncompress (const char *filename)
 {
 #ifndef COMPRESS
@@ -1008,13 +1008,13 @@ static void append_slash (char *name) {
         return;
 }
 
-static void 
+static void
 adjust_prefix (char *bufp, int prefixid)
 {
         char *ptr;
 
         if (!bufp) return;
-        /* Backward compatibility, ignore trailing ;n */ 
+        /* Backward compatibility, ignore trailing ;n */
         if ((ptr = index(bufp, ';')) != 0) *ptr = '\0';
         if (strlen(bufp) > 0) {
                 fqn_prefix[prefixid] = (char *)alloc(strlen(bufp)+2);
@@ -1144,7 +1144,7 @@ char            *tmp_levels;
         return 1;
 }
 
-void 
+void
 read_config_file (const char *filename)
 {
 #define tmp_levels      (char *)0
@@ -1165,7 +1165,7 @@ read_config_file (const char *filename)
                 }
         }
         (void) fclose(fp);
-        
+
         /* turn off detection of duplicate configfile options */
         set_duplicate_opt_detection(0);
 
@@ -1221,7 +1221,7 @@ fopen_wizkit_file()
         return (FILE *)0;
 }
 
-void 
+void
 read_wizkit (void)
 {
         FILE *fp;

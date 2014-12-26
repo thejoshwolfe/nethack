@@ -21,14 +21,14 @@ static int armor_to_dragon(int);
 static void newman(void);
 
 /* update the youmonst.data structure pointer */
-void 
+void
 set_uasmon (void)
 {
         set_mon_data(&youmonst, &mons[u.umonnum], 0);
 }
 
 /* make a (new) human out of the player */
-static void 
+static void
 polyman (const char *fmt, const char *arg)
 {
         boolean sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
@@ -95,7 +95,7 @@ polyman (const char *fmt, const char *arg)
         see_monsters();
 }
 
-void 
+void
 change_sex (void)
 {
         /* setting u.umonster for caveman/cavewoman or priest/priestess
@@ -127,7 +127,7 @@ change_sex (void)
         }
 }
 
-static void 
+static void
 newman (void)
 {
         int tmp, oldlvl;
@@ -208,7 +208,7 @@ dead: /* we come directly here if their experience level went to 0 or less */
 
 void
 polyself(forcecontrol)
-boolean forcecontrol;     
+boolean forcecontrol;
 {
         char buf[BUFSZ];
         int old_light, new_light;
@@ -315,7 +315,7 @@ boolean forcecontrol;
 }
 
 /* (try to) make a mntmp monster out of the player */
-int 
+int
 polymon (       /* returns 1 if polymorph successful */
     int mntmp
 )
@@ -547,7 +547,7 @@ polymon (       /* returns 1 if polymorph successful */
         return(1);
 }
 
-static void 
+static void
 break_armor (void)
 {
     struct obj *otmp;
@@ -649,7 +649,7 @@ break_armor (void)
     }
 }
 
-static void 
+static void
 drop_weapon (int alone)
 {
     struct obj *otmp;
@@ -681,7 +681,7 @@ drop_weapon (int alone)
     }
 }
 
-void 
+void
 rehumanize (void)
 {
         /* You can't revert back while unchanging */
@@ -711,7 +711,7 @@ rehumanize (void)
         (void) encumber_msg();
 }
 
-int 
+int
 dobreathe (void)
 {
         struct attack *mattk;
@@ -738,7 +738,7 @@ dobreathe (void)
         return(1);
 }
 
-int 
+int
 dospit (void)
 {
         struct obj *otmp;
@@ -751,7 +751,7 @@ dospit (void)
         return(1);
 }
 
-int 
+int
 doremove (void)
 {
         if (!Punished) {
@@ -762,7 +762,7 @@ doremove (void)
         return(1);
 }
 
-int 
+int
 dospinweb (void)
 {
         struct trap *ttmp = t_at(u.ux,u.uy);
@@ -867,7 +867,7 @@ dospinweb (void)
             Your("web fails to impede access to the %s.",
                  (levl[u.ux][u.uy].typ == STAIRS) ? "stairs" : "ladder");
             return(1);
-                 
+
         }
         ttmp = maketrap(u.ux, u.uy, WEB);
         if (ttmp) {
@@ -878,7 +878,7 @@ dospinweb (void)
         return(1);
 }
 
-int 
+int
 dosummon (void)
 {
         int placeholder;
@@ -1021,7 +1021,7 @@ int dogaze(void) {
         return 1;
 }
 
-int 
+int
 dohide (void)
 {
         boolean ismimic = youmonst.data->mlet == S_MIMIC;
@@ -1040,7 +1040,7 @@ dohide (void)
         return(1);
 }
 
-int 
+int
 domindblast (void)
 {
         struct monst *mtmp, *nmon;
@@ -1078,7 +1078,7 @@ domindblast (void)
         return 1;
 }
 
-static void 
+static void
 uunstick (void)
 {
         pline("%s is no longer in your clutches.", Monnam(u.ustuck));
@@ -1217,7 +1217,7 @@ body_part (int part)
 }
 
 
-int 
+int
 poly_gender (void)
 {
 /* Returns gender of polymorphed player; 0/1=same meaning as flags.female,
@@ -1228,7 +1228,7 @@ poly_gender (void)
 }
 
 
-void 
+void
 ugolemeffects (int damtype, int dam)
 {
         int heal = 0;
@@ -1255,7 +1255,7 @@ ugolemeffects (int damtype, int dam)
         }
 }
 
-static int 
+static int
 armor_to_dragon (int atyp)
 {
         switch(atyp) {

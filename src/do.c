@@ -24,7 +24,7 @@ static const char drop_types[] =
         { ALLOW_COUNT, COIN_CLASS, ALL_CLASSES, 0 };
 
 /* 'd' command: drop one inventory item */
-int 
+int
 dodrop (void)
 {
         int result, i = (invent || u.ugold) ? 0 : (SIZE(drop_types) - 1);
@@ -68,7 +68,7 @@ boolean pushing;
 
                 if (ttmp) (void) delfloortrap(ttmp);
                 bury_objs(rx, ry);
-                
+
                 newsym(rx,ry);
                 if (pushing) {
                     You("push %s into the %s.", the(xname(otmp)), what);
@@ -212,7 +212,7 @@ const char *verb;
 }
 
 
-void 
+void
 doaltarobj (  /* obj is an object dropped on an altar */
     struct obj *obj
 )
@@ -235,7 +235,7 @@ doaltarobj (  /* obj is an object dropped on an altar */
         }
 }
 
-static void 
+static void
 trycall (struct obj *obj)
 {
         if(!objects[obj->otyp].oc_name_known &&
@@ -243,7 +243,7 @@ trycall (struct obj *obj)
            docall(obj);
 }
 
-static void 
+static void
 dosinkring (  /* obj is a ring being dropped over a kitchen sink */
     struct obj *obj
 )
@@ -429,7 +429,7 @@ const char *word;
         return(TRUE);
 }
 
-static int 
+static int
 drop (struct obj *obj)
 {
         if(!obj) return(0);
@@ -481,7 +481,7 @@ drop (struct obj *obj)
 
 /* Called in several places - may produce output */
 /* eg ship_object() and dropy() -> sellobj() both produce output */
-void 
+void
 dropx (struct obj *obj)
 {
         if (obj->oclass != COIN_CLASS || obj == invent) freeinv(obj);
@@ -493,7 +493,7 @@ dropx (struct obj *obj)
         dropy(obj);
 }
 
-void 
+void
 dropy (struct obj *obj)
 {
         if (obj == uwep) setuwep((struct obj *)0);
@@ -553,7 +553,7 @@ dropy (struct obj *obj)
 
 /* things that must change when not held; recurse into containers.
    Called for both player and monsters */
-void 
+void
 obj_no_longer_held (struct obj *obj)
 {
         if (!obj) {
@@ -576,7 +576,7 @@ obj_no_longer_held (struct obj *obj)
 }
 
 /* 'D' command: drop several things */
-int 
+int
 doddrop (void)
 {
         int result = 0;
@@ -593,7 +593,7 @@ doddrop (void)
 }
 
 /* Drop things from the hero's inventory, using a menu. */
-static int 
+static int
 menu_drop (int retry)
 {
     int n, i, n_dropped = 0;
@@ -694,7 +694,7 @@ menu_drop (int retry)
 /* on a ladder, used in goto_level */
 static boolean at_ladder = FALSE;
 
-int 
+int
 dodown (void)
 {
         struct trap *trap = 0;
@@ -780,7 +780,7 @@ dodown (void)
         return(1);
 }
 
-int 
+int
 doup (void)
 {
         if( (u.ux != xupstair || u.uy != yupstair)
@@ -827,7 +827,7 @@ doup (void)
 d_level save_dlevel = {0, 0};
 
 /* check that we can write out the current level */
-static int 
+static int
 currentlevel_rewrite (void)
 {
         int fd;
@@ -853,7 +853,7 @@ currentlevel_rewrite (void)
         return fd;
 }
 
-void 
+void
 save_currentstate (void)
 {
         int fd;
@@ -1259,7 +1259,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
         (void) pickup(1);
 }
 
-static void 
+static void
 final_level (void)
 {
         struct monst *mtmp;
@@ -1352,7 +1352,7 @@ const char *pre_msg, *post_msg;
 }
 
 /* handle something like portal ejection */
-void 
+void
 deferred_goto (void)
 {
         if (!on_level(&u.uz, &u.utolev)) {
@@ -1394,7 +1394,7 @@ struct obj *corpse;
     char *cname, cname_buf[BUFSZ];
     struct obj *container = (struct obj *)0;
     int container_where = 0;
-    
+
     where = corpse->where;
     is_uwep = corpse == uwep;
     cname = eos(strcpy(cname_buf, "bite-covered "));
@@ -1442,7 +1442,7 @@ struct obj *corpse;
                     mcarry && canseemon(mcarry) && container) {
                         char sackname[BUFSZ];
                         Sprintf(sackname, "%s %s", s_suffix(mon_nam(mcarry)),
-                                xname(container)); 
+                                xname(container));
                         pline("%s writhes out of %s!", Amonnam(mtmp), sackname);
                 } else if (container_where == OBJ_INVENT && container) {
                         char sackname[BUFSZ];
@@ -1470,7 +1470,7 @@ struct obj *corpse;
 
 /* Revive the corpse via a timeout. */
 /*ARGSUSED*/
-void 
+void
 revive_mon (void *arg, long timeout)
 {
     struct obj *body = (struct obj *) arg;
@@ -1484,14 +1484,14 @@ revive_mon (void *arg, long timeout)
     }
 }
 
-int 
+int
 donull (void)
 {
         return(1);      /* Do nothing, but let other things happen */
 }
 
 
-static int 
+static int
 wipeoff (void)
 {
         if(u.ucreamed < 4)      u.ucreamed = 0;
@@ -1511,7 +1511,7 @@ wipeoff (void)
         return(1);              /* still busy */
 }
 
-int 
+int
 dowipe (void)
 {
         if(u.ucreamed)  {
@@ -1528,7 +1528,7 @@ dowipe (void)
         return(1);
 }
 
-void 
+void
 set_wounded_legs (long side, int timex)
 {
         /* KMH -- STEED
@@ -1548,7 +1548,7 @@ set_wounded_legs (long side, int timex)
         (void)encumber_msg();
 }
 
-void 
+void
 heal_legs (void)
 {
         if(Wounded_legs) {

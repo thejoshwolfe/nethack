@@ -36,7 +36,7 @@ static int oracle_flg = 0;  /* -1=>don't use, 0=>need init, 1=>init done */
 static unsigned oracle_cnt = 0;
 static long *oracle_loc = 0;
 
-static void 
+static void
 init_rumors (dlb *fp)
 {
         char line[BUFSZ];
@@ -65,7 +65,7 @@ char *
 getrumor(truth, rumor_buf, exclude_cookie)
 int truth; /* 1=true, -1=false, 0=either */
 char *rumor_buf;
-boolean exclude_cookie; 
+boolean exclude_cookie;
 {
         dlb     *rumors;
         long tidbit, beginning;
@@ -132,7 +132,7 @@ boolean exclude_cookie;
         return rumor_buf;
 }
 
-void 
+void
 outrumor (
     int truth, /* 1=true, -1=false, 0=either */
     int mechanism
@@ -178,7 +178,7 @@ outrumor (
         pline("%s", line);
 }
 
-static void 
+static void
 init_oracles (dlb *fp)
 {
         int i;
@@ -199,7 +199,7 @@ init_oracles (dlb *fp)
         return;
 }
 
-void 
+void
 save_oracles (int fd, int mode)
 {
         if (perform_bwrite(mode)) {
@@ -215,7 +215,7 @@ save_oracles (int fd, int mode)
         }
 }
 
-void 
+void
 restore_oracles (int fd)
 {
         mread(fd, (void *) &oracle_cnt, sizeof oracle_cnt);
@@ -279,7 +279,7 @@ boolean delphi;
         }
 }
 
-int 
+int
 doconsult (struct monst *oracl)
 {
         int u_pay, minor_cost = 50, major_cost = 500 + 50 * u.ulevel;

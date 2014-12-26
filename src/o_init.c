@@ -25,7 +25,7 @@ extern short glyph2tile[];      /* from tile.c */
  * is restored.  So might as well do that the first time instead of writing
  * another routine.
  */
-static void 
+static void
 shuffle_tiles (void)
 {
         int i;
@@ -40,7 +40,7 @@ shuffle_tiles (void)
 }
 #endif  /* USE_TILES */
 
-static void 
+static void
 setgemprobs (d_level *dlev)
 {
         int j, first, lev;
@@ -168,7 +168,7 @@ char oclass;
 #endif
 }
 
-static void 
+static void
 shuffle_all (void)
 {
         int first, last, oclass;
@@ -218,7 +218,7 @@ shuffle_all (void)
 }
 
 /* find the object index for snow boots; used [once] by slippery ice code */
-int 
+int
 find_skates (void)
 {
     int i;
@@ -232,13 +232,13 @@ find_skates (void)
     return -1;  /* not 0, or caller would try again each move */
 }
 
-void 
+void
 oinit (void)                    /* level dependent initialization */
 {
         setgemprobs(&u.uz);
 }
 
-void 
+void
 savenames (int fd, int mode)
 {
         int i;
@@ -267,7 +267,7 @@ savenames (int fd, int mode)
             }
 }
 
-void 
+void
 restnames (int fd)
 {
         int i;
@@ -313,7 +313,7 @@ boolean credit_hero;
 }
 
 /* if a class name has been cleared, we may need to purge it from disco[] */
-void 
+void
 undiscover_object (int oindx)
 {
     if (!objects[oindx].oc_name_known) {
@@ -353,7 +353,7 @@ static short uniq_objs[] = {
         BELL_OF_OPENING,
 };
 
-int 
+int
 dodiscovered (void)                          /* free after Robert Viduya */
 {
     int i, dis;

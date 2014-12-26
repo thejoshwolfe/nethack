@@ -20,7 +20,7 @@ static void remember_topl(void);
 static void removetopl(int);
 
 
-int 
+int
 tty_doprev_message (void)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
@@ -117,7 +117,7 @@ tty_doprev_message (void)
 }
 
 
-static void 
+static void
 redotoplin (const char *str)
 {
         int otoplin = ttyDisplay->toplin;
@@ -136,7 +136,7 @@ redotoplin (const char *str)
                 more();
 }
 
-static void 
+static void
 remember_topl (void)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
@@ -153,7 +153,7 @@ remember_topl (void)
     cw->maxcol = cw->maxrow = (idx + 1) % cw->rows;
 }
 
-void 
+void
 addtopl (const char *s)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
@@ -165,7 +165,7 @@ addtopl (const char *s)
 }
 
 
-void 
+void
 more (void)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
@@ -203,7 +203,7 @@ more (void)
     ttyDisplay->inmore = 0;
 }
 
-void 
+void
 update_topl (const char *bp)
 {
         char *tl, *otl;
@@ -250,13 +250,13 @@ update_topl (const char *bp)
         if(!(cw->flags & WIN_STOP)) redotoplin(toplines);
 }
 
-static void 
+static void
 topl_putsym (char c)
 {
     struct WinDesc *cw = wins[WIN_MESSAGE];
 
     if(cw == (struct WinDesc *) 0) panic("Putsym window MESSAGE nonexistant");
-        
+
     switch(c) {
     case '\b':
         if(ttyDisplay->curx == 0 && ttyDisplay->cury > 0)
@@ -293,7 +293,7 @@ static void removetopl(int n) {
 
 extern char erase_char;         /* from xxxtty.c; don't need kill_char */
 
-char 
+char
 tty_yn_function (const char *query, const char *resp, char def)
 /*
  *   Generic yes/no function. 'def' is the default (returned by space or

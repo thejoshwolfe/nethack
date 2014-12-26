@@ -27,7 +27,7 @@ static const char * const stoned_texts[] = {
         "You are a statue."                     /* 1 */
 };
 
-static void 
+static void
 stoned_dialogue (void)
 {
         long i = (Stoned & TIMEOUT);
@@ -50,7 +50,7 @@ static const char * const vomiting_texts[] = {
         "suddenly vomit!"                       /* 2 */
 };
 
-static void 
+static void
 vomiting_dialogue (void)
 {
         long i = (Vomiting & TIMEOUT) / 3L;
@@ -90,7 +90,7 @@ static const char * const choke_texts2[] = {
         "You suffocate."
 };
 
-static void 
+static void
 choke_dialogue (void)
 {
         long i = (Strangled & TIMEOUT);
@@ -118,7 +118,7 @@ static const char * const slime_texts[] = {
         "You have become %s."             /* 1 */
 };
 
-static void 
+static void
 slime_dialogue (void)
 {
         long i = (Slimed & TIMEOUT) / 2L;
@@ -144,7 +144,7 @@ slime_dialogue (void)
         exercise(A_DEX, FALSE);
 }
 
-void 
+void
 burn_away_slime (void)
 {
         if (Slimed) {
@@ -157,7 +157,7 @@ burn_away_slime (void)
 
 
 
-void 
+void
 nh_timeout (void)
 {
         struct prop *upp;
@@ -372,7 +372,7 @@ boolean wakeup_msg;
 }
 
 /* Attach an egg hatch timeout to the given egg. */
-void 
+void
 attach_egg_hatch_timeout (struct obj *egg)
 {
         int i;
@@ -396,7 +396,7 @@ attach_egg_hatch_timeout (struct obj *egg)
 }
 
 /* prevent an egg from ever hatching */
-void 
+void
 kill_egg (struct obj *egg)
 {
         /* stop previous timer, if any */
@@ -404,7 +404,7 @@ kill_egg (struct obj *egg)
 }
 
 /* timer callback routine: hatch the given egg */
-void 
+void
 hatch_egg (void *arg, long timeout)
 {
         struct obj *egg;
@@ -544,7 +544,7 @@ hatch_egg (void *arg, long timeout)
 }
 
 /* Learn to recognize eggs of the given type. */
-void 
+void
 learn_egg_type (int mnum)
 {
         /* baby monsters hatch from grown-up eggs */
@@ -555,7 +555,7 @@ learn_egg_type (int mnum)
 }
 
 /* Attach a fig_transform timeout to the given figurine. */
-void 
+void
 attach_fig_transform_timeout (struct obj *figurine)
 {
         int i;
@@ -573,7 +573,7 @@ attach_fig_transform_timeout (struct obj *figurine)
 }
 
 /* give a fumble message */
-static void 
+static void
 slip_or_trip (void)
 {
         struct obj *otmp = vobj_at(u.ux, u.uy);
@@ -652,7 +652,7 @@ slip_or_trip (void)
 }
 
 /* Print a lamp flicker message with tailer. */
-static void 
+static void
 see_lamp_flicker (struct obj *obj, const char *tailer)
 {
         switch (obj->where) {
@@ -667,7 +667,7 @@ see_lamp_flicker (struct obj *obj, const char *tailer)
 }
 
 /* Print a dimming message for brass lanterns. */
-static void 
+static void
 lantern_message (struct obj *obj)
 {
         /* from adventure */
@@ -691,7 +691,7 @@ lantern_message (struct obj *obj)
  * Timeout callback for for objects that are burning. E.g. lamps, candles.
  * See begin_burn() for meanings of obj->age and obj->spe.
  */
-void 
+void
 burn_object (void *arg, long timeout)
 {
         struct obj *obj = (struct obj *) arg;
@@ -1108,7 +1108,7 @@ end_burn(obj, timer_attached)
 /*
  * Cleanup a burning object if timer stopped.
  */
-static void 
+static void
 cleanup_burn (void *arg, long expire_time)
 {
     struct obj *obj = (struct obj *)arg;
@@ -1129,7 +1129,7 @@ cleanup_burn (void *arg, long expire_time)
 }
 
 
-void 
+void
 do_storms (void)
 {
     int nstrike;
@@ -1277,7 +1277,7 @@ kind_name (short kind)
     return "unknown";
 }
 
-static void 
+static void
 print_queue (winid win, timer_element *base)
 {
     timer_element *curr;
@@ -1304,7 +1304,7 @@ print_queue (winid win, timer_element *base)
     }
 }
 
-int 
+int
 wiz_timeout_queue (void)
 {
     winid win;
@@ -1326,7 +1326,7 @@ wiz_timeout_queue (void)
     return 0;
 }
 
-void 
+void
 timer_sanity_check (void)
 {
     timer_element *curr;
@@ -1350,7 +1350,7 @@ timer_sanity_check (void)
  * Pick off timeout elements from the global queue and call their functions.
  * Do this until their time is less than or equal to the move count.
  */
-void 
+void
 run_timers (void)
 {
     timer_element *curr;
@@ -1408,7 +1408,7 @@ void * arg;
  * Remove the timer from the current list and free it up.  Return the time
  * it would have gone off, 0 if not found.
  */
-long 
+long
 stop_timer (short func_index, void *arg)
 {
     timer_element *doomed;
@@ -1432,7 +1432,7 @@ stop_timer (short func_index, void *arg)
 /*
  * Move all object timers from src to dest, leaving src untimed.
  */
-void 
+void
 obj_move_timers (struct obj *src, struct obj *dest)
 {
     int count;
@@ -1453,7 +1453,7 @@ obj_move_timers (struct obj *src, struct obj *dest)
 /*
  * Find all object timers and duplicate them for the new object "dest".
  */
-void 
+void
 obj_split_timers (struct obj *src, struct obj *dest)
 {
     timer_element *curr, *next_timer=0;
@@ -1472,7 +1472,7 @@ obj_split_timers (struct obj *src, struct obj *dest)
  * Stop all timers attached to this object.  We can get away with this because
  * all object pointers are unique.
  */
-void 
+void
 obj_stop_timers (struct obj *obj)
 {
     timer_element *curr, *prev, *next_timer=0;
@@ -1497,7 +1497,7 @@ obj_stop_timers (struct obj *obj)
 
 
 /* Insert timer into the global queue */
-static void 
+static void
 insert_timer (timer_element *gnu)
 {
     timer_element *curr, *prev;
@@ -1532,7 +1532,7 @@ remove_timer (timer_element **base, short func_index, void *arg)
 }
 
 
-static void 
+static void
 write_timer (int fd, timer_element *timer)
 {
     void * arg_save;
@@ -1687,7 +1687,7 @@ maybe_write_timer(fd, range, write_it)
  *              + timeouts that are level specific (e.g. storms)
  *              + timeouts that stay with the level (obj & monst)
  */
-void 
+void
 save_timers (int fd, int mode, int range)
 {
     timer_element *curr, *prev, *next_timer=0;

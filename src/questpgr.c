@@ -29,7 +29,7 @@ static dlb      *msg_file;
 /* used by ldrname() and neminame(), then copied into cvt_buf */
 static char     nambuf[sizeof cvt_buf];
 
-static void 
+static void
 Fread (void *ptr, int size, int nitems, dlb *stream)
 {
         int cnt;
@@ -61,7 +61,7 @@ construct_qtlist (long hdr_offset)
         return(msg_list);
 }
 
-void 
+void
 load_qtlist (void)
 {
 
@@ -102,7 +102,7 @@ load_qtlist (void)
 }
 
 /* called at program exit */
-void 
+void
 unload_qtlist (void)
 {
         if (msg_file)
@@ -114,7 +114,7 @@ unload_qtlist (void)
         return;
 }
 
-short 
+short
 quest_info (int typ)
 {
         switch (typ) {
@@ -187,7 +187,7 @@ msg_in (struct qtmsg *qtm_list, int msgnum)
         return((struct qtmsg *)0);
 }
 
-static void 
+static void
 convert_arg (char c)
 {
         const char *str;
@@ -248,7 +248,7 @@ convert_arg (char c)
         Strcpy(cvt_buf, str);
 }
 
-static void 
+static void
 convert_line (void)
 {
         char *c, *cc;
@@ -319,7 +319,7 @@ convert_line (void)
         return;
 }
 
-static void 
+static void
 deliver_by_pline (struct qtmsg *qt_msg)
 {
         long    size;
@@ -332,7 +332,7 @@ deliver_by_pline (struct qtmsg *qt_msg)
 
 }
 
-static void 
+static void
 deliver_by_window (struct qtmsg *qt_msg, int how)
 {
         long    size;
@@ -347,7 +347,7 @@ deliver_by_window (struct qtmsg *qt_msg, int how)
         destroy_nhwindow(datawin);
 }
 
-void 
+void
 com_pager (int msgnum)
 {
         struct qtmsg *qt_msg;
@@ -364,7 +364,7 @@ com_pager (int msgnum)
         return;
 }
 
-void 
+void
 qt_pager (int msgnum)
 {
         struct qtmsg *qt_msg;

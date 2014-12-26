@@ -205,7 +205,7 @@ boolean open_library(const char *lib_name, library *lp) {
     return status;
 }
 
-void 
+void
 close_library (library *lp)
 {
     (void) fclose(lp->fdata);
@@ -262,14 +262,14 @@ lib_dlb_fopen(dp, name, mode)
     return FALSE;    /* failed */
 }
 
-static int 
+static int
 lib_dlb_fclose (dlb *dp)
 {
     /* nothing needs to be done */
     return 0;
 }
 
-static int 
+static int
 lib_dlb_fread (char *buf, int size, int quan, dlb *dp)
 {
     long pos, nread, nbytes;
@@ -293,7 +293,7 @@ lib_dlb_fread (char *buf, int size, int quan, dlb *dp)
     return nread;
 }
 
-static int 
+static int
 lib_dlb_fseek (dlb *dp, long pos, int whence)
 {
     long curpos;
@@ -332,7 +332,7 @@ lib_dlb_fgets (char *buf, int len, dlb *dp)
     return buf;
 }
 
-static int 
+static int
 lib_dlb_fgetc (dlb *dp)
 {
     char c;
@@ -342,7 +342,7 @@ lib_dlb_fgetc (dlb *dp)
 }
 
 
-static long 
+static long
 lib_dlb_ftell (dlb *dp)
 {
     return dp->mark;
@@ -379,7 +379,7 @@ boolean dlb_init(void) {
     if (!dlb_initialized) {
     dlb_procs = &lib_dlb_procs;
 
-    if (dlb_procs) 
+    if (dlb_procs)
         dlb_initialized = do_dlb_init();
     }
 

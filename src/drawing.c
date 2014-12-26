@@ -495,7 +495,7 @@ static unsigned char dec_graphics[MAXPCHARS] = {
  * recognized, then MAXOCLASSES is returned.  Used in detect.c invent.c,
  * options.c, pickup.c, sp_lev.c, and lev_main.c.
  */
-int 
+int
 def_char_to_objclass (char ch)
 {
     int i;
@@ -508,7 +508,7 @@ def_char_to_objclass (char ch)
  * Convert a character into a monster class.  This returns the _first_
  * match made.  If there are are no matches, return MAXMCLASSES.
  */
-int 
+int
 def_char_to_monclass (char ch)
 {
     int i;
@@ -517,7 +517,7 @@ def_char_to_monclass (char ch)
     return i;
 }
 
-void 
+void
 assign_graphics (unsigned char *graph_chars, int glth, int maxlen, int offset)
 {
     int i;
@@ -527,7 +527,7 @@ assign_graphics (unsigned char *graph_chars, int glth, int maxlen, int offset)
                        graph_chars[i] : defsyms[i+offset].sym);
 }
 
-void 
+void
 switch_graphics (int gr_set_flag)
 {
     switch (gr_set_flag) {

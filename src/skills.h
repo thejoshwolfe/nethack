@@ -28,7 +28,7 @@
 #define P_SCIMITAR           9
 #define P_SABER             10
 #define P_CLUB              11  /* Heavy-shafted bludgeon */
-#define P_MACE              12  
+#define P_MACE              12
 #define P_MORNING_STAR      13  /* Spiked bludgeon */
 #define P_FLAIL             14  /* Two pieces hinged or chained together */
 #define P_HAMMER            15  /* Heavy head on the end */

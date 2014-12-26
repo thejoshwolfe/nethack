@@ -66,7 +66,7 @@ static const struct {
         {'8', "3o"}
 };
 
-void 
+void
 wipeout_text (
     char *engr,
     int cnt,
@@ -213,7 +213,7 @@ engr_at (signed char x, signed char y)
  * location; a case-insensitive substring match used.
  * Ignore headstones, in case the player names herself "Elbereth".
  */
-int 
+int
 sengr_at (const char *s, signed char x, signed char y)
 {
         struct engr *ep = engr_at(x,y);
@@ -223,7 +223,7 @@ sengr_at (const char *s, signed char x, signed char y)
 }
 
 
-void 
+void
 u_wipe_engr (int cnt)
 {
         if (can_reach_floor())
@@ -231,7 +231,7 @@ u_wipe_engr (int cnt)
 }
 
 
-void 
+void
 wipe_engr_at (signed char x, signed char y, signed char cnt)
 {
         struct engr *ep = engr_at(x,y);
@@ -251,13 +251,13 @@ wipe_engr_at (signed char x, signed char y, signed char cnt)
 }
 
 
-void 
+void
 read_engr_at (int x, int y)
 {
         struct engr *ep = engr_at(x,y);
         int     sensed = 0;
         char buf[BUFSZ];
-        
+
         /* Sensing an engraving does not require sight,
          * nor does it necessarily imply comprehension (literacy).
          */
@@ -326,7 +326,7 @@ read_engr_at (int x, int y)
 }
 
 
-void 
+void
 make_engr_at (int x, int y, const char *s, long e_time, signed char e_type)
 {
         struct engr *ep;
@@ -348,7 +348,7 @@ make_engr_at (int x, int y, const char *s, long e_time, signed char e_type)
 }
 
 /* delete any engraving at location <x,y> */
-void 
+void
 del_engr_at (int x, int y)
 {
         struct engr *ep = engr_at(x, y);
@@ -359,7 +359,7 @@ del_engr_at (int x, int y)
 /*
  *      freehand - returns true if player has a free hand
  */
-int 
+int
 freehand (void)
 {
         return(!uwep || !welded(uwep) ||
@@ -403,7 +403,7 @@ static const char styluses[] =
  */
 
 /* return 1 if action took 1 (or more) moves, 0 if error or aborted */
-int 
+int
 doengrave (void)
 {
         boolean dengr = FALSE;  /* TRUE if we wipe out the current engraving */
@@ -1081,7 +1081,7 @@ doengrave (void)
         return(1);
 }
 
-void 
+void
 save_engravings (int fd, int mode)
 {
         struct engr *ep = head_engr;
@@ -1104,7 +1104,7 @@ save_engravings (int fd, int mode)
             head_engr = 0;
 }
 
-void 
+void
 rest_engravings (int fd)
 {
         struct engr *ep;
@@ -1126,7 +1126,7 @@ rest_engravings (int fd)
         }
 }
 
-void 
+void
 del_engr (struct engr *ep)
 {
         if (ep == head_engr) {
@@ -1148,7 +1148,7 @@ del_engr (struct engr *ep)
 }
 
 /* randomly relocate an engraving */
-void 
+void
 rloc_engr (struct engr *ep)
 {
         int tx, ty, tryct = 200;
@@ -1201,7 +1201,7 @@ static const char *epitaphs[] = {
 /* Create a headstone at the given location.
  * The caller is responsible for newsym(x, y).
  */
-void 
+void
 make_grave (int x, int y, const char *str)
 {
         /* Can we put a grave here? */

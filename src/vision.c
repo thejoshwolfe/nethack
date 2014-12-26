@@ -107,7 +107,7 @@ static void get_unused_cs(char ***,char **,char **);
  * This must be called before mklev() is called in newgame() [allmain.c],
  * or before a game restore.   Else we die a horrible death.
  */
-void 
+void
 vision_init (void)
 {
     int i;
@@ -144,7 +144,7 @@ vision_init (void)
  * Returns true if the level feature, object, or monster at (x,y) blocks
  * sight.
  */
-int 
+int
 does_block (int x, int y, struct rm *lev)
 {
     struct obj   *obj;
@@ -179,7 +179,7 @@ does_block (int x, int y, struct rm *lev)
  * This must be called *after* the levl[][] structure is set with the new
  * level and the level monsters and objects are in place.
  */
-void 
+void
 vision_reset (void)
 {
     int y;
@@ -241,7 +241,7 @@ vision_reset (void)
  * Called from vision_recalc() and at least one light routine.  Get pointers
  * to the unused vision work area.
  */
-static void 
+static void
 get_unused_cs (char ***rows, char **rmin, char **rmax)
 {
     int  row;
@@ -308,13 +308,13 @@ static int new_angle(struct rm *, unsigned char *, int, int);
  *        bits, then again to correctly set the seenv bits.
  *      + I'm trying to make this as cheap as possible.  The display &
  *        vision eat up too much CPU time.
- *      
+ *
  *
  * Note:  Even as I write this, I'm still not convinced.  There are too
  *        many exceptions.  I may have to bite the bullet and do more
  *        checks.       - Dean 2/11/93
  */
-static int 
+static int
 new_angle (struct rm *lev, unsigned char *sv, int row, int col)
 {
     int res = *sv;
@@ -403,7 +403,7 @@ new_angle (struct rm *lev, unsigned char *sv, int row, int col)
  *      + Right after the hero is swallowed. [gulpmu()]
  *      + Just before bubbles are moved. [movebubbles()]
  */
-void 
+void
 vision_recalc (int control)
 {
     char **temp_array;  /* points to the old vision array */
@@ -723,7 +723,7 @@ skip:
  *
  * Make the location opaque to light.
  */
-void 
+void
 block_point (int x, int y)
 {
     fill_point(y,x);
@@ -745,7 +745,7 @@ block_point (int x, int y)
  *
  * Make the location transparent to light.
  */
-void 
+void
 unblock_point (int x, int y)
 {
     dig_point(y,x);
@@ -804,7 +804,7 @@ unblock_point (int x, int y)
  *   This means that a right-edge (a blocked spot that has an open
  *    spot on its right) will point to itself.
  */
-static void 
+static void
 dig_point (int row, int col)
 {
     int i;
@@ -884,7 +884,7 @@ dig_point (int row, int col)
     }
 }
 
-static void 
+static void
 fill_point (int row, int col)
 {
     int i;
@@ -1221,7 +1221,7 @@ static int _q4_path(int,int,int,int);
 /*
  * Quadrant I (step < 0).
  */
-static int 
+static int
 _q1_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1264,7 +1264,7 @@ _q1_path (int srow, int scol, int y2, int x2)
 /*
  * Quadrant IV (step > 0).
  */
-static int 
+static int
 _q4_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1307,7 +1307,7 @@ _q4_path (int srow, int scol, int y2, int x2)
 /*
  * Quadrant II (step < 0).
  */
-static int 
+static int
 _q2_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1350,7 +1350,7 @@ _q2_path (int srow, int scol, int y2, int x2)
 /*
  * Quadrant III (step > 0).
  */
-static int 
+static int
 _q3_path (int srow, int scol, int y2, int x2)
 {
     int dx, dy;
@@ -1459,7 +1459,7 @@ static int far_shadow(int,int,int,int);
  * Initialize algorithm D's table pointers.  If we don't have these,
  * then we do 3D table lookups.  Verrrry slow.
  */
-static void 
+static void
 view_init (void)
 {
     int i;
@@ -1479,7 +1479,7 @@ view_init (void)
  */
 #define OFF_TABLE 0xff
 
-static int 
+static int
 close_shadow (int side, int this_row, int block_row, int block_col)
 {
     int sdy, sdx, pdy, offset;
@@ -1507,7 +1507,7 @@ close_shadow (int side, int this_row, int block_row, int block_col)
 }
 
 
-static int 
+static int
 far_shadow (int side, int this_row, int block_row, int block_col)
 {
     int sdy, sdx, pdy, offset;
@@ -1546,7 +1546,7 @@ far_shadow (int side, int this_row, int block_row, int block_col)
  *
  * Figure out what could be seen on the right side of the source.
  */
-static void 
+static void
 right_side (
     int row,            /* current row */
     int cb_row,
@@ -1804,7 +1804,7 @@ right_side (
  * This routine is the mirror image of right_side().  Please see right_side()
  * for blow by blow comments.
  */
-static void 
+static void
 left_side (
     int row,            /* the current row */
     int cb_row,
@@ -1988,7 +1988,7 @@ left_side (
  * seen from the source location.  Initialize and fill the left most
  * and right most boundaries of what could be seen.
  */
-static void 
+static void
 view_from (
     int srow,
     int scol,                    /* source row and column */
@@ -2086,7 +2086,7 @@ static void right_side(int,int,int,char*);
 static void left_side(int,int,int,char*);
 
 /* Initialize algorithm C (nothing). */
-static void 
+static void
 view_init (void)
 {
 }
@@ -2095,7 +2095,7 @@ view_init (void)
  * Mark positions as visible on one quadrant of the right side.  The
  * quadrant is determined by the value of the global variable step.
  */
-static void 
+static void
 right_side (
     int row,            /* current row */
     int left,           /* first (left side) visible spot on prev row */
@@ -2278,7 +2278,7 @@ rside2:                                 /* used if q?_path() is a macro */
  * This routine is the mirror image of right_side().  See right_side() for
  * extensive comments.
  */
-static void 
+static void
 left_side (int row, int left_mark, int right, char *limits)
 {
     int           left, left_edge, nrow, deeper, result;
@@ -2398,7 +2398,7 @@ lside2:                                 /* used if q?_path() is a macro */
  * (srow,scol).  NOTE this is (y,x)!  Mark the visible locations in the
  * array provided.
  */
-static void 
+static void
 view_from (
     int srow,
     int scol,    /* starting row and column */
@@ -2495,7 +2495,7 @@ view_from (
  * will call "func" when necessary.  If the hero is the center, use the
  * vision matrix and reduce extra work.
  */
-void 
+void
 do_clear_area (int scol, int srow, int range, void (*func)(int, int, void *), void *arg)
 {
         /* If not centered on hero, do the hard work of figuring the area */

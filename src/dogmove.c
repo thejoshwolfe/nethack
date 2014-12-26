@@ -63,7 +63,7 @@ int x, y;
         return FALSE;
 }
 
-int 
+int
 dog_nutrition (struct monst *mtmp, struct obj *obj)
 {
         int nutrit;
@@ -235,7 +235,7 @@ struct edog *edog;
 /* do something with object (drop, pick up, eat) at current position
  * returns 1 if object eaten (since that counts as dog's move), 2 if died
  */
-static int 
+static int
 dog_invent (struct monst *mtmp, struct edog *edog, int udist)
 {
         int omx, omy;
@@ -296,7 +296,7 @@ dog_invent (struct monst *mtmp, struct edog *edog, int udist)
 /* set dog's goal -- gtyp, gx, gy
  * returns -1/0/1 (dog's desire to approach player) or -2 (abort move)
  */
-static int 
+static int
 dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist, int whappr)
 {
         int omx, omy;
@@ -439,7 +439,7 @@ dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist, int whapp
 }
 
 /* return 0 (no move), 1 (move) or 2 (dead) */
-int 
+int
 dog_move (
     struct monst *mtmp,
     int after      /* this is extra fast monster movement */
@@ -778,7 +778,7 @@ static boolean can_reach_location(struct monst *mon,
 
     if (mx == fx && my == fy) return TRUE;
     if (!isok(mx, my)) return FALSE; /* should not happen */
-    
+
     dist = dist2(mx, my, fx, fy);
     for(i=mx-1; i<=mx+1; i++) {
         for(j=my-1; j<=my+1; j++) {
@@ -803,7 +803,7 @@ static boolean can_reach_location(struct monst *mon,
 
 
 /*ARGSUSED*/    /* do_clear_area client */
-static void 
+static void
 wantdoor (int x, int y, void *distance)
 {
     int ndist;

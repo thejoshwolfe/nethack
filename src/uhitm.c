@@ -30,7 +30,7 @@ static boolean override_confirmation = FALSE;
 
 /* modified from hurtarmor() in mhitu.c */
 /* This is not static because it is also used for monsters rusting monsters */
-void 
+void
 hurtmarmor (struct monst *mdef, int attk)
 {
         int     hurt;
@@ -220,7 +220,7 @@ struct obj *wep;        /* uwep for attack(), null for kick_monster() */
 /*
  * It is unchivalrous for a knight to attack the defenseless or from behind.
  */
-void 
+void
 check_caitiff (struct monst *mtmp)
 {
         if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL &&
@@ -232,7 +232,7 @@ check_caitiff (struct monst *mtmp)
         }
 }
 
-signed char 
+signed char
 find_roll_to_hit (struct monst *mtmp)
 {
         signed char tmp;
@@ -441,7 +441,7 @@ struct attack *uattk;
                be knocked into a different location */
             notonhead = (mon->mx != x || mon->my != y);
             malive = hmon(mon, uwep, 0);
-            /* this assumes that Stormbringer was uwep not uswapwep */ 
+            /* this assumes that Stormbringer was uwep not uswapwep */
             if (malive && u.twoweap && !override_confirmation &&
                     m_at(x, y) == mon)
                 malive = hmon(mon, uswapwep, 0);
@@ -901,7 +901,7 @@ int thrown;
         }
 
         if (ispoisoned) {
-            int nopoison = (10 - (obj->owt/10));            
+            int nopoison = (10 - (obj->owt/10));
             if(nopoison < 2) nopoison = 2;
             if Role_if(PM_SAMURAI) {
                 You("dishonorably use a poisoned weapon!");
@@ -1120,7 +1120,7 @@ struct attack *mattk;
 }
 
 /* used when hitting a monster with a lance while mounted */
-static int 
+static int
 joust (
     struct monst *mon,  /* target */
     struct obj *obj     /* weapon */
@@ -1155,7 +1155,7 @@ joust (
  * (DR4 and DR4.5) screws up with an internal error 5 "Expression Too Complex."
  * Pulling it out makes it work.
  */
-static void 
+static void
 demonpet (void)
 {
         int i;
@@ -1182,7 +1182,7 @@ demonpet (void)
  * If that ever changes, the check for touching a cockatrice corpse
  * will need to be smarter about whether to break out of the theft loop.
  */
-static void 
+static void
 steal_it (struct monst *mdef, struct attack *mattk)
 {
         struct obj *otmp, *stealoid, **minvent_ptr;
@@ -1259,7 +1259,7 @@ steal_it (struct monst *mdef, struct attack *mattk)
         }
 }
 
-int 
+int
 damageum (struct monst *mdef, struct attack *mattk)
 {
         struct permonst *pd = mdef->data;
@@ -1619,7 +1619,7 @@ damageum (struct monst *mdef, struct attack *mattk)
         return(1);
 }
 
-static int 
+static int
 explum (struct monst *mdef, struct attack *mattk)
 {
         int tmp = d((int)mattk->damn, (int)mattk->damd);
@@ -1673,7 +1673,7 @@ common:
         return(1);
 }
 
-static void 
+static void
 start_engulf (struct monst *mdef)
 {
         if (!Invisible) {
@@ -1686,7 +1686,7 @@ start_engulf (struct monst *mdef)
         delay_output();
 }
 
-static void 
+static void
 end_engulf (void)
 {
         if (!Invisible) {
@@ -1695,7 +1695,7 @@ end_engulf (void)
         }
 }
 
-static int 
+static int
 gulpum (struct monst *mdef, struct attack *mattk)
 {
         int tmp;
@@ -1870,7 +1870,7 @@ gulpum (struct monst *mdef, struct attack *mattk)
         return(0);
 }
 
-void 
+void
 missum (struct monst *mdef, struct attack *mattk)
 {
         if (could_seduce(&youmonst, mdef, mattk))
@@ -2285,7 +2285,7 @@ int passive(struct monst *mon, boolean mhit, int malive, unsigned char aatyp) {
  * Special (passive) attacks on an attacking object by monsters done here.
  * Assumes the attack was successful.
  */
-void 
+void
 passive_obj (
     struct monst *mon,
     struct obj *obj,    /* null means pick uwep, uswapwep or uarmg */
@@ -2345,7 +2345,7 @@ passive_obj (
 }
 
 /* Note: caller must ascertain mtmp is mimicking... */
-void 
+void
 stumble_onto_mimic (struct monst *mtmp)
 {
         const char *fmt = "Wait!  That's %s!",
@@ -2383,7 +2383,7 @@ stumble_onto_mimic (struct monst *mtmp)
         wakeup(mtmp);   /* clears mimicking */
 }
 
-static void 
+static void
 nohandglow (struct monst *mon)
 {
         char *hands=makeplural(body_part(HAND));
@@ -2404,7 +2404,7 @@ nohandglow (struct monst *mon)
         u.umconf--;
 }
 
-int 
+int
 flash_hits_mon (
     struct monst *mtmp,
     struct obj *otmp    /* source of flash */

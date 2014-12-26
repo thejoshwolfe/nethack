@@ -34,7 +34,7 @@ extern boolean notonhead;       /* for long worms */
 
 
 /* Throw the selected object, asking for direction */
-static int 
+static int
 throw_obj (struct obj *obj, int shotlimit)
 {
         struct obj *otmp;
@@ -164,7 +164,7 @@ throw_obj (struct obj *obj, int shotlimit)
 }
 
 
-int 
+int
 dothrow (void)
 {
         struct obj *obj;
@@ -200,7 +200,7 @@ dothrow (void)
 
 /* KMH -- Automatically fill quiver */
 /* Suggested by Jeffrey Bay <jbay@convex.hp.com> */
-static void 
+static void
 autoquiver (void)
 {
         struct obj *otmp, *oammo = 0, *omissile = 0, *omisc = 0, *altammo = 0;
@@ -243,7 +243,7 @@ autoquiver (void)
             } else if (otmp->oclass == WEAPON_CLASS && throwing_weapon(otmp)) {
                 /* Ordinary weapon */
                 if (objects[otmp->otyp].oc_skill == P_DAGGER
-                        && !omissile) 
+                        && !omissile)
                     omissile = otmp;
                 else
                     omisc = otmp;
@@ -265,7 +265,7 @@ autoquiver (void)
 
 
 /* Throw from the quiver */
-int 
+int
 dofire (void)
 {
         int shotlimit;
@@ -313,7 +313,7 @@ dofire (void)
 /*
  * Object hits floor at hero's feet.  Called from drop() and throwit().
  */
-void 
+void
 hitfloor (struct obj *obj)
 {
         if (IS_SOFT(levl[u.ux][u.uy].typ) || u.uinwater) {
@@ -432,7 +432,7 @@ hurtle_step(arg, x, y)
     struct monst *mon;
     boolean may_pass = TRUE;
     struct trap *ttmp;
-    
+
     if (!isok(x,y)) {
         You_feel("the spirits holding you back.");
         return FALSE;
@@ -621,7 +621,7 @@ void hurtle(int dx, int dy, int range, boolean verbose) {
 
 /* Move a monster through the air for a few squares.
  */
-void 
+void
 mhurtle (struct monst *mon, int dx, int dy, int range)
 {
     coord mc, cc;
@@ -806,7 +806,7 @@ struct obj *obj;
 }
 
 /* the currently thrown object is returning to you (not for boomerangs) */
-static void 
+static void
 sho_obj_return_to_u (struct obj *obj)
 {
     /* might already be our location (bounced off a wall) */
@@ -1113,7 +1113,7 @@ boolean mon_notices;
 }
 
 /* thrown object misses target monster */
-static void 
+static void
 tmiss (struct obj *obj, struct monst *mon)
 {
     const char *missile = mshot_xname(obj);
@@ -1139,7 +1139,7 @@ tmiss (struct obj *obj, struct monst *mon)
  * Return 1 if obj has disappeared or otherwise been taken care of,
  * 0 if caller must take care of it.
  */
-int 
+int
 thitmonst (struct monst *mon, struct obj *obj)
 {
         int     tmp; /* Base chance to hit */
@@ -1374,7 +1374,7 @@ thitmonst (struct monst *mon, struct obj *obj)
         return 0;
 }
 
-static int 
+static int
 gem_accept (struct monst *mon, struct obj *obj)
 {
         char buf[BUFSZ];
@@ -1494,7 +1494,7 @@ boolean from_invent;    /* thrown or dropped by player; maybe on shop bill */
  * something to it.
  * Return 0 if the object doesn't break, 1 if the object broke.
  */
-int 
+int
 breaks (
     struct obj *obj,
     signed char x,
@@ -1645,7 +1645,7 @@ boolean in_view;
         }
 }
 
-static int 
+static int
 throw_gold (struct obj *obj)
 {
         int range, odx, ody;

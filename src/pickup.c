@@ -257,7 +257,7 @@ struct obj *obj;
 /* List of valid menu classes for query_objlist() and allow_category callback */
 static char valid_menu_classes[MAXOCLASSES + 2];
 
-void 
+void
 add_valid_menu_class (int c)
 {
         static int vmc_count = 0;
@@ -332,7 +332,7 @@ struct obj *otmp;
  * Returns 1 if tried to pick something up, whether
  * or not it succeeded.
  */
-int 
+int
 pickup (
     int what            /* should be a long */
 )
@@ -571,7 +571,7 @@ boolean grab;    /* forced pickup, rather than forced leave behind? */
  * picked is zero, the pickup list is left alone.  The caller of this
  * function must free the pickup list.
  */
-static int 
+static int
 autopick (
     struct obj *olist,  /* the object list */
     int follow,         /* how to follow the object list */
@@ -1074,7 +1074,7 @@ int *wt_before, *wt_after;
 
 /* determine whether character is able and player is willing to carry `obj' */
 static
-int 
+int
 lift_object(obj, container, cnt_p, telekinesis)
 struct obj *obj, *container;    /* object to pick up, bag it's coming out of */
 long *cnt_p;
@@ -1369,7 +1369,7 @@ boolean countem;
 {
         struct obj *cobj, *nobj;
         int container_count = 0;
-        
+
         for(cobj = level.objects[x][y]; cobj; cobj = nobj) {
                 nobj = cobj->nexthere;
                 if(Is_container(cobj)) {
@@ -1599,7 +1599,7 @@ boolean *prev_loot;
                     You("can't. The saddle seems to be stuck to %s.",
                         x_monnam(mtmp, ARTICLE_THE, (char *)0,
                                 SUPPRESS_SADDLE, FALSE));
-                            
+
                     /* the attempt costs you time */
                         return (1);
                 }

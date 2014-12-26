@@ -81,7 +81,7 @@ long        wgrowtime[MAX_NUM_WORMS] = DUMMY;
  *
  *  Implementation is left to the interested hacker.
  */
-int 
+int
 get_wormno (void)
 {
     int new_wormno = 1;
@@ -106,7 +106,7 @@ get_wormno (void)
  *  If the worm has no tail (ie get_wormno() fails) then this function need
  *  not be called.
  */
-void 
+void
 initworm (struct monst *worm, int wseg_count)
 {
     struct wseg *seg, *new_tail = create_worm_tail(wseg_count);
@@ -167,7 +167,7 @@ toss_wsegs(curr, display_update)
  *
  *  Remove the tail segment of the worm (the starting segment of the list).
  */
-static void 
+static void
 shrink_worm (
     int wnum    /* worm number */
 )
@@ -189,7 +189,7 @@ shrink_worm (
  *
  *  Move the worm.  Maybe grow.
  */
-void 
+void
 worm_move (struct monst *worm)
 {
     struct wseg *seg, *new_seg; /* new segment */
@@ -236,7 +236,7 @@ worm_move (struct monst *worm)
  *
  *  The worm don't move so it should shrink.
  */
-void 
+void
 worm_nomove (struct monst *worm)
 {
     shrink_worm((int) worm->wormno);    /* shrink */
@@ -254,7 +254,7 @@ worm_nomove (struct monst *worm)
  *
  *  Kill a worm tail.
  */
-void 
+void
 wormgone (struct monst *worm)
 {
     int wnum = worm->wormno;
@@ -278,7 +278,7 @@ wormgone (struct monst *worm)
  *
  *  If the hero is near any part of the worm, the worm will try to attack.
  */
-void 
+void
 wormhitu (struct monst *worm)
 {
     int wnum = worm->wormno;
@@ -304,7 +304,7 @@ wormhitu (struct monst *worm)
  *  there is a chance that the worm will be cut in half, and a chance
  *  that both halves will survive.
  */
-void 
+void
 cutworm (struct monst *worm, signed char x, signed char y, struct obj *weap)
 {
     struct wseg  *curr, *new_tail;
@@ -406,7 +406,7 @@ cutworm (struct monst *worm, signed char x, signed char y, struct obj *weap)
  *  from see_monster() in display.c or when a monster goes minvis.  It
  *  is located here for modularity.
  */
-void 
+void
 see_wsegs (struct monst *worm)
 {
     struct wseg *curr = wtails[worm->wormno];
@@ -450,7 +450,7 @@ detect_wsegs(worm, use_detection_glyph)
  *  Save the worm information for later use.  The count is the number
  *  of segments, including the dummy.  Called from save.c.
  */
-void 
+void
 save_worm (int fd, int mode)
 {
     int i;
@@ -495,7 +495,7 @@ save_worm (int fd, int mode)
  *
  *  Restore the worm information from the save file.  Called from restore.c
  */
-void 
+void
 rest_worm (int fd)
 {
     int i, j, count;
@@ -527,7 +527,7 @@ rest_worm (int fd)
  *
  *  Place the segments of the given worm.  Called from restore.c
  */
-void 
+void
 place_wsegs (struct monst *worm)
 {
     struct wseg *curr = wtails[worm->wormno];
@@ -548,7 +548,7 @@ place_wsegs (struct monst *worm)
  *  It does not get rid of (dealloc) the worm tail structures, and it does
  *  not remove the mon from the fmon chain.
  */
-void 
+void
 remove_worm (struct monst *worm)
 {
     struct wseg *curr = wtails[worm->wormno];
@@ -571,7 +571,7 @@ remove_worm (struct monst *worm)
  *  x, and y are most likely the worm->mx, and worm->my, but don't *need* to
  *  be, if somehow the head is disjoint from the tail.
  */
-void 
+void
 place_worm_tail_randomly (struct monst *worm, signed char x, signed char y)
 {
     int wnum = worm->wormno;
@@ -656,7 +656,7 @@ static void random_dir(signed char x, signed char y, signed char *nx, signed cha
  *  the number of visible segments that a worm has.
  */
 
-int 
+int
 count_wsegs (struct monst *mtmp)
 {
     int i=0;

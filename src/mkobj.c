@@ -102,7 +102,7 @@ struct obj * mkobj(char oclass, boolean artif) {
         return(mksobj(i, TRUE, artif));
 }
 
-static void 
+static void
 mkbox_cnts (struct obj *box)
 {
         int n;
@@ -165,7 +165,7 @@ mkbox_cnts (struct obj *box)
         }
 }
 
-int 
+int
 rndmonnum (void)        /* select a random, common monster type */
 {
         struct permonst *ptr;
@@ -233,7 +233,7 @@ splitobj (struct obj *obj, long num)
  * Note:  Don't use use obj_extract_self() -- we are doing an in-place swap,
  * not actually moving something.
  */
-void 
+void
 replace_object (struct obj *obj, struct obj *otmp)
 {
     otmp->where = obj->where;
@@ -288,7 +288,7 @@ replace_object (struct obj *obj, struct obj *otmp)
  * Note that check_unpaid_usage() should be used instead for partial
  * usage of an object.
  */
-void 
+void
 bill_dummy_object (struct obj *otmp)
 {
         struct obj *dummy;
@@ -512,7 +512,7 @@ boolean artif;
                         otmp->blessed = rn2(2);
                         otmp->spe = rne(3);
                 } else  blessorcurse(otmp, 10);
-                if (artif && !rn2(40))                
+                if (artif && !rn2(40))
                     otmp = mk_artifact(otmp, (aligntyp)A_NONE);
                 /* simulate lacquered armor for samurai */
                 if (Role_if(PM_SAMURAI) && otmp->otyp == SPLINT_MAIL &&
@@ -583,7 +583,7 @@ boolean artif;
  * Start a corpse decay or revive timer.
  * This takes the age of the corpse into consideration as of 3.4.0.
  */
-void 
+void
 start_corpse_timeout (struct obj *body)
 {
         long when;              /* rot away when this old */
@@ -625,12 +625,12 @@ start_corpse_timeout (struct obj *body)
                         break;
                     }
         }
-        
+
         if (body->norevive) body->norevive = 0;
         (void) start_timer(when, TIMER_OBJECT, action, (void *)body);
 }
 
-void 
+void
 bless (struct obj *otmp)
 {
         otmp->cursed = 0;
@@ -644,7 +644,7 @@ bless (struct obj *otmp)
         return;
 }
 
-void 
+void
 unbless (struct obj *otmp)
 {
         otmp->blessed = 0;
@@ -654,7 +654,7 @@ unbless (struct obj *otmp)
             otmp->owt = weight(otmp);
 }
 
-void 
+void
 curse (struct obj *otmp)
 {
         otmp->blessed = 0;
@@ -679,7 +679,7 @@ curse (struct obj *otmp)
         return;
 }
 
-void 
+void
 uncurse (struct obj *otmp)
 {
         otmp->cursed = 0;
@@ -693,7 +693,7 @@ uncurse (struct obj *otmp)
 }
 
 
-void 
+void
 blessorcurse (struct obj *otmp, int chance)
 {
         if(otmp->blessed || otmp->cursed) return;
@@ -709,7 +709,7 @@ blessorcurse (struct obj *otmp, int chance)
 }
 
 
-int 
+int
 bcsign (struct obj *otmp)
 {
         return(!!otmp->blessed - !!otmp->cursed);
@@ -724,7 +724,7 @@ bcsign (struct obj *otmp)
  *         of the code messes with a contained object and doesn't update the
  *         container's weight.
  */
-int 
+int
 weight (struct obj *obj)
 {
         int wt = objects[obj->otyp].oc_weight;
@@ -879,7 +879,7 @@ obj_attach_mid (struct obj *obj, unsigned mid)
     if (!mid || !obj) return (struct obj *)0;
     lth = sizeof(mid);
     namelth = obj->onamelth ? strlen(ONAME(obj)) + 1 : 0;
-    if (namelth) 
+    if (namelth)
         otmp = realloc_obj(obj, lth, (void *) &mid, namelth, ONAME(obj));
     else {
         otmp = obj;
@@ -1012,7 +1012,7 @@ struct obj *otmp;
  */
 
 /* put the object at the given location */
-void 
+void
 place_object (struct obj *otmp, int x, int y)
 {
     struct obj *otmp2 = level.objects[x][y];
@@ -1074,7 +1074,7 @@ void obj_ice_effects(int x, int y, boolean do_buried) {
  */
 long peek_at_iced_corpse_age (struct obj *otmp) {
     long age, retval = otmp->age;
-    
+
     if (otmp->otyp == CORPSE && ON_ICE(otmp)) {
         /* Adjust the age; must be same as obj_timer_checks() for off ice*/
         age = monstermoves - otmp->age;
@@ -1097,10 +1097,10 @@ static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int
         if (tleft == 0L) {
                 action = REVIVE_MON;
                 tleft = stop_timer(action, (void *)otmp);
-        } 
+        }
         if (tleft != 0L) {
             long age;
-            
+
             tleft = tleft - monstermoves;
             /* mark the corpse as being on ice */
             ON_ICE(otmp) = 1;
@@ -1134,7 +1134,7 @@ static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int
                 otmp->age = otmp->age + (age / ROT_ICE_ADJUSTMENT);
         }
     }
-    /* now re-start the timer with the appropriate modifications */ 
+    /* now re-start the timer with the appropriate modifications */
     if (restart_timer)
         (void) start_timer(tleft, TIMER_OBJECT, action, (void *)otmp);
 }
@@ -1142,7 +1142,7 @@ static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int
 #undef ON_ICE
 #undef ROT_ICE_ADJUSTMENT
 
-void 
+void
 remove_object (struct obj *otmp)
 {
     signed char x = otmp->ox;
@@ -1157,7 +1157,7 @@ remove_object (struct obj *otmp)
 }
 
 /* throw away all of a monster's inventory */
-void 
+void
 discard_minvent (struct monst *mtmp)
 {
     struct obj *otmp;
@@ -1184,7 +1184,7 @@ discard_minvent (struct monst *mtmp)
  *      OBJ_BURIED      level.buriedobjs chain
  *      OBJ_ONBILL      on billobjs chain
  */
-void 
+void
 obj_extract_self (struct obj *obj)
 {
     switch (obj->where) {
@@ -1220,7 +1220,7 @@ obj_extract_self (struct obj *obj)
 
 
 /* Extract the given object from the chain, following nobj chain. */
-void 
+void
 extract_nobj (struct obj *obj, struct obj **head_ptr)
 {
     struct obj *curr, *prev;
@@ -1246,7 +1246,7 @@ extract_nobj (struct obj *obj, struct obj **head_ptr)
  * This does not set obj->where, this function is expected to be called
  * in tandem with extract_nobj, which does set it.
  */
-void 
+void
 extract_nexthere (struct obj *obj, struct obj **head_ptr)
 {
     struct obj *curr, *prev;
@@ -1270,7 +1270,7 @@ extract_nexthere (struct obj *obj, struct obj **head_ptr)
  * in the inventory, then the passed obj is deleted and 1 is returned.
  * Otherwise 0 is returned.
  */
-int 
+int
 add_to_minv (struct monst *mon, struct obj *obj)
 {
     struct obj *otmp;
@@ -1315,7 +1315,7 @@ add_to_container (struct obj *container, struct obj *obj)
     return (obj);
 }
 
-void 
+void
 add_to_migration (struct obj *obj)
 {
     if (obj->where != OBJ_FREE)
@@ -1326,7 +1326,7 @@ add_to_migration (struct obj *obj)
     migrating_objs = obj;
 }
 
-void 
+void
 add_to_buried (struct obj *obj)
 {
     if (obj->where != OBJ_FREE)
@@ -1338,7 +1338,7 @@ add_to_buried (struct obj *obj)
 }
 
 /* Recalculate the weight of this container and all of _its_ containers. */
-static void 
+static void
 container_weight (struct obj *container)
 {
     container->owt = weight(container);
@@ -1354,7 +1354,7 @@ container_weight (struct obj *container)
  * Deallocate the object.  _All_ objects should be run through here for
  * them to be deallocated.
  */
-void 
+void
 dealloc_obj (struct obj *obj)
 {
     if (obj->where != OBJ_FREE)
@@ -1382,7 +1382,7 @@ dealloc_obj (struct obj *obj)
 
 #ifdef WIZARD
 /* Check all object lists for consistency. */
-void 
+void
 obj_sanity_check (void)
 {
     int x, y;
@@ -1490,7 +1490,7 @@ where_name (int where)
 }
 
 /* obj sanity check: check objs contained by container */
-static void 
+static void
 check_contained (struct obj *container, const char *mesg)
 {
     struct obj *obj;

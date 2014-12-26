@@ -77,7 +77,7 @@ int x,y;
  * Return value:  the direction of the drawbridge.
  */
 
-int 
+int
 is_drawbridge_wall (int x, int y)
 {
         struct rm *lev;
@@ -144,7 +144,7 @@ int *x,*y;
 /*
  * Find the drawbridge wall associated with a drawbridge.
  */
-static void 
+static void
 get_wall_for_db (int *x, int *y)
 {
         switch (levl[*x][*y].drawbridgemask & DB_DIR) {
@@ -235,7 +235,7 @@ e_at (int x, int y)
                (struct entity *)0 : &(occupants[entitycnt]));
 }
 
-static void 
+static void
 m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp)
 {
         etmp->emon = mtmp;
@@ -250,7 +250,7 @@ m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp)
                 etmp->edata = (struct permonst *)0;
 }
 
-static void 
+static void
 u_to_e (struct entity *etmp)
 {
         etmp->emon = &youmonst;
@@ -259,7 +259,7 @@ u_to_e (struct entity *etmp)
         etmp->edata = youmonst.data;
 }
 
-static void 
+static void
 set_entity (int x, int y, struct entity *etmp)
 {
         if ((x == u.ux) && (y == u.uy))
@@ -333,7 +333,7 @@ int x, y;
         return(TRUE);
 }
 
-static void 
+static void
 e_died (struct entity *etmp, int dest, int how)
 {
         if (is_u(etmp)) {
@@ -465,7 +465,7 @@ struct entity *etmp;
         return((boolean)((tmp >= rnd(10))? TRUE : FALSE));
 }
 
-static void 
+static void
 do_entity (struct entity *etmp)
 {
         int newx, newy, at_portcullis, oldx, oldy;
@@ -632,7 +632,7 @@ do_entity (struct entity *etmp)
  * Close the drawbridge located at x,y
  */
 
-void 
+void
 close_drawbridge (int x, int y)
 {
         struct rm *lev1, *lev2;
@@ -683,7 +683,7 @@ close_drawbridge (int x, int y)
  * Open the drawbridge located at x,y
  */
 
-void 
+void
 open_drawbridge (int x, int y)
 {
         struct rm *lev1, *lev2;
@@ -720,7 +720,7 @@ open_drawbridge (int x, int y)
  * Let's destroy the drawbridge located at x,y
  */
 
-void 
+void
 destroy_drawbridge (int x, int y)
 {
         struct rm *lev1, *lev2;

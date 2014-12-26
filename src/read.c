@@ -36,7 +36,7 @@ static void maybe_tame(struct monst *,struct obj *);
 
 static void set_lit(int,int,void *);
 
-int 
+int
 doread (void)
 {
         struct obj *scroll;
@@ -149,7 +149,7 @@ doread (void)
         return(1);
 }
 
-static void 
+static void
 stripspe (struct obj *obj)
 {
         if (obj->blessed) plines(nothing_happens);
@@ -163,14 +163,14 @@ stripspe (struct obj *obj)
         }
 }
 
-static void 
+static void
 p_glow1 (struct obj *otmp)
 {
         Your("%s %s briefly.", xname(otmp),
              otense(otmp, Blind ? "vibrate" : "glow"));
 }
 
-static void 
+static void
 p_glow2 (struct obj *otmp, const char *color)
 {
         Your("%s %s%s%s for a moment.",
@@ -202,7 +202,7 @@ struct obj *obj;
  * recharge an object; curse_bless is -1 if the recharging implement
  * was cursed, +1 if blessed, 0 otherwise.
  */
-void 
+void
 recharge (struct obj *obj, int curse_bless)
 {
         int n;
@@ -417,7 +417,7 @@ recharge (struct obj *obj, int curse_bless)
 
 
 /* Forget known information about this object class. */
-static void 
+static void
 forget_single_object (int obj_id)
 {
         objects[obj_id].oc_name_known = 0;
@@ -434,7 +434,7 @@ forget_single_object (int obj_id)
 
 
 /* randomize the given list of numbers  0 <= i < count */
-static void 
+static void
 randomize (int *indices, int count)
 {
         int i, iswap, temp;
@@ -449,7 +449,7 @@ randomize (int *indices, int count)
 
 
 /* Forget % of known objects. */
-void 
+void
 forget_objects (int percent)
 {
         int i, count;
@@ -476,7 +476,7 @@ forget_objects (int percent)
 
 
 /* Forget some or all of map (depends on parameters). */
-void 
+void
 forget_map (int howmuch)
 {
         int zx, zy;
@@ -495,7 +495,7 @@ forget_map (int howmuch)
 }
 
 /* Forget all traps on the level. */
-void 
+void
 forget_traps (void)
 {
         struct trap *trap;
@@ -510,7 +510,7 @@ forget_traps (void)
  * Forget given % of all levels that the hero has visited and not forgotten,
  * except this one.
  */
-void 
+void
 forget_levels (int percent)
 {
         int i, count;
@@ -541,7 +541,7 @@ forget_levels (int percent)
                 else
                     indices[count++] = i;
             }
-        
+
         if (percent > 100) percent = 100;
 
         randomize(indices, count);
@@ -566,7 +566,7 @@ forget_levels (int percent)
  *      howmuch & ALL_MAP       = forget whole map
  *      howmuch & ALL_SPELLS    = forget all spells
  */
-static void 
+static void
 forget (int howmuch)
 {
 
@@ -596,7 +596,7 @@ forget (int howmuch)
 }
 
 /* monster is hit by scroll of taming's effect */
-static void 
+static void
 maybe_tame (struct monst *mtmp, struct obj *sobj)
 {
         if (sobj->cursed) {
@@ -609,7 +609,7 @@ maybe_tame (struct monst *mtmp, struct obj *sobj)
         }
 }
 
-int 
+int
 seffects (struct obj *sobj)
 {
         int cval;
@@ -881,7 +881,7 @@ seffects (struct obj *sobj)
                                 if (obj->oclass == WEAPON_CLASS) {
                                     /* mergeable weapon test covers ammo,
                                        missiles, spears, daggers & knives */
-                                    if (!objects[obj->otyp].oc_merge) 
+                                    if (!objects[obj->otyp].oc_merge)
                                         wornmask = 0L;
                                 } else if (obj->oclass == GEM_CLASS) {
                                     /* possibly ought to check whether
@@ -1257,7 +1257,7 @@ seffects (struct obj *sobj)
         return(0);
 }
 
-static void 
+static void
 wand_explode (struct obj *obj)
 {
     obj->in_use = TRUE; /* in case losehp() is fatal */
@@ -1271,7 +1271,7 @@ wand_explode (struct obj *obj)
 /*
  * Low-level lit-field update routine.
  */
-static void 
+static void
 set_lit (int x, int y, void *val)
 {
         if (val)
@@ -1361,7 +1361,7 @@ do_it:
         vision_full_recalc = 1; /* delayed vision recalculation */
 }
 
-static void 
+static void
 do_class_genocide (void)
 {
         int i, j, immunecnt, gonecnt, goodcnt, class, feel_dead = 0;
@@ -1517,7 +1517,7 @@ do_class_genocide (void)
 #define REALLY 1
 #define PLAYER 2
 #define ONTHRONE 4
-void 
+void
 do_genocide (int how)
 /* 0 = no genocide; create monsters (cursed scroll) */
 /* 1 = normal genocide */
@@ -1665,7 +1665,7 @@ do_genocide (int how)
         }
 }
 
-void 
+void
 punish (struct obj *sobj)
 {
         /* KMH -- Punishment is still okay when you are riding */
@@ -1695,7 +1695,7 @@ punish (struct obj *sobj)
         }
 }
 
-void 
+void
 unpunish (void)
 {           /* remove the ball and chain */
         struct obj *savechain = uchain;

@@ -181,13 +181,13 @@ uid_t *ruid, *euid, *suid;
     return nh_getresuid(ruid, euid, suid);
 }
 
-int 
+int
 uid_t (int getuid)(void)
 {
     return nh_getuid();
 }
 
-int 
+int
 uid_t (int geteuid)(void)
 {
     return nh_geteuid();
@@ -200,13 +200,13 @@ gid_t *rgid, *egid, *sgid;
     return nh_getresgid(rgid, egid, sgid);
 }
 
-int 
+int
 gid_t (int getgid)(void)
 {
     return nh_getgid();
 }
 
-int 
+int
 gid_t (int getegid)(void)
 {
     return nh_getegid();

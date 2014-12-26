@@ -27,7 +27,7 @@ static const char *breathwep[] = {
 };
 
 /* hero is hit by something other than a monster */
-int 
+int
 thitu (
     int tlev,
     int dam,
@@ -235,7 +235,7 @@ boolean verbose;  /* give message(s) even when you can't see what happened */
         return 0;
 }
 
-void 
+void
 m_throw (
     struct monst *mon,
     int x,
@@ -453,7 +453,7 @@ m_throw (
 
 
 /* Remove an item from the monster's inventory and destroy it. */
-void 
+void
 m_useup (struct monst *mon, struct obj *obj)
 {
         if (obj->quan > 1L) {
@@ -472,7 +472,7 @@ m_useup (struct monst *mon, struct obj *obj)
 
 
 /* monster attempts ranged weapon attack against player */
-void 
+void
 thrwmu (struct monst *mtmp)
 {
         struct obj *otmp, *mwep;
@@ -602,7 +602,7 @@ thrwmu (struct monst *mtmp)
 }
 
 
-int 
+int
 spitmu (                /* monster spits substance at you */
     struct monst *mtmp,
     struct attack *mattk
@@ -643,7 +643,7 @@ spitmu (                /* monster spits substance at you */
 }
 
 
-int 
+int
 breamu (                        /* monster breathes at you (ranged) */
     struct monst *mtmp,
     struct attack *mattk

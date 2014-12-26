@@ -95,7 +95,7 @@ shkname (                               /* called in do_name.c */
         return(ESHK(mtmp)->shknam);
 }
 
-void 
+void
 shkgone (                               /* called in mon.c */
     struct monst *mtmp
 )
@@ -141,7 +141,7 @@ boolean zero_out;
                 (zero_out)? (struct monst *)0 : shkp;
 }
 
-void 
+void
 replshk (struct monst *mtmp, struct monst *mtmp2)
 {
         rooms[ESHK(mtmp2)->shoproom - ROOMOFFSET].resident = mtmp2;
@@ -173,7 +173,7 @@ boolean ghostly;
 
 
 /* Clear the unpaid bit on all of the objects in the list. */
-static void 
+static void
 clear_unpaid (struct obj *list)
 {
     while (list) {
@@ -184,7 +184,7 @@ clear_unpaid (struct obj *list)
 }
 
 /* either you paid or left the shop or the shopkeeper died */
-static void 
+static void
 setpaid (struct monst *shkp)
 {
         struct obj *obj;
@@ -214,7 +214,7 @@ setpaid (struct monst *shkp)
         }
 }
 
-static long 
+static long
 addupbill (struct monst *shkp)
 {
         int ct = ESHK(shkp)->billct;
@@ -281,7 +281,7 @@ boolean nearshop;
 }
 
 /* x,y is strictly inside shop */
-char 
+char
 inside_shop (signed char x, signed char y)
 {
         char rno;
@@ -338,7 +338,7 @@ boolean newlev;
 }
 
 /* robbery from outside the shop via telekinesis or grappling hook */
-void 
+void
 remote_burglary (signed char x, signed char y)
 {
         struct monst *shkp;
@@ -358,7 +358,7 @@ remote_burglary (signed char x, signed char y)
         }
 }
 
-/* shop merchandise has been taken; pay for it with any credit available;  
+/* shop merchandise has been taken; pay for it with any credit available;
    return false if the debt is fully covered by credit, true otherwise */
 static boolean
 rob_shop(shkp)
@@ -392,7 +392,7 @@ struct monst *shkp;
         return TRUE;
 }
 
-void 
+void
 u_entered_shop (char *enterstring)
 {
 
@@ -544,7 +544,7 @@ struct obj *obj1, *obj2;
  * turning the `$' command into a way to discover that the current
  * level is bones data which has a shk on the warpath.
  */
-static long 
+static long
 shop_debt (struct eshk *eshkp)
 {
         struct bill_x *bp;
@@ -557,7 +557,7 @@ shop_debt (struct eshk *eshkp)
 }
 
 /* called in response to the `$' command */
-void 
+void
 shopper_financial_report (void)
 {
         struct monst *shkp, *this_shkp = shop_keeper(inside_shop(u.ux, u.uy));
@@ -593,7 +593,7 @@ shopper_financial_report (void)
 }
 
 
-int 
+int
 inhishop (struct monst *mtmp)
 {
         return(index(in_rooms(mtmp->mx, mtmp->my, SHOPBASE),
@@ -650,7 +650,7 @@ boolean silent;
 }
 
 /* Delete the contents of the given object. */
-void 
+void
 delete_contents (struct obj *obj)
 {
         struct obj *curr;
@@ -662,7 +662,7 @@ delete_contents (struct obj *obj)
 }
 
 /* called with two args on merge */
-void 
+void
 obfree (struct obj *obj, struct obj *merge)
 {
         struct bill_x *bp;
@@ -712,7 +712,7 @@ obfree (struct obj *obj, struct obj *merge)
         dealloc_obj(obj);
 }
 
-static long 
+static long
 check_credit (long tmp, struct monst *shkp)
 {
         long credit = ESHK(shkp)->credit;
@@ -730,7 +730,7 @@ check_credit (long tmp, struct monst *shkp)
         return(tmp);
 }
 
-static void 
+static void
 pay (long tmp, struct monst *shkp)
 {
         long robbed = ESHK(shkp)->robbed;
@@ -775,7 +775,7 @@ angry_shk_exists()
 }
 
 /* remove previously applied surcharge from all billed items */
-static void 
+static void
 pacify_shk (struct monst *shkp)
 {
         NOTANGRY(shkp) = TRUE;  /* make peaceful */
@@ -793,7 +793,7 @@ pacify_shk (struct monst *shkp)
 }
 
 /* add aggravation surcharge to all billed items */
-static void 
+static void
 rile_shk (struct monst *shkp)
 {
         NOTANGRY(shkp) = FALSE; /* make angry */
@@ -870,7 +870,7 @@ boolean silentkops;
         }
 }
 
-void 
+void
 hot_pursuit (struct monst *shkp)
 {
         if(!shkp->isshk) return;
@@ -885,7 +885,7 @@ hot_pursuit (struct monst *shkp)
  * damages something inside the shop.  these conditions
  * must be checked by the calling function.
  */
-void 
+void
 make_angry_shk (struct monst *shkp, signed char ox, signed char oy)
 {
         signed char sx, sy;
@@ -918,7 +918,7 @@ static const char not_enough_money[] =
                             "Besides, you don't have enough to interest %s.";
 
 
-static long 
+static long
 cheapest_item (   /* delivers the cheapest item on the list */
     struct monst *shkp
 )
@@ -935,7 +935,7 @@ cheapest_item (   /* delivers the cheapest item on the list */
         return(gmin);
 }
 
-int 
+int
 dopay (void)
 {
         struct eshk *eshkp;
@@ -1036,7 +1036,7 @@ proceed:
         ltmp = eshkp->robbed;
 
         /* wake sleeping shk when someone who owes money offers payment */
-        if (ltmp || eshkp->billct || eshkp->debit) 
+        if (ltmp || eshkp->billct || eshkp->debit)
             rouse_shk(shkp, TRUE);
 
         if (!shkp->mcanmove || shkp->msleeping) { /* still asleep/paralyzed */
@@ -1091,7 +1091,7 @@ proceed:
                     pline("But since %s shop has been robbed recently,",
                           mhis(shkp));
                     pline("you %scompensate %s for %s losses.",
-                          (u.ugold < ltmp) ? 
+                          (u.ugold < ltmp) ?
                           "partially " : "",
                           mon_nam(shkp), mhis(shkp));
                     pay(u.ugold < ltmp ? u.ugold : ltmp, shkp);
@@ -1122,7 +1122,7 @@ proceed:
                 impossible("dopay: not to shopkeeper?");
                 if(resident) setpaid(resident);
                 return(0);
-        }        
+        }
         /* pay debt, if any, first */
         if(eshkp->debit) {
                 long dtmp = eshkp->debit;
@@ -1409,7 +1409,7 @@ int croaked;
                       !rn2(2) ? (shkp->female ? ", shakes her head," :
                            ", shakes his head,") : "",
                       !inhishop(shkp) ? "disappears" : "sighs");
-            rouse_shk(shkp, FALSE);     /* wake shk for bones */    
+            rouse_shk(shkp, FALSE);     /* wake shk for bones */
             taken = (roomno == eshkp->shoproom);
             goto skip;
         }
@@ -1479,7 +1479,7 @@ clear:
         return(taken);
 }
 
-static void 
+static void
 set_repo_loc (struct eshk *eshkp)
 {
         signed char ox, oy;
@@ -1506,7 +1506,7 @@ set_repo_loc (struct eshk *eshkp)
 }
 
 /* called at game exit, after inventory disclosure but before making bones */
-void 
+void
 finish_paybill (void)
 {
         struct obj *otmp;
@@ -1570,7 +1570,7 @@ find_oid (unsigned id)
 }
 
 /* calculate the value that the shk will charge for [one of] an object */
-static long 
+static long
 get_cost (
     struct obj *obj,
     struct monst *shkp     /* if angry, impose a surcharge */
@@ -1683,7 +1683,7 @@ boolean unpaid_only;
         return(price);
 }
 
-long 
+long
 contained_gold (struct obj *obj)
 {
         struct obj *otmp;
@@ -1719,7 +1719,7 @@ boolean sale;
         }
 }
 
-void 
+void
 picked_container (struct obj *obj)
 {
         struct obj *otmp;
@@ -1737,7 +1737,7 @@ picked_container (struct obj *obj)
 }
 
 /* calculate how much the shk will pay when buying [all of] an object */
-static long 
+static long
 set_cost (struct obj *obj, struct monst *shkp)
 {
         long tmp = getprice(obj, TRUE) * obj->quan;
@@ -1768,7 +1768,7 @@ set_cost (struct obj *obj, struct monst *shkp)
 
 
 /* called from doinv(invent.c) for inventory of unpaid objects */
-long 
+long
 unpaid_cost (
     struct obj *unp_obj    /* known to be unpaid */
 )
@@ -1829,7 +1829,7 @@ boolean dummy;
         obj->unpaid = 1;
 }
 
-static void 
+static void
 add_to_billobjs (struct obj *obj)
 {
     if (obj->where != OBJ_FREE)
@@ -1864,7 +1864,7 @@ struct monst *shkp;
 }
 
 /* shopkeeper tells you what you bought or sold, sometimes partly IDing it */
-static void 
+static void
 shk_names_obj (
     struct monst *shkp,
     struct obj *obj,
@@ -2008,7 +2008,7 @@ speak:
         }
 }
 
-void 
+void
 splitbill (struct obj *obj, struct obj *otmp)
 {
         /* otmp has been split off from obj */
@@ -2045,7 +2045,7 @@ splitbill (struct obj *obj, struct obj *otmp)
         }
 }
 
-static void 
+static void
 sub_one_frombill (struct obj *obj, struct monst *shkp)
 {
         struct bill_x *bp;
@@ -2078,7 +2078,7 @@ sub_one_frombill (struct obj *obj, struct monst *shkp)
 }
 
 /* recursive check of unpaid objects within nested containers. */
-void 
+void
 subfrombill (struct obj *obj, struct monst *shkp)
 {
         struct obj *otmp;
@@ -2172,7 +2172,7 @@ boolean peaceful, silent;
              * shopkeeper is angry are included in robbed, not debit */
             if (ANGRY(shkp))
                 ESHK(shkp)->robbed += value;
-            else 
+            else
                 ESHK(shkp)->debit += value;
 
             if(!silent) {
@@ -2219,7 +2219,7 @@ static int sell_how = SELL_NORMAL;
    shouldn't carry over from ordinary selling to credit selling */
 static boolean auto_credit = FALSE;
 
-void 
+void
 sellobj_state (int deliberate)
 {
         /* If we're deliberately dropping something, there's no automatic
@@ -2233,7 +2233,7 @@ sellobj_state (int deliberate)
         auto_credit = FALSE;
 }
 
-void 
+void
 sellobj (struct obj *obj, signed char x, signed char y)
 {
         struct monst *shkp;
@@ -2356,7 +2356,7 @@ move_on:
                 obj->no_charge = 1;
                 return;
         }
-        
+
         if(!shkp->mgold) {
                 char c, qbuf[BUFSZ];
                 long tmpcr = ((offer * 9L) / 10L) + (offer <= 1L);
@@ -2439,7 +2439,7 @@ move_on:
         }
 }
 
-int 
+int
 doinvbill (
     int mode               /* 0: deliver count 1: paged */
 )
@@ -2598,7 +2598,7 @@ shkcatch (struct obj *obj, signed char x, signed char y)
         return (struct monst *)0;
 }
 
-void 
+void
 add_damage (signed char x, signed char y, long cost)
 {
         struct damage *tmp_dam;
@@ -2867,7 +2867,7 @@ boolean catchup;        /* restoring a level */
 /*
  * shk_move: return 1: moved  0: didn't  -1: let m_move do it  -2: died
  */
-int 
+int
 shk_move (struct monst *shkp)
 {
         signed char gx,gy,omx,omy;
@@ -2975,7 +2975,7 @@ shk_move (struct monst *shkp)
 }
 
 /* called after shopkeeper moves, in case the move causes re-entry into shop */
-void 
+void
 after_shk_move (struct monst *shkp)
 {
         struct eshk *eshkp = ESHK(shkp);
@@ -2997,7 +2997,7 @@ struct monst *mtmp;
 }
 
 /* You are digging in the shop. */
-void 
+void
 shopdig (int fall)
 {
     struct monst *shkp = shop_keeper(*u.ushops);
@@ -3279,7 +3279,7 @@ shop_object (signed char x, signed char y)
 }
 
 /* give price quotes for all objects linked to this one (ie, on this spot) */
-void 
+void
 price_quote (struct obj *first_obj)
 {
     struct obj *otmp;
@@ -3366,7 +3366,7 @@ const char *Izchak_speaks[]={
     "%s comments about the Valley of the Dead as being a gateway."
 };
 
-void 
+void
 shk_chat (struct monst *shkp)
 {
         struct eshk *eshk;
@@ -3532,13 +3532,13 @@ boolean altusage;
 }
 
 /* for using charges of unpaid objects "used in the normal manner" */
-void 
+void
 check_unpaid (struct obj *otmp)
 {
         check_unpaid_usage(otmp, FALSE);                /* normal item use */
 }
 
-void 
+void
 costly_gold (signed char x, signed char y, long amount)
 {
         long delta;

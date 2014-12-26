@@ -40,7 +40,7 @@ static const char *rank(void);
 
 
 /* convert experience level (1..30) to rank index (0..8) */
-int 
+int
 xlev_to_rank (int xlev)
 {
         return (xlev <= 2) ? 0 : (xlev <= 30) ? ((xlev + 2) / 4) : 8;
@@ -83,7 +83,7 @@ rank (void)
         return(rank_of(u.ulevel, Role_switch, flags.female));
 }
 
-int 
+int
 title_to_mon (const char *str, int *rank_indx, int *title_length)
 {
         int i, j;
@@ -110,7 +110,7 @@ title_to_mon (const char *str, int *rank_indx, int *title_length)
 }
 
 
-void 
+void
 max_rank_sz (void)
 {
         int i, r, maxr = 0;
@@ -168,7 +168,7 @@ void bot1str(char *newbot1)
         Sprintf(nb = eos(nb), (u.ualign.type == A_CHAOTIC) ? "  Chaotic" :
                         (u.ualign.type == A_NEUTRAL) ? "  Neutral" : "  Lawful");
 }
-static void 
+static void
 bot1 (void)
 {
         char newbot1[MAXCO];
@@ -179,7 +179,7 @@ bot1 (void)
 }
 
 /* provide the name of the current level for display by various ports */
-int 
+int
 describe_level (char *buf)
 {
         int ret = 1;
@@ -230,7 +230,7 @@ char* newbot2;
             hpcolor = CLR_GREEN;
           } else if(hp <= (hpmax/3)) {
             hpcolor = CLR_RED;
-            if(hp<=(hpmax/10)) 
+            if(hp<=(hpmax/10))
               hpattr = ATR_BLINK;
           } else {
             hpcolor = CLR_YELLOW;
@@ -273,7 +273,7 @@ char* newbot2;
         if(cap > UNENCUMBERED)
                 Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
 }
-static void 
+static void
 bot2 (void)
 {
         char newbot2[MAXCO];
@@ -282,7 +282,7 @@ bot2 (void)
         putstr(WIN_STATUS, 0, newbot2);
 }
 
-void 
+void
 bot (void)
 {
         bot1();

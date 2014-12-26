@@ -196,7 +196,7 @@ void tty_shutdown(void) {
         return;
 }
 
-void 
+void
 tty_number_pad (int state)
 {
         switch (state) {
@@ -359,7 +359,7 @@ void cl_end(void) {
 }
 
 
-void 
+void
 clear_screen (void)
 {
         /* note: if CL is null, then termcap initialization failed,
@@ -372,7 +372,7 @@ clear_screen (void)
 }
 
 
-void 
+void
 home (void)
 {
         if(HO)
@@ -384,26 +384,26 @@ home (void)
         ttyDisplay->curx = ttyDisplay->cury = 0;
 }
 
-void 
+void
 standoutbeg (void)
 {
         if(SO) xputs(SO);
 }
 
-void 
+void
 standoutend (void)
 {
         if(SE) xputs(SE);
 }
 
 
-void 
+void
 backsp (void)
 {
         xputs(BC);
 }
 
-void 
+void
 tty_nhbell (void)
 {
         if (flags.silent) return;
@@ -503,7 +503,7 @@ const int ti_map[8] = {
         COLOR_BLACK, COLOR_RED, COLOR_GREEN, COLOR_YELLOW,
         COLOR_BLUE, COLOR_MAGENTA, COLOR_CYAN, COLOR_WHITE };
 
-static void 
+static void
 init_hilite (void)
 {
         int c;
@@ -580,7 +580,7 @@ e_atr2str (int n)
 }
 
 
-void 
+void
 term_start_attr (int attr)
 {
         if (attr) {
@@ -589,7 +589,7 @@ term_start_attr (int attr)
 }
 
 
-void 
+void
 term_end_attr (int attr)
 {
         if(attr) {
@@ -598,14 +598,14 @@ term_end_attr (int attr)
 }
 
 
-void 
+void
 term_start_raw_bold (void)
 {
         xputs(nh_HI);
 }
 
 
-void 
+void
 term_end_raw_bold (void)
 {
         xputs(nh_HE);

@@ -8,7 +8,7 @@ static int utcnt, utpnt;
 static coord utrack[UTSZ];
 
 
-void 
+void
 initrack (void)
 {
         utcnt = utpnt = 0;
@@ -16,7 +16,7 @@ initrack (void)
 
 
 /* add to track */
-void 
+void
 settrack (void)
 {
         if(utcnt < UTSZ) utcnt++;

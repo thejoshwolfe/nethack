@@ -52,7 +52,7 @@ static boolean zap_oseen;
  * the item.  Returns 0 if nothing happened, 2 if the monster can't do anything
  * (i.e. it teleported) and 1 if it's dead.
  */
-static int 
+static int
 precheck (struct monst *mon, struct obj *obj)
 {
         boolean vis;
@@ -160,7 +160,7 @@ boolean self;
         }
 }
 
-static void 
+static void
 mreadmsg (struct monst *mtmp, struct obj *otmp)
 {
         boolean vismon = canseemon(mtmp);
@@ -197,7 +197,7 @@ mreadmsg (struct monst *mtmp, struct obj *otmp)
                   vismon ? mon_nam(mtmp) : mhe(mtmp));
 }
 
-static void 
+static void
 mquaffmsg (struct monst *mtmp, struct obj *otmp)
 {
         if (canseemon(mtmp)) {
@@ -515,7 +515,7 @@ botm:   return((boolean)(!!m.has_defense));
  * after find_defensive().  Return values are 0: did something, 1: died,
  * 2: did something and can't attack again (i.e. teleported).
  */
-int 
+int
 use_defensive (struct monst *mtmp)
 {
         int i, fleetim, how = 0;
@@ -886,7 +886,7 @@ mon_tele:
 #undef m_flee
 }
 
-int 
+int
 rnd_defensive_item (struct monst *mtmp)
 {
         struct permonst *pm = mtmp->data;
@@ -1064,7 +1064,7 @@ struct monst *mtmp;
 #undef nomore
 }
 
-static int 
+static int
 mbhitm (struct monst *mtmp, struct obj *otmp)
 {
         int tmp;
@@ -1139,7 +1139,7 @@ mbhitm (struct monst *mtmp, struct obj *otmp)
  * zapping you, so we need a special function for it.  (Unless someone wants
  * to merge the two functions...)
  */
-static void 
+static void
 mbhit (
     struct monst *mon,                      /* monster shooting the wand */
     int range,                      /* direction and range */
@@ -1231,7 +1231,7 @@ mbhit (
 /* Perform an offensive action for a monster.  Must be called immediately
  * after find_offensive().  Return values are same as use_defensive().
  */
-int 
+int
 use_offensive (struct monst *mtmp)
 {
         int i;
@@ -1438,7 +1438,7 @@ use_offensive (struct monst *mtmp)
         return 0;
 }
 
-int 
+int
 rnd_offensive_item (struct monst *mtmp)
 {
         struct permonst *pm = mtmp->data;
@@ -1610,7 +1610,7 @@ muse_newcham_mon (struct monst *mon)
         return rndmonst();
 }
 
-int 
+int
 use_misc (struct monst *mtmp)
 {
         int i;
@@ -1799,7 +1799,7 @@ skipmsg:
         return 0;
 }
 
-static void 
+static void
 you_aggravate (struct monst *mtmp)
 {
         pline("For some reason, %s presence is known to you.",
@@ -1820,7 +1820,7 @@ you_aggravate (struct monst *mtmp)
             map_invisible(mtmp->mx, mtmp->my);
 }
 
-int 
+int
 rnd_misc_item (struct monst *mtmp)
 {
         struct permonst *pm = mtmp->data;

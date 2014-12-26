@@ -91,7 +91,7 @@ static int isqrt(int);
 static const char explodes[] = "radiates explosive energy";
 
 /* convert a letter into a number in the range 0..51, or -1 if not a letter */
-static int 
+static int
 spell_let_to_idx (char ilet)
 {
     int indx;
@@ -199,7 +199,7 @@ struct obj *spellbook;
 }
 
 /* special effects for The Book of the Dead */
-static void 
+static void
 deadbook (struct obj *book2)
 {
     struct monst *mtmp, *mtmp2;
@@ -310,7 +310,7 @@ raise_dead:
     return;
 }
 
-static int 
+static int
 learn (void)
 {
         int i;
@@ -384,7 +384,7 @@ learn (void)
         return(0);
 }
 
-int 
+int
 study_book (struct obj *spellbook)
 {
         int      booktype = spellbook->otyp;
@@ -493,7 +493,7 @@ study_book (struct obj *spellbook)
 
 /* a spellbook has been destroyed or the character has changed levels;
    the stored address for the current book is no longer valid */
-void 
+void
 book_disappears (struct obj *obj)
 {
         if (obj == book) book = (struct obj *)0;
@@ -502,14 +502,14 @@ book_disappears (struct obj *obj)
 /* renaming an object usually results in it having a different address;
    so the sequence start reading, get interrupted, name the book, resume
    reading would read the "new" book from scratch */
-void 
+void
 book_substitution (struct obj *old_obj, struct obj *new_obj)
 {
         if (old_obj == book) book = new_obj;
 }
 
 /* called from moveloop() */
-void 
+void
 age_spells (void)
 {
         int i;
@@ -572,7 +572,7 @@ getspell(spell_no)
 }
 
 /* the 'Z' command -- cast a spell */
-int 
+int
 docast (void)
 {
         int spell_no;
@@ -606,13 +606,13 @@ spelltypemnemonic (int skill)
         }
 }
 
-int 
+int
 spell_skilltype (int booktype)
 {
         return (objects[booktype].oc_skill);
 }
 
-static void 
+static void
 cast_protection (void)
 {
         int loglev = 0;
@@ -674,7 +674,7 @@ cast_protection (void)
 }
 
 /* attempting to cast a forgotten spell will cause disorientation */
-static void 
+static void
 spell_backfire (int spell)
 {
     long duration = (long)((spellev(spell) + 1) * 3);    /* 6..24 */
@@ -956,7 +956,7 @@ boolean atme;
 }
 
 /* Choose location where spell takes effect. */
-static int 
+static int
 throwspell (void)
 {
         coord cc;
@@ -992,7 +992,7 @@ throwspell (void)
         }
 }
 
-void 
+void
 losespells (void)
 {
         boolean confused = (Confusion != 0);
@@ -1012,7 +1012,7 @@ losespells (void)
 }
 
 /* the '+' command -- view known spells */
-int 
+int
 dovspell (void)
 {
         char qbuf[QBUFSZ];
@@ -1106,7 +1106,7 @@ int *spell_no;
         return FALSE;
 }
 
-void 
+void
 dump_spells (void)
 {
         int i;
@@ -1134,7 +1134,7 @@ dump_spells (void)
 } /* dump_spells */
 
 /* Integer square root function without using floating point. */
-static int 
+static int
 isqrt (int val)
 {
     int rt = 0;
@@ -1147,7 +1147,7 @@ isqrt (int val)
     return rt;
 }
 
-static int 
+static int
 percent_success (int spell)
 {
         /* Intrinsic and learned ability are combined to calculate
@@ -1255,7 +1255,7 @@ percent_success (int spell)
 
 
 /* Learn a spell during creation of the initial inventory */
-void 
+void
 initialspell (struct obj *obj)
 {
         int i;

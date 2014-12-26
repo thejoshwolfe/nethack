@@ -70,7 +70,7 @@ wrong_elem_type(ptr)
     return FALSE;
 }
 
-static void 
+static void
 m_initgrp (     /* make a group just like mtmp */
     struct monst *mtmp,
     int x,
@@ -135,7 +135,7 @@ m_initgrp (     /* make a group just like mtmp */
         }
 }
 
-static void 
+static void
 m_initthrow (struct monst *mtmp, int otyp, int oquan)
 {
         struct obj *otmp;
@@ -148,7 +148,7 @@ m_initthrow (struct monst *mtmp, int otyp, int oquan)
 }
 
 
-static void 
+static void
 m_initweap (struct monst *mtmp)
 {
         struct permonst *ptr = mtmp->data;
@@ -448,7 +448,7 @@ m_initweap (struct monst *mtmp)
 }
 
 
-static void 
+static void
 m_initinv (struct monst *mtmp)
 {
         int cnt;
@@ -804,7 +804,7 @@ makemon (struct permonst *ptr, int x, int y, int mmflags)
                                 y = bypos.y;
                         } else
                                 return((struct monst *) 0);
-                } else 
+                } else
                         return((struct monst *) 0);
         }
 
@@ -1020,11 +1020,11 @@ makemon (struct permonst *ptr, int x, int y, int mmflags)
         return(mtmp);
 }
 
-int 
+int
 mbirth_limit (int mndx)
 {
         /* assert(MAXMONNO < 255); */
-        return (mndx == PM_NAZGUL ? 9 : mndx == PM_ERINYS ? 3 : MAXMONNO); 
+        return (mndx == PM_NAZGUL ? 9 : mndx == PM_ERINYS ? 3 : MAXMONNO);
 }
 
 /* used for wand/scroll/spell of create monster */
@@ -1082,7 +1082,7 @@ int mndx;
  *      comparing the dungeon alignment and monster alignment.
  *      return an integer in the range of 0-5.
  */
-static int 
+static int
 align_shift (struct permonst *ptr)
 {
     static long oldmoves = 0L;  /* != 1, starting value of moves */
@@ -1131,7 +1131,7 @@ rndmonst (void)
             for (mndx = LOW_PM; mndx < SPECIAL_PM; mndx++) {
                 if (!uncommon(mndx)) break;
                 rndmonst_state.mchoices[mndx] = 0;
-            }           
+            }
             if (mndx == SPECIAL_PM) {
                 /* evidently they've all been exterminated */
                 return (struct permonst *)0;
@@ -1188,7 +1188,7 @@ rndmonst (void)
 
 /* called when you change level (experience or dungeon depth) or when
    monster species can no longer be created (genocide or extinction) */
-void 
+void
 reset_rndmonst (
     int mndx    /* particular species that can no longer be created */
 )
@@ -1259,7 +1259,7 @@ mkclass (char class, int spc)
         return(&mons[first]);
 }
 
-int 
+int
 adj_lev (       /* adjust strength of monsters based on u.uz and u.ulevel */
     struct permonst *ptr
 )
@@ -1381,7 +1381,7 @@ grow_up (       /* `mtmp' might "grow up" into a bigger version */
 }
 
 
-int 
+int
 mongets (struct monst *mtmp, int otyp)
 {
         struct obj *otmp;
@@ -1429,7 +1429,7 @@ mongets (struct monst *mtmp, int otyp)
 }
 
 
-int 
+int
 golemhp (int type)
 {
         switch(type) {
@@ -1496,7 +1496,7 @@ struct permonst *ptr;
  *      peaceful monsters
  *   it's never bad to kill a hostile monster, although it may not be good
  */
-void 
+void
 set_malign (struct monst *mtmp)
 {
         signed char mal = mtmp->data->maligntyp;
@@ -1552,7 +1552,7 @@ static char syms[] = {
         S_MIMIC_DEF, S_MIMIC_DEF, S_MIMIC_DEF,
 };
 
-void 
+void
 set_mimic_sym (         /* KAA, modified by ERS */
     struct monst *mtmp
 )
@@ -1663,7 +1663,7 @@ assign_sym:
 }
 
 /* release a monster from a bag of tricks */
-void 
+void
 bagotricks (struct obj *bag)
 {
     if (!bag || bag->otyp != BAG_OF_TRICKS) {

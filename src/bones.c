@@ -38,7 +38,7 @@ d_level *lev;
  * ID is positive instead of negative).  This way, when we later save the
  * chain of fruit types, we know to only save the types that exist.
  */
-static void 
+static void
 goodfruit (int id)
 {
         struct fruit *f;
@@ -114,7 +114,7 @@ boolean restore;
         }
 }
 
-static void 
+static void
 drop_upon_death (struct monst *mtmp, struct obj *cont)
 {
         struct obj *otmp;
@@ -181,7 +181,7 @@ can_make_bones()
 }
 
 /* save bones and possessions of a deceased adventurer */
-void 
+void
 savebones (struct obj *corpse)
 {
         int fd, x, y;
@@ -257,7 +257,7 @@ savebones (struct obj *corpse)
                 if (!mtmp) return;
                 mtmp = christen_monst(mtmp, plname);
                 if (corpse)
-                        (void) obj_attach_mid(corpse, mtmp->m_id); 
+                        (void) obj_attach_mid(corpse, mtmp->m_id);
         } else {
                 /* give your possessions to the monster you become */
                 in_mklev = TRUE;

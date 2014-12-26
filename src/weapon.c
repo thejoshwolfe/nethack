@@ -72,7 +72,7 @@ static const char * const barehands_or_martial[] = {
     "bare handed combat", "martial arts"
 };
 
-static void 
+static void
 give_may_advance_msg (int skill)
 {
         You_feel("more confident in your %sskills.",
@@ -110,7 +110,7 @@ static const char kebabable[] = {
  *      hitval returns an integer representing the "to hit" bonuses
  *      of "otmp" against the monster.
  */
-int 
+int
 hitval (struct obj *otmp, struct monst *mon)
 {
         int     tmp = 0;
@@ -175,7 +175,7 @@ hitval (struct obj *otmp, struct monst *mon)
  *      dmgval returns an integer representing the damage bonuses
  *      of "otmp" against the monster.
  */
-int 
+int
 dmgval (struct obj *otmp, struct monst *mon)
 {
         int tmp = 0, otyp = otmp->otyp;
@@ -549,7 +549,7 @@ boolean polyspot;
 /* Let a monster try to wield a weapon, based on mon->weapon_check.
  * Returns 1 if the monster took time to do it, 0 if it did not.
  */
-int 
+int
 mon_wield_item (struct monst *mon)
 {
         struct obj *obj;
@@ -646,7 +646,7 @@ mon_wield_item (struct monst *mon)
                     begin_burn(obj, FALSE);
                     if (canseemon(mon))
                         pline("%s brilliantly in %s %s!",
-                            Tobjnam(obj, "glow"), 
+                            Tobjnam(obj, "glow"),
                             s_suffix(mon_nam(mon)), mbodypart(mon,HAND));
                 }
                 obj->owornmask = W_WEP;
@@ -656,7 +656,7 @@ mon_wield_item (struct monst *mon)
         return 0;
 }
 
-int 
+int
 abon (void)             /* attack bonus for strength & dexterity */
 {
         int sbon;
@@ -681,7 +681,7 @@ abon (void)             /* attack bonus for strength & dexterity */
 }
 
 
-int 
+int
 dbon (void)             /* damage bonus for strength */
 {
         int str = ACURR(A_STR);
@@ -720,7 +720,7 @@ skill_level_name (int skill, char *buf)
 }
 
 /* return the # of slots required to advance the skill */
-static int 
+static int
 slots_required (int skill)
 {
     int tmp = P_SKILL(skill);
@@ -785,7 +785,7 @@ int skill;
                 (unsigned) practice_needed_to_advance(P_SKILL(skill))));
 }
 
-static void 
+static void
 skill_advance (int skill)
 {
     u.weapon_slots -= slots_required(skill);
@@ -814,13 +814,13 @@ const static struct skill_range {
  * to be able to update the menu since selecting one item could make
  * others unselectable.
  */
-int 
+int
 enhance_weapon_skill (void)
 {
         return enhance_skill(FALSE);
 }
 
-void 
+void
 dump_weapon_skill (void)
 {
         enhance_skill(TRUE);
@@ -1005,7 +1005,7 @@ int enhance_skill(boolean want_dump)
  * Change from restricted to unrestricted, allowing P_BASIC as max.  This
  * function may be called with with P_NONE.  Used in pray.c.
  */
-void 
+void
 unrestrict_weapon_skill (int skill)
 {
     if (skill < P_NUM_SKILLS && P_RESTRICTED(skill)) {
@@ -1016,7 +1016,7 @@ unrestrict_weapon_skill (int skill)
 }
 
 
-void 
+void
 use_skill (int skill, int degree)
 {
     boolean advance_before;
@@ -1029,7 +1029,7 @@ use_skill (int skill, int degree)
     }
 }
 
-void 
+void
 add_weapon_skill (
     int n       /* number of slots to gain; normally one */
 )
@@ -1045,7 +1045,7 @@ add_weapon_skill (
         give_may_advance_msg(P_NONE);
 }
 
-void 
+void
 lose_weapon_skill (
     int n       /* number of slots to lose; normally one */
 )
@@ -1070,7 +1070,7 @@ lose_weapon_skill (
     }
 }
 
-int 
+int
 weapon_type (struct obj *obj)
 {
         /* KMH -- now uses the object table */
@@ -1087,7 +1087,7 @@ weapon_type (struct obj *obj)
         return ((type < 0) ? -type : type);
 }
 
-int 
+int
 uwep_skill_type (void)
 {
         if (u.twoweap)
@@ -1099,7 +1099,7 @@ uwep_skill_type (void)
  * Return hit bonus/penalty based on skill of weapon.
  * Treat restricted weapons as unskilled.
  */
-int 
+int
 weapon_hit_bonus (struct obj *weapon)
 {
     int type, wep_type, skill, bonus = 0;
@@ -1165,7 +1165,7 @@ weapon_hit_bonus (struct obj *weapon)
  * Return damage bonus/penalty based on skill of weapon.
  * Treat restricted weapons as unskilled.
  */
-int 
+int
 weapon_dam_bonus (struct obj *weapon)
 {
     int type, wep_type, skill, bonus = 0;
@@ -1232,7 +1232,7 @@ weapon_dam_bonus (struct obj *weapon)
  * hero is holding, finally reading the given array that sets
  * maximums.
  */
-void 
+void
 skill_init (const struct def_skill *class_skill)
 {
         struct obj *obj;
@@ -1295,7 +1295,7 @@ skill_init (const struct def_skill *class_skill)
         }
 }
 
-void 
+void
 setmnotwielded (struct monst *mon, struct obj *obj)
 {
     if (!obj) return;

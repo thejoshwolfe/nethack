@@ -42,7 +42,7 @@ static int lastinvnr = 51;      /* 0 ... 51 (never saved&restored) */
 static char venom_inv[] = { VENOM_CLASS, 0 };   /* (constant) */
 #endif
 
-void 
+void
 assigninvlet (struct obj *otmp)
 {
         boolean inuse[52];
@@ -74,7 +74,7 @@ assigninvlet (struct obj *otmp)
 #define inv_rank(o) ((o)->invlet ^ 040)
 
 /* sort the inventory; used by addinv() and doorganize() */
-static void 
+static void
 reorder_invent (void)
 {
         struct obj *otmp, *prev, *next;
@@ -141,7 +141,7 @@ merge_choice (struct obj *objlist, struct obj *obj)
 }
 
 /* merge obj with otmp and delete obj if types agree */
-int 
+int
 merged (struct obj **potmp, struct obj **pobj)
 {
         struct obj *otmp = *potmp, *obj = *pobj;
@@ -212,7 +212,7 @@ in-place.
 
 It may be valid to merge this code with with addinv_core2().
 */
-void 
+void
 addinv_core1 (struct obj *obj)
 {
         if (obj->oclass == COIN_CLASS) {
@@ -249,7 +249,7 @@ This is called when adding objects to the hero's inventory normally (via
 addinv) or when an object in the hero's inventory has been polymorphed
 in-place.
 */
-void 
+void
 addinv_core2 (struct obj *obj)
 {
         if (confers_luck(obj)) {
@@ -308,7 +308,7 @@ added:
  * has been added to the hero's or monster's inventory,
  * and after hero's intrinsics have been updated.
  */
-void 
+void
 carry_obj_effects (struct obj *obj)
 {
         /* Cursed figurines can spontaneously transform
@@ -397,7 +397,7 @@ hold_another_object (struct obj *obj, const char *drop_fmt, const char *drop_arg
 }
 
 /* useup() all of an item regardless of its quantity */
-void 
+void
 useupall (struct obj *obj)
 {
         setnotworn(obj);
@@ -405,7 +405,7 @@ useupall (struct obj *obj)
         obfree(obj, (struct obj *)0);   /* deletes contents also */
 }
 
-void 
+void
 useup (struct obj *obj)
 {
         /*  Note:  This works correctly for containers because they */
@@ -439,7 +439,7 @@ where we are polymorphing an object already in the hero's inventory.
 
 Should think of a better name...
 */
-void 
+void
 freeinv_core (struct obj *obj)
 {
         if (obj->oclass == COIN_CLASS) {
@@ -479,7 +479,7 @@ freeinv_core (struct obj *obj)
 }
 
 /* remove an object from the hero's inventory */
-void 
+void
 freeinv (struct obj *obj)
 {
         extract_nobj(obj, &invent);
@@ -487,7 +487,7 @@ freeinv (struct obj *obj)
         update_inventory();
 }
 
-void 
+void
 delallobj (int x, int y)
 {
         struct obj *otmp, *otmp2;
@@ -505,7 +505,7 @@ delallobj (int x, int y)
 
 
 /* destroy object in fobj chain (if unpaid, it remains on the bill) */
-void 
+void
 delobj (struct obj *obj)
 {
         boolean update_map;
@@ -621,7 +621,7 @@ mkgoldobj (long q)
         return(otmp);
 }
 
-static void 
+static void
 compactify (char *buf)
 /* compact a string of inventory letters by dashing runs of letters */
 {
@@ -876,7 +876,7 @@ getobj (const char *let, const char *word)
                         } else if (!allowgold) {
                                 You("are not carrying any gold.");
                                 return(struct obj *)0;
-                        } 
+                        }
                         if(cnt == 0 && prezero) return((struct obj *)0);
                         /* Historic note: early Nethack had a bug which was
                          * first reported for Larn, where trying to drop 2^32-n
@@ -961,7 +961,7 @@ getobj (const char *let, const char *word)
         return(otmp);
 }
 
-void 
+void
 silly_thing (const char *word, struct obj *otmp)
 {
         const char *s1, *s2, *s3, *what;
@@ -996,14 +996,14 @@ silly_thing (const char *word, struct obj *otmp)
 }
 
 
-static int 
+static int
 ckvalidcat (struct obj *otmp)
 {
         /* use allow_category() from pickup.c */
         return((int)allow_category(otmp));
 }
 
-static int 
+static int
 ckunpaid (struct obj *otmp)
 {
         return((int)(otmp->unpaid));
@@ -1181,15 +1181,15 @@ unsigned *resultflags;
         else if (allowgold == 2 && !oletct)
             return 1;   /* you dropped gold (or at least tried to) */
         else {
-            int cnt = askchain(&invent, olets, allflag, fn, ckfn, mx, word); 
+            int cnt = askchain(&invent, olets, allflag, fn, ckfn, mx, word);
             /*
              * askchain() has already finished the job in this case
              * so set a special flag to convey that back to the caller
              * so that it won't continue processing.
-             * Fix for bug C331-1 reported by Irina Rempt-Drijfhout. 
+             * Fix for bug C331-1 reported by Irina Rempt-Drijfhout.
              */
             if (combo && allflag && resultflags)
-                *resultflags |= ALL_FINISHED; 
+                *resultflags |= ALL_FINISHED;
             return cnt;
         }
 }
@@ -1201,7 +1201,7 @@ unsigned *resultflags;
  * If allflag then no questions are asked. Max gives the max nr of
  * objects to be treated. Return the number of objects treated.
  */
-int 
+int
 askchain (
     struct obj **objchn,
     const char *olets,
@@ -1303,7 +1303,7 @@ ret:
  */
 
 /* make an object actually be identified; no display updating */
-void 
+void
 fully_identify_obj (struct obj *otmp)
 {
     makeknown(otmp->otyp);
@@ -1314,7 +1314,7 @@ fully_identify_obj (struct obj *otmp)
 }
 
 /* ggetobj callback routine; identify an object and give immediate feedback */
-int 
+int
 identify (struct obj *otmp)
 {
     fully_identify_obj(otmp);
@@ -1323,7 +1323,7 @@ identify (struct obj *otmp)
 }
 
 /* menu of unidentified objects; select and identify up to id_limit of them */
-static void 
+static void
 menu_identify (int id_limit)
 {
     menu_item *pick_list;
@@ -1352,7 +1352,7 @@ menu_identify (int id_limit)
 }
 
 /* dialog with user to identify a given number of items; 0 means all */
-void 
+void
 identify_pack (int id_limit)
 {
     struct obj *obj, *the_obj;
@@ -1391,7 +1391,7 @@ identify_pack (int id_limit)
 }
 
 
-static char 
+static char
 obj_to_let ( /* should of course only be called for things in invent */
     struct obj *obj
 )
@@ -1409,7 +1409,7 @@ obj_to_let ( /* should of course only be called for things in invent */
  * Print the indicated quantity of the given object.  If quan == 0L then use
  * the current quantity.
  */
-void 
+void
 prinv (const char *prefix, struct obj *obj, long quan)
 {
         if (!prefix) prefix = "";
@@ -1463,7 +1463,7 @@ long quan;              /* if non-0, print this quantity, not obj->quan */
 
 
 /* the 'i' command */
-int 
+int
 ddoinv (void)
 {
         (void) display_inventory((char *)0, FALSE);
@@ -1688,7 +1688,7 @@ boolean want_reply;
  * Returns the number of unpaid items within the given list.  This includes
  * contained objects.
  */
-int 
+int
 count_unpaid (struct obj *list)
 {
     int count = 0;
@@ -1703,10 +1703,10 @@ count_unpaid (struct obj *list)
 }
 
 /*
- * Returns the number of items with b/u/c/unknown within the given list.  
+ * Returns the number of items with b/u/c/unknown within the given list.
  * This does NOT include contained objects.
  */
-int 
+int
 count_buc (struct obj *list, int type)
 {
     int count = 0;
@@ -1740,7 +1740,7 @@ count_buc (struct obj *list, int type)
     return count;
 }
 
-static void 
+static void
 dounpaid (void)
 {
     winid win;
@@ -1839,7 +1839,7 @@ this_type_only(obj)
 }
 
 /* the 'I' command */
-int 
+int
 dotypeinv (void)
 {
         char c = '\0';
@@ -2121,7 +2121,7 @@ boolean picked_some;
 }
 
 /* explicilty look at what is here, including all objects */
-int 
+int
 dolook (void)
 {
         return look_here(0, FALSE);
@@ -2158,7 +2158,7 @@ boolean force_touch;
 }
 
 
-void 
+void
 stackobj (struct obj *obj)
 {
         struct obj *otmp;
@@ -2239,7 +2239,7 @@ mergable(otmp, obj)     /* returns TRUE if obj  & otmp can be merged */
         } else return(FALSE);
 }
 
-int 
+int
 doprgold (void)
 {
         /* the messages used to refer to "carrying gold", but that didn't
@@ -2253,7 +2253,7 @@ doprgold (void)
 }
 
 
-int 
+int
 doprwep (void)
 {
     if (!uwep) {
@@ -2265,7 +2265,7 @@ doprwep (void)
     return 0;
 }
 
-int 
+int
 doprarm (void)
 {
         if(!wearing_armor())
@@ -2287,7 +2287,7 @@ doprarm (void)
         return 0;
 }
 
-int 
+int
 doprring (void)
 {
         if(!uleft && !uright)
@@ -2304,7 +2304,7 @@ doprring (void)
         return 0;
 }
 
-int 
+int
 dopramulet (void)
 {
         if (!uamul)
@@ -2326,7 +2326,7 @@ struct obj *obj;
                                 (obj->otyp == LEASH && obj->leashmon));
 }
 
-int 
+int
 doprtool (void)
 {
         struct obj *otmp;
@@ -2344,7 +2344,7 @@ doprtool (void)
 
 /* '*' command; combines the ')' + '[' + '=' + '"' + '(' commands;
    show inventory of all currently wielded, worn, or used objects */
-int 
+int
 doprinuse (void)
 {
         struct obj *otmp;
@@ -2363,7 +2363,7 @@ doprinuse (void)
 /*
  * uses up an object that's on the floor, charging for it as necessary
  */
-void 
+void
 useupf (struct obj *obj, long numused)
 {
         struct obj *otmp;
@@ -2441,7 +2441,7 @@ boolean unpaid;
         return invbuf;
 }
 
-void 
+void
 free_invbuf (void)
 {
         if (invbuf) free((void *)invbuf),  invbuf = (char *)0;
@@ -2449,7 +2449,7 @@ free_invbuf (void)
 }
 
 
-void 
+void
 reassign (void)
 {
         int i;
@@ -2461,7 +2461,7 @@ reassign (void)
 }
 
 
-int 
+int
 doorganize (void)    /* inventory organizer by Del Lamb */
 {
         struct obj *obj, *otmp;
@@ -2548,7 +2548,7 @@ doorganize (void)    /* inventory organizer by Del Lamb */
 }
 
 /* common to display_minventory and display_cinventory */
-static void 
+static void
 invdisp_nothing (const char *hdr, const char *txt)
 {
         winid win;

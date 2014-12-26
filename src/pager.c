@@ -35,7 +35,7 @@ int c;
  * a substring of buf.  Return 1 if the string was appended, 0 otherwise.
  * It is expected that buf is of size BUFSZ.
  */
-static int 
+static int
 append_str (char *buf, const char *new_str)
 {
     int space_left;     /* space remaining in buf */
@@ -673,7 +673,7 @@ do_look(quick)
                 break;  /* out of for loop*/
             }
         }
-    
+
         /* if we ignored venom and list turned out to be short, put it back */
         if (skipped_venom && found < 2) {
             x_str = objexplain[VENOM_CLASS];
@@ -686,7 +686,7 @@ do_look(quick)
             }
         }
 
-        /* handle optional boulder symbol as a special case */ 
+        /* handle optional boulder symbol as a special case */
         if (iflags.bouldersym && sym == iflags.bouldersym) {
             if (!found) {
                 firstmatch = "boulder";
@@ -696,7 +696,7 @@ do_look(quick)
                 found += append_str(out_str, "boulder");
             }
         }
-        
+
         /*
          * If we are looking at the screen, follow multiple possibilities or
          * an ambiguous explanation by something more detailed.
@@ -741,19 +741,19 @@ do_look(quick)
 }
 
 
-int 
+int
 dowhatis (void)
 {
         return do_look(FALSE);
 }
 
-int 
+int
 doquickwhatis (void)
 {
         return do_look(TRUE);
 }
 
-int 
+int
 doidtrap (void)
 {
         struct trap *trap;

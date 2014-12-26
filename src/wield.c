@@ -80,7 +80,7 @@ static int ready_weapon(struct obj *);
  * responsibility to handle that.  It's also the caller's responsibility
  * to print the appropriate messages.
  */
-void 
+void
 setuwep (struct obj *obj)
 {
         struct obj *olduwep = uwep;
@@ -109,7 +109,7 @@ setuwep (struct obj *obj)
         update_inventory();
 }
 
-static int 
+static int
 ready_weapon (struct obj *wep)
 {
         /* Separated function so swapping works easily */
@@ -190,14 +190,14 @@ ready_weapon (struct obj *wep)
         return(res);
 }
 
-void 
+void
 setuqwep (struct obj *obj)
 {
         setworn(obj, W_QUIVER);
         update_inventory();
 }
 
-void 
+void
 setuswapwep (struct obj *obj)
 {
         setworn(obj, W_SWAPWEP);
@@ -214,7 +214,7 @@ static const char ready_objs[] =
 static const char bullets[] =   /* (note: different from dothrow.c) */
         { ALL_CLASSES, ALLOW_NONE, GEM_CLASS, WEAPON_CLASS, 0 };
 
-int 
+int
 dowield (void)
 {
         struct obj *wep, *oldwep;
@@ -266,7 +266,7 @@ dowield (void)
         return (result);
 }
 
-int 
+int
 doswapweapon (void)
 {
         struct obj *oldwep, *oldswap;
@@ -310,7 +310,7 @@ doswapweapon (void)
         return (result);
 }
 
-int 
+int
 dowieldquiver (void)
 {
         struct obj *newquiver;
@@ -446,7 +446,7 @@ const char *verb;       /* "rub",&c */
     return TRUE;
 }
 
-int 
+int
 can_twoweapon (void)
 {
         struct obj *otmp;
@@ -491,7 +491,7 @@ can_twoweapon (void)
         return (FALSE);
 }
 
-void 
+void
 drop_uswapwep (void)
 {
         char str[BUFSZ];
@@ -503,7 +503,7 @@ drop_uswapwep (void)
         dropx(obj);
 }
 
-int 
+int
 dotwoweapon (void)
 {
         /* You can always toggle it off */
@@ -531,7 +531,7 @@ dotwoweapon (void)
  * 1.  The item has been eaten, stolen, burned away, or rotted away.
  * 2.  Making an item disappear for a bones pile.
  */
-void 
+void
 uwepgone (void)
 {
         if (uwep) {
@@ -545,7 +545,7 @@ uwepgone (void)
         }
 }
 
-void 
+void
 uswapwepgone (void)
 {
         if (uswapwep) {
@@ -554,7 +554,7 @@ uswapwepgone (void)
         }
 }
 
-void 
+void
 uqwepgone (void)
 {
         if (uquiver) {
@@ -563,7 +563,7 @@ uqwepgone (void)
         }
 }
 
-void 
+void
 untwoweapon (void)
 {
         if (u.twoweap) {
@@ -662,7 +662,7 @@ boolean fade_scrolls;
         }
 }
 
-int 
+int
 chwepon (struct obj *otmp, int amount)
 {
         const char *color = hcolor((amount < 0) ? NH_BLACK : NH_BLUE);
@@ -749,7 +749,7 @@ chwepon (struct obj *otmp, int amount)
         return(1);
 }
 
-int 
+int
 welded (struct obj *obj)
 {
         if (obj && obj == uwep && will_weld(obj)) {
@@ -759,7 +759,7 @@ welded (struct obj *obj)
         return 0;
 }
 
-void 
+void
 weldmsg (struct obj *obj)
 {
         long savewornmask;

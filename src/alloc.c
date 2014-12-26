@@ -57,7 +57,7 @@ fmt_ptr (const void *ptr, char *buf)
 
 /* If ${NH_HEAPLOG} is defined and we can create a file by that name,
    then we'll log the allocation and release information to that file. */
-static void 
+static void
 heapmon_init (void)
 {
         char *logname = getenv("NH_HEAPLOG");
@@ -85,7 +85,7 @@ nhalloc (unsigned int lth, const char *file, int line)
         return ptr;
 }
 
-void 
+void
 nhfree (void *ptr, const char *file, int line)
 {
         char ptr_address[20];

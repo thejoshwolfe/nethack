@@ -195,7 +195,7 @@ const struct shclass shtypes[] = {
         {(char *)0, 0, 0, 0, {{0, 0}, {0, 0}, {0, 0}}, 0}
 };
 
-static void 
+static void
 mkshobj_at (
 /* make an object of the appropriate type for a shop square */
     const struct shclass *shp,
@@ -225,7 +225,7 @@ mkshobj_at (
 }
 
 /* extract a shopkeeper name for the given shop type */
-static void 
+static void
 nameshk (struct monst *shk, const char *const *nlp)
 {
         int i, trycnt, names_avail;
@@ -284,7 +284,7 @@ nameshk (struct monst *shk, const char *const *nlp)
         ESHK(shk)->shknam[PL_NSIZ-1] = 0;
 }
 
-static int 
+static int
 shkinit (       /* create a new shopkeeper in the given room */
     const struct shclass *shp,
     struct mkroom *sroom
@@ -351,7 +351,7 @@ shkinit (       /* create a new shopkeeper in the given room */
 }
 
 /* stock a newly-created room with objects */
-void 
+void
 stock_room (int shp_indx, struct mkroom *sroom)
 {
     /*
@@ -437,7 +437,7 @@ struct obj *obj;
 }
 
 /* positive value: class; negative value: specific object type */
-int 
+int
 get_shop_item (int type)
 {
         const struct shclass *shp = shtypes+type;

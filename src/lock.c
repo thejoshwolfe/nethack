@@ -67,7 +67,7 @@ lock_action (void)
                 return xlock.box->otyp == CHEST ? actions[1] : actions[2];
 }
 
-static int 
+static int
 picklock (void)      /* try to open/close a lock */
 {
 
@@ -114,14 +114,14 @@ picklock (void)      /* try to open/close a lock */
             else xlock.door->doormask = D_LOCKED;
         } else {
             xlock.box->olocked = !xlock.box->olocked;
-            if(xlock.box->otrapped)     
+            if(xlock.box->otrapped)
                 (void) chest_trap(xlock.box, FINGER, FALSE);
         }
         exercise(A_DEX, TRUE);
         return((xlock.usedtime = 0));
 }
 
-static int 
+static int
 forcelock (void)     /* try to force a locked chest */
 {
 
@@ -203,7 +203,7 @@ forcelock (void)     /* try to force a locked chest */
 }
 
 
-void 
+void
 reset_pick (void)
 {
         xlock.usedtime = xlock.chance = xlock.picktyp = 0;
@@ -212,7 +212,7 @@ reset_pick (void)
 }
 
 
-int 
+int
 pick_lock ( /* pick a lock with a given object */
     struct obj *pick
 )
@@ -410,7 +410,7 @@ pick_lock ( /* pick a lock with a given object */
         return(1);
 }
 
-int 
+int
 doforce (void)               /* try to force a chest with your weapon */
 {
         struct obj *otmp;
@@ -471,7 +471,7 @@ doforce (void)               /* try to force a chest with your weapon */
         return(1);
 }
 
-int 
+int
 doopen (void)                /* try to open a door */
 {
         coord cc;
@@ -577,7 +577,7 @@ objhere:        pline("%s's in the way.", Something);
         return(FALSE);
 }
 
-int 
+int
 doclose (void)               /* try to close a door */
 {
         int x, y;
@@ -715,7 +715,7 @@ int x, y;
         const char *msg = (const char *)0;
         const char *dustcloud = "A cloud of dust";
         const char *quickly_dissipates = "quickly dissipates";
-        
+
         if (door->typ == SDOOR) {
             switch (otmp->otyp) {
             case WAN_OPENING:
@@ -829,7 +829,7 @@ int x, y;
         return res;
 }
 
-static void 
+static void
 chest_shatter_msg (struct obj *otmp)
 {
         const char *disposition;

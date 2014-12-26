@@ -31,7 +31,7 @@ static int dieroll;
 
 
 
-static void 
+static void
 hitmsg (struct monst *mtmp, struct attack *mattk)
 {
         int compat;
@@ -94,7 +94,7 @@ struct attack *mattk;
         stop_occupation();
 }
 
-static void 
+static void
 mswings (               /* monster swings obj */
     struct monst *mtmp,
     struct obj *otemp
@@ -124,7 +124,7 @@ mpoisons_subj (struct monst *mtmp, struct attack *mattk)
 }
 
 /* called when your intrinsic speed is taken away */
-void 
+void
 u_slow_down (void)
 {
         HFast = 0L;
@@ -136,7 +136,7 @@ u_slow_down (void)
 }
 
 
-static void 
+static void
 wildmiss (              /* monster attacked your displaced image */
     struct monst *mtmp,
     struct attack *mattk
@@ -284,7 +284,7 @@ getmattk (struct permonst *mptr, int indx, int prev_result[], struct attack *alt
  *              monster which it attacks by mistake, the caller had better
  *              take care of it...
  */
-int 
+int
 mattacku (struct monst *mtmp)
 {
         struct  attack  *mattk, alt_attk;
@@ -300,7 +300,7 @@ mattacku (struct monst *mtmp)
                 /* Might be attacking your image around the corner, or
                  * invisible, or you might be blind....
                  */
-        
+
         if(!ranged) nomul(0);
         if(mtmp->mhp <= 0 || (Underwater && !is_swimmer(mtmp->data)))
             return(0);
@@ -677,7 +677,7 @@ mattacku (struct monst *mtmp)
  * helper function for some compilers that have trouble with hitmu
  */
 
-static void 
+static void
 hurtarmor (int attk)
 {
         int     hurt;
@@ -784,7 +784,7 @@ struct attack *mattk;
 }
 
 /* armor that sufficiently covers the body might be able to block magic */
-int 
+int
 magic_negation (struct monst *mon)
 {
         struct obj *armor;
@@ -829,7 +829,7 @@ magic_negation (struct monst *mon)
  *        3 if the monster lives but teleported/paralyzed, so it can't keep
  *             attacking you
  */
-static int 
+static int
 hitmu (struct monst *mtmp, struct attack *mattk)
 {
         struct permonst *mdat = mtmp->data;
@@ -1080,7 +1080,7 @@ dopois:
                 hitmsg(mtmp, mattk);
                 if (uncancelled && multi >= 0 && !rn2(3)) {
                     if (Free_action) {
-                        You("momentarily stiffen.");            
+                        You("momentarily stiffen.");
                     } else {
                         if (Blind) You("are frozen!");
                         else You("are frozen by %s!", mon_nam(mtmp));
@@ -1476,7 +1476,7 @@ dopois:
                 if (!is_fainted()) morehungry(rn1(40,40));
                 /* plus the normal damage */
                 break;
-            case AD_SLIM:    
+            case AD_SLIM:
                 hitmsg(mtmp, mattk);
                 if (!uncancelled) break;
                 if (flaming(youmonst.data)) {
@@ -1572,7 +1572,7 @@ dopois:
 }
 
 
-static int 
+static int
 gulpmu (        /* monster swallows you, or damage if u.uswallow */
     struct monst *mtmp,
     struct attack *mattk
@@ -1844,7 +1844,7 @@ common:
     return(2);  /* it dies */
 }
 
-int 
+int
 gazemu (        /* monster gazes at you */
     struct monst *mtmp,
     struct attack *mattk
@@ -1991,7 +1991,7 @@ gazemu (        /* monster gazes at you */
 }
 
 
-void 
+void
 mdamageu (      /* mtmp hits you for n points damage */
     struct monst *mtmp,
     int n
@@ -2008,7 +2008,7 @@ mdamageu (      /* mtmp hits you for n points damage */
 }
 
 
-static void 
+static void
 urustm (struct monst *mon, struct obj *obj)
 {
         boolean vis;
@@ -2045,7 +2045,7 @@ urustm (struct monst *mon, struct obj *obj)
 }
 
 
-int 
+int
 could_seduce (struct monst *magr, struct monst *mdef, struct attack *mattk)
 /* returns 0 if seduction impossible,
  *         1 if fine,
@@ -2083,7 +2083,7 @@ could_seduce (struct monst *magr, struct monst *mdef, struct attack *mattk)
                     || (mattk && mattk->adtyp != AD_SSEX)
                    ))
                 return 0;
-        
+
         if(genagr == 1 - gendef)
                 return 1;
         else
@@ -2092,7 +2092,7 @@ could_seduce (struct monst *magr, struct monst *mdef, struct attack *mattk)
 
 
 /* Returns 1 if monster teleported */
-int 
+int
 doseduce (struct monst *mon)
 {
         struct obj *ring, *nring;
@@ -2314,7 +2314,7 @@ doseduce (struct monst *mon)
         return 1;
 }
 
-static void 
+static void
 mayberem (struct obj *obj, const char *str)
 {
         char qbuf[QBUFSZ];
@@ -2345,7 +2345,7 @@ mayberem (struct obj *obj, const char *str)
 
 
 
-static int 
+static int
 passiveum (struct permonst *olduasmon, struct monst *mtmp, struct attack *mattk)
 {
         int i, tmp;

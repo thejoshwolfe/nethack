@@ -25,7 +25,7 @@ long somegold (void) {
                 (u.ugold > 10000) ? rnd(10000) : rnd((int) u.ugold) );
 }
 
-void 
+void
 stealgold (struct monst *mtmp)
 {
         struct obj *gold = g_at(u.ux, u.uy);
@@ -58,7 +58,7 @@ stealgold (struct monst *mtmp)
 unsigned int stealoid;          /* object to be stolen */
 unsigned int stealmid;          /* monster doing the stealing */
 
-static int 
+static int
 stealarm (void)
 {
         struct monst *mtmp;
@@ -68,7 +68,7 @@ stealarm (void)
             if(otmp->o_id == stealoid) {
                 for(mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                     if(mtmp->m_id == stealmid) {
-                        if(DEADMONSTER(mtmp)) impossible("stealarm(): dead monster stealing"); 
+                        if(DEADMONSTER(mtmp)) impossible("stealarm(): dead monster stealing");
                         if(!dmgtype(mtmp->data, AD_SITM)) /* polymorphed */
                             goto botm;
                         if(otmp->unpaid)
@@ -143,7 +143,7 @@ boolean unchain_ball;   /* whether to unpunish or just unwield */
  * Returns -1 if the monster died in the attempt
  * Avoid stealing the object stealoid
  */
-int 
+int
 steal (struct monst *mtmp, char *objnambuf)
 {
         struct obj *otmp;
@@ -331,7 +331,7 @@ gotobj:
 
 
 /* Returns 1 if otmp is free'd, 0 otherwise. */
-int 
+int
 mpickobj (struct monst *mtmp, struct obj *otmp)
 {
     int freed_otmp;
@@ -365,7 +365,7 @@ mpickobj (struct monst *mtmp, struct obj *otmp)
 }
 
 
-void 
+void
 stealamulet (struct monst *mtmp)
 {
     struct obj *otmp = (struct obj *)0;
@@ -426,7 +426,7 @@ boolean verbosely;
          /* obj_no_longer_held(obj); -- done by place_object */
             if (obj->owornmask & W_WEP) setmnotwielded(mon, obj);
         /* don't charge for an owned saddle on dead steed */
-        } else if (mon->mtame && (obj->owornmask & W_SADDLE) && 
+        } else if (mon->mtame && (obj->owornmask & W_SADDLE) &&
                 !obj->unpaid && costly_spot(omx, omy)) {
             obj->no_charge = 1;
         }
@@ -443,7 +443,7 @@ boolean verbosely;
 /* some monsters bypass the normal rules for moving between levels or
    even leaving the game entirely; when that happens, prevent them from
    taking the Amulet or invocation tools with them */
-void 
+void
 mdrop_special_objs (struct monst *mon)
 {
     struct obj *obj, *otmp;
@@ -511,7 +511,7 @@ boolean is_pet;         /* If true, pet should keep wielded/worn items */
                                 g, plur(g));
                 mtmp->mgold = 0L;
         }
-        
+
         if (show & cansee(omx, omy))
                 newsym(omx, omy);
 }

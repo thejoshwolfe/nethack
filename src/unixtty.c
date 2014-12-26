@@ -75,7 +75,7 @@ static int speednum(speed_t speed) {
         return 0;
 }
 
-static void 
+static void
 setctty (void)
 {
         if(STTY(&curttyb) < 0 || STTY2(&curttyb2) < 0)
@@ -87,7 +87,7 @@ setctty (void)
  * and switch off tab expansion if necessary.
  * Called by startup() in termcap.c and after returning from ! or ^Z
  */
-void 
+void
 gettty (void)
 {
         if(GTTY(&inittyb) < 0 || GTTY2(&inittyb2) < 0)
@@ -109,7 +109,7 @@ gettty (void)
 }
 
 /* reset terminal to original state */
-void 
+void
 settty (const char *s)
 {
         end_screen();
@@ -180,7 +180,7 @@ int change = 0;
         start_screen();
 }
 
-void 
+void
 intron (void)           /* enable kbd interupts if enabled when game started */
 {
 #ifdef TTY_GRAPHICS
@@ -193,7 +193,7 @@ intron (void)           /* enable kbd interupts if enabled when game started */
 #endif
 }
 
-void 
+void
 introff (void)          /* disable kbd interrupts if required*/
 {
 #ifdef TTY_GRAPHICS

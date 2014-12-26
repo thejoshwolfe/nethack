@@ -45,7 +45,7 @@ static void add_class(char *, char);
 
 static const char no_elbow_room[] = "don't have enough elbow-room to maneuver.";
 
-static int 
+static int
 use_camera (struct obj *obj)
 {
         struct monst *mtmp;
@@ -82,7 +82,7 @@ use_camera (struct obj *obj)
         return 1;
 }
 
-static int 
+static int
 use_towel (struct obj *obj)
 {
         if(!freehand()) {
@@ -193,7 +193,7 @@ static const char hollow_str[] = "a hollow sound.  This must be a secret %s!";
    not take any time; however, unless it did, the stethoscope would be
    almost useless.  As a compromise, one use per turn is free, another
    uses up the turn; this makes curse status have a tangible effect. */
-static int 
+static int
 use_stethoscope (struct obj *obj)
 {
         static long last_used_move = -1;
@@ -299,14 +299,14 @@ use_stethoscope (struct obj *obj)
 
 static const char whistle_str[] = "produce a %s whistling sound.";
 
-static void 
+static void
 use_whistle (struct obj *obj)
 {
         You(whistle_str, obj->cursed ? "shrill" : "high");
         wake_nearby();
 }
 
-static void 
+static void
 use_magic_whistle (struct obj *obj)
 {
         struct monst *mtmp, *nextmon;
@@ -348,7 +348,7 @@ int number_leashed(void) {
         return(i);
 }
 
-void 
+void
 o_unleash (             /* otmp is about to be destroyed or stolen */
     struct obj *otmp
 )
@@ -381,7 +381,7 @@ boolean feedback;
         mtmp->mleashed = 0;
 }
 
-void 
+void
 unleash_all (void)              /* player is about to die (for bones) */
 {
         struct obj *otmp;
@@ -396,7 +396,7 @@ unleash_all (void)              /* player is about to die (for bones) */
 #define MAXLEASHED      2
 
 /* ARGSUSED */
-static void 
+static void
 use_leash (struct obj *obj)
 {
         coord cc;
@@ -512,7 +512,7 @@ next_to_u()
 }
 
 
-void 
+void
 check_leash (signed char x, signed char y)
 {
         struct obj *otmp;
@@ -522,7 +522,7 @@ check_leash (signed char x, signed char y)
             if (otmp->otyp != LEASH || otmp->leashmon == 0) continue;
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp)) continue;
-                if ((int)mtmp->m_id == otmp->leashmon) break; 
+                if ((int)mtmp->m_id == otmp->leashmon) break;
             }
             if (!mtmp) {
                 impossible("leash in use isn't attached to anything?");
@@ -574,7 +574,7 @@ check_leash (signed char x, signed char y)
 
 static const char look_str[] = "look %s.";
 
-static int 
+static int
 use_mirror (struct obj *obj)
 {
         struct monst *mtmp;
@@ -710,7 +710,7 @@ use_mirror (struct obj *obj)
         return 1;
 }
 
-static void 
+static void
 use_bell (struct obj **optr)
 {
         struct obj *obj = *optr;
@@ -812,7 +812,7 @@ use_bell (struct obj **optr)
         if (wakem) wake_nearby();
 }
 
-static void 
+static void
 use_candelabrum (struct obj *obj)
 {
         const char *s = (obj->spe != 1) ? "candles" : "candle";
@@ -862,7 +862,7 @@ use_candelabrum (struct obj *obj)
         begin_burn(obj, FALSE);
 }
 
-static void 
+static void
 use_candle (struct obj **optr)
 {
         struct obj *obj = *optr;
@@ -1010,7 +1010,7 @@ struct obj *obj;
         return FALSE;
 }
 
-static void 
+static void
 use_lamp (struct obj *obj)
 {
         char buf[BUFSZ];
@@ -1060,7 +1060,7 @@ use_lamp (struct obj *obj)
         }
 }
 
-static void 
+static void
 light_cocktail (
     struct obj *obj     /* obj is a potion of oil */
 )
@@ -1114,7 +1114,7 @@ light_cocktail (
 
 static const char cuddly[] = { TOOL_CLASS, GEM_CLASS, 0 };
 
-int 
+int
 dorub (void)
 {
         struct obj *obj = getobj(cuddly, "rub");
@@ -1153,14 +1153,14 @@ dorub (void)
         return 1;
 }
 
-int 
+int
 dojump (void)
 {
         /* Physical jump */
         return jump(0);
 }
 
-int 
+int
 jump (
     int magic /* 0=Physical, otherwise skill level */
 )
@@ -1323,7 +1323,7 @@ struct obj *corpse;
         return 1;
 }
 
-static void 
+static void
 use_tinning_kit (struct obj *obj)
 {
         struct obj *corpse, *can;
@@ -1389,7 +1389,7 @@ use_tinning_kit (struct obj *obj)
         } else impossible("Tinning failed.");
 }
 
-void 
+void
 use_unicorn_horn (struct obj *obj)
 {
 #define PROP_COUNT 6            /* number of properties we're dealing with */
@@ -1537,7 +1537,7 @@ use_unicorn_horn (struct obj *obj)
 /*
  * Timer callback routine: turn figurine into monster
  */
-void 
+void
 fig_transform (void *arg, long timeout)
 {
         struct obj *figurine = (struct obj *)arg;
@@ -1652,7 +1652,7 @@ boolean quietly;
         return TRUE;
 }
 
-static void 
+static void
 use_figurine (struct obj **optr)
 {
         struct obj *obj = *optr;
@@ -1690,7 +1690,7 @@ static const char lubricables[] = { ALL_CLASSES, ALLOW_NONE, 0 };
 static const char need_to_remove_outer_armor[] =
                         "need to remove your %s to grease your %s.";
 
-static void 
+static void
 use_grease (struct obj *obj)
 {
         struct obj *otmp;
@@ -1758,7 +1758,7 @@ static struct trapinfo {
         boolean force_bungle;
 } trapinfo;
 
-void 
+void
 reset_trapset (void)
 {
         trapinfo.tobj = 0;
@@ -1766,7 +1766,7 @@ reset_trapset (void)
 }
 
 /* touchstones - by Ken Arnold */
-static void 
+static void
 use_stone (struct obj *tstone)
 {
     struct obj *obj;
@@ -1897,7 +1897,7 @@ use_stone (struct obj *tstone)
 }
 
 /* Place a landmine/bear trap.  Helge Hafting */
-static void 
+static void
 use_trap (struct obj *otmp)
 {
         int ttyp, tmp;
@@ -1988,7 +1988,7 @@ use_trap (struct obj *otmp)
         return;
 }
 
-static int 
+static int
 set_trap (void)
 {
         struct obj *otmp = trapinfo.tobj;
@@ -2028,7 +2028,7 @@ set_trap (void)
         return 0;
 }
 
-static int 
+static int
 use_whip (struct obj *obj)
 {
     char buf[BUFSZ];
@@ -2260,7 +2260,7 @@ static const char
         cant_reach[] = "can't reach that spot from here.";
 
 /* Distance attacks by pole-weapons */
-static int 
+static int
 use_pole (struct obj *obj)
 {
         int res = 0, typ, max_range = 4, min_range = 4;
@@ -2326,7 +2326,7 @@ use_pole (struct obj *obj)
         return (1);
 }
 
-static int 
+static int
 use_cream_pie (struct obj *obj)
 {
         boolean wasblind = Blind;
@@ -2364,7 +2364,7 @@ use_cream_pie (struct obj *obj)
         return(0);
 }
 
-static int 
+static int
 use_grapple (struct obj *obj)
 {
         int res = 0, typ, max_range = 4, tohit;
@@ -2490,7 +2490,7 @@ use_grapple (struct obj *obj)
 #define BY_OBJECT       ((struct monst *)0)
 
 /* return 1 if the wand is broken, hence some time elapsed */
-static int 
+static int
 do_break_wand (struct obj *obj)
 {
     static const char nothing_else_happens[] = "But nothing else happens...";
@@ -2594,7 +2594,7 @@ do_break_wand (struct obj *obj)
                      * do if it's a wall or door that's being dug */
                     watch_dig((struct monst *)0, x, y, TRUE);
                     if (*in_rooms(x,y,SHOPBASE)) shop_damage = TRUE;
-                }                   
+                }
                 digactualhole(x, y, BY_OBJECT,
                               (rn2(obj->spe) < 3 || !Can_dig_down(&u.uz)) ?
                                PIT : HOLE);
@@ -2658,7 +2658,7 @@ uhave_graystone()
         return FALSE;
 }
 
-static void 
+static void
 add_class (char *cl, char class)
 {
         char tmp[2];
@@ -2667,7 +2667,7 @@ add_class (char *cl, char class)
         Strcat(cl, tmp);
 }
 
-int 
+int
 doapply (void)
 {
         struct obj *obj;

@@ -16,7 +16,7 @@ static void ghost_from_bottle(void);
 static short mixtype(struct obj *,struct obj *);
 
 /* force `val' to be within valid range for intrinsic timeout value */
-static long 
+static long
 itimeout (long val)
 {
     if (val >= TIMEOUT) val = TIMEOUT;
@@ -26,14 +26,14 @@ itimeout (long val)
 }
 
 /* increment `old' by `incr' and force result to be valid intrinsic timeout */
-static long 
+static long
 itimeout_incr (long old, int incr)
 {
     return itimeout((old & TIMEOUT) + (long)incr);
 }
 
 /* set the timeout field of intrinsic `which' */
-void 
+void
 set_itimeout (long *which, long val)
 {
     *which &= ~TIMEOUT;
@@ -41,7 +41,7 @@ set_itimeout (long *which, long val)
 }
 
 /* increment the timeout field of intrinsic `which' */
-void 
+void
 incr_itimeout (long *which, int incr)
 {
     set_itimeout(which, itimeout_incr(*which, incr));
@@ -291,7 +291,7 @@ long mask;      /* nonzero if resistance status should change by mask */
         return changed;
 }
 
-static void 
+static void
 ghost_from_bottle (void)
 {
         struct monst *mtmp = makemon(&mons[PM_GHOST], u.ux, u.uy, NO_MM_FLAGS);
@@ -314,7 +314,7 @@ ghost_from_bottle (void)
 
 /* "Quaffing is like drinking, except you spill more."  -- Terry Pratchett
  */
-int 
+int
 dodrink (void)
 {
         struct obj *otmp;
@@ -372,7 +372,7 @@ dodrink (void)
         return dopotion(otmp);
 }
 
-int 
+int
 dopotion (struct obj *otmp)
 {
         int retval;
@@ -397,7 +397,7 @@ dopotion (struct obj *otmp)
         return(1);
 }
 
-int 
+int
 peffects (struct obj *otmp)
 {
         int i, ii, lim;
@@ -907,7 +907,7 @@ healup(nhp, nxtra, curesick, cureblind)
         return;
 }
 
-void 
+void
 strange_feeling (struct obj *obj, const char *txt)
 {
         if (flags.beginner || !txt)
@@ -1160,7 +1160,7 @@ boolean your_fault;
 }
 
 /* vapors are inhaled or get in your eyes */
-void 
+void
 potionbreathe (struct obj *obj)
 {
         int i, ii, isdone, kn = 0;
@@ -1299,7 +1299,7 @@ potionbreathe (struct obj *obj)
         }
 }
 
-static short 
+static short
 mixtype (struct obj *o1, struct obj *o2)
 /* returns the potion type when o1 is dipped in o2 */
 {
@@ -1827,7 +1827,7 @@ int dodip(void) {
                 if (potion->quan > 1L) {
                     singlepotion = splitobj(potion, 1L);
                 } else singlepotion = potion;
-                
+
                 if(singlepotion->unpaid && costly_spot(u.ux, u.uy)) {
                     You("use it, you pay for it.");
                     bill_dummy_object(singlepotion);
@@ -1874,7 +1874,7 @@ int dodip(void) {
 }
 
 
-void 
+void
 djinni_from_bottle (struct obj *obj)
 {
         struct monst *mtmp;

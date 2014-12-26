@@ -503,7 +503,7 @@ struct obj *obj;
                          (obj->known || obj->otyp == AMULET_OF_YENDOR));
 }
 
-static void 
+static void
 add_erosion_words (struct obj *obj, char *prefix)
 {
         boolean iscrys = (obj->otyp == CRYSKNIFE);
@@ -518,14 +518,14 @@ add_erosion_words (struct obj *obj, char *prefix)
                 switch (obj->oeroded) {
                         case 2: Strcat(prefix, "very "); break;
                         case 3: Strcat(prefix, "thoroughly "); break;
-                }                       
+                }
                 Strcat(prefix, is_rustprone(obj) ? "rusty " : "burnt ");
         }
         if (obj->oeroded2 && !iscrys) {
                 switch (obj->oeroded2) {
                         case 2: Strcat(prefix, "very "); break;
                         case 3: Strcat(prefix, "thoroughly "); break;
-                }                       
+                }
                 Strcat(prefix, is_corrodeable(obj) ? "corroded " :
                         "rotted ");
         }
@@ -736,7 +736,7 @@ ring:
         }
         if(obj->owornmask & W_QUIVER) Strcat(bp, " (in quiver)");
         if(obj->unpaid) {
-                signed char ox, oy; 
+                signed char ox, oy;
                 long quotedprice = unpaid_cost(obj);
                 struct monst *shkp = (struct monst *)0;
 
@@ -2625,7 +2625,7 @@ typfnd:
         return(otmp);
 }
 
-int 
+int
 rnd_class (int first, int last)
 {
         int i, x, sum=0;

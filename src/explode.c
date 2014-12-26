@@ -20,7 +20,7 @@ static int expl[3][3] = {
  * did it, and with a wand, spell, or breath weapon?  Object types share both
  * these disadvantages....
  */
-void 
+void
 explode (
     int x,
     int y,
@@ -98,7 +98,7 @@ explode (
 
                 if (i+x-1 == u.ux && j+y-1 == u.uy) {
                     switch(adtyp) {
-                        case AD_PHYS:                        
+                        case AD_PHYS:
                                 explmask[i][j] = 0;
                                 break;
                         case AD_MAGM:
@@ -136,7 +136,7 @@ explode (
                 if (mtmp) {
                     if (mtmp->mhp < 1) explmask[i][j] = 2;
                     else switch(adtyp) {
-                        case AD_PHYS:                        
+                        case AD_PHYS:
                                 break;
                         case AD_MAGM:
                                 explmask[i][j] |= resists_magm(mtmp);
@@ -396,7 +396,7 @@ struct scatter_chain {
  */
 
 /* returns number of scattered objects */
-long 
+long
 scatter (
     int sx,
     int sy,                             /* location of objects to scatter */
@@ -563,7 +563,7 @@ scatter (
  *
  * For now, just perform a "regular" explosion.
  */
-void 
+void
 splatter_burning_oil (int x, int y)
 {
 /* ZT_SPELL(ZT_FIRE) = ZT_SPELL(AD_FIRE-1) = 10+(2-1) = 11 */

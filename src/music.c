@@ -65,7 +65,7 @@ static void awaken_monsters (int distance) {
  * Make monsters fall asleep.  Note that they may resist the spell.
  */
 
-static void 
+static void
 put_monsters_to_sleep (int distance)
 {
         struct monst *mtmp = fmon;
@@ -84,7 +84,7 @@ put_monsters_to_sleep (int distance)
  * Charm snakes in range.  Note that the snakes are NOT tamed.
  */
 
-static void 
+static void
 charm_snakes (int distance)
 {
         struct monst *mtmp = fmon;
@@ -117,7 +117,7 @@ charm_snakes (int distance)
  * Calm nymphs in range.
  */
 
-static void 
+static void
 calm_nymphs (int distance)
 {
         struct monst *mtmp = fmon;
@@ -139,7 +139,7 @@ calm_nymphs (int distance)
 
 /* Awake only soldiers of the level. */
 
-void 
+void
 awaken_soldiers (void)
 {
         struct monst *mtmp = fmon;
@@ -162,7 +162,7 @@ awaken_soldiers (void)
  * If swallowed, range is reduced to 0.
  */
 
-static void 
+static void
 charm_monsters (int distance)
 {
         struct monst *mtmp, *mtmp2;
@@ -188,7 +188,7 @@ charm_monsters (int distance)
  * That is:  create random chasms (pits).
  */
 
-static void 
+static void
 do_earthquake (int force)
 {
         int x,y;
@@ -420,7 +420,7 @@ static int do_improvisation (struct obj *instr) {
  * So you want music...
  */
 
-int 
+int
 do_play_instrument (struct obj *instr)
 {
     char buf[BUFSZ], c = 'y';

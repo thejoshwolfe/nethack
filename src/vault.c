@@ -58,7 +58,7 @@ boolean forceshow;
         return(TRUE);
 }
 
-static void 
+static void
 restfakecorr (struct monst *grd)
 {
         /* it seems you left the corridor - let the guard disappear */
@@ -109,7 +109,7 @@ findgd (void)
 }
 
 
-char 
+char
 vault_occupied (char *array)
 {
         char *ptr;
@@ -120,7 +120,7 @@ vault_occupied (char *array)
         return('\0');
 }
 
-void 
+void
 invault (void)
 {
     struct monst *guard;
@@ -320,7 +320,7 @@ fnd:
 }
 
 
-static void 
+static void
 move_gold (struct obj *gold, int vroom)
 {
         signed char nx, ny;
@@ -334,7 +334,7 @@ move_gold (struct obj *gold, int vroom)
         newsym(nx,ny);
 }
 
-static void 
+static void
 wallify_vault (struct monst *grd)
 {
         int x, y, typ;
@@ -401,7 +401,7 @@ wallify_vault (struct monst *grd)
 /*
  * return  1: guard moved,  0: guard didn't,  -1: let m_move do it,  -2: died
  */
-int 
+int
 gd_move (struct monst *grd)
 {
         int x, y, nx, ny, m, n;
@@ -682,7 +682,7 @@ cleanup:
 }
 
 /* Routine when dying or quitting with a vault guard around */
-void 
+void
 paygd (void)
 {
         struct monst *grd = findgd();
@@ -717,7 +717,7 @@ paygd (void)
         mongone(grd);
 }
 
-long 
+long
 hidden_gold (void)
 {
         long value = 0L;

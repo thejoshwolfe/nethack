@@ -52,7 +52,7 @@ const char *msg;
     return (revived);
 }
 
-static int 
+static int
 moverock (void)
 {
     signed char rx, ry, sx, sy;
@@ -214,7 +214,7 @@ moverock (void)
                           throws_rocks(youmonst.data) ? "little" : "great",
                           the(xname(otmp)));
                   exercise(A_STR, TRUE);
-                } else 
+                } else
                     pline("%s moves %s.",
                           upstart(y_monnam(u.usteed)), the(xname(otmp)));
                 lastmovetime = moves;
@@ -398,7 +398,7 @@ static int still_chewing(signed char x,signed char y) {
 }
 
 
-void 
+void
 movobj (struct obj *obj, signed char ox, signed char oy)
 {
         /* optimize by leaving on the fobj chain? */
@@ -410,7 +410,7 @@ movobj (struct obj *obj, signed char ox, signed char oy)
 
 static const char fell_on_sink[] = "fell onto a sink";
 
-static void 
+static void
 dosinkfall (void)
 {
         struct obj *obj;
@@ -501,7 +501,7 @@ signed char x, y;
 /* return TRUE if (dx,dy) is an OK place to move
  * mode is one of DO_MOVE, TEST_MOVE or TEST_TRAV
  */
-boolean 
+boolean
 test_move(ux, uy, dx, dy, mode)
 int ux, uy, dx, dy;
 int mode;
@@ -751,7 +751,7 @@ boolean guess;
                     }
                 }
             }
-            
+
             n = nn;
             set = 1-set;
             radius++;
@@ -809,7 +809,7 @@ found:
     return FALSE;
 }
 
-void 
+void
 domove (void)
 {
         struct monst *mtmp;
@@ -1356,7 +1356,7 @@ domove (void)
         }
 }
 
-void 
+void
 invocation_message (void)
 {
         /* a special clue-msg when on the Invocation position */
@@ -1748,7 +1748,7 @@ boolean newlev;
 }
 
 
-int 
+int
 dopickup (void)
 {
         int count;
@@ -1825,7 +1825,7 @@ dopickup (void)
 /* stop running if we see something interesting */
 /* turn around a corner if that is the only way we can proceed */
 /* do not turn left or right twice */
-void 
+void
 lookaround (void)
 {
     int x, y, i, x0 = 0, y0 = 0, m0 = 1, i0 = 9;
@@ -1950,7 +1950,7 @@ stop:
 
 /* something like lookaround, but we are not running */
 /* react only to monsters that might hit us */
-int 
+int
 monster_nearby (void)
 {
         int x,y;
@@ -1975,7 +1975,7 @@ monster_nearby (void)
         return(0);
 }
 
-void 
+void
 nomul (int nval)
 {
         if(multi < nval) return;        /* This is a bug fix by ab@unido */
@@ -1986,7 +1986,7 @@ nomul (int nval)
 }
 
 /* called when a non-movement, multi-turn action has completed */
-void 
+void
 unmul (const char *msg_override)
 {
         multi = 0;      /* caller will usually have done this already */
@@ -2000,7 +2000,7 @@ unmul (const char *msg_override)
 }
 
 
-static void 
+static void
 maybe_wail (void)
 {
     static short powers[] = { TELEPORT, SEE_INVIS, POISON_RES, COLD_RES,
@@ -2062,7 +2062,7 @@ boolean k_format;
         }
 }
 
-int 
+int
 weight_cap (void)
 {
         long carrcap;
@@ -2098,7 +2098,7 @@ static int wc;  /* current weight_cap(); valid after call to inv_weight() */
 
 /* returns how far beyond the normal capacity the player is currently. */
 /* inv_weight() is negative if the player is below normal capacity. */
-int 
+int
 inv_weight (void)
 {
         struct obj *otmp = invent;
@@ -2123,7 +2123,7 @@ inv_weight (void)
  * Returns 0 if below normal capacity, or the number of "capacity units"
  * over the normal capacity the player is loaded.  Max is 5.
  */
-int 
+int
 calc_capacity (int xtra_wt)
 {
     int cap, wt = inv_weight() + xtra_wt;
@@ -2134,13 +2134,13 @@ calc_capacity (int xtra_wt)
     return min(cap, OVERLOADED);
 }
 
-int 
+int
 near_capacity (void)
 {
     return calc_capacity(0);
 }
 
-int 
+int
 max_capacity (void)
 {
     int wt = inv_weight();
@@ -2163,7 +2163,7 @@ const char *str;
 }
 
 
-int 
+int
 inv_cnt (void)
 {
         struct obj *otmp = invent;

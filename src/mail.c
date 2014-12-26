@@ -154,7 +154,7 @@ retry:
                     max_distance = dd;
                     startp->y = row;
                     startp->x = viz_rmin[row];
-                
+
                 } else if (enexto(&testcc, (signed char)viz_rmin[row], row,
                                                 (struct permonst *) 0) &&
                            !cansee(testcc.x, testcc.y) &&
@@ -169,7 +169,7 @@ retry:
                     max_distance = dd;
                     startp->y = row;
                     startp->x = viz_rmax[row];
-                
+
                 } else if (enexto(&testcc, (signed char)viz_rmax[row], row,
                                                 (struct permonst *) 0) &&
                            !cansee(testcc.x,testcc.y) &&
@@ -339,7 +339,7 @@ md_rush(md,tx,ty)
 
 /* Deliver a scroll of mail. */
 /*ARGSUSED*/
-static void 
+static void
 newmail (struct mail_info *info)
 {
     struct monst *md;
@@ -439,25 +439,25 @@ void readmail(struct obj *otmp) {
                 /* Allow this call to block. */
                 if (fcntl (fileno (mb), F_SETLKW, &fl) == -1)
                   goto bail;
-                
+
                 errno = 0;
-                
+
                 while (fgets(curline, 102, mb) != NULL)
                 {
                   fl.l_type = F_UNLCK;
                   fcntl (fileno(mb), F_UNLCK, &fl);
-                  
+
                   pline("There is a%s message on this scroll.",
                       seen_one_already ? "nother" : "");
-                  
+
                   msg = strchr(curline, ':');
-                  
+
                   if (!msg)
                     goto bail;
-                  
+
                   *msg = '\0';
                   msg++;
-                  
+
                   pline ("This message is from '%s'.", curline);
 
                   msg[strlen(msg) - 1] = '\0'; /* kill newline */
@@ -472,7 +472,7 @@ void readmail(struct obj *otmp) {
 
                 fl.l_type = F_UNLCK;
                 fcntl(fileno(mb), F_UNLCK, &fl);
-                
+
                 fclose(mb);
                 unlink(mailbox);
                 return;

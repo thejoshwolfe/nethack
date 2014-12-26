@@ -13,7 +13,7 @@ static const char steeds[] = {
 static boolean landing_spot(coord *, int, int);
 
 /* caller has decided that hero can't reach something while mounted */
-void 
+void
 rider_cant_reach (void)
 {
      You("aren't skilled enough to reach from %s.", y_monnam(u.usteed));
@@ -35,7 +35,7 @@ can_saddle(mtmp)
 }
 
 
-int 
+int
 use_saddle (struct obj *otmp)
 {
         struct monst *mtmp;
@@ -164,7 +164,7 @@ can_ride(mtmp)
 }
 
 
-int 
+int
 doride (void)
 {
         boolean forcemount = FALSE;
@@ -245,7 +245,7 @@ mount_steed(mtmp, force)
         if (u.uswallow || u.ustuck || u.utrap || Punished ||
             !test_move(u.ux, u.uy, mtmp->mx-u.ux, mtmp->my-u.uy, TEST_MOVE)) {
             if (Punished || !(u.uswallow || u.ustuck || u.utrap))
-                You("are unable to swing your %s over.", body_part(LEG)); 
+                You("are unable to swing your %s over.", body_part(LEG));
             else
                 You("are stuck here for now.");
             return (FALSE);
@@ -342,7 +342,7 @@ mount_steed(mtmp, force)
 
 
 /* You and your steed have moved */
-void 
+void
 exercise_steed (void)
 {
         if (!u.usteed)
@@ -358,7 +358,7 @@ exercise_steed (void)
 
 
 /* The player kicks or whips the steed */
-void 
+void
 kick_steed (void)
 {
         char He[4];
@@ -455,7 +455,7 @@ int forceit;
 }
 
 /* Stop riding the current steed */
-void 
+void
 dismount_steed (
     int reason          /* Player was thrown off etc. */
 )
@@ -467,7 +467,7 @@ dismount_steed (
         boolean repair_leg_damage = TRUE;
         unsigned save_utrap = u.utrap;
         boolean have_spot = landing_spot(&cc,reason,0);
-        
+
         mtmp = u.usteed;                /* make a copy of steed pointer */
         /* Sanity check */
         if (!mtmp)              /* Just return silently */
@@ -618,7 +618,7 @@ dismount_steed (
         return;
 }
 
-void 
+void
 place_monster (struct monst *mon, int x, int y)
 {
     if (mon == u.usteed ||

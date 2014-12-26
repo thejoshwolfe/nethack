@@ -31,7 +31,7 @@ static const char * const a_your[2] = { "a", "your" };
 static const char * const A_Your[2] = { "A", "Your" };
 static const char tower_of_flame[] = "tower of flame";
 static const char * const A_gush_of_water_hits = "A gush of water hits";
-static const char * const blindgas[6] = 
+static const char * const blindgas[6] =
         {"humid", "odorless", "pungent", "chilling", "acrid", "biting"};
 
 
@@ -43,7 +43,7 @@ struct monst *victim;
     struct obj *item;
     char buf[BUFSZ];
     int mat_idx;
-    
+
     if (!victim) return 0;
 #define burn_dmg(obj,descr) rust_dmg(obj, descr, 0, FALSE, victim)
     while (1) {
@@ -183,7 +183,7 @@ struct monst *victim;
         return(TRUE);
 }
 
-void 
+void
 grease_protect (struct obj *otmp, const char *ostr, struct monst *victim)
 {
         static const char txt[] = "protected by the layer of grease!";
@@ -319,7 +319,7 @@ boolean td;     /* td == TRUE : trap door or hole */
             if (!In_sokoban(&u.uz)) {
                 if (t->ttyp == TRAPDOOR)
                         pline("A trap door opens up under you!");
-                else 
+                else
                         pline("There's a gaping hole under you!");
             }
         } else pline_The("%s opens up under you!", surface(u.ux,u.uy));
@@ -461,7 +461,7 @@ animate_statue (struct obj *statue, signed char x, signed char y, int cause, int
         else mon->mundetected = FALSE;
         if ((x == u.ux && y == u.uy) || cause == ANIMATE_SPELL) {
             const char *comes_to_life = nonliving(mon->data) ?
-                                        "moves" : "comes to life"; 
+                                        "moves" : "comes to life";
             if (cause == ANIMATE_SPELL)
                 pline("%s %s!", upstart(statuename),
                         canspotmon(mon) ? comes_to_life : "disappears");
@@ -553,7 +553,7 @@ struct obj *objchn, *saddle;
         return FALSE;
 }
 
-void 
+void
 dotrap (struct trap *trap, unsigned trflags)
 {
         int ttype = trap->ttyp;
@@ -943,7 +943,7 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
                                          u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE,
                                          "poor", SUPPRESS_SADDLE, FALSE));
                     else
-                        
+
                     Sprintf(verbbuf, "%s", Levitation ? (const char *)"float" :
                                 locomotion(youmonst.data, "stumble"));
                     You("%s into %s spider web!",
@@ -1117,7 +1117,7 @@ glovecheck:             (void) rust_dmg(uarmg, "gauntlets", 1, TRUE, &youmonst);
         }
 }
 
-static int 
+static int
 steedintrap (struct trap *trap, struct obj *otmp)
 {
         struct monst *mtmp = u.usteed;
@@ -1176,7 +1176,7 @@ steedintrap (struct trap *trap, struct obj *otmp)
                             trapkilled = TRUE;
                         steedhit = TRUE;
                         break;
-                case POLY_TRAP: 
+                case POLY_TRAP:
                     if (!resists_magm(mtmp)) {
                         if (!resist(mtmp, WAND_CLASS, 0, NOTELL)) {
                         (void) newcham(mtmp, (struct permonst *)0,
@@ -1189,7 +1189,7 @@ steedintrap (struct trap *trap, struct obj *otmp)
                                          mtmp->mnamelth ? ARTICLE_NONE : ARTICLE_A,
                                          (char *)0, SUPPRESS_SADDLE, FALSE));
                         }
-                                
+
                     }
                     steedhit = TRUE;
                     break;
@@ -1206,7 +1206,7 @@ steedintrap (struct trap *trap, struct obj *otmp)
 }
 
 /* some actions common to both player and monsters for triggered landmine */
-void 
+void
 blow_up_landmine (struct trap *trap)
 {
         (void)scatter(trap->tx, trap->ty, 4,
@@ -1231,7 +1231,7 @@ blow_up_landmine (struct trap *trap)
  *        1 if an object was launched and placed somewhere.
  *        2 if an object was launched, but used up.
  */
-int 
+int
 launch_obj (short otyp, int x1, int y1, int x2, int y2, int style)
 {
         struct monst *mtmp;
@@ -1318,7 +1318,7 @@ launch_obj (short otyp, int x1, int y1, int x2, int y2, int style)
                 bhitpos.x += dx;
                 bhitpos.y += dy;
                 t = t_at(bhitpos.x, bhitpos.y);
-                
+
                 if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
                         if (otyp == BOULDER && throws_rocks(mtmp->data)) {
                             if (rn2(3)) {
@@ -1369,7 +1369,7 @@ launch_obj (short otyp, int x1, int y1, int x2, int y2, int style)
                                         newsym(bhitpos.x,bhitpos.y);
                                 used_up = TRUE;
                             }
-                            break;              
+                            break;
                         case LEVEL_TELEP:
                         case TELEP_TRAP:
                             if (cansee(bhitpos.x, bhitpos.y))
@@ -1461,7 +1461,7 @@ launch_obj (short otyp, int x1, int y1, int x2, int y2, int style)
 }
 
 
-void 
+void
 seetrap (struct trap *trap)
 {
         if(!trap->tseen) {
@@ -1547,7 +1547,7 @@ static boolean isclearpath(coord *cc, int distance, signed char dx, signed char 
         return TRUE;
 }
 
-int 
+int
 mintrap (struct monst *mtmp)
 {
         struct trap *trap = t_at(mtmp->mx, mtmp->my);
@@ -1568,7 +1568,7 @@ mintrap (struct monst *mtmp)
                  */
                 seetrap(trap);
             }
-                
+
             if (!rn2(40)) {
                 if (sobj_at(BOULDER, mtmp->mx, mtmp->my) &&
                         (trap->ttyp == PIT || trap->ttyp == SPIKED_PIT)) {
@@ -2057,7 +2057,7 @@ glovecheck:                 target = which_armor(mtmp, W_ARMG);
 
 
 /* Combine cockatrice checks into single functions to avoid repeating code. */
-void 
+void
 instapetrify (const char *str)
 {
         if (Stone_resistance) return;
@@ -2092,7 +2092,7 @@ boolean byplayer;
         } else monstone(mon);
 }
 
-void 
+void
 selftouch (const char *arg)
 {
         char kbuf[BUFSZ];
@@ -2132,7 +2132,7 @@ boolean byplayer;
         }
 }
 
-void 
+void
 float_up (void)
 {
         if(u.utrap) {
@@ -2178,7 +2178,7 @@ float_up (void)
         return;
 }
 
-void 
+void
 fill_pit (int x, int y)
 {
         struct obj *otmp;
@@ -2192,7 +2192,7 @@ fill_pit (int x, int y)
         }
 }
 
-int 
+int
 float_down (
     long hmask,
     long emask     /* might cancel timeout */
@@ -2315,7 +2315,7 @@ float_down (
         return 1;
 }
 
-static void 
+static void
 dofiretrap (
     struct obj *box     /* null for floor trap */
 )
@@ -2374,7 +2374,7 @@ dofiretrap (
             melt_ice(u.ux, u.uy);
 }
 
-static void 
+static void
 domagictrap (void)
 {
         int fate = rnd(20);
@@ -2840,7 +2840,7 @@ drown()
         return(TRUE);
 }
 
-void 
+void
 drain_en (int n)
 {
         if (!u.uenmax) return;
@@ -2854,7 +2854,7 @@ drain_en (int n)
         flags.botl = 1;
 }
 
-int 
+int
 dountrap (void)      /* disarm a trap */
 {
         if (near_capacity() >= HVY_ENCUMBER) {
@@ -2877,7 +2877,7 @@ dountrap (void)      /* disarm a trap */
 }
 
 /* Probability of disabling a trap.  Helge Hafting */
-static int 
+static int
 untrap_prob (struct trap *ttmp)
 {
         int chance = 3;
@@ -2899,7 +2899,7 @@ untrap_prob (struct trap *ttmp)
 }
 
 /* Replace trap with object(s).  Helge Hafting */
-static void 
+static void
 cnv_trap_obj (int otyp, int cnt, struct trap *ttmp)
 {
         struct obj *otmp = mksobj(otyp, TRUE, FALSE);
@@ -2917,7 +2917,7 @@ cnv_trap_obj (int otyp, int cnt, struct trap *ttmp)
 }
 
 /* while attempting to disarm an adjacent trap, we've fallen into it */
-static void 
+static void
 move_into_trap (struct trap *ttmp)
 {
         int bc;
@@ -2952,7 +2952,7 @@ boolean force_failure;
         int ttype = ttmp->ttyp;
         boolean under_u = (!u.dx && !u.dy);
         boolean holdingtrap = (ttype == BEAR_TRAP || ttype == WEB);
-        
+
         /* Test for monster first, monsters are displayed instead of trap. */
         if (mtmp && (!mtmp->mtrapped || !holdingtrap)) {
                 pline("%s is in the way.", Monnam(mtmp));
@@ -3025,7 +3025,7 @@ boolean force_failure;
         return 2;
 }
 
-static void 
+static void
 reward_untrap (struct trap *ttmp, struct monst *mtmp)
 {
         if (!ttmp->madeby_u) {
@@ -3046,7 +3046,7 @@ reward_untrap (struct trap *ttmp, struct monst *mtmp)
         }
 }
 
-static int 
+static int
 disarm_holdingtrap ( /* Helge Hafting */
     struct trap *ttmp
 )
@@ -3079,7 +3079,7 @@ disarm_holdingtrap ( /* Helge Hafting */
         return 1;
 }
 
-static int 
+static int
 disarm_landmine ( /* Helge Hafting */
     struct trap *ttmp
 )
@@ -3096,7 +3096,7 @@ disarm_landmine ( /* Helge Hafting */
 static const char oil[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS, 0 };
 
 /* it may not make much sense to use grease on floor boards, but so what? */
-static int 
+static int
 disarm_squeaky_board (struct trap *ttmp)
 {
         struct obj *obj;
@@ -3129,7 +3129,7 @@ disarm_squeaky_board (struct trap *ttmp)
 }
 
 /* removes traps that shoot arrows, darts, etc. */
-static int 
+static int
 disarm_shooting_trap (struct trap *ttmp, int otyp)
 {
         int fails = try_disarm(ttmp, FALSE);
@@ -3167,7 +3167,7 @@ boolean stuff;
 }
 
 /* Help trapped monster (out of a (spiked) pit) */
-static int 
+static int
 help_monster_out (struct monst *mtmp, struct trap *ttmp)
 {
         int wt;
@@ -3598,7 +3598,7 @@ boolean disarm;
                 case 5:
                 case 4:
                 case 3:
-                        if (!Free_action) {                        
+                        if (!Free_action) {
                         pline("Suddenly you are frozen in place!");
                         nomul(-d(5, 6));
                         exercise(A_DEX, FALSE);
@@ -3646,7 +3646,7 @@ t_at (int x, int y)
 }
 
 
-void 
+void
 deltrap (struct trap *trap)
 {
         struct trap *ttmp;
@@ -3694,7 +3694,7 @@ struct trap *ttmp;
 }
 
 /* used for doors (also tins).  can be used for anything else that opens. */
-void 
+void
 b_trapped (const char *item, int bodypart)
 {
         int lvl = level_difficulty();

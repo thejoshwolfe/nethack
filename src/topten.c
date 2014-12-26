@@ -74,7 +74,7 @@ const char * const killed_by_prefix[] = {
 
 static winid toptenwin = WIN_ERR;
 
-static void 
+static void
 topten_print (const char *x)
 {
         if (toptenwin == WIN_ERR)
@@ -83,7 +83,7 @@ topten_print (const char *x)
             putstr(toptenwin, ATR_NONE, x);
 }
 
-static void 
+static void
 topten_print_bold (const char *x)
 {
         if (toptenwin == WIN_ERR)
@@ -92,7 +92,7 @@ topten_print_bold (const char *x)
             putstr(toptenwin, ATR_BOLD, x);
 }
 
-static signed char 
+static signed char
 observable_depth (d_level *lev)
 {
             return depth(lev);
@@ -202,7 +202,7 @@ struct toptenentry *tt;
 #endif
 }
 
-static void 
+static void
 free_ttlist (struct toptenentry *tt)
 {
         struct toptenentry *ttnext;
@@ -215,7 +215,7 @@ free_ttlist (struct toptenentry *tt)
         dealloc_ttentry(tt);
 }
 
-void 
+void
 topten (int how)
 {
         int uid = getuid();
@@ -515,7 +515,7 @@ topten (int how)
         }
 }
 
-static void 
+static void
 outheader (void)
 {
         char linebuf[BUFSZ];
@@ -724,7 +724,7 @@ int uid;
  * argc >= 2, with argv[0] untrustworthy (directory names, et al.),
  * and argv[1] starting with "-s".
  */
-void 
+void
 prscore (int argc, char **argv)
 {
         const char **players;
@@ -920,13 +920,13 @@ pickentry:
 /* Lattice scanf isn't up to reading the scorefile.  What */
 /* follows deals with that; I admit it's ugly. (KL) */
 /* Now generally available (KL) */
-static void 
+static void
 nsb_mung_line (char *p)
 {
         while ((p = index(p, ' ')) != 0) *p = '|';
 }
 
-static void 
+static void
 nsb_unmung_line (char *p)
 {
         while ((p = index(p, '|')) != 0) *p = ' ';

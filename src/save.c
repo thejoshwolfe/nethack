@@ -36,7 +36,7 @@ static long nulls[10];
 /* need to preserve these during save to avoid accessing freed memory */
 static unsigned ustuck_id = 0, usteed_id = 0;
 
-int 
+int
 dosave (void)
 {
         clear_nhwindow(WIN_MESSAGE);
@@ -121,7 +121,7 @@ int dosave0(void) {
 
         vision_recalc(2);       /* shut down vision to prevent problems
                                    in the event of an impossible() call */
-        
+
         /* undo date-dependent luck adjustments made at startup time */
         if(flags.moonphase == FULL_MOON)        /* ut-sally!fletcher */
                 change_luck(-1);                /* and unido!ab */
@@ -182,7 +182,7 @@ int dosave0(void) {
         return(1);
 }
 
-static void 
+static void
 savegamestate (int fd, int mode)
 {
         int uid;
@@ -229,7 +229,7 @@ savegamestate (int fd, int mode)
         bflush(fd);
 }
 
-void 
+void
 savestateinlock (void)
 {
         int fd, hpid;
@@ -439,7 +439,7 @@ static void bputc(int c) {
 }
 
 /*ARGSUSED*/
-void 
+void
 bufon (int fd)
 {
     compressing = TRUE;
@@ -447,7 +447,7 @@ bufon (int fd)
 }
 
 /*ARGSUSED*/
-void 
+void
 bufoff (int fd)
 {
     if (outbufp) {
@@ -459,7 +459,7 @@ bufoff (int fd)
     return;
 }
 
-void 
+void
 bflush (  /* flush run and buffer */
     int fd
 )
@@ -480,7 +480,7 @@ bflush (  /* flush run and buffer */
     }
 }
 
-void 
+void
 bwrite (int fd, void *loc, unsigned num)
 {
     unsigned char *bp = (unsigned char *)loc;
@@ -509,7 +509,7 @@ bwrite (int fd, void *loc, unsigned num)
     }
 }
 
-void 
+void
 bclose (int fd)
 {
     bufoff(fd);
@@ -577,7 +577,7 @@ void bclose(int fd) {
 }
 #endif /* ZEROCOMP */
 
-static void 
+static void
 savelevchn (int fd, int mode)
 {
         s_level *tmplev, *tmplev2;
@@ -598,7 +598,7 @@ savelevchn (int fd, int mode)
             sp_levchn = 0;
 }
 
-static void 
+static void
 savedamage (int fd, int mode)
 {
         struct damage *damageptr, *tmp_dam;
@@ -622,7 +622,7 @@ savedamage (int fd, int mode)
             level.damagelist = 0;
 }
 
-static void 
+static void
 saveobjchn (int fd, struct obj *otmp, int mode)
 {
         struct obj *otmp2;
@@ -652,7 +652,7 @@ saveobjchn (int fd, struct obj *otmp, int mode)
             bwrite(fd, (void *) &minusone, sizeof(int));
 }
 
-static void 
+static void
 savemonchn (int fd, struct monst *mtmp, int mode)
 {
         struct monst *mtmp2;
@@ -680,7 +680,7 @@ savemonchn (int fd, struct monst *mtmp, int mode)
             bwrite(fd, (void *) &minusone, sizeof(int));
 }
 
-static void 
+static void
 savetrapchn (int fd, struct trap *trap, int mode)
 {
         struct trap *trap2;
@@ -702,7 +702,7 @@ savetrapchn (int fd, struct trap *trap, int mode)
  * we only want to save the fruits which exist on the bones level; the bones
  * level routine marks nonexistent fruits by making the fid negative.
  */
-void 
+void
 savefruitchn (int fd, int mode)
 {
         struct fruit *f2, *f1;
@@ -723,7 +723,7 @@ savefruitchn (int fd, int mode)
 }
 
 /* also called by prscore(); this probably belongs in dungeon.c... */
-void 
+void
 free_dungeons (void)
 {
 #ifdef FREE_ALL_MEMORY
@@ -733,7 +733,7 @@ free_dungeons (void)
         return;
 }
 
-void 
+void
 freedynamicdata (void)
 {
         unload_qtlist();

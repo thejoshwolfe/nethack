@@ -67,7 +67,7 @@ static const char *rip_txt[] = {
 
 static char **rip;
 
-static void 
+static void
 center (int line, char *text)
 {
         char *ip,*op;

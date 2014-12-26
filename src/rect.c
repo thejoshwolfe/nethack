@@ -24,7 +24,7 @@ static int rect_cnt;
  * new level to be build...
  */
 
-void 
+void
 init_rect (void)
 {
         rect_cnt = 1;
@@ -38,7 +38,7 @@ init_rect (void)
  *
  */
 
-int 
+int
 get_rect_ind (NhRect *r)
 {
         NhRect *rectp;
@@ -112,7 +112,7 @@ NhRect *r1, *r2, *r3;
  * Remove a rectangle from the list of free NhRect.
  */
 
-void 
+void
 remove_rect (NhRect *r)
 {
         int ind;
@@ -126,7 +126,7 @@ remove_rect (NhRect *r)
  * Add a NhRect to the list.
  */
 
-void 
+void
 add_rect (NhRect *r)
 {
         if (rect_cnt >= MAXRECT) {
@@ -149,7 +149,7 @@ add_rect (NhRect *r)
  * then remove it.
  */
 
-void 
+void
 split_rects (NhRect *r1, NhRect *r2)
 {
         NhRect r, old_r;
@@ -162,7 +162,7 @@ split_rects (NhRect *r1, NhRect *r2)
         for (i=rect_cnt-1; i>=0; i--)
             if (intersect(&rect[i], r2, &r))
                 split_rects(&rect[i], &r);
-        
+
         if (r2->ly - old_r.ly-1 > (old_r.hy < ROWNO - 1 ? 2*YLIM : YLIM+1)+4) {
                 r = old_r;
                 r.hy = r2->ly - 2;

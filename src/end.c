@@ -16,7 +16,7 @@
 #define FIRST_GEM    DILITHIUM_CRYSTAL
 #define FIRST_AMULET AMULET_OF_ESP
 #define LAST_AMULET  AMULET_OF_YENDOR
- 
+
 struct valuable_data { long count; int typ; };
 
 static struct valuable_data
@@ -74,7 +74,7 @@ extern const char * const killed_by_prefix[];   /* from topten.c */
 FILE *dump_fp = (FILE *)0;  /* file pointer for dumps */
 /* functions dump_init, dump_exit and dump are from the dump patch */
 
-void 
+void
 dump_init (void)
 {
   if (dump_fn[0]) {
@@ -99,7 +99,7 @@ dump_init (void)
         pline("Dump file not created.");
       }
       free(new_dump_fn);
-      
+
     } else {
       dump_fp = fopen (dump_fn, "w");
 
@@ -111,14 +111,14 @@ dump_init (void)
   }
 }
 
-void 
+void
 dump_exit (void)
 {
   if (dump_fp)
     fclose (dump_fp);
 }
 
-void 
+void
 dump (char *pre, char *str)
 {
   if (dump_fp)
@@ -126,7 +126,7 @@ dump (char *pre, char *str)
 }
 
 /*ARGSUSED*/
-void 
+void
 done1 (   /* called as signal() handler, so sent at least one arg */
     int sig_unused
 )
@@ -149,7 +149,7 @@ done1 (   /* called as signal() handler, so sent at least one arg */
 
 
 /* "#quit" command or keyboard interrupt */
-int 
+int
 done2 (void)
 {
         if(yn("Really quit?") == 'n') {
@@ -183,7 +183,7 @@ done2 (void)
 
 #ifndef NO_SIGNAL
 /*ARGSUSED*/
-static void 
+static void
 done_intr ( /* called as signal() handler, so sent at least one arg */
     int sig_unused
 )
@@ -203,7 +203,7 @@ static void done_hangup(int sig) {
 }
 #endif /* NO_SIGNAL */
 
-void 
+void
 done_in_by (struct monst *mtmp)
 {
         char buf[BUFSZ];
@@ -432,7 +432,7 @@ boolean taken;
 }
 
 /* try to get the player back in a viable state after being killed */
-static void 
+static void
 savelife (int how)
 {
         u.uswldtim = 0;
@@ -461,7 +461,7 @@ savelife (int how)
  * Get valuables from the given list.  Revised code: the list always remains
  * intact.
  */
-static void 
+static void
 get_valuables (
     struct obj *list    /* inventory or container contents */
 )
@@ -495,7 +495,7 @@ get_valuables (
  *  Sort collected valuables, most frequent to least.  We could just
  *  as easily use qsort, but we don't care about efficiency here.
  */
-static void 
+static void
 sort_valuables (
     struct valuable_data list[],
     int size            /* max value is less than 20 */
@@ -559,7 +559,7 @@ winid endwin;
 }
 
 /* Be careful not to call panic from here! */
-void 
+void
 done (int how)
 {
         boolean taken;

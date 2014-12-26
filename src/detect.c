@@ -56,7 +56,7 @@ o_material (struct obj *obj, unsigned material)
     return (struct obj *) 0;
 }
 
-static void 
+static void
 do_dknown_of (struct obj *obj)
 {
     struct obj *otmp;
@@ -145,7 +145,7 @@ unsigned material;
 }
 
 /* look for gold, on the floor or in monsters' possession */
-int 
+int
 gold_detect (struct obj *sobj)
 {
     struct obj *obj;
@@ -172,7 +172,7 @@ gold_detect (struct obj *sobj)
                 goto outgoldmap;        /* skip further searching */
             }
     }
-    
+
     /* look for gold objects */
     for (obj = fobj; obj; obj = obj->nobj) {
         if (sobj->blessed && o_material(obj, GOLD)) {
@@ -249,7 +249,7 @@ outgoldmap:
                 break;
             }
     }
-    
+
     newsym(u.ux,u.uy);
     You_feel("very greedy, and sense gold!");
     exercise(A_WIS, TRUE);
@@ -263,7 +263,7 @@ outgoldmap:
 
 /* returns 1 if nothing was detected            */
 /* returns 0 if something was detected          */
-int 
+int
 food_detect (struct obj *sobj)
 {
     struct obj *obj;
@@ -289,7 +289,7 @@ food_detect (struct obj *sobj)
                 break;
             }
     }
-    
+
     if (!ct && !ctu) {
         known = stale && !confused;
         if (stale) {
@@ -368,7 +368,7 @@ food_detect (struct obj *sobj)
  *      1 - nothing was detected
  *      0 - something was detected
  */
-int 
+int
 object_detect (
     struct obj *detector,      /* object doing the detecting */
     int class          /* an object class, 0 for all */
@@ -544,7 +544,7 @@ object_detect (
  * Returns 1 if nothing was detected.
  * Returns 0 if something was detected.
  */
-int 
+int
 monster_detect (
     struct obj *otmp,       /* detecting object (if any) */
     int mclass                     /* monster class, 0 for all */
@@ -607,7 +607,7 @@ monster_detect (
     return 0;
 }
 
-static void 
+static void
 sense_trap (struct trap *trap, signed char x, signed char y, int src_cursed)
 {
     if (Hallucination || src_cursed) {
@@ -639,7 +639,7 @@ sense_trap (struct trap *trap, signed char x, signed char y, int src_cursed)
 /* also be used in the crystal ball routine     */
 /* returns 1 if nothing was detected            */
 /* returns 0 if something was detected          */
-int 
+int
 trap_detect (struct obj *sobj)
 /* sobj is null if crystal ball, *scroll if gold detection scroll */
 {
@@ -748,7 +748,7 @@ static const struct {
   { "the Wizard of Yendor's tower", &wiz1_level },
 };
 
-void 
+void
 use_crystal_ball (struct obj *obj)
 {
     char ch;
@@ -817,7 +817,7 @@ use_crystal_ball (struct obj *obj)
     if (flags.verbose) You("may look for an object or monster symbol.");
     ch = yn_function("What do you look for?", (char *)0, '\0');
     /* Don't filter out ' ' here; it has a use */
-    if ((ch != def_monsyms[S_GHOST]) && index(quitchars,ch)) { 
+    if ((ch != def_monsyms[S_GHOST]) && index(quitchars,ch)) {
         if (flags.verbose) plines(Never_mind);
         return;
     }
@@ -868,7 +868,7 @@ use_crystal_ball (struct obj *obj)
     return;
 }
 
-static void 
+static void
 show_map_spot (int x, int y)
 {
     struct rm *lev;
@@ -898,7 +898,7 @@ show_map_spot (int x, int y)
     }
 }
 
-void 
+void
 do_mapping (void)
 {
     int zx, zy;
@@ -917,7 +917,7 @@ do_mapping (void)
     }
 }
 
-void 
+void
 do_vicinity_map (void)
 {
     int zx, zy;
@@ -938,7 +938,7 @@ do_vicinity_map (void)
 }
 
 /* convert a secret door into a normal door */
-void 
+void
 cvt_sdoor_to_door (struct rm *lev)
 {
         int newmask = lev->doormask & ~WM_MASK;
@@ -951,7 +951,7 @@ cvt_sdoor_to_door (struct rm *lev)
 }
 
 
-static void 
+static void
 findone (int zx, int zy, void *num)
 {
         struct trap *ttmp;
@@ -995,7 +995,7 @@ findone (int zx, int zy, void *num)
         }
 }
 
-static void 
+static void
 openone (int zx, int zy, void *num)
 {
         struct trap *ttmp;
@@ -1046,7 +1046,7 @@ openone (int zx, int zy, void *num)
         }
 }
 
-int 
+int
 findit (void)        /* returns number of things found */
 {
         int num = 0;
@@ -1056,7 +1056,7 @@ findit (void)        /* returns number of things found */
         return(num);
 }
 
-int 
+int
 openit (void)        /* returns number of things found and opened */
 {
         int num = 0;
@@ -1074,7 +1074,7 @@ openit (void)        /* returns number of things found and opened */
         return(num);
 }
 
-void 
+void
 find_trap (struct trap *trap)
 {
     int tt = what_trap(trap->ttyp);
@@ -1103,7 +1103,7 @@ find_trap (struct trap *trap)
     }
 }
 
-int 
+int
 dosearch0 (int aflag)
 {
 #ifdef GCC_BUG
@@ -1210,14 +1210,14 @@ dosearch0 (int aflag)
         return(1);
 }
 
-int 
+int
 dosearch (void)
 {
         return(dosearch0(0));
 }
 
 /* Pre-map the sokoban levels */
-void 
+void
 sokoban_detect (void)
 {
         int x, y;

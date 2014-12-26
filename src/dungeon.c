@@ -91,7 +91,7 @@ void save_dungeon(int fd, boolean perform_write, boolean free_data) {
 }
 
 /* Restore the dungeon structures. */
-void 
+void
 restore_dungeon (int fd)
 {
     branch *curr, *last;
@@ -123,7 +123,7 @@ restore_dungeon (int fd)
     mread(fd, (void *) &inv_pos, sizeof inv_pos);
 }
 
-static void 
+static void
 Fread (void *ptr, int size, int nitems, dlb *stream)
 {
     int cnt;
@@ -136,7 +136,7 @@ Fread (void *ptr, int size, int nitems, dlb *stream)
     }
 }
 
-static signed char 
+static signed char
 dname_to_dnum (const char *s)
 {
     signed char    i;
@@ -159,7 +159,7 @@ find_level (const char *s)
 }
 
 /* Find the branch that links the named dungeon. */
-static int 
+static int
 find_branch (
     const char *s,        /* dungeon name */
     struct proto_dungeon *pd
@@ -192,7 +192,7 @@ find_branch (
  * Find the "parent" by searching the prototype branch list for the branch
  * listing, then figuring out to which dungeon it belongs.
  */
-static signed char 
+static signed char
 parent_dnum (
     const char *s,    /* dungeon name */
     struct proto_dungeon *pd
@@ -254,7 +254,7 @@ static int level_range(signed char dgn, int base, int rand, int chain,
     return 1;
 }
 
-static signed char 
+static signed char
 parent_dlevel (const char *s, struct proto_dungeon *pd)
 {
     int i, j, num, base, dnum = parent_dnum(s, pd);
@@ -280,7 +280,7 @@ parent_dlevel (const char *s, struct proto_dungeon *pd)
 }
 
 /* Convert from the temporary branch type to the dungeon branch type. */
-static int 
+static int
 correct_branch_type (struct tmpbranch *tbr)
 {
     switch (tbr->type) {
@@ -374,7 +374,7 @@ add_branch (int dgn, int child_entry_level, struct proto_dungeon *pd)
  * level that has a dungeon number less than the dungeon number of the
  * last entry.
  */
-static void 
+static void
 add_level (s_level *new_lev)
 {
     s_level *prev, *curr;
@@ -395,7 +395,7 @@ add_level (s_level *new_lev)
     }
 }
 
-static void 
+static void
 init_level (int dgn, int proto_index, struct proto_dungeon *pd)
 {
     s_level    *new_level;
@@ -420,7 +420,7 @@ init_level (int dgn, int proto_index, struct proto_dungeon *pd)
     new_level->flags.maze_like = !!(tlevel->flags & MAZELIKE);
     new_level->flags.rogue_like = !!(tlevel->flags & ROGUELIKE);
     new_level->flags.align = ((tlevel->flags & D_ALIGN_MASK) >> 4);
-    if (!new_level->flags.align) 
+    if (!new_level->flags.align)
         new_level->flags.align =
         ((pd->tmpdungeon[dgn].flags & D_ALIGN_MASK) >> 4);
 
@@ -774,7 +774,7 @@ void init_dungeons(void) {
 
 }
 
-signed char 
+signed char
 dunlev (    /* return the level number for lev in *this* dungeon */
     d_level *lev
 )
@@ -782,7 +782,7 @@ dunlev (    /* return the level number for lev in *this* dungeon */
     return(lev->dlevel);
 }
 
-signed char 
+signed char
 dunlevs_in_dungeon (    /* return the lowest level number for *this* dungeon*/
     d_level *lev
 )
@@ -825,7 +825,7 @@ boolean noquest;
 
 /* return a bookkeeping level number for purpose of comparisons and
  * save/restore */
-signed char 
+signed char
 ledger_no (d_level *lev)
 {
     return((signed char)(lev->dlevel + dungeons[lev->dnum].ledger_start));
@@ -841,7 +841,7 @@ ledger_no (d_level *lev)
  * not be confused with deepest_lev_reached() -- which returns the lowest
  * depth visited by the player.
  */
-signed char 
+signed char
 maxledgerno (void)
 {
     return (signed char) (dungeons[n_dgns-1].ledger_start +
@@ -849,7 +849,7 @@ maxledgerno (void)
 }
 
 /* return the dungeon that this ledgerno exists in */
-signed char 
+signed char
 ledger_to_dnum (signed char ledgerno)
 {
     int i;
@@ -866,7 +866,7 @@ ledger_to_dnum (signed char ledgerno)
 }
 
 /* return the level of the dungeon this ledgerno exists in */
-signed char 
+signed char
 ledger_to_dlev (signed char ledgerno)
 {
     return((signed char)(ledgerno - dungeons[ledger_to_dnum(ledgerno)].ledger_start));
@@ -953,7 +953,7 @@ boolean    at_stairs;
     }
 }
 
-void 
+void
 u_on_newpos (int x, int y)
 {
     u.ux = x;
@@ -962,7 +962,7 @@ u_on_newpos (int x, int y)
     if (u.usteed) u.usteed->mx = u.ux, u.usteed->my = u.uy;
 }
 
-void 
+void
 u_on_sstairs (void) {    /* place you on the special staircase */
 
     if (sstairs.sx) {
@@ -1071,7 +1071,7 @@ d_level *lev;
  * "down" is confined to the current dungeon.  At present, level teleport
  * in dungeons that build up is confined within them.
  */
-void 
+void
 get_level (d_level *newlevel, int levnum)
 {
     branch *br;
@@ -1220,7 +1220,7 @@ d_level    *lev;
 }
 
 
-void 
+void
 find_hell (    /* sets *lev to be the gateway to Gehennom... */
     d_level *lev
 )
@@ -1239,7 +1239,7 @@ boolean    at_stairs, falling;
     goto_level(&lev, at_stairs, falling, FALSE);
 }
 
-void 
+void
 assign_level (        /* equivalent to dest = source */
     d_level *dest,
     d_level *src
@@ -1249,7 +1249,7 @@ assign_level (        /* equivalent to dest = source */
     dest->dlevel = src->dlevel;
 }
 
-void 
+void
 assign_rnd_level (    /* dest = src + rn1(range) */
     d_level *dest,
     d_level *src,
@@ -1266,7 +1266,7 @@ assign_rnd_level (    /* dest = src + rn1(range) */
 }
 
 
-int 
+int
 induced_align (int pct)
 {
     s_level    *lev = Is_special(&u.uz);
@@ -1294,7 +1294,7 @@ d_level *lev;
 /* use instead of depth() wherever a degree of difficulty is made
  * dependent on the location in the dungeon (eg. monster creation).
  */
-signed char 
+signed char
 level_difficulty (void)
 {
     if (In_endgame(&u.uz))

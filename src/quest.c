@@ -22,7 +22,7 @@ static void chat_with_guardian(void);
 static void prisoner_speaks(struct monst *);
 
 
-static void 
+static void
 on_start (void)
 {
   if(!Qstat(first_start)) {
@@ -34,7 +34,7 @@ on_start (void)
   }
 }
 
-static void 
+static void
 on_locate (void)
 {
   if(!Qstat(first_locate)) {
@@ -44,7 +44,7 @@ on_locate (void)
         qt_pager(QT_NEXTLOCATE);
 }
 
-static void 
+static void
 on_goal (void)
 {
   if (Qstat(killed_nemesis)) {
@@ -58,7 +58,7 @@ on_goal (void)
   }
 }
 
-void 
+void
 onquest (void)
 {
         if(u.uevent.qcompleted || Not_firsttime) return;
@@ -70,7 +70,7 @@ onquest (void)
         return;
 }
 
-void 
+void
 nemdead (void)
 {
         if(!Qstat(killed_nemesis)) {
@@ -79,7 +79,7 @@ nemdead (void)
         }
 }
 
-void 
+void
 artitouch (void)
 {
         if(!Qstat(touched_artifact)) {
@@ -171,7 +171,7 @@ boolean seal;
    completion text hasn't been given yet, give it now.  Otherwise
    give another message about the character keeping the artifact
    and using the magic portal to return to the dungeon. */
-void 
+void
 finish_quest (
     struct obj *obj     /* quest artifact; possibly null if carrying Amulet */
 )
@@ -201,7 +201,7 @@ finish_quest (
         }
 }
 
-static void 
+static void
 chat_with_leader (void)
 {
 /*      Rule 0: Cheater checks.                                 */
@@ -268,7 +268,7 @@ chat_with_leader (void)
         }
 }
 
-void 
+void
 leader_speaks (struct monst *mtmp)
 {
         /* maybe you attacked leader? */
@@ -286,7 +286,7 @@ leader_speaks (struct monst *mtmp)
         } else chat_with_leader();
 }
 
-static void 
+static void
 chat_with_nemesis (void)
 {
 /*      The nemesis will do most of the talking, but... */
@@ -294,7 +294,7 @@ chat_with_nemesis (void)
         if(!Qstat(met_nemesis)) Qstat(met_nemesis++);
 }
 
-void 
+void
 nemesis_speaks (void)
 {
         if(!Qstat(in_battle)) {
@@ -310,7 +310,7 @@ nemesis_speaks (void)
           if(!rn2(5))   qt_pager(rn1(10, QT_DISCOURAGE));
 }
 
-static void 
+static void
 chat_with_guardian (void)
 {
 /*      These guys/gals really don't have much to say... */
@@ -320,7 +320,7 @@ chat_with_guardian (void)
             qt_pager(rn1(5, QT_GUARDTALK));
 }
 
-static void 
+static void
 prisoner_speaks (struct monst *mtmp)
 {
         if (mtmp->data == &mons[PM_PRISONER] &&
@@ -341,7 +341,7 @@ prisoner_speaks (struct monst *mtmp)
         return;
 }
 
-void 
+void
 quest_chat (struct monst *mtmp)
 {
     if (mtmp->m_id == Qstat(leader_m_id)) {
@@ -356,7 +356,7 @@ quest_chat (struct monst *mtmp)
         }
 }
 
-void 
+void
 quest_talk (struct monst *mtmp)
 {
     if (mtmp->m_id == Qstat(leader_m_id)) {
@@ -370,7 +370,7 @@ quest_talk (struct monst *mtmp)
         }
 }
 
-void 
+void
 quest_stat_check (struct monst *mtmp)
 {
     if(mtmp->data->msound == MS_NEMESIS)

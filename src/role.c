@@ -502,14 +502,14 @@ validrole(rolenum)
 }
 
 
-int 
+int
 randrole (void)
 {
         return (rn2(SIZE(roles)-1));
 }
 
 
-int 
+int
 str2role (char *str)
 {
         int i, len;
@@ -551,7 +551,7 @@ validrace(rolenum, racenum)
 }
 
 
-int 
+int
 randrace (int rolenum)
 {
         int i, n = 0;
@@ -575,7 +575,7 @@ randrace (int rolenum)
 }
 
 
-int 
+int
 str2race (char *str)
 {
         int i, len;
@@ -615,7 +615,7 @@ validgend(rolenum, racenum, gendnum)
 }
 
 
-int 
+int
 randgend (int rolenum, int racenum)
 {
         int i, n = 0;
@@ -640,7 +640,7 @@ randgend (int rolenum, int racenum)
 }
 
 
-int 
+int
 str2gend (char *str)
 {
         int i, len;
@@ -679,7 +679,7 @@ validalign(rolenum, racenum, alignnum)
 }
 
 
-int 
+int
 randalign (int rolenum, int racenum)
 {
         int i, n = 0;
@@ -704,7 +704,7 @@ randalign (int rolenum, int racenum)
 }
 
 
-int 
+int
 str2align (char *str)
 {
         int i, len;
@@ -772,7 +772,7 @@ int rolenum, racenum, gendnum, alignnum;
 /* pick a random role subject to any racenum/gendnum/alignnum constraints */
 /* If pickhow == PICK_RIGID a role is returned only if there is  */
 /* a single possibility */
-int 
+int
 pick_role (int racenum, int gendnum, int alignnum, int pickhow)
 {
     int i;
@@ -837,7 +837,7 @@ int rolenum, racenum, gendnum, alignnum;
 /* pick a random race subject to any rolenum/gendnum/alignnum constraints */
 /* If pickhow == PICK_RIGID a race is returned only if there is  */
 /* a single possibility */
-int 
+int
 pick_race (int rolenum, int gendnum, int alignnum, int pickhow)
 {
     int i;
@@ -898,7 +898,7 @@ int rolenum, racenum, gendnum, alignnum;
 /* gender and alignment are not comparable (and also not constrainable) */
 /* If pickhow == PICK_RIGID a gender is returned only if there is  */
 /* a single possibility */
-int 
+int
 pick_gend (int rolenum, int racenum, int alignnum, int pickhow)
 {
     int i;
@@ -959,7 +959,7 @@ int rolenum, racenum, gendnum, alignnum;
 /* alignment and gender are not comparable (and also not constrainable) */
 /* If pickhow == PICK_RIGID an alignment is returned only if there is  */
 /* a single possibility */
-int 
+int
 pick_align (int rolenum, int racenum, int gendnum, int pickhow)
 {
     int i;
@@ -983,7 +983,7 @@ pick_align (int rolenum, int racenum, int gendnum, int pickhow)
     return ROLE_NONE;
 }
 
-void 
+void
 rigid_role_checks (void)
 {
     /* Some roles are limited to a single race, alignment, or gender and
@@ -1031,14 +1031,14 @@ promptsep (char *buf, int num_post_attribs)
         const char *conj = "and ";
         if (num_post_attribs > 1
             && post_attribs < num_post_attribs && post_attribs > 1)
-                Strcat(buf, ","); 
+                Strcat(buf, ",");
         Strcat(buf, " ");
         --post_attribs;
         if (!post_attribs && num_post_attribs > 1) Strcat(buf, conj);
         return buf;
 }
 
-static int 
+static int
 role_gendercount (int rolenum)
 {
         int gendcount = 0;
@@ -1050,7 +1050,7 @@ role_gendercount (int rolenum)
         return gendcount;
 }
 
-static int 
+static int
 race_alignmentcount (int racenum)
 {
         int aligncount = 0;
@@ -1078,7 +1078,7 @@ root_plselection_prompt (char *suppliedbuf, int buflen, int rolenum, int racenum
                 pa[k] = 0;
         buf[0] = '\0';
         *suppliedbuf = '\0';
-        
+
         /* How many alignments are allowed for the desired race? */
         if (racenum != ROLE_NONE && racenum != ROLE_RANDOM)
                 aligncount = race_alignmentcount(racenum);
@@ -1140,7 +1140,7 @@ root_plselection_prompt (char *suppliedbuf, int buflen, int rolenum, int racenum
 
         if (racenum != ROLE_NONE && racenum != ROLE_RANDOM) {
                 if (validrole(rolenum) && ok_race(rolenum, racenum, gendnum, alignnum)) {
-                        if (donefirst) Strcat(buf, " "); 
+                        if (donefirst) Strcat(buf, " ");
                         Strcat(buf, (rolenum == ROLE_NONE) ?
                                 races[racenum].noun :
                                 races[racenum].adj);
@@ -1171,7 +1171,7 @@ root_plselection_prompt (char *suppliedbuf, int buflen, int rolenum, int racenum
                                 Strcat(buf, roles[rolenum].name.m);
                                 Strcat(buf, "/");
                                 Strcat(buf, roles[rolenum].name.f);
-                        } else 
+                        } else
                                 Strcat(buf, roles[rolenum].name.m);
                 }
                 donefirst = TRUE;
@@ -1179,7 +1179,7 @@ root_plselection_prompt (char *suppliedbuf, int buflen, int rolenum, int racenum
                 pa[BP_ROLE] = 1;
                 post_attribs++;
         }
-        
+
         if ((racenum == ROLE_NONE || racenum == ROLE_RANDOM) && !validrole(rolenum)) {
                 if (donefirst) Strcat(buf, " ");
                 Strcat(buf, "character");
@@ -1201,7 +1201,7 @@ build_plselection_prompt (char *buf, int buflen, int rolenum, int racenum, int g
         const char *defprompt = "Shall I pick a character for you? [ynq] ";
         int num_post_attribs = 0;
         char tmpbuf[BUFSZ];
-        
+
         if (buflen < QBUFSZ)
                 return (char *)defprompt;
 
@@ -1253,7 +1253,7 @@ build_plselection_prompt (char *buf, int buflen, int rolenum, int racenum, int g
 #undef BP_ROLE
 #undef NUM_BP
 
-void 
+void
 plnamesuffix (void)
 {
         char *sptr, *eptr;
@@ -1306,7 +1306,7 @@ plnamesuffix (void)
  *
  * This code also replaces quest_init().
  */
-void 
+void
 role_init (void)
 {
         int alignmnt;

@@ -56,7 +56,7 @@ extern char circle_start[];
 
 
 /* Create a new light source.  */
-void 
+void
 new_light_source (signed char x, signed char y, int range, int type, void *id)
 {
     light_source *ls;
@@ -84,7 +84,7 @@ new_light_source (signed char x, signed char y, int range, int type, void *id)
  * Delete a light source. This assumes only one light source is attached
  * to an object at a time.
  */
-void 
+void
 del_light_source (int type, void *id)
 {
     light_source *curr, *prev;
@@ -119,7 +119,7 @@ del_light_source (int type, void *id)
 }
 
 /* Mark locations that are temporarily lit via mobile light sources. */
-void 
+void
 do_light_sources (char **cs_rows)
 {
     int x, y, min_x, max_x, max_y, offset;
@@ -220,7 +220,7 @@ find_mid (unsigned nid, unsigned fmflags)
 }
 
 /* Save all light sources of the given range. */
-void 
+void
 save_light_sources (int fd, int mode, int range)
 {
     int count, actual, is_global;
@@ -269,7 +269,7 @@ save_light_sources (int fd, int mode, int range)
  * Pull in the structures from disk, but don't recalculate the object
  * pointers.
  */
-void 
+void
 restore_light_sources (int fd)
 {
     int count;
@@ -363,7 +363,7 @@ maybe_write_ls(fd, range, write_it)
 }
 
 /* Write a light source structure to disk. */
-static void 
+static void
 write_ls (int fd, light_source *ls)
 {
     void * arg_save;
@@ -394,7 +394,7 @@ write_ls (int fd, light_source *ls)
 }
 
 /* Change light source's ID from src to dest. */
-void 
+void
 obj_move_light_source (struct obj *src, struct obj *dest)
 {
     light_source *ls;
@@ -417,7 +417,7 @@ any_light_source()
  * Snuff an object light source if at (x,y).  This currently works
  * only for burning light sources.
  */
-void 
+void
 snuff_light_source (int x, int y)
 {
     light_source *ls;
@@ -468,7 +468,7 @@ obj_is_burning(obj)
 }
 
 /* copy the light source(s) attachted to src, and attach it/them to dest */
-void 
+void
 obj_split_light_source (struct obj *src, struct obj *dest)
 {
     light_source *ls, *new_ls;
@@ -497,7 +497,7 @@ obj_split_light_source (struct obj *src, struct obj *dest)
 
 /* light source `src' has been folded into light source `dest';
    used for merging lit candles and adding candle(s) to lit candelabrum */
-void 
+void
 obj_merge_light_sources (struct obj *src, struct obj *dest)
 {
     light_source *ls;
@@ -515,7 +515,7 @@ obj_merge_light_sources (struct obj *src, struct obj *dest)
 
 /* Candlelight is proportional to the number of candles;
    minimum range is 2 rather than 1 for playability. */
-int 
+int
 candle_light_range (struct obj *obj)
 {
     int radius;
@@ -556,7 +556,7 @@ candle_light_range (struct obj *obj)
 #ifdef WIZARD
 extern char *fmt_ptr(const void *, char *);  /* from alloc.c */
 
-int 
+int
 wiz_light_sources (void)
 {
     winid win;

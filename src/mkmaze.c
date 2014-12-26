@@ -78,7 +78,7 @@ is_solid(x,y)
  *              W x W           This would extend a spine from x down.
  *              . W W
  */
-static int 
+static int
 extend_spine (int locale[3][3], int wall_there, int dx, int dy)
 {
     int spine, nx, ny;
@@ -115,7 +115,7 @@ extend_spine (int locale[3][3], int wall_there, int dx, int dy)
  * are totally surrounded by stone - they are redundant.  (2) correct
  * the types so that they extend and connect to each other.
  */
-void 
+void
 wallification (int x1, int y1, int x2, int y2)
 {
         unsigned char type;
@@ -203,7 +203,7 @@ int dir;
         return(TRUE);
 }
 
-static void 
+static void
 maze0xy (       /* find random starting point for maze generation */
     coord *cc
 )
@@ -232,7 +232,7 @@ bad_location(x, y, lx, ly, hx, hy)
 
 /* pick a location in area (lx, ly, hx, hy) but not in (nlx, nly, nhx, nhy) */
 /* and place something (based on rtype) in that region */
-void 
+void
 place_lregion (signed char lx, signed char ly, signed char hx, signed char hy, signed char nlx, signed char nly, signed char nhx, signed char nhy, signed char rtype, d_level *lev)
 {
     int trycnt;
@@ -320,7 +320,7 @@ static boolean put_lregion_here(signed char x, signed char y,
 static boolean was_waterlevel; /* ugh... this shouldn't be needed */
 
 /* this is special stuff that the level compiler cannot (yet) handle */
-static void 
+static void
 fixup_special (void)
 {
     lev_region *r = lregions;
@@ -482,7 +482,7 @@ fixup_special (void)
     num_lregions = 0;
 }
 
-void 
+void
 makemaz (const char *s)
 {
         int x,y;
@@ -651,7 +651,7 @@ void walkfrom(int x, int y) {
         }
 }
 
-static void 
+static void
 move (int *x, int *y, int dir)
 {
         switch(dir){
@@ -663,7 +663,7 @@ move (int *x, int *y, int dir)
         }
 }
 
-void 
+void
 mazexy (        /* find random point in generated corridors,
                    so we don't create items in moats, bunkers, or walls */
     coord *cc
@@ -694,7 +694,7 @@ mazexy (        /* find random point in generated corridors,
         return;
 }
 
-void 
+void
 bound_digging (void)
 /* put a non-diggable boundary around the initial portion of a level map.
  * assumes that no level will initially put things beyond the isok() range.
@@ -816,7 +816,7 @@ static void set_wportal(void);
 static void mk_bubble(int,int,int);
 static void mv_bubble(struct bubble *,int,int,boolean);
 
-void 
+void
 movebubbles (void)
 {
         static boolean up;
@@ -940,7 +940,7 @@ movebubbles (void)
 }
 
 /* when moving in water, possibly (1 in 3) alter the intended destination */
-void 
+void
 water_friction (void)
 {
         int x, y, dx, dy;
@@ -973,7 +973,7 @@ water_friction (void)
         if (eff) pline("Water turbulence affects your movements.");
 }
 
-void 
+void
 save_waterlevel (int fd, int mode)
 {
         struct bubble *b;
@@ -995,7 +995,7 @@ save_waterlevel (int fd, int mode)
             unsetup_waterlevel();
 }
 
-void 
+void
 restore_waterlevel (int fd)
 {
         struct bubble *b = (struct bubble *)0, *btmp;
@@ -1056,7 +1056,7 @@ waterbody_name (signed char x, signed char y)
         else return "water";
 }
 
-static void 
+static void
 set_wportal (void)
 {
         /* there better be only one magic portal on water level... */
@@ -1065,7 +1065,7 @@ set_wportal (void)
         impossible("set_wportal(): no portal!");
 }
 
-static void 
+static void
 setup_waterlevel (void)
 {
         int x, y;
@@ -1094,7 +1094,7 @@ setup_waterlevel (void)
                         mk_bubble(x,y,rn2(7));
 }
 
-static void 
+static void
 unsetup_waterlevel (void)
 {
         struct bubble *b, *bb;
@@ -1108,7 +1108,7 @@ unsetup_waterlevel (void)
         bbubbles = ebubbles = (struct bubble *)0;
 }
 
-static void 
+static void
 mk_bubble (int x, int y, int n)
 {
         /*

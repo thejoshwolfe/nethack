@@ -191,7 +191,7 @@ boolean special;
         nsubroom++;
 }
 
-static void 
+static void
 makerooms (void)
 {
         boolean tried_vault = FALSE;
@@ -285,7 +285,7 @@ boolean nxcor;
                 smeq[a] = smeq[b];
 }
 
-void 
+void
 makecorridors (void)
 {
         int a, b, i;
@@ -315,7 +315,7 @@ makecorridors (void)
             }
 }
 
-void 
+void
 add_door (int x, int y, struct mkroom *aroom)
 {
         struct mkroom *broom;
@@ -412,7 +412,7 @@ static const char *trap_engravings[TRAPNUM] = {
                         (char *)0,
 };
 
-static void 
+static void
 makeniche (int trap_type)
 {
         struct mkroom *aroom;
@@ -462,7 +462,7 @@ makeniche (int trap_type)
         }
 }
 
-static void 
+static void
 make_niches (void)
 {
         int ct = rnd((nroom>>1) + 1), dep = depth(&u.uz);
@@ -481,7 +481,7 @@ make_niches (void)
         }
 }
 
-static void 
+static void
 makevtele (void)
 {
         makeniche(TELEP_TRAP);
@@ -492,7 +492,7 @@ makevtele (void)
  * special) but it's easier to put it all in one place than make sure
  * each type initializes what it needs to separately.
  */
-static void 
+static void
 clear_level_structures (void)
 {
         static struct rm zerorm = { cmap_to_glyph(S_stone),
@@ -547,7 +547,7 @@ clear_level_structures (void)
         clear_regions();
 }
 
-static void 
+static void
 makelevel (void)
 {
         struct mkroom *croom, *troom;
@@ -756,7 +756,7 @@ makelevel (void)
  *      surrounding the rooms on the map.
  *      Also place kelp in water.
  */
-static void 
+static void
 mineralize (void)
 {
         s_level *sp;
@@ -833,7 +833,7 @@ mineralize (void)
             }
 }
 
-void 
+void
 mklev (void)
 {
         struct mkroom *croom;
@@ -961,7 +961,7 @@ static struct mkroom * pos_to_room(signed char x, signed char y) {
 
 
 /* If given a branch, randomly place a special stair or portal. */
-void 
+void
 place_branch (
     branch *br, /* branch to place */
     signed char x,
@@ -1044,7 +1044,7 @@ static boolean bydoor(signed char x, signed char y) {
 }
 
 /* see whether it is allowable to create a door at [x,y] */
-int 
+int
 okdoor (signed char x, signed char y)
 {
         boolean near_door = bydoor(x, y);
@@ -1053,7 +1053,7 @@ okdoor (signed char x, signed char y)
                         doorindex < DOORMAX && !near_door);
 }
 
-void 
+void
 dodoor (int x, int y, struct mkroom *aroom)
 {
         if(doorindex >= DOORMAX) {
@@ -1078,7 +1078,7 @@ signed char x, y;
 
 /* make a trap somewhere (in croom if mazeflag = 0 && !tm) */
 /* if tm != null, make trap at that location */
-void 
+void
 mktrap (int num, int mazeflag, struct mkroom *croom, coord *tm)
 {
         int kind;
@@ -1182,7 +1182,7 @@ void mkstairs(signed char x, signed char y, char up, struct mkroom *croom) {
         levl[x][y].ladder = up ? LA_UP : LA_DOWN;
 }
 
-static void 
+static void
 mkfount (int mazeflag, struct mkroom *croom)
 {
         coord m;
@@ -1205,7 +1205,7 @@ mkfount (int mazeflag, struct mkroom *croom)
         level.flags.nfountains++;
 }
 
-static void 
+static void
 mksink (struct mkroom *croom)
 {
         coord m;
@@ -1224,7 +1224,7 @@ mksink (struct mkroom *croom)
 }
 
 
-static void 
+static void
 mkaltar (struct mkroom *croom)
 {
         coord m;
@@ -1247,7 +1247,7 @@ mkaltar (struct mkroom *croom)
         levl[m.x][m.y].altarmask = Align2amask( al );
 }
 
-static void 
+static void
 mkgrave (struct mkroom *croom)
 {
         coord m;
@@ -1295,7 +1295,7 @@ mkgrave (struct mkroom *croom)
  * which is guaranteed for normal play due to the fact that sight is needed
  * to read the Book of the Dead.
  */
-void 
+void
 mkinvokearea (void)
 {
     int dist;

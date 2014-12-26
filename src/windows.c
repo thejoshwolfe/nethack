@@ -26,7 +26,7 @@ static void def_raw_print(const char *s) {
 void choose_windows(const char *s) {
     char *ow; const char *wt;
     int i;
-    
+
     if (!strcmp(s, DEFAULT_WINDOW_SYS) && (ow = getenv("OVERRIDEWIN")))
       wt = ow;
     else
@@ -56,7 +56,7 @@ void choose_windows(const char *s) {
  * --More-- prompt; other interfaces generally don't need that.
  */
 /*ARGSUSED*/
-char 
+char
 genl_message_menu (char let, int how, const char *mesg)
 {
     pline("%s", mesg);
@@ -64,7 +64,7 @@ genl_message_menu (char let, int how, const char *mesg)
 }
 
 /*ARGSUSED*/
-void 
+void
 genl_preference_update (const char *pref)
 {
         /* window ports are expected to provide

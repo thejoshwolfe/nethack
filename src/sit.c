@@ -4,7 +4,7 @@
 #include "extern.h"
 #include "winprocs.h"
 
-void 
+void
 take_gold (void)
 {
         if (u.ugold <= 0)  {
@@ -16,7 +16,7 @@ take_gold (void)
         }
 }
 
-int 
+int
 dosit (void)
 {
         static const char sit_message[] = "sit on the %s.";
@@ -285,7 +285,7 @@ dosit (void)
         return(1);
 }
 
-void 
+void
 rndcurse (void)                 /* curse a few inventory items at random! */
 {
         int     nobj = 0;
@@ -349,7 +349,7 @@ rndcurse (void)                 /* curse a few inventory items at random! */
         }
 }
 
-void 
+void
 attrcurse (void)                        /* remove a random INTRINSIC ability */
 {
         switch(rnd(11)) {

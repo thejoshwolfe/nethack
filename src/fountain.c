@@ -13,13 +13,13 @@ static void dowaternymph(void);
 static void gush(int,int,void *);
 static void dofindgem(void);
 
-void 
+void
 floating_above (const char *what)
 {
     You("are floating high above the %s.", what);
 }
 
-static void 
+static void
 dowatersnakes (void) /* Fountain of snakes! */
 {
     int num = rn1(5,2);
@@ -39,7 +39,7 @@ dowatersnakes (void) /* Fountain of snakes! */
         pline_The("fountain bubbles furiously for a moment, then calms.");
 }
 
-static void 
+static void
 dowaterdemon (void) /* Water demon */
 {
     struct monst *mtmp;
@@ -64,7 +64,7 @@ dowaterdemon (void) /* Water demon */
         pline_The("fountain bubbles furiously for a moment, then calms.");
 }
 
-static void 
+static void
 dowaternymph (void) /* Water Nymph */
 {
         struct monst *mtmp;
@@ -85,7 +85,7 @@ dowaternymph (void) /* Water Nymph */
                    You_hear("a loud pop.");
 }
 
-void 
+void
 dogushforth ( /* Gushing forth along LOS from (u.ux, u.uy) */
     int drinking
 )
@@ -101,7 +101,7 @@ dogushforth ( /* Gushing forth along LOS from (u.ux, u.uy) */
         }
 }
 
-static void 
+static void
 gush (int x, int y, void *poolcnt)
 {
         struct monst *mtmp;
@@ -131,7 +131,7 @@ gush (int x, int y, void *poolcnt)
                 newsym(x,y);
 }
 
-static void 
+static void
 dofindgem (void) /* Find a gem in the sparkling waters. */
 {
         if (!Blind) You("spot a gem in the sparkling waters!");
@@ -189,7 +189,7 @@ boolean isyou;
         }
 }
 
-void 
+void
 drinkfountain (void)
 {
         /* What happens when you drink from a fountain? */
@@ -345,7 +345,7 @@ drinkfountain (void)
         dryup(u.ux, u.uy, TRUE);
 }
 
-void 
+void
 dipfountain (struct obj *obj)
 {
         if (Levitation) {
@@ -467,7 +467,7 @@ dipfountain (struct obj *obj)
         dryup(u.ux, u.uy, TRUE);
 }
 
-void 
+void
 breaksink (int x, int y)
 {
     if(cansee(x,y) || (x == u.ux && y == u.uy))
@@ -479,7 +479,7 @@ breaksink (int x, int y)
     newsym(x,y);
 }
 
-void 
+void
 drinksink (void)
 {
         struct obj *otmp;

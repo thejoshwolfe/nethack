@@ -48,7 +48,7 @@ mon_nam_too (char *outbuf, struct monst *mon, struct monst *other_mon)
         return outbuf;
 }
 
-static void 
+static void
 noises (struct monst *magr, struct attack *mattk)
 {
         boolean farq = (distu(magr->mx, magr->my) > 15);
@@ -62,7 +62,7 @@ noises (struct monst *magr, struct attack *mattk)
         }
 }
 
-static void 
+static void
 missmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         const char *fmt;
@@ -93,7 +93,7 @@ missmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
  *  then we report that the monster did nothing so it will continue to
  *  digest the hero.
  */
-int 
+int
 fightm (                /* have monsters fight each other */
     struct monst *mtmp
 )
@@ -180,7 +180,7 @@ fightm (                /* have monsters fight each other */
  *
  * In the case of exploding monsters, the monster dies as well.
  */
-int 
+int
 mattackm (struct monst *magr, struct monst *mdef)
 {
     int             i,          /* loop counter */
@@ -266,7 +266,7 @@ mattackm (struct monst *magr, struct monst *mdef)
                     return MM_MISS;
                 /* Monsters won't attack cockatrices physically if they
                  * have a weapon instead.  This instinct doesn't work for
-                 * players, or under conflict or confusion. 
+                 * players, or under conflict or confusion.
                  */
                 if (!magr->mconf && !Conflict && otmp &&
                     mattk->aatyp != AT_WEAP && touch_petrifies(mdef->data)) {
@@ -322,7 +322,7 @@ mattackm (struct monst *magr, struct monst *mdef)
                 if (u.usteed && (mdef == u.usteed)) {
                     strike = 0;
                     break;
-                } 
+                }
                 /* Engulfing attacks are directed at the hero if
                  * possible. -dlc
                  */
@@ -364,7 +364,7 @@ mattackm (struct monst *magr, struct monst *mdef)
 }
 
 /* Returns the result of mdamagem(). */
-static int 
+static int
 hitmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         if(vis){
@@ -419,7 +419,7 @@ hitmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 }
 
 /* Returns the same values as mdamagem(). */
-static int 
+static int
 gazemm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         char buf[BUFSZ];
@@ -466,7 +466,7 @@ gazemm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 }
 
 /* Returns the same values as mattackm(). */
-static int 
+static int
 gulpmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         signed char     ax, ay, dx, dy;
@@ -532,7 +532,7 @@ gulpmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
         return status;
 }
 
-static int 
+static int
 explmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         int result;
@@ -561,7 +561,7 @@ explmm (struct monst *magr, struct monst *mdef, struct attack *mattk)
 /*
  *  See comment at top of mattackm(), for return values.
  */
-static int 
+static int
 mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
         struct obj *obj;
@@ -1122,7 +1122,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
 
 
 
-int 
+int
 noattacks (                     /* returns 1 if monster doesn't attack */
     struct permonst *ptr
 )
@@ -1136,7 +1136,7 @@ noattacks (                     /* returns 1 if monster doesn't attack */
 }
 
 /* `mon' is hit by a sleep attack; return 1 if it's affected, 0 otherwise */
-int 
+int
 sleep_monst (struct monst *mon, int amt, int how)
 {
         if (resists_sleep(mon) ||
@@ -1156,7 +1156,7 @@ sleep_monst (struct monst *mon, int amt, int how)
 }
 
 /* sleeping grabber releases, engulfer doesn't; don't use for paralysis! */
-void 
+void
 slept_monst (struct monst *mon)
 {
         if ((mon->msleeping || !mon->mcanmove) && mon == u.ustuck &&
@@ -1167,7 +1167,7 @@ slept_monst (struct monst *mon)
 }
 
 
-static void 
+static void
 mrustm (struct monst *magr, struct monst *mdef, struct obj *obj)
 {
         boolean is_acid;
@@ -1202,7 +1202,7 @@ mrustm (struct monst *magr, struct monst *mdef, struct obj *obj)
         }
 }
 
-static void 
+static void
 mswingsm (struct monst *magr, struct monst *mdef, struct obj *otemp)
 {
         char buf[BUFSZ];
@@ -1360,7 +1360,7 @@ int mdead;
 
 /* "aggressive defense"; what type of armor prevents specified attack
    from touching its target? */
-long 
+long
 attk_protection (int aatyp)
 {
     long w_mask = 0L;

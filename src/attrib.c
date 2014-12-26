@@ -154,7 +154,7 @@ adjattrib(ndx, incr, msgflg)
         return TRUE;
 }
 
-void 
+void
 gainstr (struct obj *otmp, int incr)
 {
         int num = 1;
@@ -167,7 +167,7 @@ gainstr (struct obj *otmp, int incr)
         (void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, TRUE);
 }
 
-void 
+void
 losestr (       /* may kill you; cause may be poison or monster like 'a' */
     int num
 )
@@ -188,7 +188,7 @@ losestr (       /* may kill you; cause may be poison or monster like 'a' */
         (void) adjattrib(A_STR, -num, TRUE);
 }
 
-void 
+void
 change_luck (signed char n)
 {
         u.uluck += n;
@@ -214,7 +214,7 @@ boolean parameter; /* So I can't think up of a good name.  So sue me. --KAA */
 }
 
 /* there has just been an inventory change affecting a luck-granting item */
-void 
+void
 set_moreluck (void)
 {
         int luckbon = stone_luck(TRUE);
@@ -225,7 +225,7 @@ set_moreluck (void)
 }
 
 
-void 
+void
 restore_attrib (void)
 {
         int     i;
@@ -281,7 +281,7 @@ boolean inc_or_dec;
 #define FAINTED         5
 #define STARVED         6
 
-static void 
+static void
 exerper (void)
 {
         if(!(moves % 10)) {
@@ -325,13 +325,13 @@ exerper (void)
 
                 if(Sick || Vomiting)     exercise(A_CON, FALSE);
                 if(Confusion || Hallucination)          exercise(A_WIS, FALSE);
-                if((Wounded_legs 
+                if((Wounded_legs
                     && !u.usteed
                             ) || Fumbling || HStun)     exercise(A_DEX, FALSE);
         }
 }
 
-void 
+void
 exerchk (void)
 {
         int     i, mod_val;
@@ -609,7 +609,7 @@ signed char acurr(int x) {
 
 /* condense clumsy ACURR(A_STR) value into value that fits into game formulas
  */
-signed char 
+signed char
 acurrstr (void)
 {
         int str = ACURR(A_STR);

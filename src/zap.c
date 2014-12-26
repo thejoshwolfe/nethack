@@ -88,7 +88,7 @@ const char * const flash_types[] = {    /* also used in buzzmu(mcastu.c) */
 
 /* Routines for IMMEDIATE wands and spells. */
 /* bhitm: monster mtmp was hit by the effect of wand or spell otmp */
-int 
+int
 bhitm (struct monst *mtmp, struct obj *otmp)
 {
         boolean wake = TRUE;    /* Most 'zaps' should wake monster */
@@ -345,7 +345,7 @@ bhitm (struct monst *mtmp, struct obj *otmp)
         return 0;
 }
 
-void 
+void
 probe_monster (struct monst *mtmp)
 {
         struct obj *otmp;
@@ -503,7 +503,7 @@ coord *cc;
 /*
  * get_container_location() returns the following information
  * about the outermost container:
- * loc argument gets set to: 
+ * loc argument gets set to:
  *      OBJ_INVENT      if in hero's inventory; return 0.
  *      OBJ_FLOOR       if on the floor; return 0.
  *      OBJ_BURIED      if buried; return 0.
@@ -692,7 +692,7 @@ revive (struct obj *obj)
         return mtmp;
 }
 
-static void 
+static void
 revive_egg (struct obj *obj)
 {
         /*
@@ -704,7 +704,7 @@ revive_egg (struct obj *obj)
 }
 
 /* try to revive all corpses and eggs carried by `mon' */
-int 
+int
 unturn_dead (struct monst *mon)
 {
         struct obj *otmp, *otmp2;
@@ -741,7 +741,7 @@ unturn_dead (struct monst *mon)
 
 static const char charged_objs[] = { WAND_CLASS, WEAPON_CLASS, ARMOR_CLASS, 0 };
 
-static void 
+static void
 costly_cancel (struct obj *obj)
 {
         char objroom;
@@ -772,7 +772,7 @@ costly_cancel (struct obj *obj)
 }
 
 /* cancel obj, possibly carried by you or a monster */
-void 
+void
 cancel_item (struct obj *obj)
 {
         boolean u_ring = (obj == uleft) || (obj == uright);
@@ -984,7 +984,7 @@ struct obj *obj;
  * there's a random factor here to keep from always using the stuff
  * at the top of the pile.
  */
-static void 
+static void
 polyuse (struct obj *objhdr, int mat, int minwt)
 {
     struct obj *otmp, *otmp2;
@@ -1018,7 +1018,7 @@ polyuse (struct obj *objhdr, int mat, int minwt)
  * Polymorph some of the stuff in this pile into a monster, preferably
  * a golem of the kind okind.
  */
-static void 
+static void
 create_polymon (struct obj *obj, int okind)
 {
         struct permonst *mdat = (struct permonst *)0;
@@ -1099,7 +1099,7 @@ create_polymon (struct obj *obj, int okind)
 }
 
 /* Assumes obj is on the floor. */
-void 
+void
 do_osshock (struct obj *obj)
 {
         long i;
@@ -1387,7 +1387,7 @@ no_unwear:
  * Object obj was hit by the effect of the wand/spell otmp.  Return
  * non-zero if the wand/spell had any effect.
  */
-int 
+int
 bhito (struct obj *obj, struct obj *otmp)
 {
         int res = 1;    /* affected object by default */
@@ -1643,7 +1643,7 @@ smell:
 }
 
 /* returns nonzero if something was hit */
-int 
+int
 bhitpile (struct obj *obj, int (*fhito)( OBJ_P,  OBJ_P), int tx, int ty)
 {
     int hitanything = 0;
@@ -1679,7 +1679,7 @@ bhitpile (struct obj *obj, int (*fhito)( OBJ_P,  OBJ_P), int tx, int ty)
  *            it removes a charge from the wand if zappable.
  * added by GAN 11/03/86
  */
-int 
+int
 zappable (struct obj *wand)
 {
         if(wand->spe < 0 || (wand->spe == 0 && rn2(121)))
@@ -1694,7 +1694,7 @@ zappable (struct obj *wand)
  * zapnodir - zaps a NODIR wand/spell.
  * added by GAN 11/03/86
  */
-void 
+void
 zapnodir (struct obj *obj)
 {
         boolean known = FALSE;
@@ -1737,7 +1737,7 @@ zapnodir (struct obj *obj)
         }
 }
 
-static void 
+static void
 backfire (struct obj *otmp)
 {
         otmp->in_use = TRUE;    /* in case losehp() is fatal */
@@ -1748,7 +1748,7 @@ backfire (struct obj *otmp)
 
 static const char zap_syms[] = { WAND_CLASS, 0 };
 
-int 
+int
 dozap (void)
 {
         struct obj *obj;
@@ -2084,7 +2084,7 @@ zap_steed(obj)
 struct obj *obj;        /* wand or spell */
 {
         int steedhit = FALSE;
-        
+
         switch (obj->otyp) {
 
            /*
@@ -2362,7 +2362,7 @@ struct obj *obj;        /* wand or spell */
 
 
 /* called for various wand and spell effects - M. Stephenson */
-void 
+void
 weffects (struct obj *obj)
 {
         int otyp = obj->otyp;
@@ -2418,7 +2418,7 @@ weffects (struct obj *obj)
 /*
  * Generate the to damage bonus for a spell. Based on the hero's intelligence
  */
-int 
+int
 spell_damage_bonus (void)
 {
     int tmp, intell = ACURR(A_INT);
@@ -2443,7 +2443,7 @@ spell_damage_bonus (void)
  * Generate the to hit bonus for a spell.  Based on the hero's skill in
  * spell class and dexterity.
  */
-static int 
+static int
 spell_hit_bonus (int skill)
 {
     int hit_bon = 0;
@@ -2480,7 +2480,7 @@ exclam (int force)
         return (const char *)((force < 0) ? "?" : (force <= 4) ? "." : "!");
 }
 
-void 
+void
 hit (
     const char *str,
     struct monst *mtmp,
@@ -2495,7 +2495,7 @@ hit (
                    mon_nam(mtmp), force);
 }
 
-void 
+void
 miss (const char *str, struct monst *mtmp)
 {
         pline("%s %s %s.", The(str), vtense(str, "miss"),
@@ -2800,7 +2800,7 @@ boomhit (int dx, int dy)
         return (struct monst *)0;
 }
 
-static int 
+static int
 zhitm (                     /* returns damage to mon */
     struct monst *mon,
     int type,
@@ -3119,7 +3119,7 @@ boolean u_caused;
 }
 
 /* will zap/spell/breath attack score a hit against armor class `ac'? */
-static int 
+static int
 zap_hit (
     int ac,
     int type       /* either hero cast spell type or 0 */
@@ -3144,7 +3144,7 @@ zap_hit (
 /* type == -20 to -29 : monster breathing at you */
 /* type == -30 to -39 : monster shooting a wand */
 /* called with dx = dy = 0 with vertical bolts */
-void 
+void
 buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
 {
     int range, abstype = abs(type) % 10;
@@ -3384,7 +3384,7 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
     bhitpos = save_bhitpos;
 }
 
-void 
+void
 melt_ice (signed char x, signed char y)
 {
         struct rm *lev = &levl[x][y];
@@ -3615,7 +3615,7 @@ boolean *shopdamage;
 }
 
 
-void 
+void
 fracture_rock (      /* fractured by pick-axe or wand of striking */
     struct obj *obj                   /* no texts here! */
 )
@@ -3677,7 +3677,7 @@ const char * const destroy_strings[] = {        /* also used in trap.c */
         "breaks apart and explodes", "break apart and explode", "exploding wand"
 };
 
-void 
+void
 destroy_item (int osym, int dmgtyp)
 {
         struct obj *obj, *obj2;
@@ -3798,7 +3798,7 @@ destroy_item (int osym, int dmgtyp)
         return;
 }
 
-int 
+int
 destroy_mitem (struct monst *mtmp, int osym, int dmgtyp)
 {
         struct obj *obj, *obj2;
@@ -3895,7 +3895,7 @@ destroy_mitem (struct monst *mtmp, int osym, int dmgtyp)
 }
 
 
-int 
+int
 resist (struct monst *mtmp, char oclass, int damage, int tell)
 {
         int resisted;
@@ -3935,7 +3935,7 @@ resist (struct monst *mtmp, char oclass, int damage, int tell)
         return(resisted);
 }
 
-void 
+void
 makewish (void)
 {
         char buf[BUFSZ];

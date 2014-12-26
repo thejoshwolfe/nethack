@@ -462,7 +462,7 @@ static const struct def_skill Skill_W[] = {
 };
 
 
-static void 
+static void
 knows_object (int obj)
 {
         discover_object(obj,TRUE,FALSE);
@@ -472,7 +472,7 @@ knows_object (int obj)
 /* Know ordinary (non-magical) objects of a certain class,
  * like all gems except the loadstone and luckstone.
  */
-static void 
+static void
 knows_class (char sym)
 {
         int ct;
@@ -481,7 +481,7 @@ knows_class (char sym)
                         knows_object(ct);
 }
 
-void 
+void
 u_init (void)
 {
         int i;
@@ -798,7 +798,7 @@ int otyp;
     return TRUE;
 }
 
-static void 
+static void
 ini_inv (struct trobj *trop)
 {
         struct obj *obj;

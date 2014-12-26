@@ -416,7 +416,7 @@ void moveloop(void) {
 }
 
 
-void 
+void
 stop_occupation (void)
 {
         if(occupation) {
@@ -534,12 +534,12 @@ void welcome(boolean new_game) {
 }
 
 #ifdef POSITIONBAR
-static void 
+static void
 do_positionbar (void)
 {
         static char pbar[COLNO];
         char *p;
-        
+
         p = pbar;
         /* up stairway */
         if (upstair.sx &&

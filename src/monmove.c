@@ -40,7 +40,7 @@ struct monst *mtmp;
 }
 
 
-static void 
+static void
 watch_on_duty (struct monst *mtmp)
 {
         int     x, y;
@@ -71,7 +71,7 @@ watch_on_duty (struct monst *mtmp)
 }
 
 
-int 
+int
 dochugw (struct monst *mtmp)
 {
         int x = mtmp->mx, y = mtmp->my;
@@ -134,7 +134,7 @@ boolean digest_meal;
  * Possibly awaken the given monster.  Return a 1 if the monster has been
  * jolted awake.
  */
-static int 
+static int
 disturb (struct monst *mtmp)
 {
         /*
@@ -201,7 +201,7 @@ boolean fleemsg;
         }
 }
 
-static void 
+static void
 distfleeck (struct monst *mtmp, int *inrange, int *nearby, int *scared)
 {
         int seescaryx, seescaryy;
@@ -239,7 +239,7 @@ distfleeck (struct monst *mtmp, int *inrange, int *nearby, int *scared)
 
 /* perform a special one-time action for a monster; returns -1 if nothing
    special happened, 0 if monster uses up its turn, 1 if monster is killed */
-static int 
+static int
 m_arrival (struct monst *mon)
 {
         mon->mstrategy &= ~STRAT_ARRIVE;        /* always reset */
@@ -251,7 +251,7 @@ m_arrival (struct monst *mon)
 /* The whole dochugw/m_move/distfleeck/mfndpos section is serious spaghetti
  * code. --KAA
  */
-int 
+int
 dochug (struct monst *mtmp)
 {
         struct permonst *mdat;
@@ -414,7 +414,7 @@ toofar:
             struct obj *mw_tmp;
 
             /* The scared check is necessary.  Otherwise a monster that is
-             * one square near the player but fleeing into a wall would keep    
+             * one square near the player but fleeing into a wall would keep
              * switching between pick-axe and weapon.  If monster is stuck
              * in a trap, prefer ranged weapon (wielding is done in thrwmu).
              * This may cost the monster an attack, but keeps the monster
@@ -536,7 +536,7 @@ struct monst *mtmp;
  * 2: monster died.
  * 3: did not move, and can't do anything else either.
  */
-int 
+int
 m_move (struct monst *mtmp, int after)
 {
         int appr;
@@ -1159,7 +1159,7 @@ int x, y;
 
 
 /* decide where the monster thinks you are standing */
-void 
+void
 set_apparxy (struct monst *mtmp)
 {
         boolean notseen, gotu;
@@ -1260,7 +1260,7 @@ struct monst *mtmp;
                     typ != SKELETON_KEY && typ != LOCK_PICK
                 ) return FALSE;
                 if (Is_container(obj) && obj->cobj) return FALSE;
-                    
+
         }
         return TRUE;
 }

@@ -5,7 +5,7 @@
 #include "display.h"
 
 
-void 
+void
 were_change (struct monst *mon)
 {
         if (!is_were(mon->data))
@@ -36,7 +36,7 @@ were_change (struct monst *mon)
 
 static int counter_were(int);
 
-static int 
+static int
 counter_were (int pm)
 {
         switch(pm) {
@@ -50,7 +50,7 @@ counter_were (int pm)
         }
 }
 
-void 
+void
 new_were (struct monst *mon)
 {
         int pm;
@@ -126,7 +126,7 @@ char *genbuf;
         return total;
 }
 
-void 
+void
 you_were (void)
 {
         char qbuf[QBUFSZ];

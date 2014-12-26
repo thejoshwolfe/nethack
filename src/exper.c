@@ -7,7 +7,7 @@
 static long newuexp(int);
 static int enermod(int);
 
-static long 
+static long
 newuexp (int lev)
 {
         if (lev < 10) return (10L * (1L << lev));
@@ -15,7 +15,7 @@ newuexp (int lev)
         return (10000000L * ((long)(lev - 19)));
 }
 
-static int 
+static int
 enermod (int en)
 {
         switch (Role_switch) {
@@ -33,7 +33,7 @@ enermod (int en)
         }
 }
 
-int 
+int
 experience (    /* return # of exp points for mtmp after nk killed */
     struct monst *mtmp,
     int nk
@@ -92,7 +92,7 @@ experience (    /* return # of exp points for mtmp after nk killed */
         return(tmp);
 }
 
-void 
+void
 more_experienced (int exp, int rexp)
 {
         u.uexp += exp;
@@ -103,7 +103,7 @@ more_experienced (int exp, int rexp)
                 flags.beginner = 0;
 }
 
-void 
+void
 losexp (                /* e.g., hit by drain life attack */
     const char *drainer /* cause of death, if drain should be fatal */
 )
@@ -164,7 +164,7 @@ losexp (                /* e.g., hit by drain life attack */
  * After all, how much real experience does one get shooting a wand of death
  * at a dragon created with a wand of polymorph??
  */
-void 
+void
 newexplevel (void)
 {
         if (u.ulevel < MAXULEV && u.uexp >= newuexp(u.ulevel))

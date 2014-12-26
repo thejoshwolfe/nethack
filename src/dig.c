@@ -130,7 +130,7 @@ boolean rockit;
 }
 
 /* When digging into location <x,y>, what are you actually digging into? */
-static int 
+static int
 dig_typ (struct obj *otmp, signed char x, signed char y)
 {
         boolean ispick = is_pick(otmp);
@@ -204,7 +204,7 @@ dig_check(madeby, verbose, x, y)
         return(TRUE);
 }
 
-static int 
+static int
 dig (void)
 {
         struct rm *lev;
@@ -429,7 +429,7 @@ cleanup:
 }
 
 /* When will hole be finished? Very rough indication used by shopkeeper. */
-int 
+int
 holetime (void)
 {
         if(occupation != dig || !*u.ushops) return(-1);
@@ -467,7 +467,7 @@ static signed char fillholetyp(int x,int y) {
         return ROOM;
 }
 
-void 
+void
 digactualhole (int x, int y, struct monst *madeby, int ttyp)
 {
         struct obj *oldobjs, *newobjs;
@@ -684,7 +684,7 @@ boolean pit_only;
                 delobj(boulder_here);
                 return TRUE;
 
-        } else if (IS_GRAVE(lev->typ)) {        
+        } else if (IS_GRAVE(lev->typ)) {
             digactualhole(u.ux, u.uy, BY_YOU, PIT);
             dig_up_grave();
             return TRUE;
@@ -748,7 +748,7 @@ boolean pit_only;
         return FALSE;
 }
 
-static void 
+static void
 dig_up_grave (void)
 {
         struct obj *otmp;
@@ -794,7 +794,7 @@ dig_up_grave (void)
         return;
 }
 
-int 
+int
 use_pick_axe (struct obj *obj)
 {
         boolean ispick;
@@ -846,7 +846,7 @@ use_pick_axe (struct obj *obj)
 /*       the "In what direction do you want to dig?" query.        */
 /*       use_pick_axe2() uses the existing u.dx, u.dy and u.dz    */
 
-int 
+int
 use_pick_axe2 (struct obj *obj)
 {
         int rx, ry;
@@ -1323,7 +1323,7 @@ void bury_objs (int x, int y) {
 }
 
 /* move objects from buriedobjlist to fobj/nexthere lists */
-void 
+void
 unearth_objs (int x, int y)
 {
         struct obj *otmp, *otmp2;
@@ -1352,7 +1352,7 @@ unearth_objs (int x, int y)
  * away, any contents become newly buried objects.
  */
 /* ARGSUSED */
-void 
+void
 rot_organic (
     void *arg,
     long timeout        /* unused */
@@ -1376,7 +1376,7 @@ rot_organic (
 /*
  * Called when a corpse has rotted completely away.
  */
-void 
+void
 rot_corpse (
     void *arg,
     long timeout        /* unused */

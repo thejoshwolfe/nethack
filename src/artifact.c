@@ -47,7 +47,7 @@ static void hack_artifacts(void);
 static boolean attacks(int,struct obj *);
 
 /* handle some special cases; must be called after u_init() */
-static void 
+static void
 hack_artifacts (void)
 {
         struct artifact *art;
@@ -71,7 +71,7 @@ hack_artifacts (void)
 }
 
 /* zero out the artifact existence list */
-void 
+void
 init_artifacts (void)
 {
         (void) memset((void *) artiexist, 0, sizeof artiexist);
@@ -79,14 +79,14 @@ init_artifacts (void)
         hack_artifacts();
 }
 
-void 
+void
 save_artifacts (int fd)
 {
         bwrite(fd, (void *) artiexist, sizeof artiexist);
         bwrite(fd, (void *) artidisco, sizeof artidisco);
 }
 
-void 
+void
 restore_artifacts (int fd)
 {
         mread(fd, (void *) artiexist, sizeof artiexist);
@@ -217,7 +217,7 @@ boolean mod;
         return;
 }
 
-int 
+int
 nartifact_exist (void)
 {
     int a = 0;
@@ -257,7 +257,7 @@ struct obj *obj;
 {
     const struct artifact *arti = get_artifact(obj);
 
-    if (arti) {      
+    if (arti) {
         /* while being worn */
         if ((obj->owornmask & ~W_ART) && (arti->spfx & SPFX_REFLECT))
             return TRUE;
@@ -478,7 +478,7 @@ long wp_mask;
  * Ignores such things as gauntlets, assuming the artifact is not
  * fooled by such trappings.
  */
-int 
+int
 touch_artifact (struct obj *obj, struct monst *mon)
 {
     const struct artifact *oart = get_artifact(obj);
@@ -540,7 +540,7 @@ touch_artifact (struct obj *obj, struct monst *mon)
 
 
 /* decide whether an artifact's special attacks apply against mtmp */
-static int 
+static int
 spec_applies (const struct artifact *weap, struct monst *mtmp)
 {
         struct permonst *ptr;
@@ -595,7 +595,7 @@ spec_applies (const struct artifact *weap, struct monst *mtmp)
 }
 
 /* return the M2 flags of monster that an artifact's special attacks apply against */
-long 
+long
 spec_m2 (struct obj *otmp)
 {
         const struct artifact *artifact = get_artifact(otmp);
@@ -605,7 +605,7 @@ spec_m2 (struct obj *otmp)
 }
 
 /* special attack bonus */
-int 
+int
 spec_abon (struct obj *otmp, struct monst *mon)
 {
         const struct artifact *weap = get_artifact(otmp);
@@ -619,7 +619,7 @@ spec_abon (struct obj *otmp, struct monst *mon)
 }
 
 /* special damage bonus */
-int 
+int
 spec_dbon (struct obj *otmp, struct monst *mon, int tmp)
 {
         const struct artifact *weap = get_artifact(otmp);
@@ -636,7 +636,7 @@ spec_dbon (struct obj *otmp, struct monst *mon, int tmp)
 }
 
 /* add identified artifact to discoveries list */
-void 
+void
 discover_artifact (signed char m)
 {
     int i;
@@ -894,7 +894,7 @@ char *hittee;                   /* target's name: "you" or mon_nam(mdef) */
 
     return result;
 }
-  
+
 /* Function used when someone attacks someone else with an artifact
  * weapon.  Only adds the special (artifact) damage, and returns a 1 if it
  * did something special (in which case the caller won't print the normal
@@ -933,7 +933,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             return FALSE;
         }
 
-        realizes_damage = (youdefend || vis || 
+        realizes_damage = (youdefend || vis ||
                            /* feel the effect even if not seen */
                            (youattack && mdef == u.ustuck));
 
@@ -983,7 +983,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
         }
 
         if (!spec_dbon_applies) {
-            /* since damage bonus didn't apply, nothing more to do;  
+            /* since damage bonus didn't apply, nothing more to do;
                no further attacks have side-effects on inventory */
             return FALSE;
         }
@@ -1141,7 +1141,7 @@ static const char recharge_type[] = { ALLOW_COUNT, ALL_CLASSES, 0 };
 static const char invoke_types[] = { ALL_CLASSES, 0 };
                 /* #invoke: an "ugly check" filters out most objects */
 
-int 
+int
 doinvoke (void)
 {
     struct obj *obj;
@@ -1152,7 +1152,7 @@ doinvoke (void)
     return arti_invoke(obj);
 }
 
-static int 
+static int
 arti_invoke (struct obj *obj)
 {
     const struct artifact *oart = get_artifact(obj);
@@ -1382,7 +1382,7 @@ artifact_light(obj)
 }
 
 /* KMH -- Talking artifacts are finally implemented */
-void 
+void
 arti_speak (struct obj *obj)
 {
         const struct artifact *oart = get_artifact(obj);
@@ -1413,7 +1413,7 @@ unsigned char inv_prop;
 }
 
 /* Return the price sold to the hero of a given artifact or unique item */
-long 
+long
 arti_cost (struct obj *otmp)
 {
         if (!otmp->oartifact)

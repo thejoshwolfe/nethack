@@ -72,7 +72,7 @@ boolean undirected;
 
 /* convert a level based random selection into a specific mage spell;
    inappropriate choices will be screened out by spell_would_be_useless() */
-static int 
+static int
 choose_magic_spell (int spellval)
 {
     switch (spellval) {
@@ -116,7 +116,7 @@ choose_magic_spell (int spellval)
 }
 
 /* convert a level based random selection into a specific cleric spell */
-static int 
+static int
 choose_clerical_spell (int spellnum)
 {
     switch (spellnum) {
@@ -170,7 +170,7 @@ castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
          *    it fails with cursetxt() and loss of mspec_used.
          * -- monster isn't trying to attack.  Select a spell once.  Don't keep
          *    searching; if that spell is not useful (or if it's directed),
-         *    return and do something else. 
+         *    return and do something else.
          * Since most spells are directed, this means that a monster that isn't
          * attacking casts spells only a small portion of the time that an
          * attacking monster does.
@@ -232,7 +232,7 @@ castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
             pline("%s casts a spell%s!",
                   canspotmon(mtmp) ? Monnam(mtmp) : "Something",
                   is_undirected_spell(mattk->adtyp, spellnum) ? "" :
-                  (Invisible && !perceives(mtmp->data) && 
+                  (Invisible && !perceives(mtmp->data) &&
                    (mtmp->mux != u.ux || mtmp->muy != u.uy)) ?
                   " at a spot near you" :
                   (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy)) ?
@@ -310,7 +310,7 @@ castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
    If you modify either of these, be sure to change is_undirected_spell()
    and spell_would_be_useless().
  */
-static void 
+static void
 cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum)
 {
     if (dmg == 0 && !is_undirected_spell(AD_SPEL, spellnum)) {
@@ -465,7 +465,7 @@ cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum)
     if (dmg) mdamageu(mtmp, dmg);
 }
 
-static void 
+static void
 cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
 {
     if (dmg == 0 && !is_undirected_spell(AD_CLRC, spellnum)) {
@@ -740,7 +740,7 @@ int spellnum;
 /* convert 1..10 to 0..9; add 10 for second group (spell casting) */
 #define ad_to_typ(k) (10 + (int)k - 1)
 
-int 
+int
 buzzmu (                /* monster uses spell (ranged) */
     struct monst *mtmp,
     struct attack *mattk

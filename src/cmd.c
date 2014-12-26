@@ -64,14 +64,14 @@ static char *parse(void);
 static boolean help_dir(char,const char *);
 
 
-static int 
+static int
 doprev_message (void)
 {
     return nh_doprev_message();
 }
 
 /* Count down by decrementing multi */
-static int 
+static int
 timed_occupation (void)
 {
         (*timed_occ_fn)();
@@ -94,7 +94,7 @@ timed_occupation (void)
  *                      Picking Locks / Forcing Chests.
  *                      Setting traps.
  */
-void 
+void
 reset_occupations (void)
 {
         reset_remarm();
@@ -105,7 +105,7 @@ reset_occupations (void)
 /* If a time is given, use it to timeout this function, otherwise the
  * function times out by its own means.
  */
-void 
+void
 set_occupation (int (*fn)(void), const char *txt, int xtime)
 {
         if (xtime) {
@@ -131,7 +131,7 @@ static char popch(void);
 static char pushq[BSIZE], saveq[BSIZE];
 static int phead, ptail, shead, stail;
 
-static char 
+static char
 popch (void) {
         /* If occupied, return '\0', letting getchar know a character should
          * be read from the keyboard.  If the character read is not the
@@ -143,7 +143,7 @@ popch (void) {
         else            return(char)((phead != ptail) ? pushq[ptail++] : '\0');
 }
 
-char 
+char
 pgetchar (void) {               /* curtesy of aeb@cwi.nl */
         int ch;
 
@@ -153,7 +153,7 @@ pgetchar (void) {               /* curtesy of aeb@cwi.nl */
 }
 
 /* A ch == 0 resets the pushq */
-void 
+void
 pushch (char ch)
 {
         if (!ch)
@@ -166,7 +166,7 @@ pushch (char ch)
 /* A ch == 0 resets the saveq.  Only save keystrokes when not
  * replaying a previous command.
  */
-void 
+void
 savech (char ch)
 {
         if (!in_doagain) {
@@ -179,7 +179,7 @@ savech (char ch)
 }
 
 
-static int 
+static int
 doextcmd (void)      /* here after # - now read a full-word command */
 {
         int idx, retval;
@@ -195,7 +195,7 @@ doextcmd (void)      /* here after # - now read a full-word command */
         return retval;
 }
 
-int 
+int
 doextlist (void)     /* here after #? - now list all full-word commands */
 {
         const struct ext_func_tab *efp;
@@ -224,7 +224,7 @@ doextlist (void)     /* here after #? - now list all full-word commands */
  * This is currently used only by the tty port and is
  * controlled via runtime option 'extmenu'
  */
-int 
+int
 extcmd_via_menu (void)  /* here after # - now show pick-list of possible commands */
 {
     const struct ext_func_tab *efp;
@@ -330,7 +330,7 @@ extcmd_via_menu (void)  /* here after # - now show pick-list of possible command
 #endif
 
 /* #monster command - use special monster ability while polymorphed */
-static int 
+static int
 domonability (void)
 {
         if (can_breathe(youmonst.data)) return dobreathe();
@@ -360,7 +360,7 @@ domonability (void)
         return 0;
 }
 
-static int 
+static int
 enter_explore_mode (void)
 {
         if(!discover && !wizard) {
@@ -382,7 +382,7 @@ enter_explore_mode (void)
 
 /* ^W command - wish for something */
 /* Unlimited wishes for debug mode by Paul Polderman */
-static int 
+static int
 wiz_wish (void) {
         if (wizard) {
             boolean save_verbose = flags.verbose;
@@ -397,7 +397,7 @@ wiz_wish (void) {
 }
 
 /* ^I command - identify hero's inventory */
-static int 
+static int
 wiz_identify (void)
 {
         if (wizard)     identify_pack(0);
@@ -406,7 +406,7 @@ wiz_identify (void)
 }
 
 /* ^F command - reveal the level map and any traps on it */
-static int 
+static int
 wiz_map (void)
 {
         if (wizard) {
@@ -428,7 +428,7 @@ wiz_map (void)
 }
 
 /* ^G command - generate monster(s); a count prefix will be honored */
-static int 
+static int
 wiz_genesis (void)
 {
         if (wizard)     (void) create_particular();
@@ -437,7 +437,7 @@ wiz_genesis (void)
 }
 
 /* ^O command - display dungeon layout */
-static int 
+static int
 wiz_where (void)
 {
         if (wizard) (void) print_dungeon(FALSE, (signed char *)0, (signed char *)0);
@@ -446,7 +446,7 @@ wiz_where (void)
 }
 
 /* ^E command - detect unseen (secret doors, traps, hidden monsters) */
-static int 
+static int
 wiz_detect (void)
 {
         if(wizard)  (void) findit();
@@ -455,7 +455,7 @@ wiz_detect (void)
 }
 
 /* ^V command - level teleport */
-static int 
+static int
 wiz_level_tele (void)
 {
         if (wizard)     level_tele();
@@ -464,7 +464,7 @@ wiz_level_tele (void)
 }
 
 /* #monpolycontrol command - choose new form for shapechangers, polymorphees */
-static int 
+static int
 wiz_mon_polycontrol (void)
 {
     iflags.mon_polycontrol = !iflags.mon_polycontrol;
@@ -474,7 +474,7 @@ wiz_mon_polycontrol (void)
 }
 
 /* #levelchange command - adjust hero's experience level */
-static int 
+static int
 wiz_level_change (void)
 {
     char buf[BUFSZ];
@@ -514,7 +514,7 @@ wiz_level_change (void)
 }
 
 /* #panic command - test program's panic handling */
-static int 
+static int
 wiz_panic (void)
 {
         if (yn("Do you want to call panic() and end your game?") == 'y')
@@ -523,7 +523,7 @@ wiz_panic (void)
 }
 
 /* #polyself command - change hero's form */
-static int 
+static int
 wiz_polyself (void)
 {
         polyself(TRUE);
@@ -531,7 +531,7 @@ wiz_polyself (void)
 }
 
 /* #seenv command */
-static int 
+static int
 wiz_show_seenv (void)
 {
         winid win;
@@ -573,7 +573,7 @@ wiz_show_seenv (void)
 }
 
 /* #vision command */
-static int 
+static int
 wiz_show_vision (void)
 {
         winid win;
@@ -610,7 +610,7 @@ wiz_show_vision (void)
 }
 
 /* #wmode command */
-static int 
+static int
 wiz_show_wmodes (void)
 {
         winid win;
@@ -664,7 +664,7 @@ static const char
 #define you_have_never(badthing) enl_msg(You_,have_never,never,badthing)
 #define you_have_X(something)   enl_msg(You_,have,(const char *)"",something)
 
-static void 
+static void
 enlght_line (const char *start, const char *middle, const char *end)
 {
         char buf[BUFSZ];
@@ -707,7 +707,7 @@ enlght_combatinc (const char *inctyp, int incamt, int final, char *outbuf)
         return outbuf;
 }
 
-void 
+void
 enlightenment (
     int final   /* 0 => still in progress; 1 => over, survived; 2 => dead */
 )
@@ -793,7 +793,7 @@ enlightenment (
         }
 #if defined(WIZARD)
         if (Wounded_legs && u.usteed && wizard) {
-            Strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0, 
+            Strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0,
                     SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION, FALSE));
             *buf = highc(*buf);
             enl_msg(buf, " has", " had", " wounded legs");
@@ -810,7 +810,7 @@ enlightenment (
                 Sprintf(buf, "aware of the presence of %s",
                         (flags.warntype & M2_ORC) ? "orcs" :
                         (flags.warntype & M2_DEMON) ? "demons" :
-                        something); 
+                        something);
                 you_are(buf);
         }
         if (Undead_warning) you_are("warned of undead");
@@ -850,7 +850,7 @@ enlightenment (
         else if (Levitation) you_are("levitating");     /* without control */
         else if (Flying) you_can("fly");
         if (Wwalking) you_can("walk on water");
-        if (Swimming) you_can("swim");        
+        if (Swimming) you_can("swim");
         if (Breathless) you_can("survive without air");
         else if (Amphibious) you_can("breathe water");
         if (Passes_walls) you_can("walk through walls");
@@ -996,7 +996,7 @@ enlightenment (
         return;
 }
 
-void 
+void
 dump_enlightenment (int final)
 {
         int ltmp;
@@ -1086,7 +1086,7 @@ dump_enlightenment (int final)
                 dump(youhad, buf);
         }
         if (Wounded_legs && u.usteed) {
-            Strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0, 
+            Strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0,
                     SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION, FALSE));
             *buf = highc(*buf);
             Strcat(buf, " had wounded legs");
@@ -1103,7 +1103,7 @@ dump_enlightenment (int final)
                 Sprintf(buf, "aware of the presence of %s",
                         (flags.warntype & M2_ORC) ? "orcs" :
                         (flags.warntype & M2_DEMON) ? "demons" :
-                        something); 
+                        something);
                 dump(youwere, buf);
         }
         if (Undead_warning) dump(youwere, "warned of undead");
@@ -1181,7 +1181,7 @@ dump_enlightenment (int final)
             if(uright && uright->otyp == RIN_PROTECTION) prot += uright->spe;
             if (HProtection & INTRINSIC) prot += u.ublessed;
             prot += u.uspellprot;
-            
+
             if (prot < 0)
                 dump(youwere, "ineffectively protected");
             else
@@ -1301,7 +1301,7 @@ minimal_enlightenment()
 
         fmtstr = iflags.menu_tab_sep ? tabbed_fmtstr : untabbed_fmtstr;
         deity_fmtstr = iflags.menu_tab_sep ?
-                        tabbed_deity_fmtstr : untabbed_deity_fmtstr; 
+                        tabbed_deity_fmtstr : untabbed_deity_fmtstr;
         any.a_void = 0;
         buf[0] = buf2[0] = '\0';
         tmpwin = create_nhwindow(NHW_MENU);
@@ -1383,7 +1383,7 @@ minimal_enlightenment()
         return (n != -1);
 }
 
-static int 
+static int
 doattributes (void)
 {
         if (!minimal_enlightenment())
@@ -1396,14 +1396,14 @@ doattributes (void)
 /* KMH, #conduct
  * (shares enlightenment's tense handling)
  */
-static int 
+static int
 doconduct (void)
 {
         show_conduct(0);
         return 0;
 }
 
-void 
+void
 show_conduct (int final)
 {
         char buf[BUFSZ];
@@ -1493,7 +1493,7 @@ show_conduct (int final)
         destroy_nhwindow(en_win);
 }
 
-void 
+void
 dump_conduct (int final)
 {
         char buf[BUFSZ];
@@ -1509,7 +1509,7 @@ dump_conduct (int final)
         else if (!u.uconduct.unvegetarian)
             dump("", "  You were a vegetarian");
         else if (Role_if(PM_MONK) && u.uconduct.unvegetarian < 10) {
-            sprintf(buf, "  You ate non-vegetarian food %ld time%s.", 
+            sprintf(buf, "  You ate non-vegetarian food %ld time%s.",
                 u.uconduct.unvegetarian, plur(u.uconduct.unvegetarian));
             dump("", buf);
         }
@@ -1818,7 +1818,7 @@ count_obj(chain, total_count, total_size, top, recurse)
         *total_size += size;
 }
 
-static void 
+static void
 obj_chain (winid win, const char *src, struct obj *chain, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -1831,7 +1831,7 @@ obj_chain (winid win, const char *src, struct obj *chain, long *total_count, lon
         putstr(win, 0, buf);
 }
 
-static void 
+static void
 mon_invent_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -1846,7 +1846,7 @@ mon_invent_chain (winid win, const char *src, struct monst *chain, long *total_c
         putstr(win, 0, buf);
 }
 
-static void 
+static void
 contained (winid win, const char *src, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -1869,7 +1869,7 @@ contained (winid win, const char *src, long *total_count, long *total_size)
         putstr(win, 0, buf);
 }
 
-static void 
+static void
 mon_chain (winid win, const char *src, struct monst *chain, long *total_count, long *total_size)
 {
         char buf[BUFSZ];
@@ -1889,7 +1889,7 @@ mon_chain (winid win, const char *src, struct monst *chain, long *total_count, l
 /*
  * Display memory usage of all monsters and objects on the level.
  */
-static int 
+static int
 wiz_show_stats (void)
 {
         char buf[BUFSZ];
@@ -1943,7 +1943,7 @@ wiz_show_stats (void)
         return 0;
 }
 
-void 
+void
 sanity_check (void)
 {
         obj_sanity_check();
@@ -1957,7 +1957,7 @@ sanity_check (void)
 #define unmeta(c)       (0x7f & (c))
 
 
-void 
+void
 rhack (char *cmd)
 {
         boolean do_walk, do_rush, prefix_seen, bad_command,
@@ -1989,7 +1989,7 @@ rhack (char *cmd)
                 /* This handles very old inconsistent DOS/Windows behaviour
                  * in a new way: earlier, the keyboard handler mapped these,
                  * which caused counts to be strange when entered from the
-                 * number pad. Now do not map them until here. 
+                 * number pad. Now do not map them until here.
                  */
                 switch (*cmd) {
                     case '5':       *cmd = 'g'; break;
@@ -2152,7 +2152,7 @@ rhack (char *cmd)
         return;
 }
 
-int 
+int
 xytod ( /* convert an x,y pair into a direction code */
     signed char x,
     signed char y
@@ -2166,7 +2166,7 @@ xytod ( /* convert an x,y pair into a direction code */
         return -1;
 }
 
-void 
+void
 dtoxy ( /* convert a direction code into an x,y pair */
     coord *cc,
     int dd
@@ -2177,7 +2177,7 @@ dtoxy ( /* convert a direction code into an x,y pair */
         return;
 }
 
-int 
+int
 movecmd (       /* also sets u.dz, but returns false for <> */
     char sym
 )
@@ -2208,7 +2208,7 @@ movecmd (       /* also sets u.dz, but returns false for <> */
  *
  * Returns non-zero if coordinates in cc are valid.
  */
-int 
+int
 get_adjacent_loc (const char *prompt, const char *emsg, signed char x, signed char y, coord *cc)
 {
         signed char new_x, new_y;
@@ -2228,7 +2228,7 @@ get_adjacent_loc (const char *prompt, const char *emsg, signed char x, signed ch
         return 1;
 }
 
-int 
+int
 getdir (const char *s)
 {
         char dirsym;
@@ -2273,7 +2273,7 @@ const char *msg;
                 putstr(win, 0, buf);
                 putstr(win, 0, "");
         }
-        if (letter(sym)) { 
+        if (letter(sym)) {
             sym = highc(sym);
             ctrl = (sym - 'A') + 1;
             if ((expl = dowhatdoes_core(ctrl, buf2))
@@ -2337,7 +2337,7 @@ const char *msg;
 }
 
 
-void 
+void
 confdir (void)
 {
         int x = (u.umonnum == PM_GRID_BUG) ? 2*rn2(4) : rn2(8);
@@ -2347,7 +2347,7 @@ confdir (void)
 }
 
 
-int 
+int
 isok (int x, int y)
 {
         /* x corresponds to curx, so x==1 is the first column. Ach. %% */
@@ -2527,7 +2527,7 @@ static void end_of_input (void) {
 }
 
 
-char 
+char
 readchar (void)
 {
         int sym;
@@ -2563,7 +2563,7 @@ readchar (void)
         return((char) sym);
 }
 
-static int 
+static int
 dotravel (void)
 {
         /* Keyboard travel command */
@@ -2596,7 +2596,7 @@ dotravel (void)
  *   the core from sending too long a prompt string to the
  *   window port causing a buffer overflow there.
  */
-char 
+char
 yn_function (const char *query, const char *resp, char def)
 {
         char qbuf[QBUFSZ];

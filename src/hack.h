@@ -247,5 +247,5 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 
 /* negative armor class is randomly weakened to prevent invulnerability */
 #define AC_VALUE(AC)    ((AC) >= 0 ? (AC) : -rnd(-(AC)))
- 
+
 #endif /* HACK_H */

@@ -13,7 +13,7 @@ static int dochat(void);
 static int mon_in_room(struct monst *,int);
 
 /* this easily could be a macro, but it might overtax dumb compilers */
-static int 
+static int
 mon_in_room (struct monst *mon, int rmtyp)
 {
     int rno = levl[mon->mx][mon->my].roomno;
@@ -21,7 +21,7 @@ mon_in_room (struct monst *mon, int rmtyp)
     return rooms[rno - ROOMOFFSET].rtype == rmtyp;
 }
 
-void 
+void
 dosounds (void)
 {
     struct mkroom *sroom;
@@ -281,7 +281,7 @@ growl_sound (struct monst *mtmp)
 }
 
 /* the sounds of a seriously abused pet, including player attacking it */
-void 
+void
 growl (struct monst *mtmp)
 {
     const char *growl_verb = 0;
@@ -302,7 +302,7 @@ growl (struct monst *mtmp)
 }
 
 /* the sounds of mistreated pets */
-void 
+void
 yelp (struct monst *mtmp)
 {
     const char *yelp_verb = 0;
@@ -342,7 +342,7 @@ yelp (struct monst *mtmp)
 }
 
 /* the sounds of distressed pets */
-void 
+void
 whimper (struct monst *mtmp)
 {
     const char *whimper_verb = 0;
@@ -373,7 +373,7 @@ whimper (struct monst *mtmp)
 }
 
 /* pet makes "I'm hungry" noises */
-void 
+void
 beg (struct monst *mtmp)
 {
     if (mtmp->msleeping || !mtmp->mcanmove ||
@@ -390,7 +390,7 @@ beg (struct monst *mtmp)
     }
 }
 
-static int 
+static int
 domonnoise (struct monst *mtmp)
 {
     const char *pline_msg = 0,  /* Monnam(mtmp) will be prepended */
@@ -484,7 +484,7 @@ domonnoise (struct monst *mtmp)
                             Sprintf(verbuf, "%s! Your silver sheen does not frighten me!",
                                         youmonst.data == &mons[PM_SILVER_DRAGON] ?
                                         "Fool" : "Young Fool");
-                            verbl_msg = verbuf; 
+                            verbl_msg = verbuf;
                         } else {
                             vampindex = rn2(SIZE(vampmsg));
                             if (vampindex == 0) {
@@ -774,7 +774,7 @@ domonnoise (struct monst *mtmp)
 }
 
 
-int 
+int
 dotalk (void)
 {
     int result;
@@ -785,7 +785,7 @@ dotalk (void)
     return result;
 }
 
-static int 
+static int
 dochat (void)
 {
     struct monst *mtmp;

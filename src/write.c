@@ -8,7 +8,7 @@ static int cost(struct obj *);
 /*
  * returns basecost of a scroll or a spellbook
  */
-static int 
+static int
 cost (struct obj *otmp)
 {
 
@@ -63,7 +63,7 @@ cost (struct obj *otmp)
 
 static const char write_on[] = { SCROLL_CLASS, SPBOOK_CLASS, 0 };
 
-int 
+int
 dowrite (struct obj *pen)
 {
         struct obj *paper;

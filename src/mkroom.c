@@ -39,7 +39,7 @@ struct mkroom *sroom;
         return((boolean)( area > 20 ));
 }
 
-void 
+void
 mkroom (
 /* make and stock a room of a given type */
     int roomtype
@@ -62,7 +62,7 @@ mkroom (
     }
 }
 
-static void 
+static void
 mkshop (void)
 {
         struct mkroom *sroom;
@@ -204,7 +204,7 @@ boolean strict;
         return (struct mkroom *)0;
 }
 
-static void 
+static void
 mkzoo (int type)
 {
         struct mkroom *sroom;
@@ -215,7 +215,7 @@ mkzoo (int type)
         }
 }
 
-void 
+void
 fill_zoo (struct mkroom *sroom)
 {
         struct monst *mon;
@@ -434,7 +434,7 @@ antholemon (void)
                         (struct permonst *)0 : &mons[mtyp]);
 }
 
-static void 
+static void
 mkswamp (void)  /* Michiel Huisjes & Fred de Wilde */
 {
         struct mkroom *sroom;
@@ -482,7 +482,7 @@ shrine_pos (int roomno)
         return(&buf);
 }
 
-static void 
+static void
 mktemple (void)
 {
         struct mkroom *sroom;
@@ -544,13 +544,13 @@ struct mkroom *sroom;
 }
 
 
-int 
+int
 somex (struct mkroom *croom)
 {
         return rn2(croom->hx-croom->lx+1) + croom->lx;
 }
 
-int 
+int
 somey (struct mkroom *croom)
 {
         return rn2(croom->hy-croom->ly+1) + croom->ly;
@@ -692,7 +692,7 @@ gotone:
  * (if any).
  */
 
-static void 
+static void
 save_room (int fd, struct mkroom *r)
 {
         short i;
@@ -710,7 +710,7 @@ save_room (int fd, struct mkroom *r)
  * save_rooms : Save all the rooms on disk!
  */
 
-void 
+void
 save_rooms (int fd)
 {
         short i;
@@ -721,7 +721,7 @@ save_rooms (int fd)
             save_room(fd, &rooms[i]);
 }
 
-static void 
+static void
 rest_room (int fd, struct mkroom *r)
 {
         short i;
@@ -739,7 +739,7 @@ rest_room (int fd, struct mkroom *r)
  * the disk.
  */
 
-void 
+void
 rest_rooms (int fd)
 {
         short i;

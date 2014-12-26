@@ -163,7 +163,7 @@ struct monst * makedog (void) {
 
 /* record `last move time' for all monsters prior to level save so that
    mon_arrive() can catch up for lost time when they're restored later */
-void 
+void
 update_mlstmv (void)
 {
         struct monst *mon;
@@ -174,7 +174,7 @@ update_mlstmv (void)
             if (!DEADMONSTER(mon)) mon->mlstmv = monstermoves;
 }
 
-void 
+void
 losedogs (void)
 {
         struct monst *mtmp, *mtmp0 = 0, *mtmp2;
@@ -534,7 +534,7 @@ boolean pets_only;      /* true for ascension or final escape */
 }
 
 
-void 
+void
 migrate_to_level (
     struct monst *mtmp,
     signed char tolev,  /* destination level */
@@ -594,7 +594,7 @@ migrate_to_level (
 
 /* return quality of food; the lower the better */
 /* fungi will eat even tainted food */
-int 
+int
 dogfood (struct monst *mon, struct obj *obj)
 {
         boolean carni = carnivorous(mon->data);
@@ -820,7 +820,7 @@ boolean was_dead;
                                 mtmp->mpeaceful ? "seems unable" :
                                             "refuses",
                                 body_part(EYE));
-                else 
+                else
                         pline("%s avoids your gaze.",
                                 Monnam(mtmp));
             }
@@ -855,7 +855,7 @@ boolean was_dead;
     }
 }
 
-void 
+void
 abuse_dog (struct monst *mtmp)
 {
         if (!mtmp->mtame) return;
@@ -874,7 +874,7 @@ abuse_dog (struct monst *mtmp)
         if (mtmp->mx != 0) {
             if (mtmp->mtame && rn2(mtmp->mtame)) yelp(mtmp);
             else growl(mtmp);   /* give them a moment's worry */
-        
+
             if (!mtmp->mtame) newsym(mtmp->mx, mtmp->my);
         }
 }

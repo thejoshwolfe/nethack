@@ -9,7 +9,7 @@
 /*      These routines provide basic data for any type of monster. */
 
 
-void 
+void
 set_mon_data (struct monst *mon, struct permonst *ptr, int flag)
 {
     mon->data = ptr;
@@ -280,7 +280,7 @@ sticks(ptr)     /* creature sticks other creatures it hits */
 }
 
 /* number of horns this type of monster has on its head */
-int 
+int
 num_horns (struct permonst *ptr)
 {
     switch (monsndx(ptr)) {
@@ -322,7 +322,7 @@ int dtyp;
 
 /* returns the maximum damage a defender can do to the attacker via
  * a passive defense */
-int 
+int
 max_passive_dmg (struct monst *mdef, struct monst *magr)
 {
     int i, dmg = 0;
@@ -348,7 +348,7 @@ max_passive_dmg (struct monst *mdef, struct monst *magr)
 }
 
 
-int 
+int
 monsndx (               /* return an index into the mons array */
     struct permonst *ptr
 )

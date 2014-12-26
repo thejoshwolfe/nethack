@@ -60,7 +60,7 @@ static long omoves;
 #define Is_IceBox(o) ((o)->otyp == ICE_BOX ? TRUE : FALSE)
 
 /* Recalculate level.objects[x][y], since this info was not saved. */
-static void 
+static void
 find_lev_obj (void)
 {
         struct obj *fobjtmp = (struct obj *)0;
@@ -117,7 +117,7 @@ boolean quietly;
         }
 }
 
-static void 
+static void
 restlevchn (int fd)
 {
         int cnt;
@@ -267,7 +267,7 @@ boolean ghostly;
                         int mndx = monsndx(mtmp->data);
                         if (propagate(mndx, TRUE, ghostly) == 0) {
                                 /* cookie to trigger purge in getbones() */
-                                mtmp->mhpmax = DEFUNCT_MONSTER; 
+                                mtmp->mhpmax = DEFUNCT_MONSTER;
                         }
                 }
                 if(mtmp->minvent) {
@@ -317,7 +317,7 @@ loadfruitchn (int fd)
         return flist;
 }
 
-static void 
+static void
 freefruitchn (struct fruit *flist)
 {
         struct fruit *fnext;
@@ -329,7 +329,7 @@ freefruitchn (struct fruit *flist)
         }
 }
 
-static void 
+static void
 ghostfruit (struct obj *otmp)
 {
         struct fruit *oldf;
@@ -435,7 +435,7 @@ unsigned int *stuckid, *steedid;        /* STEED */
 /* update game state pointers to those valid for the current level (so we
  * don't dereference a wild u.ustuck when saving the game state, for instance)
  */
-static void 
+static void
 restlevelstate (
     unsigned int stuckid,
     unsigned int steedid        /* STEED */
@@ -474,7 +474,7 @@ static int restlevelfile(int fd, signed char ltmp) {
         return(2);
 }
 
-int 
+int
 dorecover (int fd)
 {
         unsigned int stuckid = 0, steedid = 0;  /* not a */
@@ -566,7 +566,7 @@ dorecover (int fd)
         return(1);
 }
 
-void 
+void
 trickery (char *reason)
 {
         pline("Strange, this map is not as I remember it.");
@@ -620,7 +620,7 @@ boolean ghostly;
                 short   i, j;
                 unsigned char   len;
                 struct rm r;
-                
+
                 i = 0; j = 0; len = 0;
                 while(i < ROWNO) {
                     while(j < COLNO) {
@@ -740,7 +740,7 @@ boolean ghostly;
                 case BR_NO_END1:
                 case BR_NO_END2: /* OK to assign to sstairs if it's not used */
                     assign_level(&sstairs.tolev, &ltmp);
-                    break;              
+                    break;
                 case BR_PORTAL: /* max of 1 portal per level */
                     {
                         struct trap *ttmp;
@@ -774,7 +774,7 @@ boolean ghostly;
 
 
 /* Clear all structures for object and monster ID mapping. */
-static void 
+static void
 clear_id_mapping (void)
 {
     struct bucket *curr;
@@ -787,7 +787,7 @@ clear_id_mapping (void)
 }
 
 /* Add a mapping to the ID map. */
-static void 
+static void
 add_id_mapping (unsigned gid, unsigned nid)
 {
     int idx;
@@ -875,7 +875,7 @@ static unsigned short inbufsz = 0;
 static short inrunlength = -1;
 static int mreadfd;
 
-static int 
+static int
 mgetc (void)
 {
     if (inbufp >= inbufsz) {
@@ -891,7 +891,7 @@ mgetc (void)
     return inbuf[inbufp++];
 }
 
-void 
+void
 minit (void)
 {
     inbufsz = 0;
@@ -899,7 +899,7 @@ minit (void)
     inrunlength = -1;
 }
 
-int 
+int
 mread (int fd, void *buf, unsigned len)
 {
     /*int readlen = 0;*/
