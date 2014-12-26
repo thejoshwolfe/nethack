@@ -20,11 +20,7 @@
 static void do_positionbar(void);
 #endif
 
-#if !defined(_BULL_SOURCE) && !defined(__sgi)
-# if !defined(SUNOS4)
 extern struct passwd *getpwuid(uid_t);
-# endif
-#endif
 extern struct passwd *getpwnam(const char *);
 static boolean whoami(void);
 static void process_options(int, char **);
@@ -371,10 +367,6 @@ void moveloop(void) {
             sanity_check();
 #endif
 
-#ifdef CLIPPING
-        /* just before rhack */
-        cliparound(u.ux, u.uy);
-#endif
 
         u.umoved = FALSE;
 

@@ -115,7 +115,6 @@
 /* monsters & objects */
 #define SEDUCE          /* Succubi/incubi seduction, by KAA, suggested by IM */
 /* I/O */
-#define CLIPPING        /* allow smaller screens -- ERS */
 
 #define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
 

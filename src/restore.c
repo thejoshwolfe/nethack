@@ -366,14 +366,8 @@ unsigned int *stuckid, *steedid;        /* STEED */
         if (remember_discover) discover = remember_discover;
 
         role_init();    /* Reset the initial role, race, gender, and alignment */
-#ifdef AMII_GRAPHICS
-        amii_setpens(amii_numcolors);   /* use colors from save file */
-#endif
         mread(fd, (void *) &u, sizeof(struct you));
         set_uasmon();
-#ifdef CLIPPING
-        cliparound(u.ux, u.uy);
-#endif
         if(u.uhp <= 0 && (!Upolyd || u.mh <= 0)) {
             u.ux = u.uy = 0;    /* affects pline() [hence You()] */
             You("were not healthy enough to survive restoration.");
