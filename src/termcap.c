@@ -57,44 +57,7 @@ void tty_startup(int *wid, int *hgt) {
                 term = getenv("TERM");
 
         if (!term)
-#ifndef ANSI_DEFAULT
                 error("Can't get TERM.");
-#else
-        {
-                HO = "\033[H";
-/*              nh_CD = "\033[J"; */
-                CE = "\033[K";          /* the ANSI termcap */
-                nh_CM = "\033[%i%d;%dH";
-                UP = "\033[A";
-                nh_ND = "\033[C";
-                XD = "\033[B";
-                BC = "\033[D";
-                nh_HI = SO = "\033[1m";
-                nh_US = "\033[4m";
-                MR = "\033[7m";
-                TI = nh_HE = ME = SE = nh_UE = "\033[0m";
-                /* strictly, SE should be 2, and nh_UE should be 24,
-                   but we can't trust all ANSI emulators to be
-                   that complete.  -3. */
-                AS = "\016";
-                AE = "\017";
-                TE = VS = VE = nullstr;
-                for (i = 0; i < CLR_MAX / 2; i++)
-                    if (i != CLR_BLACK) {
-                        hilites[i|BRIGHT] = (char *) alloc(sizeof("\033[1;3%dm"));
-                        Sprintf(hilites[i|BRIGHT], "\033[1;3%dm", i);
-                        if (i != CLR_GRAY)
-                            {
-                                hilites[i] = (char *) alloc(sizeof("\033[0;3%dm"));
-                                Sprintf(hilites[i], "\033[0;3%dm", i);
-                            }
-                    }
-                *wid = CO;
-                *hgt = LI;
-                CL = "\033[2J";         /* last thing set */
-                return;
-        }
-#endif /* ANSI_DEFAULT */
 
         tptr = (char *) alloc(1024);
 
