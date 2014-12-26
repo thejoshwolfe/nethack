@@ -41,10 +41,6 @@ typedef signed char     boolean;                /* 0 or 1 */
 # endif
 #endif
 
-/* #define SPECIALIZATION */    /* do "specialized" version of new topology */
-
-
-
 #define OBJ_P struct obj*
 #define MONST_P struct monst*
 
