@@ -10,9 +10,7 @@
 #include "mondata.h"    /* for mindless() */
 #endif
 
-#ifndef INVISIBLE_OBJECTS
 #define vobj_at(x,y) (level.objects[x][y])
-#endif
 
 /*
  * sensemon()

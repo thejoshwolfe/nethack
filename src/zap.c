@@ -868,9 +868,6 @@ struct obj *obj;
         if (holy) costly_cancel(obj);
         unbless(obj);
         uncurse(obj);
-#ifdef INVISIBLE_OBJECTS
-        if (obj->oinvis) obj->oinvis = 0;
-#endif
         return;
 }
 
@@ -1525,10 +1522,6 @@ struct obj *obj, *otmp;
                 rloco(obj);
                 break;
         case WAN_MAKE_INVISIBLE:
-#ifdef INVISIBLE_OBJECTS
-                obj->oinvis = TRUE;
-                newsym(obj->ox,obj->oy);        /* make object disappear */
-#endif
                 break;
         case WAN_UNDEAD_TURNING:
         case SPE_TURN_UNDEAD:

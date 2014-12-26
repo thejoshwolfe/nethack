@@ -339,9 +339,6 @@ boolean artif;
                 otmp->dknown = 0;
         if (!objects[otmp->otyp].oc_uses_known)
                 otmp->known = 1;
-#ifdef INVISIBLE_OBJECTS
-        otmp->oinvis = !rn2(1250);
-#endif
         if (init) switch (let) {
         case WEAPON_CLASS:
                 otmp->quan = is_multigen(otmp) ? (long) rn1(6,6) : 1L;

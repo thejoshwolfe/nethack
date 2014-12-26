@@ -76,9 +76,6 @@ struct obj {
 
         unsigned recharged:3;  /* number of times it's been recharged */
         unsigned lamplit:1;    /* a light-source -- can be lit */
-#ifdef INVISIBLE_OBJECTS
-        unsigned oinvis:1;     /* invisible */
-#endif
         unsigned greased:1;    /* covered with grease */
         unsigned oattached:2;  /* obj struct has special attachment */
 #define OATTACHED_NOTHING 0

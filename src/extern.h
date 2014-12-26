@@ -219,9 +219,6 @@ extern void rot_corpse(void *, long);
 
 /* ### display.c ### */
 
-#ifdef INVISIBLE_OBJECTS
-extern struct obj * vobj_at(signed char,signed char);
-#endif /* INVISIBLE_OBJECTS */
 extern void magic_map_background(signed char,signed char,int);
 extern void map_background(signed char,signed char,int);
 extern void map_trap(struct trap *,int);

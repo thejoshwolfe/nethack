@@ -140,10 +140,6 @@ hitval (struct obj *otmp, struct monst *mon)
         if (is_pick(otmp) &&
            (passes_walls(ptr) && thick_skinned(ptr))) tmp += 2;
 
-#ifdef INVISIBLE_OBJECTS
-        /* Invisible weapons against monsters who can't see invisible */
-        if (otmp->oinvis && !perceives(ptr)) tmp += 3;
-#endif
 
         /* Check specially named weapon "to hit" bonuses */
         if (otmp->oartifact) tmp += spec_abon(otmp, mon);

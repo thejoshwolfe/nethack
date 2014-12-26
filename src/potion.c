@@ -1687,27 +1687,6 @@ int dodip(void) {
                 return(1);
         }
 
-#ifdef INVISIBLE_OBJECTS
-        if (potion->otyp == POT_INVISIBILITY && !obj->oinvis) {
-                obj->oinvis = TRUE;
-                if (!Blind) {
-                    if (!See_invisible) pline("Where did %s go?",
-                                the(xname(obj)));
-                    else You("notice a little haziness around %s.",
-                                the(xname(obj)));
-                }
-                goto poof;
-        } else if (potion->otyp == POT_SEE_INVISIBLE && obj->oinvis) {
-                obj->oinvis = FALSE;
-                if (!Blind) {
-                    if (!See_invisible) pline("So that's where %s went!",
-                                the(xname(obj)));
-                    else pline_The("haziness around %s disappears.",
-                                the(xname(obj)));
-                }
-                goto poof;
-        }
-#endif
 
         if(is_poisonable(obj)) {
             if(potion->otyp == POT_SICKNESS && !obj->opoisoned) {
