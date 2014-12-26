@@ -26,9 +26,7 @@ static  const char      SCCS_Id[] = "@(#)makedefs.c\t3.4\t2002/02/03";
 #define DATE_FILE       "date.h"
 #define MONST_FILE      "pm.h"
 #define ONAME_FILE      "onames.h"
-#ifndef OPTIONS_FILE
 #define OPTIONS_FILE    "options"
-#endif
 #define ORACLE_FILE     "oracles"
 #define DATA_FILE       "data"
 #define RUMOR_FILE      "rumors"
@@ -64,13 +62,6 @@ static struct version_info version;
 /*-end of vision defs-*/
 
 static char     in_line[256], filename[60];
-
-#ifdef FILE_PREFIX
-                /* if defined, a first argument not starting with - is
-                 * taken as a text string to be prepended to any
-                 * output filename generated */
-char *file_prefix="";
-#endif
 
 int main(int,char **);
 void do_makedefs(char *);
@@ -116,29 +107,15 @@ static char *eos(char *);
 /* input, output, tmp */
 static FILE *ifp, *ofp, *tfp;
 
-int
-main (int argc, char *argv[])
-{
-        if ( (argc != 2)
-#ifdef FILE_PREFIX
-                && (argc != 3)
-#endif
-        ) {
-            Fprintf(stderr, "Bad arg count (%d).\n", argc-1);
-            (void) fflush(stderr);
-            return 1;
-        }
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        Fprintf(stderr, "Bad arg count (%d).\n", argc - 1);
+        fflush(stderr);
+        return 1;
+    }
 
-#ifdef FILE_PREFIX
-        if(argc >=2 && argv[1][0]!='-'){
-            file_prefix=argv[1];
-            argc--;argv++;
-        }
-#endif
-        do_makedefs(&argv[1][1]);
-        exit(EXIT_SUCCESS);
-        /*NOTREACHED*/
-        return 0;
+    do_makedefs(&argv[1][1]);
+    return 0;
 }
 
 void
@@ -225,9 +202,6 @@ do_rumors (void)
         long    true_rumor_size;
 
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename,file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, RUMOR_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
@@ -337,10 +311,6 @@ version_id_string (char *outbuf, const char *build_date)
     char subbuf[64], versbuf[64];
 
     subbuf[0] = '\0';
-#ifdef PORT_SUB_ID
-    subbuf[0] = ' ';
-    Strcpy(&subbuf[1], PORT_SUB_ID);
-#endif
     Sprintf(outbuf, "%s NetHack%s Version %s - last build %s.",
             PORT_ID, subbuf, version_string(versbuf), build_date);
     return outbuf;
@@ -354,9 +324,6 @@ do_date (void)
         const char *ul_sfx;
 
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename,file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATE_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
@@ -451,9 +418,6 @@ void do_options(void) {
         const char *str, *indent = "    ";
 
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename,file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, OPTIONS_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
@@ -538,9 +502,6 @@ do_data (void)
 
         Sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "database.tmp");
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename,file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATA_FILE);
         Sprintf(infile, DATA_IN_TEMPLATE, DATA_FILE);
         Strcat(infile, ".base");
@@ -661,9 +622,6 @@ do_oracles (void)
 
         Sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "oracles.tmp");
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename, file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ORACLE_FILE);
         Sprintf(infile, DATA_IN_TEMPLATE, ORACLE_FILE);
         Strcat(infile, ".txt");
@@ -874,9 +832,6 @@ do_monstr (void)
      * create the source file, "monstr.c"
      */
     filename[0]='\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MON_STR_C);
     if (!(ofp = fopen(filename, "w+"))) {
         perror(filename);
@@ -911,9 +866,6 @@ do_permonst (void)
         char    *c, *nam;
 
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename, file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MONST_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
@@ -1154,9 +1106,6 @@ do_questtxt (void)
         }
 
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename, file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, QTXT_O_FILE);
         if(!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
@@ -1217,9 +1166,6 @@ do_objs (void)
         boolean sumerr = FALSE;
 
         filename[0]='\0';
-#ifdef FILE_PREFIX
-        Strcat(filename, file_prefix);
-#endif
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ONAME_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
@@ -1328,11 +1274,3 @@ eos (char *str)
     while (*str) str++;
     return str;
 }
-
-#ifdef STRICT_REF_DEF
-struct flag flags;
-# ifdef ATTRIB_H
-struct attribs attrmax, attrmin;
-# endif
-#endif /* STRICT_REF_DEF */
-
