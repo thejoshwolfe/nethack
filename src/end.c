@@ -2,9 +2,7 @@
 #include <stdarg.h>
 #include "hack.h"
 #include "eshk.h"
-#ifndef NO_SIGNAL
 #include <signal.h>
-#endif
 #include "dlb.h"
 #include "pm_props.h"
 #include "extern.h"
@@ -28,10 +26,8 @@ static struct val_list { struct valuable_data *list; int size; } valuables[] = {
         { 0, 0 }
 };
 
-#ifndef NO_SIGNAL
 static void done_intr(int);
 static void done_hangup(int);
-#endif
 static void disclose(int,boolean);
 static void get_valuables(struct obj *);
 static void sort_valuables(struct valuable_data *,int);
@@ -130,13 +126,9 @@ done1 (   /* called as signal() handler, so sent at least one arg */
     int sig_unused
 )
 {
-#ifndef NO_SIGNAL
         (void) signal(SIGINT,SIG_IGN);
-#endif
         if(flags.ignintr) {
-#ifndef NO_SIGNAL
                 (void) signal(SIGINT, done1);
-#endif
                 clear_nhwindow(WIN_MESSAGE);
                 curs_on_u();
                 wait_synch();
@@ -152,9 +144,7 @@ int
 done2 (void)
 {
         if(yn("Really quit?") == 'n') {
-#ifndef NO_SIGNAL
                 (void) signal(SIGINT, done1);
-#endif
                 clear_nhwindow(WIN_MESSAGE);
                 curs_on_u();
                 wait_synch();
@@ -178,7 +168,6 @@ done2 (void)
         return 0;
 }
 
-#ifndef NO_SIGNAL
 /*ARGSUSED*/
 static void
 done_intr ( /* called as signal() handler, so sent at least one arg */
@@ -198,7 +187,6 @@ static void done_hangup(int sig) {
         done_intr(sig);
         return;
 }
-#endif /* NO_SIGNAL */
 
 void
 done_in_by (struct monst *mtmp)
@@ -647,11 +635,9 @@ die:
             pline("Do not pass go.  Do not collect 200 %s.", currency(200L));
 
         if (have_windows) wait_synch(); /* flush screen output */
-#ifndef NO_SIGNAL
         (void) signal(SIGINT, done_intr);
         (void) signal(SIGQUIT, done_intr);
         (void) signal(SIGHUP, done_hangup);
-#endif /* NO_SIGNAL */
 
         bones_ok = (how < GENOCIDED) && can_make_bones();
 

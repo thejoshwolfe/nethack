@@ -8,9 +8,7 @@
 #include "timeout.h"
 #include "color.h"
 
-#ifndef NO_SIGNAL
 #include <signal.h>
-#endif
 #if !defined(LSC) && !defined(O_WRONLY) && !defined(AZTEC_C)
 #include <fcntl.h>
 #endif
@@ -88,9 +86,7 @@ int dosave0(void) {
         fq_save = fqname(SAVEF, SAVEPREFIX, 1); /* level files take 0 */
 
         (void) signal(SIGHUP, SIG_IGN);
-#ifndef NO_SIGNAL
         (void) signal(SIGINT, SIG_IGN);
-#endif
 
         HUP if (iflags.window_inited) {
             fd = open_savefile();

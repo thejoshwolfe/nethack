@@ -3,9 +3,7 @@
 
 #include "hack.h"
 
-#ifndef NO_SIGNAL
 #include <signal.h>
-#endif
 
 #include "dlb.h"
 #include "pm_props.h"
@@ -462,9 +460,7 @@ void newgame(void) {
                                  * any artifacts */
         u_init();
 
-#ifndef NO_SIGNAL
         (void) signal(SIGINT, done1);
-#endif
         if(iflags.news) display_file(NEWS, FALSE);
         load_qtlist();  /* load up the quest text info */
 /*      quest_init();*/ /* Now part of role_init() */
