@@ -2530,7 +2530,7 @@ readchar (void)
         if ( *readchar_queue )
             sym = *readchar_queue++;
         else
-            sym = in_doagain ? Getchar() : nh_poskey(&x, &y, &mod);
+            sym = in_doagain ? pgetchar() : nh_poskey(&x, &y, &mod);
 
 # ifdef NR_OF_EOFS
         if (sym == EOF) {
@@ -2542,7 +2542,7 @@ readchar (void)
            */
             do {
                 clearerr(stdin);        /* omit if clearerr is undefined */
-                sym = Getchar();
+                sym = pgetchar();
             } while (--cnt && sym == EOF);
         }
 # endif /* NR_OF_EOFS */

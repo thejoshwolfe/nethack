@@ -70,8 +70,6 @@ typedef signed char     boolean;                /* 0 or 1 */
 #define LARGEST_INT     32767
 
 
-#define Getchar pgetchar
-
 
 #include "coord.h"
 
