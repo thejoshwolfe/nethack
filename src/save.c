@@ -56,11 +56,6 @@ dosave (void)
 
 // called as signal() handler, so sent at least one arg
 void hangup(int sig_unused) {
-# ifdef NOSAVEONHANGUP
-        (void) signal(SIGINT, SIG_IGN);
-        clearlocks();
-        terminate(EXIT_FAILURE);
-# else  /* SAVEONHANGUP */
         if (!program_state.done_hup++) {
             if (program_state.something_worth_saving)
                 (void) dosave0();
@@ -69,7 +64,6 @@ void hangup(int sig_unused) {
                 terminate(EXIT_FAILURE);
             }
         }
-# endif
         return;
 }
 
