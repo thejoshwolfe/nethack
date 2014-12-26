@@ -420,7 +420,7 @@ static const short tmspc10[] = {                /* from termcap */
 /* delay 50 ms */
 void tty_delay_output(void) {
     fflush(stdout);
-    msleep(50);             /* sleep for 50 milliseconds */
+    usleep(50 * 1000); // sleep for 50 milliseconds
     return;
 }
 

@@ -1,8 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 
-/* "Rand()"s definition is determined by [OS]conf.h */
-#define RND(x)  (int)(Rand() % (long)(x))
+#define RND(x)  (int)(random() % (long)(x))
 
 /* 0 <= rn2(x) < x */
 int rn2(int x) {

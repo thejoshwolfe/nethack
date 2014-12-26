@@ -123,7 +123,7 @@ static int phead, ptail, shead, stail;
 
 static char 
 popch (void) {
-        /* If occupied, return '\0', letting tgetch know a character should
+        /* If occupied, return '\0', letting getchar know a character should
          * be read from the keyboard.  If the character read is not the
          * ABORT character (as checked in pcmain.c), that character will be
          * pushed back on the pushq.

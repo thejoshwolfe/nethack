@@ -165,18 +165,6 @@ void regularize(char * s) {
                 *lp = '_';
 }
 
-#if !defined(msleep)
-#include <poll.h>
-
-void msleep(unsigned msec) {
-        struct pollfd unused;
-        int msecs = msec;               /* poll API is signed */
-
-        if (msecs < 0) msecs = 0;       /* avoid infinite sleep */
-        (void) poll(&unused, (unsigned long)0, msecs);
-}
-#endif
-
 #ifdef GETRES_SUPPORT
 
 extern int nh_getresuid(uid_t *, uid_t *, uid_t *);

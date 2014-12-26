@@ -1750,9 +1750,6 @@ extern void error(const char *,...);
 
 extern void getlock(void);
 extern void regularize(char *);
-# if !defined(msleep)
-extern void msleep(unsigned);
-# endif
 
 /* ### vault.c ### */
 
