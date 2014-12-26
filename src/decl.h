@@ -136,9 +136,6 @@ extern struct sinfo {
         int something_worth_saving;     /* in case of panic */
         int panicking;          /* `panic' is in progress */
         int in_impossible;
-#ifdef PANICLOG
-        int in_paniclog;
-#endif
 } program_state;
 
 extern boolean restoring;
@@ -299,7 +296,6 @@ extern char **viz_array;                /* could see/in sight row pointers */
 extern winid WIN_MESSAGE, WIN_STATUS;
 extern winid WIN_MAP, WIN_INVEN;
 extern char toplines[];
-#ifndef TCAP_H
 extern struct tc_gbl_data {     /* also declared in tcap.h */
     char *tc_AS, *tc_AE;        /* graphics start and end (tty font swapping) */
     int   tc_LI,  tc_CO;        /* lines and columns */
@@ -308,7 +304,6 @@ extern struct tc_gbl_data {     /* also declared in tcap.h */
 #define AE tc_gbl_data.tc_AE
 #define LI tc_gbl_data.tc_LI
 #define CO tc_gbl_data.tc_CO
-#endif
 
 /* xxxexplain[] is in drawing.c */
 extern const char * const monexplain[], invisexplain[], * const objexplain[], * const oclass_names[];
