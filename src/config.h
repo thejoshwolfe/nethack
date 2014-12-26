@@ -102,8 +102,6 @@
 /* dungeon levels */
 #define WALLIFIED_MAZE  /* Fancy mazes - Jean-Christophe Collet */
 /* monsters & objects */
-#define SEDUCE          /* Succubi/incubi seduction, by KAA, suggested by IM */
-/* I/O */
 
 #define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
 

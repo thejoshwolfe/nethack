@@ -502,9 +502,7 @@ static const char *build_opts[] = {
 #ifdef SCORE_ON_BOTL
                 "score on status line",
 #endif
-#ifdef SEDUCE
                 "seduction",
-#endif
                 "sinks",
                 "terminal info library",
                 "tourists",
