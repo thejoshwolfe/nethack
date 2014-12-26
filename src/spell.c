@@ -1103,7 +1103,6 @@ int *spell_no;
         return FALSE;
 }
 
-#ifdef DUMP_LOG
 void 
 dump_spells (void)
 {
@@ -1130,7 +1129,6 @@ dump_spells (void)
         dump("","");
 
 } /* dump_spells */
-#endif
 
 /* Integer square root function without using floating point. */
 static int 

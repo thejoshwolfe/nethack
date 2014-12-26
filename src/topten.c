@@ -322,12 +322,10 @@ topten (int how)
               "Since you were in %s mode, the score list will not be checked.",
                     wizard ? "wizard" : "discover");
                 topten_print(pbuf);
-#ifdef DUMP_LOG
                 if (dump_fn[0]) {
                   dump("", pbuf);
                   dump("", "");
                 }
-#endif
             }
             goto showwin;
         }
@@ -348,9 +346,7 @@ topten (int how)
         }
 
         HUP topten_print("");
-#ifdef DUMP_LOG
         dump("", "");
-#endif
 
         /* assure minimum number of points */
         if(t0->points < POINTSMIN) t0->points = 0;
@@ -395,10 +391,8 @@ topten (int how)
                                     t1->points);
                             topten_print(pbuf);
                             topten_print("");
-#ifdef DUMP_LOG
                             dump("", pbuf);
                             dump("", "");
-#endif
                         }
                     }
                     if(occ_cnt < 0) {
@@ -432,23 +426,17 @@ topten (int how)
                 if(!done_stopprint) if(rank0 > 0){
                     if(rank0 <= 10) {
                         topten_print("You made the top ten list!");
-#ifdef DUMP_LOG
                         dump("", "You made the top ten list!");
-#endif
                     } else {
                         char pbuf[BUFSZ];
                         Sprintf(pbuf,
                           "You reached the %d%s place on the top %d list.",
                                 rank0, ordin(rank0), ENTRYMAX);
                         topten_print(pbuf);
-#ifdef DUMP_LOG
                         dump("", pbuf);
-#endif
                     }
                     topten_print("");
-#ifdef DUMP_LOG
                     dump("", "");
-#endif
                 }
         }
         if(rank0 == 0) rank0 = rank1;
@@ -476,9 +464,7 @@ topten (int how)
                     rank0 > flags.end_top + flags.end_around + 1 &&
                     !flags.end_own) {
                 topten_print("");
-#ifdef DUMP_LOG
                 dump("", "");
-#endif
             }
             if(rank != rank0)
                 outentry(rank, t1, FALSE);
@@ -537,9 +523,7 @@ outheader (void)
         while(bp < linebuf + COLNO - 9) *bp++ = ' ';
         Strcpy(bp, "Hp [max]");
         topten_print(linebuf);
-#ifdef DUMP_LOG
         dump("", linebuf);
-#endif
 }
 
 /* so>0: standout line; so=0: ordinary line */
@@ -658,14 +642,10 @@ boolean so;
                 while (bp < linebuf + (COLNO-1)) *bp++ = ' ';
                 *bp = 0;
                 topten_print_bold(linebuf);
-#ifdef DUMP_LOG
                 dump("*", linebuf[0]==' '? linebuf+1: linebuf);
-#endif
             } else {
                 topten_print(linebuf);
-#ifdef DUMP_LOG
                 dump(" ", linebuf[0]==' '? linebuf+1: linebuf);
-#endif
             }
             Sprintf(linebuf, "%15s %s", "", linebuf3);
             lngr = strlen(linebuf);
@@ -691,9 +671,7 @@ boolean so;
             topten_print_bold(linebuf);
         } else
             topten_print(linebuf);
-#ifdef DUMP_LOG
         dump(" ", linebuf[0]==' '? linebuf+1: linebuf);
-#endif
 }
 
 static int

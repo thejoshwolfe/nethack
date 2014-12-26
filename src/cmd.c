@@ -986,7 +986,6 @@ enlightenment (
         return;
 }
 
-#ifdef DUMP_LOG
 void 
 dump_enlightenment (int final)
 {
@@ -1269,7 +1268,6 @@ dump_enlightenment (int final)
         return;
 
 } /* dump_enlightenment */
-#endif
 
 /*
  * Courtesy function for non-debug, non-explorer mode players
@@ -1485,7 +1483,6 @@ show_conduct (int final)
         destroy_nhwindow(en_win);
 }
 
-#ifdef DUMP_LOG
 void 
 dump_conduct (int final)
 {
@@ -1575,7 +1572,6 @@ dump_conduct (int final)
 
         dump("", "");
 }
-#endif /* DUMP_LOG */
 
 
 #ifndef M

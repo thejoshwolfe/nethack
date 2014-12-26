@@ -133,16 +133,8 @@ botl_score (void)
 }
 #endif
 
-#ifdef DUMP_LOG
 void bot1str(char *newbot1)
-#else
-static void
-bot1()
-#endif
 {
-#ifndef DUMP_LOG
-        char newbot1[MAXCO];
-#endif
         char *nb;
         int i,j;
 
@@ -189,7 +181,6 @@ bot1()
         if (flags.showscore)
             Sprintf(nb = eos(nb), " S:%ld", botl_score());
 #endif
-#ifdef DUMP_LOG
 }
 static void 
 bot1 (void)
@@ -197,7 +188,6 @@ bot1 (void)
         char newbot1[MAXCO];
 
         bot1str(newbot1);
-#endif
         curs(WIN_STATUS, 1, 0);
         putstr(WIN_STATUS, 0, newbot1);
 }
@@ -224,20 +214,12 @@ describe_level (char *buf)
         return ret;
 }
 
-#ifdef DUMP_LOG
 void bot2str(newbot2)
 char* newbot2;
-#else
-static void
-bot2()
-#endif
 {
-#ifndef DUMP_LOG
-        char  newbot2[MAXCO];
-#endif
         char *nb;
         int hp, hpmax;
-#if defined(HPMON) && !defined(LISP_GRAPHICS)
+#if defined(HPMON)
         int hpcolor, hpattr;
 #endif
         int cap = near_capacity();
@@ -316,14 +298,12 @@ bot2()
         if(Slimed)         Sprintf(nb = eos(nb), " Slime");
         if(cap > UNENCUMBERED)
                 Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
-#ifdef DUMP_LOG
 }
 static void 
 bot2 (void)
 {
         char newbot2[MAXCO];
         bot2str(newbot2);
-#endif
         curs(WIN_STATUS, 1, 1);
         putstr(WIN_STATUS, 0, newbot2);
 }
@@ -335,6 +315,3 @@ bot (void)
         bot2();
         flags.botl = flags.botlx = 0;
 }
-
-
-/*botl.c*/

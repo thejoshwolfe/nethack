@@ -175,13 +175,11 @@ struct monst *migrating_mons = (struct monst *)0;
 struct mvitals mvitals[NUMMONS];
 
 /* originally from end.c */
-#ifdef DUMP_LOG
 #ifdef DUMP_FN
 char dump_fn[] = DUMP_FN;
 #else
 char dump_fn[PL_PSIZ] = DUMMY;
 #endif
-#endif /* DUMP_LOG */
 
 struct c_color_names c_color_names = {
         "black", "amber", "golden",

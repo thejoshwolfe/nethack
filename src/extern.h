@@ -123,10 +123,8 @@ extern long botl_score(void);
 extern int describe_level(char *);
 extern const char *rank_of(int,short,boolean);
 extern void bot(void);
-#ifdef DUMP_LOG
 extern void bot1str(char *);
 extern void bot2str(char *);
-#endif
 
 /* ### cmd.c ### */
 
@@ -143,10 +141,8 @@ extern int doextlist(void);
 extern int extcmd_via_menu(void);
 extern void enlightenment(int);
 extern void show_conduct(int);
-#ifdef DUMP_LOG
 extern void dump_enlightenment(int);
 extern void dump_conduct(int);
-#endif
 extern int xytod(signed char,signed char);
 extern void dtoxy(coord *,int);
 extern int movecmd(char);
@@ -245,9 +241,7 @@ extern void clear_glyph_buffer(void);
 extern void row_refresh(int,int,int);
 extern void cls(void);
 extern void flush_screen(int);
-#ifdef DUMP_LOG
 extern void dump_screen(void);
-#endif
 extern int back_to_glyph(signed char,signed char);
 extern int zapdir_to_glyph(int,int,int);
 extern int glyph_at(signed char,signed char);
@@ -484,10 +478,8 @@ extern void panic(const char *,...);
 #if !defined(MAKEDEFS_C) && !defined(LEV_LEX_C)
 extern void done(int);
 extern void container_contents(struct obj *,boolean,boolean);
-#ifdef DUMP_LOG
 extern void dump(char *, char *);
 extern void do_containerconts(struct obj *,boolean,boolean,boolean);
-#endif
 extern void terminate(int);
 extern int num_genocides(void);
 
@@ -685,9 +677,7 @@ extern void prinv(const char *,struct obj *,long);
 extern char *xprname(struct obj *,const char *,char,boolean,long,long);
 extern int ddoinv(void);
 extern char display_inventory(const char *,boolean);
-#ifdef DUMP_LOG
 extern char dump_inventory(const char *,boolean);
-#endif
 extern int display_binventory(int,int,boolean);
 extern struct obj *display_cinventory(struct obj *);
 extern struct obj *display_minventory(struct monst *,int,char *);
@@ -1777,9 +1767,7 @@ extern int mon_wield_item(struct monst *);
 extern int abon(void);
 extern int dbon(void);
 extern int enhance_weapon_skill(void);
-#ifdef DUMP_LOG
 extern void dump_weapon_skill(void);
-#endif
 extern void unrestrict_weapon_skill(int);
 extern void use_skill(int,int);
 extern void add_weapon_skill(int);

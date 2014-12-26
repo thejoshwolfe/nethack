@@ -1320,7 +1320,6 @@ flush_screen (int cursor_on_u)
 
 /* ========================================================================= */
 
-#ifdef DUMP_LOG
 /* D: Added to dump screen to output file */
 static unsigned char 
 get_glyph_char (int glyph)
@@ -1419,7 +1418,6 @@ dump_screen (void)
     dump("", "");
     dump("", "");
 }
-#endif /* DUMP_LOG */
 
 /*
  * back_to_glyph()

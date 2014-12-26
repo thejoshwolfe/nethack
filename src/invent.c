@@ -14,11 +14,7 @@ static boolean taking_off(const char *);
 static boolean putting_on(const char *);
 static int ckunpaid(struct obj *);
 static int ckvalidcat(struct obj *);
-#ifdef DUMP_LOG
 static char display_pickinv(const char *,boolean, long *, boolean);
-#else
-static char display_pickinv(const char *,boolean, long *);
-#endif /* DUMP_LOG */
 static boolean this_type_only(struct obj *);
 static void dounpaid(void);
 static struct obj *find_unpaid(struct obj *,struct obj **);
@@ -899,9 +895,7 @@ getobj (const char *let, const char *word)
                         allowed_choices = altlets;
                     ilet = display_pickinv(allowed_choices, TRUE,
                                            allowcnt ? &ctmp : (long *)0
-#ifdef DUMP_LOG
                                            , FALSE
-#endif
                                            );
                     if(!ilet) continue;
                     if (allowcnt && ctmp >= 0) {
@@ -1507,20 +1501,12 @@ find_unpaid (struct obj *list, struct obj **last_found)
  * inventory and return a count as well as a letter. If out_cnt is not null,
  * any count returned from the menu selection is placed here.
  */
-#ifdef DUMP_LOG
 static char
 display_pickinv(lets, want_reply, out_cnt, want_dump)
 const char *lets;
 boolean want_reply;
 long* out_cnt;
 boolean want_dump;
-#else
-static char
-display_pickinv(lets, want_reply, out_cnt)
-const char *lets;
-boolean want_reply;
-long* out_cnt;
-#endif
 {
         struct obj *otmp;
 #ifdef SORTLOOT
@@ -1544,9 +1530,7 @@ long* out_cnt;
         } else
             win = WIN_INVEN;
 
-#ifdef DUMP_LOG
         if (want_dump)   dump("", "Your inventory");
-#endif
 
         /*
         Exit early if no inventory -- but keep going if we are doing
@@ -1561,12 +1545,10 @@ long* out_cnt;
         */
         if (!invent && !(flags.perm_invent && !lets && !want_reply)) {
             pline("Not carrying anything%s.", u.ugold ? " except gold" : "");
-#ifdef DUMP_LOG
             if (want_dump) {
                 dump("  Not carrying anything",
                     u.ugold ? " except gold." : ".");
             }
-#endif
             return 0;
         }
 
@@ -1584,14 +1566,12 @@ long* out_cnt;
                           want_reply ? PICK_ONE : PICK_NONE,
                           xprname(otmp, (char *)0, lets[0], TRUE, 0L, 0L));
                     if (out_cnt) *out_cnt = -1L;        /* select all */
-#ifdef DUMP_LOG
                     if (want_dump) {
                       char letbuf[7];
                       sprintf(letbuf, "  %c - ", lets[0]);
                       dump(letbuf,
                            xprname(otmp, (char *)0, lets[0], TRUE, 0L, 0L));
                     }
-#endif
                     break;
                 }
             }
@@ -1638,23 +1618,19 @@ nextclass:
               any.a_void = 0;             /* zero */
               add_menu(win, NO_GLYPH, &any, 0, 0, ATR_INVERSE,
                        let_to_name(*invlet, FALSE), MENU_UNSELECTED);
-#ifdef DUMP_LOG
               if (want_dump)
                 dump("  ", let_to_name(*invlet, FALSE));
-#endif
               classcount++;
             }
             any.a_char = ilet;
             add_menu(win, obj_to_glyph(otmp),
                      &any, ilet, 0, ATR_NONE, doname(otmp),
                      MENU_UNSELECTED);
-#ifdef DUMP_LOG
             if (want_dump) {
               char letbuf[7];
               sprintf(letbuf, "  %c - ", ilet);
               dump(letbuf, doname(otmp));
             }
-#endif
           }
         }
 #else /* SORTLOOT */
@@ -1666,23 +1642,19 @@ nextclass:
                                 any.a_void = 0;         /* zero */
                                 add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
                                     let_to_name(*invlet, FALSE), MENU_UNSELECTED);
-#ifdef DUMP_LOG
                                 if (want_dump)
                                     dump("  ", let_to_name(*invlet, FALSE));
-#endif
                                 classcount++;
                             }
                             any.a_char = ilet;
                             add_menu(win, obj_to_glyph(otmp),
                                         &any, ilet, 0, ATR_NONE, doname(otmp),
                                         MENU_UNSELECTED);
-#ifdef DUMP_LOG
                             if (want_dump) {
                               char letbuf[7];
                               sprintf(letbuf, "  %c - ", ilet);
                               dump(letbuf, doname(otmp));
                             }
-#endif
                         }
                 }
         }
@@ -1708,9 +1680,7 @@ nextclass:
             free((void *)selected);
         } else
             ret = !n ? '\0' : '\033';   /* cancelled */
-#ifdef DUMP_LOG
         if (want_dump)  dump("", "");
-#endif
 
         return ret;
 }
@@ -1728,13 +1698,10 @@ const char *lets;
 boolean want_reply;
 {
         return display_pickinv(lets, want_reply, (long *)0
-#ifdef DUMP_LOG
                                 , FALSE
-#endif
         );
 }
 
-#ifdef DUMP_LOG
 /* See display_inventory. This is the same thing WITH dumpfile creation */
 char
 dump_inventory(lets, want_reply)
@@ -1743,7 +1710,6 @@ boolean want_reply;
 {
   return display_pickinv(lets, want_reply, (long *)0, TRUE);
 }
-#endif
 
 /*
  * Returns the number of unpaid items within the given list.  This includes
