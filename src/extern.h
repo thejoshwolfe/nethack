@@ -1146,10 +1146,8 @@ extern void set_duplicate_opt_detection(int);
 extern void set_wc_option_mod_status(unsigned long, int);
 extern void set_wc2_option_mod_status(unsigned long, int);
 extern void set_option_mod_status(const char *,int);
-#ifdef AUTOPICKUP_EXCEPTIONS
 extern int add_autopickup_exception(const char *);
 extern void free_autopickup_exceptions(void);
-#endif /* AUTOPICKUP_EXCEPTIONS */
 #ifdef MENU_COLOR
 extern boolean add_menu_coloring(char *);
 #endif /* MENU_COLOR */

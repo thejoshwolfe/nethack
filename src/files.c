@@ -1070,10 +1070,8 @@ char            *tmp_levels;
                 parseoptions(bufp, TRUE, TRUE);
                 if (plname[0])          /* If a name was given */
                         plnamesuffix(); /* set the character class */
-#ifdef AUTOPICKUP_EXCEPTIONS
         } else if (match_varname(buf, "AUTOPICKUP_EXCEPTION", 5)) {
                 add_autopickup_exception(bufp);
-#endif
         } else if (match_varname(buf, "HACKDIR", 4)) {
                 adjust_prefix(bufp, HACKPREFIX);
         } else if (match_varname(buf, "LEVELDIR", 4) ||

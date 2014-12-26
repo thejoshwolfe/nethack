@@ -92,8 +92,6 @@
 # define MENU_COLOR
 #endif
 
-#define AUTOPICKUP_EXCEPTIONS  /* exceptions to autopickup */
-
 /* End of Section 5 */
 
 #endif /* CONFIG_H */

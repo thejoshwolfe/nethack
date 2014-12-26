@@ -453,9 +453,7 @@ static const char *build_opts[] = {
 #ifdef ANSI_DEFAULT
                 "ANSI default terminal",
 #endif
-#ifdef AUTOPICKUP_EXCEPTIONS
                 "autopickup_exceptions",
-#endif
                 "color",
 #ifdef COM_COMPL
                 "command line completion",
@@ -505,9 +503,7 @@ static const char *build_opts[] = {
         };
 
 static const char *window_opts[] = {
-#ifdef TTY_GRAPHICS
                 "traditional tty-based graphics",
-#endif
                 0
         };
 

@@ -335,10 +335,8 @@ static boolean is_wc_option(const char *);
 static boolean wc_supported(const char *);
 static boolean is_wc2_option(const char *);
 static boolean wc2_supported(const char *);
-#ifdef AUTOPICKUP_EXCEPTIONS
 static void remove_autopickup_exception(struct autopickup_exception *);
 static int count_ape_maps(int *, int *);
-#endif
 
 /* check whether a user-supplied option string is a proper leading
    substring of a particular option name; option string might have
@@ -2347,13 +2345,11 @@ doset (void)
                                 doset_add_menu(tmpwin, compopt[i].name,
                                         (pass == DISP_IN_GAME) ? 0 : indexoffset);
                 }
-#ifdef AUTOPICKUP_EXCEPTIONS
         any.a_int = -1;
         Sprintf(buf, "autopickup exceptions (%d currently set)",
                 count_ape_maps((int *)0, (int *)0));
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
 
-#endif /* AUTOPICKUP_EXCEPTIONS */
         any.a_void = 0;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
@@ -2371,12 +2367,10 @@ doset (void)
              */
             for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx) {
                 opt_indx = pick_list[pick_idx].item.a_int - 1;
-#ifdef AUTOPICKUP_EXCEPTIONS
                 if (opt_indx == -2) {
                     special_handling("autopickup_exception",
                                         setinitial, fromfile);
                 } else
-#endif
                 if (opt_indx < boolcount) {
                     /* boolean option */
                     Sprintf(buf, "%s%s", *boolopt[opt_indx].addr ? "!" : "",
@@ -2427,9 +2421,7 @@ boolean setinitial,setfromfile;
     
     /* Special handling of menustyle, pickup_burden, pickup_types,
      * disclose, runmode, msg_window, menu_headings, number_pad and sortloot
-#ifdef AUTOPICKUP_EXCEPTIONS
      * Also takes care of interactive autopickup_exception_handling changes.
-#endif
      */
     if (!strcmp("menustyle", optname)) {
         const char *style_name;
@@ -2693,7 +2685,6 @@ boolean setinitial,setfromfile;
         }
         destroy_nhwindow(tmpwin);
         retval = TRUE;
-#ifdef AUTOPICKUP_EXCEPTIONS
     } else if (!strcmp("autopickup_exception", optname)) {
         boolean retval;
         int pick_cnt, pick_idx, opt_idx, pass;
@@ -2775,7 +2766,6 @@ ape_again:
                 goto ape_again;
         }
         retval = TRUE;
-#endif /* AUTOPICKUP_EXCEPTIONS */
     }
     return retval;
 }
@@ -3047,12 +3037,10 @@ int dotogglepickup(void) {
         if (flags.pickup) {
             oc_to_str(flags.pickup_types, ocl);
             Sprintf(buf, "ON, for %s objects%s", ocl[0] ? ocl : "all",
-#ifdef AUTOPICKUP_EXCEPTIONS
                         (iflags.autopickup_exceptions[AP_LEAVE] ||
                          iflags.autopickup_exceptions[AP_GRAB]) ?
                          ((count_ape_maps((int *)0, (int *)0) == 1) ?
                             ", with one exception" : ", with some exceptions") :
-#endif
                         "");
         } else {
             Strcpy(buf, "OFF");
@@ -3061,7 +3049,6 @@ int dotogglepickup(void) {
         return 0;
 }
 
-#ifdef AUTOPICKUP_EXCEPTIONS
 int 
 add_autopickup_exception (const char *mapping)
 {
@@ -3151,7 +3138,6 @@ free_autopickup_exceptions (void)
                 }
         }
 }
-#endif /* AUTOPICKUP_EXCEPTIONS */
 
 /* data for option_help() */
 static const char *opt_intro[] = {
