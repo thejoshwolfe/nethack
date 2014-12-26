@@ -46,14 +46,8 @@ static struct Bool_Opt
         {"cursesgraphics", (boolean *)0, FALSE, SET_IN_FILE},
         {"DECgraphics", &iflags.DECgraphics, FALSE, SET_IN_GAME},
         {"eight_bit_tty", &iflags.wc_eight_bit_input, FALSE, SET_IN_GAME},      /*WC*/
-#if defined(TTY_GRAPHICS)
         {"extmenu", &iflags.extmenu, FALSE, SET_IN_GAME},
-#else
-        {"extmenu", (boolean *)0, FALSE, SET_IN_FILE},
-#endif
-#if defined(HPMON)
         { "hpmon", &iflags.use_hpmon, FALSE, SET_IN_GAME},
-#endif
 #ifdef OPT_DISPMAP
         {"fast_map", &flags.fast_map, TRUE, SET_IN_GAME},
 #else

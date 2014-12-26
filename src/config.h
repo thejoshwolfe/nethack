@@ -107,8 +107,6 @@
 
 #define PARANOID
 
-#define HPMON           /* Color HP monitor */
-
 
 /*
  * Section 5:  EXPERIMENTAL STUFF

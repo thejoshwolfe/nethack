@@ -16,6 +16,7 @@ extmenu        use a menu for selecting extended commands (#)     [FALSE]
 fixinv         try to retain the same letter for the same object  [TRUE]
 help           print all available info when using the / command  [TRUE]
 hilite_pet     display pets in a highlighted manner               [FALSE]
+hpmon          color HP readout depending on how low it is        [FALSE]
 IBMgraphics    use IBM extended characters for the dungeon        [FALSE]
 ignintr        ignore interrupt signal, including breaks          [FALSE]
 legacy         print introductory message                         [TRUE]
@@ -66,8 +67,6 @@ checkpoint save game state after each level change, for possible  [TRUE]
 Boolean option if PARANOID was set at compile time:
 paranoid_quit  ask for explicit 'yes' when quitting               [FALSE]
 
-Boolean option if HPMON was set at compile time:
-hpmon      color HP readout depending on how low it is            [FALSE]
 
 Boolean option if USE_TILES was set at compile time:
 preload_tiles  control whether tiles get pre-loaded into RAM at the

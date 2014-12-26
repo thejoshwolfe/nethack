@@ -184,9 +184,7 @@ struct instance_flags {
         boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
 #endif
 
-#if defined(HPMON)
         boolean use_hpmon;
-#endif
 
 /*
  * Window capability support.

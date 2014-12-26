@@ -201,9 +201,7 @@ char* newbot2;
 {
         char *nb;
         int hp, hpmax;
-#if defined(HPMON)
         int hpcolor, hpattr;
-#endif
         int cap = near_capacity();
 
         hp = Upolyd ? u.mh : u.uhp;
@@ -212,16 +210,9 @@ char* newbot2;
         if(hp < 0) hp = 0;
         (void) describe_level(newbot2);
         Sprintf(nb = eos(newbot2),
-#ifdef HPMON
                 "%c:%-2ld HP:", oc_syms[COIN_CLASS],
                 u.ugold
                 );
-#else /* HPMON */
-                "%c:%-2ld HP:%d(%d) Pw:%d(%d) AC:%-2d", oc_syms[COIN_CLASS],
-                u.ugold,
-                hp, hpmax, u.uen, u.uenmax, u.uac);
-#endif /* HPMON */
-#ifdef HPMON
         curs(WIN_STATUS, 1, 1);
         putstr(WIN_STATUS, 0, newbot2);
 
@@ -250,7 +241,6 @@ char* newbot2;
         }
         Sprintf(nb = eos(newbot2), " Pw:%d(%d) AC:%-2d",
                 u.uen, u.uenmax, u.uac);
-#endif /* HPMON */
 
         if (Upolyd)
                 Sprintf(nb = eos(nb), " HD:%d", mons[u.umonnum].mlevel);
