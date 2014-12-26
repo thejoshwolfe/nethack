@@ -10,7 +10,7 @@ struct monst { struct monst *dummy; };  /* lint: struct obj's union */
 #else   /* !OBJECTS_PASS_2_ */
 /* second pass */
 #include "color.h"
-#  define COLOR_FIELD(X) X,
+#define COLOR_FIELD(X) X,
 #endif  /* !OBJECTS_PASS_2_ */
 
 
@@ -26,24 +26,24 @@ struct monst { struct monst *dummy; };  /* lint: struct obj's union */
 
 #ifndef OBJECTS_PASS_2_
 /* first pass -- object descriptive text */
-# define OBJ(name,desc) name,desc
-# define OBJECT(obj,bits,prp,sym,prob,dly,wt,cost,sdam,ldam,oc1,oc2,nut,color) \
+#define OBJ(name,desc) name,desc
+#define OBJECT(obj,bits,prp,sym,prob,dly,wt,cost,sdam,ldam,oc1,oc2,nut,color) \
         {obj}
 
 struct objdescr obj_descr[] = {
 #else
 /* second pass -- object definitions */
 
-# define BITS(nmkn,mrg,uskn,ctnr,mgc,chrg,uniq,nwsh,big,tuf,dir,sub,mtrl) \
+#define BITS(nmkn,mrg,uskn,ctnr,mgc,chrg,uniq,nwsh,big,tuf,dir,sub,mtrl) \
         nmkn,mrg,uskn,0,mgc,chrg,uniq,nwsh,big,tuf,dir,mtrl,sub /* SCO ODT 1.1 cpp fodder */
-# define OBJECT(obj,bits,prp,sym,prob,dly,wt,cost,sdam,ldam,oc1,oc2,nut,color) \
+#define OBJECT(obj,bits,prp,sym,prob,dly,wt,cost,sdam,ldam,oc1,oc2,nut,color) \
         {0, 0, (char *)0, bits, prp, sym, dly, COLOR_FIELD(color) \
          prob, wt, cost, sdam, ldam, oc1, oc2, nut}
-# ifndef lint
-#  define HARDGEM(n) (n >= 8)
-# else
-#  define HARDGEM(n) (0)
-# endif
+#ifndef lint
+#define HARDGEM(n) (n >= 8)
+#else
+#define HARDGEM(n) (0)
+#endif
 
 struct objclass objects[] = {
 #endif
@@ -935,9 +935,9 @@ OBJECT(OBJ("acid venom", "splash of venom"),
 #ifndef OBJECTS_PASS_2_
 
 /* perform recursive compilation for second structure */
-#  undef OBJ
-#  undef OBJECT
-#  define OBJECTS_PASS_2_
+#undef OBJ
+#undef OBJECT
+#define OBJECTS_PASS_2_
 #include "objects.c"
 
 void objects_init(void);
@@ -950,5 +950,3 @@ objects_init()
 }
 
 #endif  /* !OBJECTS_PASS_2_ */
-
-/*objects.c*/
