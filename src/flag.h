@@ -160,9 +160,6 @@ struct instance_flags {
         unsigned char   bouldersym;     /* symbol for boulder display */
         boolean travel1;        /* first travel step */
         coord   travelcc;       /* coordinates for travel_cache */
-#ifdef SIMPLE_MAIL
-        boolean simplemail;     /* simple mail format $NAME:$MESSAGE */
-#endif
         boolean  sanity_check;  /* run sanity checks */
         boolean  mon_polycontrol;       /* debug: control monster polymorphs */
         char prevmsg_window;    /* type of old message window to use */

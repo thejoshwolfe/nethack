@@ -342,8 +342,4 @@ struct autopickup_exception {
         struct autopickup_exception *next;
 };
 
-#ifdef SIMPLE_MAIL
-extern int mailckfreq;
-#endif
-
 #endif /* DECL_H */

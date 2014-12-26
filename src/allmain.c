@@ -517,15 +517,6 @@ void welcome(boolean new_game) {
 int main (int argc, char *argv[]) {
         int fd;
         boolean exact_username;
-#ifdef SIMPLE_MAIL
-        char* e_simple = NULL;
-#endif
-
-#ifdef SIMPLE_MAIL
-        /* figure this out early */
-        e_simple = nh_getenv("SIMPLEMAIL");
-        iflags.simplemail = (e_simple ? 1 : 0);
-#endif
 
         hname = argv[0];
         hackpid = getpid();
