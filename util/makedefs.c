@@ -305,20 +305,13 @@ static char * version_string(char *outbuf) {
     return outbuf;
 }
 
-static char *
-version_id_string (char *outbuf, const char *build_date)
-{
-    char subbuf[64], versbuf[64];
-
-    subbuf[0] = '\0';
-    sprintf(outbuf, "%s NetHack%s Version %s - last build %s.",
-            PORT_ID, subbuf, version_string(versbuf), build_date);
+static char * version_id_string (char *outbuf, const char *build_date) {
+    char versbuf[64];
+    sprintf(outbuf, "NetHack Version %s - last build %s.", version_string(versbuf), build_date);
     return outbuf;
 }
 
-void
-do_date (void)
-{
+void do_date (void) {
         long clocktim = 0;
         char *c, cbuf[60], buf[BUFSZ];
         const char *ul_sfx;

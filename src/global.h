@@ -43,11 +43,6 @@
 #define LARGEST_INT     32767
 
 
-
-/* Displayable name of this port; don't redefine if defined in *conf.h */
-#define PORT_ID        "Unix"
-
-
 extern long *alloc(unsigned int);               /* alloc.c */
 
 /* Used for consistency checks of various data files; */
