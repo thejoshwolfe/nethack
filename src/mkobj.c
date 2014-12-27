@@ -64,6 +64,35 @@ const struct icp hellprobs[] = {
 { 4, AMULET_CLASS}
 };
 
+static const char dknowns[] = {
+                WAND_CLASS, RING_CLASS, POTION_CLASS, SCROLL_CLASS,
+                GEM_CLASS, SPBOOK_CLASS, WEAPON_CLASS, TOOL_CLASS, 0
+};
+#define TAINT_AGE (50L)         /* age when corpses go bad */
+#define TROLL_REVIVE_CHANCE 37  /* 1/37 chance for 50 turns ~ 75% chance */
+#define ROT_AGE (250L)          /* age when corpses rot away */
+
+static int treefruits[] = {APPLE,ORANGE,PEAR,BANANA,EUCALYPTUS_LEAF};
+
+/* return true if the corpse has special timing */
+#define special_corpse(num)  (((num) == PM_LIZARD)              \
+                                || ((num) == PM_LICHEN)         \
+                                || (is_rider(&mons[num]))       \
+                                || (mons[num].mlet == S_TROLL))
+
+// rotting on ice takes 2 times as long
+static const int ROT_ICE_ADJUSTMENT = 2;
+
+/* This must stay consistent with the defines in obj.h. */
+static const char *obj_state_names[NOBJ_STATES] = {
+        "free",         "floor",        "contained",    "invent",
+        "minvent",      "migrating",    "buried",       "onbill"
+};
+
+static const char * where_name (int where) {
+    return (where<0 || where>=NOBJ_STATES) ? "unknown" : obj_state_names[where];
+}
+
 struct obj * mkobj_at(char let, int x, int y, bool artif) {
         struct obj *otmp;
 
@@ -314,11 +343,6 @@ bill_dummy_object (struct obj *otmp)
         return;
 }
 
-
-static const char dknowns[] = {
-                WAND_CLASS, RING_CLASS, POTION_CLASS, SCROLL_CLASS,
-                GEM_CLASS, SPBOOK_CLASS, WEAPON_CLASS, TOOL_CLASS, 0
-};
 
 struct obj *
 mksobj (int otyp, bool init, bool artif)
@@ -589,10 +613,6 @@ start_corpse_timeout (struct obj *body)
         int rot_adjust;
         short action;
 
-#define TAINT_AGE (50L)         /* age when corpses go bad */
-#define TROLL_REVIVE_CHANCE 37  /* 1/37 chance for 50 turns ~ 75% chance */
-#define ROT_AGE (250L)          /* age when corpses rot away */
-
         /* lizards and lichen don't rot or revive */
         if (body->corpsenm == PM_LIZARD || body->corpsenm == PM_LICHEN) return;
 
@@ -779,8 +799,6 @@ weight (struct obj *obj)
         return(wt ? wt*(int)obj->quan : ((int)obj->quan + 1)>>1);
 }
 
-static int treefruits[] = {APPLE,ORANGE,PEAR,BANANA,EUCALYPTUS_LEAF};
-
 struct obj *
 rnd_treefruit_at (int x, int y)
 {
@@ -803,13 +821,6 @@ mkgold (long amount, int x, int y)
     gold->owt = weight(gold);
     return (gold);
 }
-
-
-/* return true if the corpse has special timing */
-#define special_corpse(num)  (((num) == PM_LIZARD)              \
-                                || ((num) == PM_LICHEN)         \
-                                || (is_rider(&mons[num]))       \
-                                || (mons[num].mlet == S_TROLL))
 
 /*
  * OEXTRA note: Passing mtmp causes mtraits to be saved
@@ -1040,9 +1051,6 @@ place_object (struct obj *otmp, int x, int y)
     if (otmp->timed) obj_timer_checks(otmp, x, y, 0);
 }
 
-#define ON_ICE(a) ((a)->recharged)
-#define ROT_ICE_ADJUSTMENT 2    /* rotting on ice takes 2 times as long */
-
 /* If ice was affecting any objects correct that now
  * Also used for starting ice effects too. [zap.c]
  */
@@ -1071,7 +1079,7 @@ void obj_ice_effects(int x, int y, bool do_buried) {
 long peek_at_iced_corpse_age (struct obj *otmp) {
     long age, retval = otmp->age;
 
-    if (otmp->otyp == CORPSE && ON_ICE(otmp)) {
+    if (otmp->otyp == CORPSE && otmp->recharged) {
         /* Adjust the age; must be same as obj_timer_checks() for off ice*/
         age = monstermoves - otmp->age;
         retval = otmp->age + (age / ROT_ICE_ADJUSTMENT);
@@ -1099,7 +1107,7 @@ static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int
 
             tleft = tleft - monstermoves;
             /* mark the corpse as being on ice */
-            ON_ICE(otmp) = 1;
+            otmp->recharged = 1;
             /* Adjust the time remaining */
             tleft *= ROT_ICE_ADJUSTMENT;
             restart_timer = true;
@@ -1110,7 +1118,7 @@ static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int
     }
     /* Check for corpses coming off ice */
     else if ((force < 0) ||
-             (otmp->otyp == CORPSE && ON_ICE(otmp) &&
+             (otmp->otyp == CORPSE && otmp->recharged &&
              ((on_floor && !is_ice(x,y)) || !on_floor))) {
         tleft = stop_timer(action, (void *)otmp);
         if (tleft == 0L) {
@@ -1121,7 +1129,7 @@ static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int
                 long age;
 
                 tleft = tleft - monstermoves;
-                ON_ICE(otmp) = 0;
+                otmp->recharged = 0;
                 /* Adjust the remaining time */
                 tleft /= ROT_ICE_ADJUSTMENT;
                 restart_timer = true;
@@ -1135,12 +1143,7 @@ static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int
         (void) start_timer(tleft, TIMER_OBJECT, action, (void *)otmp);
 }
 
-#undef ON_ICE
-#undef ROT_ICE_ADJUSTMENT
-
-void
-remove_object (struct obj *otmp)
-{
+void remove_object (struct obj *otmp) {
     signed char x = otmp->ox;
     signed char y = otmp->oy;
 
@@ -1153,9 +1156,7 @@ remove_object (struct obj *otmp)
 }
 
 /* throw away all of a monster's inventory */
-void
-discard_minvent (struct monst *mtmp)
-{
+void discard_minvent (struct monst *mtmp) {
     struct obj *otmp;
 
     while ((otmp = mtmp->minvent) != 0) {
@@ -1180,9 +1181,7 @@ discard_minvent (struct monst *mtmp)
  *      OBJ_BURIED      level.buriedobjs chain
  *      OBJ_ONBILL      on billobjs chain
  */
-void
-obj_extract_self (struct obj *obj)
-{
+void obj_extract_self (struct obj *obj) {
     switch (obj->where) {
         case OBJ_FREE:
             break;
@@ -1216,9 +1215,7 @@ obj_extract_self (struct obj *obj)
 
 
 /* Extract the given object from the chain, following nobj chain. */
-void
-extract_nobj (struct obj *obj, struct obj **head_ptr)
-{
+void extract_nobj (struct obj *obj, struct obj **head_ptr) {
     struct obj *curr, *prev;
 
     curr = *head_ptr;
@@ -1242,9 +1239,7 @@ extract_nobj (struct obj *obj, struct obj **head_ptr)
  * This does not set obj->where, this function is expected to be called
  * in tandem with extract_nobj, which does set it.
  */
-void
-extract_nexthere (struct obj *obj, struct obj **head_ptr)
-{
+void extract_nexthere (struct obj *obj, struct obj **head_ptr) {
     struct obj *curr, *prev;
 
     curr = *head_ptr;
@@ -1266,9 +1261,7 @@ extract_nexthere (struct obj *obj, struct obj **head_ptr)
  * in the inventory, then the passed obj is deleted and 1 is returned.
  * Otherwise 0 is returned.
  */
-int
-add_to_minv (struct monst *mon, struct obj *obj)
-{
+int add_to_minv (struct monst *mon, struct obj *obj) {
     struct obj *otmp;
 
     if (obj->where != OBJ_FREE)
@@ -1290,9 +1283,7 @@ add_to_minv (struct monst *mon, struct obj *obj)
  * Add obj to container, make sure obj is "free".  Returns (merged) obj.
  * The input obj may be deleted in the process.
  */
-struct obj *
-add_to_container (struct obj *container, struct obj *obj)
-{
+struct obj * add_to_container (struct obj *container, struct obj *obj) {
     struct obj *otmp;
 
     if (obj->where != OBJ_FREE)
@@ -1311,9 +1302,7 @@ add_to_container (struct obj *container, struct obj *obj)
     return (obj);
 }
 
-void
-add_to_migration (struct obj *obj)
-{
+void add_to_migration (struct obj *obj) {
     if (obj->where != OBJ_FREE)
         panic("add_to_migration: obj not free");
 
@@ -1322,9 +1311,7 @@ add_to_migration (struct obj *obj)
     migrating_objs = obj;
 }
 
-void
-add_to_buried (struct obj *obj)
-{
+void add_to_buried (struct obj *obj) {
     if (obj->where != OBJ_FREE)
         panic("add_to_buried: obj not free");
 
@@ -1334,25 +1321,17 @@ add_to_buried (struct obj *obj)
 }
 
 /* Recalculate the weight of this container and all of _its_ containers. */
-static void
-container_weight (struct obj *container)
-{
+static void container_weight (struct obj *container) {
     container->owt = weight(container);
     if (container->where == OBJ_CONTAINED)
         container_weight(container->ocontainer);
-/*
-    else if (container->where == OBJ_INVENT)
-        recalculate load delay here ???
-*/
 }
 
 /*
  * Deallocate the object.  _All_ objects should be run through here for
  * them to be deallocated.
  */
-void
-dealloc_obj (struct obj *obj)
-{
+void dealloc_obj (struct obj *obj) {
     if (obj->where != OBJ_FREE)
         panic("dealloc_obj: obj not free");
 
@@ -1456,16 +1435,6 @@ void obj_sanity_check (void) {
             }
             check_contained(obj, mesg);
         }
-}
-
-/* This must stay consistent with the defines in obj.h. */
-static const char *obj_state_names[NOBJ_STATES] = {
-        "free",         "floor",        "contained",    "invent",
-        "minvent",      "migrating",    "buried",       "onbill"
-};
-
-static const char * where_name (int where) {
-    return (where<0 || where>=NOBJ_STATES) ? "unknown" : obj_state_names[where];
 }
 
 /* obj sanity check: check objs contained by container */
