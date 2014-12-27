@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
 
     fprintf(f, "\n// Artifacts (unique objects)\n\n");
 
+    fprintf(f, "enum {\n");
     int i;
     char *c;
     char *objnam;
@@ -53,10 +54,11 @@ int main(int argc, char *argv[]) {
         /* fudge _platinum_ YENDORIAN EXPRESS CARD */
         if (!strncmp(objnam, "PLATINUM_", 9))
             objnam += 9;
-        fprintf(f,"#define\tART_%s\t%d\n", limit(objnam, 1), i);
+        fprintf(f,"    ART_%s = %d,\n", limit(objnam, 1), i);
     }
 
-    fprintf(f, "#define\tNROFARTIFACTS\t%d\n", i-1);
+    fprintf(f, "    NROFARTIFACTS = %d,\n", i-1);
+    fprintf(f, "};\n");
 
     fprintf(f,"\n#endif /* ARTIFACT_NAMES_H */\n");
     fclose(f);
