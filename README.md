@@ -43,9 +43,12 @@ The goal of this fork is to make the game more approachable for new players.
    For instance, once your brain is sucked by a master mindflayer, that ability will appear in the master mindflayer article in the encyclopedia.
    Right-clicking on a master mindflayer in-game should provide a link to the article, etc.
  * Don't touch the balance too much.
-   Keep all the same items, monsters, roles, etc.
-   Try to preserve the idiosyncrasies in the game engine,
-   like the [dual slow-digestion exploit](http://nethackwiki.com/wiki/Foodless#Dual_slow_digestion).
+   * Keep all the same items, monsters, roles, etc.
+   * Preserve many of the idiosyncrasies in the game engine,
+     like the [dual slow-digestion exploit](http://nethackwiki.com/wiki/Foodless#Dual_slow_digestion).
+   * Fix crashes, obviously.
+   * Fix bugs that don't make sense, such as [C343-10](http://nethackwiki.com/wiki/Bugs_in_NetHack_3.4.3#C343-10):
+     If there is a corpse in a pit, you have to enter the pit to pick it up but not to eat it.
  * Improve the information conveyance.
    * Non-cursed fortune cookies should be more helpful, and should fill in the encyclopedia.
      Cursed fortune cookies should just be unhelpful instead of outright lies.
