@@ -92,14 +92,13 @@ readentry (FILE *rfile, struct toptenentry *tt)
         static const char fmt32[] = "%c%c %[^,],%[^\n]%*c";
         static const char fmt33[] = "%s %s %s %s %[^,],%[^\n]%*c";
 
-#define TTFIELDS 13
+        const int TTFIELDS = 13;
         if(fscanf(rfile, fmt,
                         &tt->ver_major, &tt->ver_minor, &tt->patchlevel,
                         &tt->points, &tt->deathdnum, &tt->deathlev,
                         &tt->maxlvl, &tt->hp, &tt->maxhp, &tt->deaths,
                         &tt->deathdate, &tt->birthdate,
                         &tt->uid) != TTFIELDS)
-#undef TTFIELDS
                 tt->points = 0;
         else {
                 /* Check for backwards compatibility */

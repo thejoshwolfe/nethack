@@ -1230,31 +1230,22 @@ static int maybe_write_timer(int, int, bool);
 static timer_element *timer_base;               /* "active" */
 static unsigned long timer_id = 1;
 
-/* If defined, then include names when printing out the timer queue */
-#define VERBOSE_TIMER
-
 typedef struct {
     timeout_proc f, cleanup;
     const char *name;
-#define TTAB(a, b, c) {a,b,c}
 } ttable;
 
 /* table of timeout functions */
 static const ttable timeout_funcs[NUM_TIME_FUNCS] = {
-    TTAB(rot_organic,   (timeout_proc)0,        "rot_organic"),
-    TTAB(rot_corpse,    (timeout_proc)0,        "rot_corpse"),
-    TTAB(revive_mon,    (timeout_proc)0,        "revive_mon"),
-    TTAB(burn_object,   cleanup_burn,           "burn_object"),
-    TTAB(hatch_egg,     (timeout_proc)0,        "hatch_egg"),
-    TTAB(fig_transform, (timeout_proc)0,        "fig_transform")
+    {rot_organic,   (timeout_proc)0,        "rot_organic"},
+    {rot_corpse,    (timeout_proc)0,        "rot_corpse"},
+    {revive_mon,    (timeout_proc)0,        "revive_mon"},
+    {burn_object,   cleanup_burn,           "burn_object"},
+    {hatch_egg,     (timeout_proc)0,        "hatch_egg"},
+    {fig_transform, (timeout_proc)0,        "fig_transform"}
 };
-#undef TTAB
 
-
-
-static const char *
-kind_name (short kind)
-{
+static const char * kind_name (short kind) {
     switch (kind) {
         case TIMER_LEVEL: return "level";
         case TIMER_GLOBAL: return "global";
@@ -1282,9 +1273,7 @@ static void print_queue (winid win, timer_element *base) {
     }
 }
 
-int
-wiz_timeout_queue (void)
-{
+int wiz_timeout_queue (void) {
     winid win;
     char buf[BUFSZ];
 
@@ -1345,9 +1334,7 @@ void run_timers (void) {
 /*
  * Start a timer.  Return true if successful.
  */
-bool 
-start_timer (long when, short kind, short func_index, void *arg)
-{
+bool start_timer (long when, short kind, short func_index, void *arg) {
     timer_element *gnu;
 
     if (func_index < 0 || func_index >= NUM_TIME_FUNCS)
@@ -1375,9 +1362,7 @@ start_timer (long when, short kind, short func_index, void *arg)
  * Remove the timer from the current list and free it up.  Return the time
  * it would have gone off, 0 if not found.
  */
-long
-stop_timer (short func_index, void *arg)
-{
+long stop_timer (short func_index, void *arg) {
     timer_element *doomed;
     long timeout;
 
@@ -1399,9 +1384,7 @@ stop_timer (short func_index, void *arg)
 /*
  * Move all object timers from src to dest, leaving src untimed.
  */
-void
-obj_move_timers (struct obj *src, struct obj *dest)
-{
+void obj_move_timers (struct obj *src, struct obj *dest) {
     int count;
     timer_element *curr;
 
@@ -1420,9 +1403,7 @@ obj_move_timers (struct obj *src, struct obj *dest)
 /*
  * Find all object timers and duplicate them for the new object "dest".
  */
-void
-obj_split_timers (struct obj *src, struct obj *dest)
-{
+void obj_split_timers (struct obj *src, struct obj *dest) {
     timer_element *curr, *next_timer=0;
 
     for (curr = timer_base; curr; curr = next_timer) {
@@ -1439,9 +1420,7 @@ obj_split_timers (struct obj *src, struct obj *dest)
  * Stop all timers attached to this object.  We can get away with this because
  * all object pointers are unique.
  */
-void
-obj_stop_timers (struct obj *obj)
-{
+void obj_stop_timers (struct obj *obj) {
     timer_element *curr, *prev, *next_timer=0;
 
     for (prev = 0, curr = timer_base; curr; curr = next_timer) {
@@ -1464,9 +1443,7 @@ obj_stop_timers (struct obj *obj)
 
 
 /* Insert timer into the global queue */
-static void
-insert_timer (timer_element *gnu)
-{
+static void insert_timer (timer_element *gnu) {
     timer_element *curr, *prev;
 
     for (prev = 0, curr = timer_base; curr; prev = curr, curr = curr->next)
@@ -1480,9 +1457,7 @@ insert_timer (timer_element *gnu)
 }
 
 
-static timer_element *
-remove_timer (timer_element **base, short func_index, void *arg)
-{
+static timer_element * remove_timer (timer_element **base, short func_index, void *arg) {
     timer_element *prev, *curr;
 
     for (prev = 0, curr = *base; curr; prev = curr, curr = curr->next)
@@ -1498,10 +1473,7 @@ remove_timer (timer_element **base, short func_index, void *arg)
     return curr;
 }
 
-
-static void
-write_timer (int fd, timer_element *timer)
-{
+static void write_timer (int fd, timer_element *timer) {
     void * arg_save;
 
     switch (timer->kind) {
@@ -1545,14 +1517,11 @@ write_timer (int fd, timer_element *timer)
     }
 }
 
-
 /*
  * Return true if the object will stay on the level when the level is
  * saved.
  */
-bool 
-obj_is_local (struct obj *obj)
-{
+bool obj_is_local (struct obj *obj) {
     switch (obj->where) {
         case OBJ_INVENT:
         case OBJ_MIGRATING:     return false;
@@ -1570,9 +1539,7 @@ obj_is_local (struct obj *obj)
  * Return true if the given monster will stay on the level when the
  * level is saved.
  */
-static bool 
-mon_is_local (struct monst *mon)
-{
+static bool mon_is_local (struct monst *mon) {
     struct monst *curr;
 
     for (curr = migrating_mons; curr; curr = curr->nmon)
@@ -1583,14 +1550,11 @@ mon_is_local (struct monst *mon)
     return true;
 }
 
-
 /*
  * Return true if the timer is attached to something that will stay on the
  * level when the level is saved.
  */
-static bool 
-timer_is_local (timer_element *timer)
-{
+static bool timer_is_local (timer_element *timer) {
     switch (timer->kind) {
         case TIMER_LEVEL:       return true;
         case TIMER_GLOBAL:      return false;
@@ -1606,9 +1570,7 @@ timer_is_local (timer_element *timer)
  * Part of the save routine.  Count up the number of timers that would
  * be written.  If write_it is true, actually write the timer.
  */
-static int 
-maybe_write_timer (int fd, int range, bool write_it)
-{
+static int maybe_write_timer (int fd, int range, bool write_it) {
     int count = 0;
     timer_element *curr;
 
@@ -1635,7 +1597,6 @@ maybe_write_timer (int fd, int range, bool write_it)
     return count;
 }
 
-
 /*
  * Save part of the timer list.  The parameter 'range' specifies either
  * global or level timers to save.  The timer ID is saved with the global
@@ -1649,9 +1610,7 @@ maybe_write_timer (int fd, int range, bool write_it)
  *              + timeouts that are level specific (e.g. storms)
  *              + timeouts that stay with the level (obj & monst)
  */
-void
-save_timers (int fd, int mode, int range)
-{
+void save_timers (int fd, int mode, int range) {
     timer_element *curr, *prev, *next_timer=0;
     int count;
 
@@ -1681,7 +1640,6 @@ save_timers (int fd, int mode, int range)
         }
     }
 }
-
 
 /*
  * Pull in the structures from disk, but don't recalculate the object and
@@ -1714,9 +1672,7 @@ restore_timers (
 
 
 /* reset all timers that are marked for reseting */
-void 
-relink_timers (bool ghostly)
-{
+void relink_timers (bool ghostly) {
     timer_element *curr;
     unsigned nid;
 
@@ -1738,6 +1694,3 @@ relink_timers (bool ghostly)
         }
     }
 }
-
-
-/*timeout.c*/

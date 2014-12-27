@@ -25,10 +25,7 @@ static bool e_missed(struct entity *, bool);
 static bool e_jumps(struct entity *);
 static void do_entity(struct entity *);
 
-
-bool 
-is_pool (int x, int y)
-{
+bool is_pool (int x, int y) {
     signed char ltyp;
 
     if (!isok(x,y)) return false;
@@ -39,9 +36,7 @@ is_pool (int x, int y)
     return false;
 }
 
-bool 
-is_lava (int x, int y)
-{
+bool is_lava (int x, int y) {
     signed char ltyp;
 
     if (!isok(x,y)) return false;
@@ -52,9 +47,7 @@ is_lava (int x, int y)
     return false;
 }
 
-bool 
-is_ice (int x, int y)
-{
+bool is_ice (int x, int y) {
     signed char ltyp;
 
     if (!isok(x,y)) return false;
@@ -65,8 +58,6 @@ is_ice (int x, int y)
     return false;
 }
 
-
-
 /*
  * We want to know whether a wall (or a door) is the portcullis (passageway)
  * of an eventual drawbridge.
@@ -74,9 +65,7 @@ is_ice (int x, int y)
  * Return value:  the direction of the drawbridge.
  */
 
-int
-is_drawbridge_wall (int x, int y)
-{
+int is_drawbridge_wall (int x, int y) {
         struct rm *lev;
 
         lev = &levl[x][y];
@@ -104,20 +93,15 @@ is_drawbridge_wall (int x, int y)
  * drawbridge "wall" is UP in the location x, y
  * (instead of UP or DOWN, as with is_drawbridge_wall).
  */
-bool 
-is_db_wall (int x, int y)
-{
+bool is_db_wall (int x, int y) {
         return((bool)( levl[x][y].typ == DBWALL ));
 }
-
 
 /*
  * Return true with x,y pointing to the drawbridge if x,y initially indicate
  * a drawbridge or drawbridge wall.
  */
-bool 
-find_drawbridge (int *x, int *y)
-{
+bool find_drawbridge (int *x, int *y) {
         int dir;
 
         if (IS_DRAWBRIDGE(levl[*x][*y].typ))
@@ -135,13 +119,10 @@ find_drawbridge (int *x, int *y)
         return false;
 }
 
-
 /*
  * Find the drawbridge wall associated with a drawbridge.
  */
-static void
-get_wall_for_db (int *x, int *y)
-{
+static void get_wall_for_db (int *x, int *y) {
         switch (levl[*x][*y].drawbridgemask & DB_DIR) {
                 case DB_NORTH: (*y)--; break;
                 case DB_SOUTH: (*y)++; break;
@@ -212,9 +193,7 @@ struct entity {
 
 static struct entity occupants[ENTITIES];
 
-static struct entity *
-e_at (int x, int y)
-{
+static struct entity * e_at (int x, int y) {
         int entitycnt;
 
         for (entitycnt = 0; entitycnt < ENTITIES; entitycnt++)
@@ -226,9 +205,7 @@ e_at (int x, int y)
                (struct entity *)0 : &(occupants[entitycnt]));
 }
 
-static void
-m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp)
-{
+static void m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp) {
         etmp->emon = mtmp;
         if (mtmp) {
                 etmp->ex = x;
@@ -241,18 +218,14 @@ m_to_e (struct monst *mtmp, int x, int y, struct entity *etmp)
                 etmp->edata = (struct permonst *)0;
 }
 
-static void
-u_to_e (struct entity *etmp)
-{
+static void u_to_e (struct entity *etmp) {
         etmp->emon = &youmonst;
         etmp->ex = u.ux;
         etmp->ey = u.uy;
         etmp->edata = youmonst.data;
 }
 
-static void
-set_entity (int x, int y, struct entity *etmp)
-{
+static void set_entity (int x, int y, struct entity *etmp) {
         if ((x == u.ux) && (y == u.uy))
                 u_to_e(etmp);
         else if (MON_AT(x, y))
@@ -271,9 +244,7 @@ set_entity (int x, int y, struct entity *etmp)
 
 /* #define e_strg(etmp, func) (is_u(etmp)? (char *)0 : func(etmp->emon)) */
 
-static const char *
-e_nam (struct entity *etmp)
-{
+static const char * e_nam (struct entity *etmp) {
         return(is_u(etmp)? "you" : mon_nam(etmp->emon));
 }
 
@@ -282,9 +253,7 @@ e_nam (struct entity *etmp)
  * verb, where necessary.
  */
 
-static const char *
-E_phrase (struct entity *etmp, const char *verb)
-{
+static const char * E_phrase (struct entity *etmp, const char *verb) {
         static char wholebuf[80];
 
         strcpy(wholebuf, is_u(etmp) ? "You" : Monnam(etmp->emon));
@@ -301,9 +270,7 @@ E_phrase (struct entity *etmp, const char *verb)
  * Simple-minded "can it be here?" routine
  */
 
-static bool 
-e_survives_at (struct entity *etmp, int x, int y)
-{
+static bool e_survives_at (struct entity *etmp, int x, int y) {
         if (noncorporeal(etmp->edata))
                 return(true);
         if (is_pool(x, y))
@@ -322,9 +289,7 @@ e_survives_at (struct entity *etmp, int x, int y)
         return(true);
 }
 
-static void
-e_died (struct entity *etmp, int dest, int how)
-{
+static void e_died (struct entity *etmp, int dest, int how) {
         if (is_u(etmp)) {
                 if (how == DROWNING) {
                         killer = 0;     /* drown() sets its own killer */
@@ -360,13 +325,13 @@ e_died (struct entity *etmp, int dest, int how)
 
                 killer = 0;
                 /* fake "digested to death" damage-type suppresses corpse */
-#define mk_message(dest) ((dest & 1) ? "" : (char *)0)
-#define mk_corpse(dest)  ((dest & 2) ? AD_DGST : AD_PHYS)
                 /* if monsters are moving, one of them caused the destruction */
-                if (flags.mon_moving)
-                    monkilled(etmp->emon, mk_message(dest), mk_corpse(dest));
-                else            /* you caused it */
+                if (flags.mon_moving) {
+                    monkilled(etmp->emon, (dest & 1) ? "" : NULL, (dest & 2) ? AD_DGST : AD_PHYS);
+                } else {
+                    // you caused it
                     xkilled(etmp->emon, dest);
+                }
                 etmp->edata = (struct permonst *)0;
 
                 /* dead long worm handling */
@@ -375,19 +340,14 @@ e_died (struct entity *etmp, int dest, int how)
                         etmp->emon == occupants[entitycnt].emon)
                         occupants[entitycnt].edata = (struct permonst *)0;
                 }
-#undef mk_message
-#undef mk_corpse
         }
 }
-
 
 /*
  * These are never directly affected by a bridge or portcullis.
  */
 
-static bool 
-automiss (struct entity *etmp)
-{
+static bool automiss (struct entity *etmp) {
         return (bool)((is_u(etmp) ? Passes_walls :
                         passes_walls(etmp->edata)) || noncorporeal(etmp->edata));
 }
@@ -426,9 +386,7 @@ static bool e_missed(struct entity *etmp, bool chunks) {
  * Can etmp jump from death?
  */
 
-static bool 
-e_jumps (struct entity *etmp)
-{
+static bool e_jumps (struct entity *etmp) {
         int tmp = 4;            /* out of 10 */
 
         if (is_u(etmp)? (Sleeping || Fumbling) :
@@ -448,9 +406,7 @@ e_jumps (struct entity *etmp)
         return((bool)((tmp >= rnd(10))? true : false));
 }
 
-static void
-do_entity (struct entity *etmp)
-{
+static void do_entity (struct entity *etmp) {
         int newx, newy, at_portcullis, oldx, oldy;
         bool must_jump = false, relocates = false, e_inview;
         struct rm *crm;
@@ -615,9 +571,7 @@ do_entity (struct entity *etmp)
  * Close the drawbridge located at x,y
  */
 
-void
-close_drawbridge (int x, int y)
-{
+void close_drawbridge (int x, int y) {
         struct rm *lev1, *lev2;
         struct trap *t;
         int x2, y2;
@@ -666,9 +620,7 @@ close_drawbridge (int x, int y)
  * Open the drawbridge located at x,y
  */
 
-void
-open_drawbridge (int x, int y)
-{
+void open_drawbridge (int x, int y) {
         struct rm *lev1, *lev2;
         struct trap *t;
         int x2, y2;
@@ -703,9 +655,7 @@ open_drawbridge (int x, int y)
  * Let's destroy the drawbridge located at x,y
  */
 
-void
-destroy_drawbridge (int x, int y)
-{
+void destroy_drawbridge (int x, int y) {
         struct rm *lev1, *lev2;
         struct trap *t;
         int x2, y2;
@@ -796,4 +746,3 @@ destroy_drawbridge (int x, int y)
                 }
         }
 }
-

@@ -51,6 +51,22 @@ static const char moderateloadmsg[] = "You have a little trouble lifting";
 static const char nearloadmsg[] = "You have much trouble lifting";
 static const char overloadmsg[] = "You have extreme difficulty lifting";
 
+/* Value set by query_objlist() for n_or_more(). */
+static long val_for_n_or_more;
+
+/* List of valid menu classes for query_objlist() and allow_category callback */
+static char valid_menu_classes[MAXOCLASSES + 2];
+
+/* A variable set in use_container(), to be used by the callback routines   */
+/* in_container(), and out_container() from askchain() and use_container(). */
+static struct obj *current_container;
+
+/* query_objlist callback: return true if obj's count is >= reference value */
+static bool n_or_more (struct obj *obj) {
+    if (obj == uchain) return false;
+    return (obj->quan >= val_for_n_or_more);
+}
+
 /* BUG: this lets you look at cockatrice corpses while blind without
    touching them */
 /* much simpler version of the look-here code; used by query_classes() */
@@ -229,23 +245,7 @@ check_here (bool picked_some)
         }
 }
 
-/* Value set by query_objlist() for n_or_more(). */
-static long val_for_n_or_more;
-
-/* query_objlist callback: return true if obj's count is >= reference value */
-static bool 
-n_or_more (struct obj *obj)
-{
-    if (obj == uchain) return false;
-    return (obj->quan >= val_for_n_or_more);
-}
-
-/* List of valid menu classes for query_objlist() and allow_category callback */
-static char valid_menu_classes[MAXOCLASSES + 2];
-
-void
-add_valid_menu_class (int c)
-{
+void add_valid_menu_class (int c) {
         static int vmc_count = 0;
 
         if (c == 0)  /* reset */
@@ -1607,9 +1607,7 @@ loot_mon (struct monst *mtmp, int *passed_info, bool *prev_loot)
  * Decide whether an object being placed into a magic bag will cause
  * it to explode.  If the object is a bag itself, check recursively.
  */
-static bool 
-mbag_explodes (struct obj *obj, int depthin)
-{
+static bool mbag_explodes (struct obj *obj, int depthin) {
     /* these won't cause an explosion when they're empty */
     if ((obj->otyp == WAN_CANCELLATION || obj->otyp == BAG_OF_TRICKS) &&
             obj->spe <= 0)
@@ -1628,15 +1626,8 @@ mbag_explodes (struct obj *obj, int depthin)
     return false;
 }
 
-/* A variable set in use_container(), to be used by the callback routines   */
-/* in_container(), and out_container() from askchain() and use_container(). */
-static struct obj *current_container;
-#define Icebox (current_container->otyp == ICE_BOX)
-
 /* Returns: -1 to stop, 1 item was inserted, 0 item was not inserted. */
-static int 
-in_container (struct obj *obj)
-{
+static int in_container (struct obj *obj) {
         bool floor_container = !carried(current_container);
         bool was_unpaid = false;
         char buf[BUFSZ];
@@ -1652,7 +1643,7 @@ in_container (struct obj *obj)
                 return 0;
         } else if (obj->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL)) {
                 Norep("You cannot %s %s you are wearing.",
-                        Icebox ? "refrigerate" : "stash", something);
+                        (current_container->otyp == ICE_BOX) ? "refrigerate" : "stash", something);
                 return 0;
         } else if ((obj->otyp == LOADSTONE) && obj->cursed) {
                 obj->bknown = 1;
@@ -1735,7 +1726,7 @@ in_container (struct obj *obj)
                 sellobj_state(SELL_NORMAL);
             }
         }
-        if (Icebox && !age_is_relative(obj)) {
+        if ((current_container->otyp == ICE_BOX) && !age_is_relative(obj)) {
                 obj->age = monstermoves - obj->age; /* actual age */
                 /* stop any corpse timeouts when frozen */
                 if (obj->otyp == CORPSE && obj->timed) {
@@ -1834,7 +1825,7 @@ out_container (struct obj *obj)
         obj_extract_self(obj);
         current_container->owt = weight(current_container);
 
-        if (Icebox && !age_is_relative(obj)) {
+        if ((current_container->otyp == ICE_BOX) && !age_is_relative(obj)) {
                 obj->age = monstermoves - obj->age; /* actual age */
                 if (obj->otyp == CORPSE)
                         start_corpse_timeout(obj);
@@ -1926,11 +1917,7 @@ observe_quantum_cat (struct obj *box)
     return;
 }
 
-#undef Icebox
-
-int 
-use_container (struct obj *obj, int held)
-{
+int use_container (struct obj *obj, int held) {
         struct obj *curr, *otmp;
         struct obj *u_gold = (struct obj *)0;
         bool one_by_one, allflag, quantum_cat = false,
@@ -2138,9 +2125,7 @@ ask_again2:
 }
 
 /* Loot a container (take things out, put things in), using a menu. */
-static int 
-menu_loot (int retry, struct obj *container, bool put_in)
-{
+static int menu_loot (int retry, struct obj *container, bool put_in) {
     int n, i, n_looted = 0;
     bool all_categories = true, loot_everything = false;
     char buf[BUFSZ];
@@ -2208,9 +2193,7 @@ menu_loot (int retry, struct obj *container, bool put_in)
     return n_looted;
 }
 
-static int 
-in_or_out_menu (const char *prompt, struct obj *obj, bool outokay, bool inokay)
-{
+static int in_or_out_menu (const char *prompt, struct obj *obj, bool outokay, bool inokay) {
     winid win;
     anything any;
     menu_item *pick_list;
@@ -2248,5 +2231,3 @@ in_or_out_menu (const char *prompt, struct obj *obj, bool outokay, bool inokay)
     }
     return n;
 }
-
-/*pickup.c*/

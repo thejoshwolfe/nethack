@@ -49,17 +49,17 @@ static int menu_remarm(int);
 static void already_wearing(const char*);
 static void already_wearing2(const char*, const char*);
 
-void
-off_msg (struct obj *otmp)
-{
+#define DESTROY_ARM(o) ((otmp = (o)) != 0 && \
+                        (!atmp || atmp == otmp) && \
+                        (!obj_resists(otmp, 0, 90)))
+
+void off_msg (struct obj *otmp) {
         if(flags.verbose)
             You("were wearing %s.", doname(otmp));
 }
 
 /* for items that involve no delay */
-static void
-on_msg (struct obj *otmp)
-{
+static void on_msg (struct obj *otmp) {
         if (flags.verbose) {
             char how[BUFSZ];
 
@@ -77,9 +77,7 @@ on_msg (struct obj *otmp)
  * The Type_off() functions call setworn() themselves.
  */
 
-static int
-Boots_on (void)
-{
+static int Boots_on (void) {
     long oldprop =
         u.uprops[objects[uarmf->otyp].oc_oprop].extrinsic & ~WORN_BOOTS;
 
@@ -2001,13 +1999,8 @@ menu_remarm (int retry)
 }
 
 /* hit by destroy armor scroll/black dragon breath/monster spell */
-int
-destroy_arm (struct obj *atmp)
-{
+int destroy_arm (struct obj *atmp) {
         struct obj *otmp;
-#define DESTROY_ARM(o) ((otmp = (o)) != 0 && \
-                        (!atmp || atmp == otmp) && \
-                        (!obj_resists(otmp, 0, 90)))
 
         if (DESTROY_ARM(uarmc)) {
                 if (donning(otmp)) cancel_don();
@@ -2051,14 +2044,11 @@ destroy_arm (struct obj *atmp)
                 return 0;               /* could not destroy anything */
         }
 
-#undef DESTROY_ARM
         stop_occupation();
         return(1);
 }
 
-void
-adj_abon (struct obj *otmp, signed char delta)
-{
+void adj_abon (struct obj *otmp, signed char delta) {
         if (uarmg && uarmg == otmp && otmp->otyp == GAUNTLETS_OF_DEXTERITY) {
                 if (delta) {
                         makeknown(uarmg->otyp);
@@ -2076,5 +2066,3 @@ adj_abon (struct obj *otmp, signed char delta)
         }
 }
 
-
-/*do_wear.c*/

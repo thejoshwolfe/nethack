@@ -535,9 +535,6 @@ bool drag_ball(signed char x, signed char y,
                 default: impossible("bad chain movement");
                     break;
             }
-#undef SKIP_TO_DRAG
-#undef IS_CHAIN_ROCK
-#undef CHAIN_IN_MIDDLE
             return true;
         }
 

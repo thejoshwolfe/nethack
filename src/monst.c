@@ -39,6 +39,9 @@ void monst_init(void);
 #define ATTK(at,ad,n,d) {at,ad,n,d}
 #define A(a1,a2,a3,a4,a5,a6) {a1,a2,a3,a4,a5,a6}
 
+#define SEDUCTION_ATTACKS \
+        A(ATTK(AT_BITE, AD_SSEX, 0, 0), ATTK(AT_CLAW, AD_PHYS, 1, 3), \
+          ATTK(AT_CLAW, AD_PHYS, 1, 3), NO_ATTK, NO_ATTK, NO_ATTK)
 
 /*
  *      Rule #1:        monsters of a given class are contiguous in the
@@ -2446,9 +2449,6 @@ struct permonst mons[] = {
         M1_POIS|M1_THICK_HIDE,
         M2_DEMON|M2_STALK|M2_HOSTILE|M2_NASTY, M3_INFRAVISIBLE|M3_INFRAVISION,
         CLR_BROWN),
-#define SEDUCTION_ATTACKS \
-        A(ATTK(AT_BITE, AD_SSEX, 0, 0), ATTK(AT_CLAW, AD_PHYS, 1, 3), \
-          ATTK(AT_CLAW, AD_PHYS, 1, 3), NO_ATTK, NO_ATTK, NO_ATTK)
     MON("succubus", S_DEMON,
         LVL(6, 12, 0, 70, -9), (G_NOCORPSE|1),
         SEDUCTION_ATTACKS,
@@ -2463,7 +2463,6 @@ struct permonst mons[] = {
         M1_HUMANOID|M1_FLY|M1_POIS,
         M2_DEMON|M2_STALK|M2_HOSTILE|M2_NASTY|M2_MALE,
         M3_INFRAVISIBLE|M3_INFRAVISION, CLR_GRAY),
-#undef SEDUCTION_ATTACKS
     /* Used by AD&D for a type of demon, originally one of the Furies */
     /* and spelled this way */
     MON("erinys", S_DEMON,
@@ -3301,10 +3300,6 @@ struct permonst mons[] = {
 };
 
 /* dummy routine used to force linkage */
-void
-monst_init (void)
-{
+void monst_init (void) {
     return;
 }
-
-/*monst.c*/
