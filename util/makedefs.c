@@ -51,29 +51,17 @@ static struct version_info version;
 
 static char     in_line[256], filename[60];
 
-int main(int,char **);
-void do_makedefs(char *);
-void do_data(void);
-void do_date(void);
-void do_options(void);
-void do_monstr(void);
-void do_questtxt(void);
-void do_rumors(void);
-void do_oracles(void);
+static void do_makedefs(char *);
 
 extern void monst_init(void);           /* monst.c */
 extern void objects_init(void); /* objects.c */
 
 static void make_version(void);
-static char *version_string(char *);
-static char *version_id_string(char *,const char *);
 static char *xcrypt(const char *);
-static int check_control(char *);
 static bool d_filter(char *);
 static bool h_filter(char *);
 static bool ranged_attk(struct permonst*);
 static int mstrength(struct permonst *);
-static void build_savebones_compat_string(void);
 
 static bool qt_comment(char *);
 static bool qt_control(char *);
@@ -86,7 +74,6 @@ static void do_qt_text(char *);
 static void adjust_qt_hdrs(void);
 static void put_qt_hdrs(void);
 
-static char *tmpdup(const char *);
 static char *eos(char *);
 
 /* input, output, tmp */
@@ -103,57 +90,6 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void
-do_makedefs (char *options)
-{
-        bool more_than_one;
-
-        /* Note:  these initializers don't do anything except guarantee that
-                we're linked properly.
-        */
-        monst_init();
-        objects_init();
-
-        /* construct the current version number */
-        make_version();
-
-
-        more_than_one = strlen(options) > 1;
-        while (*options) {
-            if (more_than_one)
-                fprintf(stderr, "makedefs -%c\n", *options);
-
-            switch (*options) {
-                case 'd':
-                case 'D':       do_data();
-                                break;
-                case 'm':
-                case 'M':       do_monstr();
-                                break;
-                case 'v':
-                case 'V':       do_date();
-                                do_options();
-                                break;
-                case 'q':
-                case 'Q':       do_questtxt();
-                                break;
-                case 'r':
-                case 'R':       do_rumors();
-                                break;
-                case 'h':
-                case 'H':       do_oracles();
-                                break;
-                default:        fprintf(stderr, "Unknown option '%c'.\n",
-                                        *options);
-                                (void) fflush(stderr);
-                                exit(EXIT_FAILURE);
-
-            }
-            options++;
-        }
-        if (more_than_one) fprintf(stderr, "Completed.\n");     /* feedback */
-
-}
 
 
 /* trivial text encryption routine which can't be broken with `tr' */
@@ -173,7 +109,7 @@ static char * xcrypt (const char *str) {
         return buf;
 }
 
-void do_rumors (void) {
+static void do_rumors (void) {
         char    infile[60];
         long    true_rumor_size;
 
@@ -276,142 +212,6 @@ static void make_version(void) {
         return;
 }
 
-static char * version_string(char *outbuf) {
-    sprintf(outbuf, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
-    return outbuf;
-}
-
-static char * version_id_string (char *outbuf, const char *build_date) {
-    char versbuf[64];
-    sprintf(outbuf, "NetHack Version %s - last build %s.", version_string(versbuf), build_date);
-    return outbuf;
-}
-
-void do_date (void) {
-        long clocktim = 0;
-        char *c, cbuf[60], buf[BUFSZ];
-        const char *ul_sfx;
-
-        filename[0]='\0';
-        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATE_FILE);
-        if (!(ofp = fopen(filename, "w+"))) {
-                perror(filename);
-                exit(EXIT_FAILURE);
-        }
-        fprintf(ofp,"/*\tSCCS Id: @(#)date.h\t3.4\t2002/02/03 */\n\n");
-        fprintf(ofp, "%s", Dont_Edit_Code);
-
-        (void) time((time_t *)&clocktim);
-        strcpy(cbuf, ctime((time_t *)&clocktim));
-        for (c = cbuf; *c; c++) if (*c == '\n') break;
-        *c = '\0';      /* strip off the '\n' */
-        fprintf(ofp,"#define BUILD_DATE \"%s\"\n", cbuf);
-        fprintf(ofp,"#define BUILD_TIME (%ldL)\n", clocktim);
-        fprintf(ofp,"\n");
-        ul_sfx = "UL";
-        fprintf(ofp,"#define VERSION_NUMBER 0x%08lx%s\n",
-                version.incarnation, ul_sfx);
-        fprintf(ofp,"#define VERSION_FEATURES 0x%08lx%s\n",
-                version.feature_set, ul_sfx);
-        fprintf(ofp,"#define VERSION_SANITY1 0x%08lx%s\n",
-                version.entity_count, ul_sfx);
-        fprintf(ofp,"#define VERSION_SANITY2 0x%08lx%s\n",
-                version.struct_sizes, ul_sfx);
-        fprintf(ofp,"\n");
-        fprintf(ofp,"#define VERSION_STRING \"%s\"\n", version_string(buf));
-        fprintf(ofp,"#define VERSION_ID \\\n \"%s\"\n",
-                version_id_string(buf, cbuf));
-        fprintf(ofp,"\n");
-        fclose(ofp);
-        return;
-}
-
-static char save_bones_compat_buf[BUFSZ];
-
-static void build_savebones_compat_string (void) {
-        strcpy(save_bones_compat_buf,
-                "save and bones files accepted from version");
-        sprintf(eos(save_bones_compat_buf), " %d.%d.%d only",
-                VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
-}
-
-static const char *build_opts[] = {
-                "autopickup_exceptions",
-                "color",
-                "data librarian",
-                "debug mode",
-                "Elbereth",
-                "experience points on status line",
-                "insurance files for recovering from crashes",
-                "Keystone Kops",
-                "log file",
-                "mail daemon",
-                "news file",
-                "redo command",
-                "saddles and riding",
-                "seduction",
-                "sinks",
-                "terminal info library",
-                "tourists",
-                "variable playground",
-                "walled mazes",
-                save_bones_compat_buf,
-                "basic NetHack features"
-        };
-
-static const char *window_opts[] = {
-                "traditional tty-based graphics",
-                0
-        };
-
-void do_options(void) {
-        int i, length;
-        const char *str, *indent = "    ";
-
-        filename[0]='\0';
-        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, OPTIONS_FILE);
-        if (!(ofp = fopen(filename, "w+"))) {
-                perror(filename);
-                exit(EXIT_FAILURE);
-        }
-
-        build_savebones_compat_string();
-        fprintf(ofp,
-                "\n    NetHack version %d.%d.%d\n",
-                VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
-
-        fprintf(ofp,"\nOptions compiled into this edition:\n");
-
-        length = COLNO + 1;     /* force 1st item onto new line */
-        for (i = 0; i < SIZE(build_opts); i++) {
-            str = build_opts[i];
-            if (length + strlen(str) > COLNO - 5)
-                fprintf(ofp,"\n%s", indent),  length = strlen(indent);
-            else
-                fprintf(ofp," "),  length++;
-            fprintf(ofp,"%s", str),  length += strlen(str);
-            fprintf(ofp,(i < SIZE(build_opts) - 1) ? "," : "."),  length++;
-        }
-
-        fprintf(ofp,"\n\nSupported windowing systems:\n");
-
-        length = COLNO + 1;     /* force 1st item onto new line */
-        for (i = 0; i < SIZE(window_opts) - 1; i++) {
-            str = window_opts[i];
-            if (length + strlen(str) > COLNO - 5)
-                fprintf(ofp,"\n%s", indent),  length = strlen(indent);
-            else
-                fprintf(ofp," "),  length++;
-            fprintf(ofp,"%s", str),  length += strlen(str);
-            fprintf(ofp, ","),  length++;
-        }
-        fprintf(ofp, "\n%swith a default of %s.", indent, "tty");
-        fprintf(ofp,"\n\n");
-
-        fclose(ofp);
-        return;
-}
-
 /* routine to decide whether to discard something from data.base */
 static bool d_filter(char *line) {
     if (*line == '#') return true;      /* ignore comment lines */
@@ -440,7 +240,7 @@ text-b/text-c           at fseek(0x01234567L + 456L)
     *
     */
 
-void do_data (void) {
+static void do_data (void) {
         char    infile[60], tempfile[60];
         bool ok;
         long    txt_offset;
@@ -554,7 +354,7 @@ static const char *special_oracle[] = {
    "-----" lines.
  */
 
-void do_oracles (void) {
+static void do_oracles (void) {
         char    infile[60], tempfile[60];
         bool in_oracle, ok;
         long    txt_offset, offset, fpos;
@@ -669,25 +469,6 @@ dead_data:  perror(in_line);    /* report the problem */
 }
 
 
-static  struct deflist {
-
-        const char      *defname;
-        bool true_or_false;
-} deflist[] = {
-              { 0, 0 } };
-
-static int check_control (char *s) {
-        int     i;
-
-        if(s[0] != '%') return(-1);
-
-        for(i = 0; deflist[i].defname; i++)
-            if(!strncmp(deflist[i].defname, s+1, strlen(deflist[i].defname)))
-                return(i);
-
-        return(-1);
-}
-
 /* returns true if monster can attack at range */
 static bool ranged_attk(struct permonst *ptr) {
         int     i, j;
@@ -757,7 +538,7 @@ static int mstrength (struct permonst *ptr) {
         return((tmp >= 0) ? tmp : 0);
 }
 
-void do_monstr (void) {
+static void do_monstr (void) {
     struct permonst *ptr;
     int i, j;
 
@@ -1012,15 +793,58 @@ void do_questtxt (void) {
         return;
 }
 
-static char * tmpdup (const char *str) {
-        static char buf[128];
-
-        if (!str) return (char *)0;
-        (void)strncpy(buf, str, 127);
-        return buf;
-}
-
 static char * eos (char *str) {
     while (*str) str++;
     return str;
+}
+
+static void do_makedefs(char *options) {
+    bool more_than_one;
+
+    /* Note:  these initializers don't do anything except guarantee that
+     we're linked properly.
+     */
+    monst_init();
+    objects_init();
+
+    /* construct the current version number */
+    make_version();
+
+    more_than_one = strlen(options) > 1;
+    while (*options) {
+        if (more_than_one)
+            fprintf(stderr, "makedefs -%c\n", *options);
+
+        switch (*options) {
+            case 'd':
+            case 'D':
+                do_data();
+                break;
+            case 'm':
+            case 'M':
+                do_monstr();
+                break;
+            case 'q':
+            case 'Q':
+                do_questtxt();
+                break;
+            case 'r':
+            case 'R':
+                do_rumors();
+                break;
+            case 'h':
+            case 'H':
+                do_oracles();
+                break;
+            default:
+                fprintf(stderr, "Unknown option '%c'.\n", *options);
+                (void)fflush(stderr);
+                exit(EXIT_FAILURE);
+
+        }
+        options++;
+    }
+    if (more_than_one)
+        fprintf(stderr, "Completed.\n"); /* feedback */
+
 }
