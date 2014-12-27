@@ -28,26 +28,26 @@ static struct Bool_Opt {
     {"altmeta", (bool *)0, true, DISP_IN_GAME},
     {"ascii_map",     &iflags.wc_ascii_map, true, SET_IN_GAME},    /*WC*/
     {"asksavedisk", (bool *)0, false, SET_IN_FILE},
-    {"autodig", &flags.autodig, false, SET_IN_GAME},
-    {"autopickup", &flags.pickup, true, SET_IN_GAME},
+    {"autodig", &flags.autodig, true, SET_IN_GAME},
+    {"autopickup", &flags.pickup, false, SET_IN_GAME},
     {"autoquiver", &flags.autoquiver, false, SET_IN_GAME},
     {"BIOS", (bool *)0, false, SET_IN_FILE},
     {"checkpoint", &flags.ins_chkpt, true, SET_IN_GAME},
     {"checkspace", (bool *)0, false, SET_IN_FILE},
     {"cmdassist", &iflags.cmdassist, true, SET_IN_GAME},
-    {"color",         &iflags.wc_color, false, SET_IN_GAME},        /*WC*/
+    {"color",         &iflags.wc_color, true, SET_IN_GAME},        /*WC*/
     {"confirm",&flags.confirm, true, SET_IN_GAME},
     {"cursesgraphics", (bool *)0, false, SET_IN_FILE},
     {"DECgraphics", &iflags.DECgraphics, false, SET_IN_GAME},
     {"eight_bit_tty", &iflags.wc_eight_bit_input, false, SET_IN_GAME},      /*WC*/
     {"extmenu", &iflags.extmenu, false, SET_IN_GAME},
-    {"hpmon", &iflags.use_hpmon, false, SET_IN_GAME},
+    {"hpmon", &iflags.use_hpmon, true, SET_IN_GAME},
     {"female", &flags.female, false, DISP_IN_GAME},
     {"fixinv", &flags.invlet_constant, true, SET_IN_GAME},
     {"fullscreen", &iflags.wc2_fullscreen, false, SET_IN_FILE},
     {"guicolor", &iflags.wc2_guicolor, true, SET_IN_GAME},
     {"help", &flags.help, true, SET_IN_GAME},
-    {"hilite_pet",    &iflags.wc_hilite_pet, false, SET_IN_GAME},   /*WC*/
+    {"hilite_pet",    &iflags.wc_hilite_pet, true, SET_IN_GAME},   /*WC*/
     {"IBMgraphics", &iflags.IBMgraphics, false, SET_IN_GAME},
     {"ignintr", &flags.ignintr, false, SET_IN_GAME},
     {"large_font", &iflags.obsolete, false, SET_IN_FILE},   /* OBSOLETE */
