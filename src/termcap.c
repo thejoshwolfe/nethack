@@ -381,10 +381,6 @@ void graph_off(void) {
 }
 
 
-static const short tmspc10[] = {                /* from termcap */
-        0, 2000, 1333, 909, 743, 666, 500, 333, 166, 83, 55, 41, 20, 10, 5
-};
-
 /* delay 50 ms */
 void tty_delay_output(void) {
     fflush(stdout);

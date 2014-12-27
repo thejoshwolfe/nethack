@@ -976,13 +976,13 @@ postmov:
                     struct rm *here = &levl[mtmp->mx][mtmp->my];
                     bool btrapped = (here->doormask & D_TRAPPED);
 
-                    if(here->doormask & (D_LOCKED|D_CLOSED) && amorphous(ptr)) {
+                    if((here->doormask & (D_LOCKED|D_CLOSED)) && amorphous(ptr)) {
                         if (flags.verbose && canseemon(mtmp))
                             pline("%s %s under the door.", Monnam(mtmp),
                                   (ptr == &mons[PM_FOG_CLOUD] ||
                                    ptr == &mons[PM_YELLOW_LIGHT])
                                   ? "flows" : "oozes");
-                    } else if(here->doormask & D_LOCKED && can_unlock) {
+                    } else if((here->doormask & D_LOCKED) && can_unlock) {
                         if(btrapped) {
                             here->doormask = D_NODOOR;
                             newsym(mtmp->mx, mtmp->my);
@@ -1030,7 +1030,7 @@ postmov:
                                 else if (flags.soundok)
                                     You_hear("a door crash open.");
                             }
-                            if (here->doormask & D_LOCKED && !rn2(2))
+                            if ((here->doormask & D_LOCKED) && !rn2(2))
                                     here->doormask = D_NODOOR;
                             else here->doormask = D_BROKEN;
                             /* newsym(mtmp->mx, mtmp->my); */ /* done below */

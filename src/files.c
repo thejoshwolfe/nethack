@@ -635,8 +635,7 @@ static FILE * fopen_config_file(const char *filename) {
  * NOTE: zeros are inserted unless modlist is true, in which case the list
  *  location is unchanged.  Callers must handle zeros if modlist is false.
  */
-    static int 
-get_uchars (
+static int get_uchars (
     FILE *fp,           /* input file pointer */
     char *buf,          /* read buffer, must be of size BUFSZ */
     char *bufp,         /* current pointer */

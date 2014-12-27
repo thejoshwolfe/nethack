@@ -2195,15 +2195,13 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
                         break;
                     }
                     if(mon->mcansee) {
-                        if (ureflects("%s gaze is reflected by your %s.",
-                                    s_suffix(Monnam(mon))))
-                            ;
-                        else if (Free_action)
+                        if (ureflects("%s gaze is reflected by your %s.", s_suffix(Monnam(mon)))) {
+                        } else if (Free_action) {
                             You("momentarily stiffen under %s gaze!",
                                     s_suffix(mon_nam(mon)));
-                        else {
+                        } else {
                             You("are frozen by %s gaze!",
-                                  s_suffix(mon_nam(mon)));
+                                    s_suffix(mon_nam(mon)));
                             nomul((ACURR(A_WIS) > 12 || rn2(4)) ? -tmp : -127);
                         }
                     } else {

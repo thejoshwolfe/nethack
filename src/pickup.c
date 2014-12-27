@@ -694,7 +694,7 @@ query_objlist (
                                                         && (*allow)(curr)) {
 
                     /* if sorting, print type name (once only) */
-                    if (qflags & INVORDER_SORT && !printed_type_name) {
+                    if ((qflags & INVORDER_SORT) && !printed_type_name) {
                         any.a_obj = (struct obj *) 0;
                         add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
                                         let_to_name(*pack, false), MENU_UNSELECTED);
@@ -709,7 +709,7 @@ query_objlist (
                 }
             }
             pack++;
-        } while (qflags & INVORDER_SORT && *pack);
+        } while ((qflags & INVORDER_SORT) && *pack);
 
         free(oarray);
         end_menu(win, qstr);

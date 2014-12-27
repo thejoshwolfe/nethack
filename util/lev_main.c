@@ -161,7 +161,7 @@ extern int n_olist, n_mlist, n_plist;
 
 extern unsigned int nlreg, nreg, ndoor, ntrap, nmons, nobj;
 extern unsigned int ndb, nwalk, npart, ndig, npass, nlad, nstair;
-extern unsigned int naltar, ncorridor, nrooms, ngold, nengraving;
+extern unsigned int naltar, nrooms, ngold, nengraving;
 extern unsigned int nfountain, npool, nsink;
 
 extern unsigned int max_x_map, max_y_map;

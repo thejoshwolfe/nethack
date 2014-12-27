@@ -20,8 +20,6 @@
 #include <pwd.h>
 #include <fcntl.h>
 
-extern struct passwd *getpwuid(uid_t);
-extern struct passwd *getpwnam(const char *);
 static bool whoami(void);
 static void process_options(int, char **);
 

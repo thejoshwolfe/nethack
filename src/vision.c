@@ -557,7 +557,7 @@ vision_recalc (int control)
                      */
                     dx = u.ux - col;    dx = sign(dx);
                     flev = &(levl[col+dx][row+dy]);
-                    if (flev->lit || next_array[row+dy][col+dx] & TEMP_LIT) {
+                    if (flev->lit || (next_array[row+dy][col+dx] & TEMP_LIT)) {
                         next_row[col] |= IN_SIGHT;      /* we see it */
 
                         oldseenv = lev->seenv;

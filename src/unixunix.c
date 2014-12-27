@@ -14,9 +14,6 @@
 // an empty file used for locking purposes
 static const char *HLOCK = "run/perm";
 
-extern void linux_mapon(void);
-extern void linux_mapoff(void);
-
 static struct stat buf;
 
 /* see whether we should throw away this xlock file */

@@ -700,7 +700,7 @@ ring:
                 } else if (obj->otyp == EGG) {
                     if (obj->corpsenm >= LOW_PM &&
                             (obj->known ||
-                            mvitals[obj->corpsenm].mvflags & MV_KNOWS_EGG)) {
+                            (mvitals[obj->corpsenm].mvflags & MV_KNOWS_EGG))) {
                         strcat(prefix, mons[obj->corpsenm].mname);
                         strcat(prefix, " ");
                         if (obj->spe)
@@ -2312,22 +2312,23 @@ typfnd:
 
         /* check for some objects that are not allowed */
         if (typ && objects[typ].oc_unique) {
-            if (wizard)
-                ;       /* allow unique objects */
-            else
-            switch (typ) {
-                case AMULET_OF_YENDOR:
-                    typ = FAKE_AMULET_OF_YENDOR;
-                    break;
-                case CANDELABRUM_OF_INVOCATION:
-                    typ = rnd_class(TALLOW_CANDLE, WAX_CANDLE);
-                    break;
-                case BELL_OF_OPENING:
-                    typ = BELL;
-                    break;
-                case SPE_BOOK_OF_THE_DEAD:
-                    typ = SPE_BLANK_PAPER;
-                    break;
+            if (wizard) {
+                /* allow unique objects */
+            } else {
+                switch (typ) {
+                    case AMULET_OF_YENDOR:
+                        typ = FAKE_AMULET_OF_YENDOR;
+                        break;
+                    case CANDELABRUM_OF_INVOCATION:
+                        typ = rnd_class(TALLOW_CANDLE, WAX_CANDLE);
+                        break;
+                    case BELL_OF_OPENING:
+                        typ = BELL;
+                        break;
+                    case SPE_BOOK_OF_THE_DEAD:
+                        typ = SPE_BLANK_PAPER;
+                        break;
+                }
             }
         }
 
@@ -2370,9 +2371,11 @@ typfnd:
 
         if (oclass == VENOM_CLASS) otmp->spe = 1;
 
-        if (spesgn == 0) spe = otmp->spe;
-        else if (wizard) /* no alteration to spe */ ;
-        else if (oclass == ARMOR_CLASS || oclass == WEAPON_CLASS ||
+        if (spesgn == 0) {
+            spe = otmp->spe;
+        } else if (wizard) {
+            /* no alteration to spe */
+        } else if (oclass == ARMOR_CLASS || oclass == WEAPON_CLASS ||
                  is_weptool(otmp) ||
                         (oclass==RING_CLASS && objects[typ].oc_charged)) {
                 if(spe > rnd(5) && spe > otmp->spe) spe = 0;

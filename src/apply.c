@@ -256,17 +256,18 @@ static int use_stethoscope (struct obj *obj) {
             mstatusline(u.ustuck);
             return res;
         } else if (u.dz) {
-            if (Underwater)
+            if (Underwater) {
                 You_hear("faint splashing.");
-            else if (u.dz < 0 || !can_reach_floor())
+            } else if (u.dz < 0 || !can_reach_floor()) {
                 You_cant("reach the %s.",
                         (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
-            else if (its_dead(u.ux, u.uy, &res))
-                ;   /* message already given */
-            else if (Is_stronghold(&u.uz))
+            } else if (its_dead(u.ux, u.uy, &res)) {
+                /* message already given */
+            } else if (Is_stronghold(&u.uz)) {
                 You_hear("the crackling of hellfire.");
-            else
+            } else {
                 pline_The("%s seems healthy enough.", surface(u.ux,u.uy));
+            }
             return res;
         } else if (obj->cursed && !rn2(2)) {
             You_hear("your heart beat.");
@@ -686,15 +687,13 @@ static int use_mirror (struct obj *obj) {
             pline("%s is frightened by its reflection.", Monnam(mtmp));
         monflee(mtmp, d(2,4), false, false);
     } else if (!Blind) {
-        if (mtmp->minvis && !See_invisible)
-            ;
-        else if ((mtmp->minvis && !perceives(mtmp->data))
-                || !haseyes(mtmp->data))
-            pline("%s doesn't seem to notice its reflection.",
-                    Monnam(mtmp));
-        else
-            pline("%s ignores %s reflection.",
-                    Monnam(mtmp), mhis(mtmp));
+        if (mtmp->minvis && !See_invisible) {
+            // nothing
+        } else if ((mtmp->minvis && !perceives(mtmp->data)) || !haseyes(mtmp->data)) {
+            pline("%s doesn't seem to notice its reflection.", Monnam(mtmp));
+        } else {
+            pline("%s ignores %s reflection.", Monnam(mtmp), mhis(mtmp));
+        }
     }
     return 1;
 }

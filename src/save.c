@@ -63,7 +63,6 @@ void hangup(int sig_unused) {
 
 /* returns 1 if save successful */
 int dosave0(void) {
-    const char *fq_save;
     int fd, ofd;
     signed char ltmp;
     d_level uz_save;
@@ -71,7 +70,7 @@ int dosave0(void) {
 
     if (!SAVEF[0])
         return 0;
-    fq_save = fqname(SAVEF, SAVEPREFIX, 1); /* level files take 0 */
+    fqname(SAVEF, SAVEPREFIX, 1); /* level files take 0 */
 
     (void) signal(SIGHUP, SIG_IGN);
     (void) signal(SIGINT, SIG_IGN);

@@ -33,7 +33,6 @@ static void get_valuables(struct obj *);
 static void sort_valuables(struct valuable_data *,int);
 static void artifact_score(struct obj *,bool,winid);
 static void savelife(int);
-static void list_vanquished(char,bool);
 extern void dump_spells(void);
 void do_vanquished(int, bool, bool);
 static void list_genocided(int, bool, bool);
@@ -1008,12 +1007,6 @@ void terminate(int status) {
         }
 
         nethack_exit(status);
-}
-
-static void 
-list_vanquished (char defquery, bool ask)
-{
-  do_vanquished(defquery, ask, false);
 }
 
 void 

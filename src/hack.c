@@ -532,10 +532,11 @@ test_move (int ux, int uy, int dx, int dy, int mode)
         }
     } else if (IS_DOOR(tmpr->typ)) {
         if (closed_door(x,y)) {
-            if (Blind && mode == DO_MOVE) feel_location(x,y);
-            if (Passes_walls)
-                ;       /* do nothing */
-            else if (can_ooze(&youmonst)) {
+            if (Blind && mode == DO_MOVE)
+                feel_location(x,y);
+            if (Passes_walls) {
+                /* do nothing */
+            } else if (can_ooze(&youmonst)) {
                 if (mode == DO_MOVE) You("ooze under the door.");
             } else if (tunnels(youmonst.data) && !needspick(youmonst.data)) {
                 /* Eat the door. */
@@ -1438,9 +1439,9 @@ stillinwater:;
                     case S_PIERCER:
                         pline("%s suddenly drops from the %s!",
                               Amonnam(mtmp), ceiling(u.ux,u.uy));
-                        if(mtmp->mtame) /* jumps to greet you, not attack */
-                            ;
-                        else if(uarmh && is_metallic(uarmh))
+                        if(mtmp->mtame) {
+                            /* jumps to greet you, not attack */
+                        } else if(uarmh && is_metallic(uarmh))
                             pline("Its blow glances off your helmet.");
                         else if (u.uac + 3 <= rnd(20))
                             You("are almost hit by %s!",

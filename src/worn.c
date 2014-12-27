@@ -549,14 +549,15 @@ void mon_break_armor (struct monst *mon, bool polyspot) {
             if ((otmp = which_armor(mon, W_ARM)) != 0) {
                 if ((Is_dragon_scales(otmp) &&
                         mdat == Dragon_scales_to_pm(otmp)) ||
-                    (Is_dragon_mail(otmp) && mdat == Dragon_mail_to_pm(otmp)))
-                    ;   /* no message here;
-                           "the dragon merges with his scaly armor" is odd
-                           and the monster's previous form is already gone */
-                else if (vis)
+                    (Is_dragon_mail(otmp) && mdat == Dragon_mail_to_pm(otmp))) {
+                    /* no message here;
+                       "the dragon merges with his scaly armor" is odd
+                       and the monster's previous form is already gone */
+                } else if (vis) {
                     pline("%s breaks out of %s armor!", Monnam(mon), ppronoun);
-                else
+                } else {
                     You_hear("a cracking sound.");
+                }
                 m_useup(mon, otmp);
             }
             if ((otmp = which_armor(mon, W_ARMC)) != 0) {

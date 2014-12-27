@@ -315,9 +315,9 @@ fall_through (
             }
         } else pline_The("%s opens up under you!", surface(u.ux,u.uy));
 
-        if (In_sokoban(&u.uz) && Can_fall_thru(&u.uz))
-            ;   /* KMH -- You can't escape the Sokoban level traps */
-        else if(Levitation || u.ustuck || !Can_fall_thru(&u.uz)
+        if (In_sokoban(&u.uz) && Can_fall_thru(&u.uz)) {
+            /* You can't escape the Sokoban level traps */
+        } else if(Levitation || u.ustuck || !Can_fall_thru(&u.uz)
            || Flying || is_clinger(youmonst.data)
            || (Inhell && !u.uevent.invoked &&
                                         newlevel == dunlevs_in_dungeon(&u.uz))
@@ -602,9 +602,9 @@ dotrap (struct trap *trap, unsigned trflags)
                 otmp->quan = 1L;
                 otmp->owt = weight(otmp);
                 otmp->opoisoned = 0;
-                if (u.usteed && !rn2(2) && steedintrap(trap, otmp)) /* nothing */;
-                else
-                if (thitu(8, dmgval(otmp, &youmonst), otmp, "arrow")) {
+                if (u.usteed && !rn2(2) && steedintrap(trap, otmp)) {
+                     /* nothing */
+                } else if (thitu(8, dmgval(otmp, &youmonst), otmp, "arrow")) {
                     obfree(otmp, (struct obj *)0);
                 } else {
                     place_object(otmp, u.ux, u.uy);
@@ -627,9 +627,9 @@ dotrap (struct trap *trap, unsigned trflags)
                 otmp->quan = 1L;
                 otmp->owt = weight(otmp);
                 if (!rn2(6)) otmp->opoisoned = 1;
-                if (u.usteed && !rn2(2) && steedintrap(trap, otmp)) /* nothing */;
-                else
-                if (thitu(7, dmgval(otmp, &youmonst), otmp, "little dart")) {
+                if (u.usteed && !rn2(2) && steedintrap(trap, otmp)) {
+                    /* nothing */
+                } else if (thitu(7, dmgval(otmp, &youmonst), otmp, "little dart")) {
                     if (otmp->opoisoned)
                         poisoned("dart", A_CON, "little dart", -10);
                     obfree(otmp, (struct obj *)0);
@@ -3391,7 +3391,7 @@ untrap (bool force)
                 return(0);
         }
 
-        if ((levl[x][y].doormask & D_TRAPPED
+        if (((levl[x][y].doormask & D_TRAPPED)
              && (force ||
                  (!confused && rn2(MAXULEV - u.ulevel + 11) < 10)))
             || (!force && confused && !rn2(3))) {

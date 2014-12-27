@@ -10,9 +10,6 @@
 #include "onames.h"
 #include "artifact_names.h"
 
-// larger file for debugging purposes
-static const char * LOGFILE = "run/logfile";
-
 #define done_stopprint program_state.stopprint
 
 #define newttentry() (struct toptenentry *) malloc(sizeof(struct toptenentry))

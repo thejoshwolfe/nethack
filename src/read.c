@@ -484,7 +484,7 @@ forget_map (int howmuch)
 
         known = true;
         for(zx = 0; zx < COLNO; zx++) for(zy = 0; zy < ROWNO; zy++)
-            if (howmuch & ALL_MAP || rn2(7)) {
+            if ((howmuch & ALL_MAP) || rn2(7)) {
                 /* Zonk all memory of this location. */
                 levl[zx][zy].seenv = 0;
                 levl[zx][zy].waslit = 0;
