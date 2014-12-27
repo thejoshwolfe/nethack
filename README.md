@@ -66,6 +66,8 @@ The goal of this fork is to make the game more approachable for new players.
        Major Consultations should be added to your encyclopedia, and should never repeat.
    * Make the "You hear" and "You feel" messages more direct, possibly after getting them enough times.
    * The retro "Rogue" level has got to go.
+   * Provide a high-level map of the dungeon branches you've discovered so far,
+     and a detailed map of each For each floor you've been to.
  * A game mode that allows save states, called "Practice Mode".
    The normal game should be called "Hardcore Mode".
    * You can still unlock encyclopedia entries in Practice Mode.
