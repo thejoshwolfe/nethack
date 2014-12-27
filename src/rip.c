@@ -73,11 +73,11 @@ void genl_outrip(winid tmpwin, int how) {
         default: impossible("bad killer format?");
         case KILLED_BY_AN:
                  strcpy(buf, killed_by_prefix[how]);
-                 Strcat(buf, an(killer));
+                 strcat(buf, an(killer));
                  break;
         case KILLED_BY:
                  strcpy(buf, killed_by_prefix[how]);
-                 Strcat(buf, killer);
+                 strcat(buf, killer);
                  break;
         case NO_KILLER_PREFIX:
                  strcpy(buf, killer);

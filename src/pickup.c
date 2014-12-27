@@ -2008,7 +2008,7 @@ use_container (struct obj *obj, int held)
                     }
                     menuprompt[0] = '\0';
                     if (!cnt) sprintf(menuprompt, "%s ", emptymsg);
-                    Strcat(menuprompt, "Do what?");
+                    strcat(menuprompt, "Do what?");
                     t = in_or_out_menu(menuprompt, current_container, outokay, inokay);
                     if (t <= 0) return 0;
                     loot_out = (t & 0x01) != 0;
@@ -2026,7 +2026,7 @@ ask_again2:
                 menu_on_request = 0;
                 add_valid_menu_class(0);        /* reset */
                 strcpy(pbuf, ":ynq");
-                if (cnt) Strcat(pbuf, "m");
+                if (cnt) strcat(pbuf, "m");
                 switch (yn_function(qbuf, pbuf, 'n')) {
                 case ':':
                     container_contents(current_container, false, false);
@@ -2072,7 +2072,7 @@ ask_again2:
             sprintf(qbuf, "Do you wish to put %s in?", something);
             strcpy(pbuf, ynqchars);
             if (flags.menu_style == MENU_TRADITIONAL && invent && inv_cnt() > 0)
-                Strcat(pbuf, "m");
+                strcat(pbuf, "m");
             switch (yn_function(qbuf, pbuf, 'n')) {
                 case 'y':
                     loot_in = true;

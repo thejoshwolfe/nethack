@@ -202,21 +202,21 @@ done_in_by (struct monst *mtmp)
            priest" alone isn't */
         if ((mtmp->data->geno & G_UNIQ) != 0 && !(mtmp->data == &mons[PM_HIGH_PRIEST] && !mtmp->ispriest)) {
             if (!type_is_pname(mtmp->data))
-                Strcat(buf, "the ");
+                strcat(buf, "the ");
             killer_format = KILLED_BY;
         }
         /* _the_ <invisible> <distorted> ghost of Dudley */
         if (mtmp->data == &mons[PM_GHOST] && mtmp->mnamelth) {
-                Strcat(buf, "the ");
+                strcat(buf, "the ");
                 killer_format = KILLED_BY;
         }
         if (mtmp->minvis)
-                Strcat(buf, "invisible ");
+                strcat(buf, "invisible ");
         if (distorted)
-                Strcat(buf, "hallucinogen-distorted ");
+                strcat(buf, "hallucinogen-distorted ");
 
         if(mtmp->data == &mons[PM_GHOST]) {
-                Strcat(buf, "ghost");
+                strcat(buf, "ghost");
                 if (mtmp->mnamelth) sprintf(eos(buf), " of %s", NAME(mtmp));
         } else if(mtmp->isshk) {
                 sprintf(eos(buf), "%s %s, the shopkeeper",
@@ -226,14 +226,14 @@ done_in_by (struct monst *mtmp)
                 /* m_monnam() suppresses "the" prefix plus "invisible", and
                    it overrides the effect of Hallucination on priestname() */
                 killer = m_monnam(mtmp);
-                Strcat(buf, killer);
+                strcat(buf, killer);
         } else {
-                Strcat(buf, mtmp->data->mname);
+                strcat(buf, mtmp->data->mname);
                 if (mtmp->mnamelth)
                     sprintf(eos(buf), " called %s", NAME(mtmp));
         }
 
-        if (multi) Strcat(buf, ", while helpless");
+        if (multi) strcat(buf, ", while helpless");
         killer = buf;
         if (mtmp->data->mlet == S_WRAITH)
                 u.ugrave_arise = PM_WRAITH;
@@ -743,12 +743,12 @@ die:
 /* changing kilbuf really changes killer. we do it this way because
    killer is declared a (const char *)
 */
-        if (u.uhave.amulet) Strcat(kilbuf, " (with the Amulet)");
+        if (u.uhave.amulet) strcat(kilbuf, " (with the Amulet)");
         else if (how == ESCAPED) {
             if (Is_astralevel(&u.uz))   /* offered Amulet to wrong deity */
-                Strcat(kilbuf, " (in celestial disgrace)");
+                strcat(kilbuf, " (in celestial disgrace)");
             else if (carrying(FAKE_AMULET_OF_YENDOR))
-                Strcat(kilbuf, " (with a fake Amulet)");
+                strcat(kilbuf, " (with a fake Amulet)");
                 /* don't bother counting to see whether it should be plural */
         }
 
@@ -800,7 +800,7 @@ die:
                 if (dump_fp) dump("", pbuf);
                 pbuf[0] = '\0';
             } else {
-                if (!done_stopprint) Strcat(pbuf, " ");
+                if (!done_stopprint) strcat(pbuf, " ");
             }
             sprintf(eos(pbuf), "%s with %ld point%s,",
                         how==ASCENDED ? "went to your reward" :

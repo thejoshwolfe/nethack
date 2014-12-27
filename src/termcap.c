@@ -477,7 +477,7 @@ init_hilite (void)
             if (c != CLR_BLACK) {
                 hilites[c|BRIGHT] = (char*) alloc(strlen(scratch)+strlen(MD)+1);
                 strcpy(hilites[c|BRIGHT], MD);
-                Strcat(hilites[c|BRIGHT], scratch);
+                strcat(hilites[c|BRIGHT], scratch);
             }
 
         }

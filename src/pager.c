@@ -81,7 +81,7 @@ lookat (int x, int y, char *buf, char *monbuf)
 
             sprintf(steedbuf, ", mounted on %s", y_monnam(u.usteed));
             /* assert((sizeof buf >= strlen(buf)+strlen(steedbuf)+1); */
-            Strcat(buf, steedbuf);
+            strcat(buf, steedbuf);
         }
         /* When you see yourself normally, no explanation is appended
            (even if you could also see yourself via other means).
@@ -131,10 +131,10 @@ lookat (int x, int y, char *buf, char *monbuf)
                     (mtmp->mpeaceful && accurate) ? "peaceful " : "",
                     name);
             if (u.ustuck == mtmp)
-                Strcat(buf, (Upolyd && sticks(youmonst.data)) ?
+                strcat(buf, (Upolyd && sticks(youmonst.data)) ?
                         ", being held" : ", holding you");
             if (mtmp->mleashed)
-                Strcat(buf, ", leashed to you");
+                strcat(buf, ", leashed to you");
 
             if (mtmp->mtrapped && cansee(mtmp->mx, mtmp->my)) {
                 struct trap *t = t_at(mtmp->mx, mtmp->my);
@@ -178,43 +178,43 @@ lookat (int x, int y, char *buf, char *monbuf)
 
                 if (ways_seen > 1 || !normal) {
                     if (normal) {
-                        Strcat(monbuf, "normal vision");
+                        strcat(monbuf, "normal vision");
                         /* can't actually be 1 yet here */
-                        if (ways_seen-- > 1) Strcat(monbuf, ", ");
+                        if (ways_seen-- > 1) strcat(monbuf, ", ");
                     }
                     if (useemon && mtmp->minvis) {
-                        Strcat(monbuf, "see invisible");
-                        if (ways_seen-- > 1) Strcat(monbuf, ", ");
+                        strcat(monbuf, "see invisible");
+                        if (ways_seen-- > 1) strcat(monbuf, ", ");
                     }
                     if ((!mtmp->minvis || See_invisible) &&
                             see_with_infrared(mtmp)) {
-                        Strcat(monbuf, "infravision");
-                        if (ways_seen-- > 1) Strcat(monbuf, ", ");
+                        strcat(monbuf, "infravision");
+                        if (ways_seen-- > 1) strcat(monbuf, ", ");
                     }
                     if (tp_sensemon(mtmp)) {
-                        Strcat(monbuf, "telepathy");
-                        if (ways_seen-- > 1) Strcat(monbuf, ", ");
+                        strcat(monbuf, "telepathy");
+                        if (ways_seen-- > 1) strcat(monbuf, ", ");
                     }
                     if (useemon && xraydist > 0 &&
                             distu(mtmp->mx, mtmp->my) <= xraydist) {
                         /* Eyes of the Overworld */
-                        Strcat(monbuf, "astral vision");
-                        if (ways_seen-- > 1) Strcat(monbuf, ", ");
+                        strcat(monbuf, "astral vision");
+                        if (ways_seen-- > 1) strcat(monbuf, ", ");
                     }
                     if (Detect_monsters) {
-                        Strcat(monbuf, "monster detection");
-                        if (ways_seen-- > 1) Strcat(monbuf, ", ");
+                        strcat(monbuf, "monster detection");
+                        if (ways_seen-- > 1) strcat(monbuf, ", ");
                     }
                     if (MATCH_WARN_OF_MON(mtmp)) {
                         char wbuf[BUFSZ];
                         if (Hallucination)
-                                Strcat(monbuf, "paranoid delusion");
+                                strcat(monbuf, "paranoid delusion");
                         else {
                                 sprintf(wbuf, "warned of %s",
                                         makeplural(mtmp->data->mname));
-                                Strcat(monbuf, wbuf);
+                                strcat(monbuf, wbuf);
                         }
-                        if (ways_seen-- > 1) Strcat(monbuf, ", ");
+                        if (ways_seen-- > 1) strcat(monbuf, ", ");
                     }
                 }
             }
@@ -237,15 +237,15 @@ lookat (int x, int y, char *buf, char *monbuf)
             strcpy(buf, distant_name(otmp, xname));
 
         if (levl[x][y].typ == STONE || levl[x][y].typ == SCORR)
-            Strcat(buf, " embedded in stone");
+            strcat(buf, " embedded in stone");
         else if (IS_WALL(levl[x][y].typ) || levl[x][y].typ == SDOOR)
-            Strcat(buf, " embedded in a wall");
+            strcat(buf, " embedded in a wall");
         else if (closed_door(x,y))
-            Strcat(buf, " embedded in a door");
+            strcat(buf, " embedded in a door");
         else if (is_pool(x,y))
-            Strcat(buf, " in water");
+            strcat(buf, " in water");
         else if (is_lava(x,y))
-            Strcat(buf, " in molten lava");     /* [can this ever happen?] */
+            strcat(buf, " in molten lava");     /* [can this ever happen?] */
     } else if (glyph_is_trap(glyph)) {
         int tnum = what_trap(glyph_to_trap(glyph));
         strcpy(buf, defsyms[trap_to_defsym(tnum)].explanation);
@@ -662,7 +662,7 @@ do_look (
                 /* Kludge: warning trumps boulders on the display.
                    Reveal the boulder too or player can get confused */
                 if (from_screen && sobj_at(BOULDER, cc.x, cc.y))
-                        Strcat(out_str, " co-located with a boulder");
+                        strcat(out_str, " co-located with a boulder");
                 break;  /* out of for loop*/
             }
         }

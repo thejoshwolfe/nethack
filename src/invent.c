@@ -1236,7 +1236,7 @@ nextclass:
                 if (!allflag) {
                         strcpy(qbuf, !ininv ? doname(otmp) :
                                 xprname(otmp, (char *)0, ilet, !nodot, 0L, 0L));
-                        Strcat(qbuf, "?");
+                        strcat(qbuf, "?");
                         sym = (takeoff || ident || otmp->quan < 2L) ?
                                 nyaq(qbuf) : nyNaq(qbuf);
                 }
@@ -1861,11 +1861,11 @@ dotypeinv (void)
                                               (u.ugold != 0),
                                               (bool (*)(struct obj *)) 0, &itemcount);
             if (unpaid_count) {
-                Strcat(types, "u");
+                strcat(types, "u");
                 class_count++;
             }
             if (billx) {
-                Strcat(types, "x");
+                strcat(types, "x");
                 class_count++;
             }
             /* add everything not already included; user won't see these */
@@ -2020,7 +2020,7 @@ look_here (
                         if (otmp->otyp == CORPSE) feel_cockatrice(otmp, false);
                 }
                 if (Blind) strcpy(fbuf, "You feel");
-                Strcat(fbuf,":");
+                strcat(fbuf,":");
                 (void) display_minventory(mtmp, MINV_ALL, fbuf);
             } else {
                 You("%s no objects here.", verb);
@@ -2092,7 +2092,7 @@ look_here (
                         char buf[BUFSZ];
                         felt_cockatrice = true;
                         strcpy(buf, doname(otmp));
-                        Strcat(buf, "...");
+                        strcat(buf, "...");
                         putstr(tmpwin, 0, buf);
                         break;
                 }
@@ -2416,7 +2416,7 @@ let_to_name (char let, bool unpaid)
             invbuf = (char *) alloc(invbufsiz);
         }
         if (unpaid)
-            Strcat(strcpy(invbuf, "Unpaid "), class_name);
+            strcat(strcpy(invbuf, "Unpaid "), class_name);
         else
             strcpy(invbuf, class_name);
         return invbuf;

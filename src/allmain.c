@@ -561,8 +561,7 @@ int main (int argc, char *argv[]) {
             int len = strlen(plname);
             /* append the current role, if any, so that last dash is ours */
             if (++len < sizeof plname)
-                (void)strncat(strcat(plname, "-"),
-                        pl_character, sizeof plname - len - 1);
+                strncat(strcat(plname, "-"), pl_character, sizeof plname - len - 1);
         }
     plnamesuffix();         /* strip suffix from name; calls askname() */
     /* again if suffix was whole name */

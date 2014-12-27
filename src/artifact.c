@@ -814,9 +814,9 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
             char buf[BUFSZ];
 
             buf[0] = '\0';
-            if (do_stun) Strcat(buf, "stunned");
-            if (do_stun && do_confuse) Strcat(buf, " and ");
-            if (do_confuse) Strcat(buf, "confused");
+            if (do_stun) strcat(buf, "stunned");
+            if (do_stun && do_confuse) strcat(buf, " and ");
+            if (do_confuse) strcat(buf, "confused");
             pline("%s %s %s%c", hittee, vtense(hittee, "are"),
                     buf, (do_stun && do_confuse) ? '!' : '.');
         }

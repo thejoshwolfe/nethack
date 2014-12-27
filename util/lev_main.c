@@ -997,8 +997,8 @@ write_level_file (char *filename, splev *room_level, specialmaze *maze_level)
         char lbuf[60];
 
         lbuf[0] = '\0';
-        Strcat(lbuf, filename);
-        Strcat(lbuf, LEV_EXT);
+        strcat(lbuf, filename);
+        strcat(lbuf, LEV_EXT);
 
         fout = open(lbuf, O_WRONLY|O_CREAT, OMASK);
         if (fout < 0) return false;

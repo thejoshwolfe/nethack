@@ -545,12 +545,12 @@ void init_dungeons(void) {
     if (!dgn_file) {
         char tbuf[BUFSZ];
         sprintf(tbuf, "Cannot open dungeon description - \"%s", DUNGEON_FILE);
-        Strcat(tbuf, "\" from ");
-        Strcat(tbuf, "\n\"");
+        strcat(tbuf, "\" from ");
+        strcat(tbuf, "\n\"");
         if (fqn_prefix[DATAPREFIX])
-            Strcat(tbuf, fqn_prefix[DATAPREFIX]);
-        Strcat(tbuf, DLBFILE);
-        Strcat(tbuf, "\" file!");
+            strcat(tbuf, fqn_prefix[DATAPREFIX]);
+        strcat(tbuf, DLBFILE);
+        strcat(tbuf, "\" file!");
         panic("%s", tbuf);
     }
 
@@ -1437,7 +1437,7 @@ signed char print_dungeon(bool bymenu, signed char *rlev, signed char *rdgn) {
     /* Most entrances are uninteresting. */
     if (dptr->entry_lev != 1) {
         if (dptr->entry_lev == nlev)
-        Strcat(buf, ", entrance from below");
+        strcat(buf, ", entrance from below");
         else
         sprintf(eos(buf), ", entrance on %d",
             dptr->depth_start + dptr->entry_lev - 1);

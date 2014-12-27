@@ -290,8 +290,8 @@ extcmd_via_menu (void)  /* here after # - now show pick-list of possible command
                 sprintf(prompt, "%s or %s", choices[i-1]->ef_txt,
                         choices[i]->ef_txt);
             } else {
-                Strcat(prompt," or ");
-                Strcat(prompt, choices[i]->ef_txt);
+                strcat(prompt," or ");
+                strcat(prompt, choices[i]->ef_txt);
             }
             ++acount;
         }
@@ -1063,7 +1063,7 @@ dump_enlightenment (int final)
         strcpy(buf, x_monnam(u.usteed, ARTICLE_YOUR, (char *)0,
                     SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION, false));
         *buf = highc(*buf);
-        Strcat(buf, " had wounded legs");
+        strcat(buf, " had wounded legs");
         dump("  ", buf);
     }
     if (Sleeping) dump("  ", "You fell asleep");
@@ -2507,6 +2507,6 @@ char yn_function (const char *query, const char *resp, char def) {
     truncspot = QBUFSZ - reduction;
     (void) strncpy(qbuf, query, (int)truncspot);
     qbuf[truncspot] = '\0';
-    Strcat(qbuf,"...");
+    strcat(qbuf,"...");
     return (*windowprocs.win_yn_function)(qbuf, resp, def);
 }

@@ -47,7 +47,6 @@
 /* Displayable name of this port; don't redefine if defined in *conf.h */
 #define PORT_ID        "Unix"
 
-#define Strcat   (void) strcat
 #define Vprintf  (void) vprintf
 #define Vfprintf (void) vfprintf
 #define Vsprintf (void) vsprintf

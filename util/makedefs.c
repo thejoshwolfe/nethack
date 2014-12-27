@@ -210,7 +210,7 @@ do_rumors (void)
         Fprintf(ofp, "%s", Dont_Edit_Data);
 
         sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
-        Strcat(infile, ".tru");
+        strcat(infile, ".tru");
         if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
                 Fclose(ofp);
@@ -231,7 +231,7 @@ do_rumors (void)
         Fclose(ifp);
 
         sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
-        Strcat(infile, ".fal");
+        strcat(infile, ".fal");
         if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
                 Fclose(ofp);
@@ -488,7 +488,7 @@ do_data (void)
         filename[0]='\0';
         sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATA_FILE);
         sprintf(infile, DATA_IN_TEMPLATE, DATA_FILE);
-        Strcat(infile, ".base");
+        strcat(infile, ".base");
         if (!(ifp = fopen(infile, "r"))) {          /* data.base */
                 perror(infile);
                 exit(EXIT_FAILURE);
@@ -608,7 +608,7 @@ do_oracles (void)
         filename[0]='\0';
         sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ORACLE_FILE);
         sprintf(infile, DATA_IN_TEMPLATE, ORACLE_FILE);
-        Strcat(infile, ".txt");
+        strcat(infile, ".txt");
         if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
                 exit(EXIT_FAILURE);

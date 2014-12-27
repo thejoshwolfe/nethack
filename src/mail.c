@@ -54,7 +54,7 @@ void getmailstatus(void) {
                 const char *pw_name = getpwuid(getuid())->pw_name;
                 mailbox = (char *) alloc(sizeof(MAILPATH)+strlen(pw_name));
                 strcpy(mailbox, MAILPATH);
-                Strcat(mailbox, pw_name);
+                strcat(mailbox, pw_name);
         }
         if(stat(mailbox, &omstat)){
                 omstat.st_mtime = 0;

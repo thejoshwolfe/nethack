@@ -535,9 +535,9 @@ level_tele (void)
             strcpy(qbuf, "To what level do you want to teleport?");
             do {
                 if (++trycnt == 2) {
-                        if (wizard) Strcat(qbuf, " [type a number or ? for a menu]");
+                        if (wizard) strcat(qbuf, " [type a number or ? for a menu]");
                         else
-                        Strcat(qbuf, " [type a number]");
+                        strcat(qbuf, " [type a number]");
                 }
                 getlin(qbuf, buf);
                 if (!strcmp(buf,"\033")) {      /* cancelled */
@@ -568,7 +568,7 @@ level_tele (void)
                                                         true, false);
                                         if (obj) {
                                                 obj = addinv(obj);
-                                                Strcat(buf, " with the amulet");
+                                                strcat(buf, " with the amulet");
                                         }
                                 }
                                 assign_level(&newlevel, &earth_level);

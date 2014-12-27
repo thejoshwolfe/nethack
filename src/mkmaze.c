@@ -519,7 +519,7 @@ makemaz (const char *s)
         }
 
         if(*protofile) {
-            Strcat(protofile, LEV_EXT);
+            strcat(protofile, LEV_EXT);
             if(load_special(protofile)) {
                 fixup_special();
                 /* some levels can end up with monsters

@@ -175,8 +175,8 @@ validate_prefix_locations (char *reasonbuf)
             (void) unlink(filename);
         } else {
             if (reasonbuf) {
-                if (failcount) Strcat(reasonbuf,", ");
-                Strcat(reasonbuf, fqn_prefix_names[prefcnt]);
+                if (failcount) strcat(reasonbuf,", ");
+                strcat(reasonbuf, fqn_prefix_names[prefcnt]);
             }
             /* the paniclog entry gets the value of errno as well */
             sprintf(panicbuf1,"Invalid %s", fqn_prefix_names[prefcnt]);
@@ -405,7 +405,7 @@ save_savefile_name (int fd)
 
 /* change pre-existing savefile name to indicate an error savefile */
 void set_error_savefile(void) {
-    Strcat(SAVEF, ".e");
+    strcat(SAVEF, ".e");
 }
 
 
@@ -484,7 +484,7 @@ static int nesting = 0;
 
 static char * make_lockname (const char *filename, char *lockname) {
     strcpy(lockname, filename);
-    Strcat(lockname, "_lock");
+    strcat(lockname, "_lock");
     return lockname;
 }
 

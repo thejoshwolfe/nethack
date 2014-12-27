@@ -231,7 +231,7 @@ void bot2str (char *newbot2) {
         sprintf(nb = eos(nb), " T:%ld", moves);
     if(strcmp(hu_stat[u.uhs], "        ")) {
         sprintf(nb = eos(nb), " ");
-        Strcat(newbot2, hu_stat[u.uhs]);
+        strcat(newbot2, hu_stat[u.uhs]);
     }
     if(Confusion)      sprintf(nb = eos(nb), " Conf");
     if(Sick) {

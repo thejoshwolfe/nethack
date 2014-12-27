@@ -215,8 +215,8 @@ update_topl (const char *bp)
             cw->cury == 0 &&
             n0 + (int)strlen(toplines) + 3 < CO-8 &&  /* room for --More-- */
             (notdied = strncmp(bp, "You die", 7))) {
-                Strcat(toplines, "  ");
-                Strcat(toplines, bp);
+                strcat(toplines, "  ");
+                strcat(toplines, bp);
                 cw->curx += 2;
                 if(!(cw->flags & WIN_STOP))
                     addtopl(bp);
