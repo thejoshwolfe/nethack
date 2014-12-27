@@ -344,10 +344,7 @@ find_mac (struct monst *mon)
  * players to influence what gets worn.  Putting on a shirt underneath
  * already worn body armor is too obviously buggy...
  */
-void 
-m_dowear (struct monst *mon, bool creation)
-{
-#define RACE_EXCEPTION true
+void m_dowear (struct monst *mon, bool creation) {
         /* Note the restrictions here are the same as in dowear in do_wear.c
          * except for the additional restriction on intelligence.  (Players
          * are always intelligent, even if polymorphed).
@@ -377,12 +374,10 @@ m_dowear (struct monst *mon, bool creation)
         if (!cantweararm(mon->data))
             m_dowear_type(mon, W_ARM, creation, false);
         else
-            m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);
+            m_dowear_type(mon, W_ARM, creation, true);
 }
 
-static void 
-m_dowear_type (struct monst *mon, long flag, bool creation, bool racialexception)
-{
+static void m_dowear_type (struct monst *mon, long flag, bool creation, bool racialexception) {
         struct obj *old, *best, *obj;
         int m_delay = 0;
         int unseen = !canseemon(mon);
@@ -485,11 +480,8 @@ outer_break:
                 } /* else if (!mon->minvis) pline("%s suddenly appears!", Amonnam(mon)); */
         }
 }
-#undef RACE_EXCEPTION
 
-struct obj *
-which_armor (struct monst *mon, long flag)
-{
+struct obj * which_armor (struct monst *mon, long flag) {
         struct obj *obj;
 
         for(obj = mon->minvent; obj; obj = obj->nobj)
@@ -498,9 +490,7 @@ which_armor (struct monst *mon, long flag)
 }
 
 /* remove an item of armor and then drop it */
-static void
-m_lose_armor (struct monst *mon, struct obj *obj)
-{
+static void m_lose_armor (struct monst *mon, struct obj *obj) {
         mon->misc_worn_check &= ~obj->owornmask;
         if (obj->owornmask)
             update_mon_intrinsics(mon, obj, false, false);
@@ -513,9 +503,7 @@ m_lose_armor (struct monst *mon, struct obj *obj)
 }
 
 /* all objects with their bypass bit set should now be reset to normal */
-void
-clear_bypasses (void)
-{
+void clear_bypasses (void) {
         struct obj *otmp, *nobj;
         struct monst *mtmp;
 
@@ -544,16 +532,12 @@ clear_bypasses (void)
         flags.bypasses = false;
 }
 
-void
-bypass_obj (struct obj *obj)
-{
+void bypass_obj (struct obj *obj) {
         obj->bypass = 1;
         flags.bypasses = true;
 }
 
-void 
-mon_break_armor (struct monst *mon, bool polyspot)
-{
+void mon_break_armor (struct monst *mon, bool polyspot) {
         struct obj *otmp;
         struct permonst *mdat = mon->data;
         bool vis = cansee(mon->mx, mon->my);
@@ -708,9 +692,7 @@ mon_break_armor (struct monst *mon, bool polyspot)
 /* bias a monster's preferences towards armor that has special benefits. */
 /* currently only does speed boots, but might be expanded if monsters get to
    use more armor abilities */
-static int
-extra_pref (struct monst *mon, struct obj *obj)
-{
+static int extra_pref (struct monst *mon, struct obj *obj) {
     if (obj) {
         if (obj->otyp == SPEED_BOOTS && mon->permspeed != MFAST)
             return 20;
@@ -725,9 +707,7 @@ extra_pref (struct monst *mon, struct obj *obj)
  *       1 If the race/object combination is acceptable.
  *      -1 If the race/object combination is unacceptable.
  */
-int
-racial_exception (struct monst *mon, struct obj *obj)
-{
+int racial_exception (struct monst *mon, struct obj *obj) {
     const struct permonst *ptr = raceptr(mon);
 
     /* Acceptable Exceptions: */
@@ -740,4 +720,3 @@ racial_exception (struct monst *mon, struct obj *obj)
 
     return 0;
 }
-/*worn.c*/
