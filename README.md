@@ -53,8 +53,7 @@ The goal of this fork is to make the game more approachable for new players.
    * Real-world time shouldn't affect the game.
      Move the all the nighttime/moon-phase mechanics to correspond to in-game time.
      In-game time should be randomly initialized for new games, and flow with the turn counter.
-     * You should be able to ask the Oracle for the in-game time for free.
-     * I don't like the idea of adding a watch item, because it would affect the game balance.
+     * You can ask the Oracle for the in-game time for free, and then you know it forever afterward (intrinsic chronoscience).
  * Improve the information conveyance.
    * Non-cursed fortune cookies should be more helpful, and should fill in the encyclopedia.
      Cursed fortune cookies should just be unhelpful instead of outright lies.
