@@ -240,14 +240,12 @@ moverock (void)
             if (throws_rocks(youmonst.data)) {
                 if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
                     You("aren't skilled enough to %s %s from %s.",
-                        (flags.pickup && !In_sokoban(&u.uz))
-                            ? "pick up" : "push aside",
+                            "push aside",
                         the(xname(otmp)), y_monnam(u.usteed));
                 } else
                 {
                     pline("However, you can easily %s.",
-                        (flags.pickup && !In_sokoban(&u.uz))
-                            ? "pick it up" : "push it aside");
+                            "push it aside");
                     if (In_sokoban(&u.uz))
                         change_luck(-1);        /* Sokoban guilt */
                     break;

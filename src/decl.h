@@ -322,10 +322,4 @@ extern const char * const monexplain[], invisexplain[], * const objexplain[], * 
 extern char *fqn_prefix[PREFIX_COUNT];
 extern char *fqn_prefix_names[PREFIX_COUNT];
 
-struct autopickup_exception {
-        char *pattern;
-        bool grab;
-        struct autopickup_exception *next;
-};
-
 #endif /* DECL_H */

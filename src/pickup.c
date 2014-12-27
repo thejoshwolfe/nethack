@@ -341,7 +341,7 @@ pickup (
 
                 /* no pickup if levitating & not on air or water level */
                 if (!can_reach_floor()) {
-                    if ((multi && !flags.run) || (autopickup && !flags.pickup))
+                    if ((multi && !flags.run) || autopickup)
                         read_engr_at(u.ux, u.uy);
                     return (0);
                 }
@@ -361,7 +361,7 @@ pickup (
                  * action, or possibly paralyzed, sleeping, etc.... and they just
                  * teleported onto the object.  They shouldn't pick it up.
                  */
-                if ((multi && !flags.run) || (autopickup && !flags.pickup)) {
+                if ((multi && !flags.run) || autopickup) {
                     check_here(false);
                     return (0);
                 }
@@ -527,26 +527,6 @@ end_query:
         return (n_tried > 0);
 }
 
-bool 
-is_autopickup_exception (
-    struct obj *obj,
-    bool grab    /* forced pickup, rather than forced leave behind? */
-)
-{
-        /*
-         *  Does the text description of this match an exception?
-         */
-        char *objdesc = makesingular(doname(obj));
-        struct autopickup_exception *ape = (grab) ?
-                                        iflags.autopickup_exceptions[AP_GRAB] :
-                                        iflags.autopickup_exceptions[AP_LEAVE];
-        while (ape) {
-                if (pmatch(ape->pattern, objdesc)) return true;
-                ape = ape->next;
-        }
-        return false;
-}
-
 /*
  * Pick from the given list using flags.pickup_types.  Return the number
  * of items picked (not counts).  Create an array that returns pointers
@@ -554,39 +534,8 @@ is_autopickup_exception (
  * picked is zero, the pickup list is left alone.  The caller of this
  * function must free the pickup list.
  */
-static int
-autopick (
-    struct obj *olist,  /* the object list */
-    int follow,         /* how to follow the object list */
-    menu_item **pick_list       /* list of objects and counts to pick up */
-)
-{
-        menu_item *pi;  /* pick item */
-        struct obj *curr;
-        int n;
-        const char *otypes = flags.pickup_types;
-
-        /* first count the number of eligible items */
-        for (n = 0, curr = olist; curr; curr = FOLLOW(curr, follow))
-
-
-            if ((!*otypes || index(otypes, curr->oclass) ||
-                 is_autopickup_exception(curr, true)) &&
-                 !is_autopickup_exception(curr, false))
-                n++;
-
-        if (n) {
-            *pick_list = pi = (menu_item *) malloc(sizeof(menu_item) * n);
-            for (n = 0, curr = olist; curr; curr = FOLLOW(curr, follow))
-            if ((!*otypes || index(otypes, curr->oclass) ||
-                 is_autopickup_exception(curr, true)) &&
-                 !is_autopickup_exception(curr, false)) {
-                    pi[n].item.a_obj = curr;
-                    pi[n].count = curr->quan;
-                    n++;
-                }
-        }
-        return n;
+static int autopick(struct obj *olist, int follow, menu_item **pick_list) {
+    return 0;
 }
 
 
