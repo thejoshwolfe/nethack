@@ -381,33 +381,39 @@ static bool touch_petrifies(const struct permonst * ptr) {
          ptr == &mons[PM_CHICKATRICE];
 }
 
-#define is_mind_flayer(ptr)     ((ptr) == &mons[PM_MIND_FLAYER] || \
-                                 (ptr) == &mons[PM_MASTER_MIND_FLAYER])
+static bool is_mind_flayer(const struct permonst * ptr) {
+    return (ptr == &mons[PM_MIND_FLAYER] ||
+            ptr == &mons[PM_MASTER_MIND_FLAYER]);
+}
 
-#define nonliving(ptr)          (is_golem(ptr) || is_undead(ptr) || \
-                                 (ptr)->mlet == S_VORTEX || \
-                                 (ptr) == &mons[PM_MANES])
+static bool nonliving(const struct permonst * ptr) {
+    return is_golem(ptr) ||
+           is_undead(ptr) ||
+           ptr->mlet == S_VORTEX ||
+           ptr == &mons[PM_MANES];
+}
 
 /* Used for conduct with corpses, tins, and digestion attacks */
 /* G_NOCORPSE monsters might still be swallowed as a purple worm */
 /* Maybe someday this could be in mflags... */
-#define vegan(ptr)              ((ptr)->mlet == S_BLOB || \
-                                 (ptr)->mlet == S_JELLY ||            \
-                                 (ptr)->mlet == S_FUNGUS ||           \
-                                 (ptr)->mlet == S_VORTEX ||           \
-                                 (ptr)->mlet == S_LIGHT ||            \
-                                ((ptr)->mlet == S_ELEMENTAL &&        \
-                                 (ptr) != &mons[PM_STALKER]) ||       \
-                                ((ptr)->mlet == S_GOLEM &&            \
-                                 (ptr) != &mons[PM_FLESH_GOLEM] &&    \
-                                 (ptr) != &mons[PM_LEATHER_GOLEM]) || \
-                                 noncorporeal(ptr))
-#define vegetarian(ptr)         (vegan(ptr) || \
-                                ((ptr)->mlet == S_PUDDING &&         \
-                                 (ptr) != &mons[PM_BLACK_PUDDING]))
+static bool vegan(const struct permonst * ptr) {
+    return ptr->mlet == S_BLOB ||
+           ptr->mlet == S_JELLY ||
+           ptr->mlet == S_FUNGUS ||
+           ptr->mlet == S_VORTEX ||
+           ptr->mlet == S_LIGHT ||
+           (ptr->mlet == S_ELEMENTAL && ptr != &mons[PM_STALKER]) ||
+           (ptr->mlet == S_GOLEM && ptr != &mons[PM_FLESH_GOLEM] && ptr != &mons[PM_LEATHER_GOLEM]) ||
+           noncorporeal(ptr);
+}
+static bool vegetarian(const struct permonst * ptr) {
+    return vegan(ptr) ||
+           (ptr->mlet == S_PUDDING && ptr != &mons[PM_BLACK_PUDDING]);
+}
 
-#define befriend_with_obj(ptr, obj) ((obj)->oclass == FOOD_CLASS && \
-                                     is_domestic(ptr))
+static bool befriend_with_obj(const struct permonst * ptr, const struct obj * obj) {
+    return obj->oclass == FOOD_CLASS && is_domestic(ptr);
+}
 
 static bool is_lminion(struct monst * mon) {
     return is_minion(mon->data) &&
