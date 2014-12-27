@@ -72,8 +72,10 @@ not_enough_room[] = "There's not enough room here to use that.",
 
 #define BY_OBJECT       ((struct monst *)0)
 
+#define PROP_COUNT 6            /* number of properties we're dealing with */
+#define ATTR_COUNT (A_MAX*3)    /* number of attribute points we might fix */
 
-
+#define prop2trbl(X)    ((X) + A_MAX)
 
 
 static int use_camera (struct obj *obj) {
@@ -1344,8 +1346,6 @@ static void use_tinning_kit (struct obj *obj) {
 }
 
 void use_unicorn_horn (struct obj *obj) {
-#define PROP_COUNT 6            /* number of properties we're dealing with */
-#define ATTR_COUNT (A_MAX*3)    /* number of attribute points we might fix */
     int idx, val, val_limit,
         trouble_count, unfixable_trbl, did_prop, did_attr;
     int trouble_list[PROP_COUNT + ATTR_COUNT];
@@ -1377,20 +1377,16 @@ void use_unicorn_horn (struct obj *obj) {
     /*
      * Entries in the trouble list use a very simple encoding scheme.
      */
-#define prop2trbl(X)    ((X) + A_MAX)
-#define attr2trbl(Y)    (Y)
-#define prop_trouble(X) trouble_list[trouble_count++] = prop2trbl(X)
-#define attr_trouble(Y) trouble_list[trouble_count++] = attr2trbl(Y)
 
     trouble_count = unfixable_trbl = did_prop = did_attr = 0;
 
     /* collect property troubles */
-    if (Sick) prop_trouble(SICK);
-    if (Blinded > (long)u.ucreamed) prop_trouble(BLINDED);
-    if (HHallucination) prop_trouble(HALLUC);
-    if (Vomiting) prop_trouble(VOMITING);
-    if (HConfusion) prop_trouble(CONFUSION);
-    if (HStun) prop_trouble(STUNNED);
+    if (Sick) trouble_list[trouble_count++] = prop2trbl(SICK);
+    if (Blinded > (long)u.ucreamed) trouble_list[trouble_count++] = prop2trbl(BLINDED);
+    if (HHallucination) trouble_list[trouble_count++] = prop2trbl(HALLUC);
+    if (Vomiting) trouble_list[trouble_count++] = prop2trbl(VOMITING);
+    if (HConfusion) trouble_list[trouble_count++] = prop2trbl(CONFUSION);
+    if (HStun) trouble_list[trouble_count++] = prop2trbl(STUNNED);
 
     unfixable_trbl = unfixable_trouble_count(true);
 
@@ -1403,7 +1399,7 @@ void use_unicorn_horn (struct obj *obj) {
         if (val_limit > ABASE(idx) + 3) val_limit = ABASE(idx) + 3;
 
         for (val = ABASE(idx); val < val_limit; val++)
-            attr_trouble(idx);
+            trouble_list[trouble_count++] = idx;
         /* keep track of unfixed trouble, for message adjustment below */
         unfixable_trbl += (AMAX(idx) - val_limit);
     }
@@ -1478,12 +1474,6 @@ void use_unicorn_horn (struct obj *obj) {
         pline("Nothing seems to happen.");
 
     flags.botl = (did_attr || did_prop);
-#undef PROP_COUNT
-#undef ATTR_COUNT
-#undef prop2trbl
-#undef attr2trbl
-#undef prop_trouble
-#undef attr_trouble
 }
 
 /*
