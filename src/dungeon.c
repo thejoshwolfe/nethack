@@ -391,9 +391,7 @@ add_level (s_level *new_lev)
     }
 }
 
-static void
-init_level (int dgn, int proto_index, struct proto_dungeon *pd)
-{
+static void init_level (int dgn, int proto_index, struct proto_dungeon *pd) {
     s_level    *new_level;
     struct tmplevel *tlevel = &pd->tmplevel[proto_index];
 
@@ -955,26 +953,24 @@ u_on_newpos (int x, int y)
     if (u.usteed) u.usteed->mx = u.ux, u.usteed->my = u.uy;
 }
 
-void
-u_on_sstairs (void) {    /* place you on the special staircase */
-
+/* place you on the special staircase */
+void u_on_sstairs (void) {
     if (sstairs.sx) {
         u_on_newpos(sstairs.sx, sstairs.sy);
     } else {
         /* code stolen from goto_level */
         int trycnt = 0;
         signed char x, y;
-#define badspot(x,y) ((levl[x][y].typ != ROOM && levl[x][y].typ != CORR) || MON_AT(x, y))
         do {
-        x = rnd(COLNO-1);
-        y = rn2(ROWNO);
-        if (!badspot(x, y)) {
-            u_on_newpos(x, y);
-            return;
-        }
+            x = rnd(COLNO-1);
+            y = rn2(ROWNO);
+            bool badspot = (levl[x][y].typ != ROOM && levl[x][y].typ != CORR) || MON_AT(x, y);
+            if (!badspot) {
+                u_on_newpos(x, y);
+                return;
+            }
         } while (++trycnt <= 500);
         panic("u_on_sstairs: could not relocate player!");
-#undef badspot
     }
 }
 
