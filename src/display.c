@@ -725,7 +725,7 @@ void shieldeff (signed char x, signed char y) {
         for (i = 0; i < SHIELD_COUNT; i++) {
             show_glyph(x, y, cmap_to_glyph(shield_static[i]));
             flush_screen(1);    /* make sure the glyph shows up */
-            delay_output();
+            my_delay_output();
         }
         newsym(x,y);            /* restore the old information */
     }
@@ -735,7 +735,7 @@ void shieldeff (signed char x, signed char y) {
 /*
  * tmp_at()
  *
- * Temporarily place glyphs on the screen.  Do not call delay_output().  It
+ * Temporarily place glyphs on the screen.  Do not call my_delay_output().  It
  * is up to the caller to decide if it wants to wait [presently, everyone
  * but explode() wants to delay].
  *

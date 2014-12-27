@@ -268,7 +268,7 @@ md_rush (
         place_monster(md,fx,fy);        /* put md down */
         newsym(fx,fy);                  /* see it */
         flush_screen(0);                /* make sure md shows up */
-        delay_output();                 /* wait a little bit */
+        my_delay_output();                 /* wait a little bit */
 
         /* Remove md from the dungeon.  Restore original mon, if necessary. */
         if (mon) {
@@ -302,7 +302,7 @@ md_rush (
     place_monster(md, fx, fy);  /* place at final spot */
     newsym(fx, fy);
     flush_screen(0);
-    delay_output();                     /* wait a little bit */
+    my_delay_output();                     /* wait a little bit */
 
     return true;
 }

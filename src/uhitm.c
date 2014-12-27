@@ -1668,31 +1668,25 @@ common:
         return(1);
 }
 
-static void
-start_engulf (struct monst *mdef)
-{
+static void start_engulf (struct monst *mdef) {
         if (!Invisible) {
                 map_location(u.ux, u.uy, true);
                 tmp_at(DISP_ALWAYS, mon_to_glyph(&youmonst));
                 tmp_at(mdef->mx, mdef->my);
         }
         You("engulf %s!", mon_nam(mdef));
-        delay_output();
-        delay_output();
+        my_delay_output();
+        my_delay_output();
 }
 
-static void
-end_engulf (void)
-{
+static void end_engulf (void) {
         if (!Invisible) {
                 tmp_at(DISP_END, 0);
                 newsym(u.ux, u.uy);
         }
 }
 
-static int
-gulpum (struct monst *mdef, struct attack *mattk)
-{
+static int gulpum (struct monst *mdef, struct attack *mattk) {
         int tmp;
         int dam = d((int)mattk->damn, (int)mattk->damd);
         struct obj *otmp;

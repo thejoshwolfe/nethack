@@ -92,7 +92,7 @@ extern struct window_procs windowprocs;
 #define getlin (*windowprocs.win_getlin)
 #define get_ext_cmd (*windowprocs.win_get_ext_cmd)
 #define number_pad (*windowprocs.win_number_pad)
-#define delay_output (*windowprocs.win_delay_output)
+#define my_delay_output (*windowprocs.win_delay_output)
 
 /* 3.4.2: There is a real yn_function() in the core now, which does
  *        some buffer length validation on the parameters prior to

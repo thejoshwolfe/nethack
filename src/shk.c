@@ -2415,7 +2415,7 @@ struct monst * shkcatch (struct obj *obj, signed char x, signed char y) {
                     the(xname(obj)));
             if (!canspotmon(shkp))
                 map_invisible(x, y);
-            delay_output();
+            my_delay_output();
             mark_synch();
         }
         subfrombill(obj, shkp);

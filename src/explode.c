@@ -200,7 +200,7 @@ explode (
                                         cmap_to_glyph(shield_static[k]));
                         }
                         curs_on_u();    /* will flush screen and output */
-                        delay_output();
+                        my_delay_output();
                     }
 
                     /* Cover last shield glyph with blast symbol. */
@@ -211,8 +211,8 @@ explode (
                     }
 
                 } else {                /* delay a little bit. */
-                    delay_output();
-                    delay_output();
+                    my_delay_output();
+                    my_delay_output();
                 }
 
                 tmp_at(DISP_END, 0); /* clear the explosion */
@@ -519,11 +519,6 @@ scatter (
                                         stmp->range -= 3;
                                         stop_occupation();
                                     }
-                                }
-                        } else {
-                                if (scflags & VIS_EFFECTS) {
-                                    /* tmp_at(bhitpos.x, bhitpos.y); */
-                                    /* delay_output(); */
                                 }
                         }
                         stmp->ox = bhitpos.x;

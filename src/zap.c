@@ -2693,7 +2693,7 @@ bhit (
                     newsym(x, y);
                 }
                 tmp_at(bhitpos.x, bhitpos.y);
-                delay_output();
+                my_delay_output();
                 /* kicked objects fall in pools */
                 if((weapon == KICKED_WEAPON) &&
                    (is_pool(bhitpos.x, bhitpos.y) ||
@@ -2785,7 +2785,7 @@ boomhit (int dx, int dy)
                         }
                 }
                 tmp_at(bhitpos.x, bhitpos.y);
-                delay_output();
+                my_delay_output();
                 if(ct % 5 != 0) i++;
                 if(IS_SINK(levl[bhitpos.x][bhitpos.y].typ))
                         break;  /* boomerang falls on sink */
@@ -3193,7 +3193,7 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
                 }
                 if(ZAP_POS(lev->typ) || cansee(lsx,lsy))
                     tmp_at(sx,sy);
-                delay_output(); /* wait a little */
+                my_delay_output(); /* wait a little */
             }
         } else
             goto make_bounce;

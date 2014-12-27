@@ -1277,7 +1277,7 @@ mkinvokearea (void)
         }
 
         flush_screen(1);        /* make sure the new glyphs shows up */
-        delay_output();
+        my_delay_output();
     }
 
     You("are standing at the top of a stairwell leading down!");

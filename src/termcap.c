@@ -8,7 +8,7 @@
 
 /*
  * The following prototypes are from termcap.h.
- * We can't just include it though because of namespace collisions for UP and delay_output, among others.
+ * We can't just include it though because of namespace collisions
  */
 extern char * tgetstr (const char *, char **);
 extern char * tgoto (const char *, int, int);
@@ -389,7 +389,6 @@ static const short tmspc10[] = {                /* from termcap */
 void tty_delay_output(void) {
     fflush(stdout);
     usleep(50 * 1000); // sleep for 50 milliseconds
-    return;
 }
 
 
@@ -436,146 +435,113 @@ void cl_eos(void) {
  * characters on the assumed black background.
  */
 
-        /* `curses' is aptly named; various versions don't like these
-            macros used elsewhere within nethack; fortunately they're
-            not needed beyond this point, so we don't need to worry
-            about reconstructing them after the header file inclusion. */
-#undef delay_output
-#undef true
-#undef false
-
 #include <curses.h>
-
-#undef COLOR_BLACK
-#define COLOR_BLACK COLOR_BLUE
-
-const int ti_map[8] = {
-        COLOR_BLACK, COLOR_RED, COLOR_GREEN, COLOR_YELLOW,
-        COLOR_BLUE, COLOR_MAGENTA, COLOR_CYAN, COLOR_WHITE };
-
-static void
-init_hilite (void)
-{
-        int c;
-        char *setf, *scratch;
-
-        for (c = 0; c < SIZE(hilites); c++)
-                hilites[c] = nh_HI;
-        hilites[CLR_GRAY] = hilites[NO_COLOR] = (char *)0;
-
-        if (tgetnum("Co") < 8
-            || ((setf = tgetstr("AF", (char **)0)) == (char *)0
-                 && (setf = tgetstr("Sf", (char **)0)) == (char *)0))
-                return;
-
-        for (c = 0; c < CLR_MAX / 2; c++) {
-            scratch = tparm(setf, ti_map[c]);
-            if (c != CLR_GRAY) {
-                hilites[c] = (char *) malloc(strlen(scratch) + 1);
-                strcpy(hilites[c], scratch);
-            }
-            if (c != CLR_BLACK) {
-                hilites[c|BRIGHT] = (char*) malloc(strlen(scratch)+strlen(MD)+1);
-                strcpy(hilites[c|BRIGHT], MD);
-                strcat(hilites[c|BRIGHT], scratch);
-            }
-
-        }
-}
-
-
-static void kill_hilite(void) {
-        int c;
-
-        for (c = 0; c < CLR_MAX / 2; c++) {
-            if (hilites[c|BRIGHT] == hilites[c])  hilites[c|BRIGHT] = 0;
-            if (hilites[c] && (hilites[c] != nh_HI))
-                free((void *) hilites[c]),  hilites[c] = 0;
-            if (hilites[c|BRIGHT] && (hilites[c|BRIGHT] != nh_HI))
-                free((void *) hilites[c|BRIGHT]),  hilites[c|BRIGHT] = 0;
-        }
-        return;
-}
-
 
 static char nulstr[] = "";
 
+const int ti_map[8] = {
+    COLOR_BLUE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW,
+    COLOR_BLUE, COLOR_MAGENTA, COLOR_CYAN, COLOR_WHITE
+};
+
+static void init_hilite (void) {
+    int c;
+    char *setf, *scratch;
+
+    for (c = 0; c < SIZE(hilites); c++)
+        hilites[c] = nh_HI;
+    hilites[CLR_GRAY] = hilites[NO_COLOR] = (char *)0;
+
+    if (tgetnum("Co") < 8
+            || ((setf = tgetstr("AF", (char **)0)) == (char *)0
+                && (setf = tgetstr("Sf", (char **)0)) == (char *)0))
+        return;
+
+    for (c = 0; c < CLR_MAX / 2; c++) {
+        scratch = tparm(setf, ti_map[c]);
+        if (c != CLR_GRAY) {
+            hilites[c] = (char *) malloc(strlen(scratch) + 1);
+            strcpy(hilites[c], scratch);
+        }
+        if (c != CLR_BLACK) {
+            hilites[c|BRIGHT] = (char*) malloc(strlen(scratch)+strlen(MD)+1);
+            strcpy(hilites[c|BRIGHT], MD);
+            strcat(hilites[c|BRIGHT], scratch);
+        }
+
+    }
+}
+
+static void kill_hilite(void) {
+    int c;
+
+    for (c = 0; c < CLR_MAX / 2; c++) {
+        if (hilites[c|BRIGHT] == hilites[c])  hilites[c|BRIGHT] = 0;
+        if (hilites[c] && (hilites[c] != nh_HI))
+            free((void *) hilites[c]),  hilites[c] = 0;
+        if (hilites[c|BRIGHT] && (hilites[c|BRIGHT] != nh_HI))
+            free((void *) hilites[c|BRIGHT]),  hilites[c|BRIGHT] = 0;
+    }
+    return;
+}
+
 static char * s_atr2str(int n) {
     switch (n) {
-            case ATR_ULINE:
-                    if(nh_US) return nh_US;
-            case ATR_BOLD:
-            case ATR_BLINK:
-                    if (MD) return MD;
-                    return nh_HI;
-            case ATR_INVERSE:
-                    return MR;
+        case ATR_ULINE:
+            if(nh_US) return nh_US;
+        case ATR_BOLD:
+        case ATR_BLINK:
+            if (MD) return MD;
+            return nh_HI;
+        case ATR_INVERSE:
+            return MR;
     }
     return nulstr;
 }
 
-static char *
-e_atr2str (int n)
-{
+static char * e_atr2str (int n) {
     switch (n) {
-            case ATR_ULINE:
-                    if(nh_UE) return nh_UE;
-            case ATR_BOLD:
-            case ATR_BLINK:
-                    return nh_HE;
-            case ATR_INVERSE:
-                    return ME;
+        case ATR_ULINE:
+            if(nh_UE) return nh_UE;
+        case ATR_BOLD:
+        case ATR_BLINK:
+            return nh_HE;
+        case ATR_INVERSE:
+            return ME;
     }
     return nulstr;
 }
 
-
-void
-term_start_attr (int attr)
-{
-        if (attr) {
-                xputs(s_atr2str(attr));
-        }
+void term_start_attr (int attr) {
+    if (attr) {
+        xputs(s_atr2str(attr));
+    }
 }
 
-
-void
-term_end_attr (int attr)
-{
-        if(attr) {
-                xputs(e_atr2str(attr));
-        }
+void term_end_attr (int attr) {
+    if(attr) {
+        xputs(e_atr2str(attr));
+    }
 }
 
-
-void
-term_start_raw_bold (void)
-{
+void term_start_raw_bold (void) {
         xputs(nh_HI);
 }
 
-
-void
-term_end_raw_bold (void)
-{
+void term_end_raw_bold (void) {
         xputs(nh_HE);
 }
 
-
-
 void term_end_color(void) {
-        xputs(nh_HE);
+    xputs(nh_HE);
 }
 
 
 void term_start_color(int color) {
-        xputs(hilites[color]);
+    xputs(hilites[color]);
 }
 
 
 int has_color(int color) {
-        return hilites[color] != (char *)0;
+    return hilites[color] != (char *)0;
 }
-
-
-

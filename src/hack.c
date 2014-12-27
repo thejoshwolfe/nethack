@@ -1335,20 +1335,18 @@ domove (void)
             if (iflags.runmode != RUN_LEAP || !(moves % 7L)) {
                 if (flags.time) flags.botl = 1;
                 curs_on_u();
-                delay_output();
+                my_delay_output();
                 if (iflags.runmode == RUN_CRAWL) {
-                    delay_output();
-                    delay_output();
-                    delay_output();
-                    delay_output();
+                    my_delay_output();
+                    my_delay_output();
+                    my_delay_output();
+                    my_delay_output();
                 }
             }
         }
 }
 
-void
-invocation_message (void)
-{
+void invocation_message (void) {
         /* a special clue-msg when on the Invocation position */
         if(invocation_pos(u.ux, u.uy) && !On_stairs(u.ux, u.uy)) {
             char buf[BUFSZ];
