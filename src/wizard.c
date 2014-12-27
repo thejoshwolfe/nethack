@@ -85,14 +85,13 @@ amulet (void)
 }
 
 
-int
-mon_has_amulet (struct monst *mtmp)
-{
-        struct obj *otmp;
+bool mon_has_amulet(const struct monst * mtmp) {
+    struct obj *otmp;
 
-        for(otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
-                if(otmp->otyp == AMULET_OF_YENDOR) return(1);
-        return(0);
+    for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
+        if (otmp->otyp == AMULET_OF_YENDOR)
+            return true;
+    return false;
 }
 
 int

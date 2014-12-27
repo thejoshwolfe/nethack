@@ -986,11 +986,8 @@ makemon (struct permonst *ptr, int x, int y, int mmflags)
         return(mtmp);
 }
 
-int
-mbirth_limit (int mndx)
-{
-        /* assert(MAXMONNO < 255); */
-        return (mndx == PM_NAZGUL ? 9 : mndx == PM_ERINYS ? 3 : MAXMONNO);
+int mbirth_limit (int mndx) {
+    return (mndx == PM_NAZGUL ? 9 : mndx == PM_ERINYS ? 3 : MAXMONNO);
 }
 
 /* used for wand/scroll/spell of create monster */

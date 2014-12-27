@@ -19,28 +19,28 @@ static bool bigmonst(const struct permonst * ptr) {
 static bool pm_resistance(const struct permonst * ptr, unsigned char typ) {
     return (ptr->mresists & typ) != 0;
 }
-static bool resists_fire(struct monst * mon) {
+static bool resists_fire(const struct monst * mon) {
     return (mon->mintrinsics & MR_FIRE) != 0;
 }
-static bool resists_cold(struct monst * mon) {
+static bool resists_cold(const struct monst * mon) {
     return (mon->mintrinsics & MR_COLD) != 0;
 }
-static bool resists_sleep(struct monst * mon) {
+static bool resists_sleep(const struct monst * mon) {
     return (mon->mintrinsics & MR_SLEEP) != 0;
 }
-static bool resists_disint(struct monst * mon) {
+static bool resists_disint(const struct monst * mon) {
     return (mon->mintrinsics & MR_DISINT) != 0;
 }
-static bool resists_elec(struct monst * mon) {
+static bool resists_elec(const struct monst * mon) {
     return (mon->mintrinsics & MR_ELEC) != 0;
 }
-static bool resists_poison(struct monst * mon) {
+static bool resists_poison(const struct monst * mon) {
     return (mon->mintrinsics & MR_POISON) != 0;
 }
-static bool resists_acid(struct monst * mon) {
+static bool resists_acid(const struct monst * mon) {
     return (mon->mintrinsics & MR_ACID) != 0;
 }
-static bool resists_ston(struct monst * mon) {
+static bool resists_ston(const struct monst * mon) {
     return (mon->mintrinsics & MR_STONE) != 0;
 }
 

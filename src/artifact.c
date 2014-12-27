@@ -279,7 +279,7 @@ static bool attacks(int adtyp, struct obj *otmp) {
     return false;
 }
 
-bool defends(int adtyp, struct obj *otmp) {
+bool defends(int adtyp, const struct obj *otmp) {
     const struct artifact *weap;
 
     if ((weap = get_artifact(otmp)) != 0)
@@ -288,7 +288,7 @@ bool defends(int adtyp, struct obj *otmp) {
 }
 
 /* used for monsters */
-bool protects(int adtyp, struct obj *otmp) {
+bool protects(int adtyp, const struct obj *otmp) {
     const struct artifact *weap;
 
     if ((weap = get_artifact(otmp)) != 0)

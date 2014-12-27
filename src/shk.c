@@ -2795,8 +2795,8 @@ void after_shk_move (struct monst *shkp) {
 
 
 /* for use in levl_follower (mondata.c) */
-bool is_fshk(struct monst *mtmp) {
-    return((bool)(mtmp->isshk && ESHK(mtmp)->following));
+bool is_fshk(const struct monst *mtmp) {
+    return mtmp->isshk && ESHK(mtmp)->following;
 }
 
 /* You are digging in the shop. */

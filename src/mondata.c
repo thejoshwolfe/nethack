@@ -8,12 +8,10 @@
 
 /*      These routines provide basic data for any type of monster. */
 
-
-void
-set_mon_data (struct monst *mon, struct permonst *ptr, int flag)
-{
+void set_mon_data(struct monst * mon, struct permonst * ptr, int flag) {
     mon->data = ptr;
-    if (flag == -1) return;             /* "don't care" */
+    if (flag == -1)
+        return; /* "don't care" */
 
     if (flag == 1)
         mon->mintrinsics |= (ptr->mresists & 0x00FF);
@@ -21,7 +19,6 @@ set_mon_data (struct monst *mon, struct permonst *ptr, int flag)
         mon->mintrinsics = (ptr->mresists & 0x00FF);
     return;
 }
-
 
 const struct attack * attacktype_fordmg(const struct permonst *ptr, int atyp, int dtyp) {
     const struct attack *a;
@@ -36,104 +33,102 @@ bool attacktype(const struct permonst *ptr, int atyp) {
 }
 
 
-bool 
-poly_when_stoned (struct permonst *ptr)
-{
-    return((bool)(is_golem(ptr) && ptr != &mons[PM_STONE_GOLEM] &&
-            !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD)));
-            /* allow G_EXTINCT */
+bool poly_when_stoned(const struct permonst * ptr) {
+    return is_golem(ptr) && ptr != &mons[PM_STONE_GOLEM] &&
+           !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD);
+           /* allow G_EXTINCT */
 }
 
-bool 
-resists_drli (       /* returns true if monster is drain-life resistant */
-    struct monst *mon
-)
-{
-        struct permonst *ptr = mon->data;
-        struct obj *wep = ((mon == &youmonst) ? uwep : MON_WEP(mon));
+/* returns true if monster is drain-life resistant */
+bool resists_drli(const struct monst * mon) {
+    const struct permonst * ptr = mon->data;
+    struct obj * wep = (mon == &youmonst) ? uwep : MON_WEP(mon);
 
-        return (bool)(is_undead(ptr) || is_demon(ptr) || is_were(ptr) ||
-                         ptr == &mons[PM_DEATH] ||
-                         (wep && wep->oartifact && defends(AD_DRLI, wep)));
+    return is_undead(ptr) || is_demon(ptr) || is_were(ptr) ||
+            ptr == &mons[PM_DEATH] ||
+            (wep && wep->oartifact && defends(AD_DRLI, wep));
 }
 
-bool 
-resists_magm (       /* true if monster is magic-missile resistant */
-    struct monst *mon
-)
-{
-        struct permonst *ptr = mon->data;
-        struct obj *o;
-
-        /* as of 3.2.0:  gray dragons, Angels, Oracle, Yeenoghu */
-        if (dmgtype(ptr, AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON] ||
-                dmgtype(ptr, AD_RBRE))  /* Chromatic Dragon */
+/* true if monster is magic-missile resistant */
+bool resists_magm(const struct monst *mon) {
+    struct permonst *ptr = mon->data;
+    /* as of 3.2.0:  gray dragons, Angels, Oracle, Yeenoghu */
+    if (dmgtype(ptr, AD_MAGM) ||
+            ptr == &mons[PM_BABY_GRAY_DRAGON] ||
+            dmgtype(ptr, AD_RBRE)) /* Chromatic Dragon */
+        return true;
+    /* check for magic resistance granted by wielded weapon */
+    const struct obj * o = (mon == &youmonst) ? uwep : MON_WEP(mon);
+    if (o && o->oartifact && defends(AD_MAGM, o))
+        return true;
+    /* check for magic resistance granted by worn or carried items */
+    o = (mon == &youmonst) ? invent : mon->minvent;
+    for (; o; o = o->nobj)
+        if ((o->owornmask && objects[o->otyp].oc_oprop == ANTIMAGIC) ||
+                (o->oartifact && protects(AD_MAGM, o)))
             return true;
-        /* check for magic resistance granted by wielded weapon */
-        o = (mon == &youmonst) ? uwep : MON_WEP(mon);
-        if (o && o->oartifact && defends(AD_MAGM, o))
-            return true;
-        /* check for magic resistance granted by worn or carried items */
-        o = (mon == &youmonst) ? invent : mon->minvent;
-        for ( ; o; o = o->nobj)
-            if ((o->owornmask && objects[o->otyp].oc_oprop == ANTIMAGIC) ||
-                    (o->oartifact && protects(AD_MAGM, o)))
-                return true;
-        return false;
+    return false;
 }
 
 /* true iff monster is resistant to light-induced blindness */
-bool 
-resists_blnd (struct monst *mon)
-{
-        struct permonst *ptr = mon->data;
-        bool is_you = (mon == &youmonst);
-        struct obj *o;
+bool resists_blnd(const struct monst * mon) {
+    const struct permonst *ptr = mon->data;
+    bool is_you = (mon == &youmonst);
+    const struct obj *o;
 
-        if (is_you ? (Blind || u.usleep) :
-                (mon->mblinded || !mon->mcansee || !haseyes(ptr) ||
-                    /* BUG: temporary sleep sets mfrozen, but since
-                            paralysis does too, we can't check it */
-                    mon->msleeping))
+    if (is_you) {
+        if (Blind || u.usleep)
+            return Blind;
+    } else {
+        if (mon->mblinded || !mon->mcansee || !haseyes(ptr) ||
+                /* BUG: temporary sleep sets mfrozen, but since
+                        paralysis does too, we can't check it */
+                mon->msleeping)
             return true;
-        /* yellow light, Archon; !dust vortex, !cobra, !raven */
-        if (dmgtype_fromattack(ptr, AD_BLND, AT_EXPL) ||
-                dmgtype_fromattack(ptr, AD_BLND, AT_GAZE))
+    }
+    /* yellow light, Archon; !dust vortex, !cobra, !raven */
+    if (dmgtype_fromattack(ptr, AD_BLND, AT_EXPL) ||
+            dmgtype_fromattack(ptr, AD_BLND, AT_GAZE))
+        return true;
+    o = is_you ? uwep : MON_WEP(mon);
+    if (o && o->oartifact && defends(AD_BLND, o))
+        return true;
+    o = is_you ? invent : mon->minvent;
+    for ( ; o; o = o->nobj)
+        if ((o->owornmask && objects[o->otyp].oc_oprop == BLINDED) ||
+                (o->oartifact && protects(AD_BLND, o)))
             return true;
-        o = is_you ? uwep : MON_WEP(mon);
-        if (o && o->oartifact && defends(AD_BLND, o))
-            return true;
-        o = is_you ? invent : mon->minvent;
-        for ( ; o; o = o->nobj)
-            if ((o->owornmask && objects[o->otyp].oc_oprop == BLINDED) ||
-                    (o->oartifact && protects(AD_BLND, o)))
-                return true;
-        return false;
+    return false;
 }
 
 /* true iff monster can be blinded by the given attack */
 /* Note: may return true when mdef is blind (e.g. new cream-pie attack) */
 /* NULL == no specific aggressor */
 /* aatyp == AT_WEAP, AT_SPIT */
-bool can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, struct obj *obj) {
-        bool is_you = (mdef == &youmonst);
-        bool check_visor = false;
-        struct obj *o;
-        const char *s;
+bool can_blnd(const struct monst *magr, const struct monst *mdef, unsigned char aatyp, const struct obj *obj) {
+    bool is_you = (mdef == &youmonst);
+    bool check_visor = false;
+    const struct obj * o;
+    const char *s;
 
-        /* no eyes protect against all attacks for now */
-        if (!haseyes(mdef->data))
-            return false;
+    /* no eyes protect against all attacks for now */
+    if (!haseyes(mdef->data))
+        return false;
 
-        switch(aatyp) {
-        case AT_EXPL: case AT_BOOM: case AT_GAZE: case AT_MAGC:
+    switch (aatyp) {
+        case AT_EXPL:
+        case AT_BOOM:
+        case AT_GAZE:
+        case AT_MAGC:
         case AT_BREA: /* assumed to be lightning */
             /* light-based attacks may be cancelled or resisted */
             if (magr && magr->mcan)
                 return false;
             return !resists_blnd(mdef);
 
-        case AT_WEAP: case AT_SPIT: case AT_NONE:
+        case AT_WEAP:
+        case AT_SPIT:
+        case AT_NONE:
             /* an object is used (thrown/spit/other) */
             if (obj && (obj->otyp == CREAM_PIE)) {
                 if (is_you && Blindfolded)
@@ -144,11 +139,11 @@ bool can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, struc
                     return false;
                 check_visor = true;
             } else if (obj && (obj->otyp == POT_BLINDNESS)) {
-                return true;    /* no defense */
+                return true; /* no defense */
             } else
-                return false;   /* other objects cannot cause blindness yet */
+                return false; /* other objects cannot cause blindness yet */
             if ((magr == &youmonst) && u.uswallow)
-                return false;   /* can't affect eyes while inside monster */
+                return false; /* can't affect eyes while inside monster */
             break;
 
         case AT_ENGL:
@@ -163,11 +158,12 @@ bool can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, struc
             if (is_you && ublindf)
                 return false;
             if ((magr == &youmonst) && u.uswallow)
-                return false;   /* can't affect eyes while inside monster */
+                return false; /* can't affect eyes while inside monster */
             check_visor = true;
             break;
 
-        case AT_TUCH: case AT_STNG:
+        case AT_TUCH:
+        case AT_STNG:
             /* some physical, blind-inducing attacks can be cancelled */
             if (magr && magr->mcan)
                 return false;
@@ -175,99 +171,88 @@ bool can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, struc
 
         default:
             break;
-        }
+    }
 
-        /* check if wearing a visor (only checked if visor might help) */
-        if (check_visor) {
-            o = (mdef == &youmonst) ? invent : mdef->minvent;
-            for ( ; o; o = o->nobj)
-                if ((o->owornmask & W_ARMH) &&
-                    (s = OBJ_DESCR(objects[o->otyp])) != (char *)0 &&
-                    !strcmp(s, "visored helmet"))
-                    return false;
+    /* check if wearing a visor (only checked if visor might help) */
+    if (check_visor) {
+        o = (mdef == &youmonst) ? invent : mdef->minvent;
+        for (; o; o = o->nobj) {
+            if ((o->owornmask & W_ARMH) && (s = OBJ_DESCR(objects[o->otyp])) != (char *)0 && !strcmp(s, "visored helmet"))
+                return false;
         }
+    }
 
-        return true;
+    return true;
 }
 
 
-bool 
-ranged_attk (        /* returns true if monster can attack at range */
-    struct permonst *ptr
-)
-{
-        int i, atyp;
-        long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
+/* returns true if monster can attack at range */
+bool ranged_attk(const struct permonst * ptr) {
+    int i, atyp;
+    long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
 
-        /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP) ||
-                attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE) ||
-                attacktype(ptr, AT_MAGC));
-           but that's too slow -dlc
-         */
-        for (i = 0; i < NATTK; i++) {
-            atyp = ptr->mattk[i].aatyp;
-            if (atyp >= AT_WEAP) return true;
-         /* assert(atyp < 32); */
-            if ((atk_mask & (1L << atyp)) != 0L) return true;
-        }
+    for (i = 0; i < NATTK; i++) {
+        atyp = ptr->mattk[i].aatyp;
+        if (atyp >= AT_WEAP)
+            return true;
+        /* assert(atyp < 32); */
+        if ((atk_mask & (1L << atyp)) != 0L)
+            return true;
+    }
 
-        return false;
+    return false;
 }
 
-bool 
-hates_silver (struct permonst *ptr)
 /* returns true if monster is especially affected by silver weapons */
-{
-        return((bool)(is_were(ptr) || ptr->mlet==S_VAMPIRE || is_demon(ptr) ||
-                ptr == &mons[PM_SHADE] ||
-                (ptr->mlet==S_IMP && ptr != &mons[PM_TENGU])));
+bool hates_silver(const struct permonst *ptr) {
+    return is_were(ptr) ||
+            ptr->mlet == S_VAMPIRE ||
+            is_demon(ptr) ||
+            ptr == &mons[PM_SHADE] ||
+            (ptr->mlet == S_IMP && ptr != &mons[PM_TENGU]);
 }
 
 /* true iff the type of monster pass through iron bars */
-bool 
-passes_bars (struct permonst *mptr)
-{
-    return (bool) (passes_walls(mptr) || amorphous(mptr) ||
-                      is_whirly(mptr) || verysmall(mptr) ||
-                      (slithy(mptr) && !bigmonst(mptr)));
+bool passes_bars(const struct permonst *mptr) {
+    return passes_walls(mptr) ||
+            amorphous(mptr) ||
+            is_whirly(mptr) ||
+            verysmall(mptr) ||
+            (slithy(mptr) && !bigmonst(mptr));
 }
 
 
-bool 
-can_track (          /* returns true if monster can track well */
-    struct permonst *ptr
-)
-{
-        if (uwep && uwep->oartifact == ART_EXCALIBUR)
-                return true;
-        else
-                return((bool)haseyes(ptr));
+/* returns true if monster can track well */
+bool can_track(const struct permonst * ptr) {
+    if (uwep && uwep->oartifact == ART_EXCALIBUR)
+        return true;
+    else
+        return haseyes(ptr);
 }
 
 
 /* creature will slide out of armor */
-bool sliparm(const struct permonst *ptr) {
+bool sliparm(const struct permonst * ptr) {
     return is_whirly(ptr) ||
-           ptr->msize <= MZ_SMALL ||
-           noncorporeal(ptr);
+            ptr->msize <= MZ_SMALL ||
+            noncorporeal(ptr);
 }
 
 /* creature will break out of armor */
-bool breakarm(const struct permonst *ptr) {
-    return (bigmonst(ptr) ||
+bool breakarm(const struct permonst * ptr) {
+    if (sliparm(ptr))
+        return false;
+    return bigmonst(ptr) ||
             (ptr->msize > MZ_SMALL && !humanoid(ptr)) ||
             /* special cases of humanoids that cannot wear body armor */
-            ptr == &mons[PM_MARILITH] || ptr == &mons[PM_WINGED_GARGOYLE]) &&
-           !sliparm(ptr);
+            ptr == &mons[PM_MARILITH] || ptr == &mons[PM_WINGED_GARGOYLE];
 }
 
-bool 
-sticks (     /* creature sticks other creatures it hits */
-    struct permonst *ptr
-)
-{
-        return((bool)(dmgtype(ptr,AD_STCK) || dmgtype(ptr,AD_WRAP) ||
-                attacktype(ptr,AT_HUGS)));
+/* creature sticks other creatures it hits */
+bool sticks(const struct permonst *ptr) {
+    return dmgtype(ptr, AD_STCK) ||
+            dmgtype(ptr, AD_WRAP) ||
+            attacktype(ptr, AT_HUGS);
 }
 
 /* number of horns this type of monster has on its head */
@@ -289,48 +274,35 @@ int num_horns(const struct permonst * ptr) {
     return 0;
 }
 
-struct attack *
-dmgtype_fromattack (struct permonst *ptr, int dtyp, int atyp)
+const struct attack * dmgtype_fromattack(const struct permonst *ptr, int dtyp, int atyp)
 {
-    struct attack *a;
-
+    const struct attack * a;
     for (a = &ptr->mattk[0]; a < &ptr->mattk[NATTK]; a++)
         if (a->adtyp == dtyp && (atyp == AT_ANY || a->aatyp == atyp))
             return a;
-
-    return (struct attack *)0;
+    return NULL;
 }
 
-bool 
-dmgtype (struct permonst *ptr, int dtyp)
-{
+bool dmgtype(const struct permonst *ptr, int dtyp) {
     return dmgtype_fromattack(ptr, dtyp, AT_ANY) ? true : false;
 }
 
 /* returns the maximum damage a defender can do to the attacker via
  * a passive defense */
-int
-max_passive_dmg (struct monst *mdef, struct monst *magr)
-{
-    int i, dmg = 0;
-    unsigned char adtyp;
-
-    for(i = 0; i < NATTK; i++)
-        if(mdef->data->mattk[i].aatyp == AT_NONE ||
-                mdef->data->mattk[i].aatyp == AT_BOOM) {
-            adtyp = mdef->data->mattk[i].adtyp;
-            if ((adtyp == AD_ACID && !resists_acid(magr)) ||
-                    (adtyp == AD_COLD && !resists_cold(magr)) ||
-                    (adtyp == AD_FIRE && !resists_fire(magr)) ||
-                    (adtyp == AD_ELEC && !resists_elec(magr)) ||
-                    adtyp == AD_PHYS) {
-                dmg = mdef->data->mattk[i].damn;
-                if(!dmg) dmg = mdef->data->mlevel+1;
+int max_passive_dmg(const struct monst * mdef, const struct monst * magr) {
+    for (int i = 0; i < NATTK; i++) {
+        if (mdef->data->mattk[i].aatyp == AT_NONE || mdef->data->mattk[i].aatyp == AT_BOOM) {
+            unsigned char adtyp = mdef->data->mattk[i].adtyp;
+            if ((adtyp == AD_ACID && !resists_acid(magr)) || (adtyp == AD_COLD && !resists_cold(magr)) || (adtyp == AD_FIRE && !resists_fire(magr)) || (adtyp == AD_ELEC && !resists_elec(magr)) || adtyp == AD_PHYS) {
+                int dmg = mdef->data->mattk[i].damn;
+                if (!dmg)
+                    dmg = mdef->data->mlevel + 1;
                 dmg *= mdef->data->mattk[i].damd;
-            } else dmg = 0;
-
-            return dmg;
+                return dmg;
+            } else
+                return 0;
         }
+    }
     return 0;
 }
 
@@ -348,47 +320,48 @@ int monsndx(const struct permonst *ptr) {
 
 
 int name_to_mon (const char *in_str) {
-        /* Be careful.  We must check the entire string in case it was
-         * something such as "ettin zombie corpse".  The calling routine
-         * doesn't know about the "corpse" until the monster name has
-         * already been taken off the front, so we have to be able to
-         * read the name with extraneous stuff such as "corpse" stuck on
-         * the end.
-         * This causes a problem for names which prefix other names such
-         * as "ettin" on "ettin zombie".  In this case we want the _longest_
-         * name which exists.
-         * This also permits plurals created by adding suffixes such as 's'
-         * or 'es'.  Other plurals must still be handled explicitly.
-         */
-        int i;
-        int mntmp = NON_PM;
-        char *s, *str, *term;
-        char buf[BUFSZ];
-        int len, slen;
+    /* Be careful.  We must check the entire string in case it was
+     * something such as "ettin zombie corpse".  The calling routine
+     * doesn't know about the "corpse" until the monster name has
+     * already been taken off the front, so we have to be able to
+     * read the name with extraneous stuff such as "corpse" stuck on
+     * the end.
+     * This causes a problem for names which prefix other names such
+     * as "ettin" on "ettin zombie".  In this case we want the _longest_
+     * name which exists.
+     * This also permits plurals created by adding suffixes such as 's'
+     * or 'es'.  Other plurals must still be handled explicitly.
+     */
+    int i;
+    int mntmp = NON_PM;
+    char *s, *str, *term;
+    char buf[BUFSZ];
+    int len, slen;
 
-        str = strcpy(buf, in_str);
+    str = strcpy(buf, in_str);
 
-        if (!strncmp(str, "a ", 2)) str += 2;
-        else if (!strncmp(str, "an ", 3)) str += 3;
+    if (!strncmp(str, "a ", 2))
+        str += 2;
+    else if (!strncmp(str, "an ", 3))
+        str += 3;
 
-        slen = strlen(str);
-        term = str + slen;
+    slen = strlen(str);
+    term = str + slen;
 
-        if ((s = strstri(str, "vortices")) != 0)
-            strcpy(s+4, "ex");
-        /* be careful with "ies"; "priest", "zombies" */
-        else if (slen > 3 && !strcmpi(term-3, "ies") &&
-                    (slen < 7 || strcmpi(term-7, "zombies")))
-            strcpy(term-3, "y");
-        /* luckily no monster names end in fe or ve with ves plurals */
-        else if (slen > 3 && !strcmpi(term-3, "ves"))
-            strcpy(term-3, "f");
+    if ((s = strstri(str, "vortices")) != 0)
+        strcpy(s + 4, "ex");
+    /* be careful with "ies"; "priest", "zombies" */
+    else if (slen > 3 && !strcmpi(term - 3, "ies") && (slen < 7 || strcmpi(term - 7, "zombies")))
+        strcpy(term - 3, "y");
+    /* luckily no monster names end in fe or ve with ves plurals */
+    else if (slen > 3 && !strcmpi(term - 3, "ves"))
+        strcpy(term - 3, "f");
 
-        slen = strlen(str); /* length possibly needs recomputing */
+    slen = strlen(str); /* length possibly needs recomputing */
 
     {
         static const struct alt_spl { const char* name; short pm_val; }
-            names[] = {
+        names[] = {
             /* Alternate spellings */
                 { "grey dragon",        PM_GRAY_DRAGON },
                 { "baby grey dragon",   PM_BABY_GRAY_DRAGON },
@@ -430,57 +403,63 @@ int name_to_mon (const char *in_str) {
                 return namep->pm_val;
     }
 
-        for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
-            int m_i_len = strlen(mons[i].mname);
-            if (m_i_len > len && !strncmpi(mons[i].mname, str, m_i_len)) {
-                if (m_i_len == slen) return i;  /* exact match */
-                else if (slen > m_i_len &&
-                        (str[m_i_len] == ' ' ||
-                         !strcmpi(&str[m_i_len], "s") ||
-                         !strncmpi(&str[m_i_len], "s ", 2) ||
-                         !strcmpi(&str[m_i_len], "'") ||
-                         !strncmpi(&str[m_i_len], "' ", 2) ||
-                         !strcmpi(&str[m_i_len], "'s") ||
-                         !strncmpi(&str[m_i_len], "'s ", 3) ||
-                         !strcmpi(&str[m_i_len], "es") ||
-                         !strncmpi(&str[m_i_len], "es ", 3))) {
-                    mntmp = i;
-                    len = m_i_len;
-                }
+    for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
+        int m_i_len = strlen(mons[i].mname);
+        if (m_i_len > len && !strncmpi(mons[i].mname, str, m_i_len)) {
+            if (m_i_len == slen)
+                return i; /* exact match */
+            else if (slen > m_i_len &&
+                     (str[m_i_len] == ' ' ||
+                      !strcmpi(&str[m_i_len], "s") ||
+                      !strncmpi(&str[m_i_len], "s ", 2) ||
+                      !strcmpi(&str[m_i_len], "'") ||
+                      !strncmpi(&str[m_i_len], "' ", 2) ||
+                      !strcmpi(&str[m_i_len], "'s") ||
+                      !strncmpi(&str[m_i_len], "'s ", 3) ||
+                      !strcmpi(&str[m_i_len], "es") ||
+                      !strncmpi(&str[m_i_len], "es ", 3))) {
+                mntmp = i;
+                len = m_i_len;
             }
         }
-        if (mntmp == NON_PM) mntmp = title_to_mon(str, (int *)0, (int *)0);
-        return mntmp;
+    }
+    if (mntmp == NON_PM)
+        mntmp = title_to_mon(str, (int *)0, (int *)0);
+    return mntmp;
 }
 
 
 /* returns 3 values (0=male, 1=female, 2=none) */
-int gender (struct monst *mtmp) {
-        if (is_neuter(mtmp->data)) return 2;
-        return mtmp->female;
+int gender(const struct monst *mtmp) {
+    if (is_neuter(mtmp->data))
+        return 2;
+    return mtmp->female;
 }
 
 /* Like gender(), but lower animals and such are still "it". */
 /* This is the one we want to use when printing messages. */
-int pronoun_gender (struct monst *mtmp) {
-        if (is_neuter(mtmp->data) || !canspotmon(mtmp)) return 2;
-        return (humanoid(mtmp->data) || (mtmp->data->geno & G_UNIQ) ||
-                type_is_pname(mtmp->data)) ? (int)mtmp->female : 2;
+int pronoun_gender(const struct monst * mtmp) {
+    if (is_neuter(mtmp->data) || !canspotmon(mtmp))
+        return 2;
+    if (humanoid(mtmp->data) || (mtmp->data->geno & G_UNIQ) || type_is_pname(mtmp->data))
+        return (int)mtmp->female;
+    return 2;
 }
 
 
 /* used for nearby monsters when you go to another level */
-bool levl_follower(struct monst *mtmp) {
-        /* monsters with the Amulet--even pets--won't follow across levels */
-        if (mon_has_amulet(mtmp)) return false;
+bool levl_follower(const struct monst *mtmp) {
+    /* monsters with the Amulet--even pets--won't follow across levels */
+    if (mon_has_amulet(mtmp))
+        return false;
 
-        /* some monsters will follow even while intending to flee from you */
-        if (mtmp->mtame || mtmp->iswiz || is_fshk(mtmp)) return true;
+    /* some monsters will follow even while intending to flee from you */
+    if (mtmp->mtame || mtmp->iswiz || is_fshk(mtmp))
+        return true;
 
-        /* stalking types follow, but won't when fleeing unless you hold
-           the Amulet */
-        return (bool)((mtmp->data->mflags2 & M2_STALK) &&
-                                (!mtmp->mflee || u.uhave.amulet));
+    /* stalking types follow, but won't when fleeing unless you hold
+     the Amulet */
+    return (mtmp->data->mflags2 & M2_STALK) && (!mtmp->mflee || u.uhave.amulet);
 }
 
 static const short grownups[][2] = {
@@ -539,20 +518,18 @@ static const short grownups[][2] = {
         {NON_PM,NON_PM}
 };
 
-int little_to_big (int montype) {
-        int i;
-
-        for (i = 0; grownups[i][0] >= LOW_PM; i++)
-                if(montype == grownups[i][0]) return grownups[i][1];
-        return montype;
+int little_to_big(int montype) {
+    for (int i = 0; grownups[i][0] >= LOW_PM; i++)
+        if (montype == grownups[i][0])
+            return grownups[i][1];
+    return montype;
 }
 
-int big_to_little (int montype) {
-        int i;
-
-        for (i = 0; grownups[i][0] >= LOW_PM; i++)
-                if(montype == grownups[i][1]) return grownups[i][0];
-        return montype;
+int big_to_little(int montype) {
+    for (int i = 0; grownups[i][0] >= LOW_PM; i++)
+        if (montype == grownups[i][1])
+            return grownups[i][0];
+    return montype;
 }
 
 /*
@@ -560,9 +537,10 @@ int big_to_little (int montype) {
  * Returns correct pointer for non-polymorphed and polymorphed
  * player.  It does not return a pointer to player role character.
  */
-const struct permonst * raceptr (struct monst *mtmp) {
-    if (mtmp == &youmonst && !Upolyd) return(&mons[urace.malenum]);
-    else return(mtmp->data);
+const struct permonst * raceptr(const struct monst *mtmp) {
+    if (mtmp == &youmonst && !Upolyd)
+        return (&mons[urace.malenum]);
+    return (mtmp->data);
 }
 
 static const char *levitate[4]  = { "float", "Float", "wobble", "Wobble" };
@@ -573,71 +551,71 @@ static const char *ooze[4]      = { "ooze", "Ooze", "tremble", "Tremble" };
 static const char *immobile[4]  = { "wiggle", "Wiggle", "pulsate", "Pulsate" };
 static const char *crawl[4]     = { "crawl", "Crawl", "falter", "Falter" };
 
-const char * locomotion (const struct permonst *ptr, const char *def) {
-        int capitalize = (*def == highc(*def));
-
-        return (
-                is_floater(ptr) ? levitate[capitalize] :
-                (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize] :
-                (is_flyer(ptr) && ptr->msize > MZ_SMALL)  ? flyl[capitalize] :
-                slithy(ptr)     ? slither[capitalize] :
-                amorphous(ptr)  ? ooze[capitalize] :
-                !ptr->mmove     ? immobile[capitalize] :
-                nolimbs(ptr)    ? crawl[capitalize] :
-                def
-               );
+const char * locomotion(const struct permonst * ptr, const char * def) {
+    int capitalize = (*def == highc(*def));
+    if (is_floater(ptr))
+        return levitate[capitalize];
+    if (is_flyer(ptr) && ptr->msize <= MZ_SMALL)
+        return flys[capitalize];
+    if (is_flyer(ptr) && ptr->msize > MZ_SMALL)
+        return flyl[capitalize];
+    if (slithy(ptr))
+        return slither[capitalize];
+    if (amorphous(ptr))
+        return ooze[capitalize];
+    if (!ptr->mmove)
+        return immobile[capitalize];
+    if (nolimbs(ptr))
+        return crawl[capitalize];
+    return def;
 
 }
 
-const char * stagger (const struct permonst *ptr, const char *def) {
-        int capitalize = 2 + (*def == highc(*def));
+const char * stagger(const struct permonst *ptr, const char *def) {
+    int capitalize = 2 + (*def == highc(*def));
 
-        return (
-                is_floater(ptr) ? levitate[capitalize] :
-                (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize] :
-                (is_flyer(ptr) && ptr->msize > MZ_SMALL)  ? flyl[capitalize] :
-                slithy(ptr)     ? slither[capitalize] :
-                amorphous(ptr)  ? ooze[capitalize] :
-                !ptr->mmove     ? immobile[capitalize] :
-                nolimbs(ptr)    ? crawl[capitalize] :
-                def
-               );
-
+    if (is_floater(ptr))
+        return levitate[capitalize];
+    if (is_flyer(ptr) && ptr->msize <= MZ_SMALL)
+        return flys[capitalize];
+    if (is_flyer(ptr) && ptr->msize > MZ_SMALL)
+        return flyl[capitalize];
+    if (slithy(ptr))
+        return slither[capitalize];
+    if (amorphous(ptr))
+        return ooze[capitalize];
+    if (!ptr->mmove)
+        return immobile[capitalize];
+    if (nolimbs(ptr))
+        return crawl[capitalize];
+    return def;
 }
 
 /* return a phrase describing the effect of fire attack on a type of monster */
-const char * on_fire (struct permonst *mptr, struct attack *mattk) {
-    const char *what;
-
+const char * on_fire(const struct permonst * mptr, const struct attack * mattk) {
     switch (monsndx(mptr)) {
-    case PM_FLAMING_SPHERE:
-    case PM_FIRE_VORTEX:
-    case PM_FIRE_ELEMENTAL:
-    case PM_SALAMANDER:
-        what = "already on fire";
-        break;
-    case PM_WATER_ELEMENTAL:
-    case PM_FOG_CLOUD:
-    case PM_STEAM_VORTEX:
-        what = "boiling";
-        break;
-    case PM_ICE_VORTEX:
-    case PM_GLASS_GOLEM:
-        what = "melting";
-        break;
-    case PM_STONE_GOLEM:
-    case PM_CLAY_GOLEM:
-    case PM_GOLD_GOLEM:
-    case PM_AIR_ELEMENTAL:
-    case PM_EARTH_ELEMENTAL:
-    case PM_DUST_VORTEX:
-    case PM_ENERGY_VORTEX:
-        what = "heating up";
-        break;
-    default:
-        what = (mattk->aatyp == AT_HUGS) ? "being roasted" : "on fire";
-        break;
+        case PM_FLAMING_SPHERE:
+        case PM_FIRE_VORTEX:
+        case PM_FIRE_ELEMENTAL:
+        case PM_SALAMANDER:
+            return "already on fire";
+        case PM_WATER_ELEMENTAL:
+        case PM_FOG_CLOUD:
+        case PM_STEAM_VORTEX:
+            return "boiling";
+        case PM_ICE_VORTEX:
+        case PM_GLASS_GOLEM:
+            return "melting";
+        case PM_STONE_GOLEM:
+        case PM_CLAY_GOLEM:
+        case PM_GOLD_GOLEM:
+        case PM_AIR_ELEMENTAL:
+        case PM_EARTH_ELEMENTAL:
+        case PM_DUST_VORTEX:
+        case PM_ENERGY_VORTEX:
+            return "heating up";
+        default:
+            return (mattk->aatyp == AT_HUGS) ? "being roasted" : "on fire";
     }
-    return what;
 }
 

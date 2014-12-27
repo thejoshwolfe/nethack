@@ -702,16 +702,12 @@ create_worm_tail (int num_segs)
  *  invisibility and telepathy (which should only show the head anyway).
  *  Mostly used in the canseemon() macro.
  */
-bool 
-worm_known (struct monst *worm)
-{
+bool worm_known(const struct monst *worm) {
     struct wseg *curr = wtails[worm->wormno];
-
     while (curr) {
-        if(cansee(curr->wx,curr->wy)) return true;
+        if (cansee(curr->wx, curr->wy))
+            return true;
         curr = curr->nseg;
     }
     return false;
 }
-
-/*worm.c*/

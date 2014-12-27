@@ -61,8 +61,8 @@ extern bool spec_ability(struct obj *,unsigned long);
 extern bool confers_luck(struct obj *);
 extern bool arti_reflects(struct obj *);
 extern bool restrict_name(struct obj *,const char *);
-extern bool defends(int,struct obj *);
-extern bool protects(int,struct obj *);
+extern bool defends(int,const struct obj *);
+extern bool protects(int,const struct obj *);
 extern void set_artifact_intrinsic(struct obj *,bool,long);
 extern int touch_artifact(struct obj *,struct monst *);
 extern int spec_abon(struct obj *,struct monst *);
@@ -945,34 +945,33 @@ extern void pacify_guards(void);
 extern void set_mon_data(struct monst *,struct permonst *,int);
 extern const struct attack * attacktype_fordmg(const struct permonst *, int, int);
 extern bool attacktype(const struct permonst *,int);
-extern bool poly_when_stoned(struct permonst *);
-extern bool resists_drli(struct monst *);
-extern bool resists_magm(struct monst *);
-extern bool resists_blnd(struct monst *);
-extern bool can_blnd(struct monst *,struct monst *,unsigned char,struct obj *);
-extern bool ranged_attk(struct permonst *);
-extern bool hates_silver(struct permonst *);
-extern bool passes_bars(struct permonst *);
-extern bool can_track(struct permonst *);
+extern bool poly_when_stoned(const struct permonst *);
+extern bool resists_drli(const struct monst *);
+extern bool resists_magm(const struct monst *);
+extern bool resists_blnd(const struct monst *);
+extern bool can_blnd(const struct monst *,const struct monst *,unsigned char,const struct obj *);
+extern bool ranged_attk(const struct permonst *);
+extern bool hates_silver(const struct permonst *);
+extern bool passes_bars(const struct permonst *);
+extern bool can_track(const struct permonst *);
 extern bool breakarm(const struct permonst *);
 extern bool sliparm(const struct permonst *);
-extern bool sticks(struct permonst *);
+extern bool sticks(const struct permonst *);
 extern int num_horns(const struct permonst *);
-/* E bool canseemon(struct monst *); */
-extern struct attack *dmgtype_fromattack(struct permonst *,int,int);
-extern bool dmgtype(struct permonst *,int);
-extern int max_passive_dmg(struct monst *,struct monst *);
+extern const struct attack * dmgtype_fromattack(const struct permonst *,int,int);
+extern bool dmgtype(const struct permonst *,int);
+extern int max_passive_dmg(const struct monst *,const struct monst *);
 extern int monsndx(const struct permonst *);
 extern int name_to_mon(const char *);
-extern int gender(struct monst *);
-extern int pronoun_gender(struct monst *);
-extern bool levl_follower(struct monst *);
+extern int gender(const struct monst *);
+extern int pronoun_gender(const struct monst *);
+extern bool levl_follower(const struct monst *);
 extern int little_to_big(int);
 extern int big_to_little(int);
 extern const char *locomotion(const struct permonst *,const char *);
 extern const char *stagger(const struct permonst *,const char *);
-extern const char *on_fire(struct permonst *,struct attack *);
-extern const struct permonst *raceptr(struct monst *);
+extern const char *on_fire(const struct permonst *,const struct attack *);
+extern const struct permonst * raceptr(const struct monst *);
 
 /* ### monmove.c ### */
 
@@ -1427,7 +1426,7 @@ extern void add_damage(signed char,signed char,long);
 extern int repair_damage(struct monst *,struct damage *,bool);
 extern int shk_move(struct monst *);
 extern void after_shk_move(struct monst *);
-extern bool is_fshk(struct monst *);
+extern bool is_fshk(const struct monst *);
 extern void shopdig(int);
 extern void pay_for_damage(const char *,bool);
 extern bool costly_spot(signed char,signed char);
@@ -1735,7 +1734,7 @@ extern void genl_preference_update(const char *);
 /* ### wizard.c ### */
 
 extern void amulet(void);
-extern int mon_has_amulet(struct monst *);
+extern bool mon_has_amulet(const struct monst *);
 extern int mon_has_special(struct monst *);
 extern int tactics(struct monst *);
 extern void aggravate(void);
@@ -1764,7 +1763,7 @@ extern void place_wsegs(struct monst *);
 extern void remove_worm(struct monst *);
 extern void place_worm_tail_randomly(struct monst *,signed char,signed char);
 extern int count_wsegs(struct monst *);
-extern bool worm_known(struct monst *);
+extern bool worm_known(const struct monst *);
 
 /* ### worn.c ### */
 
