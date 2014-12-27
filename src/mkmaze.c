@@ -24,6 +24,11 @@ static void move(int *,int *,int);
 static void setup_waterlevel(void);
 static void unsetup_waterlevel(void);
 
+static const int INVPOS_X_MARGIN = 6 - 2;
+static const int INVPOS_Y_MARGIN = 5 - 2;
+static const int INVPOS_DISTANCE = 11;
+static const int x_maze_min = 2;
+static const int y_maze_min = 2;
 
 static bool iswall (int x, int y) {
     int type;
@@ -548,8 +553,6 @@ makemaz (const char *s)
             mazexy(&mm);
             mkstairs(mm.x, mm.y, 0, (struct mkroom *)0);        /* down */
         } else {        /* choose "vibrating square" location */
-#define x_maze_min 2
-#define y_maze_min 2
             /*
              * Pick a position where the stairs down to Moloch's Sanctum
              * level will ultimately be created.  At that time, an area
@@ -560,9 +563,6 @@ makemaz (const char *s)
              * We actually allow up to 2 squares around the usual edge of
              * the area to get truncated; see mkinvokearea(mklev.c).
              */
-#define INVPOS_X_MARGIN (6 - 2)
-#define INVPOS_Y_MARGIN (5 - 2)
-#define INVPOS_DISTANCE 11
             int x_range = x_maze_max - x_maze_min - 2*INVPOS_X_MARGIN - 1,
                 y_range = y_maze_max - y_maze_min - 2*INVPOS_Y_MARGIN - 1;
 
@@ -578,11 +578,6 @@ makemaz (const char *s)
                      !SPACE_POS(levl[x][y].typ) || occupied(x, y));
             inv_pos.x = x;
             inv_pos.y = y;
-#undef INVPOS_X_MARGIN
-#undef INVPOS_Y_MARGIN
-#undef INVPOS_DISTANCE
-#undef x_maze_min
-#undef y_maze_min
         }
 
         /* place branch stair or portal */
