@@ -340,7 +340,7 @@ intemple (int roomno)
                     } else
                         msg1 = "You desecrate this place by your presence!";
                 } else {
-                    Sprintf(buf, "Pilgrim, you enter a %s place!",
+                    sprintf(buf, "Pilgrim, you enter a %s place!",
                             !shrined ? "desecrated" : "sacred");
                     msg1 = buf;
                 }

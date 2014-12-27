@@ -1201,7 +1201,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
             else
                 mesg = fam_msgs[which];
             if (mesg && index(mesg, '%')) {
-                Sprintf(buf, mesg, !Blind ? "looks" : "seems");
+                sprintf(buf, mesg, !Blind ? "looks" : "seems");
                 mesg = buf;
             }
             if (mesg) plines(mesg);
@@ -1419,7 +1419,7 @@ bool revive_corpse(struct obj *corpse) {
                 if (container_where == OBJ_MINVENT && cansee(mtmp->mx, mtmp->my) &&
                     mcarry && canseemon(mcarry) && container) {
                         char sackname[BUFSZ];
-                        Sprintf(sackname, "%s %s", s_suffix(mon_nam(mcarry)),
+                        sprintf(sackname, "%s %s", s_suffix(mon_nam(mcarry)),
                                 xname(container));
                         pline("%s writhes out of %s!", Amonnam(mtmp), sackname);
                 } else if (container_where == OBJ_INVENT && container) {
@@ -1495,7 +1495,7 @@ dowipe (void)
         if(u.ucreamed)  {
                 static char buf[39];
 
-                Sprintf(buf, "wiping off your %s", body_part(FACE));
+                sprintf(buf, "wiping off your %s", body_part(FACE));
                 set_occupation(wipeoff, buf, 0);
                 /* Not totally correct; what if they change back after now
                  * but before they're finished wiping?

@@ -202,14 +202,14 @@ do_rumors (void)
         long    true_rumor_size;
 
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, RUMOR_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, RUMOR_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }
         Fprintf(ofp, "%s", Dont_Edit_Data);
 
-        Sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
+        sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
         Strcat(infile, ".tru");
         if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
@@ -230,7 +230,7 @@ do_rumors (void)
 
         Fclose(ifp);
 
-        Sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
+        sprintf(infile, DATA_IN_TEMPLATE, RUMOR_FILE);
         Strcat(infile, ".fal");
         if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
@@ -301,7 +301,7 @@ static void make_version(void) {
 }
 
 static char * version_string(char *outbuf) {
-    Sprintf(outbuf, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
+    sprintf(outbuf, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
     return outbuf;
 }
 
@@ -311,7 +311,7 @@ version_id_string (char *outbuf, const char *build_date)
     char subbuf[64], versbuf[64];
 
     subbuf[0] = '\0';
-    Sprintf(outbuf, "%s NetHack%s Version %s - last build %s.",
+    sprintf(outbuf, "%s NetHack%s Version %s - last build %s.",
             PORT_ID, subbuf, version_string(versbuf), build_date);
     return outbuf;
 }
@@ -324,7 +324,7 @@ do_date (void)
         const char *ul_sfx;
 
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATE_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATE_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
@@ -364,7 +364,7 @@ build_savebones_compat_string (void)
 {
         Strcpy(save_bones_compat_buf,
                 "save and bones files accepted from version");
-        Sprintf(eos(save_bones_compat_buf), " %d.%d.%d only",
+        sprintf(eos(save_bones_compat_buf), " %d.%d.%d only",
                 VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
 }
 
@@ -402,7 +402,7 @@ void do_options(void) {
         const char *str, *indent = "    ";
 
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, OPTIONS_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, OPTIONS_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
@@ -484,10 +484,10 @@ do_data (void)
         long    txt_offset;
         int     entry_cnt, line_cnt;
 
-        Sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "database.tmp");
+        sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "database.tmp");
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATA_FILE);
-        Sprintf(infile, DATA_IN_TEMPLATE, DATA_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, DATA_FILE);
+        sprintf(infile, DATA_IN_TEMPLATE, DATA_FILE);
         Strcat(infile, ".base");
         if (!(ifp = fopen(infile, "r"))) {          /* data.base */
                 perror(infile);
@@ -534,7 +534,7 @@ do_data (void)
         Fclose(ifp);            /* all done with original input file */
 
         /* reprocess the scratch file; 1st format an error msg, just in case */
-        Sprintf(in_line, "rewind of \"%s\"", tempfile);
+        sprintf(in_line, "rewind of \"%s\"", tempfile);
         if (rewind(tfp) != 0)  goto dead_data;
         /* copy all lines of text from the scratch file into the output file */
         while (fgets(in_line, sizeof in_line, tfp))
@@ -545,10 +545,10 @@ do_data (void)
         Unlink(tempfile);       /* remove it */
 
         /* update the first record of the output file; prepare error msg 1st */
-        Sprintf(in_line, "rewind of \"%s\"", filename);
+        sprintf(in_line, "rewind of \"%s\"", filename);
         ok = (rewind(ofp) == 0);
         if (ok) {
-           Sprintf(in_line, "header rewrite of \"%s\"", filename);
+           sprintf(in_line, "header rewrite of \"%s\"", filename);
            ok = (fprintf(ofp, "%s%08lx\n", Dont_Edit_Data, txt_offset) >= 0);
         }
         if (!ok) {
@@ -604,10 +604,10 @@ do_oracles (void)
         int     oracle_cnt;
         int i;
 
-        Sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "oracles.tmp");
+        sprintf(tempfile, OUTPUT_FILE_PATH_TEMPLATE, "oracles.tmp");
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ORACLE_FILE);
-        Sprintf(infile, DATA_IN_TEMPLATE, ORACLE_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ORACLE_FILE);
+        sprintf(infile, DATA_IN_TEMPLATE, ORACLE_FILE);
         Strcat(infile, ".txt");
         if (!(ifp = fopen(infile, "r"))) {
                 perror(infile);
@@ -668,7 +668,7 @@ do_oracles (void)
         Fclose(ifp);            /* all done with original input file */
 
         /* reprocess the scratch file; 1st format an error msg, just in case */
-        Sprintf(in_line, "rewind of \"%s\"", tempfile);
+        sprintf(in_line, "rewind of \"%s\"", tempfile);
         if (rewind(tfp) != 0)  goto dead_data;
         /* copy all lines of text from the scratch file into the output file */
         while (fgets(in_line, sizeof in_line, tfp))
@@ -679,14 +679,14 @@ do_oracles (void)
         Unlink(tempfile);       /* remove it */
 
         /* update the first record of the output file; prepare error msg 1st */
-        Sprintf(in_line, "rewind of \"%s\"", filename);
+        sprintf(in_line, "rewind of \"%s\"", filename);
         ok = (rewind(ofp) == 0);
         if (ok) {
-            Sprintf(in_line, "header rewrite of \"%s\"", filename);
+            sprintf(in_line, "header rewrite of \"%s\"", filename);
             ok = (fprintf(ofp, "%s%5d\n", Dont_Edit_Data, oracle_cnt) >=0);
         }
         if (ok) {
-            Sprintf(in_line, "data rewrite of \"%s\"", filename);
+            sprintf(in_line, "data rewrite of \"%s\"", filename);
             for (i = 0; i <= oracle_cnt; i++) {
                 if (!(ok = (fflush(ofp) == 0))) break;
                 if (!(ok = (fpos = ftell(ofp)) >= 0)) break;
@@ -816,7 +816,7 @@ do_monstr (void)
      * create the source file, "monstr.c"
      */
     filename[0]='\0';
-    Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MON_STR_C);
+    sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MON_STR_C);
     if (!(ofp = fopen(filename, "w+"))) {
         perror(filename);
         exit(EXIT_FAILURE);
@@ -850,7 +850,7 @@ do_permonst (void)
         char    *c, *nam;
 
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MONST_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, MONST_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
@@ -1083,14 +1083,14 @@ put_qt_hdrs (void)
 void
 do_questtxt (void)
 {
-        Sprintf(filename, DATA_IN_TEMPLATE, QTXT_I_FILE);
+        sprintf(filename, DATA_IN_TEMPLATE, QTXT_I_FILE);
         if(!(ifp = fopen(filename, "r"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);
         }
 
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, QTXT_O_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, QTXT_O_FILE);
         if(!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 Fclose(ifp);
@@ -1150,7 +1150,7 @@ do_objs (void)
         bool sumerr = false;
 
         filename[0]='\0';
-        Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ONAME_FILE);
+        sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ONAME_FILE);
         if (!(ofp = fopen(filename, "w+"))) {
                 perror(filename);
                 exit(EXIT_FAILURE);

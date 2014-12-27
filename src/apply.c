@@ -866,8 +866,8 @@ static void use_candle (struct obj **optr) {
         return;
     }
 
-    Sprintf(qbuf, "Attach %s", the(xname(obj)));
-    Sprintf(eos(qbuf), " to %s?",
+    sprintf(qbuf, "Attach %s", the(xname(obj)));
+    sprintf(eos(qbuf), " to %s?",
             safe_qbuf(qbuf, sizeof(" to ?"), the(xname(otmp)),
                 the(simple_typename(otmp->otyp)), "it"));
     if(yn(qbuf) == 'n') {
@@ -1304,7 +1304,7 @@ static void use_tinning_kit (struct obj *obj) {
         else {
             pline("Tinning %s without wearing gloves is a fatal mistake...",
                     an(mons[corpse->corpsenm].mname));
-            Sprintf(kbuf, "trying to tin %s without gloves",
+            sprintf(kbuf, "trying to tin %s without gloves",
                     an(mons[corpse->corpsenm].mname));
         }
         instapetrify(kbuf);
@@ -1517,7 +1517,7 @@ void fig_transform (void *arg, long timeout) {
     cansee_spot = cansee(cc.x, cc.y);
     mtmp = make_familiar(figurine, cc.x, cc.y, true);
     if (mtmp) {
-        Sprintf(monnambuf, "%s",an(m_monnam(mtmp)));
+        sprintf(monnambuf, "%s",an(m_monnam(mtmp)));
         switch (figurine->where) {
             case OBJ_INVENT:
                 if (Blind)
@@ -1543,7 +1543,7 @@ void fig_transform (void *arg, long timeout) {
                     mon = figurine->ocarry;
                     /* figurine carring monster might be invisible */
                     if (canseemon(figurine->ocarry)) {
-                        Sprintf(carriedby, "%s pack",
+                        sprintf(carriedby, "%s pack",
                                 s_suffix(a_monnam(mon)));
                     }
                     else if (is_pool(mon->mx, mon->my))
@@ -1711,7 +1711,7 @@ static void use_stone (struct obj *tstone) {
        junk as likely candidates for rubbing */
     choices = (tstone->otyp == TOUCHSTONE && tstone->dknown &&
             objects[TOUCHSTONE].oc_name_known) ? justgems : allowall;
-    Sprintf(stonebuf, "rub on the stone%s", plur(tstone->quan));
+    sprintf(stonebuf, "rub on the stone%s", plur(tstone->quan));
     if ((obj = getobj(choices, stonebuf)) == 0)
         return;
     if (obj->oclass == COIN_CLASS) {
@@ -1811,7 +1811,7 @@ static void use_stone (struct obj *tstone) {
             break;          /* default oclass */
     }
 
-    Sprintf(stonebuf, "stone%s", plur(tstone->quan));
+    sprintf(stonebuf, "stone%s", plur(tstone->quan));
     if (do_scratch)
         pline("You make %s%sscratch marks on the %s.",
                 streak_color ? streak_color : (const char *)"",
@@ -1884,7 +1884,7 @@ static void use_trap (struct obj *otmp) {
         else  chance = (rnl(10) > 5);
         You("aren't very skilled at reaching from %s.",
                 mon_nam(u.usteed));
-        Sprintf(buf, "Continue your attempt to set %s?",
+        sprintf(buf, "Continue your attempt to set %s?",
                 the(defsyms[trap_to_defsym(what_trap(ttyp))].explanation));
         if(yn(buf) == 'y') {
             if (chance) {
@@ -2017,7 +2017,7 @@ static int use_whip (struct obj *obj) {
         dam = rnd(2) + dbon() + obj->spe;
         if (dam <= 0) dam = 1;
         You("hit your %s with your bullwhip.", body_part(FOOT));
-        Sprintf(buf, "killed %sself with %s bullwhip", uhim(), uhis());
+        sprintf(buf, "killed %sself with %s bullwhip", uhim(), uhis());
         losehp(dam, buf, NO_KILLER_PREFIX);
         flags.botl = 1;
         return 1;
@@ -2130,7 +2130,7 @@ static int use_whip (struct obj *obj) {
                                     polymon(PM_STONE_GOLEM))) {
                             char kbuf[BUFSZ];
 
-                            Sprintf(kbuf, "%s corpse",
+                            sprintf(kbuf, "%s corpse",
                                     an(mons[otmp->corpsenm].mname));
                             pline("Snatching %s is a fatal mistake.", kbuf);
                             instapetrify(kbuf);
@@ -2326,14 +2326,14 @@ static int use_grapple (struct obj *obj) {
         any.a_int = 1;      /* use index+1 (cant use 0) as identifier */
         start_menu(tmpwin);
         any.a_int++;
-        Sprintf(buf, "an object on the %s", surface(cc.x, cc.y));
+        sprintf(buf, "an object on the %s", surface(cc.x, cc.y));
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                 buf, MENU_UNSELECTED);
         any.a_int++;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                 "a monster", MENU_UNSELECTED);
         any.a_int++;
-        Sprintf(buf, "the %s", surface(cc.x, cc.y));
+        sprintf(buf, "the %s", surface(cc.x, cc.y));
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                 buf, MENU_UNSELECTED);
         end_menu(tmpwin, "Aim for what?");
@@ -2407,7 +2407,7 @@ static int do_break_wand (struct obj *obj) {
     char confirm[QBUFSZ], the_wand[BUFSZ], buf[BUFSZ];
 
     Strcpy(the_wand, yname(obj));
-    Sprintf(confirm, "Are you really sure you want to break %s?",
+    sprintf(confirm, "Are you really sure you want to break %s?",
             safe_qbuf("", sizeof("Are you really sure you want to break ?"),
                 the_wand, ysimple_name(obj), "the wand"));
     if (yn(confirm) == 'n' ) return 0;
@@ -2520,7 +2520,7 @@ wanexpl:
                 }
                 damage = zapyourself(obj, false);
                 if (damage) {
-                    Sprintf(buf, "killed %sself by breaking a wand", uhim());
+                    sprintf(buf, "killed %sself by breaking a wand", uhim());
                     losehp(damage, buf, NO_KILLER_PREFIX);
                 }
                 if (flags.botl) bot();          /* blindness */

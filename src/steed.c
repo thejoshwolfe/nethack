@@ -79,7 +79,7 @@ use_saddle (struct obj *otmp)
 
             You("touch %s.", mon_nam(mtmp));
             if (!(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
-                Sprintf(kbuf, "attempting to saddle %s", an(mtmp->data->mname));
+                sprintf(kbuf, "attempting to saddle %s", an(mtmp->data->mname));
                 instapetrify(kbuf);
             }
         }
@@ -256,7 +256,7 @@ mount_steed (
             char kbuf[BUFSZ];
 
             You("touch %s.", mon_nam(mtmp));
-            Sprintf(kbuf, "attempting to ride %s", an(mtmp->data->mname));
+            sprintf(kbuf, "attempting to ride %s", an(mtmp->data->mname));
             instapetrify(kbuf);
         }
         if (!mtmp->mtame || mtmp->isminion) {
@@ -310,7 +310,7 @@ mount_steed (
             }
             You("slip while trying to get on %s.", mon_nam(mtmp));
 
-            Sprintf(buf, "slipped while mounting %s",
+            sprintf(buf, "slipped while mounting %s",
                     /* "a saddled mumak" or "a saddled pony called Dobbin" */
                     x_monnam(mtmp, ARTICLE_A, (char *)0,
                         SUPPRESS_IT|SUPPRESS_INVISIBLE|SUPPRESS_HALLUCINATION,

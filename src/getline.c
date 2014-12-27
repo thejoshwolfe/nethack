@@ -47,7 +47,7 @@ hooked_tty_getlin (const char *query, char *bufp, getlin_hook_proc hook)
         *obufp = 0;
         for(;;) {
                 (void) fflush(stdout);
-                Sprintf(toplines, "%s ", query);
+                sprintf(toplines, "%s ", query);
                 Strcat(toplines, obufp);
                 if((c = pgetchar()) == EOF) {
                         break;

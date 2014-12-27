@@ -245,7 +245,7 @@ sitoa (         /* make a signed digit string from a number */
 {
     static char buf[13];
 
-    Sprintf(buf, (n < 0) ? "%d" : "+%d", n);
+    sprintf(buf, (n < 0) ? "%d" : "+%d", n);
     return buf;
 }
 

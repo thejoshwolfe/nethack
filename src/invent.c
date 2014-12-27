@@ -830,9 +830,9 @@ getobj (const char *let, const char *word)
                 cnt = 0;
                 if (allowcnt == 2) allowcnt = 1;  /* abort previous count */
                 if(!buf[0]) {
-                        Sprintf(qbuf, "What do you want to %s? [*]", word);
+                        sprintf(qbuf, "What do you want to %s? [*]", word);
                 } else {
-                        Sprintf(qbuf, "What do you want to %s? [%s or ?*]",
+                        sprintf(qbuf, "What do you want to %s? [%s or ?*]",
                                 word, buf);
                 }
                 if (in_doagain)
@@ -1082,7 +1082,7 @@ ggetobj (
         ilets[iletct] = '\0';
 
         for (;;) {
-            Sprintf(qbuf,"What kinds of thing do you want to %s? [%s]",
+            sprintf(qbuf,"What kinds of thing do you want to %s? [%s]",
                     word, ilets);
             getlin(qbuf, buf);
             if (buf[0] == '\033') return(0);
@@ -1327,7 +1327,7 @@ menu_identify (int id_limit)
     /* assumptions:  id_limit > 0 and at least one unID'd item is present */
 
     while (id_limit) {
-        Sprintf(buf, "What would you like to identify %s?",
+        sprintf(buf, "What would you like to identify %s?",
                 first ? "first" : "next");
         n = query_objlist(buf, invent, SIGNAL_NOMENU|USE_INVLET|INVORDER_SORT,
                 &pick_list, PICK_ANY, not_fully_identified);
@@ -1440,15 +1440,15 @@ xprname (
      */
     if (cost != 0 || let == '*') {
         /* if dot is true, we're doing Iu, otherwise Ix */
-        Sprintf(li, "%c - %-45s %6ld %s",
+        sprintf(li, "%c - %-45s %6ld %s",
                 (dot && use_invlet ? obj->invlet : let),
                 (txt ? txt : doname(obj)), cost, currency(cost));
     } else if (obj && obj->oclass == COIN_CLASS) {
-        Sprintf(li, "%ld gold piece%s%s", obj->quan, plur(obj->quan),
+        sprintf(li, "%ld gold piece%s%s", obj->quan, plur(obj->quan),
                 (dot ? "." : ""));
     } else {
         /* ordinary inventory display or pickup message */
-        Sprintf(li, "%c - %s%s",
+        sprintf(li, "%c - %s%s",
                 (use_invlet ? obj->invlet : let),
                 (txt ? txt : doname(obj)), (dot ? "." : ""));
     }
@@ -1961,7 +1961,7 @@ dfeature_at (int x, int y, char *buf)
         else if (IS_SINK(ltyp))
             cmap = S_sink;                              /* "sink" */
         else if (IS_ALTAR(ltyp)) {
-            Sprintf(altbuf, "altar to %s (%s)", a_gname(),
+            sprintf(altbuf, "altar to %s (%s)", a_gname(),
                     align_str(Amask2align(lev->altarmask & ~AM_SHRINE)));
             dfeature = altbuf;
         } else if ((x == xupstair && y == yupstair) ||
@@ -2008,7 +2008,7 @@ look_here (
 
         if (u.uswallow && u.ustuck) {
             struct monst *mtmp = u.ustuck;
-            Sprintf(fbuf, "Contents of %s %s",
+            sprintf(fbuf, "Contents of %s %s",
                 s_suffix(mon_nam(mtmp)), mbodypart(mtmp, STOMACH));
             /* Skip "Contents of " by using fbuf index 12 */
             You("%s to %s what is lying in %s.",
@@ -2055,7 +2055,7 @@ look_here (
         }
 
         if (dfeature)
-                Sprintf(fbuf, "There is %s here.", an(dfeature));
+                sprintf(fbuf, "There is %s here.", an(dfeature));
 
         if (!otmp || is_lava(u.ux,u.uy) || (is_pool(u.ux,u.uy) && !Underwater)) {
                 if (dfeature) plines(fbuf);
@@ -2134,7 +2134,7 @@ feel_cockatrice (struct obj *otmp, bool force_touch)
             else
                         pline("Touching the %s corpse is a fatal mistake...",
                                 mons[otmp->corpsenm].mname);
-                Sprintf(kbuf, "%s corpse", an(mons[otmp->corpsenm].mname));
+                sprintf(kbuf, "%s corpse", an(mons[otmp->corpsenm].mname));
                 instapetrify(kbuf);
         }
 }
@@ -2481,7 +2481,7 @@ doorganize (void)    /* inventory organizer by Del Lamb */
 
         /* get new letter to use as inventory letter */
         for (;;) {
-                Sprintf(qbuf, "Adjust letter to what [%s]?",buf);
+                sprintf(qbuf, "Adjust letter to what [%s]?",buf);
                 let = yn_function(qbuf, (char *)0, '\0');
                 if(index(quitchars,let)) {
                         plines(Never_mind);
@@ -2582,7 +2582,7 @@ display_minventory (struct monst *mon, int dflags, char *title)
         int do_all = (dflags & MINV_ALL) != 0,
             do_gold = (do_all && mon->mgold);
 
-        Sprintf(tmp,"%s %s:", s_suffix(noit_Monnam(mon)),
+        sprintf(tmp,"%s %s:", s_suffix(noit_Monnam(mon)),
                 do_all ? "possessions" : "armament");
 
         if (do_all ? (mon->minvent || mon->mgold)
@@ -2646,7 +2646,7 @@ display_cinventory (struct obj *obj)
         int n;
         menu_item *selected = 0;
 
-        Sprintf(tmp,"Contents of %s:", doname(obj));
+        sprintf(tmp,"Contents of %s:", doname(obj));
 
         if (obj->cobj) {
             n = query_objlist(tmp, obj->cobj, INVORDER_SORT, &selected,

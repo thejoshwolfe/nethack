@@ -570,10 +570,10 @@ getlev (int fd, int pid, signed char lev, bool ghostly)
             char trickbuf[BUFSZ];
 
             if (pid && pid != hpid)
-                Sprintf(trickbuf, "PID (%d) doesn't match saved PID (%d)!",
+                sprintf(trickbuf, "PID (%d) doesn't match saved PID (%d)!",
                         hpid, pid);
             else
-                Sprintf(trickbuf, "This is level %d, not %d!", dlvl, lev);
+                sprintf(trickbuf, "This is level %d, not %d!", dlvl, lev);
             if (wizard) plines(trickbuf);
             trickery(trickbuf);
         }

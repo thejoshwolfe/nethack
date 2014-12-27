@@ -223,9 +223,9 @@ void mstatusline (struct monst *mtmp) {
         info[0] = 0;
         if (mtmp->mtame) {        Strcat(info, ", tame");
             if (wizard) {
-                Sprintf(eos(info), " (%d", mtmp->mtame);
+                sprintf(eos(info), " (%d", mtmp->mtame);
                 if (!mtmp->isminion)
-                    Sprintf(eos(info), "; hungry %ld; apport %d",
+                    sprintf(eos(info), "; hungry %ld; apport %d",
                         EDOG(mtmp)->hungrytime, EDOG(mtmp)->apport);
                 Strcat(info, ")");
             }
@@ -310,9 +310,9 @@ ustatusline (void)
             const char *what = body_part(LEG);
             if ((Wounded_legs & BOTH_SIDES) == BOTH_SIDES)
                 what = makeplural(what);
-                                Sprintf(eos(info), ", injured %s", what);
+                                sprintf(eos(info), ", injured %s", what);
         }
-        if (Glib)               Sprintf(eos(info), ", slippery %s",
+        if (Glib)               sprintf(eos(info), ", slippery %s",
                                         makeplural(body_part(HAND)));
         if (u.utrap)            Strcat(info, ", trapped");
         if (Fast)               Strcat(info, Very_fast ?

@@ -356,7 +356,7 @@ static int do_improvisation (struct obj *instr) {
                 } else if (!u.dx && !u.dy && !u.dz) {
                     if ((damage = zapyourself(instr, true)) != 0) {
                         char buf[BUFSZ];
-                        Sprintf(buf, "using a magical horn on %sself", uhim());
+                        sprintf(buf, "using a magical horn on %sself", uhim());
                         losehp(damage, buf, KILLED_BY);
                     }
                 } else {

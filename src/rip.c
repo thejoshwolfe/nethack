@@ -59,12 +59,12 @@ void genl_outrip(winid tmpwin, int how) {
     dp[x] = (char *)0;
 
     /* Put name on stone */
-    Sprintf(buf, "%s", plname);
+    sprintf(buf, "%s", plname);
     buf[STONE_LINE_LEN] = 0;
     center(NAME_LINE, buf);
 
     /* Put $ on stone */
-    Sprintf(buf, "%ld Au", u.ugold);
+    sprintf(buf, "%ld Au", u.ugold);
     buf[STONE_LINE_LEN] = 0; /* It could be a *lot* of gold :-) */
     center(GOLD_LINE, buf);
 
@@ -104,7 +104,7 @@ void genl_outrip(winid tmpwin, int how) {
     }
 
     /* Put year on stone */
-    Sprintf(buf, "%4d", getyear());
+    sprintf(buf, "%4d", getyear());
     center(YEAR_LINE, buf);
 
     putstr(tmpwin, 0, "");

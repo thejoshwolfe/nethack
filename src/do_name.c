@@ -18,7 +18,7 @@ static void getpos_help(bool force, const char *goal) {
     bool doing_what_is;
     winid tmpwin = create_nhwindow(NHW_MENU);
 
-    Sprintf(sbuf, "Use [%s] to move the cursor to %s.",
+    sprintf(sbuf, "Use [%s] to move the cursor to %s.",
             iflags.num_pad ? "2468" : "hjkl", goal);
     putstr(tmpwin, 0, sbuf);
     putstr(tmpwin, 0, "Use [HJKL] to move the cursor 8 units at a time.");
@@ -26,7 +26,7 @@ static void getpos_help(bool force, const char *goal) {
     /* disgusting hack; the alternate selection characters work for any
        getpos call, but they only matter for dowhatis (and doquickwhatis) */
     doing_what_is = (goal == what_is_an_unknown_object);
-    Sprintf(sbuf, "Type a .%s when you are at the right place.",
+    sprintf(sbuf, "Type a .%s when you are at the right place.",
             doing_what_is ? " or , or ; or :" : "");
     putstr(tmpwin, 0, sbuf);
     if (!force)
@@ -243,7 +243,7 @@ do_mname (void)
         }
         /* special case similar to the one in lookat() */
         (void) distant_monnam(mtmp, ARTICLE_THE, buf);
-        Sprintf(qbuf, "What do you want to call %s?", buf);
+        sprintf(qbuf, "What do you want to call %s?", buf);
         getlin(qbuf,buf);
         if(!*buf || *buf == '\033') return(0);
         /* strip leading and trailing spaces; unnames monster if all spaces */
@@ -268,7 +268,7 @@ do_oname (struct obj *obj)
         const char *aname;
         short objtyp;
 
-        Sprintf(qbuf, "What do you want to name %s %s?",
+        sprintf(qbuf, "What do you want to name %s %s?",
                 is_plural(obj) ? "these" : "this", xname(obj));
         getlin(qbuf, buf);
         if(!*buf || *buf == '\033')     return;
@@ -463,10 +463,10 @@ docall (struct obj *obj)
         otemp.oxlth = 0;
         if (objects[otemp.otyp].oc_class == POTION_CLASS && otemp.fromsink)
             /* kludge, meaning it's sink water */
-            Sprintf(qbuf,"Call a stream of %s fluid:",
+            sprintf(qbuf,"Call a stream of %s fluid:",
                     OBJ_DESCR(objects[otemp.otyp]));
         else
-            Sprintf(qbuf, "Call %s:", an(xname(&otemp)));
+            sprintf(qbuf, "Call %s:", an(xname(&otemp)));
         getlin(qbuf, buf);
         if(!*buf || *buf == '\033')
                 return;
@@ -638,10 +638,10 @@ char * x_monnam(struct monst *mtmp, int article, const char *adjective,
             char *name = NAME(mtmp);
 
             if (mdat == &mons[PM_GHOST]) {
-                Sprintf(eos(buf), "%s ghost", s_suffix(name));
+                sprintf(eos(buf), "%s ghost", s_suffix(name));
                 name_at_start = true;
             } else if (called) {
-                Sprintf(eos(buf), "%s called %s", mdat->mname, name);
+                sprintf(eos(buf), "%s called %s", mdat->mname, name);
                 name_at_start = (bool)type_is_pname(mdat);
             } else if (is_mplayer(mdat) && (bp = strstri(name, " the ")) != 0) {
                 /* <name> the <adjective> <invisible> <saddled> <rank> */
@@ -944,7 +944,7 @@ char *
 coyotename (struct monst *mtmp, char *buf)
 {
     if (mtmp && buf) {
-        Sprintf(buf, "%s - %s",
+        sprintf(buf, "%s - %s",
             x_monnam(mtmp, ARTICLE_NONE, (char *)0, 0, true),
             mtmp->mcan ? coynames[SIZE(coynames)-1] : coynames[rn2(SIZE(coynames)-1)]);
     }

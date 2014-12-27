@@ -422,12 +422,12 @@ static int domonnoise (struct monst *mtmp) {
 
                 if (mtmp->mtame) {
                     if (kindred) {
-                        Sprintf(verbuf, "Good %s to you Master%s",
+                        sprintf(verbuf, "Good %s to you Master%s",
                                 isnight ? "evening" : "day",
                                 isnight ? "!" : ".  Why do we not rest?");
                         verbl_msg = verbuf;
                     } else {
-                        Sprintf(verbuf,"%s%s",
+                        sprintf(verbuf,"%s%s",
                                 nightchild ? "Child of the night, " : "",
                                 midnight() ?
                                 "I can stand this craving no longer!" :
@@ -438,11 +438,11 @@ static int domonnoise (struct monst *mtmp) {
                     }
                 } else if (mtmp->mpeaceful) {
                     if (kindred && isnight) {
-                        Sprintf(verbuf, "Good feeding %s!",
+                        sprintf(verbuf, "Good feeding %s!",
                                 flags.female ? "sister" : "brother");
                         verbl_msg = verbuf;
                     } else if (nightchild && isnight) {
-                        Sprintf(verbuf,
+                        sprintf(verbuf,
                                 "How nice to hear you, child of the night!");
                         verbl_msg = verbuf;
                     } else
@@ -460,17 +460,17 @@ static int domonnoise (struct monst *mtmp) {
                     else if (youmonst.data == &mons[PM_SILVER_DRAGON] ||
                             youmonst.data == &mons[PM_BABY_SILVER_DRAGON]) {
                         /* Silver dragons are silver in color, not made of silver */
-                        Sprintf(verbuf, "%s! Your silver sheen does not frighten me!",
+                        sprintf(verbuf, "%s! Your silver sheen does not frighten me!",
                                 youmonst.data == &mons[PM_SILVER_DRAGON] ?
                                 "Fool" : "Young Fool");
                         verbl_msg = verbuf;
                     } else {
                         vampindex = rn2(SIZE(vampmsg));
                         if (vampindex == 0) {
-                            Sprintf(verbuf, vampmsg[vampindex], body_part(BLOOD));
+                            sprintf(verbuf, vampmsg[vampindex], body_part(BLOOD));
                             verbl_msg = verbuf;
                         } else if (vampindex == 1) {
-                            Sprintf(verbuf, vampmsg[vampindex],
+                            sprintf(verbuf, vampmsg[vampindex],
                                     Upolyd ? an(mons[u.umonnum].mname) : an(racenoun));
                             verbl_msg = verbuf;
                         } else

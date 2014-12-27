@@ -155,7 +155,7 @@ ask_again:
                 oclasses[oclassct = 0] = '\0';
                 *one_at_a_time = *everything = false;
                 not_everything = false;
-                Sprintf(qbuf,"What kinds of thing do you want to %s? [%s]",
+                sprintf(qbuf,"What kinds of thing do you want to %s? [%s]",
                         action, ilets);
                 getlin(qbuf,inbuf);
                 if (*inbuf == '\033') return false;
@@ -401,7 +401,7 @@ pickup (
             /* use menus exclusively */
             if (count) {        /* looking for N of something */
                 char buf[QBUFSZ];
-                Sprintf(buf, "Pick %d of what?", count);
+                sprintf(buf, "Pick %d of what?", count);
                 val_for_n_or_more = count;      /* set up callback selector */
                 n = query_objlist(buf, objchain,
                             traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT,
@@ -482,7 +482,7 @@ menu_pickup:
 
                 if (!all_of_a_type) {
                     char qbuf[BUFSZ];
-                    Sprintf(qbuf, "Pick up %s?",
+                    sprintf(qbuf, "Pick up %s?",
                         safe_qbuf("", sizeof("Pick up ?"), doname(obj),
                                         an(simple_typename(obj->otyp)), "something"));
                     switch ((obj->quan < 2L) ? ynaq(qbuf) : ynNaq(qbuf)) {
@@ -1020,7 +1020,7 @@ carry_count (
         /* some message will be given */
         Strcpy(obj_nambuf, doname(obj));
         if (container) {
-            Sprintf(where, "in %s", the(xname(container)));
+            sprintf(where, "in %s", the(xname(container)));
             verb = "carry";
         } else {
             Strcpy(where, "lying here");
@@ -1103,7 +1103,7 @@ lift_object (
                         (next_encumbr > HVY_ENCUMBER) ? overloadmsg :
                         (next_encumbr > MOD_ENCUMBER) ? nearloadmsg :
                         moderateloadmsg);
-                Sprintf(eos(qbuf), " %s. Continue?",
+                sprintf(eos(qbuf), " %s. Continue?",
                         safe_qbuf(qbuf, sizeof(" . Continue?"),
                                 doname(obj), an(simple_typename(obj->otyp)), "something"));
                 obj->quan = savequan;
@@ -1436,7 +1436,7 @@ lootcont:
             nobj = cobj->nexthere;
 
             if (Is_container(cobj)) {
-                Sprintf(qbuf, "There is %s here, loot it?",
+                sprintf(qbuf, "There is %s here, loot it?",
                         safe_qbuf("", sizeof("There is  here, loot it?"),
                              doname(cobj), an(simple_typename(cobj->otyp)),
                              "a container"));
@@ -1566,7 +1566,7 @@ loot_mon (struct monst *mtmp, int *passed_info, bool *prev_loot)
     if (mtmp && mtmp != u.usteed && (otmp = which_armor(mtmp, W_SADDLE))) {
         long unwornmask;
         if (passed_info) *passed_info = 1;
-        Sprintf(qbuf, "Do you want to remove the saddle from %s?",
+        sprintf(qbuf, "Do you want to remove the saddle from %s?",
                 x_monnam(mtmp, ARTICLE_THE, (char *)0, SUPPRESS_SADDLE, false));
         if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
                 if (nolimbs(youmonst.data)) {
@@ -1988,12 +1988,12 @@ use_container (struct obj *obj, int held)
         obj->owt = weight(obj); /* in case any items were lost */
 
         if (!cnt)
-            Sprintf(emptymsg, "%s is %sempty.", Yname2(obj),
+            sprintf(emptymsg, "%s is %sempty.", Yname2(obj),
                     quantum_cat ? "now " : "");
 
         if (cnt || flags.menu_style == MENU_FULL) {
             Strcpy(qbuf, "Do you want to take something out of ");
-            Sprintf(eos(qbuf), "%s?",
+            sprintf(eos(qbuf), "%s?",
                     safe_qbuf(qbuf, 1, yname(obj), ysimple_name(obj), "it"));
             if (flags.menu_style != MENU_TRADITIONAL) {
                 if (flags.menu_style == MENU_FULL) {
@@ -2007,7 +2007,7 @@ use_container (struct obj *obj, int held)
                         return used;
                     }
                     menuprompt[0] = '\0';
-                    if (!cnt) Sprintf(menuprompt, "%s ", emptymsg);
+                    if (!cnt) sprintf(menuprompt, "%s ", emptymsg);
                     Strcat(menuprompt, "Do what?");
                     t = in_or_out_menu(menuprompt, current_container, outokay, inokay);
                     if (t <= 0) return 0;
@@ -2069,7 +2069,7 @@ ask_again2:
             return used;
         }
         if (flags.menu_style != MENU_FULL) {
-            Sprintf(qbuf, "Do you wish to put %s in?", something);
+            sprintf(qbuf, "Do you wish to put %s in?", something);
             Strcpy(pbuf, ynqchars);
             if (flags.menu_style == MENU_TRADITIONAL && invent && inv_cnt() > 0)
                 Strcat(pbuf, "m");
@@ -2154,7 +2154,7 @@ menu_loot (int retry, struct obj *container, bool put_in)
         all_categories = (retry == -2);
     } else if (flags.menu_style == MENU_FULL) {
         all_categories = false;
-        Sprintf(buf,"%s what type of objects?", put_in ? putin : takeout);
+        sprintf(buf,"%s what type of objects?", put_in ? putin : takeout);
         mflags = put_in ? ALL_TYPES | BUC_ALLBKNOWN | BUC_UNKNOWN :
                           ALL_TYPES | CHOOSE_ALL | BUC_ALLBKNOWN | BUC_UNKNOWN;
         n = query_category(buf, put_in ? invent : container->cobj,
@@ -2180,7 +2180,7 @@ menu_loot (int retry, struct obj *container, bool put_in)
     } else {
         mflags = INVORDER_SORT;
         if (put_in && flags.invlet_constant) mflags |= USE_INVLET;
-        Sprintf(buf,"%s what?", put_in ? putin : takeout);
+        sprintf(buf,"%s what?", put_in ? putin : takeout);
         n = query_objlist(buf, put_in ? invent : container->cobj,
                           mflags, &pick_list, PICK_ANY,
                           all_categories ? allow_all : allow_category);
@@ -2223,14 +2223,14 @@ in_or_out_menu (const char *prompt, struct obj *obj, bool outokay, bool inokay)
     start_menu(win);
     if (outokay) {
         any.a_int = 1;
-        Sprintf(buf,"Take %s out of %s", something, the(xname(obj)));
+        sprintf(buf,"Take %s out of %s", something, the(xname(obj)));
         add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE,
                         buf, MENU_UNSELECTED);
     }
     menuselector++;
     if (inokay) {
         any.a_int = 2;
-        Sprintf(buf,"Put %s into %s", something, the(xname(obj)));
+        sprintf(buf,"Put %s into %s", something, the(xname(obj)));
         add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE, buf, MENU_UNSELECTED);
     }
     menuselector++;

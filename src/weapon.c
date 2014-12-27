@@ -604,7 +604,7 @@ mon_wield_item (struct monst *mon)
                         const char *mon_hand = mbodypart(mon, HAND);
 
                         if (bimanual(mw_tmp)) mon_hand = makeplural(mon_hand);
-                        Sprintf(welded_buf, "%s welded to %s %s",
+                        sprintf(welded_buf, "%s welded to %s %s",
                                 otense(mw_tmp, "are"),
                                 mhis(mon), mon_hand);
 
@@ -862,7 +862,7 @@ int enhance_skill(bool want_dump)
             if (eventually_advance > 0 || maxxed_cnt > 0) {
                 any.a_void = 0;
                 if (eventually_advance > 0) {
-                    Sprintf(buf,
+                    sprintf(buf,
                             "(Skill%s flagged by \"*\" may be enhanced %s.)",
                             plur(eventually_advance),
                             (u.ulevel < MAXULEV) ?
@@ -872,7 +872,7 @@ int enhance_skill(bool want_dump)
                              buf, MENU_UNSELECTED);
                 }
                 if (maxxed_cnt > 0) {
-                    Sprintf(buf,
+                    sprintf(buf,
                   "(Skill%s flagged by \"#\" cannot be enhanced any further.)",
                             plur(maxxed_cnt));
                     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
@@ -903,7 +903,7 @@ int enhance_skill(bool want_dump)
                 }
                 if (want_dump) {
                     if (P_SKILL(i) > P_UNSKILLED) {
-                        Sprintf(buf2,"%-*s [%s]",
+                        sprintf(buf2,"%-*s [%s]",
                             longest, P_NAME(i),skill_level_name(i, buf));
                         dump("    ",buf2);
                         logged=true;
@@ -932,22 +932,22 @@ int enhance_skill(bool want_dump)
                 (void) skill_level_name(i, sklnambuf);
                 if (wizard) {
                     if (!iflags.menu_tab_sep)
-                        Sprintf(buf, " %s%-*s %-12s %5d(%4d)",
+                        sprintf(buf, " %s%-*s %-12s %5d(%4d)",
                             prefix, longest, P_NAME(i), sklnambuf,
                             P_ADVANCE(i),
                             practice_needed_to_advance(P_SKILL(i)));
                     else
-                        Sprintf(buf, " %s%s\t%s\t%5d(%4d)",
+                        sprintf(buf, " %s%s\t%s\t%5d(%4d)",
                             prefix, P_NAME(i), sklnambuf,
                             P_ADVANCE(i),
                             practice_needed_to_advance(P_SKILL(i)));
                  } else
                 {
                     if (!iflags.menu_tab_sep)
-                        Sprintf(buf, " %s %-*s [%s]",
+                        sprintf(buf, " %s %-*s [%s]",
                             prefix, longest, P_NAME(i), sklnambuf);
                     else
-                        Sprintf(buf, " %s%s\t[%s]",
+                        sprintf(buf, " %s%s\t[%s]",
                             prefix, P_NAME(i), sklnambuf);
                 }
                 any.a_int = can_advance(i, speedy) ? i+1 : 0;
@@ -959,7 +959,7 @@ int enhance_skill(bool want_dump)
             Strcpy(buf, (to_advance > 0) ? "Pick a skill to advance:" :
                                            "Current skills:");
             if (wizard && !speedy)
-                Sprintf(eos(buf), "  (%d slot%s available)",
+                sprintf(eos(buf), "  (%d slot%s available)",
                         u.weapon_slots, plur(u.weapon_slots));
             if (want_dump) {
                 dump("","");

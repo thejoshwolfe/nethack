@@ -185,7 +185,7 @@ int gold_detect (struct obj *sobj) {
         if (sobj) {
             char buf[BUFSZ];
             if (youmonst.data == &mons[PM_GOLD_GOLEM]) {
-                Sprintf(buf, "You feel like a million %s!",
+                sprintf(buf, "You feel like a million %s!",
                         currency(2L));
             } else if (hidden_gold() ||
                     u.ugold)
@@ -294,7 +294,7 @@ int food_detect (struct obj *sobj) {
             }
         } else if (sobj) {
             char buf[BUFSZ];
-            Sprintf(buf, "Your %s twitches%s.", body_part(NOSE),
+            sprintf(buf, "Your %s twitches%s.", body_part(NOSE),
                     (sobj->blessed && !u.uedibility) ? " then starts to tingle" : "");
             if (sobj->blessed && !u.uedibility) {
                 bool savebeginner = flags.beginner;  /* prevent non-delivery of */
@@ -657,7 +657,7 @@ int trap_detect (struct obj *sobj) {
     }
     if (!found) {
         char buf[42];
-        Sprintf(buf, "Your %s stop itching.", makeplural(body_part(TOE)));
+        sprintf(buf, "Your %s stop itching.", makeplural(body_part(TOE)));
         strange_feeling(sobj,buf);
         return(1);
     }

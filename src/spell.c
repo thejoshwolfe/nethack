@@ -336,7 +336,7 @@ learn (void)
             return(0);
         }
 
-        Sprintf(splname, objects[booktype].oc_name_known ?
+        sprintf(splname, objects[booktype].oc_name_known ?
                         "\"%s\"" : "the \"%s\" spell",
                 OBJ_NAME(objects[booktype]));
         for (i = 0; i < MAXSPELL; i++)  {
@@ -440,7 +440,7 @@ study_book (struct obj *spellbook)
                         if (Role_if(PM_WIZARD) && read_ability < 20 &&
                             !confused) {
                             char qbuf[QBUFSZ];
-                            Sprintf(qbuf,
+                            sprintf(qbuf,
                       "This spellbook is %sdifficult to comprehend. Continue?",
                                     (read_ability < 12 ? "very " : ""));
                             if (yn(qbuf) != 'y') {
@@ -544,12 +544,12 @@ getspell (int *spell_no)
                 continue;
 
             if (nspells == 1)  Strcpy(lets, "a");
-            else if (nspells < 27)  Sprintf(lets, "a-%c", 'a' + nspells - 1);
-            else if (nspells == 27)  Sprintf(lets, "a-zA");
-            else Sprintf(lets, "a-zA-%c", 'A' + nspells - 27);
+            else if (nspells < 27)  sprintf(lets, "a-%c", 'a' + nspells - 1);
+            else if (nspells == 27)  sprintf(lets, "a-zA");
+            else sprintf(lets, "a-zA-%c", 'A' + nspells - 27);
 
             for(;;)  {
-                Sprintf(qbuf, "Cast which spell? [%s ?]", lets);
+                sprintf(qbuf, "Cast which spell? [%s ?]", lets);
                 if ((ilet = yn_function(qbuf, (char *)0, '\0')) == '?')
                     break;
 
@@ -821,7 +821,7 @@ spelleffects (int spell, bool atme)
                         if(!u.dx && !u.dy && !u.dz) {
                             if ((damage = zapyourself(pseudo, true)) != 0) {
                                 char buf[BUFSZ];
-                                Sprintf(buf, "zapped %sself with a spell", uhim());
+                                sprintf(buf, "zapped %sself with a spell", uhim());
                                 losehp(damage, buf, NO_KILLER_PREFIX);
                             }
                         } else {
@@ -871,7 +871,7 @@ spelleffects (int spell, bool atme)
                         if(!u.dx && !u.dy && !u.dz) {
                             if ((damage = zapyourself(pseudo, true)) != 0) {
                                 char buf[BUFSZ];
-                                Sprintf(buf, "zapped %sself with a spell", uhim());
+                                sprintf(buf, "zapped %sself with a spell", uhim());
                                 losehp(damage, buf, NO_KILLER_PREFIX);
                             }
                         } else weffects(pseudo);
@@ -1018,7 +1018,7 @@ int dovspell (void) {
         else {
             while (dospellmenu("Currently known spells",
                                SPELLMENU_VIEW, &splnum)) {
-                Sprintf(qbuf, "Reordering spells; swap '%c' with",
+                sprintf(qbuf, "Reordering spells; swap '%c' with",
                         spellet(splnum));
                 if (!dospellmenu(qbuf, splnum, &othnum)) break;
 
@@ -1057,12 +1057,12 @@ dospellmenu (
          * in the window-ports (say via a tab character).
          */
         if (!iflags.menu_tab_sep)
-                Sprintf(buf, "%-20s     Level  %-12s Fail", "    Name", "Category");
+                sprintf(buf, "%-20s     Level  %-12s Fail", "    Name", "Category");
         else
-                Sprintf(buf, "Name\tLevel\tCategory\tFail");
+                sprintf(buf, "Name\tLevel\tCategory\tFail");
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_BOLD, buf, MENU_UNSELECTED);
         for (i = 0; i < MAXSPELL && spellid(i) != NO_SPELL; i++) {
-                Sprintf(buf, iflags.menu_tab_sep ?
+                sprintf(buf, iflags.menu_tab_sep ?
                         "%s\t%-d%s\t%s\t%-d%%" : "%-20s  %2d%s   %-12s %3d%%",
                         spellname(i), spellev(i),
                         spellknow(i) ? " " : "*",
@@ -1114,10 +1114,10 @@ dump_spells (void)
         }
         dump("", "Spells known in the end");
 
-        Sprintf(buf, "%-20s   Level    %-12s Fail", "    Name", "Category");
+        sprintf(buf, "%-20s   Level    %-12s Fail", "    Name", "Category");
         dump("  ",buf);
         for (i = 0; i < MAXSPELL && spellid(i) != NO_SPELL; i++) {
-                Sprintf(buf, "%c - %-20s  %2d%s   %-12s %3d%%",
+                sprintf(buf, "%c - %-20s  %2d%s   %-12s %3d%%",
                         spellet(i), spellname(i), spellev(i),
                         spellknow(i) ? " " : "*",
                         spelltypemnemonic(spell_skilltype(spellid(i))),

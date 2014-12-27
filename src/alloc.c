@@ -19,6 +19,6 @@ long * alloc(unsigned int lth) {
 
 /* format a pointer for display purposes; caller supplies the result buffer */
 char * fmt_ptr (const void *ptr, char *buf) {
-    Sprintf(buf, "%06lx", (unsigned long)ptr);
+    sprintf(buf, "%06lx", (unsigned long)ptr);
     return buf;
 }

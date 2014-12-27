@@ -114,9 +114,9 @@ obj_typename (int otyp)
                 else
                         Strcpy(buf,"amulet");
                 if(un)
-                        Sprintf(eos(buf)," called %s",un);
+                        sprintf(eos(buf)," called %s",un);
                 if(dn)
-                        Sprintf(eos(buf)," (%s)",dn);
+                        sprintf(eos(buf)," (%s)",dn);
                 return(buf);
         default:
                 if(nn) {
@@ -124,16 +124,16 @@ obj_typename (int otyp)
                         if (GemStone(otyp))
                                 Strcat(buf, " stone");
                         if(un)
-                                Sprintf(eos(buf), " called %s", un);
+                                sprintf(eos(buf), " called %s", un);
                         if(dn)
-                                Sprintf(eos(buf), " (%s)", dn);
+                                sprintf(eos(buf), " (%s)", dn);
                 } else {
                         Strcpy(buf, dn ? dn : actualn);
                         if(ocl->oc_class == GEM_CLASS)
                                 Strcat(buf, (ocl->oc_material == MINERAL) ?
                                                 " stone" : " gem");
                         if(un)
-                                Sprintf(eos(buf), " called %s", un);
+                                sprintf(eos(buf), " called %s", un);
                 }
                 return(buf);
         }
@@ -142,12 +142,12 @@ obj_typename (int otyp)
             if (ocl->oc_unique)
                 Strcpy(buf, actualn); /* avoid spellbook of Book of the Dead */
             else
-                Sprintf(eos(buf), " of %s", actualn);
+                sprintf(eos(buf), " of %s", actualn);
         }
         if(un)
-                Sprintf(eos(buf), " called %s", un);
+                sprintf(eos(buf), " called %s", un);
         if(dn)
-                Sprintf(eos(buf), " (%s)", dn);
+                sprintf(eos(buf), " (%s)", dn);
         return(buf);
 }
 
@@ -209,7 +209,7 @@ fruitname (
     else
         fruit_nam = pl_fruit;   /* use it as is */
 
-    Sprintf(buf, "%s%s", makesingular(fruit_nam), juice ? " juice" : "");
+    sprintf(buf, "%s%s", makesingular(fruit_nam), juice ? " juice" : "");
     return buf;
 }
 
@@ -257,9 +257,9 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 else if (nn)
                         Strcpy(buf, actualn);
                 else if (un)
-                        Sprintf(buf,"amulet called %s", un);
+                        sprintf(buf,"amulet called %s", un);
                 else
-                        Sprintf(buf,"%s amulet", dn);
+                        sprintf(buf,"%s amulet", dn);
                 break;
             case WEAPON_CLASS:
                 if (is_poisonable(obj) && obj->opoisoned)
@@ -282,14 +282,14 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 /* If we use an() here we'd have to remember never to use */
                 /* it whenever calling doname() or xname(). */
                 if (typ == FIGURINE)
-                    Sprintf(eos(buf), " of a%s %s",
+                    sprintf(eos(buf), " of a%s %s",
                         index(vowels,*(mons[obj->corpsenm].mname)) ? "n" : "",
                         mons[obj->corpsenm].mname);
                 break;
             case ARMOR_CLASS:
                 /* depends on order of the dragon scales objects */
                 if (typ >= GRAY_DRAGON_SCALES && typ <= YELLOW_DRAGON_SCALES) {
-                        Sprintf(buf, "set of %s", actualn);
+                        sprintf(buf, "set of %s", actualn);
                         break;
                 }
                 if(is_boots(obj) || is_gloves(obj)) Strcpy(buf,"pair of ");
@@ -343,9 +343,9 @@ xname2 (struct obj *obj, bool ignore_oquan)
                     else if (obj->corpsenm == NON_PM)
                         Strcpy(buf, "empty tin");
                     else if (vegetarian(&mons[obj->corpsenm]))
-                        Sprintf(eos(buf), " of %s", mons[obj->corpsenm].mname);
+                        sprintf(eos(buf), " of %s", mons[obj->corpsenm].mname);
                     else
-                        Sprintf(eos(buf), " of %s meat", mons[obj->corpsenm].mname);
+                        sprintf(eos(buf), " of %s meat", mons[obj->corpsenm].mname);
                 }
                 break;
             case COIN_CLASS:
@@ -354,7 +354,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 break;
             case ROCK_CLASS:
                 if (typ == STATUE)
-                    Sprintf(buf, "%s%s of %s%s",
+                    sprintf(buf, "%s%s of %s%s",
                         (Role_if(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC)) ? "historic " : "" ,
                         actualn,
                         type_is_pname(&mons[obj->corpsenm]) ? "" :
@@ -365,7 +365,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 else Strcpy(buf, actualn);
                 break;
             case BALL_CLASS:
-                Sprintf(buf, "%sheavy iron ball",
+                sprintf(buf, "%sheavy iron ball",
                         (obj->owt > ocl->oc_weight) ? "very " : "");
                 break;
             case POTION_CLASS:
@@ -411,11 +411,11 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 if(!obj->dknown)
                         Strcpy(buf, "wand");
                 else if(nn)
-                        Sprintf(buf, "wand of %s", actualn);
+                        sprintf(buf, "wand of %s", actualn);
                 else if(un)
-                        Sprintf(buf, "wand called %s", un);
+                        sprintf(buf, "wand called %s", un);
                 else
-                        Sprintf(buf, "%s wand", dn);
+                        sprintf(buf, "%s wand", dn);
                 break;
         case SPBOOK_CLASS:
                 if (!obj->dknown) {
@@ -425,19 +425,19 @@ xname2 (struct obj *obj, bool ignore_oquan)
                             Strcpy(buf, "spellbook of ");
                         Strcat(buf, actualn);
                 } else if (un) {
-                        Sprintf(buf, "spellbook called %s", un);
+                        sprintf(buf, "spellbook called %s", un);
                 } else
-                        Sprintf(buf, "%s spellbook", dn);
+                        sprintf(buf, "%s spellbook", dn);
                 break;
         case RING_CLASS:
                 if(!obj->dknown)
                         Strcpy(buf, "ring");
                 else if(nn)
-                        Sprintf(buf, "ring of %s", actualn);
+                        sprintf(buf, "ring of %s", actualn);
                 else if(un)
-                        Sprintf(buf, "ring called %s", un);
+                        sprintf(buf, "ring called %s", un);
                 else
-                        Sprintf(buf, "%s ring", dn);
+                        sprintf(buf, "%s ring", dn);
                 break;
         case GEM_CLASS:
             {
@@ -446,8 +446,8 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 if (!obj->dknown) {
                     Strcpy(buf, rock);
                 } else if (!nn) {
-                    if (un) Sprintf(buf,"%s called %s", rock, un);
-                    else Sprintf(buf, "%s %s", dn, rock);
+                    if (un) sprintf(buf,"%s called %s", rock, un);
+                    else sprintf(buf, "%s %s", dn, rock);
                 } else {
                     Strcpy(buf, actualn);
                     if (GemStone(typ)) Strcat(buf, " stone");
@@ -455,7 +455,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 break;
             }
         default:
-                Sprintf(buf,"glorkum %d %d %d", obj->oclass, typ, obj->spe);
+                sprintf(buf,"glorkum %d %d %d", obj->oclass, typ, obj->spe);
         }
         if (!ignore_oquan)
         if (obj->quan != 1L) Strcpy(buf, makeplural(buf));
@@ -482,7 +482,7 @@ mshot_xname (struct obj *obj)
         Strcpy(tmpbuf, onm);
         /* "the Nth arrow"; value will eventually be passed to an() or
            The(), both of which correctly handle this "the " prefix */
-        Sprintf(onm, "the %d%s %s", m_shot.i, ordin(m_shot.i), tmpbuf);
+        sprintf(onm, "the %d%s %s", m_shot.i, ordin(m_shot.i), tmpbuf);
     }
 
     return onm;
@@ -559,7 +559,7 @@ doname (struct obj *obj)
         }
 
         if(obj->quan != 1L)
-                Sprintf(prefix, "%ld ", obj->quan);
+                sprintf(prefix, "%ld ", obj->quan);
         else if (obj_is_pname(obj) || the_unique_obj(obj)) {
                 if (!strncmpi(bp, "the ", 4))
                     bp += 4;
@@ -641,8 +641,8 @@ plus:
                         if (!obj->spe)
                             Strcpy(tmpbuf, "no");
                         else
-                            Sprintf(tmpbuf, "%d", obj->spe);
-                        Sprintf(eos(bp), " (%s candle%s%s)",
+                            sprintf(tmpbuf, "%d", obj->spe);
+                        sprintf(eos(bp), " (%s candle%s%s)",
                                 tmpbuf, plur(obj->spe),
                                 !obj->lamplit ? " attached" : ", lit");
                         break;
@@ -662,7 +662,7 @@ plus:
                 add_erosion_words(obj, prefix);
 charges:
                 if(obj->known)
-                    Sprintf(eos(bp), " (%d:%d)", (int)obj->recharged, obj->spe);
+                    sprintf(eos(bp), " (%d:%d)", (int)obj->recharged, obj->spe);
                 break;
         case POTION_CLASS:
                 if (obj->otyp == POT_OIL && obj->lamplit)
@@ -687,7 +687,7 @@ ring:
                     Strcat(prefix, "partly eaten ");
                 if (obj->otyp == CORPSE) {
                     if (mons[obj->corpsenm].geno & G_UNIQ) {
-                        Sprintf(prefix, "%s%s ",
+                        sprintf(prefix, "%s%s ",
                                 (type_is_pname(&mons[obj->corpsenm]) ?
                                         "" : "the "),
                                 s_suffix(mons[obj->corpsenm].mname));
@@ -723,12 +723,12 @@ ring:
                         const char *hand_s = body_part(HAND);
 
                         if (bimanual(obj)) hand_s = makeplural(hand_s);
-                        Sprintf(eos(bp), " (weapon in %s)", hand_s);
+                        sprintf(eos(bp), " (weapon in %s)", hand_s);
                 }
         }
         if(obj->owornmask & W_SWAPWEP) {
                 if (u.twoweap)
-                        Sprintf(eos(bp), " (wielded in other %s)",
+                        sprintf(eos(bp), " (wielded in other %s)",
                                 body_part(HAND));
                 else
                         Strcat(bp, " (alternate weapon; not wielded)");
@@ -744,7 +744,7 @@ ring:
                     costly_spot(ox, oy) &&
                     (shkp = shop_keeper(*in_rooms(ox, oy, SHOPBASE))))
                         quotedprice += contained_cost(obj, shkp, 0L, false, true);
-                Sprintf(eos(bp), " (unpaid, %ld %s)",
+                sprintf(eos(bp), " (unpaid, %ld %s)",
                         quotedprice, currency(quotedprice));
         }
         if (!strncmp(prefix, "a ", 2) &&
@@ -797,7 +797,7 @@ corpse_xname (
 {
         char *nambuf = nextobuf();
 
-        Sprintf(nambuf, "%s corpse", mons[otmp->corpsenm].mname);
+        sprintf(nambuf, "%s corpse", mons[otmp->corpsenm].mname);
 
         if (ignore_oquan || otmp->quan < 2)
             return nambuf;
@@ -981,7 +981,7 @@ aobjnam (struct obj *otmp, const char *verb)
         char prefix[PREFIX];
 
         if(otmp->quan != 1L) {
-                Sprintf(prefix, "%ld ", otmp->quan);
+                sprintf(prefix, "%ld ", otmp->quan);
                 bp = strprepend(bp, prefix);
         }
 

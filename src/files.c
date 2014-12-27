@@ -179,10 +179,10 @@ validate_prefix_locations (char *reasonbuf)
                 Strcat(reasonbuf, fqn_prefix_names[prefcnt]);
             }
             /* the paniclog entry gets the value of errno as well */
-            Sprintf(panicbuf1,"Invalid %s", fqn_prefix_names[prefcnt]);
+            sprintf(panicbuf1,"Invalid %s", fqn_prefix_names[prefcnt]);
             if (!(details = strerror(errno)))
                 details = "";
-            Sprintf(panicbuf2,"\"%s\", (%d) %s",
+            sprintf(panicbuf2,"\"%s\", (%d) %s",
                     fqn_prefix[prefcnt], errno, details);
             paniclog(panicbuf1, panicbuf2);
             failcount++;
@@ -217,7 +217,7 @@ void set_levelfile_name(char *file, int lev) {
 
     tf = rindex(file, '.');
     if (!tf) tf = eos(file);
-    Sprintf(tf, ".%d", lev);
+    sprintf(tf, ".%d", lev);
     return;
 }
 
@@ -234,7 +234,7 @@ int create_levelfile(int lev, char errbuf[]) {
     if (fd >= 0)
         level_info[lev].flags |= LFILE_EXISTS;
     else if (errbuf)        /* failure explanation */
-        Sprintf(errbuf,
+        sprintf(errbuf,
                 "Cannot create file \"%s\" for level %d (errno %d).",
                 lock, lev, errno);
 
@@ -255,7 +255,7 @@ int open_levelfile(int lev, char errbuf[]) {
        settle for `lock' instead of `fq_lock' because the latter
        might end up being too big for nethack's BUFSZ */
     if (fd < 0 && errbuf)
-        Sprintf(errbuf,
+        sprintf(errbuf,
                 "Cannot open file \"%s\" for level %d (errno %d).",
                 lock, lev, errno);
 
@@ -300,13 +300,13 @@ set_bonesfile_name (char *file, d_level *lev)
     s_level *sptr;
     char *dptr;
 
-    Sprintf(file, "bon%c%s", dungeons[lev->dnum].boneid,
+    sprintf(file, "bon%c%s", dungeons[lev->dnum].boneid,
             In_quest(lev) ? urole.filecode : "0");
     dptr = eos(file);
     if ((sptr = Is_special(lev)) != 0)
-        Sprintf(dptr, ".%c", sptr->boneid);
+        sprintf(dptr, ".%c", sptr->boneid);
     else
-        Sprintf(dptr, ".%d", lev->dlevel);
+        sprintf(dptr, ".%d", lev->dlevel);
     return(dptr-2);
 }
 
@@ -323,7 +323,7 @@ set_bonestemp_name (void)
 
     tf = rindex(lock, '.');
     if (!tf) tf = eos(lock);
-    Sprintf(tf, ".bn");
+    sprintf(tf, ".bn");
     return lock;
 }
 
@@ -340,7 +340,7 @@ create_bonesfile (d_level *lev, char **bonesid, char errbuf[])
 
     fd = creat(file, 0660);
     if (fd < 0 && errbuf) /* failure explanation */
-        Sprintf(errbuf,
+        sprintf(errbuf,
                 "Cannot create bones \"%s\", id %s (errno %d).",
                 lock, *bonesid, errno);
 
@@ -392,7 +392,7 @@ delete_bonesfile (d_level *lev)
 /* set savefile name in OS-dependent manner from pre-existing plname,
  * avoiding troublesome characters */
 void set_savefile_name(void) {
-    Sprintf(SAVEF, "run/save/%d%s", (int)getuid(), plname);
+    sprintf(SAVEF, "run/save/%d%s", (int)getuid(), plname);
     regularize(SAVEF+5);    /* avoid . or / in name */
 }
 
@@ -609,7 +609,7 @@ static FILE * fopen_config_file(const char *filename) {
     if (!envp)
         Strcpy(tmp_config, configfile);
     else
-        Sprintf(tmp_config, "%s/%s", envp, configfile);
+        sprintf(tmp_config, "%s/%s", envp, configfile);
     if ((fp = fopen(tmp_config, "r")) != (FILE *)0)
         return(fp);
     if (errno != ENOENT) {
@@ -898,7 +898,7 @@ fopen_wizkit_file (void)
 
     envp = nh_getenv("HOME");
     if (envp)
-        Sprintf(tmp_wizkit, "%s/%s", envp, wizkit);
+        sprintf(tmp_wizkit, "%s/%s", envp, wizkit);
     else    Strcpy(tmp_wizkit, wizkit);
     if ((fp = fopen(tmp_wizkit, "r")) != (FILE *)0)
         return(fp);
