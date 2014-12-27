@@ -53,62 +53,66 @@ static bool zap_oseen;
  * to use them is determined by the order of the code logic, not the
  * numerical order in which they are defined.
  */
-#define MUSE_SCR_TELEPORTATION 1
-#define MUSE_WAN_TELEPORTATION_SELF 2
-#define MUSE_POT_HEALING 3
-#define MUSE_POT_EXTRA_HEALING 4
-#define MUSE_WAN_DIGGING 5
-#define MUSE_TRAPDOOR 6
-#define MUSE_TELEPORT_TRAP 7
-#define MUSE_UPSTAIRS 8
-#define MUSE_DOWNSTAIRS 9
-#define MUSE_WAN_CREATE_MONSTER 10
-#define MUSE_SCR_CREATE_MONSTER 11
-#define MUSE_UP_LADDER 12
-#define MUSE_DN_LADDER 13
-#define MUSE_SSTAIRS 14
-#define MUSE_WAN_TELEPORTATION 15
-#define MUSE_BUGLE 16
-#define MUSE_UNICORN_HORN 17
-#define MUSE_POT_FULL_HEALING 18
-#define MUSE_LIZARD_CORPSE 19
+enum {
+    MUSE_SCR_TELEPORTATION = 1,
+    MUSE_WAN_TELEPORTATION_SELF = 2,
+    MUSE_POT_HEALING = 3,
+    MUSE_POT_EXTRA_HEALING = 4,
+    MUSE_WAN_DIGGING = 5,
+    MUSE_TRAPDOOR = 6,
+    MUSE_TELEPORT_TRAP = 7,
+    MUSE_UPSTAIRS = 8,
+    MUSE_DOWNSTAIRS = 9,
+    MUSE_WAN_CREATE_MONSTER = 10,
+    MUSE_SCR_CREATE_MONSTER = 11,
+    MUSE_UP_LADDER = 12,
+    MUSE_DN_LADDER = 13,
+    MUSE_SSTAIRS = 14,
+    MUSE_WAN_TELEPORTATION = 15,
+    MUSE_BUGLE = 16,
+    MUSE_UNICORN_HORN = 17,
+    MUSE_POT_FULL_HEALING = 18,
+    MUSE_LIZARD_CORPSE = 19,
 /*
-#define MUSE_INNATE_TPT 9999
+    MUSE_INNATE_TPT 9999
  * We cannot use this.  Since monsters get unlimited teleportation, if they
  * were allowed to teleport at will you could never catch them.  Instead,
  * assume they only teleport at random times, despite the inconsistency that if
  * you polymorph into one you teleport at will.
  */
+};
 
-#define MUSE_WAN_DEATH 1
-#define MUSE_WAN_SLEEP 2
-#define MUSE_WAN_FIRE 3
-#define MUSE_WAN_COLD 4
-#define MUSE_WAN_LIGHTNING 5
-#define MUSE_WAN_MAGIC_MISSILE 6
-#define MUSE_WAN_STRIKING 7
-#define MUSE_SCR_FIRE 8
-#define MUSE_POT_PARALYSIS 9
-#define MUSE_POT_BLINDNESS 10
-#define MUSE_POT_CONFUSION 11
-#define MUSE_FROST_HORN 12
-#define MUSE_FIRE_HORN 13
-#define MUSE_POT_ACID 14
-/*#define MUSE_WAN_TELEPORTATION 15*/
-#define MUSE_POT_SLEEPING 16
-#define MUSE_SCR_EARTH 17
+enum {
+    MUSE_WAN_DEATH = 1,
+    MUSE_WAN_SLEEP = 2,
+    MUSE_WAN_FIRE = 3,
+    MUSE_WAN_COLD = 4,
+    MUSE_WAN_LIGHTNING = 5,
+    MUSE_WAN_MAGIC_MISSILE = 6,
+    MUSE_WAN_STRIKING = 7,
+    MUSE_SCR_FIRE = 8,
+    MUSE_POT_PARALYSIS = 9,
+    MUSE_POT_BLINDNESS = 10,
+    MUSE_POT_CONFUSION = 11,
+    MUSE_FROST_HORN = 12,
+    MUSE_FIRE_HORN = 13,
+    MUSE_POT_ACID = 14,
+    // USE_WAN_TELEPORTATION = 15,
+    MUSE_POT_SLEEPING = 16,
+    MUSE_SCR_EARTH = 17,
+};
 
-
-#define MUSE_POT_GAIN_LEVEL 1
-#define MUSE_WAN_MAKE_INVISIBLE 2
-#define MUSE_POT_INVISIBILITY 3
-#define MUSE_POLY_TRAP 4
-#define MUSE_WAN_POLYMORPH 5
-#define MUSE_POT_SPEED 6
-#define MUSE_WAN_SPEED_MONSTER 7
-#define MUSE_BULLWHIP 8
-#define MUSE_POT_POLYMORPH 9
-
+enum {
+    MUSE_POT_GAIN_LEVEL = 1,
+    MUSE_WAN_MAKE_INVISIBLE = 2,
+    MUSE_POT_INVISIBILITY = 3,
+    MUSE_POLY_TRAP = 4,
+    MUSE_WAN_POLYMORPH = 5,
+    MUSE_POT_SPEED = 6,
+    MUSE_WAN_SPEED_MONSTER = 7,
+    MUSE_BULLWHIP = 8,
+    MUSE_POT_POLYMORPH = 9,
+};
 
 
 /* Any preliminary checks which may result in the monster being unable to use

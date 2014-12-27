@@ -12,24 +12,28 @@ typedef struct align {        /* alignment & record */
 /* bounds for "record" -- respect initial alignments of 10 */
 #define ALIGNLIM (10L + (moves/200L))
 
-#define A_NONE (-128)    /* the value range of type */
+enum {
+    A_NONE = (-128),    /* the value range of type */
 
-#define A_CHAOTIC (-1)
-#define A_NEUTRAL 0
-#define A_LAWFUL  1
+    A_CHAOTIC = (-1),
+    A_NEUTRAL = 0,
+    A_LAWFUL  = 1,
 
-#define A_COALIGNED  1
-#define A_OPALIGNED (-1)
+    A_COALIGNED =  1,
+    A_OPALIGNED = (-1),
+};
 
-#define AM_NONE     0
-#define AM_CHAOTIC  1
-#define AM_NEUTRAL  2
-#define AM_LAWFUL   4
+enum {
+    AM_NONE    = 0,
+    AM_CHAOTIC = 1,
+    AM_NEUTRAL = 2,
+    AM_LAWFUL  = 4,
 
-#define AM_MASK     7
+    AM_MASK    = 7,
 
-#define AM_SPLEV_CO    3
-#define AM_SPLEV_NONCO 7
+    AM_SPLEV_CO    = 3,
+    AM_SPLEV_NONCO = 7,
+};
 
 #define Amask2align(x)    ((aligntyp) ((!(x)) ? A_NONE \
              : ((x) == AM_LAWFUL) ? A_LAWFUL : ((int)x) - 2))

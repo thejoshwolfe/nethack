@@ -6,26 +6,34 @@
 #include "align.h"
 
     /* wall directions */
-#define W_NORTH         1
-#define W_SOUTH         2
-#define W_EAST          4
-#define W_WEST          8
-#define W_ANY           (W_NORTH|W_SOUTH|W_EAST|W_WEST)
+enum {
+    W_NORTH       = 1,
+    W_SOUTH       = 2,
+    W_EAST        = 4,
+    W_WEST        = 8,
+    W_ANY         = (W_NORTH|W_SOUTH|W_EAST|W_WEST),
+};
 
     /* MAP limits */
-#define MAP_X_LIM       76
-#define MAP_Y_LIM       21
+enum {
+    MAP_X_LIM     = 76,
+    MAP_Y_LIM     = 21,
+};
 
     /* Per level flags */
-#define NOTELEPORT      1
-#define HARDFLOOR       2
-#define NOMMAP          4
-#define SHORTSIGHTED    8
-#define ARBOREAL        16
+enum {
+    NOTELEPORT    = 1,
+    HARDFLOOR     = 2,
+    NOMMAP        = 4,
+    SHORTSIGHTED  = 8,
+    ARBOREAL      = 16,
+};
 
     /* special level types */
-#define SP_LEV_ROOMS    1
-#define SP_LEV_MAZE     2
+enum {
+    SP_LEV_ROOMS  = 1,
+    SP_LEV_MAZE   = 2,
+};
 
 /*
  * Structures manipulated by the special levels loader & compiler

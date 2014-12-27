@@ -20,10 +20,12 @@ struct container {
         void * list;
 };
 
-#define CONS_OBJ   0
-#define CONS_MON   1
-#define CONS_HERO  2
-#define CONS_TRAP  3
+enum {
+    CONS_OBJ  = 0,
+    CONS_MON  = 1,
+    CONS_HERO = 2,
+    CONS_TRAP = 3,
+};
 
 struct bubble {
         signed char x, y;       /* coordinates of the upper left corner */

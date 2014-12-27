@@ -99,13 +99,15 @@ static void postadjabil(long *);
 #define AVAL    50              /* tune value for exercise gains */
 
 /* hunger values - from eat.c */
-#define SATIATED        0
-#define NOT_HUNGRY      1
-#define HUNGRY          2
-#define WEAK            3
-#define FAINTING        4
-#define FAINTED         5
-#define STARVED         6
+enum {
+    SATIATED       = 0,
+    NOT_HUNGRY     = 1,
+    HUNGRY         = 2,
+    WEAK           = 3,
+    FAINTING       = 4,
+    FAINTED        = 5,
+    STARVED        = 6,
+};
 
 /* adjust an attribute; return true if change is made, false otherwise */
 //       int     msgflg;     /* positive => no message, zero => message, and */

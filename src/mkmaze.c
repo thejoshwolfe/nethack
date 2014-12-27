@@ -777,11 +777,6 @@ void mkportal (signed char x, signed char y, signed char todnum, signed char tod
  * other source files, but they are all so nicely encapsulated here.
  */
 
-#define CONS_OBJ   0
-#define CONS_MON   1
-#define CONS_HERO  2
-#define CONS_TRAP  3
-
 static struct bubble *bbubbles, *ebubbles;
 
 static struct trap *wportal;
@@ -796,9 +791,7 @@ static void set_wportal(void);
 static void mk_bubble(int,int,int);
 static void mv_bubble(struct bubble *,int,int,bool);
 
-void
-movebubbles (void)
-{
+void movebubbles (void) {
         static bool up;
         struct bubble *b;
         int x, y, i, j;
@@ -920,9 +913,7 @@ movebubbles (void)
 }
 
 /* when moving in water, possibly (1 in 3) alter the intended destination */
-void
-water_friction (void)
-{
+void water_friction (void) {
         int x, y, dx, dy;
         bool eff = false;
 
@@ -953,9 +944,7 @@ water_friction (void)
         if (eff) pline("Water turbulence affects your movements.");
 }
 
-void
-save_waterlevel (int fd, int mode)
-{
+void save_waterlevel (int fd, int mode) {
         struct bubble *b;
 
         if (!Is_waterlevel(&u.uz)) return;
@@ -975,9 +964,7 @@ save_waterlevel (int fd, int mode)
             unsetup_waterlevel();
 }
 
-void
-restore_waterlevel (int fd)
-{
+void restore_waterlevel (int fd) {
         struct bubble *b = (struct bubble *)0, *btmp;
         int i;
         int n;
@@ -1008,9 +995,7 @@ restore_waterlevel (int fd)
         was_waterlevel = true;
 }
 
-const char *
-waterbody_name (signed char x, signed char y)
-{
+const char * waterbody_name (signed char x, signed char y) {
         struct rm *lev;
         signed char ltyp;
 
@@ -1036,18 +1021,14 @@ waterbody_name (signed char x, signed char y)
         else return "water";
 }
 
-static void
-set_wportal (void)
-{
+static void set_wportal (void) {
         /* there better be only one magic portal on water level... */
         for (wportal = ftrap; wportal; wportal = wportal->ntrap)
                 if (wportal->ttyp == MAGIC_PORTAL) return;
         impossible("set_wportal(): no portal!");
 }
 
-static void
-setup_waterlevel (void)
-{
+static void setup_waterlevel (void) {
         int x, y;
         int xskip, yskip;
         int water_glyph = cmap_to_glyph(S_water);
@@ -1074,9 +1055,7 @@ setup_waterlevel (void)
                         mk_bubble(x,y,rn2(7));
 }
 
-static void
-unsetup_waterlevel (void)
-{
+static void unsetup_waterlevel (void) {
         struct bubble *b, *bb;
 
         /* free bubbles */
@@ -1088,9 +1067,7 @@ unsetup_waterlevel (void)
         bbubbles = ebubbles = (struct bubble *)0;
 }
 
-static void
-mk_bubble (int x, int y, int n)
-{
+static void mk_bubble (int x, int y, int n) {
         /*
          * These bit masks make visually pleasing bubbles on a normal aspect
          * 25x80 terminal, which naturally results in them being mathematically
@@ -1144,9 +1121,7 @@ mk_bubble (int x, int y, int n)
  * in the immediate neighborhood of one, he/she may get sucked inside.
  * This property also makes leaving a bubble slightly difficult.
  */
-static void 
-mv_bubble (struct bubble *b, int dx, int dy, bool ini)
-{
+static void mv_bubble (struct bubble *b, int dx, int dy, bool ini) {
         int x, y, i, j, colli = 0;
         struct container *cons, *ctemp;
 
@@ -1271,5 +1246,3 @@ mv_bubble (struct bubble *b, int dx, int dy, bool ini)
                 }
         }
 }
-
-/*mkmaze.c*/

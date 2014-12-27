@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "mfndpos.h"
 #include "artifact.h"
@@ -14,10 +15,20 @@ static void distfleeck(struct monst *,int *,int *,int *);
 static int m_arrival(struct monst *);
 static void watch_on_duty(struct monst *);
 
+static const char practical[] = { WEAPON_CLASS, ARMOR_CLASS, GEM_CLASS, FOOD_CLASS, 0 };
+static const char magical[] = {
+        AMULET_CLASS, POTION_CLASS, SCROLL_CLASS, WAND_CLASS, RING_CLASS,
+        SPBOOK_CLASS, 0 };
+static const char indigestion[] = { BALL_CLASS, ROCK_CLASS, 0 };
+static const char boulder_class[] = { ROCK_CLASS, 0 };
+static const char gem_class[] = { GEM_CLASS, 0 };
 
-bool 
-mb_trapped (struct monst *mtmp)
-{
+enum {
+    SQSRCHRADIUS  = 5,
+};
+
+
+bool mb_trapped (struct monst *mtmp) {
         if (flags.verbose) {
             if (cansee(mtmp->mx, mtmp->my))
                 pline("KABOOM!!  You see a door explode.");
@@ -37,10 +48,7 @@ mb_trapped (struct monst *mtmp)
         return(false);
 }
 
-
-static void
-watch_on_duty (struct monst *mtmp)
-{
+static void watch_on_duty (struct monst *mtmp) {
         int     x, y;
 
         if(mtmp->mpeaceful && in_town(u.ux+u.dx, u.uy+u.dy) &&
@@ -68,10 +76,7 @@ watch_on_duty (struct monst *mtmp)
         }
 }
 
-
-int
-dochugw (struct monst *mtmp)
-{
+int dochugw (struct monst *mtmp) {
         int x = mtmp->mx, y = mtmp->my;
         bool already_saw_mon = !occupation ? 0 : canspotmon(mtmp);
         int rd = dochug(mtmp);
@@ -95,10 +100,7 @@ dochugw (struct monst *mtmp)
         return(rd);
 }
 
-
-bool 
-onscary (int x, int y, struct monst *mtmp)
-{
+bool onscary (int x, int y, struct monst *mtmp) {
         if (mtmp->isshk || mtmp->isgd || mtmp->iswiz || !mtmp->mcansee ||
             mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN ||
             is_lminion(mtmp) || mtmp->data == &mons[PM_ANGEL] ||
@@ -113,9 +115,7 @@ onscary (int x, int y, struct monst *mtmp)
 
 
 /* regenerate lost hit points */
-void 
-mon_regen (struct monst *mon, bool digest_meal)
-{
+void mon_regen (struct monst *mon, bool digest_meal) {
         if (mon->mhp < mon->mhpmax &&
             (moves % 20 == 0 || regenerates(mon->data))) mon->mhp++;
         if (mon->mspec_used) mon->mspec_used--;
@@ -128,9 +128,7 @@ mon_regen (struct monst *mon, bool digest_meal)
  * Possibly awaken the given monster.  Return a 1 if the monster has been
  * jolted awake.
  */
-static int
-disturb (struct monst *mtmp)
-{
+static int disturb (struct monst *mtmp) {
         /*
          * + Ettins are hard to surprise.
          * + Nymphs, jabberwocks, and leprechauns do not easily wake up.
@@ -163,9 +161,7 @@ disturb (struct monst *mtmp)
 /* monster begins fleeing for the specified time, 0 means untimed flee
  * if first, only adds fleetime if monster isn't already fleeing
  * if fleemsg, prints a message about new flight, otherwise, caller should */
-void 
-monflee (struct monst *mtmp, int fleetime, bool first, bool fleemsg)
-{
+void monflee (struct monst *mtmp, int fleetime, bool first, bool fleemsg) {
         if (u.ustuck == mtmp) {
             if (u.uswallow)
                 expels(mtmp, mtmp->data, true);
@@ -191,9 +187,7 @@ monflee (struct monst *mtmp, int fleetime, bool first, bool fleemsg)
         }
 }
 
-static void
-distfleeck (struct monst *mtmp, int *inrange, int *nearby, int *scared)
-{
+static void distfleeck (struct monst *mtmp, int *inrange, int *nearby, int *scared) {
         int seescaryx, seescaryy;
 
         *inrange = (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <=
@@ -229,9 +223,7 @@ distfleeck (struct monst *mtmp, int *inrange, int *nearby, int *scared)
 
 /* perform a special one-time action for a monster; returns -1 if nothing
    special happened, 0 if monster uses up its turn, 1 if monster is killed */
-static int
-m_arrival (struct monst *mon)
-{
+static int m_arrival (struct monst *mon) {
         mon->mstrategy &= ~STRAT_ARRIVE;        /* always reset */
 
         return -1;
@@ -241,9 +233,7 @@ m_arrival (struct monst *mon)
 /* The whole dochugw/m_move/distfleeck/mfndpos section is serious spaghetti
  * code. --KAA
  */
-int
-dochug (struct monst *mtmp)
-{
+int dochug (struct monst *mtmp) {
         struct permonst *mdat;
         int tmp=0;
         int inrange, nearby, scared;
@@ -501,14 +491,6 @@ toofar:
         return(tmp == 2);
 }
 
-static const char practical[] = { WEAPON_CLASS, ARMOR_CLASS, GEM_CLASS, FOOD_CLASS, 0 };
-static const char magical[] = {
-        AMULET_CLASS, POTION_CLASS, SCROLL_CLASS, WAND_CLASS, RING_CLASS,
-        SPBOOK_CLASS, 0 };
-static const char indigestion[] = { BALL_CLASS, ROCK_CLASS, 0 };
-static const char boulder_class[] = { ROCK_CLASS, 0 };
-static const char gem_class[] = { GEM_CLASS, 0 };
-
 bool 
 itsstuck (struct monst *mtmp)
 {
@@ -700,8 +682,6 @@ not_special:
                 setlikes = true;
             }
         }
-
-#define SQSRCHRADIUS    5
 
       { int minr = SQSRCHRADIUS;        /* not too far away */
         struct obj *otmp;

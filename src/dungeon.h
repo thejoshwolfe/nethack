@@ -34,13 +34,15 @@ typedef struct stairway {       /* basic stairway identifier */
 } stairway;
 
 /* level region types */
-#define LR_DOWNSTAIR 0
-#define LR_UPSTAIR 1
-#define LR_PORTAL 2
-#define LR_BRANCH 3
-#define LR_TELE 4
-#define LR_UPTELE 5
-#define LR_DOWNTELE 6
+enum {
+    LR_DOWNSTAIR = 0,
+    LR_UPSTAIR = 1,
+    LR_PORTAL = 2,
+    LR_BRANCH = 3,
+    LR_TELE = 4,
+    LR_UPTELE = 5,
+    LR_DOWNTELE = 6,
+};
 
 typedef struct dest_area {      /* non-stairway level change indentifier */
         signed char     lx, ly;         /* "lower" left corner (near [0,0]) */
@@ -77,14 +79,16 @@ typedef struct branch {
 } branch;
 
 /* branch types */
-#define BR_STAIR   0    /* "Regular" connection, 2 staircases. */
-#define BR_NO_END1 1    /* "Regular" connection.  However, no stair from  */
-                        /*      end1 to end2.  There is a stair from end2 */
-                        /*      to end1.                                  */
-#define BR_NO_END2 2    /* "Regular" connection.  However, no stair from  */
-                        /*      end2 to end1.  There is a stair from end1 */
-                        /*      to end2.                                  */
-#define BR_PORTAL  3    /* Connection by magic portals (traps) */
+enum {
+    BR_STAIR   = 0,    /* "Regular" connection, 2 staircases. */
+    BR_NO_END1 = 1,    /* "Regular" connection.  However, no stair from  */
+                       /*      end1 to end2.  There is a stair from end2 */
+                       /*      to end1.                                  */
+    BR_NO_END2 = 2,    /* "Regular" connection.  However, no stair from  */
+                       /*      end2 to end1.  There is a stair from end1 */
+                       /*      to end2.                                  */
+    BR_PORTAL  = 3,    /* Connection by magic portals (traps) */
+};
 
 
 /* A particular dungeon contains num_dunlevs d_levels with dlevel 1..
@@ -130,17 +134,19 @@ typedef struct branch {
 
 /* monster and object migration codes */
 
-#define MIGR_NOWHERE          (-1)      /* failure flag for down_gate() */
-#define MIGR_RANDOM             0
-#define MIGR_APPROX_XY          1       /* approximate coordinates */
-#define MIGR_EXACT_XY           2       /* specific coordinates */
-#define MIGR_STAIRS_UP          3
-#define MIGR_STAIRS_DOWN        4
-#define MIGR_LADDER_UP          5
-#define MIGR_LADDER_DOWN        6
-#define MIGR_SSTAIRS            7       /* dungeon branch */
-#define MIGR_PORTAL             8       /* magic portal */
-#define MIGR_NEAR_PLAYER        9       /* mon: followers; obj: trap door */
+enum {
+    MIGR_NOWHERE          =  -1,      /* failure flag for down_gate() */
+    MIGR_RANDOM           =   0,
+    MIGR_APPROX_XY        =   1,       /* approximate coordinates */
+    MIGR_EXACT_XY         =   2,       /* specific coordinates */
+    MIGR_STAIRS_UP        =   3,
+    MIGR_STAIRS_DOWN      =   4,
+    MIGR_LADDER_UP        =   5,
+    MIGR_LADDER_DOWN      =   6,
+    MIGR_SSTAIRS          =   7,       /* dungeon branch */
+    MIGR_PORTAL           =   8,       /* magic portal */
+    MIGR_NEAR_PLAYER      =   9,       /* mon: followers; obj: trap door */
+};
 
 /* level information (saved via ledger number) */
 

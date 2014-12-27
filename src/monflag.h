@@ -1,69 +1,75 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef MONFLAG_H
 #define MONFLAG_H
 
-#define MS_SILENT       0       /* makes no sound */
-#define MS_BARK         1       /* if full moon, may howl */
-#define MS_MEW          2       /* mews or hisses */
-#define MS_ROAR         3       /* roars */
-#define MS_GROWL        4       /* growls */
-#define MS_SQEEK        5       /* squeaks, as a rodent */
-#define MS_SQAWK        6       /* squawks, as a bird */
-#define MS_HISS         7       /* hisses */
-#define MS_BUZZ         8       /* buzzes (killer bee) */
-#define MS_GRUNT        9       /* grunts (or speaks own language) */
-#define MS_NEIGH        10      /* neighs, as an equine */
-#define MS_WAIL         11      /* wails, as a tortured soul */
-#define MS_GURGLE       12      /* gurgles, as liquid or through saliva */
-#define MS_BURBLE       13      /* burbles (jabberwock) */
-#define MS_ANIMAL       13      /* up to here are animal noises */
-#define MS_SHRIEK       15      /* wakes up others */
-#define MS_BONES        16      /* rattles bones (skeleton) */
-#define MS_LAUGH        17      /* grins, smiles, giggles, and laughs */
-#define MS_MUMBLE       18      /* says something or other */
-#define MS_IMITATE      19      /* imitates others (leocrotta) */
-#define MS_ORC          MS_GRUNT        /* intelligent brutes */
-#define MS_HUMANOID     20      /* generic traveling companion */
-#define MS_ARREST       21      /* "Stop in the name of the law!" (Kops) */
-#define MS_SOLDIER      22      /* army and watchmen expressions */
-#define MS_GUARD        23      /* "Please drop that gold and follow me." */
-#define MS_DJINNI       24      /* "Thank you for freeing me!" */
-#define MS_NURSE        25      /* "Take off your shirt, please." */
-#define MS_SEDUCE       26      /* "Hello, sailor." (Nymphs) */
-#define MS_VAMPIRE      27      /* vampiric seduction, Vlad's exclamations */
-#define MS_BRIBE        28      /* asks for money, or berates you */
-#define MS_CUSS         29      /* berates (demons) or intimidates (Wiz) */
-#define MS_RIDER        30      /* astral level special monsters */
-#define MS_LEADER       31      /* your class leader */
-#define MS_NEMESIS      32      /* your nemesis */
-#define MS_GUARDIAN     33      /* your leader's guards */
-#define MS_SELL         34      /* demand payment, complain about shoplifters */
-#define MS_ORACLE       35      /* do a consultation */
-#define MS_PRIEST       36      /* ask for contribution; do cleansing */
-#define MS_SPELL        37      /* spellcaster not matching any of the above */
-#define MS_WERE         38      /* lycanthrope in human form */
-#define MS_BOAST        39      /* giants */
+enum {
+    MS_SILENT     = 0,       /* makes no sound */
+    MS_BARK       = 1,       /* if full moon, may howl */
+    MS_MEW        = 2,       /* mews or hisses */
+    MS_ROAR       = 3,       /* roars */
+    MS_GROWL      = 4,       /* growls */
+    MS_SQEEK      = 5,       /* squeaks, as a rodent */
+    MS_SQAWK      = 6,       /* squawks, as a bird */
+    MS_HISS       = 7,       /* hisses */
+    MS_BUZZ       = 8,       /* buzzes (killer bee) */
+    MS_GRUNT      = 9,       /* grunts (or speaks own language) */
+    MS_NEIGH      = 10,      /* neighs, as an equine */
+    MS_WAIL       = 11,      /* wails, as a tortured soul */
+    MS_GURGLE     = 12,      /* gurgles, as liquid or through saliva */
+    MS_BURBLE     = 13,      /* burbles (jabberwock) */
+    MS_ANIMAL     = 13,      /* up to here are animal noises */
+    MS_SHRIEK     = 15,      /* wakes up others */
+    MS_BONES      = 16,      /* rattles bones (skeleton) */
+    MS_LAUGH      = 17,      /* grins, smiles, giggles, and laughs */
+    MS_MUMBLE     = 18,      /* says something or other */
+    MS_IMITATE    = 19,      /* imitates others (leocrotta) */
+    MS_ORC        = MS_GRUNT,        /* intelligent brutes */
+    MS_HUMANOID   = 20,      /* generic traveling companion */
+    MS_ARREST     = 21,      /* "Stop in the name of the law!" (Kops) */
+    MS_SOLDIER    = 22,      /* army and watchmen expressions */
+    MS_GUARD      = 23,      /* "Please drop that gold and follow me." */
+    MS_DJINNI     = 24,      /* "Thank you for freeing me!" */
+    MS_NURSE      = 25,      /* "Take off your shirt, please." */
+    MS_SEDUCE     = 26,      /* "Hello, sailor." (Nymphs) */
+    MS_VAMPIRE    = 27,      /* vampiric seduction, Vlad's exclamations */
+    MS_BRIBE      = 28,      /* asks for money, or berates you */
+    MS_CUSS       = 29,      /* berates (demons) or intimidates (Wiz) */
+    MS_RIDER      = 30,      /* astral level special monsters */
+    MS_LEADER     = 31,      /* your class leader */
+    MS_NEMESIS    = 32,      /* your nemesis */
+    MS_GUARDIAN   = 33,      /* your leader's guards */
+    MS_SELL       = 34,      /* demand payment, complain about shoplifters */
+    MS_ORACLE     = 35,      /* do a consultation */
+    MS_PRIEST     = 36,      /* ask for contribution; do cleansing */
+    MS_SPELL      = 37,      /* spellcaster not matching any of the above */
+    MS_WERE       = 38,      /* lycanthrope in human form */
+    MS_BOAST      = 39,      /* giants */
+};
 
-
-#define MR_FIRE         0x01    /* resists fire */
-#define MR_COLD         0x02    /* resists cold */
-#define MR_SLEEP        0x04    /* resists sleep */
-#define MR_DISINT       0x08    /* resists disintegration */
-#define MR_ELEC         0x10    /* resists electricity */
-#define MR_POISON       0x20    /* resists poison */
-#define MR_ACID         0x40    /* resists acid */
-#define MR_STONE        0x80    /* resists petrification */
+enum {
+    MR_FIRE       = 0x01,    /* resists fire */
+    MR_COLD       = 0x02,    /* resists cold */
+    MR_SLEEP      = 0x04,    /* resists sleep */
+    MR_DISINT     = 0x08,    /* resists disintegration */
+    MR_ELEC       = 0x10,    /* resists electricity */
+    MR_POISON     = 0x20,    /* resists poison */
+    MR_ACID       = 0x40,    /* resists acid */
+    MR_STONE      = 0x80,    /* resists petrification */
 /* other resistances: magic, sickness */
 /* other conveyances: teleport, teleport control, telepathy */
+};
 
 /* individual resistances */
-#define MR2_SEE_INVIS   0x0100  /* see invisible */
-#define MR2_LEVITATE    0x0200  /* levitation */
-#define MR2_WATERWALK   0x0400  /* water walking */
-#define MR2_MAGBREATH   0x0800  /* magical breathing */
-#define MR2_DISPLACED   0x1000  /* displaced */
-#define MR2_STRENGTH    0x2000  /* gauntlets of power */
-#define MR2_FUMBLING    0x4000  /* clumsy */
+enum {
+    MR2_SEE_INVIS = 0x0100,  /* see invisible */
+    MR2_LEVITATE  = 0x0200,  /* levitation */
+    MR2_WATERWALK = 0x0400,  /* water walking */
+    MR2_MAGBREATH = 0x0800,  /* magical breathing */
+    MR2_DISPLACED = 0x1000,  /* displaced */
+    MR2_STRENGTH  = 0x2000,  /* gauntlets of power */
+    MR2_FUMBLING  = 0x4000,  /* clumsy */
+};
 
 
 #define M1_FLY          0x00000001L     /* can fly or float */
@@ -131,58 +137,68 @@
 #define M2_COLLECT      0x40000000L     /* picks up weapons and food */
 #define M2_MAGIC        0x80000000UL    /* picks up magic items */
 
-#define M3_WANTSAMUL    0x0001          /* would like to steal the amulet */
-#define M3_WANTSBELL    0x0002          /* wants the bell */
-#define M3_WANTSBOOK    0x0004          /* wants the book */
-#define M3_WANTSCAND    0x0008          /* wants the candelabrum */
-#define M3_WANTSARTI    0x0010          /* wants the quest artifact */
-#define M3_WANTSALL     0x001f          /* wants any major artifact */
-#define M3_WAITFORU     0x0040          /* waits to see you or get attacked */
-#define M3_CLOSE        0x0080          /* lets you close unless attacked */
+enum {
+    M3_WANTSAMUL  = 0x0001,          /* would like to steal the amulet */
+    M3_WANTSBELL  = 0x0002,          /* wants the bell */
+    M3_WANTSBOOK  = 0x0004,          /* wants the book */
+    M3_WANTSCAND  = 0x0008,          /* wants the candelabrum */
+    M3_WANTSARTI  = 0x0010,          /* wants the quest artifact */
+    M3_WANTSALL   = 0x001f,          /* wants any major artifact */
+    M3_WAITFORU   = 0x0040,          /* waits to see you or get attacked */
+    M3_CLOSE      = 0x0080,          /* lets you close unless attacked */
 
-#define M3_COVETOUS     0x001f          /* wants something */
-#define M3_WAITMASK     0x00c0          /* waiting... */
+    M3_COVETOUS   = 0x001f,          /* wants something */
+    M3_WAITMASK   = 0x00c0,          /* waiting... */
 
 /* Infravision is currently implemented for players only */
-#define M3_INFRAVISION  0x0100          /* has infravision */
-#define M3_INFRAVISIBLE 0x0200          /* visible by infravision */
+    M3_INFRAVISION  = 0x0100,          /* has infravision */
+    M3_INFRAVISIBLE = 0x0200,          /* visible by infravision */
+};
 
-#define MZ_TINY         0               /* < 2' */
-#define MZ_SMALL        1               /* 2-4' */
-#define MZ_MEDIUM       2               /* 4-7' */
-#define MZ_HUMAN        MZ_MEDIUM       /* human-sized */
-#define MZ_LARGE        3               /* 7-12' */
-#define MZ_HUGE         4               /* 12-25' */
-#define MZ_GIGANTIC     7               /* off the scale */
+enum {
+    MZ_TINY       = 0,               /* < 2' */
+    MZ_SMALL      = 1,               /* 2-4' */
+    MZ_MEDIUM     = 2,               /* 4-7' */
+    MZ_HUMAN      = MZ_MEDIUM,       /* human-sized */
+    MZ_LARGE      = 3,               /* 7-12' */
+    MZ_HUGE       = 4,               /* 12-25' */
+    MZ_GIGANTIC   = 7,               /* off the scale */
+};
 
 
 /* Monster races -- must stay within ROLE_RACEMASK */
 /* Eventually this may become its own field */
-#define MH_HUMAN        M2_HUMAN
-#define MH_ELF          M2_ELF
-#define MH_DWARF        M2_DWARF
-#define MH_GNOME        M2_GNOME
-#define MH_ORC          M2_ORC
+enum {
+    MH_HUMAN      = M2_HUMAN,
+    MH_ELF        = M2_ELF,
+    MH_DWARF      = M2_DWARF,
+    MH_GNOME      = M2_GNOME,
+    MH_ORC        = M2_ORC,
+};
 
 
 /* for mons[].geno (constant during game) */
-#define G_UNIQ          0x1000          /* generated only once */
-#define G_NOHELL        0x0800          /* not generated in "hell" */
-#define G_HELL          0x0400          /* generated only in "hell" */
-#define G_NOGEN         0x0200          /* generated only specially */
-#define G_SGROUP        0x0080          /* appear in small groups normally */
-#define G_LGROUP        0x0040          /* appear in large groups normally */
-#define G_GENO          0x0020          /* can be genocided */
-#define G_NOCORPSE      0x0010          /* no corpse left ever */
-#define G_FREQ          0x0007          /* creation frequency mask */
+enum {
+    G_UNIQ        = 0x1000,          /* generated only once */
+    G_NOHELL      = 0x0800,          /* not generated in "hell" */
+    G_HELL        = 0x0400,          /* generated only in "hell" */
+    G_NOGEN       = 0x0200,          /* generated only specially */
+    G_SGROUP      = 0x0080,          /* appear in small groups normally */
+    G_LGROUP      = 0x0040,          /* appear in large groups normally */
+    G_GENO        = 0x0020,          /* can be genocided */
+    G_NOCORPSE    = 0x0010,          /* no corpse left ever */
+    G_FREQ        = 0x0007,          /* creation frequency mask */
+};
 
 /* for mvitals[].mvflags (variant during game), along with G_NOCORPSE */
-#define G_KNOWN         0x0004          /* have been encountered */
-#define G_GONE          (G_GENOD|G_EXTINCT)
-#define G_GENOD         0x0002          /* have been genocided */
-#define G_EXTINCT       0x0001          /* have been extinguished as
+enum {
+    G_KNOWN       = 0x0004,          /* have been encountered */
+    G_GENOD       = 0x0002,          /* have been genocided */
+    G_EXTINCT     = 0x0001,          /* have been extinguished as
                                            population control */
-#define MV_KNOWS_EGG    0x0008          /* player recognizes egg of this
+    G_GONE        = (G_GENOD|G_EXTINCT),
+    MV_KNOWS_EGG  = 0x0008,          /* player recognizes egg of this
                                            monster type */
+};
 
 #endif /* MONFLAG_H */

@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "edog.h"
 #include "extern.h"
@@ -19,17 +20,16 @@ static signed char fillholetyp(int, int);
 static void dig_up_grave(void);
 
 /* Indices returned by dig_typ() */
-#define DIGTYP_UNDIGGABLE 0
-#define DIGTYP_ROCK       1
-#define DIGTYP_STATUE     2
-#define DIGTYP_BOULDER    3
-#define DIGTYP_DOOR       4
-#define DIGTYP_TREE       5
+enum {
+    DIGTYP_UNDIGGABLE = 0,
+    DIGTYP_ROCK       = 1,
+    DIGTYP_STATUE     = 2,
+    DIGTYP_BOULDER    = 3,
+    DIGTYP_DOOR       = 4,
+    DIGTYP_TREE       = 5,
+};
 
-
-static bool 
-rm_waslit (void)
-{
+static bool rm_waslit (void) {
     signed char x, y;
 
     if(levl[u.ux][u.uy].typ == ROOM && levl[u.ux][u.uy].waslit)

@@ -15,13 +15,15 @@
  * that there are enough situations which might make a monster change its
  * weapon that this is impractical.  --KAA
  */
-#define NO_WEAPON_WANTED 0
-#define NEED_WEAPON 1
-#define NEED_RANGED_WEAPON 2
-#define NEED_HTH_WEAPON 3
-#define NEED_PICK_AXE 4
-#define NEED_AXE 5
-#define NEED_PICK_OR_AXE 6
+enum {
+    NO_WEAPON_WANTED = 0,
+    NEED_WEAPON = 1,
+    NEED_RANGED_WEAPON = 2,
+    NEED_HTH_WEAPON = 3,
+    NEED_PICK_AXE = 4,
+    NEED_AXE = 5,
+    NEED_PICK_OR_AXE = 6,
+};
 
 /* The following flags are used for the second argument to display_minventory
  * in invent.c:
@@ -33,81 +35,26 @@
 #define MINV_NOLET 0x01
 #define MINV_ALL   0x02
 
-struct monst {
-        struct monst *nmon;
-        struct permonst *data;
-        unsigned m_id;
-        short mnum;             /* permanent monster index number */
-        short movement;         /* movement points (derived from permonst definition and added effects */
-        unsigned char m_lev;            /* adjusted difficulty level of monster */
-        aligntyp malign;        /* alignment of this monster, relative to the
-                                   player (positive = good to kill) */
-        signed char mx, my;
-        signed char mux, muy;           /* where the monster thinks you are */
-#define MTSZ    4
-        coord mtrack[MTSZ];     /* monster track */
-        int mhp, mhpmax;
-        unsigned mappearance;   /* for undetected mimics and the wiz */
-        unsigned char    m_ap_type;     /* what mappearance is describing: */
-#define M_AP_NOTHING    0       /* mappearance is unused -- monster appears
+enum {
+    CHAM_ORDINARY          = 0,       /* not a shapechanger */
+    CHAM_CHAMELEON         = 1,       /* animal */
+    CHAM_DOPPELGANGER      = 2,       /* demi-human */
+    CHAM_SANDESTIN         = 3,       /* demon */
+    CHAM_MAX_INDX          = CHAM_SANDESTIN,
+};
+
+enum {
+    M_AP_NOTHING    = 0,       /* mappearance is unused -- monster appears
                                    as itself */
-#define M_AP_FURNITURE  1       /* stairs, a door, an altar, etc. */
-#define M_AP_OBJECT     2       /* an object */
-#define M_AP_MONSTER    3       /* a monster */
+    M_AP_FURNITURE  = 1,       /* stairs, a door, an altar, etc. */
+    M_AP_OBJECT     = 2,       /* an object */
+    M_AP_MONSTER    = 3,       /* a monster */
+};
 
-        signed char mtame;              /* level of tameness, implies peaceful */
-        unsigned short mintrinsics;     /* low 8 correspond to mresists */
-        int mspec_used;         /* monster's special ability attack timeout */
+#define MTSZ    4
 
-        unsigned female:1;     /* is female */
-        unsigned minvis:1;     /* currently invisible */
-        unsigned invis_blkd:1; /* invisibility blocked */
-        unsigned perminvis:1;  /* intrinsic minvis value */
-        unsigned cham:3;       /* shape-changer */
-/* note: lychanthropes are handled elsewhere */
-#define CHAM_ORDINARY           0       /* not a shapechanger */
-#define CHAM_CHAMELEON          1       /* animal */
-#define CHAM_DOPPELGANGER       2       /* demi-human */
-#define CHAM_SANDESTIN          3       /* demon */
-#define CHAM_MAX_INDX           CHAM_SANDESTIN
-        unsigned mundetected:1;        /* not seen in present hiding place */
-                                /* implies one of M1_CONCEAL or M1_HIDE,
-                                 * but not mimic (that is, snake, spider,
-                                 * trapper, piercer, eel)
-                                 */
-
-        unsigned mcan:1;       /* has been cancelled */
-        unsigned mburied:1;    /* has been buried */
-        unsigned mspeed:2;     /* current speed */
-        unsigned permspeed:2;  /* intrinsic mspeed value */
-        unsigned mrevived:1;   /* has been revived from the dead */
-        unsigned mavenge:1;    /* did something to deserve retaliation */
-
-        unsigned mflee:1;      /* fleeing */
-        unsigned mfleetim:7;   /* timeout for mflee */
-
-        unsigned mcansee:1;    /* cansee 1, temp.blinded 0, blind 0 */
-        unsigned mblinded:7;   /* cansee 0, temp.blinded n, blind 0 */
-
-        unsigned mcanmove:1;   /* paralysis, similar to mblinded */
-        unsigned mfrozen:7;
-
-        unsigned msleeping:1;  /* asleep until woken */
-        unsigned mstun:1;      /* stunned (off balance) */
-        unsigned mconf:1;      /* confused */
-        unsigned mpeaceful:1;  /* does not attack unprovoked */
-        unsigned mtrapped:1;   /* trapped in a pit, web or bear trap */
-        unsigned mleashed:1;   /* monster is on a leash */
-        unsigned isshk:1;      /* is shopkeeper */
-        unsigned isminion:1;   /* is a minion */
-
-        unsigned isgd:1;       /* is guard */
-        unsigned ispriest:1;   /* is a priest */
-        unsigned iswiz:1;      /* is the Wizard of Yendor */
-        unsigned wormno:5;     /* at most 31 worms on any level */
 #define MAX_NUM_WORMS   32      /* should be 2^(wormno bitfield size) */
 
-        long mstrategy;         /* for monsters with mflag3: current strategy */
 #define STRAT_ARRIVE    0x40000000L     /* just arrived on current level */
 #define STRAT_WAITFORU  0x20000000L
 #define STRAT_CLOSE     0x10000000L
@@ -124,21 +71,85 @@ struct monst {
 #define STRAT_GOALX(s)  ((signed char)((s & STRAT_XMASK) >> 16))
 #define STRAT_GOALY(s)  ((signed char)((s & STRAT_YMASK) >> 8))
 
-        long mtrapseen;         /* bitmap of traps we've been trapped in */
-        long mlstmv;            /* for catching up with lost time */
-        long mgold;
-        struct obj *minvent;
+struct monst {
+    struct monst *nmon;
+    struct permonst *data;
+    unsigned m_id;
+    short mnum;             /* permanent monster index number */
+    short movement;         /* movement points (derived from permonst definition and added effects */
+    unsigned char m_lev;            /* adjusted difficulty level of monster */
+    aligntyp malign;        /* alignment of this monster, relative to the
+                               player (positive = good to kill) */
+    signed char mx, my;
+    signed char mux, muy;           /* where the monster thinks you are */
+    coord mtrack[MTSZ];     /* monster track */
+    int mhp, mhpmax;
+    unsigned mappearance;   /* for undetected mimics and the wiz */
+    unsigned char    m_ap_type;     /* what mappearance is describing: */
 
-        struct obj *mw;
-        long misc_worn_check;
-        signed char weapon_check;
+    signed char mtame;              /* level of tameness, implies peaceful */
+    unsigned short mintrinsics;     /* low 8 correspond to mresists */
+    int mspec_used;         /* monster's special ability attack timeout */
 
-        unsigned char mnamelth;         /* length of name (following mxlth) */
-        short mxlth;            /* length of following data */
-        /* in order to prevent alignment problems mextra should
-           be (or follow) a long int */
-        int meating;            /* monster is eating timeout */
-        long mextra[1]; /* monster dependent info */
+    unsigned female:1;     /* is female */
+    unsigned minvis:1;     /* currently invisible */
+    unsigned invis_blkd:1; /* invisibility blocked */
+    unsigned perminvis:1;  /* intrinsic minvis value */
+    unsigned cham:3;       /* shape-changer */
+    /* note: lychanthropes are handled elsewhere */
+    unsigned mundetected:1;        /* not seen in present hiding place */
+    /* implies one of M1_CONCEAL or M1_HIDE,
+     * but not mimic (that is, snake, spider,
+     * trapper, piercer, eel)
+     */
+
+    unsigned mcan:1;       /* has been cancelled */
+    unsigned mburied:1;    /* has been buried */
+    unsigned mspeed:2;     /* current speed */
+    unsigned permspeed:2;  /* intrinsic mspeed value */
+    unsigned mrevived:1;   /* has been revived from the dead */
+    unsigned mavenge:1;    /* did something to deserve retaliation */
+
+    unsigned mflee:1;      /* fleeing */
+    unsigned mfleetim:7;   /* timeout for mflee */
+
+    unsigned mcansee:1;    /* cansee 1, temp.blinded 0, blind 0 */
+    unsigned mblinded:7;   /* cansee 0, temp.blinded n, blind 0 */
+
+    unsigned mcanmove:1;   /* paralysis, similar to mblinded */
+    unsigned mfrozen:7;
+
+    unsigned msleeping:1;  /* asleep until woken */
+    unsigned mstun:1;      /* stunned (off balance) */
+    unsigned mconf:1;      /* confused */
+    unsigned mpeaceful:1;  /* does not attack unprovoked */
+    unsigned mtrapped:1;   /* trapped in a pit, web or bear trap */
+    unsigned mleashed:1;   /* monster is on a leash */
+    unsigned isshk:1;      /* is shopkeeper */
+    unsigned isminion:1;   /* is a minion */
+
+    unsigned isgd:1;       /* is guard */
+    unsigned ispriest:1;   /* is a priest */
+    unsigned iswiz:1;      /* is the Wizard of Yendor */
+    unsigned wormno:5;     /* at most 31 worms on any level */
+
+    long mstrategy;         /* for monsters with mflag3: current strategy */
+
+    long mtrapseen;         /* bitmap of traps we've been trapped in */
+    long mlstmv;            /* for catching up with lost time */
+    long mgold;
+    struct obj *minvent;
+
+    struct obj *mw;
+    long misc_worn_check;
+    signed char weapon_check;
+
+    unsigned char mnamelth;         /* length of name (following mxlth) */
+    short mxlth;            /* length of following data */
+    /* in order to prevent alignment problems mextra should
+       be (or follow) a long int */
+    int meating;            /* monster is eating timeout */
+    long mextra[1]; /* monster dependent info */
 };
 
 /*

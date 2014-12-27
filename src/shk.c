@@ -6,11 +6,13 @@
 #include "display.h"
 #include "winprocs.h"
 
-#define PAY_SOME    2
-#define PAY_BUY     1
-#define PAY_CANT    0   /* too poor */
-#define PAY_SKIP  (-1)
-#define PAY_BROKE (-2)
+enum {
+    PAY_SOME  =   2,
+    PAY_BUY   =   1,
+    PAY_CANT  =   0,  /* too poor */
+    PAY_SKIP  =  -1,
+    PAY_BROKE =  -2,
+};
 
 static void makekops(coord *);
 static void call_kops(struct monst *,bool);
@@ -79,7 +81,9 @@ static int sell_how = SELL_NORMAL;
    shouldn't carry over from ordinary selling to credit selling */
 static bool auto_credit = false;
 
-#define HUNGRY  2
+enum {
+    HUNGRY = 2,
+};
 
 /* First 4 supplied by Ronen and Tamar, remainder by development team */
 const char *Izchak_speaks[]={

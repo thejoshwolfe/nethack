@@ -218,6 +218,13 @@ struct Align {
 
 extern const struct Align aligns[];     /* table of available alignments */
 
+enum {
+    TT_BEARTRAP    = 0,
+    TT_PIT         = 1,
+    TT_WEB         = 2,
+    TT_LAVA        = 3,
+    TT_INFLOOR     = 4,
+};
 
 /*** Information about the player ***/
 struct you {
@@ -236,11 +243,6 @@ struct you {
         int ulevelmax;
         unsigned utrap;         /* trap timeout */
         unsigned utraptype;     /* defined if utrap nonzero */
-#define TT_BEARTRAP     0
-#define TT_PIT          1
-#define TT_WEB          2
-#define TT_LAVA         3
-#define TT_INFLOOR      4
         char    urooms[5];      /* rooms (roomno + 3) occupied now */
         char    urooms0[5];     /* ditto, for previous position */
         char    uentered[5];    /* rooms (roomno + 3) entered this turn */
