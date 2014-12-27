@@ -39,7 +39,7 @@ static int pet_type (void) {
         return (rn2(2) ? PM_KITTEN : PM_LITTLE_DOG);
 }
 
-struct monst * make_familiar(struct obj *otmp, signed char x, signed char y, boolean quietly) {
+struct monst * make_familiar(struct obj *otmp, signed char x, signed char y, bool quietly) {
     struct permonst *pm;
     struct monst *mtmp = 0;
     int chance, trycnt = 100;
@@ -144,14 +144,14 @@ struct monst * makedog (void) {
         if(!mtmp) return((struct monst *) 0); /* pets were genocided */
 
         /* Horses already wear a saddle */
-        if (pettype == PM_PONY && !!(otmp = mksobj(SADDLE, TRUE, FALSE))) {
+        if (pettype == PM_PONY && !!(otmp = mksobj(SADDLE, true, false))) {
             if (mpickobj(mtmp, otmp))
                 panic("merged saddle?");
             mtmp->misc_worn_check |= W_SADDLE;
             otmp->dknown = otmp->bknown = otmp->rknown = 1;
             otmp->owornmask = W_SADDLE;
             otmp->leashmon = mtmp->m_id;
-            update_mon_intrinsics(mtmp, otmp, TRUE, TRUE);
+            update_mon_intrinsics(mtmp, otmp, true, true);
         }
 
         if (!petname_used++ && *petname)
@@ -181,7 +181,7 @@ losedogs (void)
 
         while ((mtmp = mydogs) != 0) {
                 mydogs = mtmp->nmon;
-                mon_arrive(mtmp, TRUE);
+                mon_arrive(mtmp, true);
         }
 
         for(mtmp = migrating_mons; mtmp; mtmp = mtmp2) {
@@ -191,14 +191,14 @@ losedogs (void)
                         migrating_mons = mtmp->nmon;
                     else
                         mtmp0->nmon = mtmp->nmon;
-                    mon_arrive(mtmp, FALSE);
+                    mon_arrive(mtmp, false);
                 } else
                     mtmp0 = mtmp;
         }
 }
 
 /* called from resurrect() in addition to losedogs() */
-void mon_arrive(struct monst *mtmp, boolean with_you) {
+void mon_arrive(struct monst *mtmp, bool with_you) {
         struct trap *t;
         signed char xlocale, ylocale, xyloc, xyflags, wander;
         int num_segs;
@@ -206,7 +206,7 @@ void mon_arrive(struct monst *mtmp, boolean with_you) {
         mtmp->nmon = fmon;
         fmon = mtmp;
         if (mtmp->isshk)
-            set_residency(mtmp, FALSE);
+            set_residency(mtmp, false);
 
         num_segs = mtmp->wormno;
         /* baby long worms have no tail so don't use is_longworm() */
@@ -330,9 +330,9 @@ void mon_arrive(struct monst *mtmp, boolean with_you) {
         mtmp->mx = 0;   /*(already is 0)*/
         mtmp->my = xyflags;
         if (xlocale)
-            (void) mnearto(mtmp, xlocale, ylocale, FALSE);
+            (void) mnearto(mtmp, xlocale, ylocale, false);
         else {
-            if (!rloc(mtmp,TRUE)) {
+            if (!rloc(mtmp,true)) {
                 /*
                  * Failed to place migrating monster,
                  * probably because the level is full.
@@ -353,7 +353,7 @@ void mon_arrive(struct monst *mtmp, boolean with_you) {
                     }
                 }
                 corpse = mkcorpstat(CORPSE, (struct monst *)0, mtmp->data,
-                                xlocale, ylocale, FALSE);
+                                xlocale, ylocale, false);
                 if (mtmp->mgold) {
                     if (xlocale == 0 && ylocale == 0 && corpse) {
                         (void) get_obj_location(corpse, &xlocale, &ylocale, 0);
@@ -425,7 +425,7 @@ void mon_catchup_elapsed_time (struct monst *mtmp, long nmv) {
             /* leashed monsters should always be with hero, consequently
                never losing any time to be accounted for later */
             impossible("catching up for leashed monster?");
-            m_unleash(mtmp, FALSE);
+            m_unleash(mtmp, false);
         }
 
         /* recover lost hit points */
@@ -438,11 +438,11 @@ void mon_catchup_elapsed_time (struct monst *mtmp, long nmv) {
 
 /* called when you move to another level */
 /* true for ascension or final escape */
-void keepdogs(boolean pets_only) {
+void keepdogs(bool pets_only) {
         struct monst *mtmp, *mtmp2;
         struct obj *obj;
         int num_segs;
-        boolean stay_behind;
+        bool stay_behind;
 
         for (mtmp = fmon; mtmp; mtmp = mtmp2) {
             mtmp2 = mtmp->nmon;
@@ -461,34 +461,34 @@ void keepdogs(boolean pets_only) {
                     )
                 /* monster won't follow if it hasn't noticed you yet */
                 && !(mtmp->mstrategy & STRAT_WAITFORU)) {
-                stay_behind = FALSE;
+                stay_behind = false;
                 if (mtmp->mtame && mtmp->meating) {
                         if (canseemon(mtmp))
                             pline("%s is still eating.", Monnam(mtmp));
-                        stay_behind = TRUE;
+                        stay_behind = true;
                 } else if (mon_has_amulet(mtmp)) {
                         if (canseemon(mtmp))
                             pline("%s seems very disoriented for a moment.",
                                 Monnam(mtmp));
-                        stay_behind = TRUE;
+                        stay_behind = true;
                 } else if (mtmp->mtame && mtmp->mtrapped) {
                         if (canseemon(mtmp))
                             pline("%s is still trapped.", Monnam(mtmp));
-                        stay_behind = TRUE;
+                        stay_behind = true;
                 }
-                if (mtmp == u.usteed) stay_behind = FALSE;
+                if (mtmp == u.usteed) stay_behind = false;
                 if (stay_behind) {
                         if (mtmp->mleashed) {
                                 pline("%s leash suddenly comes loose.",
                                         humanoid(mtmp->data)
                                             ? (mtmp->female ? "Her" : "His")
                                             : "Its");
-                                m_unleash(mtmp, FALSE);
+                                m_unleash(mtmp, false);
                         }
                         continue;
                 }
                 if (mtmp->isshk)
-                        set_residency(mtmp, TRUE);
+                        set_residency(mtmp, true);
 
                 if (mtmp->wormno) {
                     int cnt;
@@ -522,7 +522,7 @@ void keepdogs(boolean pets_only) {
                 /* this can happen if your quest leader ejects you from the
                    "home" level while a leashed pet isn't next to you */
                 pline("%s leash goes slack.", s_suffix(Monnam(mtmp)));
-                m_unleash(mtmp, FALSE);
+                m_unleash(mtmp, false);
             }
         }
 }
@@ -540,7 +540,7 @@ void migrate_to_level (
         int num_segs = 0;       /* count of worm segments */
 
         if (mtmp->isshk)
-            set_residency(mtmp, TRUE);
+            set_residency(mtmp, true);
 
         if (mtmp->wormno) {
             int cnt;
@@ -559,7 +559,7 @@ void migrate_to_level (
 
         if (mtmp->mleashed) {
                 mtmp->mtame--;
-                m_unleash(mtmp, TRUE);
+                m_unleash(mtmp, true);
         }
         relmon(mtmp);
         mtmp->nmon = migrating_mons;
@@ -589,10 +589,10 @@ void migrate_to_level (
 int
 dogfood (struct monst *mon, struct obj *obj)
 {
-        boolean carni = carnivorous(mon->data);
-        boolean herbi = herbivorous(mon->data);
+        bool carni = carnivorous(mon->data);
+        bool herbi = herbivorous(mon->data);
         struct permonst *fptr = &mons[obj->corpsenm];
-        boolean starving;
+        bool starving;
 
         if (is_quest_artifact(obj) || obj_resists(obj, 0, 95))
             return (obj->cursed ? TABU : APPORT);
@@ -705,7 +705,7 @@ tamedog (struct monst *mtmp, struct obj *obj)
         /* make grabber let go now, whether it becomes tame or not */
         if (mtmp == u.ustuck) {
             if (u.uswallow)
-                expels(mtmp, mtmp->data, TRUE);
+                expels(mtmp, mtmp->data, true);
             else if (!(Upolyd && sticks(youmonst.data)))
                 unstuck(mtmp);
         }
@@ -719,7 +719,7 @@ tamedog (struct monst *mtmp, struct obj *obj)
                  (tasty <= ACCFOOD && EDOG(mtmp)->hungrytime <= monstermoves))) {
                 /* pet will "catch" and eat this thrown food */
                 if (canseemon(mtmp)) {
-                    boolean big_corpse = (obj->otyp == CORPSE &&
+                    bool big_corpse = (obj->otyp == CORPSE &&
                                           obj->corpsenm >= LOW_PM &&
                                 mons[obj->corpsenm].msize > mtmp->data->msize);
                     pline("%s catches %s%s",
@@ -729,7 +729,7 @@ tamedog (struct monst *mtmp, struct obj *obj)
                     pline("%s.", Tobjnam(obj, "stop"));
                 /* dog_eat expects a floor object */
                 place_object(obj, mtmp->mx, mtmp->my);
-                (void) dog_eat(mtmp, obj, mtmp->mx, mtmp->my, FALSE);
+                (void) dog_eat(mtmp, obj, mtmp->mx, mtmp->my, false);
                 /* eating might have killed it, but that doesn't matter here;
                    a non-null result suppresses "miss" message for thrown
                    food and also implies that the object has been deleted */
@@ -761,7 +761,7 @@ tamedog (struct monst *mtmp, struct obj *obj)
             /* defer eating until the edog extension has been set up */
             place_object(obj, mtmp2->mx, mtmp2->my);    /* put on floor */
             /* devour the food (might grow into larger, genocided monster) */
-            if (dog_eat(mtmp2, obj, mtmp2->mx, mtmp2->my, TRUE) == 2)
+            if (dog_eat(mtmp2, obj, mtmp2->mx, mtmp2->my, true) == 2)
                 return mtmp2;           /* oops, it died... */
             /* `obj' is now obsolete */
         }
@@ -781,9 +781,9 @@ tamedog (struct monst *mtmp, struct obj *obj)
  * If you abused the pet at all while alive, it revives untame.
  * If the pet wasn't abused and was very tame, it might revive tame.
  */
-void wary_dog(struct monst *mtmp, boolean was_dead) {
+void wary_dog(struct monst *mtmp, bool was_dead) {
     struct edog *edog;
-    boolean quietly = was_dead;
+    bool quietly = was_dead;
 
     mtmp->meating = 0;
     if (!mtmp->mtame) return;
@@ -823,7 +823,7 @@ void wary_dog(struct monst *mtmp, boolean was_dead) {
         newsym(mtmp->mx, mtmp->my);
         /* a life-saved monster might be leashed;
            don't leave it that way if it's no longer tame */
-        if (mtmp->mleashed) m_unleash(mtmp, TRUE);
+        if (mtmp->mleashed) m_unleash(mtmp, true);
     }
 
     /* if its still a pet, start a clean pet-slate now */
@@ -855,7 +855,7 @@ abuse_dog (struct monst *mtmp)
             EDOG(mtmp)->abuse++;
 
         if (!mtmp->mtame && mtmp->mleashed)
-            m_unleash(mtmp, TRUE);
+            m_unleash(mtmp, true);
 
         /* don't make a sound if pet is in the middle of leaving the level */
         /* newsym isn't necessary in this case either */

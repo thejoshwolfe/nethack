@@ -76,12 +76,12 @@ static char obuf[BUFSIZ];       /* BUFSIZ is defined in stdio.h */
 static char winpanicstr[] = "Bad window id %d";
 char defmorestr[] = "--More--";
 
-boolean GFlag = FALSE;
-boolean HE_resets_AS;   /* see termcap.c */
+bool GFlag = false;
+bool HE_resets_AS;   /* see termcap.c */
 
 static void getret(void);
-static void erase_menu_or_text(winid, struct WinDesc *, boolean);
-static void free_window_info(struct WinDesc *, boolean);
+static void erase_menu_or_text(winid, struct WinDesc *, bool);
+static void free_window_info(struct WinDesc *, bool);
 static void dmore(struct WinDesc *, const char *);
 static void set_item_state(winid, int, tty_menu_item *);
 static void set_all_on_page(winid,tty_menu_item *,tty_menu_item *);
@@ -172,7 +172,7 @@ void tty_init_nhwindows(int *argcp, char **argv) {
     tty_putstr(BASE_WINDOW, 0, COPYRIGHT_BANNER_B);
     tty_putstr(BASE_WINDOW, 0, COPYRIGHT_BANNER_C);
     tty_putstr(BASE_WINDOW, 0, "");
-    tty_display_nhwindow(BASE_WINDOW, FALSE);
+    tty_display_nhwindow(BASE_WINDOW, false);
 }
 
 void tty_player_selection(void) {
@@ -507,7 +507,7 @@ give_up:        /* Quit */
             }
         }
         /* Success! */
-        tty_display_nhwindow(BASE_WINDOW, FALSE);
+        tty_display_nhwindow(BASE_WINDOW, false);
 }
 
 /*
@@ -596,7 +596,7 @@ void tty_exit_nhwindows(const char *str) {
      */
     for(i=0; i<MAXWIN; i++)
         if (wins[i] && (i != BASE_WINDOW)) {
-            free_window_info(wins[i], TRUE);
+            free_window_info(wins[i], true);
             free((void *) wins[i]);
             wins[i] = 0;
         }
@@ -615,7 +615,7 @@ winid tty_create_nhwindow(int type) {
     newwin = (struct WinDesc*) alloc(sizeof(struct WinDesc));
     newwin->type = type;
     newwin->flags = 0;
-    newwin->active = FALSE;
+    newwin->active = false;
     newwin->curx = newwin->cury = 0;
     newwin->morestr = 0;
     newwin->mlist = (tty_menu_item *) 0;
@@ -705,7 +705,7 @@ winid tty_create_nhwindow(int type) {
     return newid;
 }
 
-static void erase_menu_or_text(winid window, struct WinDesc *cw, boolean clear) {
+static void erase_menu_or_text(winid window, struct WinDesc *cw, bool clear) {
     if(cw->offx == 0)
         if(cw->offy) {
             tty_curs(window, 1, 0);
@@ -718,7 +718,7 @@ static void erase_menu_or_text(winid window, struct WinDesc *cw, boolean clear) 
         docorner((int)cw->offx, cw->maxrow+1);
 }
 
-static void free_window_info(struct WinDesc *cw, boolean free_data) {
+static void free_window_info(struct WinDesc *cw, bool free_data) {
     int i;
 
     if (cw->data) {
@@ -791,8 +791,8 @@ void tty_clear_nhwindow(winid window) {
     case NHW_MENU:
     case NHW_TEXT:
         if(cw->active)
-            erase_menu_or_text(window, cw, TRUE);
-        free_window_info(cw, FALSE);
+            erase_menu_or_text(window, cw, true);
+        free_window_info(cw, false);
         break;
     }
     cw->curx = cw->cury = 0;
@@ -830,7 +830,7 @@ static void set_all_on_page(winid window, tty_menu_item *page_start, tty_menu_it
 
     for (n = 0, curr = page_start; curr != page_end; n++, curr = curr->next)
         if (curr->identifier.a_void && !curr->selected) {
-            curr->selected = TRUE;
+            curr->selected = true;
             set_item_state(window, n, curr);
         }
 }
@@ -843,7 +843,7 @@ static void unset_all_on_page(winid window, tty_menu_item *page_start,
 
     for (n = 0, curr = page_start; curr != page_end; n++, curr = curr->next)
         if (curr->identifier.a_void && curr->selected) {
-            curr->selected = FALSE;
+            curr->selected = false;
             curr->count = -1L;
             set_item_state(window, n, curr);
         }
@@ -859,10 +859,10 @@ static void invert_all_on_page(winid window, tty_menu_item *page_start,
     for (n = 0, curr = page_start; curr != page_end; n++, curr = curr->next)
         if (curr->identifier.a_void && (acc == 0 || curr->gselector == acc)) {
             if (curr->selected) {
-                curr->selected = FALSE;
+                curr->selected = false;
                 curr->count = -1L;
             } else
-                curr->selected = TRUE;
+                curr->selected = true;
             set_item_state(window, n, curr);
         }
 }
@@ -880,25 +880,25 @@ invert_all (
 )
 {
     tty_menu_item *curr;
-    boolean on_curr_page;
+    bool on_curr_page;
     struct WinDesc *cw =  wins[window];
 
     invert_all_on_page(window, page_start, page_end, acc);
 
     /* invert the rest */
-    for (on_curr_page = FALSE, curr = cw->mlist; curr; curr = curr->next) {
+    for (on_curr_page = false, curr = cw->mlist; curr; curr = curr->next) {
         if (curr == page_start)
-            on_curr_page = TRUE;
+            on_curr_page = true;
         else if (curr == page_end)
-            on_curr_page = FALSE;
+            on_curr_page = false;
 
         if (!on_curr_page && curr->identifier.a_void
                                 && (acc == 0 || curr->gselector == acc)) {
             if (curr->selected) {
-                curr->selected = FALSE;
+                curr->selected = false;
                 curr->count = -1;
             } else
-                curr->selected = TRUE;
+                curr->selected = true;
         }
     }
 }
@@ -909,7 +909,7 @@ process_menu_window (winid window, struct WinDesc *cw)
     tty_menu_item *page_start, *page_end, *curr;
     long count;
     int n, curr_page, page_lines;
-    boolean finished, counting, reset_count;
+    bool finished, counting, reset_count;
     char *cp, *rp, resp[QBUFSZ], gacc[QBUFSZ],
          *msave, *morestr;
 
@@ -917,10 +917,10 @@ process_menu_window (winid window, struct WinDesc *cw)
     page_start = page_end = 0;
     msave = cw->morestr;        /* save the morestr */
     cw->morestr = morestr = (char*) alloc((unsigned) QBUFSZ);
-    counting = FALSE;
+    counting = false;
     count = 0L;
-    reset_count = TRUE;
-    finished = FALSE;
+    reset_count = true;
+    finished = false;
 
     /* collect group accelerators; for PICK_NONE, they're ignored;
        for PICK_ONE, only those which match exactly one entry will be
@@ -950,10 +950,10 @@ process_menu_window (winid window, struct WinDesc *cw)
     /* loop until finished */
     while (!finished) {
         if (reset_count) {
-            counting = FALSE;
+            counting = false;
             count = 0;
         } else
-            reset_count = TRUE;
+            reset_count = true;
 
         if (!page_start) {
             /* new page to be displayed */
@@ -1065,19 +1065,19 @@ process_menu_window (winid window, struct WinDesc *cw)
                  * At present I don't know which is better.
                  */
                 if (count != 0L) {      /* ignore leading zeros */
-                    counting = TRUE;
-                    reset_count = FALSE;
+                    counting = true;
+                    reset_count = false;
                 }
                 break;
             case '\033':        /* cancel - from counting or loop */
                 if (!counting) {
                     /* deselect everything */
                     for (curr = cw->mlist; curr; curr = curr->next) {
-                        curr->selected = FALSE;
+                        curr->selected = false;
                         curr->count = -1L;
                     }
                     cw->flags |= WIN_CANCELLED;
-                    finished = TRUE;
+                    finished = true;
                 }
                 /* else only stop count */
                 break;
@@ -1086,7 +1086,7 @@ process_menu_window (winid window, struct WinDesc *cw)
             case '\r':
                 /* only finished if we are actually picking something */
                 if (cw->how != PICK_NONE) {
-                    finished = TRUE;
+                    finished = true;
                     break;
                 }
                 /* else fall through */
@@ -1095,7 +1095,7 @@ process_menu_window (winid window, struct WinDesc *cw)
                     curr_page++;
                     page_start = 0;
                 } else
-                    finished = TRUE;    /* questionable behavior */
+                    finished = true;    /* questionable behavior */
                 break;
             case MENU_PREVIOUS_PAGE:
                 if (cw->npages > 0 && curr_page != 0) {
@@ -1132,7 +1132,7 @@ process_menu_window (winid window, struct WinDesc *cw)
                     /* set the rest */
                     for (curr = cw->mlist; curr; curr = curr->next)
                         if (curr->identifier.a_void && !curr->selected)
-                            curr->selected = TRUE;
+                            curr->selected = true;
                 }
                 break;
             case MENU_UNSELECT_ALL:
@@ -1140,7 +1140,7 @@ process_menu_window (winid window, struct WinDesc *cw)
                 /* unset the rest */
                 for (curr = cw->mlist; curr; curr = curr->next)
                     if (curr->identifier.a_void && curr->selected) {
-                        curr->selected = FALSE;
+                        curr->selected = false;
                         curr->count = -1;
                     }
                 break;
@@ -1158,7 +1158,7 @@ process_menu_window (winid window, struct WinDesc *cw)
                     /* group accelerator; for the PICK_ONE case, we know that
                        it matches exactly one item in order to be in gacc[] */
                     invert_all(window, page_start, page_end, morc);
-                    if (cw->how == PICK_ONE) finished = TRUE;
+                    if (cw->how == PICK_ONE) finished = true;
                     break;
                 }
                 /* find, toggle, and possibly update */
@@ -1171,23 +1171,23 @@ process_menu_window (winid window, struct WinDesc *cw)
                                 curr->count = count;
                                 set_item_state(window, n, curr);
                             } else { /* change state */
-                                curr->selected = FALSE;
+                                curr->selected = false;
                                 curr->count = -1L;
                                 set_item_state(window, n, curr);
                             }
                         } else {        /* !selected */
                             if (counting && count > 0) {
                                 curr->count = count;
-                                curr->selected = TRUE;
+                                curr->selected = true;
                                 set_item_state(window, n, curr);
                             } else if (!counting) {
-                                curr->selected = TRUE;
+                                curr->selected = true;
                                 set_item_state(window, n, curr);
                             }
                             /* do nothing counting&&count==0 */
                         }
 
-                        if (cw->how == PICK_ONE) finished = TRUE;
+                        if (cw->how == PICK_ONE) finished = true;
                         break;  /* from `for' loop */
                     }
                 break;
@@ -1249,7 +1249,7 @@ process_text_window (winid window, struct WinDesc *cw)
 void 
 tty_display_nhwindow (
     winid window,
-    boolean blocking   /* with ttys, all windows are blocking */
+    bool blocking   /* with ttys, all windows are blocking */
 )
 {
     struct WinDesc *cw = 0;
@@ -1271,13 +1271,13 @@ tty_display_nhwindow (
             ttyDisplay->toplin = 0;
         cw->curx = cw->cury = 0;
         if(!cw->active)
-            iflags.window_inited = TRUE;
+            iflags.window_inited = true;
         break;
     case NHW_MAP:
         end_glyphout();
         if(blocking) {
             if(!ttyDisplay->toplin) ttyDisplay->toplin = 1;
-            tty_display_nhwindow(WIN_MESSAGE, TRUE);
+            tty_display_nhwindow(WIN_MESSAGE, true);
             return;
         }
     case NHW_BASE:
@@ -1294,7 +1294,7 @@ tty_display_nhwindow (
         if(cw->type == NHW_MENU)
             cw->offy = 0;
         if(ttyDisplay->toplin == 1)
-            tty_display_nhwindow(WIN_MESSAGE, TRUE);
+            tty_display_nhwindow(WIN_MESSAGE, true);
         if(cw->offx == 10 || cw->maxrow >= (int) ttyDisplay->rows) {
             cw->offx = 0;
             if(cw->offy) {
@@ -1326,7 +1326,7 @@ tty_dismiss_nhwindow (winid window)
     switch(cw->type) {
     case NHW_MESSAGE:
         if (ttyDisplay->toplin)
-            tty_display_nhwindow(WIN_MESSAGE, TRUE);
+            tty_display_nhwindow(WIN_MESSAGE, true);
         /*FALLTHRU*/
     case NHW_STATUS:
     case NHW_BASE:
@@ -1348,7 +1348,7 @@ tty_dismiss_nhwindow (winid window)
                  * leave the ending window on the screen, we don't want to
                  * erase it anyway.
                  */
-                erase_menu_or_text(window, cw, FALSE);
+                erase_menu_or_text(window, cw, false);
             }
             cw->active = 0;
         }
@@ -1372,7 +1372,7 @@ tty_destroy_nhwindow (winid window)
     if(cw->type == NHW_MAP)
         clear_screen();
 
-    free_window_info(cw, TRUE);
+    free_window_info(cw, true);
     free((void *)cw);
     wins[window] = 0;
 }
@@ -1563,7 +1563,7 @@ tty_putstr (winid window, int attr, const char *str)
         if(cw->type == NHW_TEXT && cw->cury == ttyDisplay->rows-1) {
             /* not a menu, so save memory and output 1 page at a time */
             cw->maxcol = ttyDisplay->cols; /* force full-screen mode */
-            tty_display_nhwindow(window, TRUE);
+            tty_display_nhwindow(window, true);
             for(i=0; i<cw->maxrow; i++)
                 if(cw->data[i]){
                     free((void *)cw->data[i]);
@@ -1611,7 +1611,7 @@ tty_putstr (winid window, int attr, const char *str)
     }
 }
 
-void tty_display_file(const char *fname, boolean complain) {
+void tty_display_file(const char *fname, bool complain) {
     {
         dlb *f;
         char buf[BUFSZ];
@@ -1627,7 +1627,7 @@ void tty_display_file(const char *fname, boolean complain) {
             } else if(u.ux) docrt();
         } else {
             winid datawin = tty_create_nhwindow(NHW_TEXT);
-            boolean empty = TRUE;
+            bool empty = true;
 
             if(complain
                 && nh_CD
@@ -1640,12 +1640,12 @@ void tty_display_file(const char *fname, boolean complain) {
             while (dlb_fgets(buf, BUFSZ, f)) {
                 if ((cr = index(buf, '\n')) != 0) *cr = 0;
                 if (index(buf, '\t') != 0) (void) tabexpand(buf);
-                empty = FALSE;
+                empty = false;
                 tty_putstr(datawin, 0, buf);
                 if(wins[datawin]->flags & WIN_CANCELLED)
                     break;
             }
-            if (!empty) tty_display_nhwindow(datawin, FALSE);
+            if (!empty) tty_display_nhwindow(datawin, false);
             tty_destroy_nhwindow(datawin);
             (void) dlb_fclose(f);
         }
@@ -1673,7 +1673,7 @@ tty_add_menu (
     char gch,           /* group accelerator (0 = no group) */
     int attr,           /* attribute for string (like tty_putstr()) */
     const char *str,    /* menu string */
-    boolean preselected /* item is marked as selected */
+    bool preselected /* item is marked as selected */
 )
 {
     struct WinDesc *cw = 0;
@@ -1848,7 +1848,7 @@ tty_select_menu (winid window, int how, menu_item **menu_list)
     *menu_list = (menu_item *) 0;
     cw->how = (short) how;
     morc = 0;
-    tty_display_nhwindow(window, TRUE);
+    tty_display_nhwindow(window, true);
     cancelled = !!(cw->flags & WIN_CANCELLED);
     tty_dismiss_nhwindow(window);       /* does not destroy window data */
 
@@ -1922,7 +1922,7 @@ tty_wait_synch (void)
         getret();
         if(ttyDisplay) ttyDisplay->rawprint = 0;
     } else {
-        tty_display_nhwindow(WIN_MAP, FALSE);
+        tty_display_nhwindow(WIN_MAP, false);
         if(ttyDisplay->inmore) {
             addtopl("--More--");
             (void) fflush(stdout);
@@ -1968,7 +1968,7 @@ void
 end_glyphout (void)
 {
     if (GFlag) {
-        GFlag = FALSE;
+        GFlag = false;
         graph_off();
     }
     if(ttyDisplay->color != NO_COLOR) {
@@ -1986,13 +1986,13 @@ void g_putch(int in_ch) {
     } else if (ch & 0x80) {
         if (!GFlag || HE_resets_AS) {
             graph_on();
-            GFlag = TRUE;
+            GFlag = true;
         }
         (void) putchar((ch ^ 0x80)); /* Strip 8th bit */
     } else {
         if (GFlag) {
             graph_off();
-            GFlag = FALSE;
+            GFlag = false;
         }
         (void) putchar(ch);
     }
@@ -2012,7 +2012,7 @@ void g_putch(int in_ch) {
 
 void tty_print_glyph(winid window, signed char x, signed char y, int glyph) {
     int ch;
-    boolean reverse_on = FALSE;
+    bool reverse_on = false;
     int     color;
     unsigned special;
 
@@ -2039,7 +2039,7 @@ void tty_print_glyph(winid window, signed char x, signed char y, int glyph) {
     if (((special & MG_PET) && iflags.hilite_pet) ||
         ((special & MG_DETECT) && iflags.use_inverse)) {
         term_start_attr(ATR_INVERSE);
-        reverse_on = TRUE;
+        reverse_on = true;
     }
 
         g_putch(ch);            /* print the character */

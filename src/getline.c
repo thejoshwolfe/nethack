@@ -9,9 +9,9 @@
 #include "func_tab.h"
 
 char morc = 0;  /* tell the outside world what char you chose */
-static boolean ext_cmd_getlin_hook(char *);
+static bool ext_cmd_getlin_hook(char *);
 
-typedef boolean (*getlin_hook_proc)(char *);
+typedef bool (*getlin_hook_proc)(char *);
 
 static void hooked_tty_getlin(const char*,char*,getlin_hook_proc);
 extern int extcmd_via_menu(void);       /* cmd.c */
@@ -37,7 +37,7 @@ hooked_tty_getlin (const char *query, char *bufp, getlin_hook_proc hook)
         char *obufp = bufp;
         int c;
         struct WinDesc *cw = wins[WIN_MESSAGE];
-        boolean doprev = 0;
+        bool doprev = 0;
 
         if(ttyDisplay->toplin == 1 && !(cw->flags & WIN_STOP)) more();
         cw->flags &= ~WIN_STOP;
@@ -163,13 +163,13 @@ xwaitforspace (
  * identify an extended command, expand the string to the whole
  * command.
  *
- * Return TRUE if we've extended the string at base.  Otherwise return FALSE.
+ * Return true if we've extended the string at base.  Otherwise return false.
  * Assumptions:
  *
  *      + we don't change the characters that are already in base
  *      + base has enough room to hold our string
  */
-static boolean 
+static bool 
 ext_cmd_getlin_hook (char *base)
 {
         int oindex, com_index;
@@ -180,15 +180,15 @@ ext_cmd_getlin_hook (char *base)
                         if (com_index == -1)    /* no matches yet */
                             com_index = oindex;
                         else                    /* more than 1 match */
-                            return FALSE;
+                            return false;
                 }
         }
         if (com_index >= 0) {
                 Strcpy(base, extcmdlist[com_index].ef_txt);
-                return TRUE;
+                return true;
         }
 
-        return FALSE;   /* didn't match anything */
+        return false;   /* didn't match anything */
 }
 
 /*

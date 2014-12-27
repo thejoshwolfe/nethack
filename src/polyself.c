@@ -31,10 +31,10 @@ set_uasmon (void)
 static void
 polyman (const char *fmt, const char *arg)
 {
-        boolean sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
+        bool sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
                 was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
-        boolean could_pass_walls = Passes_walls;
-        boolean was_blind = !!Blind;
+        bool could_pass_walls = Passes_walls;
+        bool was_blind = !!Blind;
 
         if (Upolyd) {
                 u.acurr = u.macurr;     /* restore old attribs */
@@ -46,7 +46,7 @@ polyman (const char *fmt, const char *arg)
 
         u.mh = u.mhmax = 0;
         u.mtimedone = 0;
-        skinback(FALSE);
+        skinback(false);
         u.uundetected = 0;
 
         if (sticky) uunstick();
@@ -85,12 +85,12 @@ polyman (const char *fmt, const char *arg)
         }
         if (was_blind && !Blind) {      /* reverting from eyeless */
             Blinded = 1L;
-            make_blinded(0L, TRUE);     /* remove blindness */
+            make_blinded(0L, true);     /* remove blindness */
         }
 
         if(!Levitation && !u.ustuck &&
            (is_pool(u.ux,u.uy) || is_lava(u.ux,u.uy)))
-                spoteffects(TRUE);
+                spoteffects(true);
 
         see_monsters();
 }
@@ -100,7 +100,7 @@ change_sex (void)
 {
         /* setting u.umonster for caveman/cavewoman or priest/priestess
            swap unintentionally makes `Upolyd' appear to be true */
-        boolean already_polyd = (boolean) Upolyd;
+        bool already_polyd = (bool) Upolyd;
 
         /* Some monsters are always of one sex and their sex can't be changed */
         /* succubi/incubi can change, but are handled below */
@@ -155,7 +155,7 @@ newman (void)
         reset_rndmonst(NON_PM); /* new monster generation criteria */
 
         /* random experience points for the new experience level */
-        u.uexp = rndexp(FALSE);
+        u.uexp = rndexp(false);
 
         /* u.uhpmax * u.ulevel / oldlvl: proportionate hit points to new level
          * -10 and +10: don't apply proportionate HP to 10 of a starting
@@ -176,7 +176,7 @@ newman (void)
 
         redist_attr();
         u.uhunger = rn1(500,500);
-        if (Sick) make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+        if (Sick) make_sick(0L, (char *) 0, false, SICK_ALL);
         Stoned = 0;
         delayed_killer = 0;
         if (u.uhp <= 0 || u.uhpmax <= 0) {
@@ -189,11 +189,11 @@ dead: /* we come directly here if their experience level went to 0 or less */
                     killer_format = KILLED_BY_AN;
                     killer="unsuccessful polymorph";
                     done(DIED);
-                    newuhs(FALSE);
+                    newuhs(false);
                     return; /* lifesaved */
                 }
         }
-        newuhs(FALSE);
+        newuhs(false);
         polyman("feel like a new %s!",
                 (flags.female && urace.individual.f) ? urace.individual.f :
                 (urace.individual.m) ? urace.individual.m : urace.noun);
@@ -207,24 +207,24 @@ dead: /* we come directly here if their experience level went to 0 or less */
 }
 
 void 
-polyself (boolean forcecontrol)
+polyself (bool forcecontrol)
 {
         char buf[BUFSZ];
         int old_light, new_light;
         int mntmp = NON_PM;
         int tries=0;
-        boolean draconian = (uarm &&
+        bool draconian = (uarm &&
                                 uarm->otyp >= GRAY_DRAGON_SCALE_MAIL &&
                                 uarm->otyp <= YELLOW_DRAGON_SCALES);
-        boolean iswere = (u.ulycn >= LOW_PM || is_were(youmonst.data));
-        boolean isvamp = (youmonst.data->mlet == S_VAMPIRE || u.umonnum == PM_VAMPIRE_BAT);
-        boolean was_floating = (Levitation || Flying);
+        bool iswere = (u.ulycn >= LOW_PM || is_were(youmonst.data));
+        bool isvamp = (youmonst.data->mlet == S_VAMPIRE || u.umonnum == PM_VAMPIRE_BAT);
+        bool was_floating = (Levitation || Flying);
 
         if(!Polymorph_control && !forcecontrol && !draconian && !iswere && !isvamp) {
             if (rn2(20) > ACURR(A_CON)) {
                 You("%s", shudder_for_moment);
                 losehp(rnd(30), "system shock", KILLED_BY_AN);
-                exercise(A_CON, FALSE);
+                exercise(A_CON, false);
                 return;
             }
         }
@@ -319,14 +319,14 @@ polymon (       /* returns 1 if polymorph successful */
     int mntmp
 )
 {
-        boolean sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
-                was_blind = !!Blind, dochange = FALSE;
-        boolean could_pass_walls = Passes_walls;
+        bool sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
+                was_blind = !!Blind, dochange = false;
+        bool could_pass_walls = Passes_walls;
         int mlvl;
 
         if (mvitals[mntmp].mvflags & G_GENOD) { /* allow G_EXTINCT */
                 You_feel("rather %s-ish.",mons[mntmp].mname);
-                exercise(A_WIS, TRUE);
+                exercise(A_WIS, true);
                 return(0);
         }
 
@@ -355,11 +355,11 @@ polymon (       /* returns 1 if polymorph successful */
             youmonst.m_ap_type = M_AP_NOTHING;
         }
         if (is_male(&mons[mntmp])) {
-                if(flags.female) dochange = TRUE;
+                if(flags.female) dochange = true;
         } else if (is_female(&mons[mntmp])) {
-                if(!flags.female) dochange = TRUE;
+                if(!flags.female) dochange = true;
         } else if (!is_neuter(&mons[mntmp]) && mntmp != u.ulycn) {
-                if(!rn2(10)) dochange = TRUE;
+                if(!rn2(10)) dochange = true;
         }
         if (dochange) {
                 flags.female = !flags.female;
@@ -397,7 +397,7 @@ polymon (       /* returns 1 if polymorph successful */
                 You("no longer seem to be petrifying.");
         }
         if (Sick_resistance && Sick) {
-                make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+                make_sick(0L, (char *) 0, false, SICK_ALL);
                 You("no longer feel sick.");
         }
         if (Slimed) {
@@ -435,7 +435,7 @@ polymon (       /* returns 1 if polymorph successful */
         }
 
         if (uskin && mntmp != armor_to_dragon(uskin->otyp))
-                skinback(FALSE);
+                skinback(false);
         break_armor();
         drop_weapon(1);
         if (hides_under(youmonst.data))
@@ -454,7 +454,7 @@ polymon (       /* returns 1 if polymorph successful */
         }
         if (was_blind && !Blind) {      /* previous form was eyeless */
             Blinded = 1L;
-            make_blinded(0L, TRUE);     /* remove blindness */
+            make_blinded(0L, true);     /* remove blindness */
         }
         newsym(u.ux,u.uy);              /* Change symbol */
 
@@ -505,13 +505,13 @@ polymon (       /* returns 1 if polymorph successful */
         if (lays_eggs(youmonst.data)) {
             learn_egg_type(u.umonnum);
             /* make queen bees recognize killer bee eggs */
-            learn_egg_type(egg_type_from_parent(u.umonnum, TRUE));
+            learn_egg_type(egg_type_from_parent(u.umonnum, true));
         }
         find_ac();
         if((!Levitation && !u.ustuck && !Flying &&
             (is_pool(u.ux,u.uy) || is_lava(u.ux,u.uy))) ||
            (Underwater && !Swimming))
-            spoteffects(TRUE);
+            spoteffects(true);
         if (Passes_walls && u.utrap && u.utraptype == TT_INFLOOR) {
             u.utrap = 0;
             pline_The("rock seems to no longer trap you.");
@@ -540,8 +540,8 @@ polymon (       /* returns 1 if polymorph successful */
         flags.botl = 1;
         vision_full_recalc = 1;
         see_monsters();
-        exercise(A_CON, FALSE);
-        exercise(A_WIS, TRUE);
+        exercise(A_CON, false);
+        exercise(A_WIS, true);
         (void) encumber_msg();
         return(1);
 }
@@ -555,7 +555,7 @@ break_armor (void)
         if ((otmp = uarm) != 0) {
                 if (donning(otmp)) cancel_don();
                 You("break out of your armor!");
-                exercise(A_STR, FALSE);
+                exercise(A_STR, false);
                 (void) Armor_gone();
                 useup(otmp);
         }
@@ -744,9 +744,9 @@ dospit (void)
 
         if (!getdir((char *)0)) return(0);
         otmp = mksobj(u.umonnum==PM_COBRA ? BLINDING_VENOM : ACID_VENOM,
-                        TRUE, FALSE);
+                        true, false);
         otmp->spe = 1; /* to indicate it's yours */
-        throwit(otmp, 0L, FALSE);
+        throwit(otmp, 0L, false);
         return(1);
 }
 
@@ -774,7 +774,7 @@ dospinweb (void)
         if (u.uswallow) {
                 You("release web fluid inside %s.", mon_nam(u.ustuck));
                 if (is_animal(u.ustuck->data)) {
-                        expels(u.ustuck, u.ustuck->data, TRUE);
+                        expels(u.ustuck, u.ustuck->data, true);
                         return(0);
                 }
                 if (is_whirly(u.ustuck->data)) {
@@ -812,7 +812,7 @@ dospinweb (void)
                 You("cannot spin webs while stuck in a trap.");
                 return(0);
         }
-        exercise(A_DEX, TRUE);
+        exercise(A_DEX, true);
         if (ttmp) switch (ttmp->ttyp) {
                 case PIT:
                 case SPIKED_PIT: You("spin a web, covering up the pit.");
@@ -889,8 +889,8 @@ dosummon (void)
         flags.botl = 1;
 
         You("call upon your brethren for help!");
-        exercise(A_WIS, TRUE);
-        if (!were_summon(youmonst.data, TRUE, &placeholder, (char *)0))
+        exercise(A_WIS, true);
+        if (!were_summon(youmonst.data, true, &placeholder, (char *)0))
                 pline("But none arrive.");
         return(1);
 }
@@ -1023,7 +1023,7 @@ int dogaze(void) {
 int
 dohide (void)
 {
-        boolean ismimic = youmonst.data->mlet == S_MIMIC;
+        bool ismimic = youmonst.data->mlet == S_MIMIC;
 
         if (u.uundetected || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
                 You("are already hiding.");
@@ -1085,7 +1085,7 @@ uunstick (void)
 }
 
 void 
-skinback (boolean silently)
+skinback (bool silently)
 {
         if (uskin) {
                 if (!silently) Your("skin returns to its original form.");
@@ -1249,7 +1249,7 @@ ugolemeffects (int damtype, int dam)
                 if (u.mh > u.mhmax) u.mh = u.mhmax;
                 flags.botl = 1;
                 pline("Strangely, you feel better than before.");
-                exercise(A_STR, TRUE);
+                exercise(A_STR, true);
         }
 }
 

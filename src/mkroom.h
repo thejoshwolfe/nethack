@@ -14,7 +14,7 @@ struct mkroom {
         signed char doorct;             /* door count */
         signed char fdoor;              /* index for the first door of the room */
         signed char nsubrooms;  /* number of subrooms */
-        boolean irregular;      /* true if room is non-rectangular */
+        bool irregular;      /* true if room is non-rectangular */
         struct mkroom *sbrooms[MAX_SUBROOMS];  /* Subrooms pointers */
         struct monst *resident; /* priest/shopkeeper/guard for this room */
 };

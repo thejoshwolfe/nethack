@@ -43,12 +43,12 @@ static void topten_print(const char *);
 static void topten_print_bold(const char *);
 static signed char observable_depth(d_level *);
 static void outheader(void);
-static void outentry(int,struct toptenentry *,boolean);
+static void outentry(int,struct toptenentry *,bool);
 static void readentry(FILE *,struct toptenentry *);
 static void writeentry(FILE *,struct toptenentry *);
 static void free_ttlist(struct toptenentry *);
-static int classmon(char *,boolean);
-static int score_wanted(boolean, int,struct toptenentry *,int,const char **,int);
+static int classmon(char *,bool);
+static int score_wanted(bool, int,struct toptenentry *,int,const char **,int);
 
 /* must fit with end.c; used in rip.c */
 const char * const killed_by_prefix[] = {
@@ -171,7 +171,7 @@ topten (int how)
         struct toptenentry *t1;
         FILE *rfile;
         int flg = 0;
-        boolean t0_used;
+        bool t0_used;
 
 
 /* If we are in the midst of a panic, cut out topten entirely.
@@ -188,7 +188,7 @@ topten (int how)
 #define HUP     if (!program_state.done_hup)
 
         /* create a new 'topten' entry */
-        t0_used = FALSE;
+        t0_used = false;
         t0 = newttentry();
         /* deepest_lev_reached() is in terms of depth(), and reporting the
          * deepest level reached in the dungeon death occurred in doesn't
@@ -202,7 +202,7 @@ topten (int how)
         t0->points = u.urexp;
         t0->deathdnum = u.uz.dnum;
         t0->deathlev = observable_depth(&u.uz);
-        t0->maxlvl = deepest_lev_reached(TRUE);
+        t0->maxlvl = deepest_lev_reached(true);
         t0->hp = u.uhp;
         t0->maxhp = u.uhpmax;
         t0->deaths = u.umortality;
@@ -284,7 +284,7 @@ topten (int how)
                 else
                         tprev->tt_next = t0;
                 t0->tt_next = t1;
-                t0_used = TRUE;
+                t0_used = true;
                 occ_cnt--;
                 flg++;          /* ask for a rewrite */
             } else tprev = t1;
@@ -368,16 +368,16 @@ topten (int how)
                 dump("", "");
             }
             if(rank != rank0)
-                outentry(rank, t1, FALSE);
+                outentry(rank, t1, false);
             else if(!rank1)
-                outentry(rank, t1, TRUE);
+                outentry(rank, t1, true);
             else {
-                outentry(rank, t1, TRUE);
-                outentry(0, t0, TRUE);
+                outentry(rank, t1, true);
+                outentry(0, t0, true);
             }
         }
         if(rank0 >= rank) if(!done_stopprint)
-                outentry(0, t0, TRUE);
+                outentry(0, t0, true);
         (void) fclose(rfile);
         unlock_file(RECORD);
         free_ttlist(tt_head);
@@ -406,11 +406,9 @@ outheader (void)
         dump("", linebuf);
 }
 
-/* so>0: standout line; so=0: ordinary line */
-static void 
-outentry (int rank, struct toptenentry *t1, boolean so)
-{
-        boolean second_line = TRUE;
+/* so=1: standout line; so=0: ordinary line */
+static void outentry (int rank, struct toptenentry *t1, bool so) {
+        bool second_line = true;
         char linebuf[BUFSZ];
         char *bp, hpbuf[24], linebuf3[BUFSZ];
         int hppos, lngr;
@@ -440,18 +438,18 @@ outentry (int rank, struct toptenentry *t1, boolean so)
             /* fixup for closing paren in "escaped... with...Amulet)[max..." */
             if ((bp = index(linebuf, ')')) != 0)
                 *bp = (t1->deathdnum == astral_level.dnum) ? '\0' : ' ';
-            second_line = FALSE;
+            second_line = false;
         } else if (!strncmp("ascended", t1->death, 8)) {
             Sprintf(eos(linebuf), "ascended to demigod%s-hood",
                     (t1->plgend[0] == 'F') ? "dess" : "");
-            second_line = FALSE;
+            second_line = false;
         } else {
             if (!strncmp(t1->death, "quit", 4)) {
                 Strcat(linebuf, "quit");
-                second_line = FALSE;
+                second_line = false;
             } else if (!strncmp(t1->death, "died of st", 10)) {
                 Strcat(linebuf, "starved to death");
-                second_line = FALSE;
+                second_line = false;
             } else if (!strncmp(t1->death, "choked", 6)) {
                 Sprintf(eos(linebuf), "choked on h%s food",
                         (t1->plgend[0] == 'F') ? "er" : "is");
@@ -542,8 +540,7 @@ outentry (int rank, struct toptenentry *t1, boolean so)
 
         if (so) {
             bp = eos(linebuf);
-            if (so >= COLNO) so = COLNO-1;
-            while (bp < linebuf + so) *bp++ = ' ';
+            while (bp < linebuf) *bp++ = ' ';
             *bp = 0;
             topten_print_bold(linebuf);
         } else
@@ -551,8 +548,8 @@ outentry (int rank, struct toptenentry *t1, boolean so)
         dump(" ", linebuf[0]==' '? linebuf+1: linebuf);
 }
 
-static int 
-score_wanted (boolean current_ver, int rank, struct toptenentry *t1, int playerct, const char **players, int uid)
+static int score_wanted (bool current_ver, int rank,
+        struct toptenentry *t1, int playerct, const char **players, int uid)
 {
         int i;
 
@@ -595,10 +592,10 @@ prscore (int argc, char **argv)
 {
         const char **players;
         int playerct, rank;
-        boolean current_ver = TRUE, init_done = FALSE;
+        bool current_ver = true, init_done = false;
         struct toptenentry *t1;
         FILE *rfile;
-        boolean match_found = FALSE;
+        bool match_found = false;
         int i;
         char pbuf[BUFSZ];
         int uid = -1;
@@ -619,7 +616,7 @@ prscore (int argc, char **argv)
         if (wiz1_level.dlevel == 0) {
                 dlb_init();
                 init_dungeons();
-                init_done = TRUE;
+                init_done = true;
         }
 
         if (!argv[1][2]){       /* plain "-s" */
@@ -628,7 +625,7 @@ prscore (int argc, char **argv)
         } else  argv[1] += 2;
 
         if (argc > 1 && !strcmp(argv[1], "-v")) {
-                current_ver = FALSE;
+                current_ver = false;
                 argc--;
                 argv++;
         }
@@ -649,7 +646,7 @@ prscore (int argc, char **argv)
             if (t1->points == 0) break;
             if (!match_found &&
                     score_wanted(current_ver, rank, t1, playerct, players, uid))
-                match_found = TRUE;
+                match_found = true;
             t1->tt_next = newttentry();
             t1 = t1->tt_next;
         }
@@ -699,7 +696,7 @@ prscore (int argc, char **argv)
 }
 
 static int 
-classmon (char *plch, boolean fem)
+classmon (char *plch, bool fem)
 {
         int i;
 

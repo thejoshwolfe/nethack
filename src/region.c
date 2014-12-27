@@ -16,15 +16,15 @@ static int max_regions = 0;
 
 #define NO_CALLBACK (-1)
 
-boolean inside_gas_cloud(void *,void *);
-boolean expire_gas_cloud(void *,void *);
-boolean inside_rect(NhRect *,int,int);
-boolean inside_region(NhRegion *,int,int);
+bool inside_gas_cloud(void *,void *);
+bool expire_gas_cloud(void *,void *);
+bool inside_rect(NhRect *,int,int);
+bool inside_region(NhRegion *,int,int);
 NhRegion *create_region(NhRect *,int);
 void add_rect_to_reg(NhRegion *,NhRect *);
 void add_mon_to_reg(NhRegion *,struct monst *);
 void remove_mon_from_reg(NhRegion *,struct monst *);
-boolean mon_in_region(NhRegion *,struct monst *);
+bool mon_in_region(NhRegion *,struct monst *);
 
 void free_region(NhRegion *);
 void add_region(NhRegion *);
@@ -40,7 +40,7 @@ static callback_proc callbacks[] = {
 };
 
 /* Should be inlined. */
-boolean 
+bool 
 inside_rect (NhRect *r, int x, int y)
 {
     return (x >= r->lx && x <= r->hx && y >= r->ly && y <= r->hy);
@@ -49,17 +49,17 @@ inside_rect (NhRect *r, int x, int y)
 /*
  * Check if a point is inside a region.
  */
-boolean 
+bool 
 inside_region (NhRegion *reg, int x, int y)
 {
     int i;
 
     if (reg == NULL || !inside_rect(&(reg->bounding_box), x, y))
-        return FALSE;
+        return false;
     for (i = 0; i < reg->nrects; i++)
         if (inside_rect(&(reg->rects[i]), x, y))
-            return TRUE;
-    return FALSE;
+            return true;
+    return false;
 }
 
 /*
@@ -95,7 +95,7 @@ create_region (NhRect *rects, int nrect)
         reg->rects[i] = rects[i];
     }
     reg->ttl = -1;              /* Defaults */
-    reg->attach_2_u = FALSE;
+    reg->attach_2_u = false;
     reg->attach_2_m = 0;
     /* reg->attach_2_o = NULL; */
     reg->enter_msg = NULL;
@@ -187,15 +187,15 @@ remove_mon_from_reg (NhRegion *reg, struct monst *mon)
  * It's probably quicker to check with the region internal list
  * than to check for coordinates.
  */
-boolean 
+bool 
 mon_in_region (NhRegion *reg, struct monst *mon)
 {
     int i;
 
     for (i = 0; i < reg->n_monst; i++)
         if (reg->monsters[i] == mon->m_id)
-            return TRUE;
-    return FALSE;
+            return true;
+    return false;
 }
 
 
@@ -350,7 +350,7 @@ run_regions (void)
 /*
  * check whether player enters/leaves one or more regions.
  */
-boolean 
+bool 
 in_out_region (signed char x, signed char y)
 {
     int i, f_indx;
@@ -361,14 +361,14 @@ in_out_region (signed char x, signed char y)
             && !hero_inside(regions[i]) && !regions[i]->attach_2_u) {
             if ((f_indx = regions[i]->can_enter_f) != NO_CALLBACK)
                 if (!(*callbacks[f_indx])(regions[i], (void *) 0))
-                    return FALSE;
+                    return false;
         } else
             if (hero_inside(regions[i])
                 && !inside_region(regions[i], x, y)
                 && !regions[i]->attach_2_u) {
             if ((f_indx = regions[i]->can_leave_f) != NO_CALLBACK)
                 if (!(*callbacks[f_indx])(regions[i], (void *) 0))
-                    return FALSE;
+                    return false;
         }
     }
 
@@ -393,13 +393,13 @@ in_out_region (signed char x, signed char y)
             if ((f_indx = regions[i]->enter_f) != NO_CALLBACK)
                 (void) (*callbacks[f_indx])(regions[i], (void *) 0);
         }
-    return TRUE;
+    return true;
 }
 
 /*
  * check wether a monster enters/leaves one or more region.
 */
-boolean 
+bool 
 m_in_out_region (struct monst *mon, signed char x, signed char y)
 {
     int i, f_indx;
@@ -411,13 +411,13 @@ m_in_out_region (struct monst *mon, signed char x, signed char y)
                 regions[i]->attach_2_m != mon->m_id) {
             if ((f_indx = regions[i]->can_enter_f) != NO_CALLBACK)
                 if (!(*callbacks[f_indx])(regions[i], mon))
-                    return FALSE;
+                    return false;
         } else if (mon_in_region(regions[i], mon) &&
                 !inside_region(regions[i], x, y) &&
                 regions[i]->attach_2_m != mon->m_id) {
             if ((f_indx = regions[i]->can_leave_f) != NO_CALLBACK)
                 if (!(*callbacks[f_indx])(regions[i], mon))
-                    return FALSE;
+                    return false;
         }
     }
 
@@ -439,7 +439,7 @@ m_in_out_region (struct monst *mon, signed char x, signed char y)
             if ((f_indx = regions[i]->enter_f) != NO_CALLBACK)
                 (void) (*callbacks[f_indx])(regions[i], mon);
         }
-    return TRUE;
+    return true;
 }
 
 /*
@@ -517,7 +517,7 @@ save_regions (int fd, int mode)
         bwrite(fd, (void *) &regions[i]->nrects, sizeof (short));
         for (j = 0; j < regions[i]->nrects; j++)
             bwrite(fd, (void *) &regions[i]->rects[j], sizeof (NhRect));
-        bwrite(fd, (void *) &regions[i]->attach_2_u, sizeof (boolean));
+        bwrite(fd, (void *) &regions[i]->attach_2_u, sizeof (bool));
         n = 0;
         bwrite(fd, (void *) &regions[i]->attach_2_m, sizeof (unsigned));
         n = regions[i]->enter_msg != NULL ? strlen(regions[i]->enter_msg) : 0;
@@ -535,12 +535,12 @@ save_regions (int fd, int mode)
         bwrite(fd, (void *) &regions[i]->can_leave_f, sizeof (short));
         bwrite(fd, (void *) &regions[i]->leave_f, sizeof (short));
         bwrite(fd, (void *) &regions[i]->inside_f, sizeof (short));
-        bwrite(fd, (void *) &regions[i]->player_flags, sizeof (boolean));
+        bwrite(fd, (void *) &regions[i]->player_flags, sizeof (bool));
         bwrite(fd, (void *) &regions[i]->n_monst, sizeof (short));
         for (j = 0; j < regions[i]->n_monst; j++)
             bwrite(fd, (void *) &regions[i]->monsters[j],
              sizeof (unsigned));
-        bwrite(fd, (void *) &regions[i]->visible, sizeof (boolean));
+        bwrite(fd, (void *) &regions[i]->visible, sizeof (bool));
         bwrite(fd, (void *) &regions[i]->glyph, sizeof (int));
         bwrite(fd, (void *) &regions[i]->arg, sizeof (void *));
     }
@@ -553,7 +553,7 @@ skip_lots:
 void 
 rest_regions (
     int fd,
-    boolean ghostly /* If a bones file restore */
+    bool ghostly /* If a bones file restore */
 )
 {
     int i, j;
@@ -579,7 +579,7 @@ rest_regions (
                                   alloc(sizeof (NhRect) * regions[i]->nrects);
         for (j = 0; j < regions[i]->nrects; j++)
             mread(fd, (void *) &regions[i]->rects[j], sizeof (NhRect));
-        mread(fd, (void *) &regions[i]->attach_2_u, sizeof (boolean));
+        mread(fd, (void *) &regions[i]->attach_2_u, sizeof (bool));
         mread(fd, (void *) &regions[i]->attach_2_m, sizeof (unsigned));
 
         mread(fd, (void *) &n, sizeof n);
@@ -611,7 +611,7 @@ rest_regions (
         mread(fd, (void *) &regions[i]->can_leave_f, sizeof (short));
         mread(fd, (void *) &regions[i]->leave_f, sizeof (short));
         mread(fd, (void *) &regions[i]->inside_f, sizeof (short));
-        mread(fd, (void *) &regions[i]->player_flags, sizeof (boolean));
+        mread(fd, (void *) &regions[i]->player_flags, sizeof (bool));
         if (ghostly) {  /* settings pertained to old player */
             clear_hero_inside(regions[i]);
             clear_heros_fault(regions[i]);
@@ -626,7 +626,7 @@ rest_regions (
         for (j = 0; j < regions[i]->n_monst; j++)
             mread(fd, (void *) &regions[i]->monsters[j],
                   sizeof (unsigned));
-        mread(fd, (void *) &regions[i]->visible, sizeof (boolean));
+        mread(fd, (void *) &regions[i]->visible, sizeof (bool));
         mread(fd, (void *) &regions[i]->glyph, sizeof (int));
         mread(fd, (void *) &regions[i]->arg, sizeof (void *));
     }
@@ -669,7 +669,7 @@ reset_region_mids (NhRegion *reg)
  * Here is an example of an expire function that may prolong
  * region life after some mods...
  */
-boolean 
+bool 
 expire_gas_cloud (void *p1, void *p2)
 {
     NhRegion *reg;
@@ -683,12 +683,12 @@ expire_gas_cloud (void *p1, void *p2)
         damage /= 2;            /* It dissipates, let's do less damage */
         reg->arg = (void *) damage;
         reg->ttl = 2;           /* Here's the trick : reset ttl */
-        return FALSE;           /* THEN return FALSE, means "still there" */
+        return false;           /* THEN return false, means "still there" */
     }
-    return TRUE;                /* OK, it's gone, you can free it! */
+    return true;                /* OK, it's gone, you can free it! */
 }
 
-boolean 
+bool 
 inside_gas_cloud (void *p1, void *p2)
 {
     NhRegion *reg;
@@ -699,17 +699,17 @@ inside_gas_cloud (void *p1, void *p2)
     dam = (int) reg->arg;
     if (p2 == NULL) {           /* This means *YOU* Bozo! */
         if (nonliving(youmonst.data) || Breathless)
-            return FALSE;
+            return false;
         if (!Blind)
-            make_blinded(1L, FALSE);
+            make_blinded(1L, false);
         if (!Poison_resistance) {
             pline("%s is burning your %s!", Something, makeplural(body_part(LUNG)));
             You("cough and spit blood!");
             losehp(rnd(dam) + 5, "gas cloud", KILLED_BY_AN);
-            return FALSE;
+            return false;
         } else {
             You("cough!");
-            return FALSE;
+            return false;
         }
     } else {                    /* A monster is inside the cloud */
         mtmp = (struct monst *) p2;
@@ -724,7 +724,7 @@ inside_gas_cloud (void *p1, void *p2)
                 mtmp->mcansee = 0;
             }
             if (resists_poison(mtmp))
-                return FALSE;
+                return false;
             mtmp->mhp -= rnd(dam) + 5;
             if (mtmp->mhp <= 0) {
                 if (heros_fault(reg))
@@ -732,12 +732,12 @@ inside_gas_cloud (void *p1, void *p2)
                 else
                     monkilled(mtmp, "gas cloud", AD_DRST);
                 if (mtmp->mhp <= 0) {   /* not lifesaved */
-                    return TRUE;
+                    return true;
                 }
             }
         }
     }
-    return FALSE;               /* Monster is still alive */
+    return false;               /* Monster is still alive */
 }
 
 NhRegion *
@@ -766,7 +766,7 @@ create_gas_cloud (signed char x, signed char y, int radius, int damage)
     cloud->inside_f = INSIDE_GAS_CLOUD;
     cloud->expire_f = EXPIRE_GAS_CLOUD;
     cloud->arg = (void *) damage;
-    cloud->visible = TRUE;
+    cloud->visible = true;
     cloud->glyph = cmap_to_glyph(S_cloud);
     add_region(cloud);
     return cloud;

@@ -78,7 +78,7 @@ void mapglyph(int glyph, int *ochar, int *ocolor, unsigned *ospecial, int x, int
         ch = monsyms[(int)mons[offset].mlet];
             mon_color(offset);
         /* Disabled for now; anyone want to get reverse video to work? */
-        /* is_reverse = TRUE; */
+        /* is_reverse = true; */
             special |= MG_DETECT;
     } else if ((offset = (glyph - GLYPH_INVIS_OFF)) >= 0) {     /* invisible */
         ch = DEF_INVISIBLE;

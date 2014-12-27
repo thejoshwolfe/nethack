@@ -30,7 +30,7 @@ static void kill_hilite(void);
 
         /* (see tcap.h) -- nh_CM, nh_ND, nh_CD, nh_HI,nh_HE, nh_US,nh_UE,
                                 ul_hack */
-struct tc_lcl_data tc_lcl_data = { 0, 0, 0, 0,0, 0,0, FALSE };
+struct tc_lcl_data tc_lcl_data = { 0, 0, 0, 0,0, 0,0, false };
 
 static char *HO, *CL, *CE, *UP, *XD, *BC, *SO, *SE, *TI, *TE;
 static char *VS, *VE;
@@ -46,7 +46,7 @@ char *hilites[CLR_MAX]; /* terminal escapes for the various colors */
 static char *KS = (char *)0, *KE = (char *)0;   /* keypad sequences */
 static char nullstr[] = "";
 
-extern boolean HE_resets_AS;
+extern bool HE_resets_AS;
 
 
 void tty_startup(int *wid, int *hgt) {
@@ -64,7 +64,7 @@ void tty_startup(int *wid, int *hgt) {
 
         tbufptr = tbuf;
         if(!strncmp(term, "5620", 4))
-                flags.null = FALSE;     /* this should be a termcap flag */
+                flags.null = false;     /* this should be a termcap flag */
         if(tgetent(tptr, term) < 1) {
                 char buf[BUFSZ];
                 (void) strncpy(buf, term,
@@ -90,7 +90,7 @@ void tty_startup(int *wid, int *hgt) {
         if(tgetflag("os"))
                 error("NetHack can't have OS.");
         if(tgetflag("ul"))
-                ul_hack = TRUE;
+                ul_hack = true;
         CE = Tgetstr("ce");
         UP = Tgetstr("up");
         /* It seems that xd is no longer supported, and we should use
@@ -216,7 +216,7 @@ static void tty_decgraphics_termcap_fixup (void) {
         ae_length = strlen(ae), he_limit = strlen(nh_he);
         while (he_limit >= ae_length) {
             if (strncmp(nh_he, ae, ae_length) == 0) {
-                HE_resets_AS = TRUE;
+                HE_resets_AS = true;
                 break;
             }
             ++nh_he, --he_limit;
@@ -441,8 +441,8 @@ void cl_eos(void) {
             not needed beyond this point, so we don't need to worry
             about reconstructing them after the header file inclusion. */
 #undef delay_output
-#undef TRUE
-#undef FALSE
+#undef true
+#undef false
 
 #include <curses.h>
 

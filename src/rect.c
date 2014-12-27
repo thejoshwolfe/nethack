@@ -5,7 +5,7 @@
 
 int get_rect_ind(NhRect *);
 
-static boolean intersect(NhRect *,NhRect *,NhRect *);
+static bool intersect(NhRect *,NhRect *,NhRect *);
 
     /*
      * In this file, we will handle the various rectangle functions we
@@ -86,16 +86,16 @@ rnd_rect (void)
 
 /*
  * Search intersection between two rectangles (r1 & r2).
- * return TRUE if intersection exist and put it in r3.
- * otherwise returns FALSE
+ * return true if intersection exist and put it in r3.
+ * otherwise returns false
  */
 
-static boolean 
+static bool 
 intersect (NhRect *r1, NhRect *r2, NhRect *r3)
 {
         if (r2->lx > r1->hx || r2->ly > r1->hy ||
             r2->hx < r1->lx || r2->hy < r1->ly)
-            return FALSE;
+            return false;
 
         r3->lx = (r2->lx > r1->lx ? r2->lx : r1->lx);
         r3->ly = (r2->ly > r1->ly ? r2->ly : r1->ly);
@@ -103,8 +103,8 @@ intersect (NhRect *r1, NhRect *r2, NhRect *r3)
         r3->hy = (r2->hy > r1->hy ? r1->hy : r2->hy);
 
         if (r3->lx > r3->hx || r3->ly > r3->hy)
-            return FALSE;
-        return TRUE;
+            return false;
+        return true;
 }
 
 /*

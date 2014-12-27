@@ -107,17 +107,17 @@ static void postadjabil(long *);
 #define FAINTED         5
 #define STARVED         6
 
-/* adjust an attribute; return TRUE if change is made, FALSE otherwise */
+/* adjust an attribute; return true if change is made, false otherwise */
 //       int     msgflg;     /* positive => no message, zero => message, and */
 //                           /* negative => conditional (msg if change made) */
-boolean adjattrib(int ndx, int incr, int msgflg) {
-    if (Fixed_abil || !incr) return FALSE;
+bool adjattrib(int ndx, int incr, int msgflg) {
+    if (Fixed_abil || !incr) return false;
 
     if ((ndx == A_INT || ndx == A_WIS)
             && uarmh && uarmh->otyp == DUNCE_CAP) {
         if (msgflg == 0)
             Your("cap constricts briefly, then relaxes again.");
-        return FALSE;
+        return false;
     }
 
     if (incr > 0) {
@@ -126,7 +126,7 @@ boolean adjattrib(int ndx, int incr, int msgflg) {
                 pline("You're already as %s as you can get.",
                         plusattr[ndx]);
             ABASE(ndx) = AMAX(ndx) = ATTRMAX(ndx); /* just in case */
-            return FALSE;
+            return false;
         }
 
         ABASE(ndx) += incr;
@@ -143,7 +143,7 @@ boolean adjattrib(int ndx, int incr, int msgflg) {
                 pline("You're already as %s as you can get.",
                         minusattr[ndx]);
             ABASE(ndx) = ATTRMIN(ndx); /* just in case */
-            return FALSE;
+            return false;
         }
 
         ABASE(ndx) += incr;
@@ -162,7 +162,7 @@ boolean adjattrib(int ndx, int incr, int msgflg) {
     flags.botl = 1;
     if (moves > 1 && (ndx == A_STR || ndx == A_CON))
         (void)encumber_msg();
-    return TRUE;
+    return true;
 }
 
 void gainstr (struct obj *otmp, int incr) {
@@ -173,7 +173,7 @@ void gainstr (struct obj *otmp, int incr) {
         if(ABASE(A_STR) < 18) num = (rn2(4) ? 1 : rnd(6) );
         else if (ABASE(A_STR) < STR18(85)) num = rnd(10);
     }
-    (void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, TRUE);
+    (void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, true);
 }
 
 /* may kill you; cause may be poison or monster like 'a' */
@@ -191,7 +191,7 @@ void losestr (int num) {
             u.uhpmax -= 6;
         }
     }
-    (void) adjattrib(A_STR, -num, TRUE);
+    (void) adjattrib(A_STR, -num, true);
 }
 
 void change_luck (signed char n) {
@@ -200,7 +200,7 @@ void change_luck (signed char n) {
     if (u.uluck > 0 && u.uluck > LUCKMAX)   u.uluck = LUCKMAX;
 }
 
-int stone_luck(boolean parameter) {
+int stone_luck(bool parameter) {
     struct obj *otmp;
     long bonchance = 0;
 
@@ -216,7 +216,7 @@ int stone_luck(boolean parameter) {
 
 /* there has just been an inventory change affecting a luck-granting item */
 void set_moreluck (void) {
-    int luckbon = stone_luck(TRUE);
+    int luckbon = stone_luck(true);
 
     if (!luckbon && !carrying(LUCKSTONE)) u.moreluck = 0;
     else if (luckbon >= 0) u.moreluck = LUCKADD;
@@ -241,7 +241,7 @@ void restore_attrib (void) {
 }
 
 
-void exercise(int i, boolean inc_or_dec) {
+void exercise(int i, bool inc_or_dec) {
     if (i == A_INT || i == A_CHA) return;   /* can't exercise these */
 
     /* no physical exercise while polymorphed; the body's temporary */
@@ -272,26 +272,26 @@ static void exerper (void) {
             (u.uhunger > 0) ? WEAK : FAINTING;
 
         switch (hs) {
-            case SATIATED:      exercise(A_DEX, FALSE);
+            case SATIATED:      exercise(A_DEX, false);
                                 if (Role_if(PM_MONK))
-                                    exercise(A_WIS, FALSE);
+                                    exercise(A_WIS, false);
                                 break;
-            case NOT_HUNGRY:    exercise(A_CON, TRUE); break;
-            case WEAK:          exercise(A_STR, FALSE);
+            case NOT_HUNGRY:    exercise(A_CON, true); break;
+            case WEAK:          exercise(A_STR, false);
                                 if (Role_if(PM_MONK))   /* fasting */
-                                    exercise(A_WIS, TRUE);
+                                    exercise(A_WIS, true);
                                 break;
             case FAINTING:
-            case FAINTED:       exercise(A_CON, FALSE); break;
+            case FAINTED:       exercise(A_CON, false); break;
         }
 
         /* Encumberance Checks */
         switch (near_capacity()) {
-            case MOD_ENCUMBER:  exercise(A_STR, TRUE); break;
-            case HVY_ENCUMBER:  exercise(A_STR, TRUE);
-                                exercise(A_DEX, FALSE); break;
-            case EXT_ENCUMBER:  exercise(A_DEX, FALSE);
-                                exercise(A_CON, FALSE); break;
+            case MOD_ENCUMBER:  exercise(A_STR, true); break;
+            case HVY_ENCUMBER:  exercise(A_STR, true);
+                                exercise(A_DEX, false); break;
+            case EXT_ENCUMBER:  exercise(A_DEX, false);
+                                exercise(A_CON, false); break;
         }
 
     }
@@ -299,14 +299,14 @@ static void exerper (void) {
     /* status checks */
     if(!(moves % 5)) {
         if ((HClairvoyant & (INTRINSIC|TIMEOUT)) &&
-                !BClairvoyant)                      exercise(A_WIS, TRUE);
-        if (HRegeneration)                      exercise(A_STR, TRUE);
+                !BClairvoyant)                      exercise(A_WIS, true);
+        if (HRegeneration)                      exercise(A_STR, true);
 
-        if(Sick || Vomiting)     exercise(A_CON, FALSE);
-        if(Confusion || Hallucination)          exercise(A_WIS, FALSE);
+        if(Sick || Vomiting)     exercise(A_CON, false);
+        if(Confusion || Hallucination)          exercise(A_WIS, false);
         if((Wounded_legs
                     && !u.usteed
-           ) || Fumbling || HStun)     exercise(A_DEX, FALSE);
+           ) || Fumbling || HStun)     exercise(A_DEX, false);
     }
 }
 

@@ -40,13 +40,13 @@ dodrop (void)
 
 /* Called when a boulder is dropped, thrown, or pushed.  If it ends up
  * in a pool, it either fills the pool up or sinks away.  In either case,
- * it's gone for good...  If the destination is not a pool, returns FALSE.
+ * it's gone for good...  If the destination is not a pool, returns false.
  */
-boolean boulder_hits_pool(struct obj *otmp, int rx, int ry, boolean pushing) {
+bool boulder_hits_pool(struct obj *otmp, int rx, int ry, bool pushing) {
         if (!otmp || otmp->otyp != BOULDER)
             impossible("Not a boulder?");
         else if (!Is_waterlevel(&u.uz) && (is_pool(rx,ry) || is_lava(rx,ry))) {
-            boolean lava = is_lava(rx,ry), fills_up;
+            bool lava = is_lava(rx,ry), fills_up;
             const char *what = waterbody_name(rx,ry);
             signed char ltyp = levl[rx][ry].typ;
             int chance = rn2(10);               /* water: 90%; lava: 10% */
@@ -102,16 +102,16 @@ boolean boulder_hits_pool(struct obj *otmp, int rx, int ry, boolean pushing) {
             /* boulder is now gone */
             if (pushing) delobj(otmp);
             else obfree(otmp, (struct obj *)0);
-            return TRUE;
+            return true;
         }
-        return FALSE;
+        return false;
 }
 
 /* Used for objects which sometimes do special things when dropped; must be
- * called with the object not in any chain.  Returns TRUE if the object goes
+ * called with the object not in any chain.  Returns true if the object goes
  * away.
  */
-boolean 
+bool 
 flooreffects (struct obj *obj, int x, int y, const char *verb)
 {
         struct trap *t;
@@ -123,8 +123,8 @@ flooreffects (struct obj *obj, int x, int y, const char *verb)
         /* make sure things like water_damage() have no pointers to follow */
         obj->nobj = obj->nexthere = (struct obj *)0;
 
-        if (obj->otyp == BOULDER && boulder_hits_pool(obj, x, y, FALSE))
-                return TRUE;
+        if (obj->otyp == BOULDER && boulder_hits_pool(obj, x, y, false))
+                return true;
         else if (obj->otyp == BOULDER && (t = t_at(x,y)) != 0 &&
                  (t->ttyp==PIT || t->ttyp==SPIKED_PIT
                         || t->ttyp==TRAPDOOR || t->ttyp==HOLE)) {
@@ -137,15 +137,15 @@ flooreffects (struct obj *obj, int x, int y, const char *verb)
                     if (mtmp) {
                         if (!passes_walls(mtmp->data) &&
                                 !throws_rocks(mtmp->data)) {
-                            if (hmon(mtmp, obj, TRUE) && !is_whirly(mtmp->data))
-                                return FALSE;   /* still alive */
+                            if (hmon(mtmp, obj, true) && !is_whirly(mtmp->data))
+                                return false;   /* still alive */
                         }
                         mtmp->mtrapped = 0;
                     } else {
                         if (!Passes_walls && !throws_rocks(youmonst.data)) {
                             losehp(rnd(15), "squished under a boulder",
                                    NO_KILLER_PREFIX);
-                            return FALSE;       /* player remains trapped */
+                            return false;       /* player remains trapped */
                         } else u.utrap = 0;
                     }
                 }
@@ -167,9 +167,9 @@ flooreffects (struct obj *obj, int x, int y, const char *verb)
                 obfree(obj, (struct obj *)0);
                 bury_objs(x, y);
                 newsym(x,y);
-                return TRUE;
+                return true;
         } else if (is_lava(x, y)) {
-                return fire_damage(obj, FALSE, FALSE, x, y);
+                return fire_damage(obj, false, false, x, y);
         } else if (is_pool(x, y)) {
                 /* Reasonably bulky objects (arbitrary) splash when dropped.
                  * If you're floating above the water even small things make noise.
@@ -186,7 +186,7 @@ flooreffects (struct obj *obj, int x, int y, const char *verb)
                     map_background(x, y, 0);
                     newsym(x, y);
                 }
-                water_damage(obj, FALSE, FALSE);
+                water_damage(obj, false, false);
         } else if (u.ux == x && u.uy == y &&
                 (!u.utrap || u.utraptype != TT_PIT) &&
                 (t = t_at(x,y)) != 0 && t->tseen &&
@@ -200,7 +200,7 @@ flooreffects (struct obj *obj, int x, int y, const char *verb)
                                 The(xname(obj)), otense(obj, "tumble"),
                                 the_your[t->madeby_u]);
         }
-        return FALSE;
+        return false;
 }
 
 
@@ -241,10 +241,10 @@ dosinkring (  /* obj is a ring being dropped over a kitchen sink */
 )
 {
         struct obj *otmp,*otmp2;
-        boolean ideed = TRUE;
+        bool ideed = true;
 
         You("drop %s down the drain.", doname(obj));
-        obj->in_use = TRUE;     /* block free identification via interrupt */
+        obj->in_use = true;     /* block free identification via interrupt */
         switch(obj->otyp) {     /* effects that can be noticed without eyes */
             case RIN_SEARCHING:
                 You("thought your %s got lost in the sink, but there it is!",
@@ -253,7 +253,7 @@ dosinkring (  /* obj is a ring being dropped over a kitchen sink */
             case RIN_SLOW_DIGESTION:
                 pline_The("ring is regurgitated!");
 giveback:
-                obj->in_use = FALSE;
+                obj->in_use = false;
                 dropx(obj);
                 trycall(obj);
                 return;
@@ -261,7 +261,7 @@ giveback:
                 pline_The("sink quivers upward for a moment.");
                 break;
             case RIN_POISON_RESISTANCE:
-                You("smell rotten %s.", makeplural(fruitname(FALSE)));
+                You("smell rotten %s.", makeplural(fruitname(false)));
                 break;
             case RIN_AGGRAVATE_MONSTER:
                 pline("Several flies buzz angrily around the sink.");
@@ -292,7 +292,7 @@ giveback:
                         (obj->spe<0) ? "small" : "great");
                 break;
             case RIN_HUNGER:
-                ideed = FALSE;
+                ideed = false;
                 for(otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp2) {
                     otmp2 = otmp->nexthere;
                     if (otmp != uball && otmp != uchain &&
@@ -300,7 +300,7 @@ giveback:
                         if (!Blind) {
                             pline("Suddenly, %s %s from the sink!",
                                   doname(otmp), otense(otmp, "vanish"));
-                            ideed = TRUE;
+                            ideed = true;
                         }
                         delobj(otmp);
                     }
@@ -311,11 +311,11 @@ giveback:
                 pline("Several flies buzz around the sink.");
                 break;
             default:
-                ideed = FALSE;
+                ideed = false;
                 break;
         }
         if(!Blind && !ideed && obj->otyp != RIN_HUNGER) {
-            ideed = TRUE;
+            ideed = true;
             switch(obj->otyp) {         /* effects that need eyes */
                 case RIN_ADORNMENT:
                     pline_The("faucets flash brightly for a moment.");
@@ -371,7 +371,7 @@ giveback:
             You_hear("the ring bouncing down the drainpipe.");
         if (!rn2(20)) {
                 pline_The("sink backs up, leaving %s.", doname(obj));
-                obj->in_use = FALSE;
+                obj->in_use = false;
                 dropx(obj);
         } else
                 useup(obj);
@@ -379,14 +379,14 @@ giveback:
 
 
 /* some common tests when trying to drop or throw items */
-boolean 
+bool 
 canletgo (struct obj *obj, const char *word)
 {
         if(obj->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL)){
                 if (*word)
                         Norep("You cannot %s %s you are wearing.",word,
                                 something);
-                return(FALSE);
+                return(false);
         }
         if (obj->otyp == LOADSTONE && obj->cursed) {
                 /* getobj() kludge sets corpsenm to user's specified count
@@ -402,21 +402,21 @@ canletgo (struct obj *obj, const char *word)
                 }
                 obj->corpsenm = 0;              /* reset */
                 obj->bknown = 1;
-                return(FALSE);
+                return(false);
         }
         if (obj->otyp == LEASH && obj->leashmon != 0) {
                 if (*word)
                         pline_The("leash is tied around your %s.",
                                         body_part(HAND));
-                return(FALSE);
+                return(false);
         }
         if (obj->owornmask & W_SADDLE) {
                 if (*word)
                         You("cannot %s %s you are sitting on.", word,
                                 something);
-                return (FALSE);
+                return (false);
         }
-        return(TRUE);
+        return(true);
 }
 
 static int
@@ -476,7 +476,7 @@ dropx (struct obj *obj)
 {
         if (obj->oclass != COIN_CLASS || obj == invent) freeinv(obj);
         if (!u.uswallow) {
-            if (ship_object(obj, u.ux, u.uy, FALSE)) return;
+            if (ship_object(obj, u.ux, u.uy, false)) return;
             if (IS_ALTAR(levl[u.ux][u.uy].typ))
                 doaltarobj(obj); /* set bknown */
         }
@@ -493,11 +493,11 @@ dropy (struct obj *obj)
         if (!u.uswallow && flooreffects(obj,u.ux,u.uy,"drop")) return;
         /* uswallow check done by GAN 01/29/87 */
         if(u.uswallow) {
-            boolean could_petrify = FALSE;
-            boolean could_poly = FALSE;
-            boolean could_slime = FALSE;
-            boolean could_grow = FALSE;
-            boolean could_heal = FALSE;
+            bool could_petrify = false;
+            bool could_poly = false;
+            bool could_slime = false;
+            bool could_grow = false;
+            bool could_heal = false;
 
             if (obj != uball) {         /* mon doesn't pick up ball */
                 if (obj->otyp == CORPSE) {
@@ -513,10 +513,10 @@ dropy (struct obj *obj)
                         (void) newcham(u.ustuck,
                                        could_poly ? (struct permonst *)0 :
                                        &mons[PM_GREEN_SLIME],
-                                       FALSE, could_slime);
+                                       false, could_slime);
                         delobj(obj);    /* corpse is digested */
                     } else if (could_petrify) {
-                        minstapetrify(u.ustuck, TRUE);
+                        minstapetrify(u.ustuck, true);
                         /* Don't leave a cockatrice corpse in a statue */
                         if (!u.uswallow) delobj(obj);
                     } else if (could_grow) {
@@ -574,7 +574,7 @@ doddrop (void)
         add_valid_menu_class(0); /* clear any classes already there */
         if (*u.ushops) sellobj_state(SELL_DELIBERATE);
         if (flags.menu_style != MENU_TRADITIONAL ||
-                (result = ggetobj("drop", drop, 0, FALSE, (unsigned *)0)) < -1)
+                (result = ggetobj("drop", drop, 0, false, (unsigned *)0)) < -1)
             result = menu_drop(result);
         if (*u.ushops) sellobj_state(SELL_NORMAL);
         reset_occupations();
@@ -591,14 +591,14 @@ menu_drop (int retry)
     struct obj *otmp, *otmp2;
     struct obj *u_gold = 0;
     menu_item *pick_list;
-    boolean all_categories = TRUE;
-    boolean drop_everything = FALSE;
+    bool all_categories = true;
+    bool drop_everything = false;
 
     if (u.ugold) {
         /* Hack: gold is not in the inventory, so make a gold object
            and put it at the head of the inventory list. */
         u_gold = mkgoldobj(u.ugold);    /* removes from u.ugold */
-        u_gold->in_use = TRUE;
+        u_gold->in_use = true;
         u.ugold = u_gold->quan;         /* put the gold back */
         assigninvlet(u_gold);           /* might end up as NOINVSYM */
         u_gold->nobj = invent;
@@ -607,7 +607,7 @@ menu_drop (int retry)
     if (retry) {
         all_categories = (retry == -2);
     } else if (flags.menu_style == MENU_FULL) {
-        all_categories = FALSE;
+        all_categories = false;
         n = query_category("Drop what type of items?",
                         invent,
                         UNPAID_TYPES | ALL_TYPES | CHOOSE_ALL |
@@ -616,19 +616,19 @@ menu_drop (int retry)
         if (!n) goto drop_done;
         for (i = 0; i < n; i++) {
             if (pick_list[i].item.a_int == ALL_TYPES_SELECTED)
-                all_categories = TRUE;
+                all_categories = true;
             else if (pick_list[i].item.a_int == 'A')
-                drop_everything = TRUE;
+                drop_everything = true;
             else
                 add_valid_menu_class(pick_list[i].item.a_int);
         }
         free((void *) pick_list);
     } else if (flags.menu_style == MENU_COMBINATION) {
         unsigned ggoresults = 0;
-        all_categories = FALSE;
+        all_categories = false;
         /* Gather valid classes via traditional NetHack method */
-        i = ggetobj("drop", drop, 0, TRUE, &ggoresults);
-        if (i == -2) all_categories = TRUE;
+        i = ggetobj("drop", drop, 0, true, &ggoresults);
+        if (i == -2) all_categories = true;
         if (ggoresults & ALL_FINISHED) {
                 n_dropped = i;
                 goto drop_done;
@@ -673,7 +673,7 @@ menu_drop (int retry)
         /* didn't drop [all of] it */
         u_gold = invent;
         invent = u_gold->nobj;
-        u_gold->in_use = FALSE;
+        u_gold->in_use = false;
         dealloc_obj(u_gold);
         update_inventory();
     }
@@ -682,13 +682,13 @@ menu_drop (int retry)
 
 
 /* on a ladder, used in goto_level */
-static boolean at_ladder = FALSE;
+static bool at_ladder = false;
 
 int
 dodown (void)
 {
         struct trap *trap = 0;
-        boolean stairs_down = ((u.ux == xdnstair && u.uy == ydnstair) ||
+        bool stairs_down = ((u.ux == xdnstair && u.uy == ydnstair) ||
                     (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up)),
                 ladder_down = (u.ux == xdnladder && u.uy == ydnladder);
 
@@ -761,11 +761,11 @@ dodown (void)
                 trap->ttyp == HOLE ? "down the hole" : "through the trap door");
 
         if (trap && Is_stronghold(&u.uz)) {
-                goto_hell(FALSE, TRUE);
+                goto_hell(false, true);
         } else {
-                at_ladder = (boolean) (levl[u.ux][u.uy].typ == LADDER);
+                at_ladder = (bool) (levl[u.ux][u.uy].typ == LADDER);
                 next_level(!trap);
-                at_ladder = FALSE;
+                at_ladder = false;
         }
         return(1);
 }
@@ -808,9 +808,9 @@ doup (void)
                 You("are held back by your pet!");
                 return(0);
         }
-        at_ladder = (boolean) (levl[u.ux][u.uy].typ == LADDER);
-        prev_level(TRUE);
-        at_ladder = FALSE;
+        at_ladder = (bool) (levl[u.ux][u.uy].typ == LADDER);
+        prev_level(true);
+        at_ladder = false;
         return(1);
 }
 
@@ -861,15 +861,15 @@ save_currentstate (void)
         savestateinlock();
 }
 
-void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean portal) {
+void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
         int fd, l_idx;
         signed char new_ledger;
-        boolean cant_go_back,
+        bool cant_go_back,
                 up = (depth(newlevel) < depth(&u.uz)),
                 newdungeon = (u.uz.dnum != newlevel->dnum),
                 was_in_W_tower = In_W_tower(u.ux, u.uy, &u.uz),
-                familiar = FALSE;
-        boolean new = FALSE;    /* made a new level? */
+                familiar = false;
+        bool new = false;    /* made a new level? */
         struct monst *mtmp;
         char whynot[BUFSZ];
 
@@ -915,11 +915,11 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
 
                     pline("A mysterious force momentarily surrounds you...");
                     if (on_level(newlevel, &u.uz)) {
-                        (void) safe_teleds(FALSE);
+                        (void) safe_teleds(false);
                         (void) next_to_u();
                         return;
                     } else
-                        at_stairs = at_ladder = FALSE;
+                        at_stairs = at_ladder = false;
                 }
         }
 
@@ -939,14 +939,14 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
         if (falling) /* assuming this is only trap door or hole */
             impact_drop((struct obj *)0, u.ux, u.uy, newlevel->dlevel);
 
-        check_special_room(TRUE);               /* probably was a trap door */
+        check_special_room(true);               /* probably was a trap door */
         if (Punished) unplacebc();
         u.utrap = 0;                            /* needed in level_tele */
         fill_pit(u.ux, u.uy);
         u.ustuck = 0;                           /* idem */
         u.uinwater = 0;
         u.uundetected = 0;      /* not hidden, even if means are available */
-        keepdogs(FALSE);
+        keepdogs(false);
         if (u.uswallow)                         /* idem */
                 u.uswldtim = u.uswallow = 0;
         /*
@@ -997,7 +997,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
                     level_info[new_ledger].flags &= ~(FORGOTTEN|VISITED);
                 }
                 mklev();
-                new = TRUE;     /* made the level */
+                new = true;     /* made the level */
         } else {
                 /* returning to previously visited level; reload it */
                 fd = open_levelfile(new_ledger, whynot);
@@ -1010,7 +1010,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
                         error("Cannot continue this game.");
                 }
                 minit();        /* ZEROCOMP */
-                getlev(fd, hackpid, new_ledger, FALSE);
+                getlev(fd, hackpid, new_ledger, false);
                 (void) close(fd);
         }
         /* do this prior to level-change pline messages */
@@ -1143,7 +1143,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
 
             if ((mtmp = m_at(u.ux, u.uy)) != 0) {
                 impossible("mnexto failed (do.c)?");
-                (void) rloc(mtmp, FALSE);
+                (void) rloc(mtmp, false);
             }
         }
 
@@ -1154,7 +1154,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
         if (level_info[new_ledger].flags & FORGOTTEN) {
             forget_map(ALL_MAP);        /* forget the map */
             forget_traps();             /* forget all traps too */
-            familiar = TRUE;
+            familiar = true;
             level_info[new_ledger].flags &= ~FORGOTTEN;
         }
 
@@ -1168,7 +1168,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
          */
 
         /* give room entrance message, if any */
-        check_special_room(FALSE);
+        check_special_room(false);
 
         /* Check whether we just entered Gehennom. */
         if (!In_hell(&u.uz0) && Inhell) {
@@ -1221,7 +1221,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
                         com_pager(Role_if(PM_ROGUE) ? 4 : 3);
                 } else {
                         com_pager(2);
-                        u.uevent.qcalled = TRUE;
+                        u.uevent.qcalled = true;
                 }
         }
 
@@ -1241,7 +1241,7 @@ void goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean p
 
         save_currentstate();
 
-        /* assume this will always return TRUE when changing level */
+        /* assume this will always return true when changing level */
         (void) in_out_region(u.ux, u.uy);
         (void) pickup(1);
 }
@@ -1259,7 +1259,7 @@ final_level (void)
             if (!DEADMONSTER(mtmp)) reset_hostility(mtmp);
 
         /* create some player-monsters */
-        create_mplayers(rn1(4, 3), TRUE);
+        create_mplayers(rn1(4, 3), true);
 
         /* create a guardian angel next to player, if worthy */
         if (Conflict) {
@@ -1270,7 +1270,7 @@ final_level (void)
                 mm.y = u.uy;
                 if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL]))
                     (void) mk_roamer(&mons[PM_ANGEL], u.ualign.type,
-                                     mm.x, mm.y, FALSE);
+                                     mm.x, mm.y, false);
             }
 
         } else if (u.ualign.record > 8) {       /* fervent */
@@ -1279,7 +1279,7 @@ final_level (void)
             mm.y = u.uy;
             if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])) {
                 if ((mtmp = mk_roamer(&mons[PM_ANGEL], u.ualign.type,
-                                      mm.x, mm.y, TRUE)) != 0) {
+                                      mm.x, mm.y, true)) != 0) {
                     if (!Blind)
                         pline("An angel appears near you.");
                     else
@@ -1294,7 +1294,7 @@ final_level (void)
                     mtmp->mhp = mtmp->mhpmax =
                                         d((int)mtmp->m_lev,10) + 30 + rnd(30);
                     if ((otmp = select_hwep(mtmp)) == 0) {
-                        otmp = mksobj(SILVER_SABER, FALSE, FALSE);
+                        otmp = mksobj(SILVER_SABER, false, false);
                         if (mpickobj(mtmp, otmp))
                             panic("merged weapon?");
                     }
@@ -1303,7 +1303,7 @@ final_level (void)
                     if ((otmp = which_armor(mtmp, W_ARMS)) == 0 ||
                             otmp->otyp != SHIELD_OF_REFLECTION) {
                         (void) mongets(mtmp, AMULET_OF_REFLECTION);
-                        m_dowear(mtmp, TRUE);
+                        m_dowear(mtmp, true);
                     }
                 }
             }
@@ -1314,7 +1314,7 @@ static char *dfr_pre_msg = 0,   /* plines() before level change */
             *dfr_post_msg = 0;  /* plines() after level change */
 
 /* change levels at the end of this turn, after monsters finish moving */
-void schedule_goto(d_level *tolev, boolean at_stairs, boolean falling,
+void schedule_goto(d_level *tolev, bool at_stairs, bool falling,
         int portal_flag, const char *pre_msg, const char *post_msg)
 {
         int typmask = 0100;             /* non-zero triggers `deferred_goto' */
@@ -1362,12 +1362,12 @@ void deferred_goto (void) {
 
 
 /*
- * Return TRUE if we created a monster for the corpse.  If successful, the
+ * Return true if we created a monster for the corpse.  If successful, the
  * corpse is gone.
  */
-boolean revive_corpse(struct obj *corpse) {
+bool revive_corpse(struct obj *corpse) {
     struct monst *mtmp, *mcarry;
-    boolean is_uwep, chewed;
+    bool is_uwep, chewed;
     signed char where;
     char *cname, cname_buf[BUFSZ];
     struct obj *container = (struct obj *)0;
@@ -1376,7 +1376,7 @@ boolean revive_corpse(struct obj *corpse) {
     where = corpse->where;
     is_uwep = corpse == uwep;
     cname = eos(strcpy(cname_buf, "bite-covered "));
-    Strcpy(cname, corpse_xname(corpse, TRUE));
+    Strcpy(cname, corpse_xname(corpse, true));
     mcarry = (where == OBJ_MINVENT) ? corpse->ocarry : 0;
 
     if (where == OBJ_CONTAINED) {
@@ -1441,9 +1441,9 @@ boolean revive_corpse(struct obj *corpse) {
                 impossible("revive_corpse: lost corpse @ %d", where);
                 break;
         }
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 /* Revive the corpse via a timeout. */
@@ -1480,7 +1480,7 @@ wipeoff (void)
                 pline("You've got the glop off.");
                 u.ucreamed = 0;
                 Blinded = 1;
-                make_blinded(0L,TRUE);
+                make_blinded(0L,true);
                 return(0);
         } else if (!u.ucreamed) {
                 Your("%s feels clean now.", body_part(FACE));

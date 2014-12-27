@@ -13,7 +13,7 @@ struct wseg {
     signed char  wx, wy;        /* the segment's position */
 };
 
-static void toss_wsegs(struct wseg *,boolean);
+static void toss_wsegs(struct wseg *,bool);
 static void shrink_worm(int);
 static void random_dir(signed char,signed char,signed char *,signed char *);
 static struct wseg *create_worm_tail(int);
@@ -135,7 +135,7 @@ initworm (struct monst *worm, int wseg_count)
  *  The display may or may not need to be updated as we free the segments.
  */
 static void 
-toss_wsegs (struct wseg *curr, boolean display_update)
+toss_wsegs (struct wseg *curr, bool display_update)
 {
     struct wseg *seg;
 
@@ -176,7 +176,7 @@ shrink_worm (
     seg = wtails[wnum];
     wtails[wnum] = seg->nseg;
     seg->nseg = (struct wseg *) 0;
-    toss_wsegs(seg, TRUE);
+    toss_wsegs(seg, true);
 }
 
 /*
@@ -263,7 +263,7 @@ wormgone (struct monst *worm)
     /*  This will also remove the real monster (ie 'w') from the its
      *  position in level.monsters[][].
      */
-    toss_wsegs(wtails[wnum], TRUE);
+    toss_wsegs(wtails[wnum], true);
 
     wheads[wnum] = wtails[wnum] = (struct wseg *) 0;
 }
@@ -359,7 +359,7 @@ cutworm (struct monst *worm, signed char x, signed char y, struct obj *weap)
             pline("Part of the tail of %s is cut off.", mon_nam(worm));
         else
             You("cut part of the tail off of %s.", mon_nam(worm));
-        toss_wsegs(new_tail, TRUE);
+        toss_wsegs(new_tail, true);
         if (worm->mhp > 1) worm->mhp /= 2;
         return;
     }
@@ -422,7 +422,7 @@ see_wsegs (struct monst *worm)
  *  Display all of the segments of the given worm for detection.
  */
 void 
-detect_wsegs (struct monst *worm, boolean use_detection_glyph)
+detect_wsegs (struct monst *worm, bool use_detection_glyph)
 {
     int num;
     struct wseg *curr = wtails[worm->wormno];
@@ -607,7 +607,7 @@ place_worm_tail_randomly (struct monst *worm, signed char x, signed char y)
             new_tail = wtails[wnum];
             newsym(nx, ny);
         } else {                        /* Oops.  Truncate because there was */
-            toss_wsegs(curr, FALSE);    /* no place for the rest of it */
+            toss_wsegs(curr, false);    /* no place for the rest of it */
             curr = (struct wseg *) 0;
         }
     }
@@ -702,16 +702,16 @@ create_worm_tail (int num_segs)
  *  invisibility and telepathy (which should only show the head anyway).
  *  Mostly used in the canseemon() macro.
  */
-boolean 
+bool 
 worm_known (struct monst *worm)
 {
     struct wseg *curr = wtails[worm->wormno];
 
     while (curr) {
-        if(cansee(curr->wx,curr->wy)) return TRUE;
+        if(cansee(curr->wx,curr->wy)) return true;
         curr = curr->nseg;
     }
-    return FALSE;
+    return false;
 }
 
 /*worm.c*/

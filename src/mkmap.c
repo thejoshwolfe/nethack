@@ -14,7 +14,7 @@ static void pass_two(signed char,signed char);
 static void pass_three(signed char,signed char);
 static void wallify_map(void);
 static void join_map(signed char,signed char);
-static void finish_map(signed char,signed char,boolean,boolean);
+static void finish_map(signed char,signed char,bool,bool);
 static void remove_room(unsigned);
 void mkmap(lev_init *);
 
@@ -145,11 +145,11 @@ pass_three (signed char bg_typ, signed char fg_typ)
 /*
  * use a flooding algorithm to find all locations that should
  * have the same rm number as the current location.
- * if anyroom is TRUE, use IS_ROOM to check room membership instead of
+ * if anyroom is true, use IS_ROOM to check room membership instead of
  * exactly matching levl[sx][sy].typ and walls are included as well.
  */
 void 
-flood_fill_rm (int sx, int sy, int rmno, boolean lit, boolean anyroom)
+flood_fill_rm (int sx, int sy, int rmno, bool lit, bool anyroom)
 {
     int i;
     int nx;
@@ -264,11 +264,11 @@ static void join_map(signed char bg_typ, signed char fg_typ) {
                 min_rx = max_rx = i;
                 min_ry = max_ry = j;
                 n_loc_filled = 0;
-                flood_fill_rm(i,j,nroom+ROOMOFFSET,FALSE,FALSE);
+                flood_fill_rm(i,j,nroom+ROOMOFFSET,false,false);
                 if(n_loc_filled > 3) {
                     add_room(min_rx, min_ry, max_rx, max_ry,
-                             FALSE, OROOM, TRUE);
-                    rooms[nroom-1].irregular = TRUE;
+                             false, OROOM, true);
+                    rooms[nroom-1].irregular = true;
                     if(nroom >= (MAXNROFROOMS*2))
                         goto joinm;
                 } else {
@@ -306,7 +306,7 @@ joinm:
             em.y = croom2->ly + ((croom2->hy - croom2->ly) / 2);
         }
 
-        (void) dig_corridor(&sm, &em, FALSE, fg_typ, bg_typ);
+        (void) dig_corridor(&sm, &em, false, fg_typ, bg_typ);
 
         /* choose next region to join */
         /* only increment croom if croom and croom2 are non-overlapping */
@@ -318,7 +318,7 @@ joinm:
     }
 }
 
-static void finish_map(signed char fg_typ, signed char bg_typ, boolean lit, boolean walled) {
+static void finish_map(signed char fg_typ, signed char bg_typ, bool lit, bool walled) {
         int     i, j;
 
         if(walled) wallify_map();
@@ -330,7 +330,7 @@ static void finish_map(signed char fg_typ, signed char bg_typ, boolean lit, bool
                        (!IS_ROCK(bg_typ) && levl[i][j].typ == bg_typ) ||
                        (bg_typ == TREE && levl[i][j].typ == bg_typ) ||
                         (walled && IS_WALL(levl[i][j].typ)))
-                        levl[i][j].lit = TRUE;
+                        levl[i][j].lit = true;
             for(i = 0; i < nroom; i++)
                 rooms[i].rlit = 1;
         }
@@ -338,7 +338,7 @@ static void finish_map(signed char fg_typ, signed char bg_typ, boolean lit, bool
         for(i=1; i<COLNO; i++)
             for(j=0; j<ROWNO; j++)
                 if (levl[i][j].typ == LAVAPOOL)
-                    levl[i][j].lit = TRUE;
+                    levl[i][j].lit = true;
 }
 
 /*
@@ -416,7 +416,7 @@ mkmap (lev_init *init_lev)
 {
         signed char     bg_typ = init_lev->bg,
                 fg_typ = init_lev->fg;
-        boolean smooth = init_lev->smoothed,
+        bool smooth = init_lev->smoothed,
                 join = init_lev->joined;
         signed char   lit = init_lev->lit,
                 walled = init_lev->walled;
@@ -443,11 +443,11 @@ mkmap (lev_init *init_lev)
         if(join)
             join_map(bg_typ, fg_typ);
 
-        finish_map(fg_typ, bg_typ, (boolean)lit, (boolean)walled);
+        finish_map(fg_typ, bg_typ, (bool)lit, (bool)walled);
         /* a walled, joined level is cavernous, not mazelike -dlc */
         if (walled && join) {
-            level.flags.is_maze_lev = FALSE;
-            level.flags.is_cavernous_lev = TRUE;
+            level.flags.is_maze_lev = false;
+            level.flags.is_cavernous_lev = true;
         }
         free(new_locations);
 }

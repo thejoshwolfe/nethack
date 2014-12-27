@@ -141,7 +141,7 @@ extern struct sinfo {
         int in_impossible;
 } program_state;
 
-extern boolean restoring;
+extern bool restoring;
 
 extern const char quitchars[];
 extern const char vowels[];
@@ -180,26 +180,26 @@ extern const signed char xdir[], ydir[], zdir[];
 
 extern signed char tbx, tby;            /* set in mthrowu.c */
 
-extern struct multishot { int n, i; short o; boolean s; } m_shot;
+extern struct multishot { int n, i; short o; bool s; } m_shot;
 
 extern struct dig_info {                /* apply.c, hack.c */
         int     effort;
         d_level level;
         coord   pos;
         long lastdigtime;
-        boolean down, chew, warned, quiet;
+        bool down, chew, warned, quiet;
 } digging;
 
 extern long moves, monstermoves;
 extern long wailmsg;
 
-extern boolean in_mklev;
-extern boolean stoned;
-extern boolean unweapon;
-extern boolean mrg_to_wielded;
+extern bool in_mklev;
+extern bool stoned;
+extern bool unweapon;
+extern bool mrg_to_wielded;
 extern struct obj *current_wand;
 
-extern boolean in_steed_dismounting;
+extern bool in_steed_dismounting;
 
 extern const int shield_static[];
 
@@ -292,7 +292,7 @@ extern const char *materialnm[];
 #define EXACT_NAME              0x0F
 
 /* Vision */
-extern boolean vision_full_recalc;      /* TRUE if need vision recalc */
+extern bool vision_full_recalc;      /* true if need vision recalc */
 extern char **viz_array;                /* could see/in sight row pointers */
 
 /* Window system stuff */
@@ -324,7 +324,7 @@ extern char *fqn_prefix_names[PREFIX_COUNT];
 
 struct autopickup_exception {
         char *pattern;
-        boolean grab;
+        bool grab;
         struct autopickup_exception *next;
 };
 

@@ -48,7 +48,7 @@
 static light_source *light_base = 0;
 
 static void write_ls(int, light_source *);
-static int maybe_write_ls(int, int, boolean);
+static int maybe_write_ls(int, int, bool);
 
 /* imported from vision.c, for small circles */
 extern char circle_data[];
@@ -227,9 +227,9 @@ save_light_sources (int fd, int mode, int range)
     light_source **prev, *curr;
 
     if (perform_bwrite(mode)) {
-        count = maybe_write_ls(fd, range, FALSE);
+        count = maybe_write_ls(fd, range, false);
         bwrite(fd, (void *) &count, sizeof count);
-        actual = maybe_write_ls(fd, range, TRUE);
+        actual = maybe_write_ls(fd, range, true);
         if (actual != count)
             panic("counted %d light sources, wrote %d! [range=%d]",
                   count, actual, range);
@@ -288,7 +288,7 @@ restore_light_sources (int fd)
 
 /* Relink all lights that are so marked. */
 void 
-relink_light_sources (boolean ghostly)
+relink_light_sources (bool ghostly)
 {
     char which;
     unsigned nid;
@@ -326,7 +326,7 @@ relink_light_sources (boolean ghostly)
  * the light source out.
  */
 static int 
-maybe_write_ls (int fd, int range, boolean write_it)
+maybe_write_ls (int fd, int range, bool write_it)
 {
     int count = 0, is_global;
     light_source *ls;
@@ -404,7 +404,7 @@ obj_move_light_source (struct obj *src, struct obj *dest)
 }
 
 /* return true if there exist any light sources */
-boolean 
+bool 
 any_light_source (void)
 {
     return light_base != (light_source *) 0;
@@ -446,16 +446,16 @@ snuff_light_source (int x, int y)
         }
 }
 
-/* Return TRUE if object sheds any light at all. */
-boolean 
+/* Return true if object sheds any light at all. */
+bool 
 obj_sheds_light (struct obj *obj)
 {
     /* so far, only burning objects shed light */
     return obj_is_burning(obj);
 }
 
-/* Return TRUE if sheds light AND will be snuffed by end_burn(). */
-boolean 
+/* Return true if sheds light AND will be snuffed by end_burn(). */
+bool 
 obj_is_burning (struct obj *obj)
 {
     return (obj->lamplit &&
@@ -498,7 +498,7 @@ obj_merge_light_sources (struct obj *src, struct obj *dest)
     light_source *ls;
 
     /* src == dest implies adding to candelabrum */
-    if (src != dest) end_burn(src, TRUE);               /* extinguish candles */
+    if (src != dest) end_burn(src, true);               /* extinguish candles */
 
     for (ls = light_base; ls; ls = ls->next)
         if (ls->type == LS_OBJECT && ls->id == (void *) dest) {
@@ -583,7 +583,7 @@ wiz_light_sources (void)
         putstr(win, 0, "<none>");
 
 
-    display_nhwindow(win, FALSE);
+    display_nhwindow(win, false);
     destroy_nhwindow(win);
 
     return 0;

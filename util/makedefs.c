@@ -83,17 +83,17 @@ static char *version_string(char *);
 static char *version_id_string(char *,const char *);
 static char *xcrypt(const char *);
 static int check_control(char *);
-static boolean d_filter(char *);
-static boolean h_filter(char *);
-static boolean ranged_attk(struct permonst*);
+static bool d_filter(char *);
+static bool h_filter(char *);
+static bool ranged_attk(struct permonst*);
 static int mstrength(struct permonst *);
 static void build_savebones_compat_string(void);
 
-static boolean qt_comment(char *);
-static boolean qt_control(char *);
+static bool qt_comment(char *);
+static bool qt_control(char *);
 static int get_hdr(char *);
-static boolean new_id(char *);
-static boolean known_msg(int,int);
+static bool new_id(char *);
+static bool known_msg(int,int);
 static void new_msg(char *,int,int);
 static void do_qt_control(char *);
 static void do_qt_text(char *);
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 void
 do_makedefs (char *options)
 {
-        boolean more_than_one;
+        bool more_than_one;
 
         /* Note:  these initializers don't do anything except guarantee that
                 we're linked properly.
@@ -446,12 +446,12 @@ void do_options(void) {
 }
 
 /* routine to decide whether to discard something from data.base */
-static boolean
+static bool
 d_filter(line)
     char *line;
 {
-    if (*line == '#') return TRUE;      /* ignore comment lines */
-    return FALSE;
+    if (*line == '#') return true;      /* ignore comment lines */
+    return false;
 }
 
    /*
@@ -480,7 +480,7 @@ void
 do_data (void)
 {
         char    infile[60], tempfile[60];
-        boolean ok;
+        bool ok;
         long    txt_offset;
         int     entry_cnt, line_cnt;
 
@@ -566,12 +566,12 @@ dead_data:  perror(in_line);    /* report the problem */
 }
 
 /* routine to decide whether to discard something from oracles.txt */
-static boolean
+static bool
 h_filter(line)
     char *line;
 {
-    if (*line == '#') return TRUE;      /* ignore comment lines */
-    return FALSE;
+    if (*line == '#') return true;      /* ignore comment lines */
+    return false;
 }
 
 static const char *special_oracle[] = {
@@ -599,7 +599,7 @@ void
 do_oracles (void)
 {
         char    infile[60], tempfile[60];
-        boolean in_oracle, ok;
+        bool in_oracle, ok;
         long    txt_offset, offset, fpos;
         int     oracle_cnt;
         int i;
@@ -640,19 +640,19 @@ do_oracles (void)
         oracle_cnt = 1;
         (void) fputs("---\n", tfp);
         Fprintf(ofp, "%05lx\n", ftell(tfp));    /* start pos of first oracle */
-        in_oracle = FALSE;
+        in_oracle = false;
 
         while (fgets(in_line, sizeof in_line, ifp)) {
             if (h_filter(in_line)) continue;
             if (!strncmp(in_line, "-----", 5)) {
                 if (!in_oracle) continue;
-                in_oracle = FALSE;
+                in_oracle = false;
                 oracle_cnt++;
                 (void) fputs("---\n", tfp);
                 Fprintf(ofp, "%05lx\n", ftell(tfp));
                 /* start pos of this oracle */
             } else {
-                in_oracle = TRUE;
+                in_oracle = true;
                 (void) fputs(xcrypt(in_line), tfp);
             }
         }
@@ -715,7 +715,7 @@ dead_data:  perror(in_line);    /* report the problem */
 static  struct deflist {
 
         const char      *defname;
-        boolean true_or_false;
+        bool true_or_false;
 } deflist[] = {
               { 0, 0 } };
 
@@ -733,8 +733,8 @@ check_control (char *s)
         return(-1);
 }
 
-static boolean
-ranged_attk(ptr)        /* returns TRUE if monster can attack at range */
+static bool
+ranged_attk(ptr)        /* returns true if monster can attack at range */
         struct permonst *ptr;
 {
         int     i, j;
@@ -742,10 +742,10 @@ ranged_attk(ptr)        /* returns TRUE if monster can attack at range */
 
         for(i = 0; i < NATTK; i++) {
             if((j=ptr->mattk[i].aatyp) >= AT_WEAP || (atk_mask & (1<<j)))
-                return TRUE;
+                return true;
         }
 
-        return(FALSE);
+        return(false);
 }
 
 /* This routine is designed to return an integer value which represents
@@ -911,22 +911,22 @@ static struct qtmsg     *curr_msg;
 
 static int      qt_line;
 
-static boolean  in_msg;
+static bool  in_msg;
 #define NO_MSG  1       /* strlen of a null line returned by fgets() */
 
-static boolean
+static bool
 qt_comment(s)
         char *s;
 {
-        if(s[0] == '#') return(TRUE);
-        return((boolean)(!in_msg  && strlen(s) == NO_MSG));
+        if(s[0] == '#') return(true);
+        return((bool)(!in_msg  && strlen(s) == NO_MSG));
 }
 
-static boolean
+static bool
 qt_control(s)
         char *s;
 {
-        return((boolean)(s[0] == '%' && (s[1] == 'C' || s[1] == 'E')));
+        return((bool)(s[0] == '%' && (s[1] == 'C' || s[1] == 'E')));
 }
 
 static int
@@ -940,31 +940,31 @@ get_hdr (char *code)
         return(0);
 }
 
-static boolean
+static bool
 new_id (code)
         char *code;
 {
         if(qt_hdr.n_hdr >= N_HDR) {
             Fprintf(stderr, OUT_OF_HEADERS, qt_line);
-            return(FALSE);
+            return(false);
         }
 
         strncpy(&qt_hdr.id[qt_hdr.n_hdr][0], code, LEN_HDR);
         msg_hdr[qt_hdr.n_hdr].n_msg = 0;
         qt_hdr.offset[qt_hdr.n_hdr++] = 0L;
-        return(TRUE);
+        return(true);
 }
 
-static boolean
+static bool
 known_msg(num, id)
         int num, id;
 {
         int i;
 
         for(i = 0; i < msg_hdr[num].n_msg; i++)
-            if(msg_hdr[num].qt_msg[i].msgnum == id) return(TRUE);
+            if(msg_hdr[num].qt_msg[i].msgnum == id) return(true);
 
-        return(FALSE);
+        return(false);
 }
 
 
@@ -997,7 +997,7 @@ do_qt_control (char *s)
                             Fprintf(stderr, CREC_IN_MSG, qt_line);
                             break;
                         } else {
-                            in_msg = TRUE;
+                            in_msg = true;
                             if (sscanf(&s[4], "%s %5d", code, &id) != 2) {
                                 Fprintf(stderr, UNREC_CREC, qt_line);
                                 break;
@@ -1015,7 +1015,7 @@ do_qt_control (char *s)
             case 'E':   if(!in_msg) {
                             Fprintf(stderr, END_NOT_IN_MSG, qt_line);
                             break;
-                        } else in_msg = FALSE;
+                        } else in_msg = false;
                         break;
 
             default:    Fprintf(stderr, UNREC_CREC, qt_line);
@@ -1099,7 +1099,7 @@ do_questtxt (void)
 
         qt_hdr.n_hdr = 0;
         qt_line = 0;
-        in_msg = FALSE;
+        in_msg = false;
 
         while (fgets(in_line, 80, ifp) != 0) {
             qt_line++;
@@ -1109,7 +1109,7 @@ do_questtxt (void)
         }
 
         (void) rewind(ifp);
-        in_msg = FALSE;
+        in_msg = false;
         adjust_qt_hdrs();
         put_qt_hdrs();
         while (fgets(in_line, 80, ifp) != 0) {
@@ -1147,7 +1147,7 @@ do_objs (void)
         int nspell = 0;
         int prefix = 0;
         char class = '\0';
-        boolean sumerr = FALSE;
+        bool sumerr = false;
 
         filename[0]='\0';
         Sprintf(eos(filename), OUTPUT_FILE_PATH_TEMPLATE, ONAME_FILE);
@@ -1169,7 +1169,7 @@ do_objs (void)
                             Fprintf(stderr, "prob error for class %d (%d%%)",
                                     class, sum);
                             (void) fflush(stderr);
-                            sumerr = TRUE;
+                            sumerr = true;
                         }
                         class = objects[i].oc_class;
                         sum = 0;
@@ -1213,7 +1213,7 @@ do_objs (void)
         if (sum && sum != 1000) {
             Fprintf(stderr, "prob error for class %d (%d%%)", class, sum);
             (void) fflush(stderr);
-            sumerr = TRUE;
+            sumerr = true;
         }
 
         Fprintf(ofp,"#define\tLAST_GEM\t(JADE)\n");

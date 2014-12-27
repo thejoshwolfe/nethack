@@ -37,7 +37,7 @@ stoned_dialogue (void)
                 HFast = 0L;
         if (i == 3L)
                 nomul(-3);
-        exercise(A_DEX, FALSE);
+        exercise(A_DEX, false);
 }
 
 /* He is getting sicker and sicker prior to vomiting */
@@ -64,13 +64,13 @@ vomiting_dialogue (void)
                 morehungry(20);
                 break;
         case 2:
-                make_stunned(HStun + d(2,4), FALSE);
+                make_stunned(HStun + d(2,4), false);
                 /* fall through */
         case 3:
-                make_confused(HConfusion + d(2,4), FALSE);
+                make_confused(HConfusion + d(2,4), false);
                 break;
         }
-        exercise(A_CON, FALSE);
+        exercise(A_CON, false);
 }
 
 static const char * const choke_texts[] = {
@@ -106,7 +106,7 @@ choke_dialogue (void)
                     plines(str);
             }
         }
-        exercise(A_STR, FALSE);
+        exercise(A_STR, false);
 }
 
 static const char * const slime_texts[] = {
@@ -140,7 +140,7 @@ slime_dialogue (void)
             stop_occupation();
             if (multi > 0) nomul(0);
         }
-        exercise(A_DEX, FALSE);
+        exercise(A_DEX, false);
 }
 
 void
@@ -173,8 +173,8 @@ nh_timeout (void)
          * neither is stopped if you don't have a luckstone.
          * Luck is based at 0 usually, +1 if a full moon and -1 on Friday 13th
          */
-            int time_luck = stone_luck(FALSE);
-            boolean nostone = !carrying(LUCKSTONE) && !stone_luck(TRUE);
+            int time_luck = stone_luck(false);
+            bool nostone = !carrying(LUCKSTONE) && !stone_luck(true);
 
             if(u.uluck > baseluck && (nostone || time_luck < 0))
                 u.uluck--;
@@ -239,7 +239,7 @@ nh_timeout (void)
                         done(TURNED_SLIME);
                         break;
                 case VOMITING:
-                        make_vomiting(0L, TRUE);
+                        make_vomiting(0L, true);
                         break;
                 case SICK:
                         You("die from your illness.");
@@ -264,17 +264,17 @@ nh_timeout (void)
                         break;
                 case CONFUSION:
                         HConfusion = 1; /* So make_confused works properly */
-                        make_confused(0L, TRUE);
+                        make_confused(0L, true);
                         stop_occupation();
                         break;
                 case STUNNED:
                         HStun = 1;
-                        make_stunned(0L, TRUE);
+                        make_stunned(0L, true);
                         stop_occupation();
                         break;
                 case BLINDED:
                         Blinded = 1;
-                        make_blinded(0L, TRUE);
+                        make_blinded(0L, true);
                         stop_occupation();
                         break;
                 case INVIS:
@@ -298,7 +298,7 @@ nh_timeout (void)
                         break;
                 case HALLUC:
                         HHallucination = 1;
-                        (void) make_hallucinated(0L, TRUE, 0L);
+                        (void) make_hallucinated(0L, true, 0L);
                         stop_occupation();
                         break;
                 case SLEEPING:
@@ -307,7 +307,7 @@ nh_timeout (void)
                         else if (Sleeping) {
                                 You("fall asleep.");
                                 sleeptime = rnd(20);
-                                fall_asleep(-sleeptime, TRUE);
+                                fall_asleep(-sleeptime, true);
                                 HSleeping += sleeptime + rnd(100);
                         }
                         break;
@@ -352,7 +352,7 @@ nh_timeout (void)
 
 
 void 
-fall_asleep (int how_long, boolean wakeup_msg)
+fall_asleep (int how_long, bool wakeup_msg)
 {
         stop_occupation();
         nomul(how_long);
@@ -408,8 +408,8 @@ hatch_egg (void *arg, long timeout)
         struct monst *mon, *mon2;
         coord cc;
         signed char x, y;
-        boolean yours, silent, knows_egg = FALSE;
-        boolean cansee_hatchspot = FALSE;
+        bool yours, silent, knows_egg = false;
+        bool cansee_hatchspot = false;
         int i, mnum, hatchcount = 0;
 
         egg = (struct obj *) arg;
@@ -455,7 +455,7 @@ hatch_egg (void *arg, long timeout)
 
         if (mon) {
             char monnambuf[BUFSZ], carriedby[BUFSZ];
-            boolean siblings = (hatchcount > 1), redraw = FALSE;
+            bool siblings = (hatchcount > 1), redraw = false;
 
             if (cansee_hatchspot) {
                 Sprintf(monnambuf, "%s%s",
@@ -471,7 +471,7 @@ hatch_egg (void *arg, long timeout)
             }
             switch (egg->where) {
                 case OBJ_INVENT:
-                    knows_egg = TRUE; /* true even if you are blind */
+                    knows_egg = true; /* true even if you are blind */
                     if (!cansee_hatchspot)
                         You_feel("%s %s from your pack!", something,
                             locomotion(mon->data, "drop"));
@@ -490,9 +490,9 @@ hatch_egg (void *arg, long timeout)
 
                 case OBJ_FLOOR:
                     if (cansee_hatchspot) {
-                        knows_egg = TRUE;
+                        knows_egg = true;
                         You("see %s hatch.", monnambuf);
-                        redraw = TRUE;  /* update egg's map location */
+                        redraw = true;  /* update egg's map location */
                     }
                     break;
 
@@ -502,7 +502,7 @@ hatch_egg (void *arg, long timeout)
                         if (canseemon(egg->ocarry)) {
                             Sprintf(carriedby, "%s pack",
                                      s_suffix(a_monnam(egg->ocarry)));
-                            knows_egg = TRUE;
+                            knows_egg = true;
                         }
                         else if (is_pool(mon->mx, mon->my))
                             Strcpy(carriedby, "empty water");
@@ -576,8 +576,8 @@ slip_or_trip (void)
         struct obj *otmp = vobj_at(u.ux, u.uy);
         const char *what, *pronoun;
         char buf[BUFSZ];
-        boolean on_foot = TRUE;
-        if (u.usteed) on_foot = FALSE;
+        bool on_foot = true;
+        if (u.usteed) on_foot = false;
 
         if (otmp && on_foot && !u.uinwater && is_pool(u.ux, u.uy)) otmp = 0;
 
@@ -607,7 +607,7 @@ slip_or_trip (void)
             pline("%s %s%s on the ice.",
                 u.usteed ? upstart(x_monnam(u.usteed,
                                 u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE,
-                                (char *)0, SUPPRESS_SADDLE, FALSE)) :
+                                (char *)0, SUPPRESS_SADDLE, false)) :
                 "You", rn2(2) ? "slip" : "slide", on_foot ? "" : "s");
         } else {
             if (on_foot) {
@@ -692,7 +692,7 @@ void
 burn_object (void *arg, long timeout)
 {
         struct obj *obj = (struct obj *) arg;
-        boolean canseeit, many, menorah, need_newsym;
+        bool canseeit, many, menorah, need_newsym;
         signed char x, y;
         char whose[BUFSZ];
 
@@ -705,7 +705,7 @@ burn_object (void *arg, long timeout)
 
             if (how_long >= obj->age) {
                 obj->age = 0;
-                end_burn(obj, FALSE);
+                end_burn(obj, false);
 
                 if (menorah) {
                     obj->spe = 0;       /* no more candles */
@@ -718,7 +718,7 @@ burn_object (void *arg, long timeout)
 
             } else {
                 obj->age -= how_long;
-                begin_burn(obj, TRUE);
+                begin_burn(obj, true);
             }
             return;
         }
@@ -729,9 +729,9 @@ burn_object (void *arg, long timeout)
             /* set up `whose[]' to be "Your" or "Fred's" or "The goblin's" */
             (void) Shk_Your(whose, obj);
         } else {
-            canseeit = FALSE;
+            canseeit = false;
         }
-        need_newsym = FALSE;
+        need_newsym = false;
 
         /* obj->age is the age remaining at this point.  */
         switch (obj->otyp) {
@@ -746,11 +746,11 @@ burn_object (void *arg, long timeout)
                                 break;
                             case OBJ_FLOOR:
                                 You("see a burning potion of oil go out.");
-                                need_newsym = TRUE;
+                                need_newsym = true;
                                 break;
                         }
                     }
-                    end_burn(obj, FALSE);       /* turn off light source */
+                    end_burn(obj, false);       /* turn off light source */
                     obj_extract_self(obj);
                     obfree(obj, (struct obj *)0);
                     obj = (struct obj *) 0;
@@ -813,7 +813,7 @@ burn_object (void *arg, long timeout)
                                     break;
                             }
                         }
-                        end_burn(obj, FALSE);
+                        end_burn(obj, false);
                         break;
 
                     default:
@@ -826,7 +826,7 @@ burn_object (void *arg, long timeout)
                 }
 
                 if (obj->age)
-                    begin_burn(obj, TRUE);
+                    begin_burn(obj, true);
 
                 break;
 
@@ -909,7 +909,7 @@ burn_object (void *arg, long timeout)
                                         You("see %s%s consumed!",
                                             many ? "some " : "",
                                             many ? xname(obj):an(xname(obj)));
-                                        need_newsym = TRUE;
+                                        need_newsym = true;
                                         break;
                                 }
 
@@ -922,7 +922,7 @@ burn_object (void *arg, long timeout)
                                                     "Its flame dies."));
                             }
                         }
-                        end_burn(obj, FALSE);
+                        end_burn(obj, false);
 
                         if (menorah) {
                             obj->spe = 0;
@@ -943,7 +943,7 @@ burn_object (void *arg, long timeout)
                 }
 
                 if (obj && obj->age)
-                    begin_burn(obj, TRUE);
+                    begin_burn(obj, true);
 
                 break;
 
@@ -986,11 +986,11 @@ burn_object (void *arg, long timeout)
  * This is a "silent" routine - it should not print anything out.
  */
 void 
-begin_burn (struct obj *obj, boolean already_lit)
+begin_burn (struct obj *obj, bool already_lit)
 {
         int radius = 3;
         long turns = 0;
-        boolean do_timer = TRUE;
+        bool do_timer = true;
 
         if (obj->age == 0 && obj->otyp != MAGIC_LAMP && !artifact_light(obj))
             return;
@@ -998,7 +998,7 @@ begin_burn (struct obj *obj, boolean already_lit)
         switch (obj->otyp) {
             case MAGIC_LAMP:
                 obj->lamplit = 1;
-                do_timer = FALSE;
+                do_timer = false;
                 break;
 
             case POT_OIL:
@@ -1038,7 +1038,7 @@ begin_burn (struct obj *obj, boolean already_lit)
                 /* [ALI] Support artifact light sources */
                 if (artifact_light(obj)) {
                     obj->lamplit = 1;
-                    do_timer = FALSE;
+                    do_timer = false;
                     radius = 2;
                 } else {
                     impossible("begin burn: unexpected %s", xname(obj));
@@ -1077,7 +1077,7 @@ begin_burn (struct obj *obj, boolean already_lit)
  * light source.
  */
 void 
-end_burn (struct obj *obj, boolean timer_attached)
+end_burn (struct obj *obj, bool timer_attached)
 {
         if (!obj->lamplit) {
             impossible("end_burn: obj %s not lit", xname(obj));
@@ -1085,7 +1085,7 @@ end_burn (struct obj *obj, boolean timer_attached)
         }
 
         if (obj->otyp == MAGIC_LAMP || artifact_light(obj))
-            timer_attached = FALSE;
+            timer_attached = false;
 
         if (!timer_attached) {
             /* [DS] Cleanup explicitly, since timer cleanup won't happen */
@@ -1170,11 +1170,11 @@ do_storms (void)
  * Interface:
  *
  * General:
- *      boolean start_timer(long timeout,short kind,short func_index,
+ *      bool start_timer(long timeout,short kind,short func_index,
  *                                                      void * arg)
  *              Start a timer of kind 'kind' that will expire at time
  *              monstermoves+'timeout'.  Call the function at 'func_index'
- *              in the timeout table using argument 'arg'.  Return TRUE if
+ *              in the timeout table using argument 'arg'.  Return true if
  *              a timer was started.  This places the timer on a list ordered
  *              "sooner" to "later".  If an object, increment the object's
  *              timer count.
@@ -1196,12 +1196,12 @@ do_storms (void)
  *              are saved with a level.  Object and monster timers are
  *              saved using their respective id's instead of pointers.
  *
- *      void restore_timers(int fd, int range, boolean ghostly, long adjust)
+ *      void restore_timers(int fd, int range, bool ghostly, long adjust)
  *              Restore timers of range 'range'.  If from a ghost pile,
  *              adjust the timeout by 'adjust'.  The object and monster
  *              ids are not restored until later.
  *
- *      void relink_timers(boolean ghostly)
+ *      void relink_timers(bool ghostly)
  *              Relink all object and monster timers that had been saved
  *              using their object's or monster's id number.
  *
@@ -1221,9 +1221,9 @@ static void print_queue(winid, timer_element *);
 static void insert_timer(timer_element *);
 static timer_element *remove_timer(timer_element **, short, void *);
 static void write_timer(int, timer_element *);
-static boolean mon_is_local(struct monst *);
-static boolean timer_is_local(timer_element *);
-static int maybe_write_timer(int, int, boolean);
+static bool mon_is_local(struct monst *);
+static bool timer_is_local(timer_element *);
+static int maybe_write_timer(int, int, bool);
 
 /* ordered timer list */
 static timer_element *timer_base;               /* "active" */
@@ -1299,7 +1299,7 @@ wiz_timeout_queue (void)
     putstr(win, 0, "");
     print_queue(win, timer_base);
 
-    display_nhwindow(win, FALSE);
+    display_nhwindow(win, false);
     destroy_nhwindow(win);
 
     return 0;
@@ -1350,9 +1350,9 @@ run_timers (void)
 
 
 /*
- * Start a timer.  Return TRUE if successful.
+ * Start a timer.  Return true if successful.
  */
-boolean 
+bool 
 start_timer (long when, short kind, short func_index, void *arg)
 {
     timer_element *gnu;
@@ -1374,7 +1374,7 @@ start_timer (long when, short kind, short func_index, void *arg)
         ((struct obj *)arg)->timed++;
 
     /* should check for duplicates and fail if any */
-    return TRUE;
+    return true;
 }
 
 
@@ -1554,58 +1554,58 @@ write_timer (int fd, timer_element *timer)
 
 
 /*
- * Return TRUE if the object will stay on the level when the level is
+ * Return true if the object will stay on the level when the level is
  * saved.
  */
-boolean 
+bool 
 obj_is_local (struct obj *obj)
 {
     switch (obj->where) {
         case OBJ_INVENT:
-        case OBJ_MIGRATING:     return FALSE;
+        case OBJ_MIGRATING:     return false;
         case OBJ_FLOOR:
-        case OBJ_BURIED:        return TRUE;
+        case OBJ_BURIED:        return true;
         case OBJ_CONTAINED:     return obj_is_local(obj->ocontainer);
         case OBJ_MINVENT:       return mon_is_local(obj->ocarry);
     }
     panic("obj_is_local");
-    return FALSE;
+    return false;
 }
 
 
 /*
- * Return TRUE if the given monster will stay on the level when the
+ * Return true if the given monster will stay on the level when the
  * level is saved.
  */
-static boolean 
+static bool 
 mon_is_local (struct monst *mon)
 {
     struct monst *curr;
 
     for (curr = migrating_mons; curr; curr = curr->nmon)
-        if (curr == mon) return FALSE;
+        if (curr == mon) return false;
     /* `mydogs' is used during level changes, never saved and restored */
     for (curr = mydogs; curr; curr = curr->nmon)
-        if (curr == mon) return FALSE;
-    return TRUE;
+        if (curr == mon) return false;
+    return true;
 }
 
 
 /*
- * Return TRUE if the timer is attached to something that will stay on the
+ * Return true if the timer is attached to something that will stay on the
  * level when the level is saved.
  */
-static boolean 
+static bool 
 timer_is_local (timer_element *timer)
 {
     switch (timer->kind) {
-        case TIMER_LEVEL:       return TRUE;
-        case TIMER_GLOBAL:      return FALSE;
+        case TIMER_LEVEL:       return true;
+        case TIMER_GLOBAL:      return false;
         case TIMER_OBJECT:      return obj_is_local((struct obj *)timer->arg);
         case TIMER_MONSTER:     return mon_is_local((struct monst *)timer->arg);
     }
     panic("timer_is_local");
-    return FALSE;
+    return false;
 }
 
 
@@ -1614,7 +1614,7 @@ timer_is_local (timer_element *timer)
  * be written.  If write_it is true, actually write the timer.
  */
 static int 
-maybe_write_timer (int fd, int range, boolean write_it)
+maybe_write_timer (int fd, int range, bool write_it)
 {
     int count = 0;
     timer_element *curr;
@@ -1666,9 +1666,9 @@ save_timers (int fd, int mode, int range)
         if (range == RANGE_GLOBAL)
             bwrite(fd, (void *) &timer_id, sizeof(timer_id));
 
-        count = maybe_write_timer(fd, range, FALSE);
+        count = maybe_write_timer(fd, range, false);
         bwrite(fd, (void *) &count, sizeof count);
-        (void) maybe_write_timer(fd, range, TRUE);
+        (void) maybe_write_timer(fd, range, true);
     }
 
     if (release_data(mode)) {
@@ -1698,7 +1698,7 @@ void
 restore_timers (
     int fd,
     int range,
-    boolean ghostly,    /* restoring from a ghost level */
+    bool ghostly,    /* restoring from a ghost level */
     long adjust        /* how much to adjust timeout */
 )
 {
@@ -1722,7 +1722,7 @@ restore_timers (
 
 /* reset all timers that are marked for reseting */
 void 
-relink_timers (boolean ghostly)
+relink_timers (bool ghostly)
 {
     timer_element *curr;
     unsigned nid;

@@ -194,7 +194,7 @@ vision_reset (void)
     /* Dig the level */
     for (y = 0; y < ROWNO; y++) {
         dig_left = 0;
-        block = TRUE;   /* location (0,y) is always stone; it's !isok() */
+        block = true;   /* location (0,y) is always stone; it's !isok() */
         lev = &levl[1][y];
         for (x = 1; x < COLNO; x++, lev += ROWNO)
             if (block != (IS_ROCK(lev->typ) || does_block(x,y,lev))) {
@@ -897,7 +897,7 @@ static void * varg;
 /*
  * Both Algorithms C and D use the following macros.
  *
- *      good_row(z)       - Return TRUE if the argument is a legal row.
+ *      good_row(z)       - Return true if the argument is a legal row.
  *      set_cs(rowp,col)  - Set the local could see array.
  *      set_min(z)        - Save the min value of the argument and the current
  *                            row minimum.
@@ -1121,7 +1121,7 @@ _q3_path (int srow, int scol, int y2, int x2)
  *              m_canseeu()
  *              do_light_sources()
  */
-boolean 
+bool 
 clear_path (int col1, int row1, int col2, int row2)
 {
     int result;
@@ -1141,7 +1141,7 @@ clear_path (int col1, int row1, int col2, int row2)
             q3_path(row1,col1,row2,col2,cleardone);
         }
     }
-    return((boolean)result);
+    return((bool)result);
 }
 
 /*===========================================================================*\
@@ -1176,7 +1176,7 @@ right_side (
     int           right;        /* right limit of "could see" */
     int           right_edge;   /* right edge of an opening */
     int           nrow;         /* new row (calculate once) */
-    int           deeper;       /* if TRUE, call self as needed */
+    int           deeper;       /* if true, call self as needed */
     int           result;       /* set by q?_path() */
     int  i;             /* loop counter */
     char *rowp; /* row optimization */

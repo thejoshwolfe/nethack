@@ -17,7 +17,7 @@ struct trobj {
 static void ini_inv(struct trobj *);
 static void knows_object(int);
 static void knows_class(char);
-static boolean restricted_spell_discipline(int);
+static bool restricted_spell_discipline(int);
 
 #define UNDEF_TYP       0
 #define UNDEF_SPE       '\177'
@@ -467,7 +467,7 @@ static const struct def_skill Skill_W[] = {
 static void
 knows_object (int obj)
 {
-        discover_object(obj,TRUE,FALSE);
+        discover_object(obj,true,false);
         objects[obj].oc_pre_discovered = 1;     /* not a "discovery" */
 }
 
@@ -501,7 +501,7 @@ u_init (void)
         u.uz0.dlevel = 0;
         u.utolev = u.uz;
 
-        u.umoved = FALSE;
+        u.umoved = false;
         u.umortality = 0;
         u.ugrave_arise = NON_PM;
 
@@ -751,14 +751,14 @@ u_init (void)
         for(i = 0; i < A_MAX; i++)
             if(!rn2(20)) {
                 int xd = rn2(7) - 2;    /* biased variation */
-                (void) adjattrib(i, xd, TRUE);
+                (void) adjattrib(i, xd, true);
                 if (ABASE(i) < AMAX(i)) AMAX(i) = ABASE(i);
             }
 
         /* make sure you can carry all you have - especially for Tourists */
         while (inv_weight() > 0) {
-                if (adjattrib(A_STR, 1, TRUE)) continue;
-                if (adjattrib(A_CON, 1, TRUE)) continue;
+                if (adjattrib(A_STR, 1, true)) continue;
+                if (adjattrib(A_CON, 1, true)) continue;
                 /* only get here when didn't boost strength or constitution */
                 break;
         }
@@ -767,7 +767,7 @@ u_init (void)
 }
 
 /* skills aren't initialized, so we use the role-specific skill lists */
-static boolean 
+static bool 
 restricted_spell_discipline (int otyp)
 {
     const struct def_skill *skills;
@@ -791,10 +791,10 @@ restricted_spell_discipline (int otyp)
     }
 
     while (skills->skill != P_NONE) {
-        if (skills->skill == this_skill) return FALSE;
+        if (skills->skill == this_skill) return false;
         ++skills;
     }
-    return TRUE;
+    return true;
 }
 
 static void
@@ -815,7 +815,7 @@ ini_inv (struct trobj *trop)
                                     break;
                                 }
                         }
-                        obj = mksobj(otyp, TRUE, FALSE);
+                        obj = mksobj(otyp, true, false);
                 } else {        /* UNDEF_TYP */
                         static short nocreate = STRANGE_OBJECT;
                         static short nocreate2 = STRANGE_OBJECT;
@@ -831,7 +831,7 @@ ini_inv (struct trobj *trop)
                  * one will immediately read it and use the iron ball as a
                  * weapon.)
                  */
-                        obj = mkobj(trop->trclass, FALSE);
+                        obj = mkobj(trop->trclass, false);
                         otyp = obj->otyp;
                         while (otyp == WAN_WISHING
                                 || otyp == nocreate
@@ -863,7 +863,7 @@ ini_inv (struct trobj *trop)
                                     restricted_spell_discipline(otyp)))
                                                         ) {
                                 dealloc_obj(obj);
-                                obj = mkobj(trop->trclass, FALSE);
+                                obj = mkobj(trop->trclass, false);
                                 otyp = obj->otyp;
                         }
 
@@ -917,9 +917,9 @@ ini_inv (struct trobj *trop)
 
                 /* Make the type known if necessary */
                 if (OBJ_DESCR(objects[otyp]) && obj->known)
-                        discover_object(otyp, TRUE, FALSE);
+                        discover_object(otyp, true, false);
                 if (otyp == OIL_LAMP)
-                        discover_object(POT_OIL, TRUE, FALSE);
+                        discover_object(POT_OIL, true, false);
 
                 if(obj->oclass == ARMOR_CLASS){
                         if (is_shield(obj) && !uarms) {

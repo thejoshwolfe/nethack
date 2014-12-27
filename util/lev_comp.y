@@ -44,16 +44,16 @@ extern int get_room_type(char *);
 extern int get_trap_type(char *);
 extern int get_monster_id(char *,char);
 extern int get_object_id(char *,char);
-extern boolean check_monster_char(char);
-extern boolean check_object_char(char);
+extern bool check_monster_char(char);
+extern bool check_object_char(char);
 extern char what_map_char(char);
 extern void scan_map(char *);
 extern void wallify_map(void);
-extern boolean check_subrooms(void);
+extern bool check_subrooms(void);
 extern void check_coord(int,int,const char *);
 extern void store_part(void);
 extern void store_room(void);
-extern boolean write_level_file(char *,splev *,specialmaze *);
+extern bool write_level_file(char *,splev *,specialmaze *);
 extern void free_rooms(splev *);
 
 static struct reg {
@@ -257,12 +257,12 @@ lev_init        : /* nothing */
                            explicitly clear any stale settings */
                         (void) memset((void *) &init_lev, 0,
                                         sizeof init_lev);
-                        init_lev.init_present = FALSE;
+                        init_lev.init_present = false;
                         $$ = 0;
                   }
                 | LEV_INIT_ID ':' CHAR ',' CHAR ',' BOOLEAN ',' BOOLEAN ',' light_state ',' walled
                   {
-                        init_lev.init_present = TRUE;
+                        init_lev.init_present = true;
                         init_lev.fg = what_map_char((char) $3);
                         if (init_lev.fg == INVALID_TYPE)
                             yyerror("Invalid foreground type.");

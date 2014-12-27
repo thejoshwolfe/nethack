@@ -8,14 +8,14 @@
 
 
 static void do_oname(struct obj *);
-static void getpos_help(boolean,const char *);
+static void getpos_help(bool,const char *);
 
 extern const char what_is_an_unknown_object[];          /* from pager.c */
 
 /* the response for '?' help request in getpos() */
-static void getpos_help(boolean force, const char *goal) {
+static void getpos_help(bool force, const char *goal) {
     char sbuf[BUFSZ];
-    boolean doing_what_is;
+    bool doing_what_is;
     winid tmpwin = create_nhwindow(NHW_MENU);
 
     Sprintf(sbuf, "Use [%s] to move the cursor to %s.",
@@ -32,15 +32,15 @@ static void getpos_help(boolean force, const char *goal) {
     if (!force)
         putstr(tmpwin, 0, "Type Space or Escape when you're done.");
     putstr(tmpwin, 0, "");
-    display_nhwindow(tmpwin, TRUE);
+    display_nhwindow(tmpwin, true);
     destroy_nhwindow(tmpwin);
 }
 
-int getpos(coord *cc, boolean force, const char *goal) {
+int getpos(coord *cc, bool force, const char *goal) {
     int result = 0;
     int cx, cy, i, c;
     int sidx, tx, ty;
-    boolean msg_given = TRUE;   /* clear message window by default */
+    bool msg_given = true;   /* clear message window by default */
     static const char pick_chars[] = ".,;:";
     const char *cp;
     const char *sdp;
@@ -48,7 +48,7 @@ int getpos(coord *cc, boolean force, const char *goal) {
 
     if (flags.verbose) {
         pline("(For instructions type a ?)");
-        msg_given = TRUE;
+        msg_given = true;
     }
     cx = cc->x;
     cy = cc->y;
@@ -58,7 +58,7 @@ int getpos(coord *cc, boolean force, const char *goal) {
         c = nh_poskey(&tx, &ty, &sidx);
         if (c == '\033') {
             cx = cy = -10;
-            msg_given = TRUE;   /* force clear */
+            msg_given = true;   /* force clear */
             result = -1;
             break;
         }
@@ -134,7 +134,7 @@ int getpos(coord *cc, boolean force, const char *goal) {
                                     cx = tx,  cy = ty;
                                     if (msg_given) {
                                         clear_nhwindow(WIN_MESSAGE);
-                                        msg_given = FALSE;
+                                        msg_given = false;
                                     }
                                     goto nxtc;
                                 }
@@ -142,19 +142,19 @@ int getpos(coord *cc, boolean force, const char *goal) {
                         }       /* row */
                     }           /* pass */
                     pline("Can't find dungeon feature '%c'.", c);
-                    msg_given = TRUE;
+                    msg_given = true;
                     goto nxtc;
                 } else {
                     pline("Unknown direction: '%s' (%s).",
                           visctrl((char)c),
                           !force ? "aborted" :
                           iflags.num_pad ? "use 2468 or ." : "use hjkl or .");
-                    msg_given = TRUE;
+                    msg_given = true;
                 } /* k => matching */
             } /* !quitchars */
             if (force) goto nxtc;
             pline("Done.");
-            msg_given = FALSE;  /* suppress clear */
+            msg_given = false;  /* suppress clear */
             cx = -1;
             cy = 0;
             result = 0; /* not -1 */
@@ -214,7 +214,7 @@ do_mname (void)
         }
         cc.x = u.ux;
         cc.y = u.uy;
-        if (getpos(&cc, FALSE, "the monster you want to name") < 0 ||
+        if (getpos(&cc, false, "the monster you want to name") < 0 ||
                         (cx = cc.x) < 0)
                 return 0;
         cy = cc.y;
@@ -290,7 +290,7 @@ do_oname (struct obj *obj)
                 do c2 = 'a' + rn2('z'-'a'); while (c1 == c2);
                 buf[n] = (buf[n] == c1) ? c2 : highc(c2);  /* keep same case */
                 pline("While engraving your %s slips.", body_part(HAND));
-                display_nhwindow(WIN_MESSAGE, FALSE);
+                display_nhwindow(WIN_MESSAGE, false);
                 You("engrave: \"%s\".",buf);
         }
         obj = oname(obj, buf);
@@ -335,7 +335,7 @@ realloc_obj (
         }
 
         if (obj->owornmask) {
-                boolean save_twoweap = u.twoweap;
+                bool save_twoweap = u.twoweap;
                 /* unwearing the old instance will clear dual-wield mode
                    if this object is either of the two weapons */
                 setworn((struct obj *)0, obj->owornmask);
@@ -396,12 +396,12 @@ oname (struct obj *obj, const char *name)
                 obj = realloc_obj(obj, obj->oxlth,
                               (void *)obj->oextra, lth, name);
         }
-        if (lth) artifact_exists(obj, name, TRUE);
+        if (lth) artifact_exists(obj, name, true);
         if (obj->oartifact) {
             /* can't dual-wield with artifact as secondary weapon */
             if (obj == uswapwep) untwoweapon();
             /* activate warning if you've just named your weapon "Sting" */
-            if (obj == uwep) set_artifact_intrinsic(obj, TRUE, W_WEP);
+            if (obj == uwep) set_artifact_intrinsic(obj, true, W_WEP);
         }
         if (carried(obj)) update_inventory();
         return obj;
@@ -486,7 +486,7 @@ docall (struct obj *obj)
             }
         } else {
             *str1 = strcpy((char *) alloc((unsigned)strlen(buf)+1), buf);
-            discover_object(obj->otyp, FALSE, TRUE); /* possibly add to disco[] */
+            discover_object(obj->otyp, false, true); /* possibly add to disco[] */
         }
 }
 
@@ -543,12 +543,12 @@ int suppress;
  
 */
 char * x_monnam(struct monst *mtmp, int article, const char *adjective,
-        int suppress, boolean called)
+        int suppress, bool called)
 {
         static char buf[BUFSZ];
         struct permonst *mdat = mtmp->data;
-        boolean do_hallu, do_invis, do_it, do_saddle;
-        boolean name_at_start, has_adjectives;
+        bool do_hallu, do_invis, do_it, do_saddle;
+        bool name_at_start, has_adjectives;
         char *bp;
 
         if (program_state.gameover)
@@ -625,24 +625,24 @@ char * x_monnam(struct monst *mtmp, int article, const char *adjective,
             !Blind && !Hallucination)
             Strcat(buf, "saddled ");
         if (buf[0] != 0)
-            has_adjectives = TRUE;
+            has_adjectives = true;
         else
-            has_adjectives = FALSE;
+            has_adjectives = false;
 
         /* Put the actual monster name or type into the buffer now */
         /* Be sure to remember whether the buffer starts with a name */
         if (do_hallu) {
             Strcat(buf, rndmonnam());
-            name_at_start = FALSE;
+            name_at_start = false;
         } else if (mtmp->mnamelth) {
             char *name = NAME(mtmp);
 
             if (mdat == &mons[PM_GHOST]) {
                 Sprintf(eos(buf), "%s ghost", s_suffix(name));
-                name_at_start = TRUE;
+                name_at_start = true;
             } else if (called) {
                 Sprintf(eos(buf), "%s called %s", mdat->mname, name);
-                name_at_start = (boolean)type_is_pname(mdat);
+                name_at_start = (bool)type_is_pname(mdat);
             } else if (is_mplayer(mdat) && (bp = strstri(name, " the ")) != 0) {
                 /* <name> the <adjective> <invisible> <saddled> <rank> */
                 char pbuf[BUFSZ];
@@ -654,21 +654,21 @@ char * x_monnam(struct monst *mtmp, int article, const char *adjective,
                 Strcat(pbuf, bp + 5);   /* append the rest of the name */
                 Strcpy(buf, pbuf);
                 article = ARTICLE_NONE;
-                name_at_start = TRUE;
+                name_at_start = true;
             } else {
                 Strcat(buf, name);
-                name_at_start = TRUE;
+                name_at_start = true;
             }
         } else if (is_mplayer(mdat) && !In_endgame(&u.uz)) {
             char pbuf[BUFSZ];
             Strcpy(pbuf, rank_of((int)mtmp->m_lev,
                                  monsndx(mdat),
-                                 (boolean)mtmp->female));
+                                 (bool)mtmp->female));
             Strcat(buf, lcase(pbuf));
-            name_at_start = FALSE;
+            name_at_start = false;
         } else {
             Strcat(buf, mdat->mname);
-            name_at_start = (boolean)type_is_pname(mdat);
+            name_at_start = (bool)type_is_pname(mdat);
         }
 
         if (name_at_start && (article == ARTICLE_YOUR || !has_adjectives)) {
@@ -708,7 +708,7 @@ char *
 l_monnam (struct monst *mtmp)
 {
         return(x_monnam(mtmp, ARTICLE_NONE, (char *)0,
-                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, TRUE));
+                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, true));
 }
 
 
@@ -716,7 +716,7 @@ char *
 mon_nam (struct monst *mtmp)
 {
         return(x_monnam(mtmp, ARTICLE_THE, (char *)0,
-                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, FALSE));
+                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, false));
 }
 
 /* print the name as if mon_nam() was called, but assume that the player
@@ -728,7 +728,7 @@ noit_mon_nam (struct monst *mtmp)
 {
         return(x_monnam(mtmp, ARTICLE_THE, (char *)0,
                 mtmp->mnamelth ? (SUPPRESS_SADDLE|SUPPRESS_IT) :
-                    SUPPRESS_IT, FALSE));
+                    SUPPRESS_IT, false));
 }
 
 char *
@@ -753,7 +753,7 @@ noit_Monnam (struct monst *mtmp)
 char *
 m_monnam (struct monst *mtmp)
 {
-        return x_monnam(mtmp, ARTICLE_NONE, (char *)0, EXACT_NAME, FALSE);
+        return x_monnam(mtmp, ARTICLE_NONE, (char *)0, EXACT_NAME, false);
 }
 
 /* pet name: "your little dog" */
@@ -768,7 +768,7 @@ y_monnam (struct monst *mtmp)
                             || mtmp == u.usteed
                             ) ? SUPPRESS_SADDLE : 0;
 
-        return x_monnam(mtmp, prefix, (char *)0, suppression_flag, FALSE);
+        return x_monnam(mtmp, prefix, (char *)0, suppression_flag, false);
 }
 
 
@@ -776,7 +776,7 @@ char *
 Adjmonnam (struct monst *mtmp, const char *adj)
 {
         char *bp = x_monnam(mtmp, ARTICLE_THE, adj,
-                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, FALSE);
+                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, false);
 
         *bp = highc(*bp);
         return(bp);
@@ -786,7 +786,7 @@ char *
 a_monnam (struct monst *mtmp)
 {
         return x_monnam(mtmp, ARTICLE_A, (char *)0,
-                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, FALSE);
+                mtmp->mnamelth ? SUPPRESS_SADDLE : 0, false);
 }
 
 char *
@@ -815,7 +815,7 @@ distant_monnam (
         Strcpy(outbuf, article == ARTICLE_THE ? "the " : "");
         Strcat(outbuf, mon->female ? "high priestess" : "high priest");
     } else {
-        Strcpy(outbuf, x_monnam(mon, article, (char *)0, 0, TRUE));
+        Strcpy(outbuf, x_monnam(mon, article, (char *)0, 0, true));
     }
     return outbuf;
 }
@@ -945,7 +945,7 @@ coyotename (struct monst *mtmp, char *buf)
 {
     if (mtmp && buf) {
         Sprintf(buf, "%s - %s",
-            x_monnam(mtmp, ARTICLE_NONE, (char *)0, 0, TRUE),
+            x_monnam(mtmp, ARTICLE_NONE, (char *)0, 0, true),
             mtmp->mcan ? coynames[SIZE(coynames)-1] : coynames[rn2(SIZE(coynames)-1)]);
     }
     return buf;

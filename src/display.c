@@ -314,7 +314,7 @@ static void display_monster (
     signed char worm_tail       /* mon is actually a worm tail */
 )
 {
-    boolean mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
+    bool mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
     int sensed = mon_mimic &&
         (Protection_from_shape_changers || sensemon(mon));
     /*
@@ -635,7 +635,7 @@ void newsym (int x, int y) {
                     /* if monster is in a physical trap, you see the trap too */
                     if (tt == BEAR_TRAP || tt == PIT ||
                         tt == SPIKED_PIT ||tt == WEB) {
-                        trap->tseen = TRUE;
+                        trap->tseen = true;
                     }
                 }
                 _map_location(x,y,0);   /* map under the monster */
@@ -910,7 +910,7 @@ void swallowed (int first) {
  */
 void under_water (int mode) {
     static signed char lastx, lasty;
-    static boolean dela;
+    static bool dela;
     int x, y;
 
     /* swallowing has a higher precedence than under water */
@@ -919,11 +919,11 @@ void under_water (int mode) {
     /* full update */
     if (mode == 1 || dela) {
         cls();
-        dela = FALSE;
+        dela = false;
     }
     /* delayed full update */
     else if (mode == 2) {
-        dela = TRUE;
+        dela = true;
         return;
     }
     /* limited update */
@@ -951,7 +951,7 @@ void under_water (int mode) {
  *      Very restricted display.  You can only see yourself.
  */
 void under_ground (int mode) {
-    static boolean dela;
+    static bool dela;
 
     /* swallowing has a higher precedence than under ground */
     if (u.uswallow) return;
@@ -959,11 +959,11 @@ void under_ground (int mode) {
     /* full update */
     if (mode == 1 || dela) {
         cls();
-        dela = FALSE;
+        dela = false;
     }
     /* delayed full update */
     else if (mode == 2) {
-        dela = TRUE;
+        dela = true;
         return;
     }
     /* limited update */
@@ -1227,7 +1227,7 @@ void row_refresh (int start, int stop, int y) {
 }
 
 void cls (void) {
-    display_nhwindow(WIN_MESSAGE, FALSE); /* flush messages */
+    display_nhwindow(WIN_MESSAGE, false); /* flush messages */
     flags.botlx = 1;            /* force update of botl window */
     clear_nhwindow(WIN_MAP);    /* clear physical screen */
 
@@ -1241,8 +1241,8 @@ void flush_screen (int cursor_on_u) {
     /* Prevent infinite loops on errors:
      *      flush_screen->print_glyph->impossible->pline->flush_screen
      */
-    static   boolean flushing = 0;
-    static   boolean delay_flushing = 0;
+    static   bool flushing = 0;
+    static   bool delay_flushing = 0;
     int x,y;
 
     if (cursor_on_u == -1) delay_flushing = !delay_flushing;
@@ -1260,7 +1260,7 @@ void flush_screen (int cursor_on_u) {
     }
 
     if (cursor_on_u) curs(WIN_MAP, u.ux,u.uy); /* move cursor to the hero */
-    display_nhwindow(WIN_MAP, FALSE);
+    display_nhwindow(WIN_MAP, false);
     reset_glyph_bbox();
     flushing = 0;
     if(flags.botl || flags.botlx) bot();
@@ -1513,7 +1513,7 @@ static int check_pos (int x, int y, int which) {
     return 0;
 }
 
-/* Return TRUE if more than one is non-zero. */
+/* Return true if more than one is non-zero. */
 #define more_than_one(x, y, a, b, c) (((a) && ((b)|(c))) || ((b) && ((a)|(c))) || ((c) && ((a)|(b))))
 
 /* Return the wall mode for a T wall. */

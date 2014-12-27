@@ -2,9 +2,9 @@
 /*
  * Entry points:
  *      mkroom() -- make and stock a room of a given type
- *      nexttodoor() -- return TRUE if adjacent to a door
- *      has_dnstairs() -- return TRUE if given room has a down staircase
- *      has_upstairs() -- return TRUE if given room has an up staircase
+ *      nexttodoor() -- return true if adjacent to a door
+ *      has_dnstairs() -- return true if given room has a down staircase
+ *      has_upstairs() -- return true if given room has an up staircase
  *      courtmon() -- generate a court monster
  *      save_rooms() -- save rooms into file fd
  *      rest_rooms() -- restore rooms from file fd
@@ -15,8 +15,8 @@
 #include "flag.h"
 #include "onames.h"
 
-static boolean isbig(struct mkroom *);
-static struct mkroom * pick_room(boolean);
+static bool isbig(struct mkroom *);
+static struct mkroom * pick_room(bool);
 static void mkshop(void), mkzoo(int), mkswamp(void);
 static void mktemple(void);
 static coord * shrine_pos(int);
@@ -31,12 +31,12 @@ static void rest_room(int,struct mkroom *);
 extern const struct shclass shtypes[];  /* defined in shknam.c */
 
 
-static boolean 
+static bool 
 isbig (struct mkroom *sroom)
 {
         int area = (sroom->hx - sroom->lx + 1)
                            * (sroom->hy - sroom->ly + 1);
-        return((boolean)( area > 20 ));
+        return((bool)( area > 20 ));
 }
 
 void
@@ -168,7 +168,7 @@ gottype:
 }
 
 static struct mkroom *
-pick_room (boolean strict)
+pick_room (bool strict)
 /* pick an unused room, preferably with only one door */
 {
         struct mkroom *sroom;
@@ -198,7 +198,7 @@ mkzoo (int type)
 {
         struct mkroom *sroom;
 
-        if ((sroom = pick_room(FALSE)) != 0) {
+        if ((sroom = pick_room(false)) != 0) {
                 sroom->rtype = type;
                 fill_zoo(sroom);
         }
@@ -304,19 +304,19 @@ fill_zoo (struct mkroom *sroom)
                             (void) mk_tt_object(CORPSE, sx, sy);
                         if(!rn2(10))    /* lots of treasure buried with dead */
                             (void) mksobj_at((rn2(3)) ? LARGE_BOX : CHEST,
-                                             sx, sy, TRUE, FALSE);
+                                             sx, sy, true, false);
                         if (!rn2(5))
                             make_grave(sx, sy, (char *)0);
                         break;
                     case BEEHIVE:
                         if(!rn2(3))
                             (void) mksobj_at(LUMP_OF_ROYAL_JELLY,
-                                             sx, sy, TRUE, FALSE);
+                                             sx, sy, true, false);
                         break;
                     case BARRACKS:
                         if(!rn2(20))    /* the payroll and some loot */
                             (void) mksobj_at((rn2(3)) ? LARGE_BOX : CHEST,
-                                             sx, sy, TRUE, FALSE);
+                                             sx, sy, true, false);
                         break;
                     case COCKNEST:
                         if(!rn2(3)) {
@@ -325,14 +325,14 @@ fill_zoo (struct mkroom *sroom)
                             if (sobj) {
                                 for (i = rn2(5); i; i--)
                                     (void) add_to_container(sobj,
-                                                mkobj(RANDOM_CLASS, FALSE));
+                                                mkobj(RANDOM_CLASS, false));
                                 sobj->owt = weight(sobj);
                             }
                         }
                         break;
                     case ANTHOLE:
                         if(!rn2(3))
-                            (void) mkobj_at(FOOD_CLASS, sx, sy, FALSE);
+                            (void) mkobj_at(FOOD_CLASS, sx, sy, false);
                         break;
                 }
             }
@@ -344,7 +344,7 @@ fill_zoo (struct mkroom *sroom)
                   (void) somexy(sroom, &mm);
                   (void) mkgold((long) rn1(50 * level_difficulty(),10), mm.x, mm.y);
                   /* the royal coffers */
-                  chest = mksobj_at(CHEST, mm.x, mm.y, TRUE, FALSE);
+                  chest = mksobj_at(CHEST, mm.x, mm.y, true, false);
                   chest->spe = 2; /* so it can be found later */
                   level.flags.has_court = 1;
                   break;
@@ -369,7 +369,7 @@ fill_zoo (struct mkroom *sroom)
 
 /* make a swarm of undead around mm */
 void 
-mkundead (coord *mm, boolean revive_corpses, int mm_flags)
+mkundead (coord *mm, bool revive_corpses, int mm_flags)
 {
         int cnt = (level_difficulty() + 1)/10 + rnd(5);
         struct permonst *mdat;
@@ -384,7 +384,7 @@ mkundead (coord *mm, boolean revive_corpses, int mm_flags)
                      !revive(otmp)))
                 (void) makemon(mdat, cc.x, cc.y, mm_flags);
         }
-        level.flags.graveyard = TRUE;   /* reduced chance for undead corpse */
+        level.flags.graveyard = true;   /* reduced chance for undead corpse */
 }
 
 static struct permonst *
@@ -472,7 +472,7 @@ mktemple (void)
         coord *shrine_spot;
         struct rm *lev;
 
-        if(!(sroom = pick_room(TRUE))) return;
+        if(!(sroom = pick_room(true))) return;
 
         /* set up Priest and shrine */
         sroom->rtype = TEMPLE;
@@ -484,12 +484,12 @@ mktemple (void)
         lev = &levl[shrine_spot->x][shrine_spot->y];
         lev->typ = ALTAR;
         lev->altarmask = induced_align(80);
-        priestini(&u.uz, sroom, shrine_spot->x, shrine_spot->y, FALSE);
+        priestini(&u.uz, sroom, shrine_spot->x, shrine_spot->y, false);
         lev->altarmask |= AM_SHRINE;
         level.flags.has_temple = 1;
 }
 
-boolean 
+bool 
 nexttodoor (int sx, int sy)
 {
         int dx, dy;
@@ -498,29 +498,29 @@ nexttodoor (int sx, int sy)
                 if(!isok(sx+dx, sy+dy)) continue;
                 if(IS_DOOR((lev = &levl[sx+dx][sy+dy])->typ) ||
                     lev->typ == SDOOR)
-                        return(TRUE);
+                        return(true);
         }
-        return(FALSE);
+        return(false);
 }
 
-boolean 
+bool 
 has_dnstairs (struct mkroom *sroom)
 {
         if (sroom == dnstairs_room)
-                return TRUE;
+                return true;
         if (sstairs.sx && !sstairs.up)
-                return((boolean)(sroom == sstairs_room));
-        return FALSE;
+                return((bool)(sroom == sstairs_room));
+        return false;
 }
 
-boolean 
+bool 
 has_upstairs (struct mkroom *sroom)
 {
         if (sroom == upstairs_room)
-                return TRUE;
+                return true;
         if (sstairs.sx && sstairs.up)
-                return((boolean)(sroom == sstairs_room));
-        return FALSE;
+                return((bool)(sroom == sstairs_room));
+        return false;
 }
 
 
@@ -536,14 +536,14 @@ somey (struct mkroom *croom)
         return rn2(croom->hy-croom->ly+1) + croom->ly;
 }
 
-boolean 
+bool 
 inside_room (struct mkroom *croom, signed char x, signed char y)
 {
-        return((boolean)(x >= croom->lx-1 && x <= croom->hx+1 &&
+        return((bool)(x >= croom->lx-1 && x <= croom->hx+1 &&
                 y >= croom->ly-1 && y <= croom->hy+1));
 }
 
-boolean 
+bool 
 somexy (struct mkroom *croom, coord *c)
 {
         int try_cnt = 0;
@@ -557,21 +557,21 @@ somexy (struct mkroom *croom, coord *c)
                 c->y = somey(croom);
                 if (!levl[c->x][c->y].edge &&
                         (int) levl[c->x][c->y].roomno == i)
-                    return TRUE;
+                    return true;
             }
             /* try harder; exhaustively search until one is found */
             for(c->x = croom->lx; c->x <= croom->hx; c->x++)
                 for(c->y = croom->ly; c->y <= croom->hy; c->y++)
                     if (!levl[c->x][c->y].edge &&
                             (int) levl[c->x][c->y].roomno == i)
-                        return TRUE;
-            return FALSE;
+                        return true;
+            return false;
         }
 
         if (!croom->nsubrooms) {
                 c->x = somex(croom);
                 c->y = somey(croom);
-                return TRUE;
+                return true;
         }
 
         /* Check that coords doesn't fall into a subroom or into a wall */
@@ -588,8 +588,8 @@ somexy (struct mkroom *croom, coord *c)
 you_lose:       ;
         }
         if (try_cnt >= 100)
-            return FALSE;
-        return TRUE;
+            return false;
+        return true;
 }
 
 /*

@@ -12,7 +12,7 @@
 
 struct bill_x {
         unsigned bo_id;
-        boolean useup;
+        bool useup;
         long price;             /* price per unit */
         long bquan;             /* amount used up */
 };
@@ -25,8 +25,8 @@ struct eshk {
         int shoptype;           /* the value of rooms[shoproom].rtype */
         signed char shoproom;           /* index in rooms; set by inshop() */
         signed char unused;             /* to force alignment for stupid compilers */
-        boolean following;      /* following customer since he owes us sth */
-        boolean surcharge;      /* angry shk inflates prices */
+        bool following;      /* following customer since he owes us sth */
+        bool surcharge;      /* angry shk inflates prices */
         coord shk;              /* usual position shopkeeper */
         coord shd;              /* position shop door */
         d_level shoplevel;      /* level (& dungeon) of his shop */

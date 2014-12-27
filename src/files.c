@@ -32,7 +32,7 @@ static char *set_bonesfile_name(char *,d_level*);
 static char *set_bonestemp_name(void);
 static char *make_lockname(const char *,char *);
 static FILE *fopen_config_file(const char *);
-static int get_uchars(FILE *,char *,char *,unsigned char *,boolean,int,const char *);
+static int get_uchars(FILE *,char *,char *,unsigned char *,bool,int,const char *);
 int parse_config_line(FILE *,char *,char *,char *);
 static void adjust_prefix(char *, int);
 
@@ -490,7 +490,7 @@ static char * make_lockname (const char *filename, char *lockname) {
 
 
 /* lock a file */
-    boolean 
+    bool 
 lock_file (const char *filename, int whichprefix, int retryct)
 {
     char locknambuf[BUFSZ];
@@ -499,7 +499,7 @@ lock_file (const char *filename, int whichprefix, int retryct)
     nesting++;
     if (nesting > 1) {
         impossible("TRIED TO NEST LOCKS");
-        return TRUE;
+        return true;
     }
 
     lockname = make_lockname(filename, locknambuf);
@@ -521,30 +521,30 @@ lock_file (const char *filename, int whichprefix, int retryct)
                     HUP raw_printf("Perhaps there is an old %s around?",
                             lockname);
                     nesting--;
-                    return FALSE;
+                    return false;
                 }
 
                 break;
             case ENOENT:
                 HUP raw_printf("Can't find file %s to lock!", filename);
                 nesting--;
-                return FALSE;
+                return false;
             case EACCES:
                 HUP raw_printf("No write permission to lock %s!", filename);
                 nesting--;
-                return FALSE;
+                return false;
             default:
                 HUP perror(lockname);
                 HUP raw_printf(
                         "Cannot lock %s for unknown reason (%d).",
                         filename, errnosv);
                 nesting--;
-                return FALSE;
+                return false;
         }
 
     }
 
-    return TRUE;
+    return true;
 }
 
 
@@ -632,8 +632,8 @@ static FILE * fopen_config_file(const char *filename) {
 /*
  * Retrieve a list of integers from a file into a unsigned char array.
  *
- * NOTE: zeros are inserted unless modlist is TRUE, in which case the list
- *  location is unchanged.  Callers must handle zeros if modlist is FALSE.
+ * NOTE: zeros are inserted unless modlist is true, in which case the list
+ *  location is unchanged.  Callers must handle zeros if modlist is false.
  */
     static int 
 get_uchars (
@@ -641,14 +641,14 @@ get_uchars (
     char *buf,          /* read buffer, must be of size BUFSZ */
     char *bufp,         /* current pointer */
     unsigned char *list,        /* return list */
-    boolean modlist,    /* TRUE: list is being modified in place */
+    bool modlist,    /* true: list is being modified in place */
     int size,          /* return list size */
     const char *name           /* name of option for error message */
 )
 {
     unsigned int num = 0;
     int count = 0;
-    boolean havenum = FALSE;
+    bool havenum = false;
 
     while (1) {
         switch(*bufp) {
@@ -659,7 +659,7 @@ get_uchars (
                     if (num || !modlist) list[count] = num;
                     count++;
                     num = 0;
-                    havenum = FALSE;
+                    havenum = false;
                 }
                 if (count == size || !*bufp) return count;
                 bufp++;
@@ -668,7 +668,7 @@ get_uchars (
             case '0': case '1': case '2': case '3':
             case '4': case '5': case '6': case '7':
             case '8': case '9':
-                havenum = TRUE;
+                havenum = true;
                 num = num*10 + (*bufp-'0');
                 bufp++;
                 break;
@@ -724,7 +724,7 @@ adjust_prefix (char *bufp, int prefixid)
     }
 }
 
-#define match_varname(INP,NAM,LEN) match_optname(INP, NAM, LEN, TRUE)
+#define match_varname(INP,NAM,LEN) match_optname(INP, NAM, LEN, true)
 
 /*ARGSUSED*/
     int 
@@ -761,7 +761,7 @@ parse_config_line (FILE *fp, char *buf, char *tmp_ramdisk, char *tmp_levels)
      * appropriate fqn_prefix[] rather than specialized variables
      */
     if (match_varname(buf, "OPTIONS", 4)) {
-        parseoptions(bufp, TRUE, TRUE);
+        parseoptions(bufp, true, true);
         if (plname[0])          /* If a name was given */
             plnamesuffix(); /* set the character class */
     } else if (match_varname(buf, "AUTOPICKUP_EXCEPTION", 5)) {
@@ -798,35 +798,35 @@ parse_config_line (FILE *fp, char *buf, char *tmp_ramdisk, char *tmp_levels)
         (void) strncpy(catname, bufp, PL_PSIZ-1);
 
     } else if (match_varname(buf, "BOULDER", 3)) {
-        (void) get_uchars(fp, buf, bufp, &iflags.bouldersym, TRUE,
+        (void) get_uchars(fp, buf, bufp, &iflags.bouldersym, true,
                 1, "BOULDER");
     } else if (match_varname(buf, "GRAPHICS", 4)) {
-        len = get_uchars(fp, buf, bufp, translate, FALSE,
+        len = get_uchars(fp, buf, bufp, translate, false,
                 MAXPCHARS, "GRAPHICS");
         assign_graphics(translate, len, MAXPCHARS, 0);
     } else if (match_varname(buf, "DUNGEON", 4)) {
-        len = get_uchars(fp, buf, bufp, translate, FALSE,
+        len = get_uchars(fp, buf, bufp, translate, false,
                 MAXDCHARS, "DUNGEON");
         assign_graphics(translate, len, MAXDCHARS, 0);
     } else if (match_varname(buf, "TRAPS", 4)) {
-        len = get_uchars(fp, buf, bufp, translate, FALSE,
+        len = get_uchars(fp, buf, bufp, translate, false,
                 MAXTCHARS, "TRAPS");
         assign_graphics(translate, len, MAXTCHARS, MAXDCHARS);
     } else if (match_varname(buf, "EFFECTS", 4)) {
-        len = get_uchars(fp, buf, bufp, translate, FALSE,
+        len = get_uchars(fp, buf, bufp, translate, false,
                 MAXECHARS, "EFFECTS");
         assign_graphics(translate, len, MAXECHARS, MAXDCHARS+MAXTCHARS);
 
     } else if (match_varname(buf, "OBJECTS", 3)) {
         /* oc_syms[0] is the RANDOM object, unused */
-        (void) get_uchars(fp, buf, bufp, &(oc_syms[1]), TRUE,
+        (void) get_uchars(fp, buf, bufp, &(oc_syms[1]), true,
                 MAXOCLASSES-1, "OBJECTS");
     } else if (match_varname(buf, "MONSTERS", 3)) {
         /* monsyms[0] is unused */
-        (void) get_uchars(fp, buf, bufp, &(monsyms[1]), TRUE,
+        (void) get_uchars(fp, buf, bufp, &(monsyms[1]), true,
                 MAXMCLASSES-1, "MONSTERS");
     } else if (match_varname(buf, "WARNINGS", 5)) {
-        (void) get_uchars(fp, buf, bufp, translate, FALSE,
+        (void) get_uchars(fp, buf, bufp, translate, false,
                 WARNCOUNT, "WARNINGS");
         assign_warnings(translate);
     } else if (match_varname(buf, "WIZKIT", 6)) {
@@ -918,27 +918,27 @@ read_wizkit (void)
     FILE *fp;
     char *ep, buf[BUFSZ];
     struct obj *otmp;
-    boolean bad_items = FALSE, skip = FALSE;
+    bool bad_items = false, skip = false;
 
     if (!wizard || !(fp = fopen_wizkit_file())) return;
 
     while (fgets(buf, (int)(sizeof buf), fp)) {
         ep = index(buf, '\n');
         if (skip) { /* in case previous line was too long */
-            if (ep) skip = FALSE; /* found newline; next line is normal */
+            if (ep) skip = false; /* found newline; next line is normal */
         } else {
-            if (!ep) skip = TRUE; /* newline missing; discard next fgets */
+            if (!ep) skip = true; /* newline missing; discard next fgets */
             else *ep = '\0';                /* remove newline */
 
             if (buf[0]) {
-                otmp = readobjnam(buf, (struct obj *)0, FALSE);
+                otmp = readobjnam(buf, (struct obj *)0, false);
                 if (otmp) {
                     if (otmp != &zeroobj)
                         otmp = addinv(otmp);
                 } else {
                     /* .60 limits output line width to 79 chars */
                     raw_printf("Bad wizkit item: \"%.60s\"", buf);
-                    bad_items = TRUE;
+                    bad_items = true;
                 }
             }
         }

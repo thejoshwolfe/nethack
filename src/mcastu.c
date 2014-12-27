@@ -29,20 +29,20 @@
 #define CLC_FIRE_PILLAR  8
 #define CLC_GEYSER       9
 
-static void cursetxt(struct monst *,boolean);
+static void cursetxt(struct monst *,bool);
 static int choose_magic_spell(int);
 static int choose_clerical_spell(int);
 static void cast_wizard_spell(struct monst *, int,int);
 static void cast_cleric_spell(struct monst *, int,int);
-static boolean is_undirected_spell(unsigned int,int);
-static boolean spell_would_be_useless(struct monst *,unsigned int,int);
+static bool is_undirected_spell(unsigned int,int);
+static bool spell_would_be_useless(struct monst *,unsigned int,int);
 
 
 extern const char * const flash_types[];        /* from zap.c */
 
 /* feedback when frustrated monster couldn't cast a spell */
 static void 
-cursetxt (struct monst *mtmp, boolean undirected)
+cursetxt (struct monst *mtmp, bool undirected)
 {
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
             const char *point_msg;  /* spellcasting monsters are impolite */
@@ -150,7 +150,7 @@ choose_clerical_spell (int spellnum)
  * 0: unsuccessful spell
  */
 int 
-castmu (struct monst *mtmp, struct attack *mattk, boolean thinks_it_foundyou, boolean foundyou)
+castmu (struct monst *mtmp, struct attack *mattk, bool thinks_it_foundyou, bool foundyou)
 {
         int     dmg, ml = mtmp->m_lev;
         int ret;
@@ -410,12 +410,12 @@ cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum)
             shieldeff(u.ux, u.uy);
             if (!Stunned)
                 You_feel("momentarily disoriented.");
-            make_stunned(1L, FALSE);
+            make_stunned(1L, false);
         } else {
             You(Stunned ? "struggle to keep your balance." : "reel...");
             dmg = d(ACURR(A_DEX) < 12 ? 6 : 4, 4);
             if (Half_spell_damage) dmg = (dmg + 1) / 2;
-            make_stunned(HStun + dmg, FALSE);
+            make_stunned(HStun + dmg, false);
         }
         dmg = 0;
         break;
@@ -486,11 +486,11 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
         destroy_item(SCROLL_CLASS, AD_FIRE);
         destroy_item(POTION_CLASS, AD_FIRE);
         destroy_item(SPBOOK_CLASS, AD_FIRE);
-        (void) burn_floor_paper(u.ux, u.uy, TRUE, FALSE);
+        (void) burn_floor_paper(u.ux, u.uy, true, false);
         break;
     case CLC_LIGHTNING:
     {
-        boolean reflects;
+        bool reflects;
 
         pline("A bolt of lightning strikes down at you from above!");
         reflects = ureflects("It bounces off your %s%s.", "");
@@ -518,20 +518,20 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
         struct permonst *pm = mkclass(S_ANT,0);
         struct monst *mtmp2 = (struct monst *)0;
         char let = (pm ? S_ANT : S_SNAKE);
-        boolean success;
+        bool success;
         int i;
         coord bypos;
         int quan;
 
         quan = (mtmp->m_lev < 2) ? 1 : rnd((int)mtmp->m_lev / 2);
         if (quan < 3) quan = 3;
-        success = pm ? TRUE : FALSE;
+        success = pm ? true : false;
         for (i = 0; i <= quan; i++) {
             if (!enexto(&bypos, mtmp->mux, mtmp->muy, mtmp->data))
                 break;
             if ((pm = mkclass(let,0)) != 0 &&
                     (mtmp2 = makemon(pm, bypos.x, bypos.y, NO_MM_FLAGS)) != 0) {
-                success = TRUE;
+                success = true;
                 mtmp2->msleeping = mtmp2->mpeaceful = mtmp2->mtame = 0;
                 set_malign(mtmp2);
             }
@@ -568,7 +568,7 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
             pline("Scales cover your %s!",
                   (num_eyes == 1) ?
                   body_part(EYE) : makeplural(body_part(EYE)));
-            make_blinded(Half_spell_damage ? 100L : 200L, FALSE);
+            make_blinded(Half_spell_damage ? 100L : 200L, false);
             if (!Blind) Your("%s", vision_clears);
             dmg = 0;
         } else
@@ -594,11 +594,11 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
             shieldeff(u.ux, u.uy);
             You_feel("momentarily dizzy.");
         } else {
-            boolean oldprop = !!Confusion;
+            bool oldprop = !!Confusion;
 
             dmg = (int)mtmp->m_lev;
             if (Half_spell_damage) dmg = (dmg + 1) / 2;
-            make_confused(HConfusion + dmg, TRUE);
+            make_confused(HConfusion + dmg, true);
             if (Hallucination)
                 You_feel("%s!", oldprop ? "trippier" : "trippy");
             else
@@ -639,7 +639,7 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
     if (dmg) mdamageu(mtmp, dmg);
 }
 
-static boolean 
+static bool 
 is_undirected_spell (unsigned int adtyp, int spellnum)
 {
     if (adtyp == AD_SPEL) {
@@ -650,7 +650,7 @@ is_undirected_spell (unsigned int adtyp, int spellnum)
         case MGC_DISAPPEAR:
         case MGC_HASTE_SELF:
         case MGC_CURE_SELF:
-            return TRUE;
+            return true;
         default:
             break;
         }
@@ -658,16 +658,16 @@ is_undirected_spell (unsigned int adtyp, int spellnum)
         switch (spellnum) {
         case CLC_INSECTS:
         case CLC_CURE_SELF:
-            return TRUE;
+            return true;
         default:
             break;
         }
     }
-    return FALSE;
+    return false;
 }
 
 /* Some spells are useless under some circumstances. */
-static boolean 
+static bool 
 spell_would_be_useless (struct monst *mtmp, unsigned int adtyp, int spellnum)
 {
     /* Some spells don't require the player to really be there and can be cast
@@ -676,50 +676,50 @@ spell_would_be_useless (struct monst *mtmp, unsigned int adtyp, int spellnum)
      * This check isn't quite right because it always uses your real position.
      * We really want something like "if the monster could see mux, muy".
      */
-    boolean mcouldseeu = couldsee(mtmp->mx, mtmp->my);
+    bool mcouldseeu = couldsee(mtmp->mx, mtmp->my);
 
     if (adtyp == AD_SPEL) {
         /* aggravate monsters, etc. won't be cast by peaceful monsters */
         if (mtmp->mpeaceful && (spellnum == MGC_AGGRAVATION ||
                 spellnum == MGC_SUMMON_MONS || spellnum == MGC_CLONE_WIZ))
-            return TRUE;
+            return true;
         /* haste self when already fast */
         if (mtmp->permspeed == MFAST && spellnum == MGC_HASTE_SELF)
-            return TRUE;
+            return true;
         /* invisibility when already invisible */
         if ((mtmp->minvis || mtmp->invis_blkd) && spellnum == MGC_DISAPPEAR)
-            return TRUE;
+            return true;
         /* peaceful monster won't cast invisibility if you can't see invisible,
            same as when monsters drink potions of invisibility.  This doesn't
            really make a lot of sense, but lets the player avoid hitting
            peaceful monsters by mistake */
         if (mtmp->mpeaceful && !See_invisible && spellnum == MGC_DISAPPEAR)
-            return TRUE;
+            return true;
         /* healing when already healed */
         if (mtmp->mhp == mtmp->mhpmax && spellnum == MGC_CURE_SELF)
-            return TRUE;
+            return true;
         /* don't summon monsters if it doesn't think you're around */
         if (!mcouldseeu && (spellnum == MGC_SUMMON_MONS ||
                 (!mtmp->iswiz && spellnum == MGC_CLONE_WIZ)))
-            return TRUE;
+            return true;
         if ((!mtmp->iswiz || flags.no_of_wizards > 1)
                                                 && spellnum == MGC_CLONE_WIZ)
-            return TRUE;
+            return true;
     } else if (adtyp == AD_CLRC) {
         /* summon insects/sticks to snakes won't be cast by peaceful monsters */
         if (mtmp->mpeaceful && spellnum == CLC_INSECTS)
-            return TRUE;
+            return true;
         /* healing when already healed */
         if (mtmp->mhp == mtmp->mhpmax && spellnum == CLC_CURE_SELF)
-            return TRUE;
+            return true;
         /* don't summon insects if it doesn't think you're around */
         if (!mcouldseeu && spellnum == CLC_INSECTS)
-            return TRUE;
+            return true;
         /* blindness spell on blinded player */
         if (Blinded && spellnum == CLC_BLIND_YOU)
-            return TRUE;
+            return true;
     }
-    return FALSE;
+    return false;
 }
 
 
@@ -738,7 +738,7 @@ buzzmu (                /* monster uses spell (ranged) */
             return(0);
 
         if (mtmp->mcan) {
-            cursetxt(mtmp, FALSE);
+            cursetxt(mtmp, false);
             return(0);
         }
         if(lined_up(mtmp) && rn2(3)) {

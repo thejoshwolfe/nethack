@@ -37,7 +37,7 @@ tty_doprev_message (void)
                 i = (i + 1) % cw->rows;
             } while (i != cw->maxcol);
             putstr(prevmsg_win, 0, toplines);
-            display_nhwindow(prevmsg_win, TRUE);
+            display_nhwindow(prevmsg_win, true);
             destroy_nhwindow(prevmsg_win);
         } else if (iflags.prevmsg_window == 'c') {              /* combination */
             do {
@@ -68,7 +68,7 @@ tty_doprev_message (void)
                         i = (i + 1) % cw->rows;
                     } while (i != cw->maxcol);
                     putstr(prevmsg_win, 0, toplines);
-                    display_nhwindow(prevmsg_win, TRUE);
+                    display_nhwindow(prevmsg_win, true);
                     destroy_nhwindow(prevmsg_win);
                 }
 
@@ -90,7 +90,7 @@ tty_doprev_message (void)
                     cw->maxcol = cw->maxrow;
             } while (cw->maxcol != cw->maxrow);
 
-            display_nhwindow(prevmsg_win, TRUE);
+            display_nhwindow(prevmsg_win, true);
             destroy_nhwindow(prevmsg_win);
             cw->maxcol = cw->maxrow;
             ttyDisplay->dismiss_more = 0;
@@ -306,9 +306,9 @@ tty_yn_function (const char *query, const char *resp, char def)
 {
         char q;
         char rtmp[40];
-        boolean digit_ok, allow_num;
+        bool digit_ok, allow_num;
         struct WinDesc *cw = wins[WIN_MESSAGE];
-        boolean doprev = 0;
+        bool doprev = 0;
         char prompt[QBUFSZ];
 
         if(ttyDisplay->toplin == 1 && !(cw->flags & WIN_STOP)) more();

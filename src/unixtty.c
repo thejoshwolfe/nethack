@@ -36,7 +36,7 @@ static struct termios termio;
 short   ospeed = 0;     /* gets around "not defined" error message */
 
         char erase_char, intr_char, kill_char;
-static boolean settty_needed = FALSE;
+static bool settty_needed = false;
 struct termios inittyb, curttyb;
 
 static void getioctls (void) {
@@ -101,7 +101,7 @@ gettty (void)
                 curttyb.tabflgs &= ~EXTABS;
                 setctty();
         }
-        settty_needed = TRUE;
+        settty_needed = true;
 }
 
 /* reset terminal to original state */
@@ -219,7 +219,7 @@ void init_linux_cons (void) {
                 atexit(linux_mapon);
                 linux_mapoff();
                 if (has_colors())
-                        iflags.use_color = TRUE;
+                        iflags.use_color = true;
         }
 }
 

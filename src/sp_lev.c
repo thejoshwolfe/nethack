@@ -28,12 +28,12 @@ static void create_stairs(stair *, struct mkroom *);
 static void create_altar(altar *, struct mkroom *);
 static void create_gold(gold *, struct mkroom *);
 static void create_feature(int,int,struct mkroom *,int);
-static boolean search_door(struct mkroom *, signed char *, signed char *,
+static bool search_door(struct mkroom *, signed char *, signed char *,
                                         signed char, int);
 static void fix_stair_rooms(void);
 static void create_corridor(corridor *);
 
-static boolean create_subroom(struct mkroom *, signed char, signed char,
+static bool create_subroom(struct mkroom *, signed char, signed char,
                                         signed char, signed char, signed char, signed char);
 
 #define LEFT    1
@@ -75,9 +75,9 @@ static void load_common_data(dlb *,int);
 static void load_one_monster(dlb *,monster *);
 static void load_one_object(dlb *,object *);
 static void load_one_engraving(dlb *,engraving *);
-static boolean load_rooms(dlb *);
+static bool load_rooms(dlb *);
 static void maze1xy(coord *,int);
-static boolean load_maze(dlb *);
+static bool load_maze(dlb *);
 static void create_door(room_door *, struct mkroom *);
 static void free_rooms(room **, int);
 static void build_room(room *, room*);
@@ -154,7 +154,7 @@ rndtrap (void)
 #define DRY     0x1
 #define WET     0x2
 
-static boolean is_ok_location(signed char, signed char, int);
+static bool is_ok_location(signed char, signed char, int);
 
 static void get_location(signed char *x, signed char *y, int humidity) {
         int cpt = 0;
@@ -191,24 +191,24 @@ found_it:;
         }
 }
 
-static boolean 
+static bool 
 is_ok_location (signed char x, signed char y, int humidity)
 {
         int typ;
 
-        if (Is_waterlevel(&u.uz)) return TRUE;  /* accept any spot */
+        if (Is_waterlevel(&u.uz)) return true;  /* accept any spot */
 
         if (humidity & DRY) {
             typ = levl[x][y].typ;
             if (typ == ROOM || typ == AIR ||
                     typ == CLOUD || typ == ICE || typ == CORR)
-                return TRUE;
+                return true;
         }
         if (humidity & WET) {
             if (is_pool(x,y) || is_lava(x,y))
-                return TRUE;
+                return true;
         }
-        return FALSE;
+        return false;
 }
 
 /*
@@ -281,8 +281,8 @@ get_free_room_loc (signed char *x, signed char *y, struct mkroom *croom)
         *x = try_x,  *y = try_y;
 }
 
-boolean 
-check_room (signed char *lowx, signed char *ddx, signed char *lowy, signed char *ddy, boolean vault)
+bool 
+check_room (signed char *lowx, signed char *ddx, signed char *lowy, signed char *ddy, bool vault)
 {
         int x,y,hix = *lowx + *ddx, hiy = *lowy + *ddy;
         struct rm *lev;
@@ -296,7 +296,7 @@ check_room (signed char *lowx, signed char *ddx, signed char *lowy, signed char 
         if (hix > COLNO-3)      hix = COLNO-3;
         if (hiy > ROWNO-3)      hiy = ROWNO-3;
 chk:
-        if (hix <= *lowx || hiy <= *lowy)       return FALSE;
+        if (hix <= *lowx || hiy <= *lowy)       return false;
 
         /* check area around room (and make room smaller if necessary) */
         for (x = *lowx - xlim; x<= hix + xlim; x++) {
@@ -307,7 +307,7 @@ chk:
                 lev = &levl[x][y];
                 for (; y <= ymax; y++) {
                         if (lev++->typ) {
-                                if (!rn2(3))    return FALSE;
+                                if (!rn2(3))    return false;
                                 if (x < *lowx)
                                     *lowx = x + xlim + 1;
                                 else
@@ -322,7 +322,7 @@ chk:
         }
         *ddx = hix - *lowx;
         *ddy = hiy - *lowy;
-        return TRUE;
+        return true;
 }
 
 /*
@@ -330,21 +330,21 @@ chk:
  * This is still very incomplete...
  */
 
-boolean 
+bool 
 create_room (signed char x, signed char y, signed char w, signed char h, signed char xal, signed char yal, signed char rtype, signed char rlit)
 {
         signed char     xabs, yabs;
         int     wtmp, htmp, xaltmp, yaltmp, xtmp, ytmp;
         NhRect  *r1 = 0, r2;
         int     trycnt = 0;
-        boolean vault = FALSE;
+        bool vault = false;
         int     xlim = XLIM, ylim = YLIM;
 
         if (rtype == -1)        /* Is the type random ? */
             rtype = OROOM;
 
         if (rtype == VAULT) {
-                vault = TRUE;
+                vault = true;
                 xlim++;
                 ylim++;
         }
@@ -354,7 +354,7 @@ create_room (signed char x, signed char y, signed char w, signed char h, signed 
 
         /* is light state random ? */
         if (rlit == -1)
-            rlit = (rnd(1+abs(depth(&u.uz))) < 11 && rn2(77)) ? TRUE : FALSE;
+            rlit = (rnd(1+abs(depth(&u.uz))) < 11 && rn2(77)) ? true : false;
 
         /*
          * Here we will try to create a room. If some parameters are
@@ -375,7 +375,7 @@ create_room (signed char x, signed char y, signed char w, signed char h, signed 
                         r1 = rnd_rect(); /* Get a random rectangle */
 
                         if (!r1) { /* No more free rectangles ! */
-                                return FALSE;
+                                return false;
                         }
                         hx = r1->hx;
                         hy = r1->hy;
@@ -473,19 +473,19 @@ create_room (signed char x, signed char y, signed char w, signed char h, signed 
                 }
         } while (++trycnt <= 100 && !r1);
         if (!r1) {      /* creation of room failed ? */
-                return FALSE;
+                return false;
         }
         split_rects(r1, &r2);
 
         if (!vault) {
                 smeq[nroom] = nroom;
                 add_room(xabs, yabs, xabs+wtmp-1, yabs+htmp-1,
-                         rlit, rtype, FALSE);
+                         rlit, rtype, false);
         } else {
                 rooms[nroom].lx = xabs;
                 rooms[nroom].ly = yabs;
         }
-        return TRUE;
+        return true;
 }
 
 /*
@@ -493,7 +493,7 @@ create_room (signed char x, signed char y, signed char w, signed char h, signed 
  * x & y are relative to the parent room.
  */
 
-static boolean create_subroom(struct mkroom *proom, signed char x, signed char y,
+static bool create_subroom(struct mkroom *proom, signed char x, signed char y,
         signed char w,  signed char h, signed char rtype, signed char rlit)
 {
         signed char width, height;
@@ -503,7 +503,7 @@ static boolean create_subroom(struct mkroom *proom, signed char x, signed char y
 
         /* There is a minimum size for the parent room */
         if (width < 4 || height < 4)
-            return FALSE;
+            return false;
 
         /* Check for random position, size, etc... */
 
@@ -526,11 +526,11 @@ static boolean create_subroom(struct mkroom *proom, signed char x, signed char y
         if (rtype == -1)
             rtype = OROOM;
         if (rlit == -1)
-            rlit = (rnd(1+abs(depth(&u.uz))) < 11 && rn2(77)) ? TRUE : FALSE;
+            rlit = (rnd(1+abs(depth(&u.uz))) < 11 && rn2(77)) ? true : false;
         add_subroom(proom, proom->lx + x, proom->ly + y,
                     proom->lx + x + w - 1, proom->ly + y + h - 1,
-                    rlit, rtype, FALSE);
-        return TRUE;
+                    rlit, rtype, false);
+        return true;
 }
 
 /*
@@ -766,7 +766,7 @@ create_monster (monster *m, struct mkroom *croom)
         if(m->align != -12)
             mtmp = mk_roamer(pm, Amask2align(amask), x, y, m->peaceful);
         else if(PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
-                 mtmp = mk_mplayer(pm, x, y, FALSE);
+                 mtmp = mk_mplayer(pm, x, y, false);
         else mtmp = makemon(pm, x, y, NO_MM_FLAGS);
 
         if (mtmp) {
@@ -856,10 +856,10 @@ create_object (object *o, struct mkroom *croom)
     struct obj *otmp;
     signed char x, y;
     char c;
-    boolean named;      /* has a name been supplied in level description? */
+    bool named;      /* has a name been supplied in level description? */
 
     if (rn2(100) < o->chance) {
-        named = o->name.str ? TRUE : FALSE;
+        named = o->name.str ? true : false;
 
         x = o->x; y = o->y;
         if (croom)
@@ -877,7 +877,7 @@ create_object (object *o, struct mkroom *croom)
         if (!c)
             otmp = mkobj_at(RANDOM_CLASS, x, y, !named);
         else if (o->id != -1)
-            otmp = mksobj_at(o->id, x, y, TRUE, !named);
+            otmp = mksobj_at(o->id, x, y, true, !named);
         else {
             /*
              * The special levels are compiled with the default "text" object
@@ -913,7 +913,7 @@ create_object (object *o, struct mkroom *croom)
         /* assume we wouldn't be given an egg corpsenm unless it was
            hatchable */
         if (otmp->otyp == EGG && otmp->corpsenm != NON_PM) {
-            if (dead_species(otmp->otyp, TRUE))
+            if (dead_species(otmp->otyp, true))
                 kill_egg(otmp); /* make sure nothing hatches */
             else
                 attach_egg_hatch_timeout(otmp); /* attach new hatch timeout */
@@ -1025,7 +1025,7 @@ create_altar (altar *a, struct mkroom *croom)
 {
         signed char             sproom,x,y;
         aligntyp        amask;
-        boolean         croom_is_temple = TRUE;
+        bool         croom_is_temple = true;
         int oldtyp;
 
         x = a->x; y = a->y;
@@ -1033,13 +1033,13 @@ create_altar (altar *a, struct mkroom *croom)
         if (croom) {
             get_free_room_loc(&x, &y, croom);
             if (croom->rtype != TEMPLE)
-                croom_is_temple = FALSE;
+                croom_is_temple = false;
         } else {
             get_location(&x, &y, DRY);
             if ((sproom = (signed char) *in_rooms(x, y, TEMPLE)) != 0)
                 croom = &rooms[sproom - ROOMOFFSET];
             else
-                croom_is_temple = FALSE;
+                croom_is_temple = false;
         }
 
         /* check for existing features */
@@ -1080,7 +1080,7 @@ create_altar (altar *a, struct mkroom *croom)
         if (a->shrine) {        /* Is it a shrine  or sanctum? */
             priestini(&u.uz, croom, x, y, (a->shrine > 1));
             levl[x][y].altarmask |= AM_SHRINE;
-            level.flags.has_temple = TRUE;
+            level.flags.has_temple = true;
         }
 }
 
@@ -1146,7 +1146,7 @@ create_feature (int fx, int fy, struct mkroom *croom, int typ)
  * Search for a door in a room on a specified wall.
  */
 
-static boolean search_door(struct mkroom *croom, signed char *x, signed char *y,
+static bool search_door(struct mkroom *croom, signed char *x, signed char *y,
         signed char wall, int cnt)
 {
         int dx, dy;
@@ -1183,20 +1183,20 @@ static boolean search_door(struct mkroom *croom, signed char *x, signed char *y,
                         *x = xx;
                         *y = yy;
                         if (cnt-- <= 0)
-                            return TRUE;
+                            return true;
                 }
                 xx += dx;
                 yy += dy;
         }
-        return FALSE;
+        return false;
 }
 
 /*
  * Dig a corridor between two points.
  */
 
-boolean 
-dig_corridor (coord *org, coord *dest, boolean nxcor, signed char ftyp, signed char btyp)
+bool 
+dig_corridor (coord *org, coord *dest, bool nxcor, signed char ftyp, signed char btyp)
 {
         int dx=0, dy=0, dix, diy, cct;
         struct rm *crm;
@@ -1207,7 +1207,7 @@ dig_corridor (coord *org, coord *dest, boolean nxcor, signed char ftyp, signed c
         if (xx <= 0 || yy <= 0 || tx <= 0 || ty <= 0 ||
             xx > COLNO-1 || tx > COLNO-1 ||
             yy > ROWNO-1 || ty > ROWNO-1) {
-                return FALSE;
+                return false;
         }
         if (tx > xx)            dx = 1;
         else if (ty > yy)       dy = 1;
@@ -1220,27 +1220,27 @@ dig_corridor (coord *org, coord *dest, boolean nxcor, signed char ftyp, signed c
         while(xx != tx || yy != ty) {
             /* loop: dig corridor at [xx,yy] and find new [xx,yy] */
             if(cct++ > 500 || (nxcor && !rn2(35)))
-                return FALSE;
+                return false;
 
             xx += dx;
             yy += dy;
 
             if(xx >= COLNO-1 || xx <= 0 || yy <= 0 || yy >= ROWNO-1)
-                return FALSE;           /* impossible */
+                return false;           /* impossible */
 
             crm = &levl[xx][yy];
             if(crm->typ == btyp) {
                 if(ftyp != CORR || rn2(100)) {
                         crm->typ = ftyp;
                         if(nxcor && !rn2(50))
-                                (void) mksobj_at(BOULDER, xx, yy, TRUE, FALSE);
+                                (void) mksobj_at(BOULDER, xx, yy, true, false);
                 } else {
                         crm->typ = SCORR;
                 }
             } else
             if(crm->typ != ftyp && crm->typ != SCORR) {
                 /* strange ... */
-                return FALSE;
+                return false;
             }
 
             /* find next corridor position */
@@ -1287,7 +1287,7 @@ dig_corridor (coord *org, coord *dest, boolean nxcor, signed char ftyp, signed c
             dy = -dy;
             dx = -dx;
         }
-        return TRUE;
+        return true;
 }
 
 /*
@@ -1370,7 +1370,7 @@ create_corridor (corridor *c)
                       case W_WEST:  dest.x--; break;
                       case W_EAST:  dest.x++; break;
                 }
-                (void) dig_corridor(&org, &dest, FALSE, CORR, STONE);
+                (void) dig_corridor(&org, &dest, false, CORR, STONE);
         }
 }
 
@@ -1380,7 +1380,7 @@ create_corridor (corridor *c)
  */
 
 void 
-fill_room (struct mkroom *croom, boolean prefilled)
+fill_room (struct mkroom *croom, bool prefilled)
 {
         if (!croom || croom->rtype == OROOM)
             return;
@@ -1391,7 +1391,7 @@ fill_room (struct mkroom *croom, boolean prefilled)
             /* Shop ? */
             if (croom->rtype >= SHOPBASE) {
                     stock_room(croom->rtype - SHOPBASE, croom);
-                    level.flags.has_shop = TRUE;
+                    level.flags.has_shop = true;
                     return;
             }
 
@@ -1412,28 +1412,28 @@ fill_room (struct mkroom *croom, boolean prefilled)
         }
         switch (croom->rtype) {
             case VAULT:
-                level.flags.has_vault = TRUE;
+                level.flags.has_vault = true;
                 break;
             case ZOO:
-                level.flags.has_zoo = TRUE;
+                level.flags.has_zoo = true;
                 break;
             case COURT:
-                level.flags.has_court = TRUE;
+                level.flags.has_court = true;
                 break;
             case MORGUE:
-                level.flags.has_morgue = TRUE;
+                level.flags.has_morgue = true;
                 break;
             case BEEHIVE:
-                level.flags.has_beehive = TRUE;
+                level.flags.has_beehive = true;
                 break;
             case BARRACKS:
-                level.flags.has_barracks = TRUE;
+                level.flags.has_barracks = true;
                 break;
             case TEMPLE:
-                level.flags.has_temple = TRUE;
+                level.flags.has_temple = true;
                 break;
             case SWAMP:
-                level.flags.has_swamp = TRUE;
+                level.flags.has_swamp = true;
                 break;
         }
 }
@@ -1511,7 +1511,7 @@ free_rooms (room **ro, int n)
 static void
 build_room (room *r, room *pr)
 {
-        boolean okroom;
+        bool okroom;
         struct mkroom   *aroom;
         short i;
         signed char rtype = (!r->chance || rn2(100) < r->chance) ? r->rtype : OROOM;
@@ -1577,7 +1577,7 @@ build_room (room *r, room *pr)
                  * DLC - this can fail if corridors are added to this room
                  * at a later point.  Currently no good way to fix this.
                  */
-                if(aroom->rtype != OROOM && r->filled) fill_room(aroom, FALSE);
+                if(aroom->rtype != OROOM && r->filled) fill_room(aroom, false);
         }
 }
 
@@ -1587,7 +1587,7 @@ build_room (room *r, room *pr)
 static void
 light_region (region *tmpregion)
 {
-    boolean litstate = tmpregion->rlit ? 1 : 0;
+    bool litstate = tmpregion->rlit ? 1 : 0;
     int hiy = tmpregion->y2;
     int x, y;
     struct rm *lev;
@@ -1704,7 +1704,7 @@ load_one_engraving (dlb *fd, engraving *e)
         e->engr.str[size] = '\0';
 }
 
-static boolean 
+static bool 
 load_rooms (dlb *fd)
 {
         signed char             nrooms, ncorr;
@@ -1923,7 +1923,7 @@ load_rooms (dlb *fd)
                 create_corridor(&tmpcor);
         }
 
-        return TRUE;
+        return true;
 }
 
 /*
@@ -1957,11 +1957,11 @@ maze1xy (coord *m, int humidity)
  * Could be cleaner, but it works.
  */
 
-static boolean 
+static bool 
 load_maze (dlb *fd)
 {
     signed char   x, y, typ;
-    boolean prefilled, room_not_needed;
+    bool prefilled, room_not_needed;
 
     char    n, numpart = 0;
     signed char   nwalk = 0, nwalk_sav;
@@ -1989,7 +1989,7 @@ load_maze (dlb *fd)
     engraving tmpengraving;
     signed char   mustfill[(MAXNROFROOMS+1)*2];
     struct trap *badtrap;
-    boolean has_bounds;
+    bool has_bounds;
 
     (void) memset((void *)&Map[0][0], 0, sizeof Map);
     load_common_data(fd, SP_LEV_MAZE);
@@ -2049,7 +2049,7 @@ load_maze (dlb *fd)
          * are laid out.  CROSSWALLS are used to specify "invisible"
          * boundaries where DOOR syms look bad or aren't desirable.
          */
-        has_bounds = FALSE;
+        has_bounds = false;
 
         if(init_lev.init_present && xsize <= 1 && ysize <= 1) {
             xstart = 1;
@@ -2061,7 +2061,7 @@ load_maze (dlb *fd)
             for(y = ystart; y < ystart+ysize; y++)
                 for(x = xstart; x < xstart+xsize; x++) {
                     levl[x][y].typ = Fgetc(fd);
-                    levl[x][y].lit = FALSE;
+                    levl[x][y].lit = false;
                     /* clear out levl: load_common_data may set them */
                     levl[x][y].flags = 0;
                     levl[x][y].horizontal = 0;
@@ -2095,7 +2095,7 @@ load_maze (dlb *fd)
                     else if(levl[x][y].typ == LAVAPOOL)
                         levl[x][y].lit = 1;
                     else if(levl[x][y].typ == CROSSWALL)
-                        has_bounds = TRUE;
+                        has_bounds = true;
                     Map[x][y] = 1;
                 }
             if (init_lev.init_present && init_lev.joined)
@@ -2177,13 +2177,13 @@ load_maze (dlb *fd)
 
                 if(tmpregion.rtype > MAXRTYPE) {
                     tmpregion.rtype -= MAXRTYPE+1;
-                    prefilled = TRUE;
+                    prefilled = true;
                 } else
-                    prefilled = FALSE;
+                    prefilled = false;
 
                 if(tmpregion.rlit < 0)
                     tmpregion.rlit = (rnd(1+abs(depth(&u.uz))) < 11 && rn2(77))
-                        ? TRUE : FALSE;
+                        ? true : false;
 
                 get_location(&tmpregion.x1, &tmpregion.y1, DRY|WET);
                 get_location(&tmpregion.x2, &tmpregion.y2, DRY|WET);
@@ -2210,15 +2210,15 @@ load_maze (dlb *fd)
                     min_rx = max_rx = tmpregion.x1;
                     min_ry = max_ry = tmpregion.y1;
                     flood_fill_rm(tmpregion.x1, tmpregion.y1,
-                                  nroom+ROOMOFFSET, tmpregion.rlit, TRUE);
+                                  nroom+ROOMOFFSET, tmpregion.rlit, true);
                     add_room(min_rx, min_ry, max_rx, max_ry,
-                             FALSE, tmpregion.rtype, TRUE);
+                             false, tmpregion.rtype, true);
                     troom->rlit = tmpregion.rlit;
-                    troom->irregular = TRUE;
+                    troom->irregular = true;
                 } else {
                     add_room(tmpregion.x1, tmpregion.y1,
                              tmpregion.x2, tmpregion.y2,
-                             tmpregion.rlit, tmpregion.rtype, TRUE);
+                             tmpregion.rlit, tmpregion.rtype, true);
                     topologize(troom);                  /* set roomno */
                 }
         }
@@ -2473,11 +2473,11 @@ load_maze (dlb *fd)
             for(x = rnd((int) (20 * mapfact) / 100); x; x--) {
                     maze1xy(&mm, DRY);
                     (void) mkobj_at(rn2(2) ? GEM_CLASS : RANDOM_CLASS,
-                                                        mm.x, mm.y, TRUE);
+                                                        mm.x, mm.y, true);
             }
             for(x = rnd((int) (12 * mapfact) / 100); x; x--) {
                     maze1xy(&mm, DRY);
-                    (void) mksobj_at(BOULDER, mm.x, mm.y, TRUE, FALSE);
+                    (void) mksobj_at(BOULDER, mm.x, mm.y, true, false);
             }
             for (x = rn2(2); x; x--) {
                 maze1xy(&mm, DRY);
@@ -2503,26 +2503,26 @@ load_maze (dlb *fd)
                     (void) maketrap(mm.x, mm.y, trytrap);
             }
     }
-    return TRUE;
+    return true;
 }
 
 /*
  * General loader
  */
 
-boolean 
+bool 
 load_special (const char *name)
 {
         dlb *fd;
-        boolean result = FALSE;
+        bool result = false;
         char c;
         struct version_info vers_info;
 
         fd = dlb_fopen(name, "r");
-        if (!fd) return FALSE;
+        if (!fd) return false;
 
         Fread((void *) &vers_info, sizeof vers_info, 1, fd);
-        if (!check_version(&vers_info, name, TRUE))
+        if (!check_version(&vers_info, name, true))
             goto give_up;
 
         Fread((void *) &c, sizeof c, 1, fd); /* c Header */
@@ -2535,7 +2535,7 @@ load_special (const char *name)
                     result = load_maze(fd);
                     break;
                 default:        /* ??? */
-                    result = FALSE;
+                    result = false;
         }
  give_up:
         (void)dlb_fclose(fd);

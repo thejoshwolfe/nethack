@@ -10,7 +10,7 @@ static void xexit(int);
 #define LIBLISTFILE "dlb.lst"           /* default list file */
 
 /* library functions (from dlb.c) */
-extern boolean open_library(const char *,library *);
+extern bool open_library(const char *,library *);
 extern void close_library(library *);
 
 char *eos(char *);      /* also used by dlb.c */
@@ -293,7 +293,7 @@ main (int argc, char **argv)
         char buf[BUFSIZ];
         int fd, out, nfiles = 0;
         long dir_size, slen, flen, fsiz;
-        boolean rewrite_directory = FALSE;
+        bool rewrite_directory = false;
 
         /*
          * Get names from either/both an argv list and a file
@@ -397,7 +397,7 @@ main (int argc, char **argv)
                 fsiz += r;
             }
             (void) close(fd);
-            if (fsiz != ld[i].fsize) rewrite_directory = TRUE;
+            if (fsiz != ld[i].fsize) rewrite_directory = true;
             /* in case directory rewrite is needed */
             ld[i].fsize = fsiz;
             ld[i].foffset = flen;

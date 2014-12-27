@@ -80,7 +80,7 @@ signed char tbx = 0, tby = 0;   /* mthrowu: target */
 
 /* for xname handling of multiple shot missile volleys:
    number of shots, index of current one, validity check, shoot vs throw */
-struct multishot m_shot = { 0, 0, STRANGE_OBJECT, FALSE };
+struct multishot m_shot = { 0, 0, STRANGE_OBJECT, false };
 
 struct dig_info digging;
 
@@ -93,14 +93,14 @@ dest_area updest = { 0, 0, 0, 0, 0, 0, 0, 0 };
 dest_area dndest = { 0, 0, 0, 0, 0, 0, 0, 0 };
 coord inv_pos = { 0, 0 };
 
-boolean in_mklev = FALSE;
-boolean stoned = FALSE; /* done to monsters hit by 'c' */
-boolean unweapon = FALSE;
-boolean mrg_to_wielded = FALSE;
+bool in_mklev = false;
+bool stoned = false; /* done to monsters hit by 'c' */
+bool unweapon = false;
+bool mrg_to_wielded = false;
                          /* weapon picked is merged with wielded one */
 struct obj *current_wand = 0;   /* wand currently zapped/applied */
 
-boolean in_steed_dismounting = FALSE;
+bool in_steed_dismounting = false;
 
 coord bhitpos = DUMMY;
 coord doors[DOORMAX] = {DUMMY};
@@ -222,7 +222,7 @@ const char *materialnm[] = {
 };
 
 /* Vision */
-boolean vision_full_recalc = 0;
+bool vision_full_recalc = 0;
 char     **viz_array = 0;/* used in cansee() and couldsee() macros */
 
 /* Global windowing data, defined here for multi-window-system support */

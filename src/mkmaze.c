@@ -11,48 +11,48 @@ extern char *lev_message;
 extern lev_region *lregions;
 extern int num_lregions;
 
-static boolean iswall(int,int);
-static boolean iswall_or_stone(int,int);
-static boolean is_solid(int,int);
+static bool iswall(int,int);
+static bool iswall_or_stone(int,int);
+static bool is_solid(int,int);
 static int extend_spine(int [3][3], int, int, int);
-static boolean okay(int,int,int);
+static bool okay(int,int,int);
 static void maze0xy(coord *);
-static boolean put_lregion_here(signed char,signed char,signed char,
-        signed char,signed char,signed char,signed char,boolean,d_level *);
+static bool put_lregion_here(signed char,signed char,signed char,
+        signed char,signed char,signed char,signed char,bool,d_level *);
 static void fixup_special(void);
 static void move(int *,int *,int);
 static void setup_waterlevel(void);
 static void unsetup_waterlevel(void);
 
 
-static boolean iswall (int x, int y) {
+static bool iswall (int x, int y) {
     int type;
 
-    if (!isok(x,y)) return FALSE;
+    if (!isok(x,y)) return false;
     type = levl[x][y].typ;
     return (IS_WALL(type) || IS_DOOR(type) ||
             type == SDOOR || type == IRONBARS);
 }
 
-static boolean iswall_or_stone (int x, int y) {
+static bool iswall_or_stone (int x, int y) {
     int type;
 
     /* out of bounds = stone */
-    if (!isok(x,y)) return TRUE;
+    if (!isok(x,y)) return true;
 
     type = levl[x][y].typ;
     return (type == STONE || IS_WALL(type) || IS_DOOR(type) ||
             type == SDOOR || type == IRONBARS);
 }
 
-/* return TRUE if out of bounds, wall or rock */
-static boolean is_solid (int x, int y) {
+/* return true if out of bounds, wall or rock */
+static bool is_solid (int x, int y) {
     return (!isok(x,y) || IS_STWALL(levl[x][y].typ));
 }
 
 
 /*
- * Return 1 (not TRUE - we're doing bit vectors here) if we want to extend
+ * Return 1 (not true - we're doing bit vectors here) if we want to extend
  * a wall spine in the (dx,dy) direction.  Return 0 otherwise.
  *
  * To extend a wall spine in that direction, first there must be a wall there.
@@ -159,7 +159,7 @@ wallification (int x1, int y1, int x2, int y2)
                 type = lev->typ;
                 if ( !(IS_WALL(type) && type != DBWALL)) continue;
 
-                /* set the locations TRUE if rock or wall or out of bounds */
+                /* set the locations true if rock or wall or out of bounds */
                 locale[0][0] = iswall_or_stone(x-1,y-1);
                 locale[1][0] = iswall_or_stone(  x,y-1);
                 locale[2][0] = iswall_or_stone(x+1,y-1);
@@ -182,14 +182,14 @@ wallification (int x1, int y1, int x2, int y2)
             }
 }
 
-static boolean 
+static bool 
 okay (int x, int y, int dir)
 {
         move(&x,&y,dir);
         move(&x,&y,dir);
         if(x<3 || y<3 || x>x_maze_max || y>y_maze_max || levl[x][y].typ != 0)
-                return(FALSE);
-        return(TRUE);
+                return(false);
+        return(true);
 }
 
 static void
@@ -208,10 +208,10 @@ maze0xy (       /* find random starting point for maze generation */
  *      pos is inside restricted region (lx,ly,hx,hy) OR
  *      NOT (pos is corridor and a maze level OR pos is a room OR pos is air)
  */
-boolean 
+bool 
 bad_location (signed char x, signed char y, signed char lx, signed char ly, signed char hx, signed char hy)
 {
-    return((boolean)(occupied(x, y) ||
+    return((bool)(occupied(x, y) ||
            within_bounded_area(x,y, lx,ly, hx,hy) ||
            !((levl[x][y].typ == CORR && level.flags.is_maze_lev) ||
                levl[x][y].typ == ROOM || levl[x][y].typ == AIR)));
@@ -223,7 +223,7 @@ void
 place_lregion (signed char lx, signed char ly, signed char hx, signed char hy, signed char nlx, signed char nly, signed char nhx, signed char nhy, signed char rtype, d_level *lev)
 {
     int trycnt;
-    boolean oneshot;
+    bool oneshot;
     signed char x, y;
 
     if(!lx) { /* default to whole level */
@@ -252,7 +252,7 @@ place_lregion (signed char lx, signed char ly, signed char hx, signed char hy, s
 
     /* then a deterministic one */
 
-    oneshot = TRUE;
+    oneshot = true;
     for (x = lx; x <= hx; x++)
         for (y = ly; y <= hy; y++)
             if (put_lregion_here(x,y,nlx,nly,nhx,nhy,rtype,oneshot,lev))
@@ -261,13 +261,13 @@ place_lregion (signed char lx, signed char ly, signed char hx, signed char hy, s
     impossible("Couldn't place lregion type %d!", rtype);
 }
 
-static boolean put_lregion_here(signed char x, signed char y,
+static bool put_lregion_here(signed char x, signed char y,
         signed char nlx, signed char nly, signed char nhx,
-        signed char nhy,signed char rtype, boolean oneshot,d_level *lev)
+        signed char nhy,signed char rtype, bool oneshot,d_level *lev)
 {
     if (bad_location(x, y, nlx, nly, nhx, nhy)) {
         if (!oneshot) {
-            return FALSE;               /* caller should try again */
+            return false;               /* caller should try again */
         } else {
             /* Must make do with the only location possible;
                avoid failure due to a misplaced trap.
@@ -275,7 +275,7 @@ static boolean put_lregion_here(signed char x, signed char y,
             struct trap *t = t_at(x,y);
 
             if (t && t->ttyp != MAGIC_PORTAL) deltrap(t);
-            if (bad_location(x, y, nlx, nly, nhx, nhy)) return FALSE;
+            if (bad_location(x, y, nlx, nly, nhx, nhy)) return false;
         }
     }
     switch (rtype) {
@@ -285,8 +285,8 @@ static boolean put_lregion_here(signed char x, signed char y,
         /* "something" means the player in this case */
         if(MON_AT(x, y)) {
             /* move the monster if no choice, or just try again */
-            if(oneshot) (void) rloc(m_at(x,y), FALSE);
-            else return(FALSE);
+            if(oneshot) (void) rloc(m_at(x,y), false);
+            else return(false);
         }
         u_on_newpos(x, y);
         break;
@@ -301,10 +301,10 @@ static boolean put_lregion_here(signed char x, signed char y,
         place_branch(Is_branchlev(&u.uz), x, y);
         break;
     }
-    return(TRUE);
+    return(true);
 }
 
-static boolean was_waterlevel; /* ugh... this shouldn't be needed */
+static bool was_waterlevel; /* ugh... this shouldn't be needed */
 
 /* this is special stuff that the level compiler cannot (yet) handle */
 static void
@@ -314,15 +314,15 @@ fixup_special (void)
     struct d_level lev;
     int x, y;
     struct mkroom *croom;
-    boolean added_branch = FALSE;
+    bool added_branch = false;
 
     if (was_waterlevel) {
-        was_waterlevel = FALSE;
+        was_waterlevel = false;
         u.uinwater = 0;
         unsetup_waterlevel();
     } else if (Is_waterlevel(&u.uz)) {
         level.flags.hero_memory = 0;
-        was_waterlevel = TRUE;
+        was_waterlevel = true;
         /* water level is an odd beast - it has to be set up
            before calling place_lregions etc. */
         setup_waterlevel();
@@ -330,7 +330,7 @@ fixup_special (void)
     for(x = 0; x < num_lregions; x++, r++) {
         switch(r->rtype) {
         case LR_BRANCH:
-            added_branch = TRUE;
+            added_branch = true;
             goto place_it;
 
         case LR_PORTAL:
@@ -408,7 +408,7 @@ fixup_special (void)
             otmp = mk_tt_object(STATUE, somex(croom), somey(croom));
         else /* Medusa statues don't contain books */
             otmp = mkcorpstat(STATUE, (struct monst *)0, (struct permonst *)0,
-                              somex(croom), somey(croom), FALSE);
+                              somex(croom), somey(croom), false);
         if (otmp) {
             while (pm_resistance(&mons[otmp->corpsenm],MR_STONE)
                    || poly_when_stoned(&mons[otmp->corpsenm])) {
@@ -530,7 +530,7 @@ makemaz (const char *s)
             impossible("Couldn't load \"%s\" - making a maze.", protofile);
         }
 
-        level.flags.is_maze_lev = TRUE;
+        level.flags.is_maze_lev = true;
 
         for(x = 2; x <= x_maze_max; x++)
                 for(y = 2; y <= y_maze_max; y++)
@@ -539,7 +539,7 @@ makemaz (const char *s)
         maze0xy(&mm);
         walkfrom((int) mm.x, (int) mm.y);
         /* put a boulder at the maze center */
-        (void) mksobj_at(BOULDER, (int) mm.x, (int) mm.y, TRUE, FALSE);
+        (void) mksobj_at(BOULDER, (int) mm.x, (int) mm.y, true, false);
 
         wallification(2, 2, x_maze_max, y_maze_max);
         mazexy(&mm);
@@ -590,11 +590,11 @@ makemaz (const char *s)
 
         for(x = rn1(8,11); x; x--) {
                 mazexy(&mm);
-                (void) mkobj_at(rn2(2) ? GEM_CLASS : 0, mm.x, mm.y, TRUE);
+                (void) mkobj_at(rn2(2) ? GEM_CLASS : 0, mm.x, mm.y, true);
         }
         for(x = rn1(10,2); x; x--) {
                 mazexy(&mm);
-                (void) mksobj_at(BOULDER, mm.x, mm.y, TRUE, FALSE);
+                (void) mksobj_at(BOULDER, mm.x, mm.y, true, false);
         }
         for (x = rn2(3); x; x--) {
                 mazexy(&mm);
@@ -695,60 +695,60 @@ bound_digging (void)
         int x,y;
         unsigned typ;
         struct rm *lev;
-        boolean found, nonwall;
+        bool found, nonwall;
         int xmin,xmax,ymin,ymax;
 
         if(Is_earthlevel(&u.uz)) return; /* everything diggable here */
 
-        found = nonwall = FALSE;
+        found = nonwall = false;
         for(xmin=0; !found; xmin++) {
                 lev = &levl[xmin][0];
                 for(y=0; y<=ROWNO-1; y++, lev++) {
                         typ = lev->typ;
                         if(typ != STONE) {
-                                found = TRUE;
-                                if(!IS_WALL(typ)) nonwall = TRUE;
+                                found = true;
+                                if(!IS_WALL(typ)) nonwall = true;
                         }
                 }
         }
         xmin -= (nonwall || !level.flags.is_maze_lev) ? 2 : 1;
         if (xmin < 0) xmin = 0;
 
-        found = nonwall = FALSE;
+        found = nonwall = false;
         for(xmax=COLNO-1; !found; xmax--) {
                 lev = &levl[xmax][0];
                 for(y=0; y<=ROWNO-1; y++, lev++) {
                         typ = lev->typ;
                         if(typ != STONE) {
-                                found = TRUE;
-                                if(!IS_WALL(typ)) nonwall = TRUE;
+                                found = true;
+                                if(!IS_WALL(typ)) nonwall = true;
                         }
                 }
         }
         xmax += (nonwall || !level.flags.is_maze_lev) ? 2 : 1;
         if (xmax >= COLNO) xmax = COLNO-1;
 
-        found = nonwall = FALSE;
+        found = nonwall = false;
         for(ymin=0; !found; ymin++) {
                 lev = &levl[xmin][ymin];
                 for(x=xmin; x<=xmax; x++, lev += ROWNO) {
                         typ = lev->typ;
                         if(typ != STONE) {
-                                found = TRUE;
-                                if(!IS_WALL(typ)) nonwall = TRUE;
+                                found = true;
+                                if(!IS_WALL(typ)) nonwall = true;
                         }
                 }
         }
         ymin -= (nonwall || !level.flags.is_maze_lev) ? 2 : 1;
 
-        found = nonwall = FALSE;
+        found = nonwall = false;
         for(ymax=ROWNO-1; !found; ymax--) {
                 lev = &levl[xmin][ymax];
                 for(x=xmin; x<=xmax; x++, lev += ROWNO) {
                         typ = lev->typ;
                         if(typ != STONE) {
-                                found = TRUE;
-                                if(!IS_WALL(typ)) nonwall = TRUE;
+                                found = true;
+                                if(!IS_WALL(typ)) nonwall = true;
                         }
                 }
         }
@@ -799,12 +799,12 @@ static int xmin, ymin, xmax, ymax;      /* level boundaries */
 
 static void set_wportal(void);
 static void mk_bubble(int,int,int);
-static void mv_bubble(struct bubble *,int,int,boolean);
+static void mv_bubble(struct bubble *,int,int,bool);
 
 void
 movebubbles (void)
 {
-        static boolean up;
+        static bool up;
         struct bubble *b;
         int x, y, i, j;
         struct trap *btrap;
@@ -916,7 +916,7 @@ movebubbles (void)
 
                 mv_bubble(b,b->dx + 1 - (!b->dx ? rx : (rx ? 1 : 0)),
                             b->dy + 1 - (!b->dy ? ry : (ry ? 1 : 0)),
-                            FALSE);
+                            false);
         }
 
         /* put attached ball&chain back */
@@ -929,7 +929,7 @@ void
 water_friction (void)
 {
         int x, y, dx, dy;
-        boolean eff = FALSE;
+        bool eff = false;
 
         if (Swimming && rn2(4))
                 return;         /* natural swimmers have advantage */
@@ -943,7 +943,7 @@ water_friction (void)
                 } while (dy && (!isok(x,y) || !is_pool(x,y)));
                 u.dx = 0;
                 u.dy = dy;
-                eff = TRUE;
+                eff = true;
         } else if (u.dy && !rn2(!u.dx ? 3 : 5)) {       /* 1/3 or 1/5*(5/6) */
                 /* cancel delta y and choose an arbitrary delta x value */
                 y = u.uy;
@@ -953,7 +953,7 @@ water_friction (void)
                 } while (dx && (!isok(x,y) || !is_pool(x,y)));
                 u.dy = 0;
                 u.dx = dx;
-                eff = TRUE;
+                eff = true;
         }
         if (eff) pline("Water turbulence affects your movements.");
 }
@@ -1006,11 +1006,11 @@ restore_waterlevel (int fd)
                         bbubbles = b;
                         b->prev = (struct bubble *)0;
                 }
-                mv_bubble(b,0,0,TRUE);
+                mv_bubble(b,0,0,true);
         }
         ebubbles = b;
         b->next = (struct bubble *)0;
-        was_waterlevel = TRUE;
+        was_waterlevel = true;
 }
 
 const char *
@@ -1138,7 +1138,7 @@ mk_bubble (int x, int y, int n)
                 b->prev = (struct bubble *)0;
         b->next =  (struct bubble *)0;
         ebubbles = b;
-        mv_bubble(b,0,0,TRUE);
+        mv_bubble(b,0,0,true);
 }
 
 /*
@@ -1150,7 +1150,7 @@ mk_bubble (int x, int y, int n)
  * This property also makes leaving a bubble slightly difficult.
  */
 static void 
-mv_bubble (struct bubble *b, int dx, int dy, boolean ini)
+mv_bubble (struct bubble *b, int dx, int dy, bool ini)
 {
         int x, y, i, j, colli = 0;
         struct container *cons, *ctemp;
@@ -1228,7 +1228,7 @@ mv_bubble (struct bubble *b, int dx, int dy, boolean ini)
 
                 case CONS_MON: {
                     struct monst *mon = (struct monst *) cons->list;
-                    (void) mnearto(mon, cons->x, cons->y, TRUE);
+                    (void) mnearto(mon, cons->x, cons->y, true);
                     break;
                 }
 

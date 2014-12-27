@@ -8,7 +8,7 @@
 #include "youprop.h"
 #include "flag.h"
 
-static boolean no_repeat = FALSE;
+static bool no_repeat = false;
 
 static char *You_buf(int);
 
@@ -50,9 +50,9 @@ void plines(const char *line) {
 void Norep (const char * line, ...) {
     va_list the_args;
         va_start(the_args, line);
-        no_repeat = TRUE;
+        no_repeat = true;
         vpline(line, the_args);
-        no_repeat = FALSE;
+        no_repeat = false;
     va_end(the_args);
         return;
 }
@@ -262,7 +262,7 @@ void mstatusline (struct monst *mtmp) {
         /* avoid "Status of the invisible newt ..., invisible" */
         /* and unlike a normal mon_nam, use "saddled" even if it has a name */
         Strcpy(monnambuf, x_monnam(mtmp, ARTICLE_THE, (char *)0,
-            (SUPPRESS_IT|SUPPRESS_INVISIBLE), FALSE));
+            (SUPPRESS_IT|SUPPRESS_INVISIBLE), false));
 
         pline("Status of %s (%s):  Level %d  HP %d(%d)  AC %d%s.",
                 monnambuf,

@@ -41,7 +41,7 @@ int xlev_to_rank (int xlev) {
     return (xlev <= 2) ? 0 : (xlev <= 30) ? ((xlev + 2) / 4) : 8;
 }
 
-const char * rank_of(int lev, short monnum, boolean female) {
+const char * rank_of(int lev, short monnum, bool female) {
     struct Role *role;
     int i;
 

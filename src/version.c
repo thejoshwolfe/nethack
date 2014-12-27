@@ -24,31 +24,31 @@ int doversion(void) {
 }
 
 int doextversion(void) {
-        display_file(OPTIONS_USED, TRUE);
+        display_file(OPTIONS_USED, true);
         return 0;
 }
 
-boolean check_version(struct version_info *version_data, const char *filename, boolean complain) {
+bool check_version(struct version_info *version_data, const char *filename, bool complain) {
     if (version_data->incarnation != VERSION_NUMBER) {
         if (complain)
             pline("Version mismatch for file \"%s\".", filename);
-        return FALSE;
+        return false;
     } else if (version_data->feature_set != VERSION_FEATURES || //
             version_data->entity_count != VERSION_SANITY1 || //
             version_data->struct_sizes != VERSION_SANITY2) {
         if (complain)
             pline("Configuration incompatibility for file \"%s\".", filename);
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 /* this used to be based on file date and somewhat OS-dependant,
    but now examines the initial part of the file's contents */
-boolean uptodate(int fd, const char *name) {
+bool uptodate(int fd, const char *name) {
     int rlen;
     struct version_info vers_info;
-    boolean verbose = name ? TRUE : FALSE;
+    bool verbose = name ? true : false;
 
     rlen = read(fd, (void *) &vers_info, sizeof vers_info);
     minit();            /* ZEROCOMP */
@@ -57,13 +57,13 @@ boolean uptodate(int fd, const char *name) {
             pline("File \"%s\" is empty?", name);
             wait_synch();
         }
-        return FALSE;
+        return false;
     }
     if (!check_version(&vers_info, name, verbose)) {
         if (verbose) wait_synch();
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 void store_version (int fd) {

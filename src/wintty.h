@@ -12,7 +12,7 @@ typedef struct tty_mi {
     long count;                 /* user count */
     char *str;                  /* description string (including accelerator) */
     int attr;                   /* string attribute */
-    boolean selected;           /* TRUE if selected by user */
+    bool selected;           /* true if selected by user */
     char selector;              /* keyboard accelerator */
     char gselector;             /* group accelerator */
 } tty_menu_item;
@@ -21,7 +21,7 @@ typedef struct tty_mi {
 struct WinDesc {
     int flags;                  /* window flags */
     signed char type;                   /* type of window */
-    boolean active;             /* true if window is active */
+    bool active;             /* true if window is active */
     unsigned char offx, offy;           /* offset from topleft of display */
     short rows, cols;           /* dimensions */
     short curx, cury;           /* current cursor position */
@@ -136,15 +136,15 @@ extern void tty_suspend_nhwindows(const char *);
 extern void tty_resume_nhwindows(void);
 extern winid tty_create_nhwindow(int);
 extern void tty_clear_nhwindow(winid);
-extern void tty_display_nhwindow(winid, boolean);
+extern void tty_display_nhwindow(winid, bool);
 extern void tty_dismiss_nhwindow(winid);
 extern void tty_destroy_nhwindow(winid);
 extern void tty_curs(winid,int,int);
 extern void tty_putstr(winid, int, const char *);
-extern void tty_display_file(const char *, boolean);
+extern void tty_display_file(const char *, bool);
 extern void tty_start_menu(winid);
 extern void tty_add_menu(winid,int,const ANY_P *,
-                        char,char,int,const char *, boolean);
+                        char,char,int,const char *, bool);
 extern void tty_end_menu(winid, const char *);
 extern int tty_select_menu(winid, int, MENU_ITEM_P **);
 extern char tty_message_menu(char,int,const char *);

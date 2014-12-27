@@ -28,16 +28,16 @@ static struct val_list { struct valuable_data *list; int size; } valuables[] = {
 
 static void done_intr(int);
 static void done_hangup(int);
-static void disclose(int,boolean);
+static void disclose(int,bool);
 static void get_valuables(struct obj *);
 static void sort_valuables(struct valuable_data *,int);
-static void artifact_score(struct obj *,boolean,winid);
+static void artifact_score(struct obj *,bool,winid);
 static void savelife(int);
-static void list_vanquished(char,boolean);
+static void list_vanquished(char,bool);
 extern void dump_spells(void);
-void do_vanquished(int, boolean, boolean);
-static void list_genocided(int, boolean, boolean);
-static boolean should_query_disclose_option(int,char *);
+void do_vanquished(int, bool, bool);
+static void list_genocided(int, bool, bool);
+static bool should_query_disclose_option(int,char *);
 
 #define nethack_exit exit
 
@@ -150,7 +150,7 @@ done2 (void)
                 wait_synch();
                 if(multi > 0) nomul(0);
                 if(multi == 0) {
-                    u.uinvulnerable = FALSE;    /* avoid ctrl-C bug -dlc */
+                    u.uinvulnerable = false;    /* avoid ctrl-C bug -dlc */
                     u.usleep = 0;
                 }
                 return 0;
@@ -192,7 +192,7 @@ void
 done_in_by (struct monst *mtmp)
 {
         char buf[BUFSZ];
-        boolean distorted = (boolean)(Hallucination && canspotmon(mtmp));
+        bool distorted = (bool)(Hallucination && canspotmon(mtmp));
 
         You("die...");
         mark_synch();   /* flush buffered screen output */
@@ -289,7 +289,7 @@ void panic (const char * str, ...) {
         done(PANICKED);
 }
 
-static boolean 
+static bool 
 should_query_disclose_option (int category, char *defquery)
 {
     int idx;
@@ -302,35 +302,35 @@ should_query_disclose_option (int category, char *defquery)
                    "should_query_disclose_option: bad disclosure index %d %c",
                        idx, category);
             *defquery = DISCLOSE_PROMPT_DEFAULT_YES;
-            return TRUE;
+            return true;
         }
         if (flags.end_disclose[idx] == DISCLOSE_YES_WITHOUT_PROMPT) {
             *defquery = 'y';
-            return FALSE;
+            return false;
         } else if (flags.end_disclose[idx] == DISCLOSE_NO_WITHOUT_PROMPT) {
             *defquery = 'n';
-            return FALSE;
+            return false;
         } else if (flags.end_disclose[idx] == DISCLOSE_PROMPT_DEFAULT_YES) {
             *defquery = 'y';
-            return TRUE;
+            return true;
         } else if (flags.end_disclose[idx] == DISCLOSE_PROMPT_DEFAULT_NO) {
             *defquery = 'n';
-            return TRUE;
+            return true;
         }
     }
     if (defquery)
         impossible("should_query_disclose_option: bad category %c", category);
     else
         impossible("should_query_disclose_option: null defquery");
-    return TRUE;
+    return true;
 }
 
 static void 
-disclose (int how, boolean taken)
+disclose (int how, bool taken)
 {
         char    c = 0, defquery;
         char    qbuf[QBUFSZ];
-        boolean ask;
+        bool ask;
 
         if (invent) {
             if(taken)
@@ -349,8 +349,8 @@ disclose (int how, boolean taken)
                             makeknown(obj->otyp);
                             obj->known = obj->bknown = obj->dknown = obj->rknown = 1;
                         }
-                        (void) dump_inventory((char *)0, TRUE);
-                        do_containerconts(invent, TRUE, TRUE, TRUE);
+                        (void) dump_inventory((char *)0, true);
+                        do_containerconts(invent, true, true, true);
                 }
                 if (c == 'q')  done_stopprint++;
             }
@@ -371,11 +371,11 @@ disclose (int how, boolean taken)
 
         ask = should_query_disclose_option('v', &defquery);
         if (!done_stopprint)
-            do_vanquished(defquery, ask, TRUE);
+            do_vanquished(defquery, ask, true);
 
         ask = should_query_disclose_option('g', &defquery);
         if (!done_stopprint)
-            list_genocided(defquery, ask,TRUE);
+            list_genocided(defquery, ask,true);
 
         ask = should_query_disclose_option('c', &defquery);
         if (!done_stopprint) {
@@ -399,7 +399,7 @@ savelife (int how)
         u.uhp = u.uhpmax;
         if (u.uhunger < 500) {
             u.uhunger = 500;
-            newuhs(FALSE);
+            newuhs(false);
         }
         /* cure impending doom of sickness hero won't have time to fix */
         if ((Sick & TIMEOUT) == 1) {
@@ -482,7 +482,7 @@ sort_valuables (
 static void 
 artifact_score (
     struct obj *list,
-    boolean counting,       /* true => add up points; false => display them */
+    bool counting,       /* true => add up points; false => display them */
     winid endwin
 )
 {
@@ -523,10 +523,10 @@ artifact_score (
 void
 done (int how)
 {
-        boolean taken;
+        bool taken;
         char kilbuf[BUFSZ], pbuf[BUFSZ];
         winid endwin = WIN_ERR;
-        boolean bones_ok, have_windows = iflags.window_inited;
+        bool bones_ok, have_windows = iflags.window_inited;
         struct obj *corpse = (struct obj *)0;
         long umoney;
 
@@ -565,7 +565,7 @@ done (int how)
                 pline_The("medallion crumbles to dust!");
                 if (uamul) useup(uamul);
 
-                (void) adjattrib(A_CON, -1, TRUE);
+                (void) adjattrib(A_CON, -1, true);
                 if(u.uhpmax <= 0) u.uhpmax = 10;        /* arbitrary */
                 savelife(how);
                 if (how == GENOCIDED)
@@ -615,7 +615,7 @@ die:
         iflags.vision_inited = 0;
         /* might have been killed while using a disposable item, so make sure
            it's gone prior to inventory disclosure and creation of bones data */
-        inven_inuse(TRUE);
+        inven_inuse(true);
 
         /* Sometimes you die on the first move.  Life's not fair.
          * On those rare occasions you get hosed immediately, go out
@@ -679,11 +679,11 @@ die:
             taken = paybill((how == ESCAPED) ? -1 : (how != QUIT));
             paygd();
             clearpriests();
-        } else  taken = FALSE;  /* lint; assert( !bones_ok ); */
+        } else  taken = false;  /* lint; assert( !bones_ok ); */
 
         clearlocks();
 
-        if (have_windows) display_nhwindow(WIN_MESSAGE, FALSE);
+        if (have_windows) display_nhwindow(WIN_MESSAGE, false);
 
         if (strcmp(flags.end_disclose, "none") && how != PANICKED)
                 disclose(how, taken);
@@ -693,7 +693,7 @@ die:
         /* calculate score, before creating bones [container gold] */
         {
             long tmp;
-            int deepest = deepest_lev_reached(FALSE);
+            int deepest = deepest_lev_reached(false);
 
             umoney = u.ugold;
             tmp = u.ugold0;
@@ -726,7 +726,7 @@ die:
         /* clean up unneeded windows */
         if (have_windows) {
             wait_synch();
-            display_nhwindow(WIN_MESSAGE, TRUE);
+            display_nhwindow(WIN_MESSAGE, true);
             destroy_nhwindow(WIN_MAP);
             destroy_nhwindow(WIN_STATUS);
             destroy_nhwindow(WIN_MESSAGE);
@@ -783,9 +783,9 @@ die:
                                   * (long)objects[val->list[i].typ].oc_cost;
 
             /* count the points for artifacts */
-            artifact_score(invent, TRUE, endwin);
+            artifact_score(invent, true, endwin);
 
-            keepdogs(TRUE);
+            keepdogs(true);
             viz_array[0][0] |= IN_SIGHT; /* need visibility for naming */
             mtmp = mydogs;
             Strcpy(pbuf, "You");
@@ -812,7 +812,7 @@ die:
             }
 
             if (!done_stopprint)
-                artifact_score(invent, FALSE, endwin);  /* list artifacts */
+                artifact_score(invent, false, endwin);  /* list artifacts */
 
             /* list valuables here */
             for (val = valuables; val->list; val++) {
@@ -823,7 +823,7 @@ die:
 
                     if (count == 0L) continue;
                     if (objects[typ].oc_class != GEM_CLASS || typ <= LAST_GEM) {
-                        otmp = mksobj(typ, FALSE, FALSE);
+                        otmp = mksobj(typ, false, false);
                         makeknown(otmp->otyp);
                         otmp->known = 1;        /* for fake amulets */
                         otmp->dknown = 1;       /* seen it (blindness fix) */
@@ -886,7 +886,7 @@ die:
             if (dump_fp) dump("", pbuf);
         }
         if (!done_stopprint)
-            display_nhwindow(endwin, TRUE);
+            display_nhwindow(endwin, true);
         if (endwin != WIN_ERR)
             destroy_nhwindow(endwin);
 
@@ -909,13 +909,13 @@ die:
 
 
 void 
-container_contents (struct obj *list, boolean identified, boolean all_containers)
+container_contents (struct obj *list, bool identified, bool all_containers)
 {
-        do_containerconts(list, identified, all_containers, FALSE);
+        do_containerconts(list, identified, all_containers, false);
 }
 
 void 
-do_containerconts (struct obj *list, boolean identified, boolean all_containers, boolean want_dump)
+do_containerconts (struct obj *list, bool identified, bool all_containers, bool want_dump)
 /* The original container_contents function */
 {
         struct obj *box, *obj;
@@ -977,15 +977,15 @@ do_containerconts (struct obj *list, boolean identified, boolean all_containers,
                         if (want_dump)  dump("  ", doname(obj));
                     }
                     if (want_dump)  dump("","");
-                    display_nhwindow(tmpwin, TRUE);
+                    display_nhwindow(tmpwin, true);
                     destroy_nhwindow(tmpwin);
                     if (all_containers) {
-                        do_containerconts(box->cobj, identified, TRUE,
+                        do_containerconts(box->cobj, identified, true,
                                           want_dump);
                     }
                 } else {
                     pline("%s empty.", Tobjnam(box, "are"));
-                    display_nhwindow(WIN_MESSAGE, FALSE);
+                    display_nhwindow(WIN_MESSAGE, false);
                     if (want_dump) {
                       dump(The(xname(box)), " is empty.");
                       dump("", "");
@@ -1011,13 +1011,13 @@ void terminate(int status) {
 }
 
 static void 
-list_vanquished (char defquery, boolean ask)
+list_vanquished (char defquery, bool ask)
 {
-  do_vanquished(defquery, ask, FALSE);
+  do_vanquished(defquery, ask, false);
 }
 
 void 
-do_vanquished (int defquery, boolean ask, boolean want_dump)
+do_vanquished (int defquery, bool ask, bool want_dump)
 {
     int i, lev;
     int ntypes = 0, max_lev = 0, nkilled;
@@ -1085,7 +1085,7 @@ do_vanquished (int defquery, boolean ask, boolean want_dump)
                 putstr(klwin, 0, buf);
                 if (want_dump)  dump("  ", buf);
             }
-            display_nhwindow(klwin, TRUE);
+            display_nhwindow(klwin, true);
             destroy_nhwindow(klwin);
             if (want_dump)  dump("", "");
         }
@@ -1105,7 +1105,7 @@ num_genocides (void)
 }
 
 static void 
-list_genocided (int defquery, boolean ask, boolean want_dump)
+list_genocided (int defquery, bool ask, bool want_dump)
 {
     int i;
     int ngenocided;
@@ -1144,7 +1144,7 @@ list_genocided (int defquery, boolean ask, boolean want_dump)
             putstr(klwin, 0, buf);
             if (want_dump)  dump("  ", buf);
 
-            display_nhwindow(klwin, TRUE);
+            display_nhwindow(klwin, true);
             destroy_nhwindow(klwin);
         }
     }

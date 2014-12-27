@@ -91,7 +91,7 @@ setuwep (struct obj *obj)
          */
         setworn(obj, W_WEP);
         if (uwep == obj && artifact_light(olduwep) && olduwep->lamplit) {
-            end_burn(olduwep, FALSE);
+            end_burn(olduwep, false);
             if (!Blind) pline("%s glowing.", Tobjnam(olduwep, "stop"));
         }
         /* Note: Explicitly wielding a pick-axe will not give a "bashing"
@@ -105,7 +105,7 @@ setuwep (struct obj *obj)
                                 && !u.usteed
                                 ) : !is_weptool(obj);
         } else
-                unweapon = TRUE;        /* for "bare hands" message */
+                unweapon = true;        /* for "bare hands" message */
         update_inventory();
 }
 
@@ -151,7 +151,7 @@ ready_weapon (struct obj *wep)
                         bimanual(wep) ?
                                 (const char *)makeplural(body_part(HAND))
                                 : body_part(HAND));
-                wep->bknown = TRUE;
+                wep->bknown = true;
             } else {
                 /* The message must be printed before setuwep (since
                  * you might die and be revived from changing weapons),
@@ -170,7 +170,7 @@ ready_weapon (struct obj *wep)
             arti_speak(wep);
 
             if (artifact_light(wep) && !wep->lamplit) {
-                begin_burn(wep, FALSE);
+                begin_burn(wep, false);
                 if (!Blind)
                     pline("%s to glow brilliantly!", Tobjnam(wep, "begin"));
             }
@@ -233,7 +233,7 @@ dowield (void)
                 return (0);
         else if (wep == uwep) {
             You("are already wielding that!");
-            if (is_weptool(wep)) unweapon = FALSE;      /* [see setuwep()] */
+            if (is_weptool(wep)) unweapon = false;      /* [see setuwep()] */
                 return (0);
         } else if (welded(uwep)) {
                 weldmsg(uwep);
@@ -380,16 +380,16 @@ dowieldquiver (void)
 
 /* used for #rub and for applying pick-axe, whip, grappling hook, or polearm */
 /* (moved from apply.c) */
-boolean 
+bool 
 wield_tool (
     struct obj *obj,
     const char *verb       /* "rub",&c */
 )
 {
     const char *what;
-    boolean more_than_1;
+    bool more_than_1;
 
-    if (obj == uwep) return TRUE;   /* nothing to do if already wielding it */
+    if (obj == uwep) return true;   /* nothing to do if already wielding it */
 
     if (!verb) verb = "wield";
     what = xname(obj);
@@ -403,48 +403,48 @@ wield_tool (
         You_cant("%s %s %s while wearing %s.",
                  verb, shk_your(yourbuf, obj), what,
                  more_than_1 ? "them" : "it");
-        return FALSE;
+        return false;
     }
     if (welded(uwep)) {
         if (flags.verbose) {
             const char *hand = body_part(HAND);
 
             if (bimanual(uwep)) hand = makeplural(hand);
-            if (strstri(what, "pair of ") != 0) more_than_1 = FALSE;
+            if (strstri(what, "pair of ") != 0) more_than_1 = false;
             pline(
              "Since your weapon is welded to your %s, you cannot %s %s %s.",
                   hand, verb, more_than_1 ? "those" : "that", xname(obj));
         } else {
             You_cant("do that.");
         }
-        return FALSE;
+        return false;
     }
     if (cantwield(youmonst.data)) {
         You_cant("hold %s strongly enough.", more_than_1 ? "them" : "it");
-        return FALSE;
+        return false;
     }
     /* check shield */
     if (uarms && bimanual(obj)) {
         You("cannot %s a two-handed %s while wearing a shield.",
             verb, (obj->oclass == WEAPON_CLASS) ? "weapon" : "tool");
-        return FALSE;
+        return false;
     }
     if (uquiver == obj) setuqwep((struct obj *)0);
     if (uswapwep == obj) {
         (void) doswapweapon();
         /* doswapweapon might fail */
-        if (uswapwep == obj) return FALSE;
+        if (uswapwep == obj) return false;
     } else {
         You("now wield %s.", doname(obj));
         setuwep(obj);
     }
-    if (uwep != obj) return FALSE;      /* rewielded old object after dying */
+    if (uwep != obj) return false;      /* rewielded old object after dying */
     /* applying weapon or tool that gets wielded ends two-weapon combat */
     if (u.twoweap)
         untwoweapon();
     if (obj->oclass != WEAPON_CLASS)
-        unweapon = TRUE;
-    return TRUE;
+        unweapon = true;
+    return true;
 }
 
 int
@@ -485,11 +485,11 @@ can_twoweapon (void)
                 instapetrify(kbuf);
         } else if (Glib || uswapwep->cursed) {
                 if (!Glib)
-                        uswapwep->bknown = TRUE;
+                        uswapwep->bknown = true;
                 drop_uswapwep();
         } else
-                return (TRUE);
-        return (FALSE);
+                return (true);
+        return (false);
 }
 
 void
@@ -537,11 +537,11 @@ uwepgone (void)
 {
         if (uwep) {
                 if (artifact_light(uwep) && uwep->lamplit) {
-                    end_burn(uwep, FALSE);
+                    end_burn(uwep, false);
                     if (!Blind) pline("%s glowing.", Tobjnam(uwep, "stop"));
                 }
                 setworn((struct obj *)0, W_WEP);
-                unweapon = TRUE;
+                unweapon = true;
                 update_inventory();
         }
 }
@@ -569,7 +569,7 @@ untwoweapon (void)
 {
         if (u.twoweap) {
                 You("can no longer use two weapons at once.");
-                u.twoweap = FALSE;
+                u.twoweap = false;
                 update_inventory();
         }
         return;
@@ -579,14 +579,14 @@ untwoweapon (void)
 void 
 erode_obj (
     struct obj *target,             /* object (e.g. weapon or armor) to erode */
-    boolean acid_dmg,
-    boolean fade_scrolls
+    bool acid_dmg,
+    bool fade_scrolls
 )
 {
         int erosion;
         struct monst *victim;
-        boolean vismon;
-        boolean visobj;
+        bool vismon;
+        bool visobj;
 
         if (!target)
             return;
@@ -626,7 +626,7 @@ erode_obj (
                         aobjnam(target, "are"));
                 /* no message if not carried */
             }
-            if (target->oerodeproof) target->rknown = TRUE;
+            if (target->oerodeproof) target->rknown = true;
         } else if (erosion < MAX_ERODE) {
             if (victim == &youmonst)
                 Your("%s%s!", aobjnam(target, acid_dmg ? "corrode" : "rust"),
@@ -677,7 +677,7 @@ chwepon (struct obj *otmp, int amount)
                 Sprintf(buf, "Your %s %s.", makeplural(body_part(HAND)),
                         (amount >= 0) ? "twitch" : "itch");
                 strange_feeling(otmp, buf);
-                exercise(A_DEX, (boolean) (amount >= 0));
+                exercise(A_DEX, (bool) (amount >= 0));
                 return(0);
         }
 
@@ -755,7 +755,7 @@ int
 welded (struct obj *obj)
 {
         if (obj && obj == uwep && will_weld(obj)) {
-                obj->bknown = TRUE;
+                obj->bknown = true;
                 return 1;
         }
         return 0;

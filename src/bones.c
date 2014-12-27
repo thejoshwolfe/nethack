@@ -8,18 +8,18 @@
 
 extern char bones[];    /* from files.c */
 
-static boolean no_bones_level(d_level *);
+static bool no_bones_level(d_level *);
 static void goodfruit(int);
-static void resetobjs(struct obj *,boolean);
+static void resetobjs(struct obj *,bool);
 static void drop_upon_death(struct monst *, struct obj *);
 
-static boolean no_bones_level(d_level *lev) {
+static bool no_bones_level(d_level *lev) {
         extern d_level save_dlevel;             /* in do.c */
         s_level *sptr;
 
         if (ledger_no(&save_dlevel)) assign_level(lev, &save_dlevel);
 
-        return (boolean)(((sptr = Is_special(lev)) != 0 && !sptr->boneid)
+        return (bool)(((sptr = Is_special(lev)) != 0 && !sptr->boneid)
                 || !dungeons[lev->dnum].boneid
                    /* no bones on the last or multiway branch levels */
                    /* in any dungeon (level 1 isn't multiway).       */
@@ -45,7 +45,7 @@ static void goodfruit (int id) {
         }
 }
 
-static void resetobjs(struct obj *ochain, boolean restore) {
+static void resetobjs(struct obj *ochain, bool restore) {
         struct obj *otmp;
 
         for (otmp = ochain; otmp; otmp = otmp->nobj) {
@@ -61,7 +61,7 @@ static void resetobjs(struct obj *ochain, boolean restore) {
                         otmp->onamelth = 0;
                         *ONAME(otmp) = '\0';
                 } else if (otmp->oartifact && restore)
-                        artifact_exists(otmp,ONAME(otmp),TRUE);
+                        artifact_exists(otmp,ONAME(otmp),true);
                 if (!restore) {
                         /* do not zero out o_ids for ghost levels anymore */
 
@@ -85,7 +85,7 @@ static void resetobjs(struct obj *ochain, boolean restore) {
                             curse(otmp);
                         } else if (otmp->otyp == CANDELABRUM_OF_INVOCATION) {
                             if (otmp->lamplit)
-                                end_burn(otmp, TRUE);
+                                end_burn(otmp, true);
                             otmp->otyp = WAX_CANDLE;
                             otmp->age = 50L;  /* assume used */
                             if (otmp->spe > 0)
@@ -115,7 +115,7 @@ static void drop_upon_death (struct monst *mtmp, struct obj *cont) {
                 otmp->owornmask = 0;
                 /* lamps don't go out when dropped */
                 if ((cont || artifact_light(otmp)) && obj_is_burning(otmp))
-                    end_burn(otmp, TRUE);       /* smother in statue */
+                    end_burn(otmp, true);       /* smother in statue */
 
                 if(otmp->otyp == SLIME_MOLD) goodfruit(otmp->spe);
 
@@ -138,30 +138,30 @@ static void drop_upon_death (struct monst *mtmp, struct obj *cont) {
 }
 
 /* check whether bones are feasible */
-boolean can_make_bones(void) {
+bool can_make_bones(void) {
         struct trap *ttmp;
 
         if (ledger_no(&u.uz) <= 0 || ledger_no(&u.uz) > maxledgerno())
-            return FALSE;
+            return false;
         if (no_bones_level(&u.uz))
-            return FALSE;               /* no bones for specific levels */
+            return false;               /* no bones for specific levels */
         if (u.uswallow) {
-            return FALSE;               /* no bones when swallowed */
+            return false;               /* no bones when swallowed */
         }
         if (!Is_branchlev(&u.uz)) {
             /* no bones on non-branches with portals */
             for(ttmp = ftrap; ttmp; ttmp = ttmp->ntrap)
-                if (ttmp->ttyp == MAGIC_PORTAL) return FALSE;
+                if (ttmp->ttyp == MAGIC_PORTAL) return false;
         }
 
         if(depth(&u.uz) <= 0 ||         /* bulletproofing for endgame */
            (!rn2(1 + (depth(&u.uz)>>2)) /* fewer ghosts on low levels */
                 && !wizard
-                )) return FALSE;
+                )) return false;
         /* don't let multiple restarts generate multiple copies of objects
          * in bones files */
-        if (discover) return FALSE;
-        return TRUE;
+        if (discover) return false;
+        return true;
 }
 
 /* save bones and possessions of a deceased adventurer */
@@ -228,18 +228,18 @@ void savebones (struct obj *corpse) {
                 /* trick makemon() into allowing monster creation
                  * on your location
                  */
-                in_mklev = TRUE;
+                in_mklev = true;
                 mtmp = makemon(&mons[PM_GHOST], u.ux, u.uy, MM_NONAME);
-                in_mklev = FALSE;
+                in_mklev = false;
                 if (!mtmp) return;
                 mtmp = christen_monst(mtmp, plname);
                 if (corpse)
                         (void) obj_attach_mid(corpse, mtmp->m_id);
         } else {
                 /* give your possessions to the monster you become */
-                in_mklev = TRUE;
+                in_mklev = true;
                 mtmp = makemon(&mons[u.ugrave_arise], u.ux, u.uy, NO_MM_FLAGS);
-                in_mklev = FALSE;
+                in_mklev = false;
                 if (!mtmp) {
                         drop_upon_death((struct monst *)0, (struct obj *)0);
                         return;
@@ -248,9 +248,9 @@ void savebones (struct obj *corpse) {
                 newsym(u.ux, u.uy);
                 Your("body rises from the dead as %s...",
                         an(mons[u.ugrave_arise].mname));
-                display_nhwindow(WIN_MESSAGE, FALSE);
+                display_nhwindow(WIN_MESSAGE, false);
                 drop_upon_death(mtmp, (struct obj *)0);
-                m_dowear(mtmp, TRUE);
+                m_dowear(mtmp, true);
         }
         if (mtmp) {
                 mtmp->m_lev = (u.ulevel ? u.ulevel : 1);
@@ -259,7 +259,7 @@ void savebones (struct obj *corpse) {
                 mtmp->msleeping = 1;
         }
         for(mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-                resetobjs(mtmp->minvent,FALSE);
+                resetobjs(mtmp->minvent,false);
                 /* do not zero out m_ids for bones levels any more */
                 mtmp->mlstmv = 0L;
                 if(mtmp->mtame) mtmp->mtame = mtmp->mpeaceful = 0;
@@ -268,8 +268,8 @@ void savebones (struct obj *corpse) {
                 ttmp->madeby_u = 0;
                 ttmp->tseen = (ttmp->ttyp == HOLE);
         }
-        resetobjs(fobj,FALSE);
-        resetobjs(level.buriedobjlist, FALSE);
+        resetobjs(fobj,false);
+        resetobjs(level.buriedobjlist, false);
 
         /* Hero is no longer on the map. */
         u.ux = u.uy = 0;
@@ -338,13 +338,13 @@ int getbones(void) {
                                 oldbonesid, bonesid);
                         if (wizard) {
                                 pline("%s", errbuf);
-                                ok = FALSE;     /* won't die of trickery */
+                                ok = false;     /* won't die of trickery */
                         }
                         trickery(errbuf);
                 } else {
                         struct monst *mtmp;
 
-                        getlev(fd, 0, 0, TRUE);
+                        getlev(fd, 0, 0, true);
 
                         /* Note that getlev() now keeps tabs on unique
                          * monsters such as demon lords, and tracks the
@@ -358,10 +358,10 @@ int getbones(void) {
                                 mongone(mtmp);
                             } else
                                 /* to correctly reset named artifacts on the level */
-                                resetobjs(mtmp->minvent,TRUE);
+                                resetobjs(mtmp->minvent,true);
                         }
-                        resetobjs(fobj,TRUE);
-                        resetobjs(level.buriedobjlist,TRUE);
+                        resetobjs(fobj,true);
+                        resetobjs(level.buriedobjlist,true);
                 }
         }
         (void) close(fd);

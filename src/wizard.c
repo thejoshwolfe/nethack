@@ -14,10 +14,10 @@ extern const int monstr[];
 
 
 static short which_arti(int);
-static boolean mon_has_arti(struct monst *,short);
+static bool mon_has_arti(struct monst *,short);
 static struct monst *other_mon_has_arti(struct monst *,short);
 static struct obj *on_ground(short);
-static boolean you_have(int);
+static bool you_have(int);
 static long target_on(int,struct monst *);
 static long strategy(struct monst *);
 
@@ -138,7 +138,7 @@ which_arti (int mask)
  *      since bell, book, candle, and amulet are all objects, not really
  *      artifacts right now.    [MRS]
  */
-static boolean 
+static bool 
 mon_has_arti (struct monst *mtmp, short otyp)
 {
         struct obj *otmp;
@@ -181,15 +181,15 @@ on_ground (short otyp)
         return((struct obj *)0);
 }
 
-static boolean 
+static bool 
 you_have (int mask)
 {
         switch(mask) {
-            case M3_WANTSAMUL:  return(boolean)(u.uhave.amulet);
-            case M3_WANTSBELL:  return(boolean)(u.uhave.bell);
-            case M3_WANTSCAND:  return(boolean)(u.uhave.menorah);
-            case M3_WANTSBOOK:  return(boolean)(u.uhave.book);
-            case M3_WANTSARTI:  return(boolean)(u.uhave.questart);
+            case M3_WANTSAMUL:  return(bool)(u.uhave.amulet);
+            case M3_WANTSBELL:  return(bool)(u.uhave.bell);
+            case M3_WANTSCAND:  return(bool)(u.uhave.menorah);
+            case M3_WANTSBOOK:  return(bool)(u.uhave.book);
+            case M3_WANTSARTI:  return(bool)(u.uhave.questart);
             default:            break;
         }
         return(0);
@@ -288,10 +288,10 @@ tactics (struct monst *mtmp)
                 mtmp->mavenge = 1; /* covetous monsters attack while fleeing */
                 if (In_W_tower(mtmp->mx, mtmp->my, &u.uz) ||
                         (mtmp->iswiz && !xupstair && !mon_has_amulet(mtmp))) {
-                    if (!rn2(3 + mtmp->mhp/10)) (void) rloc(mtmp, FALSE);
+                    if (!rn2(3 + mtmp->mhp/10)) (void) rloc(mtmp, false);
                 } else if (xupstair &&
                          (mtmp->mx != xupstair || mtmp->my != yupstair)) {
-                    (void) mnearto(mtmp, xupstair, yupstair, TRUE);
+                    (void) mnearto(mtmp, xupstair, yupstair, true);
                 }
                 /* if you're not around, cast healing spells */
                 if (distu(mtmp->mx,mtmp->my) > (BOLT_LIM * BOLT_LIM))
@@ -342,7 +342,7 @@ tactics (struct monst *mtmp)
                         return(0);
                     }
                 } else { /* a monster has it - 'port beside it. */
-                    (void) mnearto(mtmp, tx, ty, FALSE);
+                    (void) mnearto(mtmp, tx, ty, false);
                     return(0);
                 }
             }
@@ -376,7 +376,7 @@ clonewiz (void)
             mtmp2->msleeping = mtmp2->mtame = mtmp2->mpeaceful = 0;
             if (!u.uhave.amulet && rn2(2)) {  /* give clone a fake */
                 (void) add_to_minv(mtmp2, mksobj(FAKE_AMULET_OF_YENDOR,
-                                        TRUE, FALSE));
+                                        true, false));
             }
             mtmp2->m_ap_type = M_AP_MONSTER;
             mtmp2->mappearance = wizapp[rn2(SIZE(wizapp))];
@@ -474,7 +474,7 @@ resurrect (void)
                         mtmp->mfrozen = 0,  mtmp->mcanmove = 1;
                     if (mtmp->mcanmove && !mtmp->msleeping) {
                         *mmtmp = mtmp->nmon;
-                        mon_arrive(mtmp, TRUE);
+                        mon_arrive(mtmp, true);
                         /* note: there might be a second Wizard; if so,
                            he'll have to wait til the next resurrection */
                         break;
@@ -523,7 +523,7 @@ wizdead (void)
 {
         flags.no_of_wizards--;
         if (!u.uevent.udemigod) {
-                u.uevent.udemigod = TRUE;
+                u.uevent.udemigod = true;
                 u.udg_cnt = rn1(250, 50);
         }
 }

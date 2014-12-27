@@ -53,7 +53,7 @@ dosit (void)
                    (u.utrap && (u.utraptype >= TT_LAVA))) {
 
             if (u.utrap) {
-                exercise(A_WIS, FALSE); /* you're getting stuck longer */
+                exercise(A_WIS, false); /* you're getting stuck longer */
                 if(u.utraptype == TT_BEARTRAP) {
                     You_cant("sit down with your %s in the bear trap.", body_part(FOOT));
                     u.utrap++;
@@ -61,7 +61,7 @@ dosit (void)
                     if(trap->ttyp == SPIKED_PIT) {
                         You("sit down on a spike.  Ouch!");
                         losehp(1, "sitting on an iron spike", KILLED_BY);
-                        exercise(A_STR, FALSE);
+                        exercise(A_STR, false);
                     } else
                         You("sit down in the pit.");
                     u.utrap += rn2(5);
@@ -90,9 +90,9 @@ dosit (void)
  in_water:
             You("sit in the water.");
             if (!rn2(10) && uarm)
-                (void) rust_dmg(uarm, "armor", 1, TRUE, &youmonst);
+                (void) rust_dmg(uarm, "armor", 1, true, &youmonst);
             if (!rn2(10) && uarmf && uarmf->otyp != WATER_WALKING_BOOTS)
-                (void) rust_dmg(uarm, "armor", 1, TRUE, &youmonst);
+                (void) rust_dmg(uarm, "armor", 1, true, &youmonst);
         } else if(IS_SINK(typ)) {
 
             You(sit_message, defsyms[S_sink].explanation);
@@ -142,18 +142,18 @@ dosit (void)
             if (rnd(6) > 4)  {
                 switch (rnd(13))  {
                     case 1:
-                        (void) adjattrib(rn2(A_MAX), -rn1(4,3), FALSE);
+                        (void) adjattrib(rn2(A_MAX), -rn1(4,3), false);
                         losehp(rnd(10), "cursed throne", KILLED_BY_AN);
                         break;
                     case 2:
-                        (void) adjattrib(rn2(A_MAX), 1, FALSE);
+                        (void) adjattrib(rn2(A_MAX), 1, false);
                         break;
                     case 3:
                         pline("A%s electric shock shoots through your body!",
                               (Shock_resistance) ? "n" : " massive");
                         losehp(Shock_resistance ? rnd(6) : rnd(30),
                                "electric chair", KILLED_BY_AN);
-                        exercise(A_CON, FALSE);
+                        exercise(A_CON, false);
                         break;
                     case 4:
                         You_feel("much, much better!");
@@ -163,8 +163,8 @@ dosit (void)
                         }
                         if(u.uhp >= (u.uhpmax - 5))  u.uhpmax += 4;
                         u.uhp = u.uhpmax;
-                        make_blinded(0L,TRUE);
-                        make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+                        make_blinded(0L,true);
+                        make_sick(0L, (char *) 0, false, SICK_ALL);
                         heal_legs();
                         flags.botl = 1;
                         break;
@@ -198,7 +198,7 @@ dosit (void)
                         pline("A voice echoes:");
         verbalize("A curse upon thee for sitting upon this most holy throne!");
                         if (Luck > 0)  {
-                            make_blinded(Blinded + rn1(100,250),TRUE);
+                            make_blinded(Blinded + rn1(100,250),true);
                         } else      rndcurse();
                         break;
                     case 10:
@@ -207,7 +207,7 @@ dosit (void)
                                         pline(
                                         "A terrible drone fills your head!");
                                         make_confused(HConfusion + rnd(30),
-                                                                        FALSE);
+                                                                        false);
                                 } else {
                                         pline("An image forms in your mind.");
                                         do_mapping();
@@ -237,7 +237,7 @@ dosit (void)
                         break;
                     case 13:
                         Your("mind turns into a pretzel!");
-                        make_confused(HConfusion + rn1(7,16),FALSE);
+                        make_confused(HConfusion + rn1(7,16),false);
                         break;
                     default:    impossible("throne effect");
                                 break;
@@ -269,11 +269,11 @@ dosit (void)
                         return 0;
                 }
 
-                uegg = mksobj(EGG, FALSE, FALSE);
+                uegg = mksobj(EGG, false, false);
                 uegg->spe = 1;
                 uegg->quan = 1;
                 uegg->owt = weight(uegg);
-                uegg->corpsenm = egg_type_from_parent(u.umonnum, FALSE);
+                uegg->corpsenm = egg_type_from_parent(u.umonnum, false);
                 uegg->known = uegg->dknown = 1;
                 attach_egg_hatch_timeout(uegg);
                 You("lay an egg.");
@@ -346,7 +346,7 @@ rndcurse (void)                 /* curse a few inventory items at random! */
                       s_suffix(upstart(y_monnam(u.usteed))),
                       aobjnam(otmp, "glow"),
                       hcolor(otmp->cursed ? NH_BLACK : (const char *)"brown"));
-                otmp->bknown = TRUE;
+                otmp->bknown = true;
             }
         }
 }

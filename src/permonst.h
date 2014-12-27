@@ -50,9 +50,9 @@ struct permonst {
         unsigned char   msize;                  /* physical size (3 bits) */
         unsigned char   mresists;               /* resistances */
         unsigned char   mconveys;               /* conveyed by eating */
-        unsigned long   mflags1,                /* boolean bitflags */
-                        mflags2;                /* more boolean bitflags */
-        unsigned short  mflags3;                /* yet more boolean bitflags */
+        unsigned long   mflags1,                /* bool bitflags */
+                        mflags2;                /* more bool bitflags */
+        unsigned short  mflags3;                /* yet more bool bitflags */
         unsigned char   mcolor;                 /* color to use */
 };
 

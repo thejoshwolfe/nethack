@@ -7,9 +7,9 @@
 #include "flag.h"
 
 static void setgemprobs(d_level*);
-static void shuffle(int,int,boolean);
+static void shuffle(int,int,bool);
 static void shuffle_all(void);
-static boolean interesting_to_discover(int);
+static bool interesting_to_discover(int);
 
 
 static short disco[NUM_OBJECTS] = DUMMY;
@@ -41,7 +41,7 @@ setgemprobs (d_level *dlev)
 
 /* shuffle descriptions on objects o_low to o_high */
 static void 
-shuffle (int o_low, int o_high, boolean domaterial)
+shuffle (int o_low, int o_high, bool domaterial)
 {
         int i, j, num_to_shuffle;
         short sw;
@@ -169,21 +169,21 @@ shuffle_all (void)
                          * and one-of-a-kind magical artifacts at the end of
                          * their class in objects[] have fixed descriptions.
                          */
-                        shuffle(first, j, TRUE);
+                        shuffle(first, j, true);
                 }
         }
 
         /* shuffle the helmets */
-        shuffle(HELMET, HELM_OF_TELEPATHY, FALSE);
+        shuffle(HELMET, HELM_OF_TELEPATHY, false);
 
         /* shuffle the gloves */
-        shuffle(LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY, FALSE);
+        shuffle(LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY, false);
 
         /* shuffle the cloaks */
-        shuffle(CLOAK_OF_PROTECTION, CLOAK_OF_DISPLACEMENT, FALSE);
+        shuffle(CLOAK_OF_PROTECTION, CLOAK_OF_DISPLACEMENT, false);
 
         /* shuffle the boots [if they change, update find_skates() below] */
-        shuffle(SPEED_BOOTS, LEVITATION_BOOTS, FALSE);
+        shuffle(SPEED_BOOTS, LEVITATION_BOOTS, false);
 }
 
 /* find the object index for snow boots; used [once] by slippery ice code */
@@ -254,7 +254,7 @@ restnames (int fd)
 }
 
 void 
-discover_object (int oindx, boolean mark_as_known, boolean credit_hero)
+discover_object (int oindx, bool mark_as_known, bool credit_hero)
 {
     if (!objects[oindx].oc_name_known) {
         int dindx, acls = objects[oindx].oc_class;
@@ -269,7 +269,7 @@ discover_object (int oindx, boolean mark_as_known, boolean credit_hero)
 
         if (mark_as_known) {
             objects[oindx].oc_name_known = 1;
-            if (credit_hero) exercise(A_WIS, TRUE);
+            if (credit_hero) exercise(A_WIS, true);
         }
         if (moves > 1L) update_inventory();
     }
@@ -281,7 +281,7 @@ undiscover_object (int oindx)
 {
     if (!objects[oindx].oc_name_known) {
         int dindx, acls = objects[oindx].oc_class;
-        boolean found = FALSE;
+        bool found = false;
 
         /* find the object; shift those behind it forward one slot */
         for (dindx = bases[acls];
@@ -290,7 +290,7 @@ undiscover_object (int oindx)
             if (found)
                 disco[dindx-1] = disco[dindx];
             else if (disco[dindx] == oindx)
-                found = TRUE;
+                found = true;
 
         /* clear last slot */
         if (found) disco[dindx-1] = 0;
@@ -299,11 +299,11 @@ undiscover_object (int oindx)
     }
 }
 
-static boolean 
+static bool 
 interesting_to_discover (int i)
 {
         /* Pre-discovered objects are now printed with a '*' */
-    return((boolean)(objects[i].oc_uname != (char *)0 ||
+    return((bool)(objects[i].oc_uname != (char *)0 ||
             (objects[i].oc_name_known && OBJ_DESCR(objects[i]) != (char *)0)));
 }
 
@@ -357,7 +357,7 @@ dodiscovered (void)                          /* free after Robert Viduya */
             if ((dis = disco[i]) && interesting_to_discover(dis)) {
                 ct++;
                 if (oclass != prev_class) {
-                    putstr(tmpwin, iflags.menu_headings, let_to_name(oclass, FALSE));
+                    putstr(tmpwin, iflags.menu_headings, let_to_name(oclass, false));
                     prev_class = oclass;
                 }
                 Sprintf(buf, "%s %s",(objects[dis].oc_pre_discovered ? "*" : " "),
@@ -369,7 +369,7 @@ dodiscovered (void)                          /* free after Robert Viduya */
     if (ct == 0) {
         You("haven't discovered anything yet...");
     } else
-        display_nhwindow(tmpwin, TRUE);
+        display_nhwindow(tmpwin, true);
     destroy_nhwindow(tmpwin);
 
     return 0;

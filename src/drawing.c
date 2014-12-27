@@ -540,16 +540,16 @@ switch_graphics (int gr_set_flag)
  * to the ISO 8859 character set.  We should probably do a VioSetCp() call to
  * set the codepage to 437.
  */
-            iflags.IBMgraphics = TRUE;
-            iflags.DECgraphics = FALSE;
+            iflags.IBMgraphics = true;
+            iflags.DECgraphics = false;
             assign_graphics(ibm_graphics, SIZE(ibm_graphics), MAXPCHARS, 0);
             break;
         case DEC_GRAPHICS:
 /*
  * Use the VT100 line drawing character set.
  */
-            iflags.DECgraphics = TRUE;
-            iflags.IBMgraphics = FALSE;
+            iflags.DECgraphics = true;
+            iflags.IBMgraphics = false;
             assign_graphics(dec_graphics, SIZE(dec_graphics), MAXPCHARS, 0);
             if (decgraphics_mode_callback) (*decgraphics_mode_callback)();
             break;

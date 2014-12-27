@@ -35,36 +35,36 @@ attacktype_fordmg (struct permonst *ptr, int atyp, int dtyp)
     return (struct attack *)0;
 }
 
-boolean 
+bool 
 attacktype (struct permonst *ptr, int atyp)
 {
-    return attacktype_fordmg(ptr, atyp, AD_ANY) ? TRUE : FALSE;
+    return attacktype_fordmg(ptr, atyp, AD_ANY) ? true : false;
 }
 
 
-boolean 
+bool 
 poly_when_stoned (struct permonst *ptr)
 {
-    return((boolean)(is_golem(ptr) && ptr != &mons[PM_STONE_GOLEM] &&
+    return((bool)(is_golem(ptr) && ptr != &mons[PM_STONE_GOLEM] &&
             !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD)));
             /* allow G_EXTINCT */
 }
 
-boolean 
-resists_drli (       /* returns TRUE if monster is drain-life resistant */
+bool 
+resists_drli (       /* returns true if monster is drain-life resistant */
     struct monst *mon
 )
 {
         struct permonst *ptr = mon->data;
         struct obj *wep = ((mon == &youmonst) ? uwep : MON_WEP(mon));
 
-        return (boolean)(is_undead(ptr) || is_demon(ptr) || is_were(ptr) ||
+        return (bool)(is_undead(ptr) || is_demon(ptr) || is_were(ptr) ||
                          ptr == &mons[PM_DEATH] ||
                          (wep && wep->oartifact && defends(AD_DRLI, wep)));
 }
 
-boolean 
-resists_magm (       /* TRUE if monster is magic-missile resistant */
+bool 
+resists_magm (       /* true if monster is magic-missile resistant */
     struct monst *mon
 )
 {
@@ -74,26 +74,26 @@ resists_magm (       /* TRUE if monster is magic-missile resistant */
         /* as of 3.2.0:  gray dragons, Angels, Oracle, Yeenoghu */
         if (dmgtype(ptr, AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON] ||
                 dmgtype(ptr, AD_RBRE))  /* Chromatic Dragon */
-            return TRUE;
+            return true;
         /* check for magic resistance granted by wielded weapon */
         o = (mon == &youmonst) ? uwep : MON_WEP(mon);
         if (o && o->oartifact && defends(AD_MAGM, o))
-            return TRUE;
+            return true;
         /* check for magic resistance granted by worn or carried items */
         o = (mon == &youmonst) ? invent : mon->minvent;
         for ( ; o; o = o->nobj)
             if ((o->owornmask && objects[o->otyp].oc_oprop == ANTIMAGIC) ||
                     (o->oartifact && protects(AD_MAGM, o)))
-                return TRUE;
-        return FALSE;
+                return true;
+        return false;
 }
 
-/* TRUE iff monster is resistant to light-induced blindness */
-boolean 
+/* true iff monster is resistant to light-induced blindness */
+bool 
 resists_blnd (struct monst *mon)
 {
         struct permonst *ptr = mon->data;
-        boolean is_you = (mon == &youmonst);
+        bool is_you = (mon == &youmonst);
         struct obj *o;
 
         if (is_you ? (Blind || u.usleep) :
@@ -101,82 +101,82 @@ resists_blnd (struct monst *mon)
                     /* BUG: temporary sleep sets mfrozen, but since
                             paralysis does too, we can't check it */
                     mon->msleeping))
-            return TRUE;
+            return true;
         /* yellow light, Archon; !dust vortex, !cobra, !raven */
         if (dmgtype_fromattack(ptr, AD_BLND, AT_EXPL) ||
                 dmgtype_fromattack(ptr, AD_BLND, AT_GAZE))
-            return TRUE;
+            return true;
         o = is_you ? uwep : MON_WEP(mon);
         if (o && o->oartifact && defends(AD_BLND, o))
-            return TRUE;
+            return true;
         o = is_you ? invent : mon->minvent;
         for ( ; o; o = o->nobj)
             if ((o->owornmask && objects[o->otyp].oc_oprop == BLINDED) ||
                     (o->oartifact && protects(AD_BLND, o)))
-                return TRUE;
-        return FALSE;
+                return true;
+        return false;
 }
 
-/* TRUE iff monster can be blinded by the given attack */
-/* Note: may return TRUE when mdef is blind (e.g. new cream-pie attack) */
+/* true iff monster can be blinded by the given attack */
+/* Note: may return true when mdef is blind (e.g. new cream-pie attack) */
 /* NULL == no specific aggressor */
 /* aatyp == AT_WEAP, AT_SPIT */
-boolean can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, struct obj *obj) {
-        boolean is_you = (mdef == &youmonst);
-        boolean check_visor = FALSE;
+bool can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, struct obj *obj) {
+        bool is_you = (mdef == &youmonst);
+        bool check_visor = false;
         struct obj *o;
         const char *s;
 
         /* no eyes protect against all attacks for now */
         if (!haseyes(mdef->data))
-            return FALSE;
+            return false;
 
         switch(aatyp) {
         case AT_EXPL: case AT_BOOM: case AT_GAZE: case AT_MAGC:
         case AT_BREA: /* assumed to be lightning */
             /* light-based attacks may be cancelled or resisted */
             if (magr && magr->mcan)
-                return FALSE;
+                return false;
             return !resists_blnd(mdef);
 
         case AT_WEAP: case AT_SPIT: case AT_NONE:
             /* an object is used (thrown/spit/other) */
             if (obj && (obj->otyp == CREAM_PIE)) {
                 if (is_you && Blindfolded)
-                    return FALSE;
+                    return false;
             } else if (obj && (obj->otyp == BLINDING_VENOM)) {
                 /* all ublindf, including LENSES, protect, cream-pies too */
                 if (is_you && (ublindf || u.ucreamed))
-                    return FALSE;
-                check_visor = TRUE;
+                    return false;
+                check_visor = true;
             } else if (obj && (obj->otyp == POT_BLINDNESS)) {
-                return TRUE;    /* no defense */
+                return true;    /* no defense */
             } else
-                return FALSE;   /* other objects cannot cause blindness yet */
+                return false;   /* other objects cannot cause blindness yet */
             if ((magr == &youmonst) && u.uswallow)
-                return FALSE;   /* can't affect eyes while inside monster */
+                return false;   /* can't affect eyes while inside monster */
             break;
 
         case AT_ENGL:
             if (is_you && (Blindfolded || u.usleep || u.ucreamed))
-                return FALSE;
+                return false;
             if (!is_you && mdef->msleeping)
-                return FALSE;
+                return false;
             break;
 
         case AT_CLAW:
             /* e.g. raven: all ublindf, including LENSES, protect */
             if (is_you && ublindf)
-                return FALSE;
+                return false;
             if ((magr == &youmonst) && u.uswallow)
-                return FALSE;   /* can't affect eyes while inside monster */
-            check_visor = TRUE;
+                return false;   /* can't affect eyes while inside monster */
+            check_visor = true;
             break;
 
         case AT_TUCH: case AT_STNG:
             /* some physical, blind-inducing attacks can be cancelled */
             if (magr && magr->mcan)
-                return FALSE;
+                return false;
             break;
 
         default:
@@ -190,15 +190,15 @@ boolean can_blnd(struct monst *magr, struct monst *mdef, unsigned char aatyp, st
                 if ((o->owornmask & W_ARMH) &&
                     (s = OBJ_DESCR(objects[o->otyp])) != (char *)0 &&
                     !strcmp(s, "visored helmet"))
-                    return FALSE;
+                    return false;
         }
 
-        return TRUE;
+        return true;
 }
 
 
-boolean 
-ranged_attk (        /* returns TRUE if monster can attack at range */
+bool 
+ranged_attk (        /* returns true if monster can attack at range */
     struct permonst *ptr
 )
 {
@@ -212,55 +212,55 @@ ranged_attk (        /* returns TRUE if monster can attack at range */
          */
         for (i = 0; i < NATTK; i++) {
             atyp = ptr->mattk[i].aatyp;
-            if (atyp >= AT_WEAP) return TRUE;
+            if (atyp >= AT_WEAP) return true;
          /* assert(atyp < 32); */
-            if ((atk_mask & (1L << atyp)) != 0L) return TRUE;
+            if ((atk_mask & (1L << atyp)) != 0L) return true;
         }
 
-        return FALSE;
+        return false;
 }
 
-boolean 
+bool 
 hates_silver (struct permonst *ptr)
-/* returns TRUE if monster is especially affected by silver weapons */
+/* returns true if monster is especially affected by silver weapons */
 {
-        return((boolean)(is_were(ptr) || ptr->mlet==S_VAMPIRE || is_demon(ptr) ||
+        return((bool)(is_were(ptr) || ptr->mlet==S_VAMPIRE || is_demon(ptr) ||
                 ptr == &mons[PM_SHADE] ||
                 (ptr->mlet==S_IMP && ptr != &mons[PM_TENGU])));
 }
 
 /* true iff the type of monster pass through iron bars */
-boolean 
+bool 
 passes_bars (struct permonst *mptr)
 {
-    return (boolean) (passes_walls(mptr) || amorphous(mptr) ||
+    return (bool) (passes_walls(mptr) || amorphous(mptr) ||
                       is_whirly(mptr) || verysmall(mptr) ||
                       (slithy(mptr) && !bigmonst(mptr)));
 }
 
 
-boolean 
-can_track (          /* returns TRUE if monster can track well */
+bool 
+can_track (          /* returns true if monster can track well */
     struct permonst *ptr
 )
 {
         if (uwep && uwep->oartifact == ART_EXCALIBUR)
-                return TRUE;
+                return true;
         else
-                return((boolean)haseyes(ptr));
+                return((bool)haseyes(ptr));
 }
 
 
-boolean 
+bool 
 sliparm (    /* creature will slide out of armor */
     struct permonst *ptr
 )
 {
-        return((boolean)(is_whirly(ptr) || ptr->msize <= MZ_SMALL ||
+        return((bool)(is_whirly(ptr) || ptr->msize <= MZ_SMALL ||
                          noncorporeal(ptr)));
 }
 
-boolean 
+bool 
 breakarm (   /* creature will break out of armor */
     struct permonst *ptr
 )
@@ -271,12 +271,12 @@ breakarm (   /* creature will break out of armor */
               && !sliparm(ptr));
 }
 
-boolean 
+bool 
 sticks (     /* creature sticks other creatures it hits */
     struct permonst *ptr
 )
 {
-        return((boolean)(dmgtype(ptr,AD_STCK) || dmgtype(ptr,AD_WRAP) ||
+        return((bool)(dmgtype(ptr,AD_STCK) || dmgtype(ptr,AD_WRAP) ||
                 attacktype(ptr,AT_HUGS)));
 }
 
@@ -313,10 +313,10 @@ dmgtype_fromattack (struct permonst *ptr, int dtyp, int atyp)
     return (struct attack *)0;
 }
 
-boolean 
+bool 
 dmgtype (struct permonst *ptr, int dtyp)
 {
-    return dmgtype_fromattack(ptr, dtyp, AT_ANY) ? TRUE : FALSE;
+    return dmgtype_fromattack(ptr, dtyp, AT_ANY) ? true : false;
 }
 
 /* returns the maximum damage a defender can do to the attacker via
@@ -490,16 +490,16 @@ int pronoun_gender (struct monst *mtmp) {
 
 
 /* used for nearby monsters when you go to another level */
-boolean levl_follower(struct monst *mtmp) {
+bool levl_follower(struct monst *mtmp) {
         /* monsters with the Amulet--even pets--won't follow across levels */
-        if (mon_has_amulet(mtmp)) return FALSE;
+        if (mon_has_amulet(mtmp)) return false;
 
         /* some monsters will follow even while intending to flee from you */
-        if (mtmp->mtame || mtmp->iswiz || is_fshk(mtmp)) return TRUE;
+        if (mtmp->mtame || mtmp->iswiz || is_fshk(mtmp)) return true;
 
         /* stalking types follow, but won't when fleeing unless you hold
            the Amulet */
-        return (boolean)((mtmp->data->mflags2 & M2_STALK) &&
+        return (bool)((mtmp->data->mflags2 & M2_STALK) &&
                                 (!mtmp->mflee || u.uhave.amulet));
 }
 

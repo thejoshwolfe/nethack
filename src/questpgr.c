@@ -143,10 +143,10 @@ intermed (void) /* return your intermediate target string */
         return (urole.intermed);
 }
 
-boolean 
+bool 
 is_quest_artifact (struct obj *otmp)
 {
-        return((boolean)(otmp->oartifact == urole.questarti));
+        return((bool)(otmp->oartifact == urole.questarti));
 }
 
 static const char *
@@ -341,7 +341,7 @@ deliver_by_window (struct qtmsg *qt_msg, int how)
             convert_line();
             putstr(datawin, 0, out_line);
         }
-        display_nhwindow(datawin, TRUE);
+        display_nhwindow(datawin, true);
         destroy_nhwindow(datawin);
 }
 

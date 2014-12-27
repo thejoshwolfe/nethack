@@ -9,7 +9,7 @@
 #include "display.h"
 #include "winprocs.h"
 
-static int enhance_skill(boolean);
+static int enhance_skill(bool);
 
 /* Categories whose names don't come from OBJ_NAME(objects[type])
  */
@@ -85,9 +85,9 @@ give_may_advance_msg (int skill)
 }
 
 
-static boolean can_advance(int, boolean);
-static boolean could_advance(int);
-static boolean peaked_skill(int);
+static bool can_advance(int, bool);
+static bool could_advance(int);
+static bool peaked_skill(int);
 static int slots_required(int);
 
 
@@ -114,7 +114,7 @@ hitval (struct obj *otmp, struct monst *mon)
 {
         int     tmp = 0;
         struct permonst *ptr = mon->data;
-        boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
+        bool Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
 
         if (Is_weapon)
                 tmp += otmp->spe;
@@ -179,7 +179,7 @@ dmgval (struct obj *otmp, struct monst *mon)
 {
         int tmp = 0, otyp = otmp->otyp;
         struct permonst *ptr = mon->data;
-        boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
+        bool Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
 
         if (otyp == CREAM_PIE) return 0;
 
@@ -458,8 +458,8 @@ select_hwep (   /* select a hand to hand weapon for the monster */
 {
         struct obj *otmp;
         int i;
-        boolean strong = strongmonst(mtmp->data);
-        boolean wearing_shield = (mtmp->misc_worn_check & W_ARMS) != 0;
+        bool strong = strongmonst(mtmp->data);
+        bool wearing_shield = (mtmp->misc_worn_check & W_ARMS) != 0;
 
         /* prefer artifacts to everything else */
         for(otmp=mtmp->minvent; otmp; otmp = otmp->nobj) {
@@ -494,7 +494,7 @@ select_hwep (   /* select a hand to hand weapon for the monster */
  * otherwise never unwield stuff on their own.  Might print message.
  */
 void 
-possibly_unwield (struct monst *mon, boolean polyspot)
+possibly_unwield (struct monst *mon, bool polyspot)
 {
         struct obj *obj, *mw_tmp;
 
@@ -640,7 +640,7 @@ mon_wield_item (struct monst *mon)
                     }
                 }
                 if (artifact_light(obj) && !obj->lamplit) {
-                    begin_burn(obj, FALSE);
+                    begin_burn(obj, false);
                     if (canseemon(mon))
                         pline("%s brilliantly in %s %s!",
                             Tobjnam(obj, "glow"),
@@ -742,8 +742,8 @@ slots_required (int skill)
 
 /* return true if this skill can be advanced */
 /*ARGSUSED*/
-static boolean 
-can_advance (int skill, boolean speedy)
+static bool 
+can_advance (int skill, bool speedy)
 {
     return !P_RESTRICTED(skill)
             && P_SKILL(skill) < P_MAX_SKILL(skill) && (
@@ -755,7 +755,7 @@ can_advance (int skill, boolean speedy)
 }
 
 /* return true if this skill could be advanced if more slots were available */
-static boolean 
+static bool 
 could_advance (int skill)
 {
     return !P_RESTRICTED(skill)
@@ -767,7 +767,7 @@ could_advance (int skill)
 
 /* return true if this skill has reached its maximum and there's been enough
    practice to become eligible for the next step if that had been possible */
-static boolean 
+static bool 
 peaked_skill (int skill)
 {
     return !P_RESTRICTED(skill)
@@ -808,16 +808,16 @@ const static struct skill_range {
 int
 enhance_weapon_skill (void)
 {
-        return enhance_skill(FALSE);
+        return enhance_skill(false);
 }
 
 void
 dump_weapon_skill (void)
 {
-        enhance_skill(TRUE);
+        enhance_skill(true);
 }
 
-int enhance_skill(boolean want_dump)
+int enhance_skill(bool want_dump)
 /* This is the original enhance_weapon_skill() function slightly modified
  * to write the skills to the dump file. I added the wrapper functions just
  * because it looked like the easiest way to add a parameter to the
@@ -831,13 +831,13 @@ int enhance_skill(boolean want_dump)
     menu_item *selected;
     anything any;
     winid win;
-    boolean speedy = FALSE;
+    bool speedy = false;
     char buf2[BUFSZ];
-    boolean logged = FALSE;
+    bool logged = false;
 
         if (!want_dump)
         if (wizard && yn("Advance skills without practice?") == 'y')
-            speedy = TRUE;
+            speedy = true;
 
         do {
             /* find longest available skill name, count those that can advance */
@@ -896,7 +896,7 @@ int enhance_skill(boolean want_dump)
                 {
                 if (want_dump) {
                     dump("  ",(char *)skill_ranges[pass].name);
-                    logged=FALSE;
+                    logged=false;
                 } else
                     add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
                              skill_ranges[pass].name, MENU_UNSELECTED);
@@ -906,7 +906,7 @@ int enhance_skill(boolean want_dump)
                         Sprintf(buf2,"%-*s [%s]",
                             longest, P_NAME(i),skill_level_name(i, buf));
                         dump("    ",buf2);
-                        logged=TRUE;
+                        logged=true;
                     } else if (i == skill_ranges[pass].last && !logged) {
                         dump("    ","(none)");
                     }
@@ -1004,12 +1004,12 @@ unrestrict_weapon_skill (int skill)
 void
 use_skill (int skill, int degree)
 {
-    boolean advance_before;
+    bool advance_before;
 
     if (skill != P_NONE && !P_RESTRICTED(skill)) {
-        advance_before = can_advance(skill, FALSE);
+        advance_before = can_advance(skill, false);
         P_ADVANCE(skill)+=degree;
-        if (!advance_before && can_advance(skill, FALSE))
+        if (!advance_before && can_advance(skill, false))
             give_may_advance_msg(skill);
     }
 }
@@ -1022,10 +1022,10 @@ add_weapon_skill (
     int i, before, after;
 
     for (i = 0, before = 0; i < P_NUM_SKILLS; i++)
-        if (can_advance(i, FALSE)) before++;
+        if (can_advance(i, false)) before++;
     u.weapon_slots += n;
     for (i = 0, after = 0; i < P_NUM_SKILLS; i++)
-        if (can_advance(i, FALSE)) after++;
+        if (can_advance(i, false)) after++;
     if (before < after)
         give_may_advance_msg(P_NONE);
 }
@@ -1285,7 +1285,7 @@ setmnotwielded (struct monst *mon, struct obj *obj)
 {
     if (!obj) return;
     if (artifact_light(obj) && obj->lamplit) {
-        end_burn(obj, FALSE);
+        end_burn(obj, false);
         if (canseemon(mon))
             pline("%s in %s %s %s glowing.", The(xname(obj)),
                   s_suffix(mon_nam(mon)), mbodypart(mon,HAND),

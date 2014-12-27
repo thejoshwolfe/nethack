@@ -218,9 +218,9 @@ mkshobj_at (
         } else {
             atype = get_shop_item(shp - shtypes);
             if (atype < 0)
-                (void) mksobj_at(-atype, sx, sy, TRUE, TRUE);
+                (void) mksobj_at(-atype, sx, sy, true, true);
             else
-                (void) mkobj_at(atype, sx, sy, TRUE);
+                (void) mkobj_at(atype, sx, sy, true);
         }
 }
 
@@ -238,7 +238,7 @@ nameshk (struct monst *shk, const char *const *nlp)
                 && (sptr = Is_special(&u.uz)) != 0 && sptr->flags.town) {
             /* special-case minetown lighting shk */
             shname = "Izchak";
-            shk->female = FALSE;
+            shk->female = false;
         } else {
             /* We want variation from game to game, without needing the save
                and restore support which would be necessary for randomization;
@@ -319,7 +319,7 @@ shkinit (       /* create a new shopkeeper in the given room */
             return(-1);
         }
 
-        if(MON_AT(sx, sy)) (void) rloc(m_at(sx, sy), FALSE); /* insurance */
+        if(MON_AT(sx, sy)) (void) rloc(m_at(sx, sy), false); /* insurance */
 
         /* now initialize the shopkeeper monster structure */
         if(!(shk = makemon(&mons[PM_SHOPKEEPER], sx, sy, NO_MM_FLAGS)))
@@ -414,24 +414,24 @@ stock_room (int shp_indx, struct mkroom *sroom)
      * monsters will sit on top of objects and not the other way around.
      */
 
-    level.flags.has_shop = TRUE;
+    level.flags.has_shop = true;
 }
 
 
 /* does shkp's shop stock this item type? */
-boolean 
+bool 
 saleable (struct monst *shkp, struct obj *obj)
 {
     int i, shp_indx = ESHK(shkp)->shoptype - SHOPBASE;
     const struct shclass *shp = &shtypes[shp_indx];
 
-    if (shp->symb == RANDOM_CLASS) return TRUE;
+    if (shp->symb == RANDOM_CLASS) return true;
     else for (i = 0; i < SIZE(shtypes[0].iprobs) && shp->iprobs[i].iprob; i++)
                 if (shp->iprobs[i].itype < 0 ?
                         shp->iprobs[i].itype == - obj->otyp :
-                        shp->iprobs[i].itype == obj->oclass) return TRUE;
+                        shp->iprobs[i].itype == obj->oclass) return true;
     /* not found */
-    return FALSE;
+    return false;
 }
 
 /* positive value: class; negative value: specific object type */

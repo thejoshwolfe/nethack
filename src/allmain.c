@@ -22,7 +22,7 @@
 
 extern struct passwd *getpwuid(uid_t);
 extern struct passwd *getpwnam(const char *);
-static boolean whoami(void);
+static bool whoami(void);
 static void process_options(int, char **);
 
 extern void check_linux_console(void);
@@ -35,7 +35,7 @@ static const char *NEWS = "news";
 
 void moveloop(void) {
     int moveamt = 0, wtcap = 0, change = 0;
-    boolean didmove = FALSE, monscanmove = FALSE;
+    bool didmove = false, monscanmove = false;
 
     flags.moonphase = phase_of_the_moon();
     if(flags.moonphase == FULL_MOON) {
@@ -79,13 +79,13 @@ void moveloop(void) {
             do { /* hero can't move this turn loop */
                 wtcap = encumber_msg();
 
-                flags.mon_moving = TRUE;
+                flags.mon_moving = true;
                 do {
                     monscanmove = movemon();
                     if (youmonst.movement > NORMAL_SPEED)
                         break;  /* it's now your turn */
                 } while (monscanmove);
-                flags.mon_moving = FALSE;
+                flags.mon_moving = false;
 
                 if (!monscanmove && youmonst.movement < NORMAL_SPEED) {
                     /* both you and the monsters are out of steam this round */
@@ -204,8 +204,8 @@ void moveloop(void) {
                                 u.uhp--;
                             } else {
                                 You("pass out from exertion!");
-                                exercise(A_CON, FALSE);
-                                fall_asleep(-10, FALSE);
+                                exercise(A_CON, false);
+                                fall_asleep(-10, false);
                             }
                         }
                     }
@@ -248,7 +248,7 @@ void moveloop(void) {
                                     stop_occupation();
                                 else
                                     nomul(0);
-                                if (change == 1) polyself(FALSE);
+                                if (change == 1) polyself(false);
                                 else you_were();
                                 change = 0;
                             }
@@ -358,7 +358,7 @@ void moveloop(void) {
             sanity_check();
 
 
-        u.umoved = FALSE;
+        u.umoved = false;
 
         if (multi > 0) {
             lookaround();
@@ -391,14 +391,14 @@ void moveloop(void) {
         if ((!flags.run || iflags.runmode == RUN_TPORT) &&
                 (multi && (!flags.travel ? !(multi % 7) : !(moves % 7L)))) {
             if (flags.time && flags.run) flags.botl = 1;
-            display_nhwindow(WIN_MAP, FALSE);
+            display_nhwindow(WIN_MAP, false);
         }
     }
 }
 
 void stop_occupation (void) {
     if(occupation) {
-        if (!maybe_finished_meal(TRUE))
+        if (!maybe_finished_meal(true))
             You("stop %s.", occtxt);
         occupation = 0;
         flags.botl = 1; /* in case u.uhs changed */
@@ -420,10 +420,10 @@ void display_gamewindows(void) {
      * The mac port is not DEPENDENT on the order of these
      * displays, but it looks a lot better this way...
      */
-    display_nhwindow(WIN_STATUS, FALSE);
-    display_nhwindow(WIN_MESSAGE, FALSE);
+    display_nhwindow(WIN_STATUS, false);
+    display_nhwindow(WIN_MESSAGE, false);
     clear_glyph_buffer();
-    display_nhwindow(WIN_MAP, FALSE);
+    display_nhwindow(WIN_MAP, false);
 }
 
 void newgame(void) {
@@ -448,14 +448,14 @@ void newgame(void) {
     u_init();
 
     (void) signal(SIGINT, done1);
-    if(iflags.news) display_file(NEWS, FALSE);
+    if(iflags.news) display_file(NEWS, false);
     load_qtlist();  /* load up the quest text info */
     /*      quest_init();*/ /* Now part of role_init() */
 
     mklev();
     u_on_upstairs();
     vision_reset();         /* set up internals for level (after mklev) */
-    check_special_room(FALSE);
+    check_special_room(false);
 
     flags.botlx = 1;
 
@@ -476,15 +476,15 @@ void newgame(void) {
     program_state.something_worth_saving++; /* useful data now exists */
 
     /* Success! */
-    welcome(TRUE);
+    welcome(true);
     return;
 }
 
 /* show "welcome [back] to nethack" message at program startup */
 /* false => restoring an old game */
-void welcome(boolean new_game) {
+void welcome(bool new_game) {
     char buf[BUFSZ];
-    boolean currentgend = Upolyd ? u.mfemale : flags.female;
+    bool currentgend = Upolyd ? u.mfemale : flags.female;
 
     /*
      * The "welcome back" message always describes your innate form
@@ -510,7 +510,7 @@ void welcome(boolean new_game) {
 
 int main (int argc, char *argv[]) {
     int fd;
-    boolean exact_username;
+    bool exact_username;
 
     hname = argv[0];
     hackpid = getpid();
@@ -607,21 +607,21 @@ int main (int argc, char *argv[]) {
         /* Since wizard is actually flags.debug, restoring might
          * overwrite it.
          */
-        boolean remember_wiz_mode = wizard;
+        bool remember_wiz_mode = wizard;
         const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
         (void) chmod(fq_save,0);        /* disallow parallel restores */
         (void) signal(SIGINT, done1);
         if(iflags.news) {
-            display_file(NEWS, FALSE);
-            iflags.news = FALSE; /* in case dorecover() fails */
+            display_file(NEWS, false);
+            iflags.news = false; /* in case dorecover() fails */
         }
         pline("Restoring save file...");
         mark_synch();   /* flush output */
         if(!dorecover(fd))
             goto not_recovered;
-        if(!wizard && remember_wiz_mode) wizard = TRUE;
-        check_special_room(FALSE);
+        if(!wizard && remember_wiz_mode) wizard = true;
+        check_special_room(false);
         wd_message();
 
         if (discover || wizard) {
@@ -661,13 +661,13 @@ static void process_options (int argc, char *argv[]) {
         argc--;
         switch(argv[0][1]){
             case 'D':
-                wizard = TRUE;
+                wizard = true;
                 break;
             case 'X':
-                discover = TRUE;
+                discover = true;
                 break;
             case 'n':
-                iflags.news = FALSE;
+                iflags.news = false;
                 break;
             case 'u':
                 if(argv[0][2])
@@ -727,7 +727,7 @@ static void process_options (int argc, char *argv[]) {
         locknum = atoi(argv[1]);
 }
 
-static boolean whoami(void) {
+static bool whoami(void) {
     /*
      * Who am i? Algorithm: 1. Use name as specified in NETHACKOPTIONS
      *                      2. Use $USER or $LOGNAME        (if 1. fails)
@@ -741,14 +741,14 @@ static boolean whoami(void) {
      */
     char *s;
 
-    if (*plname) return FALSE;
+    if (*plname) return false;
     if(/* !*plname && */ (s = nh_getenv("USER")))
         (void) strncpy(plname, s, sizeof(plname)-1);
     if(!*plname && (s = nh_getenv("LOGNAME")))
         (void) strncpy(plname, s, sizeof(plname)-1);
     if(!*plname && (s = getlogin()))
         (void) strncpy(plname, s, sizeof(plname)-1);
-    return TRUE;
+    return true;
 }
 
 static void wd_message (void) {

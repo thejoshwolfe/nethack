@@ -164,12 +164,12 @@ void
 newexplevel (void)
 {
         if (u.ulevel < MAXULEV && u.uexp >= newuexp(u.ulevel))
-            pluslvl(TRUE);
+            pluslvl(true);
 }
 
 void 
 pluslvl (
-    boolean incr   /* true iff via incremental experience growth */
+    bool incr   /* true iff via incremental experience growth */
 )
 {               /*      (false for potion of gain level)      */
         int num;
@@ -213,7 +213,7 @@ pluslvl (
    level plus a random portion of what it takes to get to the next level */
 long 
 rndexp (
-    boolean gaining        /* gaining XP via potion vs setting XP for polyself */
+    bool gaining        /* gaining XP via potion vs setting XP for polyself */
 )
 {
         long minexp, maxexp, diff, factor, result;

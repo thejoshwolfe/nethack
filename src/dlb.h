@@ -36,7 +36,7 @@ typedef struct dlb_handle {
     long mark;          /* current file marker */
 } dlb;
 
-boolean dlb_init(void);
+bool dlb_init(void);
 void dlb_cleanup(void);
 
 dlb *dlb_fopen(const char *,const char *);

@@ -5,10 +5,10 @@
 #include "extern.h"
 #include "display.h"
 
-extern boolean notonhead;
+extern bool notonhead;
 
 
-static boolean vis, far_noise;
+static bool vis, far_noise;
 static long noisetime;
 static struct obj *otmp;
 
@@ -25,7 +25,7 @@ static int mdamagem(struct monst *,struct monst *,struct attack *);
 static void mswingsm(struct monst *, struct monst *, struct obj *);
 static void noises(struct monst *,struct attack *);
 static void missmm(struct monst *,struct monst *,struct attack *);
-static int passivemm(struct monst *, struct monst *, boolean, int);
+static int passivemm(struct monst *, struct monst *, bool, int);
 
 /* Needed for the special case of monsters wielding vorpal blades (rare).
  * If we use this a lot it should probably be a parameter to mdamagem()
@@ -51,7 +51,7 @@ mon_nam_too (char *outbuf, struct monst *mon, struct monst *other_mon)
 static void
 noises (struct monst *magr, struct attack *mattk)
 {
-        boolean farq = (distu(magr->mx, magr->my) > 15);
+        bool farq = (distu(magr->mx, magr->my) > 15);
 
         if(flags.soundok && (farq != far_noise || moves-noisetime > 10)) {
                 far_noise = farq;
@@ -246,7 +246,7 @@ mattackm (struct monst *magr, struct monst *mdef)
                     magr->weapon_check = NEED_HTH_WEAPON;
                     if (mon_wield_item(magr) != 0) return 0;
                 }
-                possibly_unwield(magr, FALSE);
+                possibly_unwield(magr, false);
                 otmp = MON_WEP(magr);
 
                 if (otmp) {
@@ -568,7 +568,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
         char buf[BUFSZ];
         struct permonst *pa = magr->data, *pd = mdef->data;
         int armpro, num, tmp = d((int)mattk->damn, (int)mattk->damd);
-        boolean cancelled;
+        bool cancelled;
 
         if (touch_petrifies(pd) && !resists_ston(magr)) {
             long protector = attk_protection((int)mattk->aatyp),
@@ -619,7 +619,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                 if (!!(obj = mlifesaver(mdef))) m_useup(mdef, obj);
 
                 /* Is a corpse for nutrition possible?  It may kill magr */
-                if (!corpse_chance(mdef, magr, TRUE) || magr->mhp < 1)
+                if (!corpse_chance(mdef, magr, true) || magr->mhp < 1)
                     break;
 
                 /* Pets get nutrition from swallowing monster whole.
@@ -629,7 +629,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                 num = monsndx(mdef->data);
                 if (magr->mtame && !magr->isminion &&
                     !(mvitals[num].mvflags & G_NOCORPSE)) {
-                    struct obj *virtualcorpse = mksobj(CORPSE, FALSE, FALSE);
+                    struct obj *virtualcorpse = mksobj(CORPSE, false, false);
                     int nutrit;
 
                     virtualcorpse->corpsenm = num;
@@ -763,8 +763,8 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                     pline("%s is covered in acid!", Monnam(mdef));
                     pline("It burns %s!", mon_nam(mdef));
                 }
-                if (!rn2(30)) erode_armor(mdef, TRUE);
-                if (!rn2(6)) erode_obj(MON_WEP(mdef), TRUE, TRUE);
+                if (!rn2(30)) erode_armor(mdef, true);
+                if (!rn2(6)) erode_obj(MON_WEP(mdef), true, true);
                 break;
             case AD_RUST:
                 if (magr->mcan) break;
@@ -807,7 +807,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                 if (magr->mcan) break;
  do_stone:
                 /* may die from the acid if it eats a stone-curing corpse */
-                if (munstone(mdef, FALSE)) goto post_stone;
+                if (munstone(mdef, false)) goto post_stone;
                 if (poly_when_stoned(pd)) {
                         mon_to_stone(mdef);
                         tmp = 0;
@@ -831,7 +831,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                        we'll get "it" in the suddenly disappears message */
                     if (vis) Strcpy(mdef_Monnam, Monnam(mdef));
                     mdef->mstrategy &= ~STRAT_WAITFORU;
-                    (void) rloc(mdef, FALSE);
+                    (void) rloc(mdef, false);
                     if (vis && !canspotmon(mdef)
                         && mdef != u.usteed
                         )
@@ -944,7 +944,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                     pline("%s steals some gold from %s.", buf, mon_nam(mdef));
                 }
                 if (!tele_restrict(magr)) {
-                    (void) rloc(magr, FALSE);
+                    (void) rloc(magr, false);
                     if (vis && !canspotmon(magr))
                         pline("%s suddenly disappears!", buf);
                 }
@@ -975,7 +975,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
 
                         /* make a special x_monnam() call that never omits
                            the saddle, and save it for later messages */
-                        Strcpy(mdefnambuf, x_monnam(mdef, ARTICLE_THE, (char *)0, 0, FALSE));
+                        Strcpy(mdefnambuf, x_monnam(mdef, ARTICLE_THE, (char *)0, 0, false));
 
                         otmp = obj;
                         if (u.usteed == mdef &&
@@ -988,7 +988,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                                 if (otmp->owornmask & W_WEP)
                                     setmnotwielded(mdef,otmp);
                                 otmp->owornmask = 0L;
-                                update_mon_intrinsics(mdef, otmp, FALSE, FALSE);
+                                update_mon_intrinsics(mdef, otmp, false, false);
                         }
                         /* add_to_minv() might free otmp [if it merges] */
                         if (vis)
@@ -999,15 +999,15 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                                 pline("%s steals %s from %s!", buf,
                                     onambuf, mdefnambuf);
                         }
-                        possibly_unwield(mdef, FALSE);
+                        possibly_unwield(mdef, false);
                         mdef->mstrategy &= ~STRAT_WAITFORU;
-                        mselftouch(mdef, (const char *)0, FALSE);
+                        mselftouch(mdef, (const char *)0, false);
                         if (mdef->mhp <= 0)
                                 return (MM_DEF_DIED | (grow_up(magr,mdef) ?
                                                         0 : MM_AGR_DIED));
                         if (magr->data->mlet == S_NYMPH &&
                             !tele_restrict(magr)) {
-                            (void) rloc(magr, FALSE);
+                            (void) rloc(magr, false);
                             if (vis && !canspotmon(magr))
                                 pline("%s suddenly disappears!", buf);
                         }
@@ -1068,7 +1068,7 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                 if (cancelled) break;   /* physical damage only */
                 if (!rn2(4) && !flaming(mdef->data) &&
                                 mdef->data != &mons[PM_GREEN_SLIME]) {
-                    (void) newcham(mdef, &mons[PM_GREEN_SLIME], FALSE, vis);
+                    (void) newcham(mdef, &mons[PM_GREEN_SLIME], false, vis);
                     mdef->mstrategy &= ~STRAT_WAITFORU;
                     tmp = 0;
                 }
@@ -1102,9 +1102,9 @@ mdamagem (struct monst *magr, struct monst *mdef, struct attack *mattk)
                 /* various checks similar to dog_eat and meatobj.
                  * after monkilled() to provide better message ordering */
                 if (mdef->cham != CHAM_ORDINARY) {
-                    (void) newcham(magr, (struct permonst *)0, FALSE, TRUE);
+                    (void) newcham(magr, (struct permonst *)0, false, true);
                 } else if (mdef->data == &mons[PM_GREEN_SLIME]) {
-                    (void) newcham(magr, &mons[PM_GREEN_SLIME], FALSE, TRUE);
+                    (void) newcham(magr, &mons[PM_GREEN_SLIME], false, true);
                 } else if (mdef->data == &mons[PM_WRAITH]) {
                     (void) grow_up(magr, (struct monst *)0);
                     /* don't grow up twice */
@@ -1170,14 +1170,14 @@ slept_monst (struct monst *mon)
 static void
 mrustm (struct monst *magr, struct monst *mdef, struct obj *obj)
 {
-        boolean is_acid;
+        bool is_acid;
 
         if (!magr || !mdef || !obj) return; /* just in case */
 
         if (dmgtype(mdef->data, AD_CORR))
-            is_acid = TRUE;
+            is_acid = true;
         else if (dmgtype(mdef->data, AD_RUST))
-            is_acid = FALSE;
+            is_acid = false;
         else
             return;
 
@@ -1218,7 +1218,7 @@ mswingsm (struct monst *magr, struct monst *mdef, struct obj *otemp)
  * handled above.  Returns same values as mattackm.
  */
 static int 
-passivemm (struct monst *magr, struct monst *mdef, boolean mhit, int mdead)
+passivemm (struct monst *magr, struct monst *mdef, bool mhit, int mdead)
 {
         struct permonst *mddat = mdef->data;
         struct permonst *madat = magr->data;

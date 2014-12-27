@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
@@ -10,6 +11,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <stdbool.h>
 
 
 /* Files expected to exist in the playground directory. */
@@ -27,11 +29,6 @@
 
 #define LEV_EXT ".lev"          /* extension for special level files */
 
-
-typedef signed char     boolean;                /* 0 or 1 */
-
-#define TRUE    ((boolean)1)
-#define FALSE   ((boolean)0)
 
 #define strcmpi(a,b) strncmpi((a),(b),-1)
 

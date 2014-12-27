@@ -76,14 +76,14 @@ new_were (struct monst *mon)
         /* regenerate by 1/4 of the lost hit points */
         mon->mhp += (mon->mhpmax - mon->mhp) / 4;
         newsym(mon->mx,mon->my);
-        mon_break_armor(mon, FALSE);
-        possibly_unwield(mon, FALSE);
+        mon_break_armor(mon, false);
+        possibly_unwield(mon, false);
 }
 
 int 
 were_summon (   /* were-creature (even you) summons a horde */
     struct permonst *ptr,
-    boolean yours,
+    bool yours,
     int *visible,                   /* number of visible helpers created */
     char *genbuf
 )
@@ -143,7 +143,7 @@ you_were (void)
 }
 
 void 
-you_unwere (boolean purify)
+you_unwere (bool purify)
 {
         if (purify) {
             You_feel("purified.");

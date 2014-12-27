@@ -24,7 +24,7 @@ static unsigned ustuck_id = 0, usteed_id = 0;
 
 static int bw_fd = -1;
 static FILE *bw_FILE = 0;
-static boolean buffering = FALSE;
+static bool buffering = false;
 
 int dosave (void) {
     clear_nhwindow(WIN_MESSAGE);
@@ -39,7 +39,7 @@ int dosave (void) {
             program_state.something_worth_saving = 0;
             u.uhp = -1;             /* universal game's over indicator */
             /* make sure they see the Saving message */
-            display_nhwindow(WIN_MESSAGE, TRUE);
+            display_nhwindow(WIN_MESSAGE, true);
             exit_nhwindows("Be seeing you...");
             terminate(EXIT_SUCCESS);
         } else (void)doredraw();
@@ -146,7 +146,7 @@ int dosave0(void) {
             return(0);
         }
         minit();        /* ZEROCOMP */
-        getlev(ofd, hackpid, ltmp, FALSE);
+        getlev(ofd, hackpid, ltmp, false);
         (void) close(ofd);
         bwrite(fd, (void *) &ltmp, sizeof ltmp); /* level number*/
         savelev(fd, ltmp, WRITE_SAVE | FREE_SAVE);     /* actual level*/
@@ -184,8 +184,8 @@ static void savegamestate (int fd, int mode) {
     }
     bwrite(fd, (void *) mvitals, sizeof(mvitals));
 
-    save_dungeon(fd, (boolean)!!perform_bwrite(mode),
-            (boolean)!!release_data(mode));
+    save_dungeon(fd, (bool)!!perform_bwrite(mode),
+            (bool)!!release_data(mode));
     savelevchn(fd, mode);
     bwrite(fd, (void *) &moves, sizeof moves);
     bwrite(fd, (void *) &monstermoves, sizeof monstermoves);
@@ -209,7 +209,7 @@ static void savegamestate (int fd, int mode) {
 
 void savestateinlock (void) {
     int fd, hpid;
-    static boolean havestate = TRUE;
+    static bool havestate = true;
     char whynot[BUFSZ];
 
     /* When checkpointing is on, the full state needs to be written
@@ -336,12 +336,12 @@ void bufon (int fd) {
     bw_fd = fd;
     if((bw_FILE = fdopen(fd, "w")) == 0)
         panic("buffering of file %d failed", fd);
-    buffering = TRUE;
+    buffering = true;
 }
 
 void bufoff (int fd) {
     bflush(fd);
-    buffering = FALSE;
+    buffering = false;
 }
 
 void bflush (int fd) {
@@ -353,7 +353,7 @@ void bflush (int fd) {
 }
 
 void bwrite (int fd, void *loc, unsigned num) {
-    boolean failed;
+    bool failed;
 
     if (buffering) {
         if(fd != bw_fd)
@@ -519,7 +519,7 @@ void savefruitchn (int fd, int mode) {
 /* also called by prscore(); this probably belongs in dungeon.c... */
 void free_dungeons (void) {
     savelevchn(0, FREE_SAVE);
-    save_dungeon(0, FALSE, TRUE);
+    save_dungeon(0, false, true);
     return;
 }
 
@@ -540,7 +540,7 @@ void freedynamicdata (void) {
 #define free_light_sources(R) save_light_sources(0, FREE_SAVE, R);
 #define free_engravings() save_engravings(0, FREE_SAVE)
 #define freedamage()    savedamage(0, FREE_SAVE)
-#define free_animals()  mon_animal_list(FALSE)
+#define free_animals()  mon_animal_list(false)
 
     /* move-specific data */
     dmonsfree();            /* release dead monsters */

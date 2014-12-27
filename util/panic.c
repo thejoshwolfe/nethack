@@ -8,7 +8,7 @@
 #include "global.h"
 
 /*VARARGS1*/
-boolean panicking;
+bool panicking;
 void panic (char * str, ...) {
     va_list the_args;
         va_start(the_args, str);

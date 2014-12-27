@@ -12,10 +12,10 @@
 #define NUMOBUF 12
 
 static char *strprepend(char *,const char *);
-static boolean wishymatch(const char *,const char *,boolean);
+static bool wishymatch(const char *,const char *,bool);
 static char *nextobuf(void);
 static void add_erosion_words(struct obj *, char *);
-char * xname2(struct obj *, boolean);
+char * xname2(struct obj *, bool);
 
 struct Jitem {
         int item;
@@ -166,10 +166,10 @@ simple_typename (int otyp)
     return bufp;
 }
 
-boolean 
+bool 
 obj_is_pname (struct obj *obj)
 {
-    return((boolean)(obj->dknown && obj->known && obj->onamelth &&
+    return((bool)(obj->dknown && obj->known && obj->onamelth &&
                      /* Since there aren't any objects which are both
                         artifacts and unique, the last check is redundant. */
                      obj->oartifact && !objects[obj->otyp].oc_unique));
@@ -198,7 +198,7 @@ distant_name (struct obj *obj, char *(*func)( struct obj *))
    ("slice of pizza" -> "pizza juice" rather than "slice of pizza juice") */
 char *
 fruitname (
-    boolean juice  /* whether or not to append " juice" to the name */
+    bool juice  /* whether or not to append " juice" to the name */
 )
 {
     char *buf = nextobuf();
@@ -217,10 +217,10 @@ fruitname (
 char *
 xname (struct obj *obj)
 {
-        return xname2(obj, FALSE);
+        return xname2(obj, false);
 }
 char *
-xname2 (struct obj *obj, boolean ignore_oquan)
+xname2 (struct obj *obj, bool ignore_oquan)
 {
         char *buf;
         int typ = obj->otyp;
@@ -242,8 +242,8 @@ xname2 (struct obj *obj, boolean ignore_oquan)
          * and printing the wrong article gives away information.
          */
         if (!nn && ocl->oc_uses_known && ocl->oc_unique) obj->known = 0;
-        if (!Blind) obj->dknown = TRUE;
-        if (Role_if(PM_PRIEST)) obj->bknown = TRUE;
+        if (!Blind) obj->dknown = true;
+        if (Role_if(PM_PRIEST)) obj->bknown = true;
         if (obj_is_pname(obj))
             goto nameit;
         switch (obj->oclass) {
@@ -490,22 +490,22 @@ mshot_xname (struct obj *obj)
 
 
 /* used for naming "the unique_item" instead of "a unique_item" */
-boolean 
+bool 
 the_unique_obj (struct obj *obj)
 {
     if (!obj->dknown)
-        return FALSE;
+        return false;
     else if (obj->otyp == FAKE_AMULET_OF_YENDOR && !obj->known)
-        return TRUE;            /* lie */
+        return true;            /* lie */
     else
-        return (boolean)(objects[obj->otyp].oc_unique &&
+        return (bool)(objects[obj->otyp].oc_unique &&
                          (obj->known || obj->otyp == AMULET_OF_YENDOR));
 }
 
 static void
 add_erosion_words (struct obj *obj, char *prefix)
 {
-        boolean iscrys = (obj->otyp == CRYSKNIFE);
+        bool iscrys = (obj->otyp == CRYSKNIFE);
 
 
         if (!is_damageable(obj) && !iscrys) return;
@@ -539,7 +539,7 @@ add_erosion_words (struct obj *obj, char *prefix)
 char *
 doname (struct obj *obj)
 {
-        boolean ispoisoned = FALSE;
+        bool ispoisoned = false;
         char prefix[PREFIX];
         char tmpbuf[PREFIX+1];
         /* when we have to add something at the start of prefix instead of the
@@ -555,7 +555,7 @@ doname (struct obj *obj)
         /* must check opoisoned--someone can have a weirdly-named fruit */
         if (!strncmp(bp, "poisoned ", 9) && obj->opoisoned) {
                 bp += 9;
-                ispoisoned = TRUE;
+                ispoisoned = true;
         }
 
         if(obj->quan != 1L)
@@ -743,7 +743,7 @@ ring:
                     get_obj_location(obj, &ox, &oy, BURIED_TOO|CONTAINED_TOO) &&
                     costly_spot(ox, oy) &&
                     (shkp = shop_keeper(*in_rooms(ox, oy, SHOPBASE))))
-                        quotedprice += contained_cost(obj, shkp, 0L, FALSE, TRUE);
+                        quotedprice += contained_cost(obj, shkp, 0L, false, true);
                 Sprintf(eos(bp), " (unpaid, %ld %s)",
                         quotedprice, currency(quotedprice));
         }
@@ -762,16 +762,16 @@ ring:
 
 
 /* used from invent.c */
-boolean 
+bool 
 not_fully_identified (struct obj *otmp)
 {
     /* check fundamental ID hallmarks first */
     if (!otmp->known || !otmp->dknown ||
             (!otmp->bknown && otmp->otyp != SCR_MAIL) ||
             !objects[otmp->otyp].oc_name_known) /* ?redundant? */
-        return TRUE;
+        return true;
     if (otmp->oartifact && undiscovered_artifact(otmp->oartifact))
-        return TRUE;
+        return true;
     /* otmp->rknown is the only item of interest if we reach here */
        /*
         *  Note:  if a revision ever allows scrolls to become fireproof or
@@ -782,9 +782,9 @@ not_fully_identified (struct obj *otmp)
                          otmp->oclass != WEAPON_CLASS &&
                          !is_weptool(otmp) &&               /* (redunant) */
                          otmp->oclass != BALL_CLASS))       /* (useless) */
-        return FALSE;
+        return false;
     else        /* lack of `rknown' only matters for vulnerable objects */
-        return (boolean)(is_rustprone(otmp) ||
+        return (bool)(is_rustprone(otmp) ||
                          is_corrodeable(otmp) ||
                          is_flammable(otmp));
 }
@@ -792,7 +792,7 @@ not_fully_identified (struct obj *otmp)
 char *
 corpse_xname (
     struct obj *otmp,
-    boolean ignore_oquan   /* to force singular */
+    bool ignore_oquan   /* to force singular */
 )
 {
         char *nambuf = nextobuf();
@@ -805,20 +805,20 @@ corpse_xname (
             return makeplural(nambuf);
 }
 
-/* xname, unless it's a corpse, then corpse_xname(obj, FALSE) */
+/* xname, unless it's a corpse, then corpse_xname(obj, false) */
 char *
 cxname (struct obj *obj)
 {
         if (obj->otyp == CORPSE)
-            return corpse_xname(obj, FALSE);
+            return corpse_xname(obj, false);
         return xname(obj);
 }
 char *
 cxname2 (struct obj *obj)
 {
         if (obj->otyp == CORPSE)
-            return corpse_xname(obj, TRUE);
-        return xname2(obj, TRUE);
+            return corpse_xname(obj, true);
+        return xname2(obj, true);
 }
 
 /* treat an object as fully ID'd when it might be used as reason for death */
@@ -872,7 +872,7 @@ singular (struct obj *otmp, char *(*func)( struct obj *))
 
         /* Note: using xname for corpses will not give the monster type */
         if (otmp->otyp == CORPSE && func == xname)
-                return corpse_xname(otmp, TRUE);
+                return corpse_xname(otmp, true);
 
         savequan = otmp->quan;
         otmp->quan = 1L;
@@ -923,7 +923,7 @@ char *
 the (const char *str)
 {
         char *buf = nextobuf();
-        boolean insert_the = FALSE;
+        bool insert_the = false;
 
         if (!strncmpi(str, "the ", 4)) {
             buf[0] = lowc(*str);
@@ -931,7 +931,7 @@ the (const char *str)
             return buf;
         } else if (*str < 'A' || *str > 'Z') {
             /* not a proper name, needs an article */
-            insert_the = TRUE;
+            insert_the = true;
         } else {
             /* Probably a proper name, might not need an article */
             char *tmp, *named, *called;
@@ -940,7 +940,7 @@ the (const char *str)
             /* some objects have capitalized adjectives in their names */
             if(((tmp = rindex(str, ' ')) || (tmp = rindex(str, '-'))) &&
                (tmp[1] < 'A' || tmp[1] > 'Z'))
-                insert_the = TRUE;
+                insert_the = true;
             else if (tmp && index(str, ' ') < tmp) {    /* has spaces */
                 /* it needs an article if the name contains "of" */
                 tmp = strstri(str, " of ");
@@ -949,11 +949,11 @@ the (const char *str)
                 if (called && (!named || called < named)) named = called;
 
                 if (tmp && (!named || tmp < named))     /* found an "of" */
-                    insert_the = TRUE;
+                    insert_the = true;
                 /* stupid special case: lacks "of" but needs "the" */
                 else if (!named && (l = strlen(str)) >= 31 &&
                       !strcmp(&str[l - 31], "Platinum Yendorian Express Card"))
-                    insert_the = TRUE;
+                    insert_the = true;
             }
         }
         if (insert_the)
@@ -1569,11 +1569,11 @@ makesingular (const char *oldstr)
 }
 
 /* compare user string against object name string using fuzzy matching */
-static boolean 
+static bool 
 wishymatch (
     const char *u_str,      /* from user, so might be variant spelling */
     const char *o_str,      /* from objects[], so is in canonical form */
-    boolean retry_inverted /* optional extra "of" handling */
+    bool retry_inverted /* optional extra "of" handling */
 )
 {
         /* special case: wizards can wish for traps.  The object is "beartrap"
@@ -1584,7 +1584,7 @@ wishymatch (
             return !strncmpi(o_str, u_str, 8);
 
         /* ignore spaces & hyphens and upper/lower case when comparing */
-        if (fuzzymatch(u_str, o_str, " -", TRUE)) return TRUE;
+        if (fuzzymatch(u_str, o_str, " -", true)) return true;
 
         if (retry_inverted) {
             const char *u_of, *o_of;
@@ -1599,13 +1599,13 @@ wishymatch (
                 p = eos(strcat(buf, " "));
                 while (u_str < u_of) *p++ = *u_str++;
                 *p = '\0';
-                return fuzzymatch(buf, o_str, " -", TRUE);
+                return fuzzymatch(buf, o_str, " -", true);
             } else if (o_of && !u_of) {
                 Strcpy(buf, o_of + 4);
                 p = eos(strcat(buf, " "));
                 while (o_str < o_of) *p++ = *o_str++;
                 *p = '\0';
-                return fuzzymatch(u_str, buf, " -", TRUE);
+                return fuzzymatch(u_str, buf, " -", true);
             }
         }
 
@@ -1614,20 +1614,20 @@ wishymatch (
            order to get the "of" inversion handling] */
         if (!strncmp(o_str, "dwarvish ", 9)) {
             if (!strncmpi(u_str, "dwarven ", 8))
-                return fuzzymatch(u_str + 8, o_str + 9, " -", TRUE);
+                return fuzzymatch(u_str + 8, o_str + 9, " -", true);
         } else if (!strncmp(o_str, "elven ", 6)) {
             if (!strncmpi(u_str, "elvish ", 7))
-                return fuzzymatch(u_str + 7, o_str + 6, " -", TRUE);
+                return fuzzymatch(u_str + 7, o_str + 6, " -", true);
             else if (!strncmpi(u_str, "elfin ", 6))
-                return fuzzymatch(u_str + 6, o_str + 6, " -", TRUE);
+                return fuzzymatch(u_str + 6, o_str + 6, " -", true);
         } else if (!strcmp(o_str, "aluminum")) {
                 /* this special case doesn't really fit anywhere else... */
                 /* (note that " wand" will have been stripped off by now) */
             if (!strcmpi(u_str, "aluminium"))
-                return fuzzymatch(u_str + 9, o_str + 8, " -", TRUE);
+                return fuzzymatch(u_str + 9, o_str + 8, " -", true);
         }
 
-        return FALSE;
+        return false;
 }
 
 /* alternate spellings; if the difference is only the presence or
@@ -1675,7 +1675,7 @@ struct alt_spellings {
  * If from_user is false, we're reading from the wizkit, nothing was typed in.
  */
 struct obj *
-readobjnam (char *bp, struct obj *no_wish, boolean from_user)
+readobjnam (char *bp, struct obj *no_wish, bool from_user)
 {
         char *p;
         int i;
@@ -1957,7 +1957,7 @@ readobjnam (char *bp, struct obj *no_wish, boolean from_user)
         struct alt_spellings *as = spellings;
 
         while (as->sp) {
-                if (fuzzymatch(bp, as->sp, " -", TRUE)) {
+                if (fuzzymatch(bp, as->sp, " -", true)) {
                         typ = as->ob;
                         goto typfnd;
                 }
@@ -2106,19 +2106,19 @@ srch:
                 const char *zn;
 
                 if (actualn && (zn = OBJ_NAME(objects[i])) != 0 &&
-                            wishymatch(actualn, zn, TRUE)) {
+                            wishymatch(actualn, zn, true)) {
                         typ = i;
                         goto typfnd;
                 }
                 if (dn && (zn = OBJ_DESCR(objects[i])) != 0 &&
-                            wishymatch(dn, zn, FALSE)) {
+                            wishymatch(dn, zn, false)) {
                         /* don't match extra descriptions (w/o real name) */
                         if (!OBJ_NAME(objects[i])) return (struct obj *)0;
                         typ = i;
                         goto typfnd;
                 }
                 if (un && (zn = objects[i].oc_uname) != 0 &&
-                            wishymatch(un, zn, FALSE)) {
+                            wishymatch(un, zn, false)) {
                         typ = i;
                         goto typfnd;
                 }
@@ -2248,7 +2248,7 @@ srch:
                         del_engr_at(u.ux, u.uy);
                         pline("A pool.");
                         /* Must manually make kelp! */
-                        water_damage(level.objects[u.ux][u.uy], FALSE, TRUE);
+                        water_damage(level.objects[u.ux][u.uy], false, true);
                         newsym(u.ux, u.uy);
                         return &zeroobj;
                 }
@@ -2344,9 +2344,9 @@ typfnd:
             typ = OIL_LAMP;
 
         if(typ) {
-                otmp = mksobj(typ, TRUE, FALSE);
+                otmp = mksobj(typ, true, false);
         } else {
-                otmp = mkobj(oclass, FALSE);
+                otmp = mkobj(oclass, false);
                 if (otmp) typ = otmp->otyp;
         }
 
@@ -2354,7 +2354,7 @@ typfnd:
                 (typ == OIL_LAMP || typ == MAGIC_LAMP || typ == BRASS_LANTERN ||
                  Is_candle(otmp) || typ == POT_OIL)) {
             place_object(otmp, u.ux, u.uy);  /* make it viable light source */
-            begin_burn(otmp, FALSE);
+            begin_burn(otmp, false);
             obj_extract_self(otmp);      /* now release it for caller's use */
         }
 
@@ -2420,7 +2420,7 @@ typfnd:
                 switch (typ) {
                 case TIN:
                         otmp->spe = 0; /* No spinach */
-                        if (dead_species(mntmp, FALSE)) {
+                        if (dead_species(mntmp, false)) {
                             otmp->corpsenm = NON_PM;    /* it's empty */
                         } else if (!(mons[mntmp].geno & G_UNIQ) &&
                                    !(mvitals[mntmp].mvflags & G_NOCORPSE) &&
@@ -2452,7 +2452,7 @@ typfnd:
                         mntmp = can_be_hatched(mntmp);
                         if (mntmp != NON_PM) {
                             otmp->corpsenm = mntmp;
-                            if (!dead_species(mntmp, TRUE))
+                            if (!dead_species(mntmp, true))
                                 attach_egg_hatch_timeout(otmp);
                             else
                                 kill_egg(otmp);
@@ -2557,7 +2557,7 @@ typfnd:
              (otmp->oartifact && rn2(nartifact_exist()) > 1))
             && !wizard
             ) {
-            artifact_exists(otmp, ONAME(otmp), FALSE);
+            artifact_exists(otmp, ONAME(otmp), false);
             obfree(otmp, (struct obj *) 0);
             otmp = &zeroobj;
             pline("For a moment, you feel %s in your %s, but it disappears!",

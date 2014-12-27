@@ -4,7 +4,7 @@
 #include "display.h"
 #include "winprocs.h"
 
-static int drop_throw(struct obj *,boolean,int,int);
+static int drop_throw(struct obj *,bool,int,int);
 
 #define URETREATING(x,y) (distmin(u.ux,u.uy,x,y) > distmin(u.ux0,u.uy0,x,y))
 
@@ -36,7 +36,7 @@ thitu (
 )
 {
         const char *onm, *knm;
-        boolean is_acid;
+        bool is_acid;
         int kprefix = KILLED_BY_AN;
         char onmbuf[BUFSZ], knmbuf[BUFSZ];
 
@@ -69,7 +69,7 @@ thitu (
                                 && hates_silver(youmonst.data)) {
                         dam += rnd(20);
                         pline_The("silver sears your flesh!");
-                        exercise(A_CON, FALSE);
+                        exercise(A_CON, false);
                 }
                 if (is_acid && Acid_resistance)
                         pline("It doesn't seem to hurt you.");
@@ -77,7 +77,7 @@ thitu (
                         if (is_acid) pline("It burns!");
                         if (Half_physical_damage) dam = (dam+1) / 2;
                         losehp(dam, knm, kprefix);
-                        exercise(A_STR, FALSE);
+                        exercise(A_STR, false);
                 }
                 return(1);
         }
@@ -89,7 +89,7 @@ thitu (
  */
 
 static int 
-drop_throw (struct obj *obj, boolean ohit, int x, int y)
+drop_throw (struct obj *obj, bool ohit, int x, int y)
 {
         int retvalu = 1;
         int create;
@@ -109,7 +109,7 @@ drop_throw (struct obj *obj, boolean ohit, int x, int y)
                 int objgone = 0;
 
                 if (down_gate(x, y) != -1)
-                        objgone = ship_object(obj, x, y, FALSE);
+                        objgone = ship_object(obj, x, y, false);
                 if (!objgone) {
                         if (!flooreffects(obj,x,y,"fall")) { /* don't double-dip on damage */
                             place_object(obj, x, y);
@@ -133,17 +133,17 @@ ohitmon (
     struct monst *mtmp,     /* accidental target */
     struct obj *otmp,       /* missile; might be destroyed by drop_throw */
     int range,              /* how much farther will object travel if it misses */
-    boolean verbose  /* give message(s) even when you can't see what happened */
+    bool verbose  /* give message(s) even when you can't see what happened */
 )
 {
         int damage, tmp;
-        boolean vis, ismimic;
+        bool vis, ismimic;
         int objgone = 1;
 
         ismimic = mtmp->m_ap_type && mtmp->m_ap_type != M_AP_MONSTER;
         vis = cansee(bhitpos.x, bhitpos.y);
 
-        tmp = 5 + find_mac(mtmp) + omon_adj(mtmp, otmp, FALSE);
+        tmp = 5 + find_mac(mtmp) + omon_adj(mtmp, otmp, false);
         if (tmp < rnd(20)) {
             if (!ismimic) {
                 if (vis) miss(distant_name(otmp, mshot_xname), mtmp);
@@ -157,7 +157,7 @@ ohitmon (
             if (ismimic) seemimic(mtmp);
             mtmp->msleeping = 0;
             if (vis) otmp->dknown = 1;
-            potionhit(mtmp, otmp, FALSE);
+            potionhit(mtmp, otmp, false);
             return 1;
         } else {
             damage = dmgval(otmp, mtmp);
@@ -316,7 +316,7 @@ m_throw (
                 bhitpos.x += dx;
                 bhitpos.y += dy;
                 if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
-                    if (ohitmon(mtmp, singleobj, range, TRUE))
+                    if (ohitmon(mtmp, singleobj, range, true))
                         break;
                 } else if (bhitpos.x == u.ux && bhitpos.y == u.uy) {
                     if (multi) nomul(0);
@@ -341,7 +341,7 @@ m_throw (
                     }
                     if (singleobj->oclass == POTION_CLASS) {
                         if (!Blind) singleobj->dknown = 1;
-                        potionhit(&youmonst, singleobj, FALSE);
+                        potionhit(&youmonst, singleobj, false);
                         break;
                     }
                     switch(singleobj->otyp) {
@@ -442,7 +442,7 @@ m_throw (
 
         if (blindinc) {
                 u.ucreamed += blindinc;
-                make_blinded(Blinded + (long)blindinc, FALSE);
+                make_blinded(Blinded + (long)blindinc, false);
                 if (!Blind) Your("%s", vision_clears);
         }
 }
@@ -457,10 +457,10 @@ m_useup (struct monst *mon, struct obj *obj)
                 obj->owt = weight(obj);
         } else {
                 obj_extract_self(obj);
-                possibly_unwield(mon, FALSE);
+                possibly_unwield(mon, false);
                 if (obj->owornmask) {
                     mon->misc_worn_check &= ~obj->owornmask;
-                    update_mon_intrinsics(mon, obj, FALSE, FALSE);
+                    update_mon_intrinsics(mon, obj, false, false);
                 }
                 obfree(obj, (struct obj*) 0);
         }
@@ -578,7 +578,7 @@ thrwmu (struct monst *mtmp)
                 onm = singular(otmp, xname);
                 onm = obj_is_pname(otmp) ? the(onm) : an(onm);
             }
-            m_shot.s = ammo_and_launcher(otmp,mwep) ? TRUE : FALSE;
+            m_shot.s = ammo_and_launcher(otmp,mwep) ? true : false;
             pline("%s %s %s!", Monnam(mtmp),
                   m_shot.s ? "shoots" : "throws", onm);
             m_shot.o = otmp->otyp;
@@ -592,7 +592,7 @@ thrwmu (struct monst *mtmp)
                     distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy), otmp);
         m_shot.n = m_shot.i = 0;
         m_shot.o = STRANGE_OBJECT;
-        m_shot.s = FALSE;
+        m_shot.s = false;
 
         nomul(0);
 }
@@ -617,13 +617,13 @@ spitmu (                /* monster spits substance at you */
                 switch (mattk->adtyp) {
                     case AD_BLND:
                     case AD_DRST:
-                        otmp = mksobj(BLINDING_VENOM, TRUE, FALSE);
+                        otmp = mksobj(BLINDING_VENOM, true, false);
                         break;
                     default:
                         impossible("bad attack type in spitmu");
                                 /* fall through */
                     case AD_ACID:
-                        otmp = mksobj(ACID_VENOM, TRUE, FALSE);
+                        otmp = mksobj(ACID_VENOM, true, false);
                         break;
                 }
                 if(!rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,mtmp->mux,mtmp->muy))) {
@@ -682,7 +682,7 @@ breamu (                        /* monster breathes at you (ranged) */
         return(1);
 }
 
-boolean 
+bool 
 linedup (signed char ax, signed char ay, signed char bx, signed char by)
 {
         tbx = ax - bx;  /* These two values are set for use */
@@ -690,17 +690,17 @@ linedup (signed char ax, signed char ay, signed char bx, signed char by)
 
         /* sometimes displacement makes a monster think that you're at its
            own location; prevent it from throwing and zapping in that case */
-        if (!tbx && !tby) return FALSE;
+        if (!tbx && !tby) return false;
 
         if((!tbx || !tby || abs(tbx) == abs(tby)) /* straight line or diagonal */
            && distmin(tbx, tby, 0, 0) < BOLT_LIM) {
-            if(ax == u.ux && ay == u.uy) return((boolean)(couldsee(bx,by)));
-            else if(clear_path(ax,ay,bx,by)) return TRUE;
+            if(ax == u.ux && ay == u.uy) return((bool)(couldsee(bx,by)));
+            else if(clear_path(ax,ay,bx,by)) return true;
         }
-        return FALSE;
+        return false;
 }
 
-boolean 
+bool 
 lined_up (          /* is mtmp in position to use ranged attack? */
     struct monst *mtmp
 )
@@ -722,8 +722,8 @@ m_carrying (struct monst *mtmp, int type)
         return((struct obj *) 0);
 }
 
-/* TRUE iff thrown/kicked/rolled object doesn't pass through iron bars */
-boolean 
+/* true iff thrown/kicked/rolled object doesn't pass through iron bars */
+bool 
 hits_bars (
     struct obj **obj_p,     /* *obj_p will be set to NULL if object breaks */
     int x,
@@ -734,7 +734,7 @@ hits_bars (
 {
     struct obj *otmp = *obj_p;
     int obj_type = otmp->otyp;
-    boolean hits = always_hit;
+    bool hits = always_hit;
 
     if (!hits)
         switch (otmp->oclass) {
@@ -763,11 +763,11 @@ hits_bars (
                 break;
         case ROCK_CLASS:        /* includes boulder */
                 if (obj_type != STATUE ||
-                        mons[otmp->corpsenm].msize > MZ_TINY) hits = TRUE;
+                        mons[otmp->corpsenm].msize > MZ_TINY) hits = true;
                 break;
         case FOOD_CLASS:
                 if (obj_type == CORPSE &&
-                        mons[otmp->corpsenm].msize > MZ_TINY) hits = TRUE;
+                        mons[otmp->corpsenm].msize > MZ_TINY) hits = true;
                 else
                     hits = (obj_type == MEAT_STICK ||
                             obj_type == HUGE_CHUNK_OF_MEAT);
@@ -776,14 +776,14 @@ hits_bars (
         case WAND_CLASS:
         case BALL_CLASS:
         case CHAIN_CLASS:
-                hits = TRUE;
+                hits = true;
                 break;
         default:
                 break;
         }
 
     if (hits && whodidit != -1) {
-        if (whodidit ? hero_breaks(otmp, x, y, FALSE) : breaks(otmp, x, y))
+        if (whodidit ? hero_breaks(otmp, x, y, false) : breaks(otmp, x, y))
             *obj_p = otmp = 0;          /* object is now gone */
             /* breakage makes its own noises */
         else if (obj_type == BOULDER || obj_type == HEAVY_IRON_BALL)

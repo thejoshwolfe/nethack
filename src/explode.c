@@ -31,8 +31,8 @@ explode (
 )
 {
         int i, j, k, damu = dam;
-        boolean starting = 1;
-        boolean visible, any_shield;
+        bool starting = 1;
+        bool visible, any_shield;
         int uhurt = 0; /* 0=unhurt, 1=items damaged, 2=you and items damaged */
         const char *str;
         int idamres, idamnonres;
@@ -40,8 +40,8 @@ explode (
         unsigned char adtyp;
         int explmask[3][3];
                 /* 0=normal explosion, 1=do shieldeff, 2=do nothing */
-        boolean shopdamage = FALSE;
-        boolean generic = FALSE;
+        bool shopdamage = false;
+        bool generic = false;
 
         if (olet == WAND_CLASS)         /* retributive strike */
                 switch (Role_switch) {
@@ -88,7 +88,7 @@ explode (
                 default: impossible("explosion base type %d?", type); return;
         }
 
-        any_shield = visible = FALSE;
+        any_shield = visible = false;
         for (i=0; i<3; i++) for (j=0; j<3; j++) {
                 if (!isok(i+x-1, j+y-1)) {
                         explmask[i][j] = 2;
@@ -172,8 +172,8 @@ explode (
                     unmap_object(i+x-1, j+y-1);
                     newsym(i+x-1, j+y-1);
                 }
-                if (cansee(i+x-1, j+y-1)) visible = TRUE;
-                if (explmask[i][j] == 1) any_shield = TRUE;
+                if (cansee(i+x-1, j+y-1)) visible = true;
+                if (explmask[i][j] == 1) any_shield = true;
         }
 
         if (visible) {
@@ -219,7 +219,7 @@ explode (
         } else {
             if (olet == MON_EXPLODE) {
                 str = "explosion";
-                generic = TRUE;
+                generic = true;
             }
             if (flags.soundok) You_hear("a blast.");
         }
@@ -282,7 +282,7 @@ explode (
                  */
                         int mdam = dam;
 
-                        if (resist(mtmp, olet, 0, FALSE)) {
+                        if (resist(mtmp, olet, 0, false)) {
                             if (cansee(i+x-1,j+y-1))
                                 pline("%s resists the %s!", Monnam(mtmp), str);
                             mdam = dam/2;
@@ -358,14 +358,14 @@ explode (
                         done((adtyp == AD_FIRE) ? BURNING : DIED);
                     }
                 }
-                exercise(A_STR, FALSE);
+                exercise(A_STR, false);
         }
 
         if (shopdamage) {
                 pay_for_damage(adtyp == AD_FIRE ? "burn away" :
                                adtyp == AD_COLD ? "shatter" :
                                adtyp == AD_DISN ? "disintegrate" : "destroy",
-                               FALSE);
+                               false);
         }
 
         /* explosions are noisy */
@@ -382,7 +382,7 @@ struct scatter_chain {
         signed char dx;                 /* direction of                 */
         signed char dy;                 /*      travel                  */
         int range;                      /* range of object              */
-        boolean stopped;                /* flag for in-motion/stopped   */
+        bool stopped;                /* flag for in-motion/stopped   */
 };
 
 /*
@@ -410,8 +410,8 @@ scatter (
         int farthest = 0;
         unsigned char typ;
         long qtmp;
-        boolean used_up;
-        boolean individual_object = obj ? TRUE : FALSE;
+        bool used_up;
+        bool individual_object = obj ? true : false;
         struct monst *mtmp;
         struct scatter_chain *stmp, *stmp2 = 0;
         struct scatter_chain *schain = (struct scatter_chain *)0;
@@ -427,7 +427,7 @@ scatter (
                 obj = (struct obj *)0; /* all used */
             }
             obj_extract_self(otmp);
-            used_up = FALSE;
+            used_up = false;
 
             /* 9 in 10 chance of fracturing boulders or statues */
             if ((scflags & MAY_FRACTURE)
@@ -451,13 +451,13 @@ scatter (
                     (void) break_statue(otmp);
                     place_object(otmp, sx, sy); /* put fragments on floor */
                 }
-                used_up = TRUE;
+                used_up = true;
 
             /* 1 in 10 chance of destruction of obj; glass, egg destruction */
             } else if ((scflags & MAY_DESTROY) && (!rn2(10)
                         || (objects[otmp->otyp].oc_material == GLASS
                         || otmp->otyp == EGG))) {
-                if (breaks(otmp, (signed char)sx, (signed char)sy)) used_up = TRUE;
+                if (breaks(otmp, (signed char)sx, (signed char)sy)) used_up = true;
             }
 
             if (!used_up) {
@@ -474,7 +474,7 @@ scatter (
                 if (tmp < 1) tmp = 1;
                 stmp->range = rnd(tmp); /* anywhere up to that determ. by wt */
                 if (farthest < stmp->range) farthest = stmp->range;
-                stmp->stopped = FALSE;
+                stmp->stopped = false;
                 if (!schain)
                     schain = stmp;
                 else
@@ -492,18 +492,18 @@ scatter (
                         if(!isok(bhitpos.x, bhitpos.y)) {
                                 bhitpos.x -= stmp->dx;
                                 bhitpos.y -= stmp->dy;
-                                stmp->stopped = TRUE;
+                                stmp->stopped = true;
                         } else if(!ZAP_POS(typ) ||
                                         closed_door(bhitpos.x, bhitpos.y)) {
                                 bhitpos.x -= stmp->dx;
                                 bhitpos.y -= stmp->dy;
-                                stmp->stopped = TRUE;
+                                stmp->stopped = true;
                         } else if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
                                 if (scflags & MAY_HITMON) {
                                     stmp->range--;
-                                    if (ohitmon(mtmp, stmp->obj, 1, FALSE)) {
+                                    if (ohitmon(mtmp, stmp->obj, 1, false)) {
                                         stmp->obj = (struct obj *)0;
-                                        stmp->stopped = TRUE;
+                                        stmp->stopped = true;
                                     }
                                 }
                         } else if (bhitpos.x==u.ux && bhitpos.y==u.uy) {
