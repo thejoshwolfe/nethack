@@ -125,10 +125,10 @@ static bool always_hostile(struct permonst * ptr) {
 static bool always_peaceful(struct permonst * ptr) {
   return (ptr->mflags2 & M2_PEACEFUL) != 0L;
 }
-static inline bool race_hostile(struct permonst * ptr) {
+static bool race_hostile(struct permonst * ptr) {
   return (ptr->mflags2 & urace.hatemask) != 0L;
 }
-static inline bool race_peaceful(struct permonst * ptr) {
+static bool race_peaceful(struct permonst * ptr) {
   return (ptr->mflags2 & urace.lovemask) != 0L;
 }
 static bool extra_nasty(struct permonst * ptr) {
@@ -137,7 +137,7 @@ static bool extra_nasty(struct permonst * ptr) {
 static bool strongmonst(struct permonst * ptr) {
   return (ptr->mflags2 & M2_STRONG) != 0L;
 }
-static inline bool can_breathe(struct permonst * ptr) {
+static bool can_breathe(struct permonst * ptr) {
   return attacktype(ptr, AT_BREA);
 }
 static bool cantwield(struct permonst * ptr) {
@@ -146,7 +146,7 @@ static bool cantwield(struct permonst * ptr) {
 static bool could_twoweap(struct permonst * ptr) {
   return ptr->mattk[1].aatyp == AT_WEAP;
 }
-static inline bool cantweararm(struct permonst * ptr) {
+static bool cantweararm(struct permonst * ptr) {
   return breakarm(ptr) || sliparm(ptr);
 }
 static bool throws_rocks(struct permonst * ptr) {
@@ -180,7 +180,7 @@ static bool likes_gold(struct permonst * ptr) {
 static bool likes_gems(struct permonst * ptr) {
   return (ptr->mflags2 & M2_JEWELS) != 0L;
 }
-static inline bool likes_objs(struct permonst * ptr){
+static bool likes_objs(struct permonst * ptr){
   return (ptr->mflags2 & M2_COLLECT) != 0L ||
          is_armed(ptr);
 }
