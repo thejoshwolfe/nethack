@@ -104,7 +104,7 @@ restore_dungeon (int fd)
 
     mread(fd, (void *) &count, sizeof(count));
     for (i = 0; i < count; i++) {
-    curr = (branch *) alloc(sizeof(branch));
+    curr = (branch *) malloc(sizeof(branch));
     mread(fd, (void *) curr, sizeof(branch));
     curr->next = (branch *) 0;
     if (last)
@@ -350,7 +350,7 @@ add_branch (int dgn, int child_entry_level, struct proto_dungeon *pd)
     branch *new_branch;
 
     branch_num = find_branch(dungeons[dgn].dname,pd);
-    new_branch = (branch *) alloc(sizeof(branch));
+    new_branch = (branch *) malloc(sizeof(branch));
     new_branch->next = (branch *) 0;
     new_branch->id = branch_id++;
     new_branch->type = correct_branch_type(&pd->tmpbranch[branch_num]);
@@ -402,7 +402,7 @@ init_level (int dgn, int proto_index, struct proto_dungeon *pd)
         if (tlevel->chance <= rn2(100)) return;
 
     pd->final_lev[proto_index] = new_level =
-                    (s_level *) alloc(sizeof(s_level));
+                    (s_level *) malloc(sizeof(s_level));
     /* load new level with data */
     strcpy(new_level->proto, tlevel->name);
     new_level->boneid = tlevel->boneschar;

@@ -2094,7 +2094,7 @@ mon_animal_list (bool construct)
                 if (is_animal(&mons[i])) animal_temp[n++] = i;
          /* if (n == 0) animal_temp[n++] = NON_PM; */
 
-            animal_list = (short *)alloc(n * sizeof *animal_list);
+            animal_list = (short *)malloc(n * sizeof *animal_list);
             (void) memcpy((void *)animal_list,
                           (void *)animal_temp,
                           n * sizeof *animal_list);

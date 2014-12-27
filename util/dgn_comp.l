@@ -53,7 +53,7 @@ CHAINLEVEL      return(CHLEVEL);
 RNDCHLEVEL      return(RNDCHLEVEL);
 [-0-9]+         { yylval.i=atoi(yytext); return(INTEGER); }
 \"[^"]*\"       { yytext[yyleng-1] = 0; /* Discard the trailing \" */
-                  yylval.str = (char *) alloc(strlen(yytext+1)+1);
+                  yylval.str = (char *) malloc(strlen(yytext+1)+1);
                   strcpy(yylval.str, yytext+1); /* Discard the first \" */
                   return(STRING); }
 ^#.*\n          { line_number++; }

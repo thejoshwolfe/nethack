@@ -719,7 +719,7 @@ cpostfx (               /* called after completely consuming a corpse */
                         "You suddenly dread being peeled and mimic %s again!" :
                         "You now prefer mimicking %s again.",
                         an(Upolyd ? youmonst.data->mname : urace.noun));
-                    eatmbuf = strcpy((char *) alloc(strlen(buf) + 1), buf);
+                    eatmbuf = strcpy((char *) malloc(strlen(buf) + 1), buf);
                     nomovemsg = eatmbuf;
                     afternmv = eatmdone;
                     /* ??? what if this was set before? */

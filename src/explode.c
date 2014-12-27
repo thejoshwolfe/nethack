@@ -461,8 +461,7 @@ scatter (
             }
 
             if (!used_up) {
-                stmp = (struct scatter_chain *)
-                                        alloc(sizeof(struct scatter_chain));
+                stmp = (struct scatter_chain *) malloc(sizeof(struct scatter_chain));
                 stmp->next = (struct scatter_chain *)0;
                 stmp->obj = otmp;
                 stmp->ox = sx;

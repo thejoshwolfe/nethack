@@ -146,7 +146,7 @@ void tty_init_nhwindows(int *argcp, char **argv) {
     setftty();                  /* calls start_screen */
 
     /* set up tty descriptor */
-    ttyDisplay = (struct DisplayDesc*) alloc(sizeof(struct DisplayDesc));
+    ttyDisplay = (struct DisplayDesc*) malloc(sizeof(struct DisplayDesc));
     ttyDisplay->toplin = 0;
     ttyDisplay->rows = hgt;
     ttyDisplay->cols = wid;
@@ -612,7 +612,7 @@ winid tty_create_nhwindow(int type) {
     if(maxwin == MAXWIN)
         return WIN_ERR;
 
-    newwin = (struct WinDesc*) alloc(sizeof(struct WinDesc));
+    newwin = (struct WinDesc*) malloc(sizeof(struct WinDesc));
     newwin->type = type;
     newwin->flags = 0;
     newwin->active = false;
@@ -681,12 +681,12 @@ winid tty_create_nhwindow(int type) {
 
     if(newwin->maxrow) {
         newwin->data =
-                (char **) alloc(sizeof(char *) * (unsigned)newwin->maxrow);
+                (char **) malloc(sizeof(char *) * (unsigned)newwin->maxrow);
         newwin->datlen =
-                (short *) alloc(sizeof(short) * (unsigned)newwin->maxrow);
+                (short *) malloc(sizeof(short) * (unsigned)newwin->maxrow);
         if(newwin->maxcol) {
             for (i = 0; i < newwin->maxrow; i++) {
-                newwin->data[i] = (char *) alloc((unsigned)newwin->maxcol);
+                newwin->data[i] = (char *) malloc((unsigned)newwin->maxcol);
                 newwin->datlen[i] = newwin->maxcol;
             }
         } else {
@@ -916,7 +916,7 @@ process_menu_window (winid window, struct WinDesc *cw)
     curr_page = page_lines = 0;
     page_start = page_end = 0;
     msave = cw->morestr;        /* save the morestr */
-    cw->morestr = morestr = (char*) alloc((unsigned) QBUFSZ);
+    cw->morestr = morestr = (char*) malloc((unsigned) QBUFSZ);
     counting = false;
     count = 0L;
     reset_count = true;
@@ -1571,12 +1571,12 @@ tty_putstr (winid window, int attr, const char *str)
                 }
             cw->maxrow = cw->cury = 0;
         }
-        /* always grows one at a time, but alloc 12 at a time */
+        /* always grows one at a time, but malloc 12 at a time */
         if(cw->cury >= cw->rows) {
             char **tmp;
 
             cw->rows += 12;
-            tmp = (char **) alloc(sizeof(char *) * (unsigned)cw->rows);
+            tmp = (char **) malloc(sizeof(char *) * (unsigned)cw->rows);
             for(i=0; i<cw->maxrow; i++)
                 tmp[i] = cw->data[i];
             if(cw->data)
@@ -1589,7 +1589,7 @@ tty_putstr (winid window, int attr, const char *str)
         if(cw->data[cw->cury])
             free((void *)cw->data[cw->cury]);
         n0 = strlen(str) + 1;
-        ob = cw->data[cw->cury] = (char *)alloc((unsigned)n0 + 1);
+        ob = cw->data[cw->cury] = (char *)malloc((unsigned)n0 + 1);
         *ob++ = (char)(attr + 1);       /* avoid nuls, for convenience */
         strcpy(ob, str);
 
@@ -1703,7 +1703,7 @@ tty_add_menu (
     } else
         newstr = str;
 
-    item = (tty_menu_item *) alloc(sizeof(tty_menu_item));
+    item = (tty_menu_item *) malloc(sizeof(tty_menu_item));
     item->identifier = *identifier;
     item->count = -1L;
     item->selected = preselected;
@@ -1773,7 +1773,7 @@ tty_end_menu (
         if (cw->plist) free((void *)cw->plist);
         cw->plist_size = cw->npages + 1;
         cw->plist = (tty_menu_item **)
-                        alloc(cw->plist_size * sizeof(tty_menu_item *));
+                        malloc(cw->plist_size * sizeof(tty_menu_item *));
     }
 
     cw->cols = 0; /* cols is set when the win is initialized... (why?) */
@@ -1860,7 +1860,7 @@ tty_select_menu (winid window, int how, menu_item **menu_list)
     }
 
     if (n > 0) {
-        *menu_list = (menu_item *) alloc(n * sizeof(menu_item));
+        *menu_list = (menu_item *) malloc(n * sizeof(menu_item));
         for (mi = *menu_list, curr = cw->mlist; curr; curr = curr->next)
             if (curr->selected) {
                 mi->item = curr->identifier;
@@ -2124,5 +2124,5 @@ static char *
 copy_of (const char *s)
 {
     if (!s) s = "";
-    return strcpy((char *) alloc((unsigned) (strlen(s) + 1)), s);
+    return strcpy((char *) malloc((unsigned) (strlen(s) + 1)), s);
 }

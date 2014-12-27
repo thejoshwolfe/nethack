@@ -765,14 +765,14 @@ void set_duplicate_opt_detection (int on_or_off) {
         /*-- ON --*/
         if (iflags.opt_booldup)
             impossible("iflags.opt_booldup already on (memory leak)");
-        iflags.opt_booldup = (int *)alloc(SIZE(boolopt) * sizeof(int));
+        iflags.opt_booldup = (int *)malloc(SIZE(boolopt) * sizeof(int));
         optptr = iflags.opt_booldup;
         for (k = 0; k < SIZE(boolopt); ++k)
             *optptr++ = 0;
 
         if (iflags.opt_compdup)
             impossible("iflags.opt_compdup already on (memory leak)");
-        iflags.opt_compdup = (int *)alloc(SIZE(compopt) * sizeof(int));
+        iflags.opt_compdup = (int *)malloc(SIZE(compopt) * sizeof(int));
         optptr = iflags.opt_compdup;
         for (k = 0; k < SIZE(compopt); ++k)
             *optptr++ = 0;
@@ -1711,7 +1711,7 @@ goodfruit:
     if (match_optname(opts, fullname, sizeof("tile_file")-1, true)) {
         if ((op = string_for_opt(opts, false)) != 0) {
             if (iflags.wc_tile_file) free(iflags.wc_tile_file);
-            iflags.wc_tile_file = (char *)alloc(strlen(op) + 1);
+            iflags.wc_tile_file = (char *)malloc(strlen(op) + 1);
             strcpy(iflags.wc_tile_file, op);
         }
         return;
@@ -2847,8 +2847,8 @@ int add_autopickup_exception (const char *mapping) {
         apehead = (grab) ? &iflags.autopickup_exceptions[AP_GRAB] :
             &iflags.autopickup_exceptions[AP_LEAVE];
         ape = (struct autopickup_exception *)
-            alloc(sizeof(struct autopickup_exception));
-        ape->pattern = (char *) alloc(textsize+1);
+            malloc(sizeof(struct autopickup_exception));
+        ape->pattern = (char *) malloc(textsize+1);
         strcpy(ape->pattern, text2);
         ape->grab = grab;
         if (!*apehead) ape->next = (struct autopickup_exception *)0;
@@ -2957,7 +2957,7 @@ void next_opt (winid datawin, const char *str) {
     int i;
     char *s;
 
-    if (!buf) *(buf = (char *)alloc(BUFSZ)) = '\0';
+    if (!buf) *(buf = (char *)malloc(BUFSZ)) = '\0';
 
     if (!*str) {
         s = eos(buf);
@@ -3298,7 +3298,7 @@ static void wc_set_font_name (int wtype, char *fontname) {
     }
     if (fn) {
         if (*fn) free(*fn);
-        *fn = (char *)alloc(strlen(fontname) + 1);
+        *fn = (char *)malloc(strlen(fontname) + 1);
         strcpy(*fn, fontname);
     }
     return;
@@ -3369,12 +3369,12 @@ static int wc_set_window_colors (char *op) {
                     !strcmpi(wn, shortnames[j])) {
                 if (tfg && !strstri(tfg, " ")) {
                     if (*fgp[j]) free(*fgp[j]);
-                    *fgp[j] = (char *)alloc(strlen(tfg) + 1);
+                    *fgp[j] = (char *)malloc(strlen(tfg) + 1);
                     strcpy(*fgp[j], tfg);
                 }
                 if (tbg && !strstri(tbg, " ")) {
                     if (*bgp[j]) free(*bgp[j]);
-                    *bgp[j] = (char *)alloc(strlen(tbg) + 1);
+                    *bgp[j] = (char *)malloc(strlen(tbg) + 1);
                     strcpy(*bgp[j], tbg);
                 }
                 break;

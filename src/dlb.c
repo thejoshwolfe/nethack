@@ -122,8 +122,8 @@ readlibdir (
     return false;
     if (lp->rev > DLB_MAX_VERS || lp->rev < DLB_MIN_VERS) return false;
 
-    lp->dir = (libdir *) alloc(lp->nentries * sizeof(libdir));
-    lp->sspace = (char *) alloc(lp->strsize);
+    lp->dir = (libdir *) malloc(lp->nentries * sizeof(libdir));
+    lp->sspace = (char *) malloc(lp->strsize);
 
     /* read in each directory entry */
     for (i = 0, sp = lp->sspace; i < lp->nentries; i++) {
@@ -385,7 +385,7 @@ dlb * dlb_fopen(const char *name, const char *mode) {
     if (!dlb_initialized)
         return NULL;
 
-    dp = (dlb *) alloc(sizeof(dlb));
+    dp = (dlb *) malloc(sizeof(dlb));
     if (do_dlb_fopen(dp, name, mode)) {
         dp->fp = NULL;
     } else if ((fp = fopen_datafile(name, mode, DATAPREFIX)) != 0) {

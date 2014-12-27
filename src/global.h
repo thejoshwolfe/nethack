@@ -42,9 +42,6 @@
  */
 #define LARGEST_INT     32767
 
-
-extern long *alloc(unsigned int);               /* alloc.c */
-
 /* Used for consistency checks of various data files; */
 struct version_info {
         unsigned long   incarnation;    /* actual version number */

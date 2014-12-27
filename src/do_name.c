@@ -485,7 +485,7 @@ docall (struct obj *obj)
                 undiscover_object(obj->otyp);
             }
         } else {
-            *str1 = strcpy((char *) alloc((unsigned)strlen(buf)+1), buf);
+            *str1 = strcpy((char *) malloc((unsigned)strlen(buf)+1), buf);
             discover_object(obj->otyp, false, true); /* possibly add to disco[] */
         }
 }

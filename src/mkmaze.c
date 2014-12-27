@@ -837,7 +837,7 @@ movebubbles (void)
                         if (OBJ_AT(x,y)) {
                             struct obj *olist = (struct obj *) 0, *otmp;
                             struct container *cons = (struct container *)
-                                alloc(sizeof(struct container));
+                                malloc(sizeof(struct container));
 
                             while ((otmp = level.objects[x][y]) != 0) {
                                 remove_object(otmp);
@@ -856,7 +856,7 @@ movebubbles (void)
                         if (MON_AT(x,y)) {
                             struct monst *mon = m_at(x,y);
                             struct container *cons = (struct container *)
-                                alloc(sizeof(struct container));
+                                malloc(sizeof(struct container));
 
                             cons->x = x;
                             cons->y = y;
@@ -876,7 +876,7 @@ movebubbles (void)
                         }
                         if (!u.uswallow && x == u.ux && y == u.uy) {
                             struct container *cons = (struct container *)
-                                alloc(sizeof(struct container));
+                                malloc(sizeof(struct container));
 
                             cons->x = x;
                             cons->y = y;
@@ -888,7 +888,7 @@ movebubbles (void)
                         }
                         if ((btrap = t_at(x,y)) != 0) {
                             struct container *cons = (struct container *)
-                                alloc(sizeof(struct container));
+                                malloc(sizeof(struct container));
 
                             cons->x = x;
                             cons->y = y;
@@ -997,7 +997,7 @@ restore_waterlevel (int fd)
         mread(fd,(void *)&ymax,sizeof(int));
         for (i = 0; i < n; i++) {
                 btmp = b;
-                b = (struct bubble *)alloc(sizeof(struct bubble));
+                b = (struct bubble *)malloc(sizeof(struct bubble));
                 mread(fd,(void *)b,sizeof(struct bubble));
                 if (bbubbles) {
                         btmp->next = b;
@@ -1120,7 +1120,7 @@ mk_bubble (int x, int y, int n)
                 impossible("n too large (mk_bubble)");
                 n = SIZE(bmask) - 1;
         }
-        b = (struct bubble *)alloc(sizeof(struct bubble));
+        b = (struct bubble *)malloc(sizeof(struct bubble));
         if ((x + (int) bmask[n][0] - 1) > bxmax) x = bxmax - bmask[n][0] + 1;
         if ((y + (int) bmask[n][1] - 1) > bymax) y = bymax - bmask[n][1] + 1;
         b->x = x;

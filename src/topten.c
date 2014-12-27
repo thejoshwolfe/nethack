@@ -13,7 +13,7 @@ static const char * LOGFILE = "run/logfile";
 
 #define done_stopprint program_state.stopprint
 
-#define newttentry() (struct toptenentry *) alloc(sizeof(struct toptenentry))
+#define newttentry() (struct toptenentry *) malloc(sizeof(struct toptenentry))
 #define dealloc_ttentry(ttent) free((void *) (ttent))
 #define NAMSZ   10
 #define DTHSZ   100
@@ -161,9 +161,7 @@ free_ttlist (struct toptenentry *tt)
         dealloc_ttentry(tt);
 }
 
-void
-topten (int how)
-{
+void topten (int how) {
         int uid = getuid();
         int rank, rank0 = -1, rank1 = 0;
         int occ_cnt = PERSMAX;
@@ -175,8 +173,8 @@ topten (int how)
 
 
 /* If we are in the midst of a panic, cut out topten entirely.
- * topten uses alloc() several times, which will lead to
- * problems if the panic was the result of an alloc() failure.
+ * topten uses malloc() several times, which will lead to
+ * problems if the panic was the result of an malloc() failure.
  */
         if (program_state.panicking)
                 return;

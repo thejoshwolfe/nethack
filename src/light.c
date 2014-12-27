@@ -66,7 +66,7 @@ new_light_source (signed char x, signed char y, int range, int type, void *id)
         return;
     }
 
-    ls = (light_source *) alloc(sizeof(light_source));
+    ls = (light_source *) malloc(sizeof(light_source));
 
     ls->next = light_base;
     ls->x = x;
@@ -279,7 +279,7 @@ restore_light_sources (int fd)
     mread(fd, (void *) &count, sizeof count);
 
     while (count-- > 0) {
-        ls = (light_source *) alloc(sizeof(light_source));
+        ls = (light_source *) malloc(sizeof(light_source));
         mread(fd, (void *) ls, sizeof(light_source));
         ls->next = light_base;
         light_base = ls;
@@ -475,7 +475,7 @@ obj_split_light_source (struct obj *src, struct obj *dest)
              * never interfere us walking down the list - we are already
              * past the insertion point.
              */
-            new_ls = (light_source *) alloc(sizeof(light_source));
+            new_ls = (light_source *) malloc(sizeof(light_source));
             *new_ls = *ls;
             if (Is_candle(src)) {
                 /* split candles may emit less light than original group */

@@ -1329,9 +1329,9 @@ void schedule_goto(d_level *tolev, bool at_stairs, bool falling,
         assign_level(&u.utolev, tolev);
 
         if (pre_msg)
-            dfr_pre_msg = strcpy((char *)alloc(strlen(pre_msg) + 1), pre_msg);
+            dfr_pre_msg = strcpy((char *)malloc(strlen(pre_msg) + 1), pre_msg);
         if (post_msg)
-            dfr_post_msg = strcpy((char *)alloc(strlen(post_msg)+1), post_msg);
+            dfr_post_msg = strcpy((char *)malloc(strlen(post_msg)+1), post_msg);
 }
 
 /* handle something like portal ejection */

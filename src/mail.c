@@ -52,7 +52,7 @@ static const char *MAILPATH = "/var/mail/";
 void getmailstatus(void) {
         if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
                 const char *pw_name = getpwuid(getuid())->pw_name;
-                mailbox = (char *) alloc(sizeof(MAILPATH)+strlen(pw_name));
+                mailbox = (char *) malloc(sizeof(MAILPATH)+strlen(pw_name));
                 strcpy(mailbox, MAILPATH);
                 strcat(mailbox, pw_name);
         }

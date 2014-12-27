@@ -20,9 +20,9 @@ DATA_INPUTS2 = build/data build/oracles dat/options build/quest.dat build/rumors
 DATDLB = $(DATA_INPUTS1) $(GENERATED_LEVELS) $(DATA_INPUTS2)
 
 MAKEDEFS_OBJS = build/makedefs.o build/monst.o build/objects.o
-DLB_OBJS = build/dlb_main.o build/dlb.o build/alloc.o build/panic.o
-DGN_COMP_OBJS = build/dgn_yacc.o build/dgn_lex.o build/dgn_main.o build/alloc.o build/panic.o
-LEV_COMP_OBJS = build/lev_yacc.o build/lev_lex.o build/lev_main.o build/alloc.o build/panic.o build/drawing.o build/decl.o build/monst.o build/objects.o
+DLB_OBJS = build/dlb_main.o build/dlb.o build/panic.o
+DGN_COMP_OBJS = build/dgn_yacc.o build/dgn_lex.o build/dgn_main.o build/panic.o
+LEV_COMP_OBJS = build/lev_yacc.o build/lev_lex.o build/lev_main.o build/panic.o build/drawing.o build/decl.o build/monst.o build/objects.o
 RECOVER_OBJS = build/recover.o
 BUILD_DIR_CHILDREN += $(MAKEDEFS_OBJS) $(DLB_OBJS) $(DGN_COMP_OBJS) $(LEV_COMP_OBJS) $(RECOVER_OBJS)
 
@@ -37,7 +37,7 @@ MAKEDEFS = cd dat && ../build/makedefs
 HACK_H = build/onames.h build/pm.h
 
 MAKEDEFS_NEEDS_THESE = build/monst.o build/objects.o
-NORMAL_ASS_O_FILES = build/allmain.o build/alloc.o build/apply.o build/artifact.o build/attrib.o build/ball.o \
+NORMAL_ASS_O_FILES = build/allmain.o build/apply.o build/artifact.o build/attrib.o build/ball.o \
   build/bones.o build/botl.o build/cmd.o build/dbridge.o build/decl.o build/detect.o build/dig.o build/display.o build/dlb.o \
   build/do.o build/do_name.o build/do_wear.o build/dog.o build/dogmove.o build/dokick.o build/dothrow.o \
   build/drawing.o build/dungeon.o build/eat.o build/end.o build/engrave.o build/exper.o build/explode.o \

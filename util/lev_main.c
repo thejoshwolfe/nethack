@@ -23,7 +23,7 @@
 
 #define ERR             (-1)
 
-#define NewTab(type, size)      (type **) alloc(sizeof(type *) * size)
+#define NewTab(type, size)      (type **) malloc(sizeof(type *) * size)
 #define Free(ptr)               if(ptr) free((void *) (ptr))
 #define Write(fd, item, size)   if (write(fd, (void *)(item), size) != size) return false;
 
@@ -441,7 +441,7 @@ scan_map (char *map)
 
         /* Then parse it now */
         while (map && *map) {
-                tmpmap[max_hig] = (char *) alloc(max_len);
+                tmpmap[max_hig] = (char *) malloc(max_len);
                 s1 = index(map, '\n');
                 if (s1) {
                         len = (int) (s1 - map);
@@ -478,7 +478,7 @@ scan_map (char *map)
 
         tmppart[npart]->xsize = max_len;
         tmppart[npart]->ysize = max_hig;
-        tmppart[npart]->map = (char **) alloc(max_hig*sizeof(char *));
+        tmppart[npart]->map = (char **) malloc(max_hig*sizeof(char *));
         for(i = 0; i< max_hig; i++)
             tmppart[npart]->map[i] = tmpmap[i];
 }
@@ -1018,7 +1018,7 @@ write_level_file (char *filename, splev *room_level, specialmaze *maze_level)
 
 /*
  * Here we write the structure of the maze in the specified file (fd).
- * Also, we have to free the memory allocated via alloc().
+ * Also, we have to free the memory allocated via malloc().
  */
 static bool 
 write_maze (int fd, specialmaze *maze)

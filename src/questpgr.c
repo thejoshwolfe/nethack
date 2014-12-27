@@ -49,7 +49,7 @@ construct_qtlist (long hdr_offset)
         (void) dlb_fseek(msg_file, hdr_offset, SEEK_SET);
         Fread(&n_msgs, sizeof(int), 1, msg_file);
         msg_list = (struct qtmsg *)
-                alloc((unsigned)(n_msgs+1)*sizeof(struct qtmsg));
+                malloc((unsigned)(n_msgs+1)*sizeof(struct qtmsg));
 
         /*
          * Load up the list.

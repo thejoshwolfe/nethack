@@ -71,7 +71,7 @@ create_region (NhRect *rects, int nrect)
     int i;
     NhRegion *reg;
 
-    reg = (NhRegion *) alloc(sizeof (NhRegion));
+    reg = (NhRegion *) malloc(sizeof (NhRegion));
     /* Determines bounding box */
     if (nrect > 0) {
         reg->bounding_box = rects[0];
@@ -82,7 +82,7 @@ create_region (NhRect *rects, int nrect)
         reg->bounding_box.hy = 0;
     }
     reg->nrects = nrect;
-    reg->rects = nrect > 0 ? (NhRect *)alloc((sizeof (NhRect)) * nrect) : NULL;
+    reg->rects = nrect > 0 ? (NhRect *)malloc((sizeof (NhRect)) * nrect) : NULL;
     for (i = 0; i < nrect; i++) {
         if (rects[i].lx < reg->bounding_box.lx)
             reg->bounding_box.lx = rects[i].lx;
@@ -123,7 +123,7 @@ add_rect_to_reg (NhRegion *reg, NhRect *rect)
 {
     NhRect *tmp_rect;
 
-    tmp_rect = (NhRect *) alloc(sizeof (NhRect) * (reg->nrects + 1));
+    tmp_rect = (NhRect *) malloc(sizeof (NhRect) * (reg->nrects + 1));
     if (reg->nrects > 0) {
         (void) memcpy((void *) tmp_rect, (void *) reg->rects,
                       (sizeof (NhRect) * reg->nrects));
@@ -154,7 +154,7 @@ add_mon_to_reg (NhRegion *reg, struct monst *mon)
 
     if (reg->max_monst <= reg->n_monst) {
         tmp_m = (unsigned *)
-                    alloc(sizeof (unsigned) * (reg->max_monst + MONST_INC));
+                    malloc(sizeof (unsigned) * (reg->max_monst + MONST_INC));
         if (reg->max_monst > 0) {
             for (i = 0; i < reg->max_monst; i++)
                 tmp_m[i] = reg->monsters[i];
@@ -226,7 +226,7 @@ add_region (NhRegion *reg)
 
     if (max_regions <= n_regions) {
         tmp_reg = regions;
-        regions = (NhRegion **)alloc(sizeof (NhRegion *) * (max_regions + 10));
+        regions = (NhRegion **)malloc(sizeof (NhRegion *) * (max_regions + 10));
         if (max_regions > 0) {
             (void) memcpy((void *) regions, (void *) tmp_reg,
                           max_regions * sizeof (NhRegion *));
@@ -568,15 +568,15 @@ rest_regions (
     mread(fd, (void *) &n_regions, sizeof (n_regions));
     max_regions = n_regions;
     if (n_regions > 0)
-        regions = (NhRegion **) alloc(sizeof (NhRegion *) * n_regions);
+        regions = (NhRegion **) malloc(sizeof (NhRegion *) * n_regions);
     for (i = 0; i < n_regions; i++) {
-        regions[i] = (NhRegion *) alloc(sizeof (NhRegion));
+        regions[i] = (NhRegion *) malloc(sizeof (NhRegion));
         mread(fd, (void *) &regions[i]->bounding_box, sizeof (NhRect));
         mread(fd, (void *) &regions[i]->nrects, sizeof (short));
 
         if (regions[i]->nrects > 0)
             regions[i]->rects = (NhRect *)
-                                  alloc(sizeof (NhRect) * regions[i]->nrects);
+                                  malloc(sizeof (NhRect) * regions[i]->nrects);
         for (j = 0; j < regions[i]->nrects; j++)
             mread(fd, (void *) &regions[i]->rects[j], sizeof (NhRect));
         mread(fd, (void *) &regions[i]->attach_2_u, sizeof (bool));
@@ -584,7 +584,7 @@ rest_regions (
 
         mread(fd, (void *) &n, sizeof n);
         if (n > 0) {
-            msg_buf = (char *) alloc(n + 1);
+            msg_buf = (char *) malloc(n + 1);
             mread(fd, (void *) msg_buf, n);
             msg_buf[n] = '\0';
             regions[i]->enter_msg = (const char *) msg_buf;
@@ -593,7 +593,7 @@ rest_regions (
 
         mread(fd, (void *) &n, sizeof n);
         if (n > 0) {
-            msg_buf = (char *) alloc(n + 1);
+            msg_buf = (char *) malloc(n + 1);
             mread(fd, (void *) msg_buf, n);
             msg_buf[n] = '\0';
             regions[i]->leave_msg = (const char *) msg_buf;
@@ -619,7 +619,7 @@ rest_regions (
         mread(fd, (void *) &regions[i]->n_monst, sizeof (short));
         if (regions[i]->n_monst > 0)
             regions[i]->monsters =
-                (unsigned *) alloc(sizeof (unsigned) * regions[i]->n_monst);
+                (unsigned *) malloc(sizeof (unsigned) * regions[i]->n_monst);
         else
             regions[i]->monsters = NULL;
         regions[i]->max_monst = regions[i]->n_monst;

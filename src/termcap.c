@@ -60,7 +60,7 @@ void tty_startup(int *wid, int *hgt) {
         if (!term)
                 error("Can't get TERM.");
 
-        tptr = (char *) alloc(1024);
+        tptr = (char *) malloc(1024);
 
         tbufptr = tbuf;
         if(!strncmp(term, "5620", 4))
@@ -126,8 +126,8 @@ void tty_startup(int *wid, int *hgt) {
          * pager as a string - so how can you send it NULs???
          *  -jsb
          */
-        nh_HI = (char *) alloc((unsigned)(strlen(SO)+1));
-        nh_HE = (char *) alloc((unsigned)(strlen(ME)+1));
+        nh_HI = (char *) malloc((unsigned)(strlen(SO)+1));
+        nh_HE = (char *) malloc((unsigned)(strlen(ME)+1));
         i = 0;
         while (digit(SO[i])) i++;
         strcpy(nh_HI, &SO[i]);
@@ -471,11 +471,11 @@ init_hilite (void)
         for (c = 0; c < CLR_MAX / 2; c++) {
             scratch = tparm(setf, ti_map[c]);
             if (c != CLR_GRAY) {
-                hilites[c] = (char *) alloc(strlen(scratch) + 1);
+                hilites[c] = (char *) malloc(strlen(scratch) + 1);
                 strcpy(hilites[c], scratch);
             }
             if (c != CLR_BLACK) {
-                hilites[c|BRIGHT] = (char*) alloc(strlen(scratch)+strlen(MD)+1);
+                hilites[c|BRIGHT] = (char*) malloc(strlen(scratch)+strlen(MD)+1);
                 strcpy(hilites[c|BRIGHT], MD);
                 strcat(hilites[c|BRIGHT], scratch);
             }

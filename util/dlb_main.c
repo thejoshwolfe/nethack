@@ -308,7 +308,7 @@ main (int argc, char **argv)
                                                                 MAX_DLB_FILES);
                     break;
                 }
-                ld[nfiles].fname = (char *) alloc(strlen(argv[ap]) + 1);
+                ld[nfiles].fname = (char *) malloc(strlen(argv[ap]) + 1);
                 strcpy(ld[nfiles].fname, argv[ap]);
             }
         }
@@ -329,7 +329,7 @@ main (int argc, char **argv)
                     break;
                 }
                 *(eos(buf)-1) = '\0';   /* strip newline */
-                ld[nfiles].fname = (char *) alloc(strlen(buf) + 1);
+                ld[nfiles].fname = (char *) malloc(strlen(buf) + 1);
                 strcpy(ld[nfiles].fname, buf);
             }
             fclose(list);

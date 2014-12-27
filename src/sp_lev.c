@@ -52,8 +52,8 @@ static bool create_subroom(struct mkroom *, signed char, signed char,
 
 #define Fread   (void)dlb_fread
 #define Fgetc   (signed char)dlb_fgetc
-#define New(type)               (type *) alloc(sizeof(type))
-#define NewTab(type, size)      (type **) alloc(sizeof(type *) * (unsigned)size)
+#define New(type)               (type *) malloc(sizeof(type))
+#define NewTab(type, size)      (type **) malloc(sizeof(type *) * (unsigned)size)
 #define Free(ptr)               if(ptr) free((void *) (ptr))
 
 static walk walklist[50];
@@ -1652,7 +1652,7 @@ load_common_data (dlb *fd, int typ)
         /* Read message */
         Fread((void *) &n, 1, sizeof(n), fd);
         if (n) {
-            lev_message = (char *) alloc(n + 1);
+            lev_message = (char *) malloc(n + 1);
             Fread((void *) lev_message, 1, (int) n, fd);
             lev_message[n] = 0;
         }
@@ -1665,13 +1665,13 @@ load_one_monster (dlb *fd, monster *m)
 
         Fread((void *) m, 1, sizeof *m, fd);
         if ((size = m->name.len) != 0) {
-            m->name.str = (char *) alloc((unsigned)size + 1);
+            m->name.str = (char *) malloc((unsigned)size + 1);
             Fread((void *) m->name.str, 1, size, fd);
             m->name.str[size] = '\0';
         } else
             m->name.str = (char *) 0;
         if ((size = m->appear_as.len) != 0) {
-            m->appear_as.str = (char *) alloc((unsigned)size + 1);
+            m->appear_as.str = (char *) malloc((unsigned)size + 1);
             Fread((void *) m->appear_as.str, 1, size, fd);
             m->appear_as.str[size] = '\0';
         } else
@@ -1685,7 +1685,7 @@ load_one_object (dlb *fd, object *o)
 
         Fread((void *) o, 1, sizeof *o, fd);
         if ((size = o->name.len) != 0) {
-            o->name.str = (char *) alloc((unsigned)size + 1);
+            o->name.str = (char *) malloc((unsigned)size + 1);
             Fread((void *) o->name.str, 1, size, fd);
             o->name.str[size] = '\0';
         } else
@@ -1699,7 +1699,7 @@ load_one_engraving (dlb *fd, engraving *e)
 
         Fread((void *) e, 1, sizeof *e, fd);
         size = e->engr.len;
-        e->engr.str = (char *) alloc((unsigned)size+1);
+        e->engr.str = (char *) malloc((unsigned)size+1);
         Fread((void *) e->engr.str, 1, size, fd);
         e->engr.str[size] = '\0';
 }
@@ -1739,7 +1739,7 @@ load_rooms (dlb *fd)
                 /* Let's see if this room has a name */
                 Fread((void *) &size, 1, sizeof(size), fd);
                 if (size > 0) { /* Yup, it does! */
-                        r->name = (char *) alloc((unsigned)size + 1);
+                        r->name = (char *) malloc((unsigned)size + 1);
                         Fread((void *) r->name, 1, size, fd);
                         r->name[size] = 0;
                 } else
@@ -1748,7 +1748,7 @@ load_rooms (dlb *fd)
                 /* Let's see if this room has a parent */
                 Fread((void *) &size, 1, sizeof(size), fd);
                 if (size > 0) { /* Yup, it does! */
-                        r->parent = (char *) alloc((unsigned)size + 1);
+                        r->parent = (char *) malloc((unsigned)size + 1);
                         Fread((void *) r->parent, 1, size, fd);
                         r->parent[size] = 0;
                 } else
@@ -2108,7 +2108,7 @@ load_maze (dlb *fd)
             if(num_lregions) {
                 /* realloc the lregion space to add the new ones */
                 /* don't really free it up until the whole level is done */
-                lev_region *newl = (lev_region *) alloc(sizeof(lev_region) *
+                lev_region *newl = (lev_region *) malloc(sizeof(lev_region) *
                                                 (unsigned)(n+num_lregions));
                 (void) memcpy((void *)(newl+n), (void *)lregions,
                                         sizeof(lev_region) * num_lregions);
@@ -2118,14 +2118,14 @@ load_maze (dlb *fd)
             } else {
                 num_lregions = n;
                 lregions = (lev_region *)
-                                alloc(sizeof(lev_region) * (unsigned)n);
+                                malloc(sizeof(lev_region) * (unsigned)n);
             }
         }
 
         while(n--) {
             Fread((void *) &tmplregion, sizeof(tmplregion), 1, fd);
             if ((size = tmplregion.rname.len) != 0) {
-                tmplregion.rname.str = (char *) alloc((unsigned)size + 1);
+                tmplregion.rname.str = (char *) malloc((unsigned)size + 1);
                 Fread((void *) tmplregion.rname.str, size, 1, fd);
                 tmplregion.rname.str[size] = '\0';
             } else

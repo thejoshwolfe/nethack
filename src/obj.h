@@ -103,7 +103,7 @@ struct obj {
                                    is flexible; amount for tmp gold objects */
 };
 
-#define newobj(xl)      (struct obj *)alloc((unsigned)(xl) + sizeof(struct obj))
+#define newobj(xl)      (struct obj *)malloc((unsigned)(xl) + sizeof(struct obj))
 #define ONAME(otmp)     (((char *)(otmp)->oextra) + (otmp)->oxlth)
 
 /* Weapons and weapon-tools */

@@ -158,7 +158,7 @@ struct monst {
  * exception being the guardian angels which are tame on creation).
  */
 
-#define newmonst(xl) (struct monst *)alloc((unsigned)(xl) + sizeof(struct monst))
+#define newmonst(xl) (struct monst *)malloc((unsigned)(xl) + sizeof(struct monst))
 #define dealloc_monst(mon) free((void *)(mon))
 
 /* these are in mspeed */
