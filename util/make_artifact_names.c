@@ -38,8 +38,6 @@ int main(int argc, char *argv[]) {
     fprintf(f, "#ifndef ARTIFACT_NAMES_H\n");
     fprintf(f, "#define ARTIFACT_NAMES_H\n\n");
 
-    fprintf(f, "\n// Artifacts (unique objects)\n\n");
-
     fprintf(f, "enum {\n");
     int i;
     char *c;

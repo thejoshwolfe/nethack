@@ -154,7 +154,7 @@ build/lev_yacc.o: $(HACK_H)
 build/lev_main.o: $(HACK_H)
 
 build/onames.h: build/make_onames
-	cd dat && ../build/make_onames
+	./build/make_onames $@
 
 build/artifact_names.h: build/make_artifact_names
 	./build/make_artifact_names $@
