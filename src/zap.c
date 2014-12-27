@@ -1134,6 +1134,10 @@ do_osshock (struct obj *obj)
         delobj(obj);
 }
 
+static bool usesCorpseEnm(int typ) {
+    return typ == CORPSE || typ == STATUE || typ == FIGURINE;
+}
+
 /*
  * Polymorph the object to the given object ID.  If the ID is STRANGE_OBJECT
  * then pick random object from the source's class (this is the standard
@@ -1145,9 +1149,7 @@ do_osshock (struct obj *obj)
  *
  * This should be safe to call for an object anywhere.
  */
-struct obj *
-poly_obj (struct obj *obj, int id)
-{
+struct obj * poly_obj (struct obj *obj, int id) {
         struct obj *otmp;
         signed char ox, oy;
         bool can_merge = (id == STRANGE_OBJECT);
@@ -1169,10 +1171,8 @@ poly_obj (struct obj *obj, int id)
             /* literally replace obj with this new thing */
             otmp = mksobj(id, false, false);
         /* Actually more things use corpsenm but they polymorph differently */
-#define USES_CORPSENM(typ) ((typ)==CORPSE || (typ)==STATUE || (typ)==FIGURINE)
-            if (USES_CORPSENM(obj->otyp) && USES_CORPSENM(id))
+            if (usesCorpseEnm(obj->otyp) && usesCorpseEnm(id))
                 otmp->corpsenm = obj->corpsenm;
-#undef USES_CORPSENM
         }
 
         /* preserve quantity */
