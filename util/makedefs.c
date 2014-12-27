@@ -1,15 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "permonst.h"
-#include "objclass.h"
-#include "monsym.h"
 #include "artilist.h"
-#include "dungeon.h"
 #include "obj.h"
 #include "monst.h"
 #include "you.h"
 #include "flag.h"
-#include "dlb.h"
 
 /* version information */
 #include "patchlevel.h"
