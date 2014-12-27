@@ -8,19 +8,40 @@
 #include "you.h"
 #include "extern.h"
 
-#define verysmall(ptr)          ((ptr)->msize < MZ_SMALL)
-#define bigmonst(ptr)           ((ptr)->msize >= MZ_LARGE)
+static bool verysmall(struct permonst * ptr) {
+    return ptr->msize < MZ_SMALL;
+}
+static bool bigmonst(struct permonst * ptr) {
+    return ptr->msize >= MZ_LARGE;
+}
 
-#define pm_resistance(ptr,typ)  (((ptr)->mresists & (typ)) != 0)
-
-#define resists_fire(mon)       (((mon)->mintrinsics & MR_FIRE) != 0)
-#define resists_cold(mon)       (((mon)->mintrinsics & MR_COLD) != 0)
-#define resists_sleep(mon)      (((mon)->mintrinsics & MR_SLEEP) != 0)
-#define resists_disint(mon)     (((mon)->mintrinsics & MR_DISINT) != 0)
-#define resists_elec(mon)       (((mon)->mintrinsics & MR_ELEC) != 0)
-#define resists_poison(mon)     (((mon)->mintrinsics & MR_POISON) != 0)
-#define resists_acid(mon)       (((mon)->mintrinsics & MR_ACID) != 0)
-#define resists_ston(mon)       (((mon)->mintrinsics & MR_STONE) != 0)
+static bool pm_resistance(struct permonst * ptr, unsigned char typ) {
+    return (ptr->mresists & typ) != 0;
+}
+static bool resists_fire(struct monst * mon) {
+    return (mon->mintrinsics & MR_FIRE) != 0;
+}
+static bool resists_cold(struct monst * mon) {
+    return (mon->mintrinsics & MR_COLD) != 0;
+}
+static bool resists_sleep(struct monst * mon) {
+    return (mon->mintrinsics & MR_SLEEP) != 0;
+}
+static bool resists_disint(struct monst * mon) {
+    return (mon->mintrinsics & MR_DISINT) != 0;
+}
+static bool resists_elec(struct monst * mon) {
+    return (mon->mintrinsics & MR_ELEC) != 0;
+}
+static bool resists_poison(struct monst * mon) {
+    return (mon->mintrinsics & MR_POISON) != 0;
+}
+static bool resists_acid(struct monst * mon) {
+    return (mon->mintrinsics & MR_ACID) != 0;
+}
+static bool resists_ston(struct monst * mon) {
+    return (mon->mintrinsics & MR_STONE) != 0;
+}
 
 #define is_lminion(mon)         (is_minion((mon)->data) && \
                                  (mon)->data->maligntyp >= A_COALIGNED && \
