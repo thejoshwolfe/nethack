@@ -860,7 +860,7 @@ ini_inv (struct trobj *trop)
                                    low level players or unbalancing; also
                                    spells in restricted skill categories */
                                 || (obj->oclass == SPBOOK_CLASS &&
-                                    (objects[otyp].oc_level > 3 ||
+                                    (objects[otyp].oc_oc2 > 3 ||
                                     restricted_spell_discipline(otyp)))
                                                         ) {
                                 dealloc_obj(obj);

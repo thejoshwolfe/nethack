@@ -2629,15 +2629,11 @@ cloak_simple_name (struct obj *cloak)
     return "cloak";
 }
 
-const char *
-mimic_obj_name (struct monst *mtmp)
-{
-        if (mtmp->m_ap_type == M_AP_OBJECT && mtmp->mappearance != STRANGE_OBJECT) {
-                int idx = objects[mtmp->mappearance].oc_descr_idx;
-                if (mtmp->mappearance == GOLD_PIECE) return "gold";
-                return obj_descr[idx].oc_name;
-        }
-        return "whatcha-may-callit";
+const char * mimic_obj_name (struct monst *mtmp) {
+    if (mtmp->m_ap_type == M_AP_OBJECT && mtmp->mappearance != STRANGE_OBJECT) {
+        int idx = objects[mtmp->mappearance].oc_descr_idx;
+        if (mtmp->mappearance == GOLD_PIECE) return "gold";
+        return objects[idx].oc_name;
+    }
+    return "whatcha-may-callit";
 }
-
-/*objnam.c*/

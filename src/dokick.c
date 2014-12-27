@@ -185,7 +185,7 @@ static void kick_monster(signed char x, signed char y) {
 
         if(Fumbling) clumsy = true;
 
-        else if(uarm && objects[uarm->otyp].oc_bulky && ACURR(A_DEX) < rnd(25))
+        else if(uarm && objects[uarm->otyp].oc_big && ACURR(A_DEX) < rnd(25))
                 clumsy = true;
 doit:
         You("kick %s.", mon_nam(mon));

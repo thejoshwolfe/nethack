@@ -335,7 +335,7 @@ get_object_id (
 
         for (i = class ? bases[class] : 0; i < NUM_OBJECTS; i++) {
             if (class && objects[i].oc_class != class) break;
-            objname = obj_descr[i].oc_name;
+            objname = objects[i].oc_name;
             if (objname && !strcmp(s, objname))
                 return i;
         }

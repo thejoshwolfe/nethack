@@ -107,7 +107,7 @@ spell_let_to_idx (char ilet)
 static bool 
 cursed_book (struct obj *bp)
 {
-        int lev = objects[bp->otyp].oc_level;
+        int lev = objects[bp->otyp].oc_oc2;
 
         switch(rn2(lev)) {
         case 0:
@@ -359,7 +359,7 @@ learn (void)
                         break;
                 } else if (spellid(i) == NO_SPELL)  {
                         spl_book[i].sp_id = booktype;
-                        spl_book[i].sp_lev = objects[booktype].oc_level;
+                        spl_book[i].sp_lev = objects[booktype].oc_oc2;
                         incrnknow(i);
                         book->spestudied++;
                         You(i > 0 ? "add %s to your repertoire." : "learn %s.",
@@ -401,19 +401,19 @@ study_book (struct obj *spellbook)
                         makeknown(booktype);
                         return(1);
                 }
-                switch (objects[booktype].oc_level) {
+                switch (objects[booktype].oc_oc2) {
                  case 1:
                  case 2:
                         delay = -objects[booktype].oc_delay;
                         break;
                  case 3:
                  case 4:
-                        delay = -(objects[booktype].oc_level - 1) *
+                        delay = -(objects[booktype].oc_oc2 - 1) *
                                 objects[booktype].oc_delay;
                         break;
                  case 5:
                  case 6:
-                        delay = -objects[booktype].oc_level *
+                        delay = -objects[booktype].oc_oc2 *
                                 objects[booktype].oc_delay;
                         break;
                  case 7:
@@ -421,7 +421,7 @@ study_book (struct obj *spellbook)
                         break;
                  default:
                         impossible("Unknown spellbook level %d, book %d;",
-                                objects[booktype].oc_level, booktype);
+                                objects[booktype].oc_oc2, booktype);
                         return 0;
                 }
 
@@ -434,7 +434,7 @@ study_book (struct obj *spellbook)
                     } else {
                         /* uncursed - chance to fail */
                         int read_ability = ACURR(A_INT) + 4 + u.ulevel/2
-                            - 2*objects[booktype].oc_level
+                            - 2*objects[booktype].oc_oc2
                             + ((ublindf && ublindf->otyp == LENSES) ? 2 : 0);
                         /* only wizards know if a spell is too difficult */
                         if (Role_if(PM_WIZARD) && read_ability < 20 &&
@@ -606,7 +606,7 @@ spelltypemnemonic (int skill)
 int
 spell_skilltype (int booktype)
 {
-        return (objects[booktype].oc_skill);
+        return (objects[booktype].oc_subtyp);
 }
 
 static void
@@ -1263,7 +1263,7 @@ initialspell (struct obj *obj)
             }
             if (spellid(i) == NO_SPELL)  {
                 spl_book[i].sp_id = obj->otyp;
-                spl_book[i].sp_lev = objects[obj->otyp].oc_level;
+                spl_book[i].sp_lev = objects[obj->otyp].oc_oc2;
                 incrnknow(i);
                 return;
             }

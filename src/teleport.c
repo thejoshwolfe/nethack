@@ -469,7 +469,7 @@ dotele (void)
                 }
             }
 
-            energy = objects[SPE_TELEPORT_AWAY].oc_level * 7 / 2 - 2;
+            energy = objects[SPE_TELEPORT_AWAY].oc_oc2 * 7 / 2 - 2;
             if (u.uen <= energy) {
                 if (wizard)
                         energy = u.uen;

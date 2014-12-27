@@ -41,9 +41,7 @@ setgemprobs (d_level *dlev)
 }
 
 /* shuffle descriptions on objects o_low to o_high */
-static void 
-shuffle (int o_low, int o_high, bool domaterial)
-{
+static void shuffle (int o_low, int o_high, bool domaterial) {
         int i, j, num_to_shuffle;
         short sw;
         int color;

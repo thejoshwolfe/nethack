@@ -120,7 +120,7 @@ hitval (struct obj *otmp, struct monst *mon)
                 tmp += otmp->spe;
 
 /*      Put weapon specific "to hit" bonuses in below:          */
-        tmp += objects[otmp->otyp].oc_hitbon;
+        tmp += objects[otmp->otyp].oc_oc1;
 
 /*      Put weapon vs. monster type "to hit" bonuses in below:  */
 
@@ -359,7 +359,7 @@ select_rwep (   /* select a ranged weapon for the monster */
                  * All monsters can wield the remaining weapons.
                  */
                 if (((strongmonst(mtmp->data) && (mtmp->misc_worn_check & W_ARMS) == 0)
-                        || !objects[pwep[i]].oc_bimanual) &&
+                        || !objects[pwep[i]].oc_big) &&
                     (objects[pwep[i]].oc_material != SILVER
                         || !hates_silver(mtmp->data))) {
                     if ((otmp = oselect(mtmp, pwep[i])) != 0) {
@@ -392,7 +392,7 @@ select_rwep (   /* select a ranged weapon for the monster */
                 /* KMH -- This belongs here so darts will work */
             propellor = &zeroobj;
 
-            prop = (objects[rwep[i]]).oc_skill;
+            prop = (objects[rwep[i]]).oc_subtyp;
             if (prop < 0) {
                 switch (-prop) {
                 case P_BOW:
@@ -466,7 +466,7 @@ select_hwep (   /* select a hand to hand weapon for the monster */
                 if (otmp->oclass == WEAPON_CLASS
                         && otmp->oartifact && touch_artifact(otmp,mtmp)
                         && ((strong && !wearing_shield)
-                            || !objects[otmp->otyp].oc_bimanual))
+                            || !objects[otmp->otyp].oc_big))
                     return otmp;
         }
 
@@ -480,7 +480,7 @@ select_hwep (   /* select a hand to hand weapon for the monster */
             if (hwep[i] == CORPSE && !(mtmp->misc_worn_check & W_ARMG))
                 continue;
             if (((strong && !wearing_shield)
-                        || !objects[hwep[i]].oc_bimanual) &&
+                        || !objects[hwep[i]].oc_big) &&
                     (objects[hwep[i]].oc_material != SILVER
                         || !hates_silver(mtmp->data)))
                 Oselect(hwep[i]);
@@ -1068,7 +1068,7 @@ weapon_type (struct obj *obj)
             obj->oclass != GEM_CLASS)
                 /* Not a weapon, weapon-tool, or ammo */
                 return (P_NONE);
-        type = objects[obj->otyp].oc_skill;
+        type = objects[obj->otyp].oc_subtyp;
         return ((type < 0) ? -type : type);
 }
 

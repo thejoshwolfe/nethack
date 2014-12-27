@@ -119,66 +119,66 @@ struct obj {
  *      #define is_poisonable(otyp) (otyp <= BEC_DE_CORBIN)
  */
 #define is_blade(otmp)  (otmp->oclass == WEAPON_CLASS && \
-                         objects[otmp->otyp].oc_skill >= P_DAGGER && \
-                         objects[otmp->otyp].oc_skill <= P_SABER)
+                         objects[otmp->otyp].oc_subtyp >= P_DAGGER && \
+                         objects[otmp->otyp].oc_subtyp <= P_SABER)
 #define is_axe(otmp)    ((otmp->oclass == WEAPON_CLASS || \
                          otmp->oclass == TOOL_CLASS) && \
-                         objects[otmp->otyp].oc_skill == P_AXE)
+                         objects[otmp->otyp].oc_subtyp == P_AXE)
 #define is_pick(otmp)   ((otmp->oclass == WEAPON_CLASS || \
                          otmp->oclass == TOOL_CLASS) && \
-                         objects[otmp->otyp].oc_skill == P_PICK_AXE)
+                         objects[otmp->otyp].oc_subtyp == P_PICK_AXE)
 #define is_sword(otmp)  (otmp->oclass == WEAPON_CLASS && \
-                         objects[otmp->otyp].oc_skill >= P_SHORT_SWORD && \
-                         objects[otmp->otyp].oc_skill <= P_SABER)
+                         objects[otmp->otyp].oc_subtyp >= P_SHORT_SWORD && \
+                         objects[otmp->otyp].oc_subtyp <= P_SABER)
 #define is_pole(otmp)   ((otmp->oclass == WEAPON_CLASS || \
                         otmp->oclass == TOOL_CLASS) && \
-                         (objects[otmp->otyp].oc_skill == P_POLEARMS || \
-                         objects[otmp->otyp].oc_skill == P_LANCE))
+                         (objects[otmp->otyp].oc_subtyp == P_POLEARMS || \
+                         objects[otmp->otyp].oc_subtyp == P_LANCE))
 #define is_spear(otmp)  (otmp->oclass == WEAPON_CLASS && \
-                         objects[otmp->otyp].oc_skill >= P_SPEAR && \
-                         objects[otmp->otyp].oc_skill <= P_JAVELIN)
+                         objects[otmp->otyp].oc_subtyp >= P_SPEAR && \
+                         objects[otmp->otyp].oc_subtyp <= P_JAVELIN)
 #define is_launcher(otmp)       (otmp->oclass == WEAPON_CLASS && \
-                         objects[otmp->otyp].oc_skill >= P_BOW && \
-                         objects[otmp->otyp].oc_skill <= P_CROSSBOW)
+                         objects[otmp->otyp].oc_subtyp >= P_BOW && \
+                         objects[otmp->otyp].oc_subtyp <= P_CROSSBOW)
 #define is_ammo(otmp)   ((otmp->oclass == WEAPON_CLASS || \
                          otmp->oclass == GEM_CLASS) && \
-                         objects[otmp->otyp].oc_skill >= -P_CROSSBOW && \
-                         objects[otmp->otyp].oc_skill <= -P_BOW)
+                         objects[otmp->otyp].oc_subtyp >= -P_CROSSBOW && \
+                         objects[otmp->otyp].oc_subtyp <= -P_BOW)
 #define ammo_and_launcher(otmp,ltmp) \
                          (is_ammo(otmp) && (ltmp) && \
-                         objects[(otmp)->otyp].oc_skill == -objects[(ltmp)->otyp].oc_skill)
+                         objects[(otmp)->otyp].oc_subtyp == -objects[(ltmp)->otyp].oc_subtyp)
 #define is_missile(otmp)        ((otmp->oclass == WEAPON_CLASS || \
                          otmp->oclass == TOOL_CLASS) && \
-                         objects[otmp->otyp].oc_skill >= -P_BOOMERANG && \
-                         objects[otmp->otyp].oc_skill <= -P_DART)
+                         objects[otmp->otyp].oc_subtyp >= -P_BOOMERANG && \
+                         objects[otmp->otyp].oc_subtyp <= -P_DART)
 #define is_weptool(o)   ((o)->oclass == TOOL_CLASS && \
-                         objects[(o)->otyp].oc_skill != P_NONE)
+                         objects[(o)->otyp].oc_subtyp != P_NONE)
 #define bimanual(otmp)  ((otmp->oclass == WEAPON_CLASS || \
                          otmp->oclass == TOOL_CLASS) && \
-                         objects[otmp->otyp].oc_bimanual)
+                         objects[otmp->otyp].oc_big)
 #define is_multigen(otmp)       (otmp->oclass == WEAPON_CLASS && \
-                         objects[otmp->otyp].oc_skill >= -P_SHURIKEN && \
-                         objects[otmp->otyp].oc_skill <= -P_BOW)
+                         objects[otmp->otyp].oc_subtyp >= -P_SHURIKEN && \
+                         objects[otmp->otyp].oc_subtyp <= -P_BOW)
 #define is_poisonable(otmp)     (otmp->oclass == WEAPON_CLASS && \
-                         objects[otmp->otyp].oc_skill >= -P_SHURIKEN && \
-                         objects[otmp->otyp].oc_skill <= -P_BOW)
-#define uslinging()     (uwep && objects[uwep->otyp].oc_skill == P_SLING)
+                         objects[otmp->otyp].oc_subtyp >= -P_SHURIKEN && \
+                         objects[otmp->otyp].oc_subtyp <= -P_BOW)
+#define uslinging()     (uwep && objects[uwep->otyp].oc_subtyp == P_SLING)
 
 /* Armor */
 #define is_shield(otmp) (otmp->oclass == ARMOR_CLASS && \
-                         objects[otmp->otyp].oc_armcat == ARM_SHIELD)
+                         objects[otmp->otyp].oc_subtyp == ARM_SHIELD)
 #define is_helmet(otmp) (otmp->oclass == ARMOR_CLASS && \
-                         objects[otmp->otyp].oc_armcat == ARM_HELM)
+                         objects[otmp->otyp].oc_subtyp == ARM_HELM)
 #define is_boots(otmp)  (otmp->oclass == ARMOR_CLASS && \
-                         objects[otmp->otyp].oc_armcat == ARM_BOOTS)
+                         objects[otmp->otyp].oc_subtyp == ARM_BOOTS)
 #define is_gloves(otmp) (otmp->oclass == ARMOR_CLASS && \
-                         objects[otmp->otyp].oc_armcat == ARM_GLOVES)
+                         objects[otmp->otyp].oc_subtyp == ARM_GLOVES)
 #define is_cloak(otmp)  (otmp->oclass == ARMOR_CLASS && \
-                         objects[otmp->otyp].oc_armcat == ARM_CLOAK)
+                         objects[otmp->otyp].oc_subtyp == ARM_CLOAK)
 #define is_shirt(otmp)  (otmp->oclass == ARMOR_CLASS && \
-                         objects[otmp->otyp].oc_armcat == ARM_SHIRT)
+                         objects[otmp->otyp].oc_subtyp == ARM_SHIRT)
 #define is_suit(otmp)   (otmp->oclass == ARMOR_CLASS && \
-                         objects[otmp->otyp].oc_armcat == ARM_SUIT)
+                         objects[otmp->otyp].oc_subtyp == ARM_SUIT)
 #define is_elven_armor(otmp)    ((otmp)->otyp == ELVEN_LEATHER_HELM\
                                 || (otmp)->otyp == ELVEN_MITHRIL_COAT\
                                 || (otmp)->otyp == ELVEN_CLOAK\

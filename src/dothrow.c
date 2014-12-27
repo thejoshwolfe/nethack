@@ -86,7 +86,7 @@ throw_obj (struct obj *obj, int shotlimit)
 
         /* Multishot calculations
          */
-        skill = objects[obj->otyp].oc_skill;
+        skill = objects[obj->otyp].oc_subtyp;
         if ((ammo_and_launcher(obj, uwep) || skill == P_DAGGER ||
                         skill == -P_DART || skill == -P_SHURIKEN) &&
                 !(Confusion || Stunned)) {
@@ -242,7 +242,7 @@ autoquiver (void)
                 omissile = otmp;
             } else if (otmp->oclass == WEAPON_CLASS && throwing_weapon(otmp)) {
                 /* Ordinary weapon */
-                if (objects[otmp->otyp].oc_skill == P_DAGGER
+                if (objects[otmp->otyp].oc_subtyp == P_DAGGER
                         && !omissile)
                     omissile = otmp;
                 else
@@ -1153,7 +1153,7 @@ thitmonst (struct monst *mon, struct obj *obj)
         tmp += disttmp;
 
         /* gloves are a hinderance to proper use of bows */
-        if (uarmg && uwep && objects[uwep->otyp].oc_skill == P_BOW) {
+        if (uarmg && uwep && objects[uwep->otyp].oc_subtyp == P_BOW) {
             switch (uarmg->otyp) {
             case GAUNTLETS_OF_POWER:    /* metal */
                 tmp -= 2;
@@ -1231,7 +1231,7 @@ thitmonst (struct monst *mon, struct obj *obj)
                      */
                     if ((Race_if(PM_ELF) || Role_if(PM_SAMURAI)) &&
                                 (!Upolyd || your_race(youmonst.data)) &&
-                                objects[uwep->otyp].oc_skill == P_BOW) {
+                                objects[uwep->otyp].oc_subtyp == P_BOW) {
                         tmp++;
                         if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)
                             tmp++;
@@ -1258,8 +1258,8 @@ thitmonst (struct monst *mon, struct obj *obj)
                 exercise(A_DEX, true);
                 /* projectiles other than magic stones
                    sometimes disappear when thrown */
-                if (objects[otyp].oc_skill < P_NONE &&
-                                objects[otyp].oc_skill > -P_BOOMERANG &&
+                if (objects[otyp].oc_subtyp < P_NONE &&
+                                objects[otyp].oc_subtyp > -P_BOOMERANG &&
                                 !objects[otyp].oc_magic) {
                     /* we were breaking 2/3 of everything unconditionally.
                      * we still don't want anything to survive unconditionally,

@@ -6,29 +6,6 @@
 
 /* definition of a class of objects */
 
-struct objclass {
-        short   oc_name_idx;            /* index of actual name */
-        short   oc_descr_idx;           /* description when name unknown */
-        char *  oc_uname;               /* called by user */
-        unsigned oc_name_known:1;
-        unsigned oc_merge:1;   /* merge otherwise equal objects */
-        unsigned oc_uses_known:1; /* obj->known affects full decription */
-                                /* otherwise, obj->dknown and obj->bknown */
-                                /* tell all, and obj->known should always */
-                                /* be set for proper merging behavior */
-        unsigned oc_pre_discovered:1;  /* Already known at start of game; */
-                                        /* won't be listed as a discovery. */
-        unsigned oc_magic:1;   /* inherently magical object */
-        unsigned oc_charged:1; /* may have +n or (n) charges */
-        unsigned oc_unique:1;  /* special one-of-a-kind object */
-        unsigned oc_nowish:1;  /* cannot wish for this object */
-
-        unsigned oc_big:1;
-#define oc_bimanual     oc_big  /* for weapons & tools used as weapons */
-#define oc_bulky        oc_big  /* for armor */
-        unsigned oc_tough:1;   /* hard gems/rings */
-
-        unsigned oc_dir:2;
 #define NODIR           1       /* for wands/spells: non-directional */
 #define IMMEDIATE       2       /*                   directional */
 #define RAY             3       /*                   zap beams */
@@ -37,9 +14,6 @@ struct objclass {
 #define SLASH           2       /* (latter includes iron ball & chain) */
 #define WHACK           0
 
-        /*unsigned oc_subtyp:3;*/      /* Now too big for a bitfield... see below */
-
-        unsigned oc_material:5;
 #define LIQUID          1       /* currently only for venom */
 #define WAX             2
 #define VEGGY           3       /* foodstuffs */
@@ -62,6 +36,7 @@ struct objclass {
 #define GEMSTONE        20
 #define MINERAL         21
 
+
 #define is_organic(otmp)        (objects[otmp->otyp].oc_material <= WOOD)
 #define is_metallic(otmp)       (objects[otmp->otyp].oc_material >= IRON && \
                                  objects[otmp->otyp].oc_material <= MITHRIL)
@@ -76,9 +51,7 @@ struct objclass {
 #define is_damageable(otmp) (is_rustprone(otmp) || is_flammable(otmp) || \
                                 is_rottable(otmp) || is_corrodeable(otmp))
 
-        signed char     oc_subtyp;
-#define oc_skill        oc_subtyp   /* Skills of weapons, spellbooks, tools, gems */
-#define oc_armcat       oc_subtyp   /* for armor */
+
 #define ARM_SHIELD      1       /* needed for special wear function */
 #define ARM_HELM        2
 #define ARM_GLOVES      3
@@ -86,6 +59,36 @@ struct objclass {
 #define ARM_CLOAK       5
 #define ARM_SHIRT       6
 #define ARM_SUIT        0
+
+struct objclass {
+        const char *oc_name;            /* actual name */
+        const char *oc_descr;           /* description when name unknown */
+        short   oc_name_idx;            /* index of actual name */
+        short   oc_descr_idx;           /* description when name unknown */
+        char *  oc_uname;               /* called by user */
+        unsigned oc_name_known:1;
+        unsigned oc_merge:1;   /* merge otherwise equal objects */
+        unsigned oc_uses_known:1; /* obj->known affects full decription */
+                                /* otherwise, obj->dknown and obj->bknown */
+                                /* tell all, and obj->known should always */
+                                /* be set for proper merging behavior */
+        unsigned oc_pre_discovered:1;  /* Already known at start of game; */
+                                        /* won't be listed as a discovery. */
+        unsigned oc_magic:1;   /* inherently magical object */
+        unsigned oc_charged:1; /* may have +n or (n) charges */
+        unsigned oc_unique:1;  /* special one-of-a-kind object */
+        unsigned oc_nowish:1;  /* cannot wish for this object */
+
+        unsigned oc_big:1; /* alias oc_bimanual: for weapons & tools used as weapons */
+                           /* alias oc_bulky: for armor */
+        unsigned oc_tough:1;   /* hard gems/rings */
+
+        unsigned oc_dir:2;
+        unsigned oc_material:5;
+
+        // oc_skill  Skills of weapons, spellbooks, tools, gems
+        // oc_armcat for armor
+        signed char     oc_subtyp;
 
         unsigned char   oc_oprop;               /* property (invis, &c.) conveyed */
         char    oc_class;               /* object class */
@@ -98,23 +101,17 @@ struct objclass {
 /* Check the AD&D rules!  The FIRST is small monster damage. */
 /* for weapons, and tools, rocks, and gems useful as weapons */
         signed char     oc_wsdam, oc_wldam;     /* max small/large monster damage */
-        signed char     oc_oc1, oc_oc2;
-#define oc_hitbon       oc_oc1          /* weapons: "to hit" bonus */
-
-#define a_ac            oc_oc1  /* armor class, used in ARM_BONUS in do.c */
-#define a_can           oc_oc2          /* armor: used in mhitu.c */
-#define oc_level        oc_oc2          /* books: spell level */
+        // weapons: "to hit" bonus
+        // armor class, used in ARM_BONUS in do.c
+        signed char     oc_oc1;
+        // armor: used in mhitu.c
+        // books: spell level
+        signed char     oc_oc2;
 
         unsigned short  oc_nutrition;   /* food value */
 };
 
-struct objdescr {
-        const char *oc_name;            /* actual name */
-        const char *oc_descr;           /* description when name unknown */
-};
-
 extern struct objclass objects[];
-extern struct objdescr obj_descr[];
 
 /*
  * All objects have a class. Make sure that all classes have a corresponding
@@ -175,6 +172,6 @@ struct fruit {
 #define newfruit() (struct fruit *)malloc(sizeof(struct fruit))
 #define dealloc_fruit(rind) free((void *) (rind))
 
-#define OBJ_NAME(obj)  (obj_descr[(obj).oc_name_idx].oc_name)
-#define OBJ_DESCR(obj) (obj_descr[(obj).oc_descr_idx].oc_descr)
+#define OBJ_NAME(obj)  (objects[(obj).oc_name_idx].oc_name)
+#define OBJ_DESCR(obj) (objects[(obj).oc_descr_idx].oc_descr)
 #endif /* OBJCLASS_H */

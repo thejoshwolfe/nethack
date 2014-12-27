@@ -527,7 +527,7 @@ void initoptions (void) {
     /* prevent it from being wished unless it's actually present    */
     /* as a named (or default) fruit.  Wishing for "fruit" will     */
     /* result in the player's preferred fruit [better than "\033"]. */
-    obj_descr[SLIME_MOLD].oc_name = "fruit";
+    objects[SLIME_MOLD].oc_name = "fruit";
 
     return;
 }

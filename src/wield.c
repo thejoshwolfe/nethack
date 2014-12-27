@@ -315,7 +315,7 @@ dowieldquiver (void)
 {
         struct obj *newquiver;
         const char *quivee_types = (uslinging() ||
-                  (uswapwep && objects[uswapwep->otyp].oc_skill == P_SLING)) ?
+                  (uswapwep && objects[uswapwep->otyp].oc_subtyp == P_SLING)) ?
                                   bullets : ready_objs;
 
         /* Since the quiver isn't in your hands, don't check cantwield(), */

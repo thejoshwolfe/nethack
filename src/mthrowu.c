@@ -363,7 +363,7 @@ m_throw (
                             hitv = 3 - distmin(u.ux,u.uy, mon->mx,mon->my);
                             if (hitv < -4) hitv = -4;
                             if (is_elf(mon->data) &&
-                                objects[singleobj->otyp].oc_skill == P_BOW) {
+                                objects[singleobj->otyp].oc_subtyp == P_BOW) {
                                 hitv++;
                                 if (MON_WEP(mon) &&
                                     MON_WEP(mon)->otyp == ELVEN_BOW)
@@ -525,7 +525,7 @@ thrwmu (struct monst *mtmp)
                         rn2(BOLT_LIM - distmin(x,y,mtmp->mux,mtmp->muy))))
             return;
 
-        skill = objects[otmp->otyp].oc_skill;
+        skill = objects[otmp->otyp].oc_subtyp;
         mwep = MON_WEP(mtmp);           /* wielded weapon */
 
         /* Multishot calculations */
@@ -740,7 +740,7 @@ hits_bars (
         switch (otmp->oclass) {
         case WEAPON_CLASS:
             {
-                int oskill = objects[obj_type].oc_skill;
+                int oskill = objects[obj_type].oc_subtyp;
 
                 hits = (oskill != -P_BOW  && oskill != -P_CROSSBOW &&
                         oskill != -P_DART && oskill != -P_SHURIKEN &&
@@ -749,7 +749,7 @@ hits_bars (
                 break;
             }
         case ARMOR_CLASS:
-                hits = (objects[obj_type].oc_armcat != ARM_GLOVES);
+                hits = (objects[obj_type].oc_subtyp != ARM_GLOVES);
                 break;
         case TOOL_CLASS:
                 hits = (obj_type != SKELETON_KEY &&

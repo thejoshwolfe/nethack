@@ -16,7 +16,7 @@ cost (struct obj *otmp)
 {
 
         if (otmp->oclass == SPBOOK_CLASS)
-                return(10 * objects[otmp->otyp].oc_level);
+                return(10 * objects[otmp->otyp].oc_oc2);
 
         switch (otmp->otyp) {
         case SCR_MAIL:

@@ -227,8 +227,8 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 #define min(x,y) ((x) < (y) ? (x) : (y))
 #define plur(x) (((x) == 1) ? "" : "s")
 
-#define ARM_BONUS(obj)  (objects[(obj)->otyp].a_ac + (obj)->spe \
-                         - min((int)greatest_erosion(obj),objects[(obj)->otyp].a_ac))
+#define ARM_BONUS(obj)  (objects[(obj)->otyp].oc_oc1 + (obj)->spe \
+                         - min((int)greatest_erosion(obj),objects[(obj)->otyp].oc_oc1))
 
 #define makeknown(x)    discover_object((x),true,true)
 #define distu(xx,yy)    dist2((int)(xx),(int)(yy),(int)u.ux,(int)u.uy)

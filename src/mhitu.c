@@ -790,34 +790,34 @@ magic_negation (struct monst *mon)
         int armpro = 0;
 
         armor = (mon == &youmonst) ? uarm : which_armor(mon, W_ARM);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
         armor = (mon == &youmonst) ? uarmc : which_armor(mon, W_ARMC);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
         armor = (mon == &youmonst) ? uarmh : which_armor(mon, W_ARMH);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
 
         /* armor types for shirt, gloves, shoes, and shield don't currently
            provide any magic cancellation but we might as well be complete */
         armor = (mon == &youmonst) ? uarmu : which_armor(mon, W_ARMU);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
         armor = (mon == &youmonst) ? uarmg : which_armor(mon, W_ARMG);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
         armor = (mon == &youmonst) ? uarmf : which_armor(mon, W_ARMF);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
         armor = (mon == &youmonst) ? uarms : which_armor(mon, W_ARMS);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
 
         /* this one is really a stretch... */
         armor = (mon == &youmonst) ? 0 : which_armor(mon, W_SADDLE);
-        if (armor && armpro < objects[armor->otyp].a_can)
-            armpro = objects[armor->otyp].a_can;
+        if (armor && armpro < objects[armor->otyp].oc_oc2)
+            armpro = objects[armor->otyp].oc_oc2;
 
         return armpro;
 }
