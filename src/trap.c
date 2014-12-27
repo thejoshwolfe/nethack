@@ -33,17 +33,17 @@ static const char * const A_gush_of_water_hits = "A gush of water hits";
 static const char * const blindgas[6] =
         {"humid", "odorless", "pungent", "chilling", "acrid", "biting"};
 
+static bool burn_dmg(struct obj *item, const char *descr, struct monst *victim) {
+    return rust_dmg(item, descr, 0, false, victim);
+}
 
 /* called when you're hit by fire (dofiretrap,buzz,zapyourself,explode) */
-bool 
-burnarmor (struct monst *victim)
-{
+bool burnarmor (struct monst *victim) {
     struct obj *item;
     char buf[BUFSZ];
     int mat_idx;
 
     if (!victim) return 0;
-#define burn_dmg(obj,descr) rust_dmg(obj, descr, 0, false, victim)
     while (1) {
         switch (rn2(5)) {
         case 0:
@@ -52,40 +52,39 @@ burnarmor (struct monst *victim)
                 mat_idx = objects[item->otyp].oc_material;
                 sprintf(buf,"%s helmet", materialnm[mat_idx] );
             }
-            if (!burn_dmg(item, item ? buf : "helmet")) continue;
+            if (!burn_dmg(item, item ? buf : "helmet", victim)) continue;
             break;
         case 1:
             item = (victim == &youmonst) ? uarmc : which_armor(victim, W_ARMC);
             if (item) {
-                (void) burn_dmg(item, cloak_simple_name(item));
+                burn_dmg(item, cloak_simple_name(item), victim);
                 return true;
             }
             item = (victim == &youmonst) ? uarm : which_armor(victim, W_ARM);
             if (item) {
-                (void) burn_dmg(item, xname(item));
+                burn_dmg(item, xname(item), victim);
                 return true;
             }
             item = (victim == &youmonst) ? uarmu : which_armor(victim, W_ARMU);
             if (item)
-                (void) burn_dmg(item, "shirt");
+                burn_dmg(item, "shirt", victim);
             return true;
         case 2:
             item = (victim == &youmonst) ? uarms : which_armor(victim, W_ARMS);
-            if (!burn_dmg(item, "wooden shield")) continue;
+            if (!burn_dmg(item, "wooden shield", victim)) continue;
             break;
         case 3:
             item = (victim == &youmonst) ? uarmg : which_armor(victim, W_ARMG);
-            if (!burn_dmg(item, "gloves")) continue;
+            if (!burn_dmg(item, "gloves", victim)) continue;
             break;
         case 4:
             item = (victim == &youmonst) ? uarmf : which_armor(victim, W_ARMF);
-            if (!burn_dmg(item, "boots")) continue;
+            if (!burn_dmg(item, "boots", victim)) continue;
             break;
         }
         break; /* Out of while loop */
     }
     return false;
-#undef burn_dmg
 }
 
 /* Generic rust-armor function.  Returns true if a message was printed;
@@ -93,9 +92,7 @@ burnarmor (struct monst *victim)
  * if the item could not be rusted; otherwise a message is printed and true is
  * returned only for rustable items.
  */
-bool 
-rust_dmg (struct obj *otmp, const char *ostr, int type, bool print, struct monst *victim)
-{
+bool rust_dmg (struct obj *otmp, const char *ostr, int type, bool print, struct monst *victim) {
         static const char * const action[] = { "smoulder", "rust", "rot", "corrode" };
         static const char * const msg[] =  { "burnt", "rusted", "rotten", "corroded" };
         bool vulnerable = false;

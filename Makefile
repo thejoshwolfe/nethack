@@ -129,7 +129,7 @@ build/dgn_comp.h: build/dgn_yacc.c
 
 build/lev_comp.h: build/lev_yacc.c
 
-build/dgn_lex.o: build/dgn_lex.c build/dgn_yacc.o
+build/dgn_lex.o: build/dgn_lex.c build/dgn_yacc.o build/pm.h
 
 build/lev_lex.o: build/lev_lex.c $(HACK_H) build/lev_yacc.o
 
