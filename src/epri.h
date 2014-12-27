@@ -5,6 +5,7 @@
 #include "align.h"
 #include "coord.h"
 #include "dungeon.h"
+#include "monst.h"
 
 struct epri {
         aligntyp shralign;      /* alignment of priest's shrine */

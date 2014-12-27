@@ -7,6 +7,7 @@
 #include "monsym.h"
 #include "you.h"
 #include "extern.h"
+#include "epri.h"
 
 static bool verysmall(struct permonst * ptr) {
     return ptr->msize < MZ_SMALL;
@@ -43,16 +44,21 @@ static bool resists_ston(struct monst * mon) {
     return (mon->mintrinsics & MR_STONE) != 0;
 }
 
-#define is_lminion(mon)         (is_minion((mon)->data) && \
-                                 (mon)->data->maligntyp >= A_COALIGNED && \
-                                 ((mon)->data != &mons[PM_ANGEL] || \
-                                  EPRI(mon)->shralign > 0))
-
-#define is_flyer(ptr)           (((ptr)->mflags1 & M1_FLY) != 0L)
-#define is_floater(ptr)         ((ptr)->mlet == S_EYE)
-#define is_clinger(ptr)         (((ptr)->mflags1 & M1_CLING) != 0L)
-#define is_swimmer(ptr)         (((ptr)->mflags1 & M1_SWIM) != 0L)
-#define breathless(ptr)         (((ptr)->mflags1 & M1_BREATHLESS) != 0L)
+static bool is_flyer(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_FLY) != 0L;
+}
+static bool is_floater(const struct permonst * ptr) {
+    return ptr->mlet == S_EYE;
+}
+static bool is_clinger(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_CLING) != 0L;
+}
+static bool is_swimmer(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_SWIM) != 0L;
+}
+static bool breathless(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_BREATHLESS) != 0L;
+}
 #define amphibious(ptr)         (((ptr)->mflags1 & (M1_AMPHIBIOUS | M1_BREATHLESS)) != 0L)
 #define passes_walls(ptr)       (((ptr)->mflags1 & M1_WALLWALK) != 0L)
 #define amorphous(ptr)          (((ptr)->mflags1 & M1_AMORPHOUS) != 0L)
@@ -306,5 +312,11 @@ static bool touch_petrifies(struct permonst * ptr) {
 
 #define befriend_with_obj(ptr, obj) ((obj)->oclass == FOOD_CLASS && \
                                      is_domestic(ptr))
+
+static bool is_lminion(struct monst * mon) {
+    return is_minion(mon->data) &&
+           mon->data->maligntyp >= A_COALIGNED &&
+           (mon->data != &mons[PM_ANGEL] || EPRI(mon)->shralign > 0);
+}
 
 #endif /* MONDATA_H */
