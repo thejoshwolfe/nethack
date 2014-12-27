@@ -20,9 +20,6 @@
  */
 
 
-#define maybe_polyd(if_so,if_not)       (Upolyd ? (if_so) : (if_not))
-
-
 /*** Resistances to troubles ***/
 /* With intrinsics and extrinsics */
 #define HFire_resistance        u.uprops[FIRE_RES].intrinsic

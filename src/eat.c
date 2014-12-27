@@ -1225,12 +1225,12 @@ fprefx (struct obj *otmp)
                                                 body_part(STOMACH));
                 break;
             case TRIPE_RATION:
-                if (carnivorous(youmonst.data) && !humanoid(youmonst.data))
+                if (carnivorous(youmonst.data) && !humanoid(youmonst.data)) {
                     pline("That tripe ration was surprisingly good!");
-                else if (maybe_polyd(is_orc(youmonst.data), Race_if(PM_ORC)))
+                } else if (Upolyd ? is_orc(youmonst.data): Race_if(PM_ORC)) {
                     pline(Hallucination ? "Tastes great! Less filling!" :
                           "Mmm, tripe... not bad!");
-                else {
+                } else {
                     pline("Yak - dog food!");
                     more_experienced(1,0);
                     newexplevel();

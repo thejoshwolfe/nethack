@@ -1137,8 +1137,7 @@ thitmonst (struct monst *mon, struct obj *obj)
          * Certain items which don't in themselves do damage ignore tmp.
          * Distance and monster size affect chance to hit.
          */
-        tmp = -1 + Luck + find_mac(mon) + u.uhitinc +
-                        maybe_polyd(youmonst.data->mlevel, u.ulevel);
+        tmp = -1 + Luck + find_mac(mon) + u.uhitinc + (Upolyd ? youmonst.data->mlevel : u.ulevel);
         if (ACURR(A_DEX) < 4) tmp -= 3;
         else if (ACURR(A_DEX) < 6) tmp -= 2;
         else if (ACURR(A_DEX) < 8) tmp -= 1;
@@ -1171,8 +1170,7 @@ thitmonst (struct monst *mon, struct obj *obj)
         }
 
         tmp += omon_adj(mon, obj, true);
-        if (is_orc(mon->data) && maybe_polyd(is_elf(youmonst.data),
-                        Race_if(PM_ELF)))
+        if (is_orc(mon->data) && (Upolyd ? is_elf(youmonst.data) : Race_if(PM_ELF)))
             tmp++;
         if (guaranteed_hit) {
             tmp += 1000; /* Guaranteed hit */

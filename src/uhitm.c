@@ -235,14 +235,11 @@ check_caitiff (struct monst *mtmp)
         }
 }
 
-signed char
-find_roll_to_hit (struct monst *mtmp)
-{
+signed char find_roll_to_hit (struct monst *mtmp) {
         signed char tmp;
         int tmp2;
 
-        tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc +
-                maybe_polyd(youmonst.data->mlevel, u.ulevel);
+        tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc + (Upolyd ? youmonst.data->mlevel : u.ulevel);
 
         check_caitiff(mtmp);
 
@@ -269,8 +266,7 @@ find_roll_to_hit (struct monst *mtmp)
                         mtmp->mfrozen = 0;
                 }
         }
-        if (is_orc(mtmp->data) && maybe_polyd(is_elf(youmonst.data),
-                        Race_if(PM_ELF)))
+        if (is_orc(mtmp->data) && (Upolyd ? is_elf(youmonst.data) : Race_if(PM_ELF)))
             tmp++;
         if(Role_if(PM_MONK) && !Upolyd) {
             if (uarm) {
