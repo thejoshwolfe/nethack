@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "timeout.h"
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
@@ -1263,21 +1264,19 @@ kind_name (short kind)
     return "unknown";
 }
 
-static void
-print_queue (winid win, timer_element *base)
-{
+static void print_queue (winid win, timer_element *base) {
     timer_element *curr;
-    char buf[BUFSZ], arg_address[20];
+    char buf[BUFSZ];
 
     if (!base) {
         putstr(win, 0, "<empty>");
     } else {
         putstr(win, 0, "timeout  id   kind   call");
         for (curr = base; curr; curr = curr->next) {
-            sprintf(buf, " %4ld   %4ld  %-6s #%d(%s)",
+            sprintf(buf, " %4ld   %4ld  %-6s #%d(%p)",
                 curr->timeout, curr->tid, kind_name(curr->kind),
                 curr->func_index,
-                fmt_ptr((void *)curr->arg, arg_address));
+                curr->arg);
             putstr(win, 0, buf);
         }
     }
@@ -1305,21 +1304,17 @@ wiz_timeout_queue (void)
     return 0;
 }
 
-void
-timer_sanity_check (void)
-{
+void timer_sanity_check (void) {
     timer_element *curr;
-    char obj_address[20];
-
     /* this should be much more complete */
-    for (curr = timer_base; curr; curr = curr->next)
+    for (curr = timer_base; curr; curr = curr->next) {
         if (curr->kind == TIMER_OBJECT) {
             struct obj *obj = (struct obj *) curr->arg;
             if (obj->timed == 0) {
-                pline("timer sanity: untimed obj %s, timer %ld",
-                      fmt_ptr((void *)obj, obj_address), curr->tid);
+                pline("timer sanity: untimed obj %p, timer %ld", obj, curr->tid);
             }
         }
+    }
 }
 
 
@@ -1328,9 +1323,7 @@ timer_sanity_check (void)
  * Pick off timeout elements from the global queue and call their functions.
  * Do this until their time is less than or equal to the move count.
  */
-void
-run_timers (void)
-{
+void run_timers (void) {
     timer_element *curr;
 
     /*

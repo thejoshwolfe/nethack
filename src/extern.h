@@ -15,10 +15,6 @@
 #include "rect.h"
 #include "region.h"
 
-/* ### alloc.c ### */
-
-extern char *fmt_ptr(const void *,char *);
-
 /* ### allmain.c ### */
 
 extern void moveloop(void);
@@ -469,7 +465,7 @@ extern bool maybe_finished_meal(bool);
 extern void done1(int);
 extern int done2(void);
 extern void done_in_by(struct monst *);
-extern void panic(const char *,...);
+extern void panic(const char *, ...) __attribute__ ((format (printf, 1, 2)));
 extern void done(int);
 extern void container_contents(struct obj *,bool,bool);
 extern void dump(char *, char *);
@@ -1150,20 +1146,20 @@ extern bool is_autopickup_exception(struct obj *, bool);
 
 /* ### pline.c ### */
 
-extern void pline(const char *,...);
+extern void pline(const char *,...) __attribute__ ((format (printf, 1, 2)));
 extern void plines(const char *);
-extern void Norep(const char *,...);
+extern void Norep(const char *,...) __attribute__ ((format (printf, 1, 2)));
 extern void free_youbuf(void);
-extern void You(const char *,...);
-extern void Your(const char *,...);
-extern void You_feel(const char *,...);
-extern void You_cant(const char *,...);
-extern void You_hear(const char *,...);
-extern void pline_The(const char *,...);
-extern void There(const char *,...);
-extern void verbalize(const char *,...);
-extern void raw_printf(const char *,...);
-extern void impossible(const char *,...);
+extern void You(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void Your(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void You_feel(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void You_cant(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void You_hear(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void pline_The(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void There(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void verbalize(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void raw_printf(const char *,...) __attribute__ ((format (printf, 1, 2)));
+extern void impossible(const char *,...) __attribute__ ((format (printf, 1, 2)));
 extern const char *align_str(aligntyp);
 extern void mstatusline(struct monst *);
 extern void ustatusline(void);

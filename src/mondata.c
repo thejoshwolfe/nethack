@@ -356,9 +356,7 @@ monsndx (               /* return an index into the mons array */
 
         i = (int)(ptr - &mons[0]);
         if (i < LOW_PM || i >= NUMMONS) {
-                /* ought to switch this to use `fmt_ptr' */
-            panic("monsndx - could not index monster (%lx)",
-                  (unsigned long)ptr);
+            panic("monsndx - could not index monster (%p)", ptr);
             return NON_PM;              /* will not get here */
         }
 

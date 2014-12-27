@@ -1874,9 +1874,7 @@ static int wiz_show_stats (void) {
     return 0;
 }
 
-    void
-sanity_check (void)
-{
+void sanity_check (void) {
     obj_sanity_check();
     timer_sanity_check();
 }

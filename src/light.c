@@ -548,13 +548,9 @@ candle_light_range (struct obj *obj)
     return radius;
 }
 
-extern char *fmt_ptr(const void *, char *);  /* from alloc.c */
-
-int
-wiz_light_sources (void)
-{
+int wiz_light_sources (void) {
     winid win;
-    char buf[BUFSZ], arg_address[20];
+    char buf[BUFSZ];
     light_source *ls;
 
     win = create_nhwindow(NHW_MENU);    /* corner text window */
@@ -568,7 +564,7 @@ wiz_light_sources (void)
         putstr(win, 0, "location range flags  type    id");
         putstr(win, 0, "-------- ----- ------ ----  -------");
         for (ls = light_base; ls; ls = ls->next) {
-            sprintf(buf, "  %2d,%2d   %2d   0x%04x  %s  %s",
+            sprintf(buf, "  %2d,%2d   %2d   0x%04x  %s  %p",
                 ls->x, ls->y, ls->range, ls->flags,
                 (ls->type == LS_OBJECT ? "obj" :
                  ls->type == LS_MONSTER ?
@@ -576,7 +572,7 @@ wiz_light_sources (void)
                      ((struct monst *)ls->id == &youmonst) ? "you" :
                      "<m>") :           /* migrating monster */
                  "???"),
-                fmt_ptr(ls->id, arg_address));
+                ls->id);
             putstr(win, 0, buf);
         }
     } else
@@ -588,7 +584,3 @@ wiz_light_sources (void)
 
     return 0;
 }
-
-
-
-/*light.c*/

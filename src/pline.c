@@ -13,15 +13,6 @@ static bool no_repeat = false;
 static char *You_buf(int);
 
 
-static void vpline(const char *, va_list);
-
-void pline(const char * line, ...) {
-    va_list the_args;
-        va_start(the_args, line);
-        vpline(line, the_args);
-    va_end(the_args);
-}
-
 static void vpline(const char *line, va_list the_args) {
         char pbuf[BUFSZ];
 /* Do NOT use va_start and va_start in here... see above */
@@ -32,6 +23,14 @@ static void vpline(const char *line, va_list the_args) {
             line = pbuf;
         }
         plines(line);
+}
+
+
+void pline(const char * line, ...) {
+    va_list the_args;
+        va_start(the_args, line);
+        vpline(line, the_args);
+    va_end(the_args);
 }
 
 void plines(const char *line) {

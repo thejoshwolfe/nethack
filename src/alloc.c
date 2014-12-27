@@ -3,8 +3,6 @@
 #include "global.h"
 #include <stdlib.h>
 
-char *fmt_ptr(const void *,char *);
-
 long *alloc(unsigned int);
 extern void panic(const char *,...);
 
@@ -17,8 +15,3 @@ long * alloc(unsigned int lth) {
     return((long *) ptr);
 }
 
-/* format a pointer for display purposes; caller supplies the result buffer */
-char * fmt_ptr (const void *ptr, char *buf) {
-    sprintf(buf, "%06lx", (unsigned long)ptr);
-    return buf;
-}
