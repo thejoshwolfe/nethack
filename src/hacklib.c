@@ -62,8 +62,7 @@ char lowc(char c) {
 }
 
 /* convert a string into all lowercase */
-char *
-lcase(char *s) {
+char * lcase(char *s) {
     char *p;
 
     for (p = s; *p; p++)
@@ -73,16 +72,14 @@ lcase(char *s) {
 }
 
 /* convert first character of a string to uppercase */
-char *
-upstart(char *s) {
+char * upstart(char *s) {
     if (s)
         *s = highc(*s);
     return s;
 }
 
 /* remove excess whitespace from a string buffer (in place) */
-char *
-mungspaces(char *bp) {
+char * mungspaces(char *bp) {
     char c, *p, *p2;
     bool was_space = true;
 
@@ -100,8 +97,7 @@ mungspaces(char *bp) {
 }
 
 /* return the end of a string (pointing at '\0') */
-char *
-eos(char *s) {
+char * eos(char *s) {
     while (*s)
         s++; /* s += strlen(s); */
     return s;
@@ -109,8 +105,7 @@ eos(char *s) {
 
 /* strcat(s, {c,'\0'}); */
 /* append a character to a string (in place) */
-char *
-strkitten(char *s, char c) {
+char * strkitten(char *s, char c) {
     char *p = eos(s);
 
     *p++ = c;
@@ -119,8 +114,7 @@ strkitten(char *s, char c) {
 }
 
 /* return a name converted to possessive */
-char *
-s_suffix(const char *s) {
+char * s_suffix(const char *s) {
     static char buf[BUFSZ];
 
     strcpy(buf, s);
@@ -134,8 +128,7 @@ s_suffix(const char *s) {
 }
 
 /* trivial text encryption routine (see makedefs) */
-char *
-xcrypt(const char *str, char *buf) {
+char * xcrypt(const char *str, char *buf) {
     const char *p;
     char *q;
     int bitmask;
@@ -160,8 +153,7 @@ bool onlyspace(const char *s) {
 }
 
 /* expand tabs into proper number of spaces */
-char *
-tabexpand(char *sbuf) {
+char * tabexpand(char *sbuf) {
     char buf[BUFSZ];
     char *bp, *s = sbuf;
     int idx;
@@ -184,8 +176,7 @@ tabexpand(char *sbuf) {
 }
 
 /* make a displayable string from a character */
-char *
-visctrl(char c) {
+char * visctrl(char c) {
     static char ccc[3];
 
     c &= 0177;
@@ -206,16 +197,14 @@ visctrl(char c) {
 
 /* return the ordinal suffix of a number */
 /* note: n should be non-negative */
-const char *
-ordin(int n) {
+const char * ordin(int n) {
     int dd = n % 10;
 
     return (dd == 0 || dd > 3 || (n % 100) / 10 == 1) ? "th" : (dd == 1) ? "st" : (dd == 2) ? "nd" : "rd";
 }
 
 /* make a signed digit string from a number */
-char *
-sitoa(int n) {
+char * sitoa(int n) {
     static char buf[13];
 
     sprintf(buf, (n < 0) ? "%d" : "+%d", n);
@@ -318,8 +307,7 @@ int strncmpi(const char *s1, const char *s2, int n /*(should probably be size_t,
 }
 
 /* case insensitive substring search */
-char *
-strstri(const char *str, const char *sub) {
+char * strstri(const char *str, const char *sub) {
     const char *s1, *s2;
     int i, k;
 #define TABSIZ 0x20    /* 0x40 would be case-sensitive */
