@@ -5,8 +5,6 @@
 #include "flag.h"
 /* Relevent header information in rm.h and objclass.h. */
 
-#define C(n) n
-
 #define g_FILLER(symbol) 0
 
 unsigned char oc_syms[MAXOCLASSES] = DUMMY; /* the current object  display symbols */
@@ -179,14 +177,14 @@ const char * const monexplain[MAXMCLASSES] = {
 };
 
 const struct symdef def_warnsyms[WARNCOUNT] = {
-        {'0', "unknown creature causing you worry", C(CLR_WHITE)},      /* white warning  */
-        {'1', "unknown creature causing you concern", C(CLR_RED)},      /* pink warning   */
-        {'2', "unknown creature causing you anxiety", C(CLR_RED)},      /* red warning    */
-        {'3', "unknown creature causing you disquiet", C(CLR_RED)},     /* ruby warning   */
+        {'0', "unknown creature causing you worry", CLR_WHITE},      /* white warning  */
+        {'1', "unknown creature causing you concern", CLR_RED},      /* pink warning   */
+        {'2', "unknown creature causing you anxiety", CLR_RED},      /* red warning    */
+        {'3', "unknown creature causing you disquiet", CLR_RED},     /* ruby warning   */
         {'4', "unknown creature causing you alarm",
-                                                C(CLR_MAGENTA)},        /* purple warning */
+                                                CLR_MAGENTA},        /* purple warning */
         {'5', "unknown creature causing you dread",
-                                                C(CLR_BRIGHT_MAGENTA)}  /* black warning  */
+                                                CLR_BRIGHT_MAGENTA}  /* black warning  */
 };
 
 /*
@@ -194,105 +192,103 @@ const struct symdef def_warnsyms[WARNCOUNT] = {
  *  Note:  {ibm|dec|mac}_graphics[] arrays also depend on this symbol order.
  */
 const struct symdef defsyms[MAXPCHARS] = {
-/* 0*/  {' ', "dark part of a room",C(NO_COLOR)},       /* stone */
-        {'|', "wall",           C(CLR_GRAY)},   /* vwall */
-        {'-', "wall",           C(CLR_GRAY)},   /* hwall */
-        {'-', "wall",           C(CLR_GRAY)},   /* tlcorn */
-        {'-', "wall",           C(CLR_GRAY)},   /* trcorn */
-        {'-', "wall",           C(CLR_GRAY)},   /* blcorn */
-        {'-', "wall",           C(CLR_GRAY)},   /* brcorn */
-        {'-', "wall",           C(CLR_GRAY)},   /* crwall */
-        {'-', "wall",           C(CLR_GRAY)},   /* tuwall */
-        {'-', "wall",           C(CLR_GRAY)},   /* tdwall */
-/*10*/  {'|', "wall",           C(CLR_GRAY)},   /* tlwall */
-        {'|', "wall",           C(CLR_GRAY)},   /* trwall */
-        {'.', "doorway",        C(CLR_GRAY)},   /* ndoor */
-        {'-', "open door",      C(CLR_BROWN)},  /* vodoor */
-        {'|', "open door",      C(CLR_BROWN)},  /* hodoor */
-        {'+', "closed door",    C(CLR_BROWN)},  /* vcdoor */
-        {'+', "closed door",    C(CLR_BROWN)},  /* hcdoor */
-        {'#', "iron bars",      C(HI_METAL)},   /* bars */
-        {'#', "tree",           C(CLR_GREEN)},  /* tree */
-        {'.', "floor of a room",C(CLR_GRAY)},   /* room */
-/*20*/  {'#', "corridor",       C(CLR_GRAY)},   /* dark corr */
-        {'#', "lit corridor",   C(CLR_GRAY)},   /* lit corr (see mapglyph.c) */
-        {'<', "staircase up",   C(CLR_GRAY)},   /* upstair */
-        {'>', "staircase down", C(CLR_GRAY)},   /* dnstair */
-        {'<', "ladder up",      C(CLR_BROWN)},  /* upladder */
-        {'>', "ladder down",    C(CLR_BROWN)},  /* dnladder */
-        {'_', "altar",          C(CLR_GRAY)},   /* altar */
-        {'|', "grave",      C(CLR_GRAY)},   /* grave */
-        {'\\', "opulent throne",C(HI_GOLD)},    /* throne */
-        {'#', "sink",           C(CLR_GRAY)},   /* sink */
-/*30*/  {'{', "fountain",       C(CLR_BLUE)},   /* fountain */
-        {'}', "water",          C(CLR_BLUE)},   /* pool */
-        {'.', "ice",            C(CLR_CYAN)},   /* ice */
-        {'}', "molten lava",    C(CLR_RED)},    /* lava */
-        {'.', "lowered drawbridge",C(CLR_BROWN)},       /* vodbridge */
-        {'.', "lowered drawbridge",C(CLR_BROWN)},       /* hodbridge */
-        {'#', "raised drawbridge",C(CLR_BROWN)},/* vcdbridge */
-        {'#', "raised drawbridge",C(CLR_BROWN)},/* hcdbridge */
-        {' ', "air",            C(CLR_CYAN)},   /* open air */
-        {'#', "cloud",          C(CLR_GRAY)},   /* [part of] a cloud */
-/*40*/  {'}', "water",          C(CLR_BLUE)},   /* under water */
-        {'^', "arrow trap",     C(HI_METAL)},   /* trap */
-        {'^', "dart trap",      C(HI_METAL)},   /* trap */
-        {'^', "falling rock trap",C(CLR_GRAY)}, /* trap */
-        {'^', "squeaky board",  C(CLR_BROWN)},  /* trap */
-        {'^', "bear trap",      C(HI_METAL)},   /* trap */
-        {'^', "land mine",      C(CLR_RED)},    /* trap */
-        {'^', "rolling boulder trap",   C(CLR_GRAY)},   /* trap */
-        {'^', "sleeping gas trap",C(HI_ZAP)},   /* trap */
-        {'^', "rust trap",      C(CLR_BLUE)},   /* trap */
-/*50*/  {'^', "fire trap",      C(CLR_ORANGE)}, /* trap */
-        {'^', "pit",            C(CLR_BLACK)},  /* trap */
-        {'^', "spiked pit",     C(CLR_BLACK)},  /* trap */
-        {'^', "hole",   C(CLR_BROWN)},  /* trap */
-        {'^', "trap door",      C(CLR_BROWN)},  /* trap */
-        {'^', "teleportation trap", C(CLR_MAGENTA)},    /* trap */
-        {'^', "level teleporter", C(CLR_MAGENTA)},      /* trap */
-        {'^', "magic portal",   C(CLR_BRIGHT_MAGENTA)}, /* trap */
-        {'"', "web",            C(CLR_GRAY)},   /* web */
-        {'^', "statue trap",    C(CLR_GRAY)},   /* trap */
-/*60*/  {'^', "magic trap",     C(HI_ZAP)},     /* trap */
-        {'^', "anti-magic field", C(HI_ZAP)},   /* trap */
-        {'^', "polymorph trap", C(CLR_BRIGHT_GREEN)},   /* trap */
-        {'|', "wall",           C(CLR_GRAY)},   /* vbeam */
-        {'-', "wall",           C(CLR_GRAY)},   /* hbeam */
-        {'\\',"wall",           C(CLR_GRAY)},   /* lslant */
-        {'/', "wall",           C(CLR_GRAY)},   /* rslant */
-        {'*', "",               C(CLR_WHITE)},  /* dig beam */
-        {'!', "",               C(CLR_WHITE)},  /* camera flash beam */
-        {')', "",               C(HI_WOOD)},    /* boomerang open left */
-/*70*/  {'(', "",               C(HI_WOOD)},    /* boomerang open right */
-        {'0', "",               C(HI_ZAP)},     /* 4 magic shield symbols */
-        {'#', "",               C(HI_ZAP)},
-        {'@', "",               C(HI_ZAP)},
-        {'*', "",               C(HI_ZAP)},
-        {'/', "",               C(CLR_GREEN)},  /* swallow top left     */
-        {'-', "",               C(CLR_GREEN)},  /* swallow top center   */
-        {'\\', "",              C(CLR_GREEN)},  /* swallow top right    */
-        {'|', "",               C(CLR_GREEN)},  /* swallow middle left  */
-        {'|', "",               C(CLR_GREEN)},  /* swallow middle right */
-/*80*/  {'\\', "",              C(CLR_GREEN)},  /* swallow bottom left  */
-        {'-', "",               C(CLR_GREEN)},  /* swallow bottom center*/
-        {'/', "",               C(CLR_GREEN)},  /* swallow bottom right */
-        {'/', "",               C(CLR_ORANGE)}, /* explosion top left     */
-        {'-', "",               C(CLR_ORANGE)}, /* explosion top center   */
-        {'\\', "",              C(CLR_ORANGE)}, /* explosion top right    */
-        {'|', "",               C(CLR_ORANGE)}, /* explosion middle left  */
-        {' ', "",               C(CLR_ORANGE)}, /* explosion middle center*/
-        {'|', "",               C(CLR_ORANGE)}, /* explosion middle right */
-        {'\\', "",              C(CLR_ORANGE)}, /* explosion bottom left  */
-/*90*/  {'-', "",               C(CLR_ORANGE)}, /* explosion bottom center*/
-        {'/', "",               C(CLR_ORANGE)}, /* explosion bottom right */
+/* 0*/  {' ', "dark part of a room",NO_COLOR},       /* stone */
+        {'|', "wall",           CLR_GRAY},   /* vwall */
+        {'-', "wall",           CLR_GRAY},   /* hwall */
+        {'-', "wall",           CLR_GRAY},   /* tlcorn */
+        {'-', "wall",           CLR_GRAY},   /* trcorn */
+        {'-', "wall",           CLR_GRAY},   /* blcorn */
+        {'-', "wall",           CLR_GRAY},   /* brcorn */
+        {'-', "wall",           CLR_GRAY},   /* crwall */
+        {'-', "wall",           CLR_GRAY},   /* tuwall */
+        {'-', "wall",           CLR_GRAY},   /* tdwall */
+/*10*/  {'|', "wall",           CLR_GRAY},   /* tlwall */
+        {'|', "wall",           CLR_GRAY},   /* trwall */
+        {'.', "doorway",        CLR_GRAY},   /* ndoor */
+        {'-', "open door",      CLR_BROWN},  /* vodoor */
+        {'|', "open door",      CLR_BROWN},  /* hodoor */
+        {'+', "closed door",    CLR_BROWN},  /* vcdoor */
+        {'+', "closed door",    CLR_BROWN},  /* hcdoor */
+        {'#', "iron bars",      HI_METAL},   /* bars */
+        {'#', "tree",           CLR_GREEN},  /* tree */
+        {'.', "floor of a room",CLR_GRAY},   /* room */
+/*20*/  {'#', "corridor",       CLR_GRAY},   /* dark corr */
+        {'#', "lit corridor",   CLR_GRAY},   /* lit corr (see mapglyph.c) */
+        {'<', "staircase up",   CLR_GRAY},   /* upstair */
+        {'>', "staircase down", CLR_GRAY},   /* dnstair */
+        {'<', "ladder up",      CLR_BROWN},  /* upladder */
+        {'>', "ladder down",    CLR_BROWN},  /* dnladder */
+        {'_', "altar",          CLR_GRAY},   /* altar */
+        {'|', "grave",      CLR_GRAY},   /* grave */
+        {'\\', "opulent throne",HI_GOLD},    /* throne */
+        {'#', "sink",           CLR_GRAY},   /* sink */
+/*30*/  {'{', "fountain",       CLR_BLUE},   /* fountain */
+        {'}', "water",          CLR_BLUE},   /* pool */
+        {'.', "ice",            CLR_CYAN},   /* ice */
+        {'}', "molten lava",    CLR_RED},    /* lava */
+        {'.', "lowered drawbridge",CLR_BROWN},       /* vodbridge */
+        {'.', "lowered drawbridge",CLR_BROWN},       /* hodbridge */
+        {'#', "raised drawbridge",CLR_BROWN},/* vcdbridge */
+        {'#', "raised drawbridge",CLR_BROWN},/* hcdbridge */
+        {' ', "air",            CLR_CYAN},   /* open air */
+        {'#', "cloud",          CLR_GRAY},   /* [part of] a cloud */
+/*40*/  {'}', "water",          CLR_BLUE},   /* under water */
+        {'^', "arrow trap",     HI_METAL},   /* trap */
+        {'^', "dart trap",      HI_METAL},   /* trap */
+        {'^', "falling rock trap",CLR_GRAY}, /* trap */
+        {'^', "squeaky board",  CLR_BROWN},  /* trap */
+        {'^', "bear trap",      HI_METAL},   /* trap */
+        {'^', "land mine",      CLR_RED},    /* trap */
+        {'^', "rolling boulder trap",   CLR_GRAY},   /* trap */
+        {'^', "sleeping gas trap",HI_ZAP},   /* trap */
+        {'^', "rust trap",      CLR_BLUE},   /* trap */
+/*50*/  {'^', "fire trap",      CLR_ORANGE}, /* trap */
+        {'^', "pit",            CLR_BLACK},  /* trap */
+        {'^', "spiked pit",     CLR_BLACK},  /* trap */
+        {'^', "hole",   CLR_BROWN},  /* trap */
+        {'^', "trap door",      CLR_BROWN},  /* trap */
+        {'^', "teleportation trap", CLR_MAGENTA},    /* trap */
+        {'^', "level teleporter", CLR_MAGENTA},      /* trap */
+        {'^', "magic portal",   CLR_BRIGHT_MAGENTA}, /* trap */
+        {'"', "web",            CLR_GRAY},   /* web */
+        {'^', "statue trap",    CLR_GRAY},   /* trap */
+/*60*/  {'^', "magic trap",     HI_ZAP},     /* trap */
+        {'^', "anti-magic field", HI_ZAP},   /* trap */
+        {'^', "polymorph trap", CLR_BRIGHT_GREEN},   /* trap */
+        {'|', "wall",           CLR_GRAY},   /* vbeam */
+        {'-', "wall",           CLR_GRAY},   /* hbeam */
+        {'\\',"wall",           CLR_GRAY},   /* lslant */
+        {'/', "wall",           CLR_GRAY},   /* rslant */
+        {'*', "",               CLR_WHITE},  /* dig beam */
+        {'!', "",               CLR_WHITE},  /* camera flash beam */
+        {')', "",               HI_WOOD},    /* boomerang open left */
+/*70*/  {'(', "",               HI_WOOD},    /* boomerang open right */
+        {'0', "",               HI_ZAP},     /* 4 magic shield symbols */
+        {'#', "",               HI_ZAP},
+        {'@', "",               HI_ZAP},
+        {'*', "",               HI_ZAP},
+        {'/', "",               CLR_GREEN},  /* swallow top left     */
+        {'-', "",               CLR_GREEN},  /* swallow top center   */
+        {'\\', "",              CLR_GREEN},  /* swallow top right    */
+        {'|', "",               CLR_GREEN},  /* swallow middle left  */
+        {'|', "",               CLR_GREEN},  /* swallow middle right */
+/*80*/  {'\\', "",              CLR_GREEN},  /* swallow bottom left  */
+        {'-', "",               CLR_GREEN},  /* swallow bottom center*/
+        {'/', "",               CLR_GREEN},  /* swallow bottom right */
+        {'/', "",               CLR_ORANGE}, /* explosion top left     */
+        {'-', "",               CLR_ORANGE}, /* explosion top center   */
+        {'\\', "",              CLR_ORANGE}, /* explosion top right    */
+        {'|', "",               CLR_ORANGE}, /* explosion middle left  */
+        {' ', "",               CLR_ORANGE}, /* explosion middle center*/
+        {'|', "",               CLR_ORANGE}, /* explosion middle right */
+        {'\\', "",              CLR_ORANGE}, /* explosion bottom left  */
+/*90*/  {'-', "",               CLR_ORANGE}, /* explosion bottom center*/
+        {'/', "",               CLR_ORANGE}, /* explosion bottom right */
 /*
  *  Note: Additions to this array should be reflected in the
  *        {ibm,dec,mac}_graphics[] arrays below.
  */
 };
-
-#undef C
 
 static unsigned char ibm_graphics[MAXPCHARS] = {
 /* 0*/  g_FILLER(S_stone),
