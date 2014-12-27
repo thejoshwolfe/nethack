@@ -16,7 +16,7 @@ void panic (char * str, ...) {
     abort();    /* avoid loops - this should never happen*/
 
         (void) fputs(" ERROR:  ", stderr);
-        Vfprintf(stderr, str, the_args);
+        vfprintf(stderr, str, the_args);
         (void) fflush(stderr);
     abort();    /* generate core dump */
     va_end(the_args);

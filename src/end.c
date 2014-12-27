@@ -279,7 +279,7 @@ void panic (const char * str, ...) {
         }
         {
             char buf[BUFSZ];
-            Vsprintf(buf,str,the_args);
+            vsprintf(buf,str,the_args);
             raw_print(buf);
             paniclog("panic", buf);
         }

@@ -28,7 +28,7 @@ static void vpline(const char *line, va_list the_args) {
 
         if (!line || !*line) return;
         if (index(line, '%')) {
-            Vsprintf(pbuf,line,the_args);
+            vsprintf(pbuf,line,the_args);
             line = pbuf;
         }
         plines(line);
@@ -174,7 +174,7 @@ static void vraw_printf(const char *line, va_list the_args) {
             raw_print(line);
         else {
             char pbuf[BUFSZ];
-            Vsprintf(pbuf,line,the_args);
+            vsprintf(pbuf,line,the_args);
             raw_print(pbuf);
         }
 }
@@ -188,7 +188,7 @@ void impossible (const char * s, ...) {
         program_state.in_impossible = 1;
         {
             char pbuf[BUFSZ];
-            Vsprintf(pbuf,s,the_args);
+            vsprintf(pbuf,s,the_args);
             paniclog("impossible", pbuf);
         }
         vpline(s,the_args);
