@@ -142,7 +142,7 @@ s_suffix (              /* return a name converted to possessive */
 {
     static char buf[BUFSZ];
 
-    Strcpy(buf, s);
+    strcpy(buf, s);
     if(!strcmpi(buf, "it"))
         Strcat(buf, "s");
     else if(*(eos(buf)-1) == 's')

@@ -1244,7 +1244,7 @@ domove (void)
                 char pnambuf[BUFSZ];
 
                 /* save its current description in case of polymorph */
-                Strcpy(pnambuf, y_monnam(mtmp));
+                strcpy(pnambuf, y_monnam(mtmp));
                 mtmp->mtrapped = 0;
                 remove_monster(x, y);
                 place_monster(mtmp, u.ux0, u.uy0);
@@ -1357,7 +1357,7 @@ invocation_message (void)
             nomul(0);           /* stop running or travelling */
             if (u.usteed) sprintf(buf, "beneath %s", y_monnam(u.usteed));
             else
-            if (Levitation || Flying) Strcpy(buf, "beneath you");
+            if (Levitation || Flying) strcpy(buf, "beneath you");
             else sprintf(buf, "under your %s", makeplural(body_part(FOOT)));
 
             You_feel("a strange vibration %s.", buf);
@@ -1581,17 +1581,17 @@ move_update (bool newlev)
 {
         char *ptr1, *ptr2, *ptr3, *ptr4;
 
-        Strcpy(u.urooms0, u.urooms);
-        Strcpy(u.ushops0, u.ushops);
+        strcpy(u.urooms0, u.urooms);
+        strcpy(u.ushops0, u.ushops);
         if (newlev) {
                 u.urooms[0] = '\0';
                 u.uentered[0] = '\0';
                 u.ushops[0] = '\0';
                 u.ushops_entered[0] = '\0';
-                Strcpy(u.ushops_left, u.ushops0);
+                strcpy(u.ushops_left, u.ushops0);
                 return;
         }
-        Strcpy(u.urooms, in_rooms(u.ux, u.uy, 0));
+        strcpy(u.urooms, in_rooms(u.ux, u.uy, 0));
 
         for (ptr1 = &u.urooms[0],
              ptr2 = &u.uentered[0],

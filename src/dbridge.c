@@ -287,7 +287,7 @@ E_phrase (struct entity *etmp, const char *verb)
 {
         static char wholebuf[80];
 
-        Strcpy(wholebuf, is_u(etmp) ? "You" : Monnam(etmp->emon));
+        strcpy(wholebuf, is_u(etmp) ? "You" : Monnam(etmp->emon));
         if (!*verb) return(wholebuf);
         Strcat(wholebuf, " ");
         if (is_u(etmp))

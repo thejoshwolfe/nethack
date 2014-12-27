@@ -111,10 +111,10 @@ readentry (FILE *rfile, struct toptenentry *tt)
                         tt->points = 0;
                     tt->plrole[1] = '\0';
                     if ((i = str2role(tt->plrole)) >= 0)
-                        Strcpy(tt->plrole, roles[i].filecode);
-                    Strcpy(tt->plrace, "?");
-                    Strcpy(tt->plgend, (tt->plgend[0] == 'M') ? "Mal" : "Fem");
-                    Strcpy(tt->plalign, "?");
+                        strcpy(tt->plrole, roles[i].filecode);
+                    strcpy(tt->plrace, "?");
+                    strcpy(tt->plgend, (tt->plgend[0] == 'M') ? "Mal" : "Fem");
+                    strcpy(tt->plalign, "?");
                 } else if (fscanf(rfile, fmt33,
                                 tt->plrole, tt->plrace, tt->plgend,
                                 tt->plalign, tt->name, tt->death) != 6)
@@ -398,10 +398,10 @@ outheader (void)
         char linebuf[BUFSZ];
         char *bp;
 
-        Strcpy(linebuf, " No  Points     Name");
+        strcpy(linebuf, " No  Points     Name");
         bp = eos(linebuf);
         while(bp < linebuf + COLNO - 9) *bp++ = ' ';
-        Strcpy(bp, "Hp [max]");
+        strcpy(bp, "Hp [max]");
         topten_print(linebuf);
         dump("", linebuf);
 }
@@ -511,7 +511,7 @@ static void outentry (int rank, struct toptenentry *t1, bool so) {
             /* special case: if about to wrap in the middle of maximum
                dungeon depth reached, wrap in front of it instead */
             if (bp > linebuf + 5 && !strncmp(bp - 5, " [max", 5)) bp -= 5;
-            Strcpy(linebuf3, bp+1);
+            strcpy(linebuf3, bp+1);
             *bp = 0;
             if (so) {
                 while (bp < linebuf + (COLNO-1)) *bp++ = ' ';
@@ -532,7 +532,7 @@ static void outentry (int rank, struct toptenentry *t1, bool so) {
         if (bp <= linebuf + hppos) {
             /* pad any necessary blanks to the hit point entry */
             while (bp < linebuf + hppos) *bp++ = ' ';
-            Strcpy(bp, hpbuf);
+            strcpy(bp, hpbuf);
             sprintf(eos(bp), " %s[%d]",
                     (t1->maxhp < 10) ? "  " : (t1->maxhp < 100) ? " " : "",
                     t1->maxhp);
@@ -674,7 +674,7 @@ prscore (int argc, char **argv)
                     /* stop printing players if there are too many to fit */
                     if (strlen(pbuf) + strlen(players[i]) + 2 >= BUFSZ) {
                         if (strlen(pbuf) < BUFSZ-4) Strcat(pbuf, "...");
-                        else Strcpy(pbuf+strlen(pbuf)-4, "...");
+                        else strcpy(pbuf+strlen(pbuf)-4, "...");
                         break;
                     }
                     Strcat(pbuf, players[i]);

@@ -12,7 +12,7 @@ char * version_string (char *buf) {
 
 /* fill and return the given buffer with the long nethack version string */
 char * getversionstring (char *buf) {
-        Strcpy(buf, VERSION_ID);
+        strcpy(buf, VERSION_ID);
         return buf;
 }
 

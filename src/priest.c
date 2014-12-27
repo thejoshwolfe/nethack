@@ -235,7 +235,7 @@ priestname (
 {
         const char *what = Hallucination ? rndmonnam() : mon->data->mname;
 
-        Strcpy(pname, "the ");
+        strcpy(pname, "the ");
         if (mon->minvis) Strcat(pname, "invisible ");
         if (mon->ispriest || mon->data == &mons[PM_ALIGNED_PRIEST] ||
                                         mon->data == &mons[PM_ANGEL]) {

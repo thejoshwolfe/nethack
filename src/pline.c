@@ -77,7 +77,7 @@ void free_youbuf (void) {
 
 /* `prefix' must be a string literal, not a pointer */
 #define YouPrefix(pointer,prefix,text) \
- Strcpy((pointer = You_buf((int)(strlen(text) + sizeof prefix))), prefix)
+ strcpy((pointer = You_buf((int)(strlen(text) + sizeof prefix))), prefix)
 
 #define YouMessage(pointer,prefix,text) \
  strcat((YouPrefix(pointer, prefix, text), pointer), text)
@@ -150,7 +150,7 @@ void verbalize (const char *line, ...) {
         if (!flags.soundok) return;
         va_start(the_args, line);
         tmp = You_buf((int)strlen(line) + sizeof "\"\"");
-        Strcpy(tmp, "\"");
+        strcpy(tmp, "\"");
         Strcat(tmp, line);
         Strcat(tmp, "\"");
         vpline(tmp, the_args);
@@ -261,7 +261,7 @@ void mstatusline (struct monst *mtmp) {
 
         /* avoid "Status of the invisible newt ..., invisible" */
         /* and unlike a normal mon_nam, use "saddled" even if it has a name */
-        Strcpy(monnambuf, x_monnam(mtmp, ARTICLE_THE, (char *)0,
+        strcpy(monnambuf, x_monnam(mtmp, ARTICLE_THE, (char *)0,
             (SUPPRESS_IT|SUPPRESS_INVISIBLE), false));
 
         pline("Status of %s (%s):  Level %d  HP %d(%d)  AC %d%s.",

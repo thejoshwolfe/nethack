@@ -312,7 +312,7 @@ gotobj:
             remove_worn_item(otmp, true);
 
         /* do this before removing it from inventory */
-        if (objnambuf) Strcpy(objnambuf, yname(otmp));
+        if (objnambuf) strcpy(objnambuf, yname(otmp));
         /* set mavenge bit so knights won't suffer an
          * alignment penalty during retaliation;
          */

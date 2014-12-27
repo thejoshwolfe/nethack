@@ -543,7 +543,7 @@ getspell (int *spell_no)
                             && spellid(nspells) != NO_SPELL; nspells++)
                 continue;
 
-            if (nspells == 1)  Strcpy(lets, "a");
+            if (nspells == 1)  strcpy(lets, "a");
             else if (nspells < 27)  sprintf(lets, "a-%c", 'a' + nspells - 1);
             else if (nspells == 27)  sprintf(lets, "a-zA");
             else sprintf(lets, "a-zA-%c", 'A' + nspells - 27);

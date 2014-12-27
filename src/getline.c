@@ -184,7 +184,7 @@ ext_cmd_getlin_hook (char *base)
                 }
         }
         if (com_index >= 0) {
-                Strcpy(base, extcmdlist[com_index].ef_txt);
+                strcpy(base, extcmdlist[com_index].ef_txt);
                 return true;
         }
 

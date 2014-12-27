@@ -1366,7 +1366,7 @@ gem_accept (struct monst *mon, struct obj *obj)
         static const char noluck[] = " graciously";
         static const char addluck[] = " gratefully";
 
-        Strcpy(buf,Monnam(mon));
+        strcpy(buf,Monnam(mon));
         mon->mpeaceful = 1;
         mon->mavenge = 0;
 

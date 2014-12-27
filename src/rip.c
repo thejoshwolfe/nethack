@@ -54,7 +54,7 @@ void genl_outrip(winid tmpwin, int how) {
     rip = dp = (char **) alloc(sizeof(rip_txt));
     for (x = 0; rip_txt[x]; x++) {
         dp[x] = (char *) alloc((unsigned int)(strlen(rip_txt[x]) + 1));
-        Strcpy(dp[x], rip_txt[x]);
+        strcpy(dp[x], rip_txt[x]);
     }
     dp[x] = (char *)0;
 
@@ -72,15 +72,15 @@ void genl_outrip(winid tmpwin, int how) {
     switch (killer_format) {
         default: impossible("bad killer format?");
         case KILLED_BY_AN:
-                 Strcpy(buf, killed_by_prefix[how]);
+                 strcpy(buf, killed_by_prefix[how]);
                  Strcat(buf, an(killer));
                  break;
         case KILLED_BY:
-                 Strcpy(buf, killed_by_prefix[how]);
+                 strcpy(buf, killed_by_prefix[how]);
                  Strcat(buf, killer);
                  break;
         case NO_KILLER_PREFIX:
-                 Strcpy(buf, killer);
+                 strcpy(buf, killer);
                  break;
     }
 

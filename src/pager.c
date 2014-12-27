@@ -230,11 +230,11 @@ lookat (int x, int y, char *buf, char *monbuf)
                     otmp->quan = 2L; /* to force pluralization */
                 else if (otmp->otyp == SLIME_MOLD)
                     otmp->spe = current_fruit;  /* give the fruit a type */
-                Strcpy(buf, distant_name(otmp, xname));
+                strcpy(buf, distant_name(otmp, xname));
                 dealloc_obj(otmp);
             }
         } else
-            Strcpy(buf, distant_name(otmp, xname));
+            strcpy(buf, distant_name(otmp, xname));
 
         if (levl[x][y].typ == STONE || levl[x][y].typ == SCORR)
             Strcat(buf, " embedded in stone");
@@ -248,9 +248,9 @@ lookat (int x, int y, char *buf, char *monbuf)
             Strcat(buf, " in molten lava");     /* [can this ever happen?] */
     } else if (glyph_is_trap(glyph)) {
         int tnum = what_trap(glyph_to_trap(glyph));
-        Strcpy(buf, defsyms[trap_to_defsym(tnum)].explanation);
+        strcpy(buf, defsyms[trap_to_defsym(tnum)].explanation);
     } else if(!glyph_is_cmap(glyph)) {
-        Strcpy(buf,"dark part of a room");
+        strcpy(buf,"dark part of a room");
     } else switch(glyph_to_cmap(glyph)) {
     case S_altar:
         if(!In_endgame(&u.uz))
@@ -260,17 +260,17 @@ lookat (int x, int y, char *buf, char *monbuf)
         break;
     case S_ndoor:
         if (is_drawbridge_wall(x, y) >= 0)
-            Strcpy(buf,"open drawbridge portcullis");
+            strcpy(buf,"open drawbridge portcullis");
         else if ((levl[x][y].doormask & ~D_TRAPPED) == D_BROKEN)
-            Strcpy(buf,"broken door");
+            strcpy(buf,"broken door");
         else
-            Strcpy(buf,"doorway");
+            strcpy(buf,"doorway");
         break;
     case S_cloud:
-        Strcpy(buf, Is_airlevel(&u.uz) ? "cloudy area" : "fog/vapor cloud");
+        strcpy(buf, Is_airlevel(&u.uz) ? "cloudy area" : "fog/vapor cloud");
         break;
     default:
-        Strcpy(buf,defsyms[glyph_to_cmap(glyph)].explanation);
+        strcpy(buf,defsyms[glyph_to_cmap(glyph)].explanation);
         break;
     }
 
@@ -720,7 +720,7 @@ do_look (
             if (found == 1 && ans != LOOK_QUICK && ans != LOOK_ONCE &&
                         (ans == LOOK_VERBOSE || (flags.help && !quick))) {
                 char temp_buf[BUFSZ];
-                Strcpy(temp_buf, firstmatch);
+                strcpy(temp_buf, firstmatch);
                 checkfile(temp_buf, pm, false, (bool)(ans == LOOK_VERBOSE));
             }
         } else {
@@ -813,7 +813,7 @@ dowhatdoes_core (char q, char *cbuf)
                         (void) strncpy(buf+1, "       ", 7);
                 }
                 (void) dlb_fclose(fp);
-                Strcpy(cbuf, buf);
+                strcpy(cbuf, buf);
                 return cbuf;
             }
         }

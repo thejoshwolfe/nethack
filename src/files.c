@@ -151,7 +151,7 @@ const char * fqname(const char * basename, int whichprefix, int buffnum) {
                 basename);
         return basename;        /* XXX */
     }
-    Strcpy(fqn_filename_buffer[buffnum], fqn_prefix[whichprefix]);
+    strcpy(fqn_filename_buffer[buffnum], fqn_prefix[whichprefix]);
     return strcat(fqn_filename_buffer[buffnum], basename);
 }
 
@@ -483,7 +483,7 @@ static int nesting = 0;
 #define HUP     if (!program_state.done_hup)
 
 static char * make_lockname (const char *filename, char *lockname) {
-    Strcpy(lockname, filename);
+    strcpy(lockname, filename);
     Strcat(lockname, "_lock");
     return lockname;
 }
@@ -607,7 +607,7 @@ static FILE * fopen_config_file(const char *filename) {
     /* constructed full path names don't need fqname() */
     envp = nh_getenv("HOME");
     if (!envp)
-        Strcpy(tmp_config, configfile);
+        strcpy(tmp_config, configfile);
     else
         sprintf(tmp_config, "%s/%s", envp, configfile);
     if ((fp = fopen(tmp_config, "r")) != (FILE *)0)
@@ -719,7 +719,7 @@ adjust_prefix (char *bufp, int prefixid)
     if ((ptr = index(bufp, ';')) != 0) *ptr = '\0';
     if (strlen(bufp) > 0) {
         fqn_prefix[prefixid] = (char *)alloc(strlen(bufp)+2);
-        Strcpy(fqn_prefix[prefixid], bufp);
+        strcpy(fqn_prefix[prefixid], bufp);
         append_slash(fqn_prefix[prefixid]);
     }
 }
@@ -899,7 +899,7 @@ fopen_wizkit_file (void)
     envp = nh_getenv("HOME");
     if (envp)
         sprintf(tmp_wizkit, "%s/%s", envp, wizkit);
-    else    Strcpy(tmp_wizkit, wizkit);
+    else    strcpy(tmp_wizkit, wizkit);
     if ((fp = fopen(tmp_wizkit, "r")) != (FILE *)0)
         return(fp);
     else if (errno != ENOENT) {

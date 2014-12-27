@@ -1547,9 +1547,9 @@ void fig_transform (void *arg, long timeout) {
                                 s_suffix(a_monnam(mon)));
                     }
                     else if (is_pool(mon->mx, mon->my))
-                        Strcpy(carriedby, "empty water");
+                        strcpy(carriedby, "empty water");
                     else
-                        Strcpy(carriedby, "thin air");
+                        strcpy(carriedby, "thin air");
                     You("see %s %s out of %s!", monnambuf,
                             locomotion(mtmp->data, "drop"), carriedby);
                 }
@@ -1653,12 +1653,12 @@ static void use_grease (struct obj *obj) {
         otmp = getobj(lubricables, "grease");
         if (!otmp) return;
         if ((otmp->owornmask & WORN_ARMOR) && uarmc) {
-            Strcpy(buf, xname(uarmc));
+            strcpy(buf, xname(uarmc));
             You(need_to_remove_outer_armor, buf, xname(otmp));
             return;
         }
         if ((otmp->owornmask & WORN_SHIRT) && (uarmc || uarm)) {
-            Strcpy(buf, uarmc ? xname(uarmc) : "");
+            strcpy(buf, uarmc ? xname(uarmc) : "");
             if (uarmc && uarm) Strcat(buf, " and ");
             Strcat(buf, uarm ? xname(uarm) : "");
             You(need_to_remove_outer_armor, buf, xname(otmp));
@@ -2090,7 +2090,7 @@ static int use_whip (struct obj *obj) {
             const char *mon_hand;
             bool gotit = proficient && (!Fumbling || !rn2(10));
 
-            Strcpy(onambuf, cxname(otmp));
+            strcpy(onambuf, cxname(otmp));
             if (gotit) {
                 mon_hand = mbodypart(mtmp, HAND);
                 if (bimanual(otmp)) mon_hand = makeplural(mon_hand);
@@ -2406,7 +2406,7 @@ static int do_break_wand (struct obj *obj) {
     int expltype = EXPL_MAGICAL;
     char confirm[QBUFSZ], the_wand[BUFSZ], buf[BUFSZ];
 
-    Strcpy(the_wand, yname(obj));
+    strcpy(the_wand, yname(obj));
     sprintf(confirm, "Are you really sure you want to break %s?",
             safe_qbuf("", sizeof("Are you really sure you want to break ?"),
                 the_wand, ysimple_name(obj), "the wand"));
@@ -2575,9 +2575,9 @@ int doapply (void) {
     if(check_capacity((char *)0)) return (0);
 
     if (carrying(POT_OIL) || uhave_graystone())
-        Strcpy(class_list, tools_too);
+        strcpy(class_list, tools_too);
     else
-        Strcpy(class_list, tools);
+        strcpy(class_list, tools);
     if (carrying(CREAM_PIE) || carrying(EUCALYPTUS_LEAF))
         add_class(class_list, FOOD_CLASS);
 

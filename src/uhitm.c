@@ -338,7 +338,7 @@ attack (struct monst *mtmp)
                     char buf[BUFSZ];
 
                     monflee(mtmp, rnd(6), false, false);
-                    Strcpy(buf, y_monnam(mtmp));
+                    strcpy(buf, y_monnam(mtmp));
                     buf[0] = highc(buf[0]);
                     You("stop.  %s is in the way!", buf);
                     return(true);
@@ -566,7 +566,7 @@ hmon_hitmon (struct monst *mon, struct obj *obj, int thrown)
                 }
             }
         } else {
-            Strcpy(saved_oname, cxname(obj));
+            strcpy(saved_oname, cxname(obj));
             if(obj->oclass == WEAPON_CLASS || is_weptool(obj) ||
                obj->oclass == GEM_CLASS) {
 
@@ -690,7 +690,7 @@ hmon_hitmon (struct monst *mon, struct obj *obj, int thrown)
             } else {
                 if (mdat == &mons[PM_SHADE] && !shade_aware(obj)) {
                     tmp = 0;
-                    Strcpy(unconventional, cxname(obj));
+                    strcpy(unconventional, cxname(obj));
                 } else {
                     switch(obj->otyp) {
                     case BOULDER:               /* 1d20 */
@@ -1393,7 +1393,7 @@ damageum (struct monst *mdef, struct attack *mattk)
                     bool u_saw_mon = canseemon(mdef) ||
                                         (u.uswallow && u.ustuck == mdef);
                     /* record the name before losing sight of monster */
-                    Strcpy(nambuf, Monnam(mdef));
+                    strcpy(nambuf, Monnam(mdef));
                     if (u_teleport_mon(mdef, false) &&
                             u_saw_mon && !canseemon(mdef))
                         pline("%s suddenly disappears!", nambuf);

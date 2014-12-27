@@ -551,7 +551,7 @@ int main (int argc, char *argv[]) {
 
     getmailstatus();
     if (wizard)
-        Strcpy(plname, "wizard");
+        strcpy(plname, "wizard");
     else
         if(!*plname || !strncmp(plname, "player", 4)
                 || !strncmp(plname, "games", 4)) {

@@ -130,10 +130,10 @@ void tty_startup(int *wid, int *hgt) {
         nh_HE = (char *) alloc((unsigned)(strlen(ME)+1));
         i = 0;
         while (digit(SO[i])) i++;
-        Strcpy(nh_HI, &SO[i]);
+        strcpy(nh_HI, &SO[i]);
         i = 0;
         while (digit(ME[i])) i++;
-        Strcpy(nh_HE, &ME[i]);
+        strcpy(nh_HE, &ME[i]);
         AS = Tgetstr("as");
         AE = Tgetstr("ae");
         nh_CD = Tgetstr("cd");
@@ -472,11 +472,11 @@ init_hilite (void)
             scratch = tparm(setf, ti_map[c]);
             if (c != CLR_GRAY) {
                 hilites[c] = (char *) alloc(strlen(scratch) + 1);
-                Strcpy(hilites[c], scratch);
+                strcpy(hilites[c], scratch);
             }
             if (c != CLR_BLACK) {
                 hilites[c|BRIGHT] = (char*) alloc(strlen(scratch)+strlen(MD)+1);
-                Strcpy(hilites[c|BRIGHT], MD);
+                strcpy(hilites[c|BRIGHT], MD);
                 Strcat(hilites[c|BRIGHT], scratch);
             }
 

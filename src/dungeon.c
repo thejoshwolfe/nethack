@@ -404,7 +404,7 @@ init_level (int dgn, int proto_index, struct proto_dungeon *pd)
     pd->final_lev[proto_index] = new_level =
                     (s_level *) alloc(sizeof(s_level));
     /* load new level with data */
-    Strcpy(new_level->proto, tlevel->name);
+    strcpy(new_level->proto, tlevel->name);
     new_level->boneid = tlevel->boneschar;
     new_level->dlevel.dnum = dgn;
     new_level->dlevel.dlevel = 0;    /* for now */
@@ -592,8 +592,8 @@ void init_dungeons(void) {
         continue;
           }
 
-        Strcpy(dungeons[i].dname, pd.tmpdungeon[i].name);
-        Strcpy(dungeons[i].proto, pd.tmpdungeon[i].protoname);
+        strcpy(dungeons[i].dname, pd.tmpdungeon[i].name);
+        strcpy(dungeons[i].proto, pd.tmpdungeon[i].protoname);
         dungeons[i].boneid = pd.tmpdungeon[i].boneschar;
 
         if(pd.tmpdungeon[i].lev.rand)

@@ -91,28 +91,28 @@ obj_typename (int otyp)
                 actualn = Japanese_item_name(otyp);
         switch(ocl->oc_class) {
         case COIN_CLASS:
-                Strcpy(buf, "coin");
+                strcpy(buf, "coin");
                 break;
         case POTION_CLASS:
-                Strcpy(buf, "potion");
+                strcpy(buf, "potion");
                 break;
         case SCROLL_CLASS:
-                Strcpy(buf, "scroll");
+                strcpy(buf, "scroll");
                 break;
         case WAND_CLASS:
-                Strcpy(buf, "wand");
+                strcpy(buf, "wand");
                 break;
         case SPBOOK_CLASS:
-                Strcpy(buf, "spellbook");
+                strcpy(buf, "spellbook");
                 break;
         case RING_CLASS:
-                Strcpy(buf, "ring");
+                strcpy(buf, "ring");
                 break;
         case AMULET_CLASS:
                 if(nn)
-                        Strcpy(buf,actualn);
+                        strcpy(buf,actualn);
                 else
-                        Strcpy(buf,"amulet");
+                        strcpy(buf,"amulet");
                 if(un)
                         sprintf(eos(buf)," called %s",un);
                 if(dn)
@@ -120,7 +120,7 @@ obj_typename (int otyp)
                 return(buf);
         default:
                 if(nn) {
-                        Strcpy(buf, actualn);
+                        strcpy(buf, actualn);
                         if (GemStone(otyp))
                                 Strcat(buf, " stone");
                         if(un)
@@ -128,7 +128,7 @@ obj_typename (int otyp)
                         if(dn)
                                 sprintf(eos(buf), " (%s)", dn);
                 } else {
-                        Strcpy(buf, dn ? dn : actualn);
+                        strcpy(buf, dn ? dn : actualn);
                         if(ocl->oc_class == GEM_CLASS)
                                 Strcat(buf, (ocl->oc_material == MINERAL) ?
                                                 " stone" : " gem");
@@ -140,7 +140,7 @@ obj_typename (int otyp)
         /* here for ring/scroll/potion/wand */
         if(nn) {
             if (ocl->oc_unique)
-                Strcpy(buf, actualn); /* avoid spellbook of Book of the Dead */
+                strcpy(buf, actualn); /* avoid spellbook of Book of the Dead */
             else
                 sprintf(eos(buf), " of %s", actualn);
         }
@@ -249,13 +249,13 @@ xname2 (struct obj *obj, bool ignore_oquan)
         switch (obj->oclass) {
             case AMULET_CLASS:
                 if (!obj->dknown)
-                        Strcpy(buf, "amulet");
+                        strcpy(buf, "amulet");
                 else if (typ == AMULET_OF_YENDOR ||
                          typ == FAKE_AMULET_OF_YENDOR)
                         /* each must be identified individually */
-                        Strcpy(buf, obj->known ? actualn : dn);
+                        strcpy(buf, obj->known ? actualn : dn);
                 else if (nn)
-                        Strcpy(buf, actualn);
+                        strcpy(buf, actualn);
                 else if (un)
                         sprintf(buf,"amulet called %s", un);
                 else
@@ -263,11 +263,11 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 break;
             case WEAPON_CLASS:
                 if (is_poisonable(obj) && obj->opoisoned)
-                        Strcpy(buf, "poisoned ");
+                        strcpy(buf, "poisoned ");
             case VENOM_CLASS:
             case TOOL_CLASS:
                 if (typ == LENSES)
-                        Strcpy(buf, "pair of ");
+                        strcpy(buf, "pair of ");
 
                 if (!obj->dknown)
                         Strcat(buf, dn ? dn : actualn);
@@ -292,15 +292,15 @@ xname2 (struct obj *obj, bool ignore_oquan)
                         sprintf(buf, "set of %s", actualn);
                         break;
                 }
-                if(is_boots(obj) || is_gloves(obj)) Strcpy(buf,"pair of ");
+                if(is_boots(obj) || is_gloves(obj)) strcpy(buf,"pair of ");
 
                 if(obj->otyp >= ELVEN_SHIELD && obj->otyp <= ORCISH_SHIELD
                                 && !obj->dknown) {
-                        Strcpy(buf, "shield");
+                        strcpy(buf, "shield");
                         break;
                 }
                 if(obj->otyp == SHIELD_OF_REFLECTION && !obj->dknown) {
-                        Strcpy(buf, "smooth shield");
+                        strcpy(buf, "smooth shield");
                         break;
                 }
 
@@ -311,13 +311,13 @@ xname2 (struct obj *obj, bool ignore_oquan)
                         else if(is_gloves(obj))
                                 Strcat(buf,"gloves");
                         else if(is_cloak(obj))
-                                Strcpy(buf,"cloak");
+                                strcpy(buf,"cloak");
                         else if(is_helmet(obj))
-                                Strcpy(buf,"helmet");
+                                strcpy(buf,"helmet");
                         else if(is_shield(obj))
-                                Strcpy(buf,"shield");
+                                strcpy(buf,"shield");
                         else
-                                Strcpy(buf,"armor");
+                                strcpy(buf,"armor");
                         Strcat(buf, " called ");
                         Strcat(buf, un);
                 } else  Strcat(buf, dn);
@@ -328,7 +328,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
 
                         for(f=ffruit; f; f = f->nextf) {
                                 if(f->fid == obj->spe) {
-                                        Strcpy(buf, f->fname);
+                                        strcpy(buf, f->fname);
                                         break;
                                 }
                         }
@@ -336,12 +336,12 @@ xname2 (struct obj *obj, bool ignore_oquan)
                         break;
                 }
 
-                Strcpy(buf, actualn);
+                strcpy(buf, actualn);
                 if (typ == TIN && obj->known) {
                     if(obj->spe > 0)
                         Strcat(buf, " of spinach");
                     else if (obj->corpsenm == NON_PM)
-                        Strcpy(buf, "empty tin");
+                        strcpy(buf, "empty tin");
                     else if (vegetarian(&mons[obj->corpsenm]))
                         sprintf(eos(buf), " of %s", mons[obj->corpsenm].mname);
                     else
@@ -350,7 +350,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 break;
             case COIN_CLASS:
             case CHAIN_CLASS:
-                Strcpy(buf, actualn);
+                strcpy(buf, actualn);
                 break;
             case ROCK_CLASS:
                 if (typ == STATUE)
@@ -362,7 +362,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                             (index(vowels,*(mons[obj->corpsenm].mname)) ?
                                                                 "an " : "a "),
                         mons[obj->corpsenm].mname);
-                else Strcpy(buf, actualn);
+                else strcpy(buf, actualn);
                 break;
             case BALL_CLASS:
                 sprintf(buf, "%sheavy iron ball",
@@ -370,7 +370,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 break;
             case POTION_CLASS:
                 if (obj->dknown && obj->odiluted)
-                        Strcpy(buf, "diluted ");
+                        strcpy(buf, "diluted ");
                 if(nn || un || !obj->dknown) {
                         Strcat(buf, "potion");
                         if(!obj->dknown) break;
@@ -391,7 +391,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 }
                 break;
         case SCROLL_CLASS:
-                Strcpy(buf, "scroll");
+                strcpy(buf, "scroll");
                 if(!obj->dknown) break;
                 if(nn) {
                         Strcat(buf, " of ");
@@ -403,13 +403,13 @@ xname2 (struct obj *obj, bool ignore_oquan)
                         Strcat(buf, " labeled ");
                         Strcat(buf, dn);
                 } else {
-                        Strcpy(buf, dn);
+                        strcpy(buf, dn);
                         Strcat(buf, " scroll");
                 }
                 break;
         case WAND_CLASS:
                 if(!obj->dknown)
-                        Strcpy(buf, "wand");
+                        strcpy(buf, "wand");
                 else if(nn)
                         sprintf(buf, "wand of %s", actualn);
                 else if(un)
@@ -419,10 +419,10 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 break;
         case SPBOOK_CLASS:
                 if (!obj->dknown) {
-                        Strcpy(buf, "spellbook");
+                        strcpy(buf, "spellbook");
                 } else if (nn) {
                         if (typ != SPE_BOOK_OF_THE_DEAD)
-                            Strcpy(buf, "spellbook of ");
+                            strcpy(buf, "spellbook of ");
                         Strcat(buf, actualn);
                 } else if (un) {
                         sprintf(buf, "spellbook called %s", un);
@@ -431,7 +431,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 break;
         case RING_CLASS:
                 if(!obj->dknown)
-                        Strcpy(buf, "ring");
+                        strcpy(buf, "ring");
                 else if(nn)
                         sprintf(buf, "ring of %s", actualn);
                 else if(un)
@@ -444,12 +444,12 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 const char *rock =
                             (ocl->oc_material == MINERAL) ? "stone" : "gem";
                 if (!obj->dknown) {
-                    Strcpy(buf, rock);
+                    strcpy(buf, rock);
                 } else if (!nn) {
                     if (un) sprintf(buf,"%s called %s", rock, un);
                     else sprintf(buf, "%s %s", dn, rock);
                 } else {
-                    Strcpy(buf, actualn);
+                    strcpy(buf, actualn);
                     if (GemStone(typ)) Strcat(buf, " stone");
                 }
                 break;
@@ -458,7 +458,7 @@ xname2 (struct obj *obj, bool ignore_oquan)
                 sprintf(buf,"glorkum %d %d %d", obj->oclass, typ, obj->spe);
         }
         if (!ignore_oquan)
-        if (obj->quan != 1L) Strcpy(buf, makeplural(buf));
+        if (obj->quan != 1L) strcpy(buf, makeplural(buf));
 
         if (obj->onamelth && obj->dknown) {
                 Strcat(buf, " named ");
@@ -479,7 +479,7 @@ mshot_xname (struct obj *obj)
 
     if (m_shot.n > 1 && m_shot.o == obj->otyp) {
         /* copy xname's result so that we can reuse its return buffer */
-        Strcpy(tmpbuf, onm);
+        strcpy(tmpbuf, onm);
         /* "the Nth arrow"; value will eventually be passed to an() or
            The(), both of which correctly handle this "the " prefix */
         sprintf(onm, "the %d%s %s", m_shot.i, ordin(m_shot.i), tmpbuf);
@@ -563,9 +563,9 @@ doname (struct obj *obj)
         else if (obj_is_pname(obj) || the_unique_obj(obj)) {
                 if (!strncmpi(bp, "the ", 4))
                     bp += 4;
-                Strcpy(prefix, "the ");
+                strcpy(prefix, "the ");
         } else
-                Strcpy(prefix, "a ");
+                strcpy(prefix, "a ");
 
 
         if (obj->bknown &&
@@ -639,7 +639,7 @@ plus:
                         goto plus;
                 if (obj->otyp == CANDELABRUM_OF_INVOCATION) {
                         if (!obj->spe)
-                            Strcpy(tmpbuf, "no");
+                            strcpy(tmpbuf, "no");
                         else
                             sprintf(tmpbuf, "%d", obj->spe);
                         sprintf(eos(bp), " (%s candle%s%s)",
@@ -752,9 +752,9 @@ ring:
                         && (*(prefix+2) || (strncmp(bp, "uranium", 7)
                                 && strncmp(bp, "unicorn", 7)
                                 && strncmp(bp, "eucalyptus", 10)))) {
-                Strcpy(tmpbuf, prefix);
-                Strcpy(prefix, "an ");
-                Strcpy(prefix+3, tmpbuf+2);
+                strcpy(tmpbuf, prefix);
+                strcpy(prefix, "an ");
+                strcpy(prefix+3, tmpbuf+2);
         }
         bp = strprepend(bp, prefix);
         return(bp);
@@ -898,9 +898,9 @@ an (const char *str)
                     strncmp(str, "unicorn", 7) &&
                     strncmp(str, "uranium", 7) &&
                     strncmp(str, "eucalyptus", 10))
-                        Strcpy(buf, "an ");
+                        strcpy(buf, "an ");
                 else
-                        Strcpy(buf, "a ");
+                        strcpy(buf, "a ");
         }
 
         Strcat(buf, str);
@@ -927,7 +927,7 @@ the (const char *str)
 
         if (!strncmpi(str, "the ", 4)) {
             buf[0] = lowc(*str);
-            Strcpy(&buf[1], str+1);
+            strcpy(&buf[1], str+1);
             return buf;
         } else if (*str < 'A' || *str > 'Z') {
             /* not a proper name, needs an article */
@@ -957,7 +957,7 @@ the (const char *str)
             }
         }
         if (insert_the)
-            Strcpy(buf, "the ");
+            strcpy(buf, "the ");
         else
             buf[0] = '\0';
         Strcat(buf, str);
@@ -1020,7 +1020,7 @@ otense (struct obj *otmp, const char *verb)
             return vtense((char *)0, verb);
 
         buf = nextobuf();
-        Strcpy(buf, verb);
+        strcpy(buf, verb);
         return buf;
 }
 
@@ -1109,21 +1109,21 @@ vtense (const char *subj, const char *verb)
         spot = verb + len - 1;
 
         if (!strcmp(verb, "are"))
-            Strcpy(buf, "is");
+            strcpy(buf, "is");
         else if (!strcmp(verb, "have"))
-            Strcpy(buf, "has");
+            strcpy(buf, "has");
         else if (index("zxs", *spot) ||
                  (len >= 2 && *spot=='h' && index("cs", *(spot-1))) ||
                  (len == 2 && *spot == 'o')) {
             /* Ends in z, x, s, ch, sh; add an "es" */
-            Strcpy(buf, verb);
+            strcpy(buf, verb);
             Strcat(buf, "es");
         } else if (*spot == 'y' && (!index(vowels, *(spot-1)))) {
             /* like "y" case in makeplural */
-            Strcpy(buf, verb);
-            Strcpy(buf + len - 1, "ies");
+            strcpy(buf, verb);
+            strcpy(buf + len - 1, "ies");
         } else {
-            Strcpy(buf, verb);
+            strcpy(buf, verb);
             Strcat(buf, "s");
         }
 
@@ -1221,10 +1221,10 @@ makeplural (const char *oldstr)
         while (*oldstr==' ') oldstr++;
         if (!oldstr || !*oldstr) {
                 impossible("plural of null?");
-                Strcpy(str, "s");
+                strcpy(str, "s");
                 return str;
         }
-        Strcpy(str, oldstr);
+        strcpy(str, oldstr);
 
         /*
          * Skip changing "pair of" to "pairs of".  According to Webster, usual
@@ -1265,7 +1265,7 @@ makeplural (const char *oldstr)
 
         /* Single letters */
         if (len==1 || !letter(*spot)) {
-                Strcpy(spot+1, "'s");
+                strcpy(spot+1, "'s");
                 goto bottom;
         }
 
@@ -1297,27 +1297,27 @@ makeplural (const char *oldstr)
 
         /* tooth/teeth */
         if (len >= 5 && !strcmp(spot-4, "tooth")) {
-                Strcpy(spot-3, "eeth");
+                strcpy(spot-3, "eeth");
                 goto bottom;
         }
 
         /* knife/knives, etc... */
         if (!strcmp(spot-1, "fe")) {
-                Strcpy(spot-1, "ves");
+                strcpy(spot-1, "ves");
                 goto bottom;
         } else if (*spot == 'f') {
                 if (index("lr", *(spot-1)) || index(vowels, *(spot-1))) {
-                        Strcpy(spot, "ves");
+                        strcpy(spot, "ves");
                         goto bottom;
                 } else if (len >= 5 && !strncmp(spot-4, "staf", 4)) {
-                        Strcpy(spot-1, "ves");
+                        strcpy(spot-1, "ves");
                         goto bottom;
                 }
         }
 
         /* foot/feet (body part) */
         if (len >= 4 && !strcmp(spot-3, "foot")) {
-                Strcpy(spot-2, "eet");
+                strcpy(spot-2, "eet");
                 goto bottom;
         }
 
@@ -1332,7 +1332,7 @@ makeplural (const char *oldstr)
         if ((len >= 4 && !strcmp(spot-3, "alga")) ||
             (len >= 5 &&
              (!strcmp(spot-4, "hypha") || !strcmp(spot-4, "larva")))) {
-                Strcpy(spot, "ae");
+                strcpy(spot, "ae");
                 goto bottom;
         }
 
@@ -1347,7 +1347,7 @@ makeplural (const char *oldstr)
 
         /* vortex/vortices */
         if (len >= 6 && !strcmp(spot-3, "rtex")) {
-                Strcpy(spot-1, "ices");
+                strcpy(spot-1, "ices");
                 goto bottom;
         }
 
@@ -1359,7 +1359,7 @@ makeplural (const char *oldstr)
 
         /* mumak/mumakil */
         if (len >= 5 && !strcmp(spot-4, "mumak")) {
-                Strcpy(spot+1, "il");
+                strcpy(spot+1, "il");
                 goto bottom;
         }
 
@@ -1371,31 +1371,31 @@ makeplural (const char *oldstr)
 
         /* erinys/erinyes */
         if (len >= 6 && !strcmp(spot-5, "erinys")) {
-                Strcpy(spot, "es");
+                strcpy(spot, "es");
                 goto bottom;
         }
 
         /* mouse/mice,louse/lice (not a monster, but possible in food names) */
         if (len >= 5 && !strcmp(spot-3, "ouse") && index("MmLl", *(spot-4))) {
-                Strcpy(spot-3, "ice");
+                strcpy(spot-3, "ice");
                 goto bottom;
         }
 
         /* matzoh/matzot, possible food name */
         if (len >= 6 && (!strcmp(spot-5, "matzoh")
                                         || !strcmp(spot-5, "matzah"))) {
-                Strcpy(spot-1, "ot");
+                strcpy(spot-1, "ot");
                 goto bottom;
         }
         if (len >= 5 && (!strcmp(spot-4, "matzo")
                                         || !strcmp(spot-5, "matza"))) {
-                Strcpy(spot, "ot");
+                strcpy(spot, "ot");
                 goto bottom;
         }
 
         /* child/children (for wise guys who give their food funny names) */
         if (len >= 5 && !strcmp(spot-4, "child")) {
-                Strcpy(spot, "dren");
+                strcpy(spot, "dren");
                 goto bottom;
         }
 
@@ -1407,21 +1407,21 @@ makeplural (const char *oldstr)
                         || (len >= 2 && *spot=='h' && index("cs", *(spot-1)))
         /* Kludge to get "tomatoes" and "potatoes" right */
                         || (len >= 4 && !strcmp(spot-2, "ato"))) {
-                Strcpy(spot+1, "es");
+                strcpy(spot+1, "es");
                 goto bottom;
         }
 
         /* Ends in y preceded by consonant (note: also "qu") change to "ies" */
         if (*spot == 'y' &&
             (!index(vowels, *(spot-1)))) {
-                Strcpy(spot, "ies");
+                strcpy(spot, "ies");
                 goto bottom;
         }
 
         /* Default: append an 's' */
-        Strcpy(spot+1, "s");
+        strcpy(spot+1, "s");
 
-bottom: if (excess) Strcpy(eos(str), excess);
+bottom: if (excess) strcpy(eos(str), excess);
         return str;
 }
 
@@ -1477,7 +1477,7 @@ makesingular (const char *oldstr)
                 str[0] = 0;
                 return str;
         }
-        Strcpy(str, oldstr);
+        strcpy(str, oldstr);
         bp = str;
 
         while (*bp == ' ') bp++;
@@ -1499,25 +1499,25 @@ makesingular (const char *oldstr)
                                 if(!BSTRCMP(bp, p-7, "cookies") ||
                                    !BSTRCMP(bp, p-4, "pies"))
                                         goto mins;
-                                Strcpy(p-3, "y");
+                                strcpy(p-3, "y");
                                 return bp;
                         }
 
                         /* note: cloves / knives from clove / knife */
                         if(!BSTRCMP(bp, p-6, "knives")) {
-                                Strcpy(p-3, "fe");
+                                strcpy(p-3, "fe");
                                 return bp;
                         }
                         if(!BSTRCMP(bp, p-6, "staves")) {
-                                Strcpy(p-3, "ff");
+                                strcpy(p-3, "ff");
                                 return bp;
                         }
                         if (!BSTRCMPI(bp, p-6, "leaves")) {
-                                Strcpy(p-3, "f");
+                                strcpy(p-3, "f");
                                 return bp;
                         }
                         if (!BSTRCMP(bp, p-8, "vortices")) {
-                                Strcpy(p-4, "ex");
+                                strcpy(p-4, "ex");
                                 return bp;
                         }
 
@@ -1554,12 +1554,12 @@ makesingular (const char *oldstr)
         } else {
 
                 if(!BSTRCMP(bp, p-5, "teeth")) {
-                        Strcpy(p-5, "tooth");
+                        strcpy(p-5, "tooth");
                         return bp;
                 }
 
                 if (!BSTRCMP(bp, p-5, "fungi")) {
-                        Strcpy(p-5, "fungus");
+                        strcpy(p-5, "fungus");
                         return bp;
                 }
 
@@ -1595,13 +1595,13 @@ wishymatch (
             u_of = strstri(u_str, " of ");
             o_of = strstri(o_str, " of ");
             if (u_of && !o_of) {
-                Strcpy(buf, u_of + 4);
+                strcpy(buf, u_of + 4);
                 p = eos(strcat(buf, " "));
                 while (u_str < u_of) *p++ = *u_str++;
                 *p = '\0';
                 return fuzzymatch(buf, o_str, " -", true);
             } else if (o_of && !u_of) {
-                Strcpy(buf, o_of + 4);
+                strcpy(buf, o_of + 4);
                 p = eos(strcat(buf, " "));
                 while (o_str < o_of) *p++ = *o_str++;
                 *p = '\0';
@@ -1727,7 +1727,7 @@ readobjnam (char *bp, struct obj *no_wish, bool from_user)
         if (!strcmpi(bp, "nothing") || !strcmpi(bp, "nil") ||
             !strcmpi(bp, "none")) return no_wish;
         /* save the [nearly] unmodified choice string */
-        Strcpy(fruitbuf, bp);
+        strcpy(fruitbuf, bp);
 
         for(;;) {
                 int l;
@@ -1948,7 +1948,7 @@ readobjnam (char *bp, struct obj *no_wish, bool from_user)
                 char *sng = makesingular(bp);
                 if (strcmp(bp, sng)) {
                         if (cnt == 1) cnt = 2;
-                        Strcpy(bp, sng);
+                        strcpy(bp, sng);
                 }
         }
 
@@ -2081,9 +2081,9 @@ readobjnam (char *bp, struct obj *no_wish, bool from_user)
                         else typ = 0;   /* somebody changed objects[]? punt */
                 } else {                /* try to construct canonical form */
                         char tbuf[BUFSZ];
-                        Strcpy(tbuf, "worthless piece of ");
+                        strcpy(tbuf, "worthless piece of ");
                         Strcat(tbuf, g);  /* assume it starts with the color */
-                        Strcpy(bp, tbuf);
+                        strcpy(bp, tbuf);
                 }
         }
 

@@ -1577,8 +1577,8 @@ edibility_prompts (struct obj *otmp)
             mnum = otmp->corpsenm;
         long rotted = 0L;
 
-        Strcpy(foodsmell, Tobjnam(otmp, "smell"));
-        Strcpy(it_or_they, (otmp->quan == 1L) ? "it" : "they");
+        strcpy(foodsmell, Tobjnam(otmp, "smell"));
+        strcpy(it_or_they, (otmp->quan == 1L) ? "it" : "they");
         sprintf(eat_it_anyway, "Eat %s anyway?",
                 (otmp->quan == 1L) ? "it" : "one");
 

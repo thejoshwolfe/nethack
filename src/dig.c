@@ -498,9 +498,9 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
         /* maketrap() might change it, also, in this situation,
            surface() returns an inappropriate string for a grave */
         if (IS_GRAVE(lev->typ))
-            Strcpy(surface_type, "grave");
+            strcpy(surface_type, "grave");
         else
-            Strcpy(surface_type, surface(x,y));
+            strcpy(surface_type, surface(x,y));
         shopdoor = IS_DOOR(lev->typ) && *in_rooms(x, y, SHOPBASE);
         oldobjs = level.objects[x][y];
         ttmp = maketrap(x, y, ttyp);

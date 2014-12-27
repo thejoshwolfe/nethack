@@ -333,7 +333,7 @@ do_date (void)
         Fprintf(ofp, "%s", Dont_Edit_Code);
 
         (void) time((time_t *)&clocktim);
-        Strcpy(cbuf, ctime((time_t *)&clocktim));
+        strcpy(cbuf, ctime((time_t *)&clocktim));
         for (c = cbuf; *c; c++) if (*c == '\n') break;
         *c = '\0';      /* strip off the '\n' */
         Fprintf(ofp,"#define BUILD_DATE \"%s\"\n", cbuf);
@@ -362,7 +362,7 @@ static char save_bones_compat_buf[BUFSZ];
 static void
 build_savebones_compat_string (void)
 {
-        Strcpy(save_bones_compat_buf,
+        strcpy(save_bones_compat_buf,
                 "save and bones files accepted from version");
         sprintf(eos(save_bones_compat_buf), " %d.%d.%d only",
                 VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);

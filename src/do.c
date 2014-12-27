@@ -446,7 +446,7 @@ drop (struct obj *obj)
                         char buf[BUFSZ];
 
                         /* doname can call s_suffix, reusing its buffer */
-                        Strcpy(buf, s_suffix(mon_nam(u.ustuck)));
+                        strcpy(buf, s_suffix(mon_nam(u.ustuck)));
                         You("drop %s into %s %s.", doname(obj), buf,
                                 mbodypart(u.ustuck, STOMACH));
                 }
@@ -1376,7 +1376,7 @@ bool revive_corpse(struct obj *corpse) {
     where = corpse->where;
     is_uwep = corpse == uwep;
     cname = eos(strcpy(cname_buf, "bite-covered "));
-    Strcpy(cname, corpse_xname(corpse, true));
+    strcpy(cname, corpse_xname(corpse, true));
     mcarry = (where == OBJ_MINVENT) ? corpse->ocarry : 0;
 
     if (where == OBJ_CONTAINED) {
@@ -1424,7 +1424,7 @@ bool revive_corpse(struct obj *corpse) {
                         pline("%s writhes out of %s!", Amonnam(mtmp), sackname);
                 } else if (container_where == OBJ_INVENT && container) {
                         char sackname[BUFSZ];
-                        Strcpy(sackname, an(xname(container)));
+                        strcpy(sackname, an(xname(container)));
                         pline("%s %s out of %s in your pack!",
                                 Blind ? Something : Amonnam(mtmp),
                                 locomotion(mtmp->data,"writhes"),
@@ -1432,7 +1432,7 @@ bool revive_corpse(struct obj *corpse) {
                 } else if (container_where == OBJ_FLOOR && container &&
                             cansee(mtmp->mx, mtmp->my)) {
                         char sackname[BUFSZ];
-                        Strcpy(sackname, an(xname(container)));
+                        strcpy(sackname, an(xname(container)));
                         pline("%s escapes from %s!", Amonnam(mtmp), sackname);
                 }
                 break;

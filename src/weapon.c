@@ -712,7 +712,7 @@ skill_level_name (int skill, char *buf)
         case P_GRAND_MASTER: ptr = "Grand Master"; break;
         default:             ptr = "Unknown";   break;
     }
-    Strcpy(buf, ptr);
+    strcpy(buf, ptr);
     return buf;
 }
 
@@ -956,7 +956,7 @@ int enhance_skill(bool want_dump)
                 } /* !want_dump */
             }
 
-            Strcpy(buf, (to_advance > 0) ? "Pick a skill to advance:" :
+            strcpy(buf, (to_advance > 0) ? "Pick a skill to advance:" :
                                            "Current skills:");
             if (wizard && !speedy)
                 sprintf(eos(buf), "  (%d slot%s available)",

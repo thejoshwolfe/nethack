@@ -250,7 +250,7 @@ nh_timeout (void)
                                 killer_format = KILLED_BY;
                             } else if (mons[m_idx].geno & G_UNIQ) {
                                 killer = the(killer);
-                                Strcpy(u.usick_cause, killer);
+                                strcpy(u.usick_cause, killer);
                                 killer_format = KILLED_BY;
                             }
                         }
@@ -505,9 +505,9 @@ hatch_egg (void *arg, long timeout)
                             knows_egg = true;
                         }
                         else if (is_pool(mon->mx, mon->my))
-                            Strcpy(carriedby, "empty water");
+                            strcpy(carriedby, "empty water");
                         else
-                            Strcpy(carriedby, "thin air");
+                            strcpy(carriedby, "thin air");
                         You("see %s %s out of %s!", monnambuf,
                             locomotion(mon->data, "drop"), carriedby);
                     }

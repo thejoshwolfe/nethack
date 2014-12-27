@@ -499,7 +499,7 @@ drop_uswapwep (void)
         struct obj *obj = uswapwep;
 
         /* Avoid trashing makeplural's static buffer */
-        Strcpy(str, makeplural(body_part(HAND)));
+        strcpy(str, makeplural(body_part(HAND)));
         Your("%s from your %s!",  aobjnam(obj, "slip"), str);
         dropx(obj);
 }

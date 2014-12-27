@@ -48,7 +48,6 @@
 #define PORT_ID        "Unix"
 
 #define Strcat   (void) strcat
-#define Strcpy   (void) strcpy
 #define Vprintf  (void) vprintf
 #define Vfprintf (void) vfprintf
 #define Vsprintf (void) vsprintf

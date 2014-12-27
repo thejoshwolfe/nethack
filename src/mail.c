@@ -53,7 +53,7 @@ void getmailstatus(void) {
         if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
                 const char *pw_name = getpwuid(getuid())->pw_name;
                 mailbox = (char *) alloc(sizeof(MAILPATH)+strlen(pw_name));
-                Strcpy(mailbox, MAILPATH);
+                strcpy(mailbox, MAILPATH);
                 Strcat(mailbox, pw_name);
         }
         if(stat(mailbox, &omstat)){

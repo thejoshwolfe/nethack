@@ -101,17 +101,17 @@ were_summon (   /* were-creature (even you) summons a horde */
                 case PM_WERERAT:
                 case PM_HUMAN_WERERAT:
                         typ = rn2(3) ? PM_SEWER_RAT : rn2(3) ? PM_GIANT_RAT : PM_RABID_RAT ;
-                        if (genbuf) Strcpy(genbuf, "rat");
+                        if (genbuf) strcpy(genbuf, "rat");
                         break;
                 case PM_WEREJACKAL:
                 case PM_HUMAN_WEREJACKAL:
                         typ = PM_JACKAL;
-                        if (genbuf) Strcpy(genbuf, "jackal");
+                        if (genbuf) strcpy(genbuf, "jackal");
                         break;
                 case PM_WEREWOLF:
                 case PM_HUMAN_WEREWOLF:
                         typ = rn2(5) ? PM_WOLF : PM_WINTER_WOLF ;
-                        if (genbuf) Strcpy(genbuf, "wolf");
+                        if (genbuf) strcpy(genbuf, "wolf");
                         break;
                 default:
                         continue;

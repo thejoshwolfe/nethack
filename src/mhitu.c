@@ -231,16 +231,16 @@ expels (
                                 if (is_whirly(mdat)) {
                                         switch (mdat->mattk[i].adtyp) {
                                                 case AD_ELEC:
-                                                        Strcpy(blast,
+                                                        strcpy(blast,
                                                       " in a shower of sparks");
                                                         break;
                                                 case AD_COLD:
-                                                        Strcpy(blast,
+                                                        strcpy(blast,
                                                         " in a blast of frost");
                                                         break;
                                         }
                                 } else
-                                        Strcpy(blast, " with a squelch");
+                                        strcpy(blast, " with a squelch");
                                 You("get expelled from %s%s!",
                                     mon_nam(mtmp), blast);
                         }
@@ -477,7 +477,7 @@ mattacku (struct monst *mtmp)
                 int numseen, numhelp;
                 char buf[BUFSZ], genericwere[BUFSZ];
 
-                Strcpy(genericwere, "creature");
+                strcpy(genericwere, "creature");
                 numhelp = were_summon(mdat, false, &numseen, genericwere);
                 if (youseeit) {
                         pline("%s summons help!", Monnam(mtmp));
@@ -1159,7 +1159,7 @@ dopois:
                                         static char kbuf[BUFSZ];
 
                                         /* "the" buffer may be reallocated */
-                                        Strcpy(kbuf, the(delayed_killer));
+                                        strcpy(kbuf, the(delayed_killer));
                                         delayed_killer = kbuf;
                                     }
                                     killer_format = KILLED_BY;
@@ -1601,7 +1601,7 @@ gulpmu (        /* monster swallows you, or damage if u.uswallow */
                          * are swallowed. Pretend purple worms don't
                          * like horses for now :-)
                          */
-                        Strcpy(buf, mon_nam(u.usteed));
+                        strcpy(buf, mon_nam(u.usteed));
                         pline ("%s lunges forward and plucks you off %s!",
                                 Monnam(mtmp), buf);
                         dismount_steed(DISMOUNT_ENGULFED);
@@ -2143,13 +2143,13 @@ doseduce (struct monst *mon)
                         Blind ? "He" : Monnam(mon), the(xname(ring)), body_part(HAND));
                     setworn(ring, LEFT_RING);
                 } else if (uright && uright->otyp != RIN_ADORNMENT) {
-                    Strcpy(buf, xname(uright));
+                    strcpy(buf, xname(uright));
                     pline("%s replaces your %s with your %s.",
                         Blind ? "He" : Monnam(mon), buf, xname(ring));
                     Ring_gone(uright);
                     setworn(ring, RIGHT_RING);
                 } else if (uleft && uleft->otyp != RIN_ADORNMENT) {
-                    Strcpy(buf, xname(uleft));
+                    strcpy(buf, xname(uleft));
                     pline("%s replaces your %s with your %s.",
                         Blind ? "He" : Monnam(mon), buf, xname(ring));
                     Ring_gone(uleft);

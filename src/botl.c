@@ -107,7 +107,7 @@ void bot1str(char *newbot1) {
     char *nb;
     int i,j;
 
-    Strcpy(newbot1, plname);
+    strcpy(newbot1, plname);
     if('a' <= newbot1[0] && newbot1[0] <= 'z') newbot1[0] += 'A'-'a';
     newbot1[10] = 0;
     sprintf(nb = eos(newbot1)," the ");
@@ -116,7 +116,7 @@ void bot1str(char *newbot1) {
         char mbot[BUFSZ];
         int k = 0;
 
-        Strcpy(mbot, mons[u.umonnum].mname);
+        strcpy(mbot, mons[u.umonnum].mname);
         while(mbot[k] != 0) {
             if ((k == 0 || (k > 0 && mbot[k-1] == ' ')) &&
                     'a' <= mbot[k] && mbot[k] <= 'z')

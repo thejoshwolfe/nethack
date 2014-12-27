@@ -394,7 +394,7 @@ void u_entered_shop (char *enterstring) {
                 in_rooms(u.ux, u.uy, SHOPBASE) !=
                 in_rooms(u.ux0, u.uy0, SHOPBASE))
             plines(no_shk);
-        Strcpy(empty_shops, u.ushops);
+        strcpy(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
     }
@@ -406,7 +406,7 @@ void u_entered_shop (char *enterstring) {
         eshkp->bill_p = (struct bill_x *) -1000;
         if (!index(empty_shops, *enterstring))
             plines(no_shk);
-        Strcpy(empty_shops, u.ushops);
+        strcpy(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
     }
@@ -782,7 +782,7 @@ void make_happy_shk(struct monst *shkp, bool silentkops) {
         char shk_nam[BUFSZ];
         bool vanished = canseemon(shkp);
 
-        Strcpy(shk_nam, mon_nam(shkp));
+        strcpy(shk_nam, mon_nam(shkp));
         if (on_level(&eshkp->shoplevel, &u.uz)) {
             home_shk(shkp, false);
             /* didn't disappear if shk can still be seen */
@@ -1840,7 +1840,7 @@ speak:
                     the(xname(obj)));
             return;
         }
-        Strcpy(buf, "\"For you, ");
+        strcpy(buf, "\"For you, ");
         if (ANGRY(shkp)) Strcat(buf, "scum ");
         else {
             static const char *honored[5] = {
@@ -2470,7 +2470,7 @@ static void remove_damage(struct monst *shkp, bool croaked) {
         int disposition;
 
         disposition = 0;
-        Strcpy(shops, in_rooms(x, y, SHOPBASE));
+        strcpy(shops, in_rooms(x, y, SHOPBASE));
         if (index(shops, ESHK(shkp)->shoproom)) {
             if (croaked)
                 disposition = (shops[1])? 0 : 1;
@@ -2915,7 +2915,7 @@ void pay_for_damage(const char *dmgstr, bool cant_mollify) {
         if (!tmp_dam->cost)
             continue;
         cost_of_damage += tmp_dam->cost;
-        Strcpy(shops_affected,
+        strcpy(shops_affected,
                 in_rooms(tmp_dam->place.x, tmp_dam->place.y, SHOPBASE));
         for (shp = shops_affected; *shp; shp++) {
             struct monst *tmp_shk;
@@ -3082,7 +3082,7 @@ void price_quote (struct obj *first_obj) {
         if (Has_contents(otmp))
             cost += contained_cost(otmp, shkp, 0L, false, false);
         if (!cost) {
-            Strcpy(price, "no charge");
+            strcpy(price, "no charge");
         } else {
             sprintf(price, "%ld %s%s", cost, currency(cost),
                     otmp->quan > 1L ? " each" : "");
@@ -3386,7 +3386,7 @@ bool block_entry(signed char x,signed char y) {
 
 char * shk_your (char *buf, struct obj *obj) {
     if (!shk_owns(buf, obj) && !mon_owns(buf, obj))
-        Strcpy(buf, carried(obj) ? "your" : "the");
+        strcpy(buf, carried(obj) ? "your" : "the");
     return buf;
 }
 
