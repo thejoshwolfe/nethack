@@ -710,31 +710,29 @@ rehumanize (void)
         (void) encumber_msg();
 }
 
-int
-dobreathe (void)
-{
-        struct attack *mattk;
+int dobreathe(void) {
+    const struct attack *mattk;
 
-        if (Strangled) {
-            You_cant("breathe.  Sorry.");
-            return(0);
-        }
-        if (u.uen < 15) {
-            You("don't have enough energy to breathe!");
-            return(0);
-        }
-        u.uen -= 15;
-        flags.botl = 1;
+    if (Strangled) {
+        You_cant("breathe.  Sorry.");
+        return(0);
+    }
+    if (u.uen < 15) {
+        You("don't have enough energy to breathe!");
+        return (0);
+    }
+    u.uen -= 15;
+    flags.botl = 1;
 
-        if (!getdir((char *)0)) return(0);
+    if (!getdir((char *)0))
+        return (0);
 
-        mattk = attacktype_fordmg(youmonst.data, AT_BREA, AD_ANY);
-        if (!mattk)
-            impossible("bad breath attack?");   /* mouthwash needed... */
-        else
-            buzz((int) (20 + mattk->adtyp-1), (int)mattk->damn,
-                u.ux, u.uy, u.dx, u.dy);
-        return(1);
+    mattk = attacktype_fordmg(youmonst.data, AT_BREA, AD_ANY);
+    if (!mattk)
+        impossible("bad breath attack?"); /* mouthwash needed... */
+    else
+        buzz((int)(20 + mattk->adtyp - 1), (int)mattk->damn, u.ux, u.uy, u.dx, u.dy);
+    return (1);
 }
 
 int

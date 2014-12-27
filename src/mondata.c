@@ -23,22 +23,16 @@ set_mon_data (struct monst *mon, struct permonst *ptr, int flag)
 }
 
 
-struct attack *
-attacktype_fordmg (struct permonst *ptr, int atyp, int dtyp)
-{
-    struct attack *a;
-
+const struct attack * attacktype_fordmg(const struct permonst *ptr, int atyp, int dtyp) {
+    const struct attack *a;
     for (a = &ptr->mattk[0]; a < &ptr->mattk[NATTK]; a++)
         if (a->aatyp == atyp && (dtyp == AD_ANY || a->adtyp == dtyp))
             return a;
-
-    return (struct attack *)0;
+    return NULL;
 }
 
-bool 
-attacktype (struct permonst *ptr, int atyp)
-{
-    return attacktype_fordmg(ptr, atyp, AD_ANY) ? true : false;
+bool attacktype(const struct permonst *ptr, int atyp) {
+    return attacktype_fordmg(ptr, atyp, AD_ANY) != NULL;
 }
 
 
@@ -251,24 +245,20 @@ can_track (          /* returns true if monster can track well */
 }
 
 
-bool 
-sliparm (    /* creature will slide out of armor */
-    struct permonst *ptr
-)
-{
-        return((bool)(is_whirly(ptr) || ptr->msize <= MZ_SMALL ||
-                         noncorporeal(ptr)));
+/* creature will slide out of armor */
+bool sliparm(const struct permonst *ptr) {
+    return is_whirly(ptr) ||
+           ptr->msize <= MZ_SMALL ||
+           noncorporeal(ptr);
 }
 
-bool 
-breakarm (   /* creature will break out of armor */
-    struct permonst *ptr
-)
-{
-        return ((bigmonst(ptr) || (ptr->msize > MZ_SMALL && !humanoid(ptr)) ||
-                /* special cases of humanoids that cannot wear body armor */
-                ptr == &mons[PM_MARILITH] || ptr == &mons[PM_WINGED_GARGOYLE])
-              && !sliparm(ptr));
+/* creature will break out of armor */
+bool breakarm(const struct permonst *ptr) {
+    return (bigmonst(ptr) ||
+            (ptr->msize > MZ_SMALL && !humanoid(ptr)) ||
+            /* special cases of humanoids that cannot wear body armor */
+            ptr == &mons[PM_MARILITH] || ptr == &mons[PM_WINGED_GARGOYLE]) &&
+           !sliparm(ptr);
 }
 
 bool 
@@ -281,22 +271,20 @@ sticks (     /* creature sticks other creatures it hits */
 }
 
 /* number of horns this type of monster has on its head */
-int
-num_horns (struct permonst *ptr)
-{
+int num_horns(const struct permonst * ptr) {
     switch (monsndx(ptr)) {
-    case PM_HORNED_DEVIL:       /* ? "more than one" */
-    case PM_MINOTAUR:
-    case PM_ASMODEUS:
-    case PM_BALROG:
-        return 2;
-    case PM_WHITE_UNICORN:
-    case PM_GRAY_UNICORN:
-    case PM_BLACK_UNICORN:
-    case PM_KI_RIN:
-        return 1;
-    default:
-        break;
+        case PM_HORNED_DEVIL:
+        case PM_MINOTAUR:
+        case PM_ASMODEUS:
+        case PM_BALROG:
+            return 2;
+        case PM_WHITE_UNICORN:
+        case PM_GRAY_UNICORN:
+        case PM_BLACK_UNICORN:
+        case PM_KI_RIN:
+            return 1;
+        default:
+            break;
     }
     return 0;
 }
@@ -347,20 +335,14 @@ max_passive_dmg (struct monst *mdef, struct monst *magr)
 }
 
 
-int
-monsndx (               /* return an index into the mons array */
-    struct permonst *ptr
-)
-{
-        int     i;
-
-        i = (int)(ptr - &mons[0]);
-        if (i < LOW_PM || i >= NUMMONS) {
-            panic("monsndx - could not index monster (%p)", ptr);
-            return NON_PM;              /* will not get here */
-        }
-
-        return(i);
+/* return an index into the mons array */
+int monsndx(const struct permonst *ptr) {
+    int i = (int)(ptr - &mons[0]);
+    if (i < LOW_PM || i >= NUMMONS) {
+        panic("monsndx - could not index monster (%p)", ptr);
+        return NON_PM; /* will not get here */
+    }
+    return (i);
 }
 
 

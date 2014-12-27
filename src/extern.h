@@ -943,8 +943,8 @@ extern void pacify_guards(void);
 /* ### mondata.c ### */
 
 extern void set_mon_data(struct monst *,struct permonst *,int);
-extern struct attack *attacktype_fordmg(struct permonst *,int,int);
-extern bool attacktype(struct permonst *,int);
+extern const struct attack * attacktype_fordmg(const struct permonst *, int, int);
+extern bool attacktype(const struct permonst *,int);
 extern bool poly_when_stoned(struct permonst *);
 extern bool resists_drli(struct monst *);
 extern bool resists_magm(struct monst *);
@@ -954,15 +954,15 @@ extern bool ranged_attk(struct permonst *);
 extern bool hates_silver(struct permonst *);
 extern bool passes_bars(struct permonst *);
 extern bool can_track(struct permonst *);
-extern bool breakarm(struct permonst *);
-extern bool sliparm(struct permonst *);
+extern bool breakarm(const struct permonst *);
+extern bool sliparm(const struct permonst *);
 extern bool sticks(struct permonst *);
-extern int num_horns(struct permonst *);
+extern int num_horns(const struct permonst *);
 /* E bool canseemon(struct monst *); */
 extern struct attack *dmgtype_fromattack(struct permonst *,int,int);
 extern bool dmgtype(struct permonst *,int);
 extern int max_passive_dmg(struct monst *,struct monst *);
-extern int monsndx(struct permonst *);
+extern int monsndx(const struct permonst *);
 extern int name_to_mon(const char *);
 extern int gender(struct monst *);
 extern int pronoun_gender(struct monst *);

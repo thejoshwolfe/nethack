@@ -9,14 +9,14 @@
 #include "extern.h"
 #include "epri.h"
 
-static bool verysmall(struct permonst * ptr) {
+static bool verysmall(const struct permonst * ptr) {
     return ptr->msize < MZ_SMALL;
 }
-static bool bigmonst(struct permonst * ptr) {
+static bool bigmonst(const struct permonst * ptr) {
     return ptr->msize >= MZ_LARGE;
 }
 
-static bool pm_resistance(struct permonst * ptr, unsigned char typ) {
+static bool pm_resistance(const struct permonst * ptr, unsigned char typ) {
     return (ptr->mresists & typ) != 0;
 }
 static bool resists_fire(struct monst * mon) {
@@ -59,205 +59,301 @@ static bool is_swimmer(const struct permonst * ptr) {
 static bool breathless(const struct permonst * ptr) {
     return (ptr->mflags1 & M1_BREATHLESS) != 0L;
 }
-#define amphibious(ptr)         (((ptr)->mflags1 & (M1_AMPHIBIOUS | M1_BREATHLESS)) != 0L)
-#define passes_walls(ptr)       (((ptr)->mflags1 & M1_WALLWALK) != 0L)
-#define amorphous(ptr)          (((ptr)->mflags1 & M1_AMORPHOUS) != 0L)
-#define noncorporeal(ptr)       ((ptr)->mlet == S_GHOST)
-#define tunnels(ptr)            (((ptr)->mflags1 & M1_TUNNEL) != 0L)
-#define needspick(ptr)          (((ptr)->mflags1 & M1_NEEDPICK) != 0L)
-#define hides_under(ptr)        (((ptr)->mflags1 & M1_CONCEAL) != 0L)
-#define is_hider(ptr)           (((ptr)->mflags1 & M1_HIDE) != 0L)
-#define haseyes(ptr)            (((ptr)->mflags1 & M1_NOEYES) == 0L)
-#define eyecount(ptr)           (!haseyes(ptr) ? 0 : \
-                                 ((ptr) == &mons[PM_CYCLOPS] || \
-                                  (ptr) == &mons[PM_FLOATING_EYE]) ? 1 : 2)
-#define nohands(ptr)            (((ptr)->mflags1 & M1_NOHANDS) != 0L)
-#define nolimbs(ptr)            (((ptr)->mflags1 & M1_NOLIMBS) == M1_NOLIMBS)
-#define notake(ptr)             (((ptr)->mflags1 & M1_NOTAKE) != 0L)
-#define has_head(ptr)           (((ptr)->mflags1 & M1_NOHEAD) == 0L)
-#define has_horns(ptr)          (num_horns(ptr) > 0)
-#define is_whirly(ptr)          ((ptr)->mlet == S_VORTEX || \
-                                 (ptr) == &mons[PM_AIR_ELEMENTAL])
-#define flaming(ptr)            ((ptr) == &mons[PM_FIRE_VORTEX] || \
-                                 (ptr) == &mons[PM_FLAMING_SPHERE] || \
-                                 (ptr) == &mons[PM_FIRE_ELEMENTAL] || \
-                                 (ptr) == &mons[PM_SALAMANDER])
-#define is_silent(ptr)          ((ptr)->msound == MS_SILENT)
-#define unsolid(ptr)            (((ptr)->mflags1 & M1_UNSOLID) != 0L)
-#define mindless(ptr)           (((ptr)->mflags1 & M1_MINDLESS) != 0L)
-#define humanoid(ptr)           (((ptr)->mflags1 & M1_HUMANOID) != 0L)
-#define is_animal(ptr)          (((ptr)->mflags1 & M1_ANIMAL) != 0L)
-#define slithy(ptr)             (((ptr)->mflags1 & M1_SLITHY) != 0L)
-#define is_wooden(ptr)          ((ptr) == &mons[PM_WOOD_GOLEM])
-#define thick_skinned(ptr)      (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
-#define lays_eggs(ptr)          (((ptr)->mflags1 & M1_OVIPAROUS) != 0L)
-#define regenerates(ptr)        (((ptr)->mflags1 & M1_REGEN) != 0L)
-#define perceives(ptr)          (((ptr)->mflags1 & M1_SEE_INVIS) != 0L)
-#define can_teleport(ptr)       (((ptr)->mflags1 & M1_TPORT) != 0L)
-#define control_teleport(ptr)   (((ptr)->mflags1 & M1_TPORT_CNTRL) != 0L)
-#define telepathic(ptr)         ((ptr) == &mons[PM_FLOATING_EYE] || \
-                                 (ptr) == &mons[PM_MIND_FLAYER] || \
-                                 (ptr) == &mons[PM_MASTER_MIND_FLAYER])
-#define is_armed(ptr)           attacktype(ptr, AT_WEAP)
-#define acidic(ptr)             (((ptr)->mflags1 & M1_ACID) != 0L)
-#define poisonous(ptr)          (((ptr)->mflags1 & M1_POIS) != 0L)
-#define carnivorous(ptr)        (((ptr)->mflags1 & M1_CARNIVORE) != 0L)
-#define herbivorous(ptr)        (((ptr)->mflags1 & M1_HERBIVORE) != 0L)
-#define metallivorous(ptr)      (((ptr)->mflags1 & M1_METALLIVORE) != 0L)
-#define polyok(ptr)             (((ptr)->mflags2 & M2_NOPOLY) == 0L)
-#define is_undead(ptr)          (((ptr)->mflags2 & M2_UNDEAD) != 0L)
-#define is_were(ptr)            (((ptr)->mflags2 & M2_WERE) != 0L)
-#define is_elf(ptr)             (((ptr)->mflags2 & M2_ELF) != 0L)
-#define is_dwarf(ptr)           (((ptr)->mflags2 & M2_DWARF) != 0L)
-#define is_gnome(ptr)           (((ptr)->mflags2 & M2_GNOME) != 0L)
-#define is_orc(ptr)             (((ptr)->mflags2 & M2_ORC) != 0L)
-#define is_human(ptr)           (((ptr)->mflags2 & M2_HUMAN) != 0L)
-#define your_race(ptr)          (((ptr)->mflags2 & urace.selfmask) != 0L)
-#define is_bat(ptr)             ((ptr) == &mons[PM_BAT] || \
-                                 (ptr) == &mons[PM_GIANT_BAT] || \
-                                 (ptr) == &mons[PM_VAMPIRE_BAT])
-static bool is_bird(struct permonst * ptr) {
+static bool amphibious(const struct permonst * ptr) {
+    return (ptr->mflags1 & (M1_AMPHIBIOUS | M1_BREATHLESS)) != 0L;
+}
+static bool passes_walls(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_WALLWALK) != 0L;
+}
+static bool amorphous(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_AMORPHOUS) != 0L;
+}
+static bool noncorporeal(const struct permonst * ptr) {
+    return ptr->mlet == S_GHOST;
+}
+static bool tunnels(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_TUNNEL) != 0L;
+}
+static bool needspick(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_NEEDPICK) != 0L;
+}
+static bool hides_under(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_CONCEAL) != 0L;
+}
+static bool is_hider(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_HIDE) != 0L;
+}
+static bool haseyes(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_NOEYES) == 0L;
+}
+static int eyecount(const struct permonst * ptr) {
+    if (!haseyes(ptr))
+        return 0;
+    if (ptr == &mons[PM_CYCLOPS] || ptr == &mons[PM_FLOATING_EYE])
+        return 1;
+    return 2;
+}
+static bool nohands(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_NOHANDS) != 0L;
+}
+static bool nolimbs(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_NOLIMBS) == M1_NOLIMBS;
+}
+static bool notake(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_NOTAKE) != 0L;
+}
+static bool has_head(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_NOHEAD) == 0L;
+}
+static bool has_horns(const struct permonst * ptr) {
+    return num_horns(ptr) > 0;
+}
+static bool is_whirly(const struct permonst * ptr) {
+    return ptr->mlet == S_VORTEX ||
+            ptr == &mons[PM_AIR_ELEMENTAL];
+}
+static bool flaming(const struct permonst * ptr) {
+    return ptr == &mons[PM_FIRE_VORTEX] ||
+            ptr == &mons[PM_FLAMING_SPHERE] ||
+            ptr == &mons[PM_FIRE_ELEMENTAL] ||
+            ptr == &mons[PM_SALAMANDER];
+}
+static bool is_silent(const struct permonst * ptr) {
+    return ptr->msound == MS_SILENT;
+}
+static bool unsolid(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_UNSOLID) != 0L;
+}
+static bool mindless(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_MINDLESS) != 0L;
+}
+static bool humanoid(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_HUMANOID) != 0L;
+}
+static bool is_animal(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_ANIMAL) != 0L;
+}
+static bool slithy(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_SLITHY) != 0L;
+}
+static bool is_wooden(const struct permonst * ptr) {
+    return ptr == &mons[PM_WOOD_GOLEM];
+}
+static bool thick_skinned(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_THICK_HIDE) != 0L;
+}
+static bool lays_eggs(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_OVIPAROUS) != 0L;
+}
+static bool regenerates(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_REGEN) != 0L;
+}
+static bool perceives(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_SEE_INVIS) != 0L;
+}
+static bool can_teleport(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_TPORT) != 0L;
+}
+static bool control_teleport(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_TPORT_CNTRL) != 0L;
+}
+static bool telepathic(const struct permonst * ptr) {
+    return ptr == &mons[PM_FLOATING_EYE] ||
+            ptr == &mons[PM_MIND_FLAYER] ||
+            ptr == &mons[PM_MASTER_MIND_FLAYER];
+}
+static bool is_armed(const struct permonst * ptr) {
+    return attacktype(ptr, AT_WEAP);
+}
+static bool acidic(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_ACID) != 0L;
+}
+static bool poisonous(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_POIS) != 0L;
+}
+static bool carnivorous(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_CARNIVORE) != 0L;
+}
+static bool herbivorous(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_HERBIVORE) != 0L;
+}
+static bool metallivorous(const struct permonst * ptr) {
+    return (ptr->mflags1 & M1_METALLIVORE) != 0L;
+}
+static bool polyok(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_NOPOLY) == 0L;
+}
+static bool is_undead(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_UNDEAD) != 0L;
+}
+static bool is_were(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_WERE) != 0L;
+}
+static bool is_elf(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_ELF) != 0L;
+}
+static bool is_dwarf(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_DWARF) != 0L;
+}
+static bool is_gnome(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_GNOME) != 0L;
+}
+static bool is_orc(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_ORC) != 0L;
+}
+static bool is_human(const struct permonst * ptr) {
+    return (ptr->mflags2 & M2_HUMAN) != 0L;
+}
+static bool your_race(const struct permonst * ptr) {
+    return (ptr->mflags2 & urace.selfmask) != 0L;
+}
+static bool is_bat(const struct permonst * ptr) {
+    return ptr == &mons[PM_BAT] ||
+            ptr == &mons[PM_GIANT_BAT] ||
+            ptr == &mons[PM_VAMPIRE_BAT];
+}
+static bool is_bird(const struct permonst * ptr) {
   return ptr->mlet == S_BAT && !is_bat(ptr);
 }
-static bool is_giant(struct permonst * ptr) {
+static bool is_giant(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_GIANT) != 0L;
 }
-static bool is_golem(struct permonst * ptr) {
+static bool is_golem(const struct permonst * ptr) {
   return ptr->mlet == S_GOLEM;
 }
-static bool is_domestic(struct permonst * ptr) {
+static bool is_domestic(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_DOMESTIC) != 0L;
 }
-static bool is_demon(struct permonst * ptr) {
+static bool is_demon(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_DEMON) != 0L;
 }
-static bool is_mercenary(struct permonst * ptr) {
+static bool is_mercenary(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_MERC) != 0L;
 }
-static bool is_male(struct permonst * ptr) {
+static bool is_male(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_MALE) != 0L;
 }
-static bool is_female(struct permonst * ptr) {
+static bool is_female(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_FEMALE) != 0L;
 }
-static bool is_neuter(struct permonst * ptr) {
+static bool is_neuter(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_NEUTER) != 0L;
 }
-static bool is_wanderer(struct permonst * ptr) {
+static bool is_wanderer(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_WANDER) != 0L;
 }
-static bool always_hostile(struct permonst * ptr) {
+static bool always_hostile(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_HOSTILE) != 0L;
 }
-static bool always_peaceful(struct permonst * ptr) {
+static bool always_peaceful(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_PEACEFUL) != 0L;
 }
-static bool race_hostile(struct permonst * ptr) {
+static bool race_hostile(const struct permonst * ptr) {
   return (ptr->mflags2 & urace.hatemask) != 0L;
 }
-static bool race_peaceful(struct permonst * ptr) {
+static bool race_peaceful(const struct permonst * ptr) {
   return (ptr->mflags2 & urace.lovemask) != 0L;
 }
-static bool extra_nasty(struct permonst * ptr) {
+static bool extra_nasty(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_NASTY) != 0L;
 }
-static bool strongmonst(struct permonst * ptr) {
+static bool strongmonst(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_STRONG) != 0L;
 }
-static bool can_breathe(struct permonst * ptr) {
+static bool can_breathe(const struct permonst * ptr) {
   return attacktype(ptr, AT_BREA);
 }
-static bool cantwield(struct permonst * ptr) {
+static bool cantwield(const struct permonst * ptr) {
   return nohands(ptr) || verysmall(ptr);
 }
-static bool could_twoweap(struct permonst * ptr) {
+static bool could_twoweap(const struct permonst * ptr) {
   return ptr->mattk[1].aatyp == AT_WEAP;
 }
-static bool cantweararm(struct permonst * ptr) {
+static bool cantweararm(const struct permonst * ptr) {
   return breakarm(ptr) || sliparm(ptr);
 }
-static bool throws_rocks(struct permonst * ptr) {
+static bool throws_rocks(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_ROCKTHROW) != 0L;
 }
-static bool type_is_pname(struct permonst * ptr) {
+static bool type_is_pname(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_PNAME) != 0L;
 }
-static bool is_lord(struct permonst * ptr) {
+static bool is_lord(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_LORD) != 0L;
 }
-static bool is_prince(struct permonst * ptr) {
+static bool is_prince(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_PRINCE) != 0L;
 }
-static bool is_ndemon(struct permonst * ptr) {
+static bool is_ndemon(const struct permonst * ptr) {
   return is_demon(ptr) &&
          (ptr->mflags2 & (M2_LORD|M2_PRINCE)) == 0L;
 }
-static bool is_dlord(struct permonst * ptr) {
+static bool is_dlord(const struct permonst * ptr) {
   return is_demon(ptr) && is_lord(ptr);
 }
-static bool is_dprince(struct permonst * ptr) {
+static bool is_dprince(const struct permonst * ptr) {
   return is_demon(ptr) && is_prince(ptr);
 }
-static bool is_minion(struct permonst * ptr) {
+static bool is_minion(const struct permonst * ptr) {
   return ptr->mflags2 & M2_MINION;
 }
-static bool likes_gold(struct permonst * ptr) {
+static bool likes_gold(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_GREEDY) != 0L;
 }
-static bool likes_gems(struct permonst * ptr) {
+static bool likes_gems(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_JEWELS) != 0L;
 }
-static bool likes_objs(struct permonst * ptr){
+static bool likes_objs(const struct permonst * ptr){
   return (ptr->mflags2 & M2_COLLECT) != 0L ||
          is_armed(ptr);
 }
-static bool likes_magic(struct permonst * ptr) {
+static bool likes_magic(const struct permonst * ptr) {
   return (ptr->mflags2 & M2_MAGIC) != 0L;
 }
-static bool webmaker(struct permonst * ptr) {
+static bool webmaker(const struct permonst * ptr) {
   return ptr == &mons[PM_CAVE_SPIDER] ||
          ptr == &mons[PM_GIANT_SPIDER];
 }
-static bool is_unicorn(struct permonst * ptr) {
+static bool is_unicorn(const struct permonst * ptr) {
   return ptr->mlet == S_UNICORN && likes_gems(ptr);
 }
-static bool is_longworm(struct permonst * ptr) {
+static bool is_longworm(const struct permonst * ptr) {
   return ptr == &mons[PM_BABY_LONG_WORM] ||
          ptr == &mons[PM_LONG_WORM] ||
          ptr == &mons[PM_LONG_WORM_TAIL];
 }
-static bool is_covetous(struct permonst * ptr) {
+static bool is_covetous(const struct permonst * ptr) {
   return !!((ptr->mflags3 & M3_COVETOUS));
 }
-static bool infravision(struct permonst * ptr) {
+static bool infravision(const struct permonst * ptr) {
   return !!((ptr->mflags3 & M3_INFRAVISION));
 }
-static bool infravisible(struct permonst * ptr) {
+static bool infravisible(const struct permonst * ptr) {
   return !!((ptr->mflags3 & M3_INFRAVISIBLE));
 }
-static bool is_mplayer(struct permonst * ptr) {
+static bool is_mplayer(const struct permonst * ptr) {
   return ptr >= &mons[PM_ARCHEOLOGIST] &&
          ptr <= &mons[PM_WIZARD];
 }
-static bool is_rider(struct permonst * ptr) {
+static bool is_rider(const struct permonst * ptr) {
   return ptr == &mons[PM_DEATH] ||
          ptr == &mons[PM_FAMINE] ||
          ptr == &mons[PM_PESTILENCE];
 }
-static bool is_placeholder(struct permonst * ptr) {
+static bool is_placeholder(const struct permonst * ptr) {
   return ptr == &mons[PM_ORC] ||
          ptr == &mons[PM_GIANT] ||
          ptr == &mons[PM_ELF] ||
          ptr == &mons[PM_HUMAN];
 }
 /* return true if the monster tends to revive */
-static bool is_reviver(struct permonst * ptr) {
+static bool is_reviver(const struct permonst * ptr) {
   return is_rider(ptr) || ptr->mlet == S_TROLL;
 }
 
 /* this returns the light's range, or 0 if none; if we add more light emitting
    monsters, we'll likely have to add a new light range field to mons[] */
-static int emits_light(struct permonst * ptr) {
+static int emits_light(const struct permonst * ptr) {
   return (ptr->mlet == S_LIGHT ||
           ptr == &mons[PM_FLAMING_SPHERE] ||
           ptr == &mons[PM_SHOCKING_SPHERE] ||
@@ -265,22 +361,22 @@ static int emits_light(struct permonst * ptr) {
          (ptr == &mons[PM_FIRE_ELEMENTAL]) ? 1 : 0;
 /*      [note: the light ranges above were reduced to 1 for performance...] */
 }
-static bool likes_lava(struct permonst * ptr) {
+static bool likes_lava(const struct permonst * ptr) {
   return ptr == &mons[PM_FIRE_ELEMENTAL] ||
          ptr == &mons[PM_SALAMANDER];
 }
-static bool pm_invisible(struct permonst * ptr) {
+static bool pm_invisible(const struct permonst * ptr) {
   return ptr == &mons[PM_STALKER] ||
          ptr == &mons[PM_BLACK_LIGHT];
 }
 
-static bool likes_fire(struct permonst * ptr) {
+static bool likes_fire(const struct permonst * ptr) {
   return ptr == &mons[PM_FIRE_VORTEX] ||
          ptr == &mons[PM_FLAMING_SPHERE] ||
          likes_lava(ptr);
 }
 
-static bool touch_petrifies(struct permonst * ptr) {
+static bool touch_petrifies(const struct permonst * ptr) {
 	return ptr == &mons[PM_COCKATRICE] ||
          ptr == &mons[PM_CHICKATRICE];
 }
