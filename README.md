@@ -43,12 +43,18 @@ The goal of this fork is to make the game more approachable for new players.
    For instance, once your brain is sucked by a master mindflayer, that ability will appear in the master mindflayer article in the encyclopedia.
    Right-clicking on a master mindflayer in-game should provide a link to the article, etc.
  * Don't touch the balance too much.
+   This project is not to create a game, but to improve the user experience for an existing game.
    * Keep all the same items, monsters, roles, etc.
    * Preserve many of the idiosyncrasies in the game engine,
      like the [dual slow-digestion exploit](http://nethackwiki.com/wiki/Foodless#Dual_slow_digestion).
-   * Fix crashes, obviously.
-   * Fix bugs that don't make sense, such as [C343-10](http://nethackwiki.com/wiki/Bugs_in_NetHack_3.4.3#C343-10):
+   * Fix crashes, such as [when you apply a wielded cream pie](http://tasvideos.org/GameResources/DOS/Nethack.html#CreamPieGlitch).
+   * Fix quirks that don't make sense, such as [C343-10](http://nethackwiki.com/wiki/Bugs_in_NetHack_3.4.3#C343-10):
      If there is a corpse in a pit, you have to enter the pit to pick it up but not to eat it.
+   * Real-world time shouldn't affect the game.
+     Move the all the nighttime/moon-phase mechanics to correspond to in-game time.
+     In-game time should be randomly initialized for new games, and flow with the turn counter.
+     * You should be able to ask the Oracle for the in-game time for free.
+     * I don't like the idea of adding a watch item, because it would affect the game balance.
  * Improve the information conveyance.
    * Non-cursed fortune cookies should be more helpful, and should fill in the encyclopedia.
      Cursed fortune cookies should just be unhelpful instead of outright lies.
@@ -63,8 +69,9 @@ The goal of this fork is to make the game more approachable for new players.
    * The retro "Rogue" level has got to go.
  * A game mode that allows save states, called "Practice Mode".
    The normal game should be called "Hardcore Mode".
-   (Get rid of the current Explore and Wizard modes.)
    * You can still unlock encyclopedia entries in Practice Mode.
+   * Rename Wizard Mode to Debug Mode, have it only accessible by running the game locally.
+   * Get rid of the standard Explore Mode.
 
 Additional fun stuff maybe someday:
 
@@ -74,17 +81,18 @@ Additional fun stuff maybe someday:
    * You only have one hand.
    * Etc.
  * Achievements
- * [TAS](http://en.wikipedia.org/wiki/Tool-assisted_speedrun) support
- * (The web api for the client would already be appropriate for AI players.)
+ * Seed input, and other [TAS](http://en.wikipedia.org/wiki/Tool-assisted_speedrun) support features
+ * (The web api for the client would already be appropriate for AI projects.)
 
 And to make this project more approachable for developers:
 
- * Drop support for all the crazy build configurations that no one wants, like BeOS and Win32.
- * Remove all compile-time options, like tourist and kops.
-   That should all be enabled all the time.
- * Use modern tools where appropriate.
-   I'm not afraid to port the level compiler to python, for example.
- * Use Git and Github.
- * Clean up the code: no Pascal-style argument declarations,
-   no hard tabs, use clear identifier names, etc.
- * Abandon all hope of cleanly merging changes to the standard game into this fork.
+ * No support for all the crazy build configurations that no one wants, like BeOS and Win32.
+ * No compile-time options. Tourists, Kops, Steeds, etc. are all enabled all the time now.
+ * Git and [GitHub](https://github.com/thejoshwolfe/nethack).
+ * Major code clean up.
+   * Aesthetic changes: no Pascal-style argument declarations, no hard tabs, clearer identifier names.
+   * Don't use the preprocessor for programming: no `#undef`, no `#include`ing yourself, no macro functions.
+   * Refactoring: minimize/eliminate global variables. Turn the game into a library with a clean interface.
+   * String manipulation: NUL-terminated `char*`s are awful. Write our own string library if we have to.
+
+Needless to say, we're abandoning all hope of cleanly merging changes for the standard game into this fork.
