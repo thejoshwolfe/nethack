@@ -5,6 +5,7 @@
 #include "eshk.h"
 #include "extern.h"
 #include "onames.h"
+#include "artifact_names.h"
 
 static void mkshobj_at(const struct shclass *,int,int);
 static void nameshk(struct monst *,const char * const *);

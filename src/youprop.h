@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef YOUPROP_H
 #define YOUPROP_H
 
@@ -7,6 +8,7 @@
 #include "mondata.h"
 #include "pm.h"
 #include "onames.h"
+#include "artifact_names.h"
 #include "decl.h"
 
 

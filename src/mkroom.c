@@ -14,6 +14,7 @@
 #include "extern.h"
 #include "flag.h"
 #include "onames.h"
+#include "artifact_names.h"
 
 static bool isbig(struct mkroom *);
 static struct mkroom * pick_room(bool);

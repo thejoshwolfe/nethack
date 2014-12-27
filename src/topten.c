@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "dlb.h"
 #include "patchlevel.h"
@@ -7,6 +8,7 @@
 #include "winprocs.h"
 #include "flag.h"
 #include "onames.h"
+#include "artifact_names.h"
 
 // larger file for debugging purposes
 static const char * LOGFILE = "run/logfile";

@@ -4,6 +4,7 @@
 #include "extern.h"
 #include "winprocs.h"
 #include "onames.h"
+#include "artifact_names.h"
 #include "flag.h"
 
 static void setgemprobs(d_level*);

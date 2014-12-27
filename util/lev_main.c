@@ -15,6 +15,7 @@
 #include "pm_props.h"
 #include "extern.h"
 #include "onames.h"
+#include "artifact_names.h"
 
 #include <fcntl.h>
 #include <sys/file.h>

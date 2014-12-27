@@ -7,6 +7,7 @@
 #include "timeout.h"
 #include "vision.h"
 #include "onames.h"
+#include "artifact_names.h"
 #include "flag.h"
 #include "mondata.h"
 

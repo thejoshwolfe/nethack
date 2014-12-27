@@ -3,6 +3,7 @@
 #include "pm_props.h"
 #include "extern.h"
 #include "onames.h"
+#include "artifact_names.h"
 #include "youprop.h"
 #include "flag.h"
 

@@ -3,6 +3,7 @@
 #include "extern.h"
 #include "winprocs.h"
 #include "onames.h"
+#include "artifact_names.h"
 #include "youprop.h"
 
 static int cost(struct obj *);

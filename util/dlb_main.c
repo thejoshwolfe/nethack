@@ -113,9 +113,7 @@ Write (int out, char *buf, long len)
 }
 
 
-char *
-eos (char *s)
-{
+char * eos (char *s) {
     while (*s) s++;
     return s;
 }
