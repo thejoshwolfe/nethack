@@ -293,7 +293,10 @@ void map_location (int x, int y, int show) {
 
 #define DETECTED        2
 #define PHYSICALLY_SEEN 1
-#define is_worm_tail(mon)       ((mon) && ((x != (mon)->mx)  || (y != (mon)->my)))
+
+static bool is_worm_tail(struct monst *mon, int x, int y) {
+    return mon && (x != mon->mx || y != mon->my);
+}
 
 /*
  * display_monster()
@@ -562,7 +565,7 @@ void feel_location (signed char x, signed char y) {
     if ((x != u.ux || y != u.uy) && (mon = m_at(x,y)) && sensemon(mon))
         display_monster(x, y, mon,
                 (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon)) ? PHYSICALLY_SEEN : DETECTED,
-                is_worm_tail(mon));
+                is_worm_tail(mon, x, y));
 }
 
 /*
@@ -623,7 +626,7 @@ void newsym (int x, int y) {
         }
         else {
             mon = m_at(x,y);
-            worm_tail = is_worm_tail(mon);
+            worm_tail = is_worm_tail(mon, x, y);
             see_it = mon && (worm_tail
                 ? (!mon->minvis || See_invisible)
                 : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
@@ -642,7 +645,7 @@ void newsym (int x, int y) {
                 /* also gets rid of any invisibility glyph */
                 display_monster(x, y, mon, see_it ? PHYSICALLY_SEEN : DETECTED, worm_tail);
             }
-            else if (mon && mon_warning(mon) && !is_worm_tail(mon))
+            else if (mon && mon_warning(mon) && !is_worm_tail(mon, x, y))
                 display_warning(mon);
             else if (glyph_is_invisible(levl[x][y].glyph))
                 map_invisible(x, y);
@@ -662,13 +665,13 @@ void newsym (int x, int y) {
                 && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon)
                                 || (see_with_infrared(mon) && mon_visible(mon))))
                     || Detect_monsters)
-                && !is_worm_tail(mon)) {
+                && !is_worm_tail(mon, x, y)) {
             /* Monsters are printed every time. */
             /* This also gets rid of any invisibility glyph */
             display_monster(x, y, mon, see_it ? 0 : DETECTED, 0);
         }
         else if ((mon = m_at(x,y)) && mon_warning(mon) &&
-                 !is_worm_tail(mon)) {
+                 !is_worm_tail(mon, x, y)) {
                 display_warning(mon);
         }
 
@@ -707,8 +710,6 @@ show_mem:
         }
     }
 }
-
-#undef is_worm_tail
 
 /*
  * shieldeff()
