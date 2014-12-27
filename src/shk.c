@@ -94,7 +94,17 @@ const char *Izchak_speaks[]={
     "%s comments about the Valley of the Dead as being a gateway."
 };
 
+static const int NEED_UPDATE = 1;
+static const int OPEN = 2;
+static const int INSHOP = 4;
 
+static int horiz(int i) {
+    return (i % 3) - 1;
+}
+
+static int vert(int i) {
+    return (i / 3) - 1;
+}
 
 static struct monst * next_shkp(struct monst *shkp, bool withbill) {
     for (; shkp; shkp = shkp->nmon) {
@@ -2605,11 +2615,6 @@ int repair_damage(struct monst *shkp, struct damage *tmp_dam, bool catchup) {
     (void) memset((void *)litter, 0, sizeof(litter));
     if ((otmp = level.objects[x][y]) != 0) {
         /* Scatter objects haphazardly into the shop */
-#define NEED_UPDATE 1
-#define OPEN        2
-#define INSHOP      4
-#define horiz(i) ((i%3)-1)
-#define vert(i)  ((i/3)-1)
         for (i = 0; i < 9; i++) {
             if ((i == 4) || (!ZAP_POS(levl[x+horiz(i)][y+vert(i)].typ)))
                 continue;
@@ -2664,11 +2669,6 @@ int repair_damage(struct monst *shkp, struct damage *tmp_dam, bool catchup) {
         if (litter[i] & NEED_UPDATE)
             newsym(x+horiz(i), y+vert(i));
     return(2);
-#undef NEED_UPDATE
-#undef OPEN
-#undef INSHOP
-#undef vert
-#undef horiz
 }
 /*
  * shk_move: return 1: moved  0: didn't  -1: let m_move do it  -2: died
