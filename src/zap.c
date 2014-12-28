@@ -4,6 +4,11 @@
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
+#include "do_name.h"
+#include "objnam.h"
+#include "dbridge.h"
+#include "shk.h"
+#include "priest.h"
 
 /* Disintegration rays have special treatment; corpses are never left.
  * But the routine which calculates the damage is separate from the routine
@@ -51,7 +56,8 @@ static int spell_hit_bonus(int);
 
 static const char are_blinded_by_the_flash[] = "are blinded by the flash!";
 
-const char * const flash_types[] = {    /* also used in buzzmu(mcastu.c) */
+/* also used in buzzmu(mcastu.c) */
+const char * const flash_types[] = {
         "magic missile",        /* Wands must be 0-9 */
         "bolt of fire",
         "bolt of cold",
@@ -127,11 +133,12 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                 if (!resist(mtmp, otmp->oclass, 0, NOTELL)) {
                         mon_adjust_speed(mtmp, -1, otmp);
                         m_dowear(mtmp, false); /* might want speed boots */
-                        if (u.uswallow && (mtmp == u.ustuck) &&
-                            is_whirly(mtmp->data)) {
-                                You("disrupt %s!", mon_nam(mtmp));
-                                pline("A huge hole opens up...");
-                                expels(mtmp, mtmp->data, true);
+                        if (u.uswallow && (mtmp == u.ustuck) && is_whirly(mtmp->data)) {
+                            char name[BUFSZ];
+                            mon_nam(name, BUFSZ, mtmp);
+                            You("disrupt %s!", name);
+                            pline("A huge hole opens up...");
+                            expels(mtmp, mtmp->data, true);
                         }
                 }
                 break;
@@ -171,7 +178,9 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                        with their metabolism...) */
                     if (mtmp->cham == CHAM_ORDINARY && !rn2(25)) {
                         if (canseemon(mtmp)) {
-                            pline("%s shudders!", Monnam(mtmp));
+                            char name[BUFSZ];
+                            Monnam(name, BUFSZ, mtmp);
+                            pline("%s shudders!", name);
                             makeknown(otyp);
                         }
                         /* dropped inventory shouldn't be hit by this zap */
@@ -198,13 +207,13 @@ bhitm (struct monst *mtmp, struct obj *otmp)
         case WAN_MAKE_INVISIBLE:
             {
                 int oldinvis = mtmp->minvis;
-                char nambuf[BUFSZ];
+                char name[BUFSZ];
 
-                /* format monster's name before altering its visibility */
-                strcpy(nambuf, Monnam(mtmp));
+                /* get monster's name before altering its visibility */
+                Monnam(name, BUFSZ, mtmp);
                 mon_set_minvis(mtmp);
                 if (!oldinvis && knowninvisible(mtmp)) {
-                    pline("%s turns transparent!", nambuf);
+                    pline("%s turns transparent!", name);
                     makeknown(otyp);
                 }
                 break;
@@ -225,8 +234,13 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                 wake = false;   /* don't want immediate counterattack */
                 if (u.uswallow && mtmp == u.ustuck) {
                         if (is_animal(mtmp->data)) {
-                                if (Blind) You_feel("a sudden rush of air!");
-                                else pline("%s opens its mouth!", Monnam(mtmp));
+                            if (Blind) {
+                                You_feel("a sudden rush of air!");
+                            } else {
+                                char name[BUFSZ];
+                                Monnam(name, BUFSZ, mtmp);
+                                pline("%s opens its mouth!", name);
+                            }
                         }
                         expels(mtmp, mtmp->data, true);
                 } else if (!!(obj = which_armor(mtmp, W_SADDLE))) {
@@ -241,7 +255,7 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                 break;
         case SPE_HEALING:
         case SPE_EXTRA_HEALING:
-                reveal_invis = true;
+            reveal_invis = true;
             if (mtmp->data != &mons[PM_PESTILENCE]) {
                 wake = false;           /* wakeup() makes the target angry */
                 mtmp->mhp += d(6, otyp == SPE_EXTRA_HEALING ? 8 : 4);
@@ -260,8 +274,11 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                             newsym(mtmp->mx, mtmp->my);
                         } else
                             mimic_hit_msg(mtmp, otyp);
-                    } else pline("%s looks%s better.", Monnam(mtmp),
-                                 otyp == SPE_EXTRA_HEALING ? " much" : "" );
+                    } else {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mtmp);
+                        pline("%s looks%s better.", name, otyp == SPE_EXTRA_HEALING ? " much" : "" );
+                    }
                 }
                 if (mtmp->mtame || mtmp->mpeaceful) {
                     adjalign(Role_if(PM_HEALER) ? 1 : sgn(u.ualign.type));
@@ -271,7 +288,7 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                 (void) resist(mtmp, otmp->oclass,
                               d(3, otyp == SPE_EXTRA_HEALING ? 8 : 4), TELL);
             }
-                break;
+            break;
         case WAN_LIGHT: /* (broken wand) */
                 if (flash_hits_mon(mtmp, otmp)) {
                     makeknown(WAN_LIGHT);
@@ -288,7 +305,8 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                 break;
         case SPE_STONE_TO_FLESH:
                 if (monsndx(mtmp->data) == PM_STONE_GOLEM) {
-                    char *name = Monnam(mtmp);
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
                     /* turn into flesh golem */
                     if (newcham(mtmp, &mons[PM_FLESH_GOLEM], false, false)) {
                         if (canseemon(mtmp))
@@ -316,8 +334,11 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                         xkilled(mtmp, 1);
                     else {
                         mtmp->m_lev--;
-                        if (canseemon(mtmp))
-                            pline("%s suddenly seems weaker!", Monnam(mtmp));
+                        if (canseemon(mtmp)) {
+                            char name[BUFSZ];
+                            Monnam(name, BUFSZ, mtmp);
+                            pline("%s suddenly seems weaker!", name);
+                        }
                     }
                 }
                 break;
@@ -358,7 +379,9 @@ probe_monster (struct monst *mtmp)
                 otmp->dknown = 1;       /* treat as "seen" */
             (void) display_minventory(mtmp, MINV_ALL, (char *)0);
         } else {
-            pline("%s is not carrying anything.", noit_Monnam(mtmp));
+            char name[BUFSZ];
+            noit_Monnam(name, BUFSZ, mtmp);
+            pline("%s is not carrying anything.", name);
         }
 }
 
@@ -623,9 +646,11 @@ revive (struct obj *obj)
                                     x2 = ghost->mx; y2 = ghost->my;
                                     if (ghost->mtame)
                                         savetame = ghost->mtame;
-                                    if (canseemon(ghost))
-                                        pline("%s is suddenly drawn into its former body!",
-                                                Monnam(ghost));
+                                    if (canseemon(ghost)) {
+                                        char name[BUFSZ];
+                                        Monnam(name, BUFSZ, ghost);
+                                        pline("%s is suddenly drawn into its former body!", name);
+                                    }
                                     mondead(ghost);
                                     recorporealization = true;
                                     newsym(x2, y2);
@@ -701,17 +726,24 @@ revive_egg (struct obj *obj)
 }
 
 /* try to revive all corpses and eggs carried by `mon' */
-int
-unturn_dead (struct monst *mon)
-{
+int unturn_dead (struct monst *mon) {
         struct obj *otmp, *otmp2;
         struct monst *mtmp2;
-        char owner[BUFSZ], corpse[BUFSZ];
+        char corpse[BUFSZ];
         bool youseeit;
         int once = 0, res = 0;
 
         youseeit = (mon == &youmonst) ? true : canseemon(mon);
         otmp2 = (mon == &youmonst) ? invent : mon->minvent;
+
+        char owner[BUFSZ];
+        if (mon == &youmonst) {
+            strcpy(owner, "Your");
+        } else {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mon);
+            nh_slprintf(owner, BUFSZ, "%s%s", name, possessive_suffix(name));
+        }
 
         while ((otmp = otmp2) != 0) {
             otmp2 = otmp->nobj;
@@ -725,12 +757,12 @@ unturn_dead (struct monst *mon)
             if ((mtmp2 = revive(otmp)) != 0) {
                 ++res;
                 if (youseeit) {
-                    if (!once++) strcpy(owner,
-                                        (mon == &youmonst) ? "Your" :
-                                        s_suffix(Monnam(mon)));
                     pline("%s %s suddenly comes alive!", owner, corpse);
-                } else if (canseemon(mtmp2))
-                    pline("%s suddenly appears!", Amonnam(mtmp2));
+                } else if (canseemon(mtmp2)) {
+                    char name[BUFSZ];
+                    Amonnam(name, BUFSZ, mtmp2);
+                    pline("%s suddenly appears!", name);
+                }
             }
         }
         return res;
@@ -1090,8 +1122,9 @@ create_polymon (struct obj *obj, int okind)
         polyuse(obj, okind, (int)mons[pm_index].cwt);
 
         if(mtmp && cansee(mtmp->mx, mtmp->my)) {
-            pline("Some %sobjects meld, and %s arises from the pile!",
-                  material, a_monnam(mtmp));
+            char name[BUFSZ];
+            a_monnam(name, BUFSZ, mtmp);
+            pline("Some %sobjects meld, and %s arises from the pile!", material, name);
         }
 }
 
@@ -1367,13 +1400,19 @@ no_unwear:
                 if(shkp->mpeaceful) {
                     if(*u.ushops && *in_rooms(u.ux, u.uy, 0) ==
                             *in_rooms(shkp->mx, shkp->my, 0) &&
-                            !costly_spot(u.ux, u.uy))
+                            !costly_spot(u.ux, u.uy)) {
                         make_angry_shk(shkp, ox, oy);
-                    else {
-                        pline("%s gets angry!", Monnam(shkp));
+                    } else {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, shkp);
+                        pline("%s gets angry!", name);
                         hot_pursuit(shkp);
                     }
-                } else Norep("%s is furious!", Monnam(shkp));
+                } else {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, shkp);
+                    Norep("%s is furious!", name);
+                }
             }
         }
         delobj(obj);
@@ -2142,8 +2181,6 @@ bool
 cancel_monst (struct monst *mdef, struct obj *obj, bool youattack, bool allow_cancel_kill, bool self_cancel)
 {
         bool youdefend = (mdef == &youmonst);
-        static const char writing_vanishes[] =
-                                "Some writing vanishes from %s head!";
         static const char your[] = "your";      /* should be extern */
 
         if (youdefend ? (!youattack && Antimagic)
@@ -2166,7 +2203,7 @@ cancel_monst (struct monst *mdef, struct obj *obj, bool youattack, bool allow_ca
         if (youdefend) {
             if (Upolyd) {
                 if ((u.umonnum == PM_CLAY_GOLEM) && !Blind)
-                    pline(writing_vanishes, your);
+                    pline("Some writing vanishes from %s head!", your);
 
                 if (Unchanging)
                     Your("amulet grows hot for a moment, then cools.");
@@ -2180,8 +2217,11 @@ cancel_monst (struct monst *mdef, struct obj *obj, bool youattack, bool allow_ca
                 were_change(mdef);
 
             if (mdef->data == &mons[PM_CLAY_GOLEM]) {
-                if (canseemon(mdef))
-                    pline(writing_vanishes, s_suffix(mon_nam(mdef)));
+                if (canseemon(mdef)) {
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mdef);
+                    pline("Some writing vanishes from %s%s head!", name, possessive_suffix(name));
+                }
 
                 if (allow_cancel_kill) {
                     if (youattack)
@@ -2474,28 +2514,33 @@ exclam (int force)
         return (const char *)((force < 0) ? "?" : (force <= 4) ? "." : "!");
 }
 
-void
-hit (
-    const char *str,
-    struct monst *mtmp,
-    const char *force              /* usually either "." or "!" */
-)
-{
-        if((!cansee(bhitpos.x,bhitpos.y) && !canspotmon(mtmp) &&
-             !(u.uswallow && mtmp == u.ustuck))
-           || !flags.verbose)
-            pline("%s %s it.", The(str), vtense(str, "hit"));
-        else pline("%s %s %s%s", The(str), vtense(str, "hit"),
-                   mon_nam(mtmp), force);
+/* force is usually either "." or "!" */
+void hit(const char *str, struct monst *mtmp, const char *force) {
+    char hits[BUFSZ];
+    vtense(hits, BUFSZ, str, "hit");
+    if ((!cansee(bhitpos.x, bhitpos.y) && !canspotmon(mtmp) && !(u.uswallow && mtmp == u.ustuck)) || !flags.verbose) {
+        pline("%s %s it.", The(str), hits);
+    } else {
+        char direct_object[BUFSZ];
+        mon_nam(direct_object, BUFSZ, mtmp);
+        pline("%s %s %s%s", The(str), hits, direct_object, force);
+    }
 }
 
-void
-miss (const char *str, struct monst *mtmp)
-{
-        pline("%s %s %s.", The(str), vtense(str, "miss"),
-              ((cansee(bhitpos.x,bhitpos.y) || canspotmon(mtmp))
-               && flags.verbose) ?
-              mon_nam(mtmp) : "it");
+void miss(const char *str, struct monst *mtmp) {
+    char subject[BUFSZ];
+    strcpy(subject, The(str));
+
+    char verb[BUFSZ];
+    vtense(verb, BUFSZ, str, "miss");
+
+    char direct_object[BUFSZ];
+    if ((cansee(bhitpos.x,bhitpos.y) || canspotmon(mtmp)) && flags.verbose)
+        mon_nam(direct_object, BUFSIZ, mtmp);
+    else
+        strcpy(direct_object, "it");
+
+    pline("%s %s %s.", subject, verb, direct_object);
 }
 
 /*
@@ -3158,13 +3203,16 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
 
     fltxt = flash_types[(type <= -30) ? abstype : abs(type)];
     if(u.uswallow) {
-        int tmp;
-
-        if(type < 0) return;
-        tmp = zhitm(u.ustuck, type, nd, &otmp);
-        if(!u.ustuck)   u.uswallow = 0;
-        else    pline("%s rips into %s%s",
-                      The(fltxt), mon_nam(u.ustuck), exclam(tmp));
+        if (type < 0)
+            return;
+        int tmp = zhitm(u.ustuck, type, nd, &otmp);
+        if (!u.ustuck) {
+            u.uswallow = 0;
+        } else {
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, u.ustuck);
+            pline("%s rips into %s%s", The(fltxt), name, exclam(tmp));
+        }
         /* Using disintegration from the inside only makes a hole... */
         if (tmp == MAGIC_COOKIE)
             u.ustuck->mhp = 0;
@@ -3224,12 +3272,16 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
                     if (is_rider(mon->data) && abs(type) == ZT_BREATH(ZT_DEATH)) {
                         if (canseemon(mon)) {
                             hit(fltxt, mon, ".");
-                            pline("%s disintegrates.", Monnam(mon));
-                            pline("%s body reintegrates before your %s!",
-                                  s_suffix(Monnam(mon)),
-                                  (eyecount(youmonst.data) == 1) ?
-                                        body_part(EYE) : makeplural(body_part(EYE)));
-                            pline("%s resurrects!", Monnam(mon));
+                            char name[BUFSZ];
+                            Monnam(name, BUFSZ, mon);
+                            char your_eyes[BUFSZ];
+                            if (eyecount(youmonst.data) == 1)
+                                strcpy(your_eyes, body_part(EYE));
+                            else
+                                strcpy(your_eyes, makeplural(body_part(EYE)));
+                            pline("%s disintegrates.", name);
+                            pline("%s%s body reintegrates before your %s!", name, possessive_suffix(name), your_eyes);
+                            pline("%s resurrects!", name);
                         }
                         mon->mhp = mon->mhpmax;
                         break; /* Out of while loop */
@@ -3237,9 +3289,9 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
                     if (mon->data == &mons[PM_DEATH] && abstype == ZT_DEATH) {
                         if (canseemon(mon)) {
                             hit(fltxt, mon, ".");
-                            pline("%s absorbs the deadly %s!", Monnam(mon),
-                                  type == ZT_BREATH(ZT_DEATH) ?
-                                        "blast" : "ray");
+                            char name[BUFSZ];
+                            Monnam(name, BUFSZ, mon);
+                            pline("%s absorbs the deadly %s!", name, type == ZT_BREATH(ZT_DEATH) ? "blast" : "ray");
                             pline("It seems even stronger than before.");
                         }
                         break; /* Out of while loop */
@@ -3249,10 +3301,13 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
                         struct obj *otmp2, *m_amulet = mlifesaver(mon);
 
                         if (canseemon(mon)) {
-                            if (!m_amulet)
-                                pline("%s is disintegrated!", Monnam(mon));
-                            else
+                            if (!m_amulet) {
+                                char name[BUFSZ];
+                                Monnam(name, BUFSZ, mon);
+                                pline("%s is disintegrated!", name);
+                            } else {
                                 hit(fltxt, mon, "!");
+                            }
                         }
                         mon->mgold = 0L;
 
@@ -3285,10 +3340,11 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
                             hit(fltxt, mon, exclam(tmp));
                         } else {
                             /* some armor was destroyed; no damage done */
-                            if (canseemon(mon))
-                                pline("%s %s is disintegrated!",
-                                      s_suffix(Monnam(mon)),
-                                      distant_name(otmp, xname));
+                            if (canseemon(mon)) {
+                                char name[BUFSZ];
+                                Monnam(name, BUFSZ, mon);
+                                pline("%s%s %s is disintegrated!", name, possessive_suffix(name), distant_name(otmp, xname));
+                            }
                             m_useup(mon, otmp);
                         }
                         if (mon_could_move && !mon->mcanmove)   /* ZT_SLEEP */
@@ -3872,10 +3928,12 @@ destroy_mitem (struct monst *mtmp, int osym, int dmgtyp)
                     if(!rn2(3)) cnt++;
 
                 if(!cnt) continue;
-                if (vis) pline("%s %s %s!",
-                        s_suffix(Monnam(mtmp)), xname(obj),
-                        (cnt > 1L) ? destroy_strings[dindx*3 + 1]
-                                  : destroy_strings[dindx*3]);
+                if (vis) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    const char * destroyed_message = (cnt > 1L) ? destroy_strings[dindx*3 + 1] : destroy_strings[dindx*3];
+                    pline("%s%s %s %s!", name, possessive_suffix(name), xname(obj), destroyed_message);
+                }
                 for(i = 0; i < cnt; i++) m_useup(mtmp, obj);
             }
         }
@@ -3908,7 +3966,9 @@ resist (struct monst *mtmp, char oclass, int damage, int tell)
         if (resisted) {
             if (tell) {
                 shieldeff(mtmp->mx, mtmp->my);
-                pline("%s resists!", Monnam(mtmp));
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s resists!", name);
             }
             damage = (damage + 1) / 2;
         }
