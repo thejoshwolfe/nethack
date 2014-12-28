@@ -19,7 +19,6 @@ static struct entity *e_at(int, int);
 static void m_to_e(struct monst *, int, int, struct entity *);
 static void u_to_e(struct entity *);
 static void set_entity(int, int, struct entity *);
-static const char *E_phrase(struct entity *, const char *);
 static bool e_survives_at(struct entity *, int, int);
 static void e_died(struct entity *, int, int);
 static bool automiss(struct entity *);
@@ -257,7 +256,7 @@ static size_t E_phrase (char *out_buf, size_t buf_size,
         if (*verb)
             return nh_slprintf(out_buf, buf_size, "You %s", verb);
         else
-            return nh_strlcpy(out_buf, buf_size, "You");
+            return nh_strlcpy(out_buf, "You", buf_size);
     } else {
         if (*verb) {
             char name[BUFSZ];
@@ -450,8 +449,10 @@ static void do_entity (struct entity *etmp) {
         }
     } else {
         if (crm->typ == DRAWBRIDGE_DOWN) {
-            pline("%s crushed underneath the drawbridge.",
-                    E_phrase(etmp, "are"));             /* no jump */
+            // no jump
+            char subject[BUFSZ];
+            E_phrase(subject, BUFSZ, etmp, "are");
+            pline("%s crushed underneath the drawbridge.", subject);
             e_died(etmp, e_inview? 3 : 2, CRUSHING);/* no corpse */
             return;   /* Note: Beyond this point, we know we're  */
         }                 /* not at an opened drawbridge, since all  */
@@ -462,13 +463,15 @@ static void do_entity (struct entity *etmp) {
             if (e_jumps(etmp)) {
                 relocates = true;
             } else {
-                if (e_inview)
-                    pline("%s crushed by the falling portcullis!",
-                            E_phrase(etmp, "are"));
-                else if (flags.soundok)
+                if (e_inview) {
+                    char subject[BUFSZ];
+                    E_phrase(subject, BUFSZ, etmp, "are");
+                    pline("%s crushed by the falling portcullis!", subject);
+                } else if (flags.soundok) {
                     You_hear("a crushing sound.");
+                }
                 e_died(etmp, e_inview? 3 : 2, CRUSHING);
-                /* no corpse */
+                // no corpse
                 return;
             }
         } else { /* tries to jump off bridge to original square */
@@ -530,9 +533,11 @@ static void do_entity (struct entity *etmp) {
                     You("pass through it!");
                 else
                     pline_The("drawbridge closes in...");
-            } else
-                pline("%s behind the drawbridge.",
-                        E_phrase(etmp, "disappear"));
+            } else {
+                char subject[BUFSZ];
+                E_phrase(subject, BUFSZ, etmp, "disappear");
+                pline("%s behind the drawbridge.", subject);
+            }
         }
         if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
             killer_format = KILLED_BY_AN;
@@ -547,23 +552,26 @@ static void do_entity (struct entity *etmp) {
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
             if (e_inview && !is_flyer(etmp->edata) &&
                     !is_floater(etmp->edata))
-                pline("%s from the bridge.",
-                        E_phrase(etmp, "fall"));
+            {
+                char subject[BUFSZ];
+                E_phrase(subject, BUFSZ, etmp, "fall");
+                pline("%s from the bridge.", subject);
+            }
             return;
         }
         if (is_pool(etmp->ex, etmp->ey) || is_lava(etmp->ex, etmp->ey))
             if (e_inview && !is_u(etmp)) {
                 /* drown() will supply msgs if nec. */
-                bool lava = is_lava(etmp->ex, etmp->ey);
-
-                if (Hallucination())
-                    pline("%s the %s and disappears.",
-                            E_phrase(etmp, "drink"),
-                            lava ? "lava" : "moat");
-                else
-                    pline("%s into the %s.",
-                            E_phrase(etmp, "fall"),
-                            lava ? "lava" : "moat");
+                const char *moat_str = is_lava(etmp->ex, etmp->ey) ? "lava" : "moat";
+                if (Hallucination()) {
+                    char subject[BUFSZ];
+                    E_phrase(subject, BUFSZ, etmp, "drink");
+                    pline("%s the %s and disappears.", subject, moat_str);
+                } else {
+                    char subject[BUFSZ];
+                    E_phrase(subject, BUFSZ, etmp, "fall");
+                    pline("%s into the %s.", subject, moat_str);
+                }
             }
         killer_format = NO_KILLER_PREFIX;
         killer = "fell from a drawbridge";
@@ -723,9 +731,11 @@ void destroy_drawbridge (int x, int y) {
         if (etmp2->edata) {
                 e_inview = e_canseemon(etmp2);
                 if (!automiss(etmp2)) {
-                        if (e_inview)
-                                pline("%s blown apart by flying debris.",
-                                      E_phrase(etmp2, "are"));
+                        if (e_inview) {
+                            char subject[BUFSZ];
+                            E_phrase(subject, BUFSZ, etmp2, "are");
+                            pline("%s blown apart by flying debris.", subject);
+                        }
                         killer_format = KILLED_BY_AN;
                         killer = "exploding drawbridge";
                         e_died(etmp2, e_inview? 3 : 2, CRUSHING); /*no corpse*/
@@ -737,12 +747,15 @@ void destroy_drawbridge (int x, int y) {
                 if (e_missed(etmp1, true)) {
                 } else {
                         if (e_inview) {
-                            if (!is_u(etmp1) && Hallucination())
-                                pline("%s into some heavy metal!",
-                                      E_phrase(etmp1, "get"));
-                            else
-                                pline("%s hit by a huge chunk of metal!",
-                                      E_phrase(etmp1, "are"));
+                            if (!is_u(etmp1) && Hallucination()) {
+                                char subject[BUFSZ];
+                                E_phrase(subject, BUFSZ, etmp1, "get");
+                                pline("%s into some heavy metal!", subject);
+                            } else {
+                                char subject[BUFSZ];
+                                E_phrase(subject, BUFSZ, etmp1, "are");
+                                pline("%s hit by a huge chunk of metal!", subject);
+                            }
                         } else {
                             if (flags.soundok && !is_u(etmp1) && !is_pool(x,y))
                                 You_hear("a crushing sound.");

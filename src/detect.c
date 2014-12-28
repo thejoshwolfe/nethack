@@ -1021,8 +1021,13 @@ int openit (void) {
 
     if(u.uswallow) {
         if (is_animal(u.ustuck->data)) {
-            if (Blind) pline("Its mouth opens!");
-            else pline("%s opens its mouth!", Monnam(u.ustuck));
+            if (Blind) {
+                pline("Its mouth opens!");
+            } else {
+                char subject[BUFSZ];
+                Monnam(subject, BUFSZ, u.ustuck);
+                pline("%s opens its mouth!", subject);
+            }
         }
         expels(u.ustuck, u.ustuck->data, true);
         return(-1);
@@ -1100,24 +1105,27 @@ int dosearch0 (int aflag) {
                         if((mtmp = m_at(x, y)) && !aflag) {
                             if(mtmp->m_ap_type) {
                                 seemimic(mtmp);
-find:           exercise(A_WIS, true);
-                if (!canspotmon(mtmp)) {
-                    if (glyph_is_invisible(levl[x][y].glyph)) {
-                        /* found invisible monster in a square
-                         * which already has an 'I' in it.
-                         * Logically, this should still take
-                         * time and lead to a return(1), but if
-                         * we did that the player would keep
-                         * finding the same monster every turn.
-                         */
-                        continue;
-                    } else {
-                        You_feel("an unseen monster!");
-                        map_invisible(x, y);
-                    }
-                } else if (!sensemon(mtmp))
-                    You("find %s.", a_monnam(mtmp));
-                return(1);
+find:                           exercise(A_WIS, true);
+                                if (!canspotmon(mtmp)) {
+                                    if (glyph_is_invisible(levl[x][y].glyph)) {
+                                        /* found invisible monster in a square
+                                         * which already has an 'I' in it.
+                                         * Logically, this should still take
+                                         * time and lead to a return(1), but if
+                                         * we did that the player would keep
+                                         * finding the same monster every turn.
+                                         */
+                                        continue;
+                                    } else {
+                                        You_feel("an unseen monster!");
+                                        map_invisible(x, y);
+                                    }
+                                } else if (!sensemon(mtmp)) {
+                                    char name[BUFSZ];
+                                    a_monnam(name, BUFSZ, mtmp);
+                                    You("find %s.", name);
+                                }
+                                return 1;
                             }
                             if(!canspotmon(mtmp)) {
                                 if (mtmp->mundetected &&
@@ -1152,7 +1160,7 @@ find:           exercise(A_WIS, true);
                 }
             }
     }
-    return(1);
+    return 1;
 }
 
 int dosearch (void) {

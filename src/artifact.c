@@ -715,8 +715,9 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
     verb = mb_verb[!!Hallucination()][attack_indx];
     if (youattack || youdefend || vis) {
         result = true;
-        pline_The("magic-absorbing blade %s %s!",
-                vtense((const char *)0, verb), hittee);
+        char verb_tensed[BUFSZ];
+        vtense(verb_tensed, BUFSZ, NULL, verb);
+        pline_The("magic-absorbing blade %s %s!", verb_tensed, hittee);
         /* assume probing has some sort of noticeable feedback
            even if it is being done by one monster to another */
         if (attack_indx == MB_INDEX_PROBE && !canspotmon(mdef))
@@ -811,11 +812,12 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
     }
 
     if (youattack || youdefend || vis) {
-        (void) upstart(hittee); /* capitalize */
+        upstart(hittee); /* capitalize */
         if (resisted) {
-            pline("%s %s!", hittee, vtense(hittee, "resist"));
-            shieldeff(youdefend ? u.ux : mdef->mx,
-                    youdefend ? u.uy : mdef->my);
+            char resist[BUFSZ];
+            vtense(resist, BUFSZ, hittee, "resist");
+            pline("%s %s!", hittee, resist);
+            shieldeff(youdefend ? u.ux : mdef->mx, youdefend ? u.uy : mdef->my);
         }
         if ((do_stun || do_confuse) && flags.verbose) {
             char buf[BUFSZ];
@@ -824,8 +826,10 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
             if (do_stun) strcat(buf, "stunned");
             if (do_stun && do_confuse) strcat(buf, " and ");
             if (do_confuse) strcat(buf, "confused");
-            pline("%s %s %s%c", hittee, vtense(hittee, "are"),
-                    buf, (do_stun && do_confuse) ? '!' : '.');
+
+            char are[BUFSZ];
+            vtense(are, BUFSZ, hittee, "are");
+            pline("%s %s %s%c", hittee, are, buf, (do_stun && do_confuse) ? '!' : '.');
         }
     }
 
