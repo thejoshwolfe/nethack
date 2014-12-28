@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "objnam.h"
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
@@ -68,9 +70,7 @@ strprepend (char *s, const char *pref)
 
 
 /* manage a pool of BUFSZ buffers, so callers don't have to */
-static char *
-nextobuf (void)
-{
+static char * nextobuf (void) {
         static char bufs[NUMOBUF][BUFSZ];
         static int bufidx = 0;
 
@@ -215,14 +215,11 @@ fruitname (
 }
 
 
-char *
-xname (struct obj *obj)
-{
+char * xname (struct obj *obj) {
         return xname2(obj, false);
 }
-char *
-xname2 (struct obj *obj, bool ignore_oquan)
-{
+
+char * xname2 (struct obj *obj, bool ignore_oquan) {
         char *buf;
         int typ = obj->otyp;
         struct objclass *ocl = &objects[typ];
@@ -865,9 +862,7 @@ killer_xname (struct obj *obj)
 /*
  * Used if only one of a collection of objects is named (e.g. in eat.c).
  */
-const char *
-singular (struct obj *otmp, char *(*func)( struct obj *))
-{
+const char * singular (struct obj *otmp, char *(*func)( struct obj *)) {
         long savequan;
         char *nam;
 
@@ -882,38 +877,44 @@ singular (struct obj *otmp, char *(*func)( struct obj *))
         return nam;
 }
 
-char *
-an (const char *str)
-{
-        char *buf = nextobuf();
-
-        buf[0] = '\0';
-
-        if (strncmpi(str, "the ", 4) &&
-            strcmp(str, "molten lava") &&
-            strcmp(str, "iron bars") &&
-            strcmp(str, "ice")) {
-                if (index(vowels, *str) &&
-                    strncmp(str, "one-", 4) &&
-                    strncmp(str, "useful", 6) &&
-                    strncmp(str, "unicorn", 7) &&
-                    strncmp(str, "uranium", 7) &&
-                    strncmp(str, "eucalyptus", 10))
-                        strcpy(buf, "an ");
-                else
-                        strcpy(buf, "a ");
+const char *an_prefix(const char *str) {
+    if (strncmpi(str, "the ", 4) != 0 &&
+        strcmp(str, "molten lava") != 0 &&
+        strcmp(str, "iron bars") != 0 &&
+        strcmp(str, "ice") != 0)
+    {
+        if (index(vowels, *str) &&
+            strncmp(str, "one-", 4) != 0 &&
+            strncmp(str, "useful", 6) != 0 &&
+            strncmp(str, "unicorn", 7) != 0 &&
+            strncmp(str, "uranium", 7) != 0 &&
+            strncmp(str, "eucalyptus", 10) != 0)
+        {
+            return "an ";
+        } else {
+            return "a ";
         }
-
-        strcat(buf, str);
-        return buf;
+    }
+    return "";
 }
 
-char *
-An (const char *str)
-{
-        char *tmp = an(str);
-        *tmp = highc(*tmp);
-        return tmp;
+char * an (const char *str) {
+    char *buf = nextobuf();
+
+    buf[0] = '\0';
+
+    const char *prefix = an_prefix(str);
+
+    strcpy(buf, prefix);
+    strcat(buf, str);
+
+    return buf;
+}
+
+char * An (const char *str) {
+    char *tmp = an(str);
+    *tmp = highc(*tmp);
+    return tmp;
 }
 
 /*
@@ -1210,9 +1211,7 @@ static const char wrpsym[] = {
  *
  * Also misused by muse.c to convert 1st person present verbs to 2nd person.
  */
-char *
-makeplural (const char *oldstr)
-{
+char * makeplural (const char *oldstr) {
         /* Note: cannot use strcmpi here -- it'd give MATZot, CAVEMeN,... */
         char *spot;
         char *str = nextobuf();

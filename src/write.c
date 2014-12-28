@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "extern.h"
 #include "winprocs.h"
@@ -234,5 +235,3 @@ found:
                                                (const char *)0);
         return(1);
 }
-
-/*write.c*/

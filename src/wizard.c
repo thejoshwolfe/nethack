@@ -597,7 +597,7 @@ cuss (struct monst *mtmp)
                           random_malediction[rn2(SIZE(random_malediction))],
                           random_insult[rn2(SIZE(random_insult))]);
         } else if(is_lminion(mtmp)) {
-                com_pager(rn2(QTN_ANGELIC - 1 + (Hallucination ? 1 : 0)) +
+                com_pager(rn2(QTN_ANGELIC - 1 + (Hallucination() ? 1 : 0)) +
                               QT_ANGELIC);
         } else {
             if (!rn2(5))

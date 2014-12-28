@@ -1,9 +1,13 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "artifact.h"
 #include "artilist.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "do_name.h"
+#include "hacklib.h"
+#include "objnam.h"
 #include "winprocs.h"
 #include "display.h"
 #include "vision.h"
@@ -479,7 +483,8 @@ int touch_artifact (struct obj *obj, struct monst *mon) {
         char buf[BUFSZ];
 
         if (!yours) return 0;
-        You("are blasted by %s power!", s_suffix(the(xname(obj))));
+        const char *name = the(xname(obj));
+        You("are blasted by %s%s power!", name, possessive_suffix(name));
         dmg = d((Antimagic ? 2 : 4), (self_willed ? 10 : 4));
         sprintf(buf, "touching %s", oart->name);
         losehp(dmg, buf, KILLED_BY);
@@ -707,7 +712,7 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
     }
 
     /* give the hit message prior to inflicting the effects */
-    verb = mb_verb[!!Hallucination][attack_indx];
+    verb = mb_verb[!!Hallucination()][attack_indx];
     if (youattack || youdefend || vis) {
         result = true;
         pline_The("magic-absorbing blade %s %s!",
@@ -761,7 +766,9 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
                     nomovemsg = "";
                     if (magr && magr == u.ustuck && sticks(youmonst.data)) {
                         u.ustuck = (struct monst *)0;
-                        You("release %s!", mon_nam(magr));
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, magr);
+                        You("release %s!", name);
                     }
                 }
             } else {
@@ -844,10 +851,13 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
         || (youattack && u.uswallow && mdef == u.ustuck && !Blind);
     bool realizes_damage;
     const char *wepdesc;
-    static const char you[] = "you";
     char hittee[BUFSZ];
 
-    strcpy(hittee, youdefend ? you : mon_nam(mdef));
+    if (youdefend) {
+        nh_strlcpy(hittee, "you", BUFSZ);
+    } else {
+        mon_nam(hittee, BUFSZ, mdef);
+    }
 
     /* The following takes care of most of the damage, but not all--
      * the exception being for level draining, which is specially
@@ -922,27 +932,32 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
             wepdesc = "The razor-sharp blade";
             /* not really beheading, but so close, why add another SPFX */
             if (youattack && u.uswallow && mdef == u.ustuck) {
-                You("slice %s wide open!", mon_nam(mdef));
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mdef);
+                You("slice %s wide open!", name);
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
                 return true;
             }
             if (!youdefend) {
                 /* allow normal cutworm() call to add extra damage */
-                if(notonhead)
+                if (notonhead)
                     return false;
 
                 if (bigmonst(mdef->data)) {
-                    if (youattack)
-                        You("slice deeply into %s!",
-                                mon_nam(mdef));
-                    else if (vis)
-                        pline("%s cuts deeply into %s!",
-                                Monnam(magr), hittee);
+                    if (youattack) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, mdef);
+                        You("slice deeply into %s!", name);
+                    } else if (vis) {
+                        pline("%s cuts deeply into %s!", Monnam(magr), hittee);
+                    }
                     *dmgptr *= 2;
                     return true;
                 }
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
-                pline("%s cuts %s in half!", wepdesc, mon_nam(mdef));
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mdef);
+                pline("%s cuts %s in half!", wepdesc, name);
                 otmp->dknown = true;
                 return true;
             } else {
@@ -975,42 +990,52 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
             wepdesc = artilist[ART_VORPAL_BLADE].name;
             if (!youdefend) {
                 if (!has_head(mdef->data) || notonhead || u.uswallow) {
-                    if (youattack)
-                        pline("Somehow, you miss %s wildly.",
-                                mon_nam(mdef));
-                    else if (vis)
-                        pline("Somehow, %s misses wildly.",
-                                mon_nam(magr));
+                    if (youattack) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, mdef);
+                        pline("Somehow, you miss %s wildly.", name);
+                    } else if (vis) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, magr);
+                        pline("Somehow, %s misses wildly.", name);
+                    }
                     *dmgptr = 0;
                     return ((bool)(youattack || vis));
                 }
                 if (noncorporeal(mdef->data) || amorphous(mdef->data)) {
-                    pline("%s slices through %s %s.", wepdesc,
-                            s_suffix(mon_nam(mdef)),
-                            mbodypart(mdef,NECK));
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mdef);
+                    pline("%s slices through %s%s %s.", wepdesc,
+                            name, possessive_suffix(name), mbodypart(mdef, NECK));
                     return true;
                 }
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mdef);
                 pline(behead_msg[rn2(SIZE(behead_msg))],
-                        wepdesc, mon_nam(mdef));
+                        wepdesc, name);
                 otmp->dknown = true;
                 return true;
             } else {
                 if (!has_head(youmonst.data)) {
-                    pline("Somehow, %s misses you wildly.",
-                            magr ? mon_nam(magr) : wepdesc);
+                    const char *attacker;
+                    if (magr) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, magr);
+                        attacker = name;
+                    } else {
+                        attacker = wepdesc;
+                    }
+                    pline("Somehow, %s misses you wildly.", attacker);
                     *dmgptr = 0;
                     return true;
                 }
                 if (noncorporeal(youmonst.data) || amorphous(youmonst.data)) {
-                    pline("%s slices through your %s.",
-                            wepdesc, body_part(NECK));
+                    pline("%s slices through your %s.", wepdesc, body_part(NECK));
                     return true;
                 }
-                *dmgptr = 2 * (Upolyd ? u.mh : u.uhp)
-                    + FATAL_DAMAGE_MODIFIER;
-                pline(behead_msg[rn2(SIZE(behead_msg))],
-                        wepdesc, "you");
+                *dmgptr = 2 * (Upolyd ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
+                pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc, "you");
                 otmp->dknown = true;
                 /* Should amulets fall off? */
                 return true;
@@ -1020,14 +1045,13 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
     if (spec_ability(otmp, SPFX_DRLI)) {
         if (!youdefend) {
             if (vis) {
-                if(otmp->oartifact == ART_STORMBRINGER)
-                    pline_The("%s blade draws the life from %s!",
-                            hcolor(NH_BLACK),
-                            mon_nam(mdef));
-                else
-                    pline("%s draws the life from %s!",
-                            The(distant_name(otmp, xname)),
-                            mon_nam(mdef));
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mdef);
+                if(otmp->oartifact == ART_STORMBRINGER) {
+                    pline_The("%s blade draws the life from %s!", hcolor(NH_BLACK), name);
+                } else {
+                    pline("%s draws the life from %s!", The(distant_name(otmp, xname)), name);
+                }
             }
             if (mdef->m_lev == 0) {
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
@@ -1044,18 +1068,15 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
             int oldhpmax = u.uhpmax;
 
             if (Blind)
-                You_feel("an %s drain your life!",
-                        otmp->oartifact == ART_STORMBRINGER ?
+                You_feel("an %s drain your life!", otmp->oartifact == ART_STORMBRINGER ?
                         "unholy blade" : "object");
             else if (otmp->oartifact == ART_STORMBRINGER)
-                pline_The("%s blade drains your life!",
-                        hcolor(NH_BLACK));
+                pline_The("%s blade drains your life!", hcolor(NH_BLACK));
             else
-                pline("%s drains your life!",
-                        The(distant_name(otmp, xname)));
+                pline("%s drains your life!", The(distant_name(otmp, xname)));
             losexp("life drainage");
             if (magr && magr->mhp < magr->mhpmax) {
-                magr->mhp += (oldhpmax - u.uhpmax)/2;
+                magr->mhp += (oldhpmax - u.uhpmax) / 2;
                 if (magr->mhp > magr->mhpmax) magr->mhp = magr->mhpmax;
             }
             return true;
@@ -1281,7 +1302,7 @@ nothing_special:
                 newsym(u.ux, u.uy);
                 if (on)
                     Your("body takes on a %s transparency...",
-                            Hallucination ? "normal" : "strange");
+                            Hallucination() ? "normal" : "strange");
                 else
                     Your("body seems to unfade...");
                 break;

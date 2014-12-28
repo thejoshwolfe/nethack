@@ -4,6 +4,9 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "objnam.h"
+#include "hacklib.h"
+#include "dbridge.h"
 #include "youprop.h"
 #include "flag.h"
 
@@ -28,8 +31,7 @@ void ballfall (void) {
         }
         if(gets_hit){
                 int dmg = rn1(7,25);
-                pline_The("iron ball falls on your %s.",
-                        body_part(HEAD));
+                pline_The("iron ball falls on your %s.", body_part(HEAD));
                 if (uarmh) {
                     if(is_metallic(uarmh)) {
                         pline("Fortunately, you are wearing a hard helmet.");
@@ -37,8 +39,7 @@ void ballfall (void) {
                     } else if (flags.verbose)
                         Your("%s does not protect you.", xname(uarmh));
                 }
-                losehp(dmg, "crunched in the head by an iron ball",
-                        NO_KILLER_PREFIX);
+                losehp(dmg, "crunched in the head by an iron ball", NO_KILLER_PREFIX);
         }
 }
 

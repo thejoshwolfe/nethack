@@ -1,10 +1,14 @@
 /* See LICENSE in the root of this project for change info */
+
 /* Contains code for 'd', 'D' (drop), '>', '<' (up, down) */
 
 #include "hack.h"
 #include "lev.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "dbridge.h"
+#include "objnam.h"
+#include "do_name.h"
 #include "display.h"
 #include "winprocs.h"
 #include "timeout.h"
@@ -20,21 +24,18 @@ static int currentlevel_rewrite(void);
 static void final_level(void);
 
 
-static const char drop_types[] =
-        { ALLOW_COUNT, COIN_CLASS, ALL_CLASSES, 0 };
+static const char drop_types[] = { ALLOW_COUNT, COIN_CLASS, ALL_CLASSES, 0 };
 
 /* 'd' command: drop one inventory item */
-int
-dodrop (void)
-{
-        int result, i = (invent || u.ugold) ? 0 : (SIZE(drop_types) - 1);
+int dodrop (void) {
+    int result, i = (invent || u.ugold) ? 0 : (SIZE(drop_types) - 1);
 
-        if (*u.ushops) sellobj_state(SELL_DELIBERATE);
-        result = drop(getobj(&drop_types[i], "drop"));
-        if (*u.ushops) sellobj_state(SELL_NORMAL);
-        reset_occupations();
+    if (*u.ushops) sellobj_state(SELL_DELIBERATE);
+    result = drop(getobj(&drop_types[i], "drop"));
+    if (*u.ushops) sellobj_state(SELL_NORMAL);
+    reset_occupations();
 
-        return result;
+    return result;
 }
 
 
@@ -219,7 +220,7 @@ doaltarobj (  /* obj is an object dropped on an altar */
                 There("is %s flash as %s %s the altar.",
                         an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)),
                         doname(obj), otense(obj, "hit"));
-                if (!Hallucination) obj->bknown = 1;
+                if (!Hallucination()) obj->bknown = 1;
         } else {
                 pline("%s %s on the altar.", Doname2(obj),
                         otense(obj, "land"));
@@ -419,61 +420,55 @@ canletgo (struct obj *obj, const char *word)
         return(true);
 }
 
-static int
-drop (struct obj *obj)
-{
-        if(!obj) return(0);
-        if(!canletgo(obj,"drop"))
-                return(0);
-        if(obj == uwep) {
-                if(welded(uwep)) {
-                        weldmsg(obj);
-                        return(0);
-                }
-                setuwep((struct obj *)0);
+static int drop (struct obj *obj) {
+    if(!obj) return(0);
+    if(!canletgo(obj,"drop"))
+        return(0);
+    if(obj == uwep) {
+        if(welded(uwep)) {
+            weldmsg(obj);
+            return(0);
         }
-        if(obj == uquiver) {
-                setuqwep((struct obj *)0);
-        }
-        if (obj == uswapwep) {
-                setuswapwep((struct obj *)0);
-        }
+        setuwep(NULL);
+    }
+    if(obj == uquiver) {
+        setuqwep(NULL);
+    }
+    if (obj == uswapwep) {
+        setuswapwep(NULL);
+    }
 
-        if (u.uswallow) {
-                /* barrier between you and the floor */
-                if(flags.verbose)
-                {
-                        char buf[BUFSZ];
-
-                        /* doname can call s_suffix, reusing its buffer */
-                        strcpy(buf, s_suffix(mon_nam(u.ustuck)));
-                        You("drop %s into %s %s.", doname(obj), buf,
-                                mbodypart(u.ustuck, STOMACH));
-                }
-        } else {
-            if((obj->oclass == RING_CLASS || obj->otyp == MEAT_RING) &&
-                        IS_SINK(levl[u.ux][u.uy].typ)) {
-                dosinkring(obj);
-                return(1);
-            }
-            if (!can_reach_floor()) {
-                if(flags.verbose) You("drop %s.", doname(obj));
-                if (obj->oclass != COIN_CLASS || obj == invent) freeinv(obj);
-                hitfloor(obj);
-                return(1);
-            }
-            if (!IS_ALTAR(levl[u.ux][u.uy].typ) && flags.verbose)
-                You("drop %s.", doname(obj));
+    if (u.uswallow) {
+        /* barrier between you and the floor */
+        if(flags.verbose) {
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, u.ustuck);
+            You("drop %s into %s%s %s.", doname(obj),
+                    name, possessive_suffix(name), mbodypart(u.ustuck, STOMACH));
         }
-        dropx(obj);
-        return(1);
+    } else {
+        if((obj->oclass == RING_CLASS || obj->otyp == MEAT_RING) &&
+                IS_SINK(levl[u.ux][u.uy].typ))
+        {
+            dosinkring(obj);
+            return 1;
+        }
+        if (!can_reach_floor()) {
+            if(flags.verbose) You("drop %s.", doname(obj));
+            if (obj->oclass != COIN_CLASS || obj == invent) freeinv(obj);
+            hitfloor(obj);
+            return 1;
+        }
+        if (!IS_ALTAR(levl[u.ux][u.uy].typ) && flags.verbose)
+            You("drop %s.", doname(obj));
+    }
+    dropx(obj);
+    return 1;
 }
 
 /* Called in several places - may produce output */
 /* eg ship_object() and dropy() -> sellobj() both produce output */
-void
-dropx (struct obj *obj)
-{
+void dropx (struct obj *obj) {
         if (obj->oclass != COIN_CLASS || obj == invent) freeinv(obj);
         if (!u.uswallow) {
             if (ship_object(obj, u.ux, u.uy, false)) return;
@@ -1196,7 +1191,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
             char buf[BUFSZ];
             int which = rn2(4);
 
-            if (Hallucination)
+            if (Hallucination())
                 mesg = halu_fam_msgs[which];
             else
                 mesg = fam_msgs[which];
@@ -1407,21 +1402,24 @@ bool revive_corpse(struct obj *corpse) {
 
             case OBJ_MINVENT:           /* probably a nymph's */
                 if (cansee(mtmp->mx, mtmp->my)) {
-                    if (canseemon(mcarry))
-                        pline("Startled, %s drops %s as it revives!",
-                              mon_nam(mcarry), an(cname));
-                    else
+                    if (canseemon(mcarry)) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, mcarry);
+                        pline("Startled, %s drops %s as it revives!", name, an(cname));
+                    } else {
                         pline("%s suddenly appears!", chewed ?
                               Adjmonnam(mtmp, "bite-covered") : Monnam(mtmp));
+                    }
                 }
                 break;
            case OBJ_CONTAINED:
                 if (container_where == OBJ_MINVENT && cansee(mtmp->mx, mtmp->my) &&
-                    mcarry && canseemon(mcarry) && container) {
-                        char sackname[BUFSZ];
-                        sprintf(sackname, "%s %s", s_suffix(mon_nam(mcarry)),
-                                xname(container));
-                        pline("%s writhes out of %s!", Amonnam(mtmp), sackname);
+                    mcarry && canseemon(mcarry) && container)
+                {
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mcarry);
+                    pline("%s writhes out of %s%s %s!", Amonnam(mtmp),
+                            name, possessive_suffix(name), xname(container));
                 } else if (container_where == OBJ_INVENT && container) {
                         char sackname[BUFSZ];
                         strcpy(sackname, an(xname(container)));

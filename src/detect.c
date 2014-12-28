@@ -8,6 +8,9 @@
 #include "hack.h"
 #include "artifact.h"
 #include "extern.h"
+#include "dbridge.h"
+#include "objnam.h"
+#include "do_name.h"
 #include "display.h"
 #include "winprocs.h"
 
@@ -393,7 +396,7 @@ int object_detect (struct obj *detector, int class) {
     if (sym && iflags.bouldersym && sym == iflags.bouldersym)
         boulder = ROCK_CLASS;
 
-    if (Hallucination || (Confusion && class == SCROLL_CLASS))
+    if (Hallucination() || (Confusion && class == SCROLL_CLASS))
         strcpy(stuff, something);
     else
         strcpy(stuff, class ? oclass_names[class] : "objects");
@@ -556,7 +559,7 @@ int monster_detect (struct obj *otmp, int mclass) {
 
     if (!mcnt) {
         if (otmp)
-            strange_feeling(otmp, Hallucination ?
+            strange_feeling(otmp, Hallucination() ?
                     "You get the heebie jeebies." :
                     "You feel threatened.");
         return 1;
@@ -597,7 +600,7 @@ int monster_detect (struct obj *otmp, int mclass) {
 }
 
 static void sense_trap (struct trap *trap, signed char x, signed char y, int src_cursed) {
-    if (Hallucination || src_cursed) {
+    if (Hallucination() || src_cursed) {
         struct obj obj;                 /* fake object */
         if (trap) {
             obj.ox = trap->tx;
@@ -746,7 +749,7 @@ void use_crystal_ball (struct obj *obj) {
                      }
                      break;
             case 4 : pline("%s your mind!", Tobjnam(obj, "zap"));
-                     (void) make_hallucinated(HHallucination + rnd(100),false,0L);
+                     (void) make_hallucinated(u.uprops[HALLUC].intrinsic + rnd(100),false,0L);
                      break;
             case 5 : pline("%s!", Tobjnam(obj, "explode"));
                      useup(obj);
@@ -758,7 +761,7 @@ void use_crystal_ball (struct obj *obj) {
         return;
     }
 
-    if (Hallucination) {
+    if (Hallucination()) {
         if (!obj->spe) {
             pline("All you see is funky %s haze.", hcolor((char *)0));
         } else {

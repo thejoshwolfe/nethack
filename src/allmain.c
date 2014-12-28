@@ -13,6 +13,8 @@
 #include "rm.h"
 #include "youprop.h"
 #include "extern.h"
+#include "hacklib.h"
+#include "dbridge.h"
 #include "winprocs.h"
 
 #include <sys/stat.h>
@@ -156,7 +158,9 @@ void moveloop(void) {
                     if (u.uinvulnerable) {
                         /* for the moment at least, you're in tiptop shape */
                         wtcap = UNENCUMBERED;
-                    } else if (Upolyd && youmonst.data->mlet == S_EEL && !is_pool(u.ux,u.uy) && !Is_waterlevel(&u.uz)) {
+                    } else if (Upolyd && youmonst.data->mlet == S_EEL &&
+                            !is_pool(u.ux,u.uy) && !Is_waterlevel(&u.uz))
+                    {
                         if (u.mh > 1) {
                             u.mh--;
                             flags.botl = 1;
@@ -304,7 +308,7 @@ void moveloop(void) {
         find_ac();
         if(!flags.mv || Blind) {
             /* redo monsters if hallu or wearing a helm of telepathy */
-            if (Hallucination) {        /* update screen randomly */
+            if (Hallucination()) {        /* update screen randomly */
                 see_monsters();
                 see_objects();
                 see_traps();

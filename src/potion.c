@@ -55,7 +55,7 @@ make_confused (long xtime, bool talk)
         if (!xtime && old) {
                 if (talk)
                     You_feel("less %s now.",
-                        Hallucination ? "trippy" : "confused");
+                        Hallucination() ? "trippy" : "confused");
         }
         if ((xtime && !old) || (!xtime && old)) flags.botl = true;
 
@@ -70,7 +70,7 @@ make_stunned (long xtime, bool talk)
         if (!xtime && old) {
                 if (talk)
                     You_feel("%s now.",
-                        Hallucination ? "less wobbly" : "a bit steadier");
+                        Hallucination() ? "less wobbly" : "a bit steadier");
         }
         if (xtime && !old) {
                 if (talk) {
@@ -166,7 +166,7 @@ make_blinded (long xtime, bool talk)
 
         if (can_see_now && !u_could_see) {      /* regaining sight */
             if (talk) {
-                if (Hallucination)
+                if (Hallucination())
                     pline("Far out!  Everything is all cosmic again!");
                 else
                     You("can see again.");
@@ -183,14 +183,14 @@ make_blinded (long xtime, bool talk)
                          (eyecnt == 1) ? "itches" : "itch");
                 } else {        /* Eyes of the Overworld */
                     Your(vismsg, "brighten",
-                         Hallucination ? "sadder" : "normal");
+                         Hallucination() ? "sadder" : "normal");
                 }
             }
         }
 
         if (u_could_see && !can_see_now) {      /* losing sight */
             if (talk) {
-                if (Hallucination)
+                if (Hallucination())
                     pline("Oh, bummer!  Everything is dark!  Help!");
                 else
                     pline("A cloud of darkness falls upon you.");
@@ -209,7 +209,7 @@ make_blinded (long xtime, bool talk)
                          (eyecnt == 1) ? "twitches" : "twitch");
                 } else {        /* Eyes of the Overworld */
                     Your(vismsg, "dim",
-                         Hallucination ? "happier" : "normal");
+                         Hallucination() ? "happier" : "normal");
                 }
             }
         }
@@ -230,7 +230,7 @@ make_hallucinated (
     long mask      /* nonzero if resistance status should change by mask */
 )
 {
-        long old = HHallucination;
+        long old = u.uprops[HALLUC].intrinsic;
         bool changed = 0;
         const char *message, *verb;
 
@@ -239,17 +239,17 @@ make_hallucinated (
         verb = (!Blind) ? "looks" : "feels";
 
         if (mask) {
-            if (HHallucination) changed = true;
+            if (u.uprops[HALLUC].intrinsic) changed = true;
 
-            if (!xtime) EHalluc_resistance |= mask;
-            else EHalluc_resistance &= ~mask;
+            if (!xtime) u.uprops[HALLUC_RES].extrinsic |= mask;
+            else u.uprops[HALLUC_RES].extrinsic &= ~mask;
         } else {
-            if (!EHalluc_resistance && (!!HHallucination != !!xtime))
+            if (!u.uprops[HALLUC_RES].extrinsic && (!!u.uprops[HALLUC].intrinsic != !!xtime))
                 changed = true;
-            set_itimeout(&HHallucination, xtime);
+            set_itimeout(&u.uprops[HALLUC].intrinsic, xtime);
 
             /* clearing temporary hallucination without toggling vision */
-            if (!changed && !HHallucination && old && talk) {
+            if (!changed && !u.uprops[HALLUC].intrinsic && old && talk) {
                 if (!haseyes(youmonst.data)) {
                     strange_feeling((struct obj *)0, (char *)0);
                 } else if (Blind) {
@@ -299,7 +299,7 @@ ghost_from_bottle (void)
                 return;
         }
         pline("As you open the bottle, an enormous %s emerges!",
-                Hallucination ? rndmonnam() : (const char *)"ghost");
+                Hallucination() ? rndmonnam() : "ghost");
         if(flags.verbose)
             You("are frightened to death, and unable to move.");
         nomul(-3);
@@ -378,7 +378,7 @@ dopotion (struct obj *otmp)
         if(nothing) {
             unkn++;
             You("have a %s feeling for a moment, then it passes.",
-                  Hallucination ? "normal" : "peculiar");
+                  Hallucination() ? "normal" : "peculiar");
         }
         if(otmp->dknown && !objects[otmp->otyp].oc_name_known) {
                 if(!unkn) {
@@ -423,8 +423,8 @@ peffects (struct obj *otmp)
                 }
                 break;
         case POT_HALLUCINATION:
-                if (Hallucination || Halluc_resistance) nothing++;
-                (void) make_hallucinated(itimeout_incr(HHallucination,
+                if (Hallucination() || Halluc_resistance()) nothing++;
+                (void) make_hallucinated(itimeout_incr(u.uprops[HALLUC].intrinsic,
                                            rn1(200, 600 - 300 * bcsign(otmp))),
                                   true, 0L);
                 break;
@@ -480,7 +480,7 @@ peffects (struct obj *otmp)
                 unkn++;
                 pline("Ooph!  This tastes like %s%s!",
                       otmp->odiluted ? "watered down " : "",
-                      Hallucination ? "dandelion wine" : "liquid fire");
+                      Hallucination() ? "dandelion wine" : "liquid fire");
                 if (!otmp->blessed)
                     make_confused(itimeout_incr(HConfusion, d(3,8)), false);
                 /* the whiskey makes us feel better */
@@ -541,9 +541,9 @@ peffects (struct obj *otmp)
                 unkn++;
                 if (otmp->cursed)
                     pline("Yecch!  This tastes %s.",
-                          Hallucination ? "overripe" : "rotten");
+                          Hallucination() ? "overripe" : "rotten");
                 else
-                    pline(Hallucination ?
+                    pline(Hallucination() ?
                       "This tastes like 10%% real %s%s all-natural beverage." :
                                 "This tastes like %s%s.",
                           otmp->odiluted ? "reconstituted " : "",
@@ -668,14 +668,14 @@ peffects (struct obj *otmp)
                         exercise(A_CON, false);
                     }
                 }
-                if(Hallucination) {
+                if(Hallucination()) {
                         You("are shocked back to your senses!");
                         (void) make_hallucinated(0L,false,0L);
                 }
                 break;
         case POT_CONFUSION:
                 if(!Confusion)
-                    if (Hallucination) {
+                    if (Hallucination()) {
                         pline("What a trippy feeling!");
                         unkn++;
                     } else
@@ -859,7 +859,7 @@ peffects (struct obj *otmp)
         case POT_ACID:
                 if (Acid_resistance)
                         /* Not necessarily a creature who _likes_ acid */
-                        pline("This tastes %s.", Hallucination ? "tangy" : "sour");
+                        pline("This tastes %s.", Hallucination() ? "tangy" : "sour");
                 else {
                         pline("This burns%s!", otmp->blessed ? " a little" :
                                         otmp->cursed ? " a lot" : " like acid");
@@ -871,7 +871,7 @@ peffects (struct obj *otmp)
                 unkn++; /* holy/unholy water can burn like acid too */
                 break;
         case POT_POLYMORPH:
-                You_feel("a little %s.", Hallucination ? "normal" : "strange");
+                You_feel("a little %s.", Hallucination() ? "normal" : "strange");
                 if (!Unchanging) polyself(false);
                 break;
         default:
@@ -904,7 +904,7 @@ strange_feeling (struct obj *obj, const char *txt)
 {
         if (flags.beginner || !txt)
                 You("have a %s feeling for a moment, then it passes.",
-                Hallucination ? "normal" : "strange");
+                Hallucination() ? "normal" : "strange");
         else
                 plines(txt);
 
@@ -972,7 +972,7 @@ potionhit (struct monst *mon, struct obj *obj, bool your_fault)
                     splatter_burning_oil(u.ux, u.uy);
                 break;
         case POT_POLYMORPH:
-                You_feel("a little %s.", Hallucination ? "normal" : "strange");
+                You_feel("a little %s.", Hallucination() ? "normal" : "strange");
                 if (!Unchanging && !Antimagic) polyself(false);
                 break;
         case POT_ACID:
@@ -1635,7 +1635,7 @@ int dodip(void) {
                 }
 
                 obj->blessed = obj->cursed = obj->bknown = 0;
-                if (Blind || Hallucination) obj->dknown = 0;
+                if (Blind || Hallucination()) obj->dknown = 0;
 
                 if ((mixture = mixtype(obj, potion)) != 0) {
                         obj->otyp = mixture;
@@ -1667,7 +1667,7 @@ int dodip(void) {
 
                 obj->odiluted = (obj->otyp != POT_WATER);
 
-                if (obj->otyp == POT_WATER && !Hallucination) {
+                if (obj->otyp == POT_WATER && !Hallucination()) {
                         pline_The("mixture bubbles%s.",
                                 Blind ? "" : ", then clears");
                 } else if (!Blind) {
@@ -1830,7 +1830,7 @@ int dodip(void) {
                 if (Blind) {
                     singlepotion->dknown = false;
                 } else {
-                    singlepotion->dknown = !Hallucination;
+                    singlepotion->dknown = !Hallucination();
                     if (mixture == POT_WATER && singlepotion->dknown)
                         sprintf(newbuf, "clears");
                     else

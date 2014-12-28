@@ -313,7 +313,7 @@ Helmet_on (void)
                     curse(uarmh);
                 }
                 flags.botl = 1;         /* reveal new alignment or INT & WIS */
-                if (Hallucination) {
+                if (Hallucination()) {
                     pline("My brain hurts!"); /* Monty Python's Flying Circus */
                 } else if (uarmh->otyp == DUNCE_CAP) {
                     You_feel("%s.",     /* track INT change; ignore WIS */

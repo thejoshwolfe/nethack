@@ -1,8 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
 /*  attribute modification routines. */
 
 #include "hack.h"
 #include "extern.h"
+#include "hacklib.h"
 #include "youprop.h"
 #include "flag.h"
 
@@ -193,7 +195,7 @@ void losestr (int num) {
             u.uhpmax -= 6;
         }
     }
-    (void) adjattrib(A_STR, -num, true);
+    adjattrib(A_STR, -num, true);
 }
 
 void change_luck (signed char n) {
@@ -305,7 +307,7 @@ static void exerper (void) {
         if (HRegeneration)                      exercise(A_STR, true);
 
         if(Sick || Vomiting)     exercise(A_CON, false);
-        if(Confusion || Hallucination)          exercise(A_WIS, false);
+        if(Confusion || Hallucination())          exercise(A_WIS, false);
         if((Wounded_legs
                     && !u.usteed
            ) || Fumbling || HStun)     exercise(A_DEX, false);

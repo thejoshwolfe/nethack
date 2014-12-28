@@ -139,7 +139,7 @@ static struct permonst * lookat (int x, int y, char *buf, char *monbuf) {
         mtmp = m_at(x,y);
         if (mtmp != (struct monst *) 0) {
             char *name, monnambuf[BUFSZ];
-            bool accurate = !Hallucination;
+            bool accurate = !Hallucination();
 
             if (mtmp->data == &mons[PM_COYOTE] && accurate)
                 name = coyotename(mtmp, monnambuf);
@@ -231,7 +231,7 @@ static struct permonst * lookat (int x, int y, char *buf, char *monbuf) {
                     }
                     if (MATCH_WARN_OF_MON(mtmp)) {
                         char wbuf[BUFSZ];
-                        if (Hallucination)
+                        if (Hallucination())
                                 strcat(monbuf, "paranoid delusion");
                         else {
                                 sprintf(wbuf, "warned of %s",
@@ -298,7 +298,7 @@ static struct permonst * lookat (int x, int y, char *buf, char *monbuf) {
         break;
     }
 
-    return ((pm && !Hallucination) ? pm : (struct permonst *) 0);
+    return ((pm && !Hallucination()) ? pm : (struct permonst *) 0);
 }
 
 /*

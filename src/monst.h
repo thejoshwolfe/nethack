@@ -1,9 +1,11 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef MONST_H
 #define MONST_H
 
 #include "align.h"
 #include "coord.h"
+#include "util.h"
 
 /* The weapon_check flag is used two ways:
  * 1) When calling mon_wield_item, is 2-6 depending on what is desired.
@@ -176,7 +178,14 @@ struct monst {
 #define MSLOW 1         /* slow monster */
 #define MFAST 2         /* speeded monster */
 
-#define NAME(mtmp)      (((char *)(mtmp)->mextra) + (mtmp)->mxlth)
+static const char *monster_name(const struct monst *m) {
+    return ((char *)m->mextra) + m->mxlth;
+}
+
+static size_t set_monster_name(struct monst *m, const char *value) {
+    char *str_ptr = ((char *)m->mextra) + m->mxlth;
+    return nh_strlcpy(str_ptr, value, m->mnamelth);
+}
 
 #define MON_WEP(mon)    ((mon)->mw)
 #define MON_NOWEP(mon)  ((mon)->mw = (struct obj *)0)

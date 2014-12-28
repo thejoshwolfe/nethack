@@ -1911,7 +1911,7 @@ observe_quantum_cat (struct obj *box)
             (void) add_to_container(box, deadcat);
         }
         pline_The("%s inside the box is dead!",
-            Hallucination ? rndmonnam() : "housecat");
+            Hallucination() ? rndmonnam() : "housecat");
     }
     box->owt = weight(box);
     return;

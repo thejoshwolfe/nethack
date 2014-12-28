@@ -647,7 +647,7 @@ clone_mon (
                              LS_MONSTER, (void *)m2);
         if (m2->mnamelth) {
             m2->mnamelth = 0; /* or it won't get allocated */
-            m2 = christen_monst(m2, NAME(mon));
+            m2 = christen_monst(m2, monster_name(mon));
         } else if (mon->isshk) {
             m2 = christen_monst(m2, shkname(mon));
         }
@@ -668,7 +668,7 @@ clone_mon (
                 m3 = newmonst(sizeof(struct epri) + mon->mnamelth);
                 *m3 = *m2;
                 m3->mxlth = sizeof(struct epri);
-                if (m2->mnamelth) strcpy(NAME(m3), NAME(m2));
+                if (m2->mnamelth) strcpy(monster_name(m3), monster_name(m2));
                 *(EPRI(m3)) = *(EPRI(mon));
                 replmon(m2, m3);
                 m2 = m3;

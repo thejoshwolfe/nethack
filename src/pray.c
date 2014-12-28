@@ -194,7 +194,7 @@ in_trouble (void)
         if(u.uhs >= HUNGRY) return(TROUBLE_HUNGRY);
         if(HStun) return (TROUBLE_STUNNED);
         if(HConfusion) return (TROUBLE_CONFUSED);
-        if(Hallucination) return(TROUBLE_HALLUCINATION);
+        if(Hallucination()) return(TROUBLE_HALLUCINATION);
         return(0);
 }
 
@@ -409,7 +409,7 @@ decurse:
                     update_inventory();
                     break;
             case TROUBLE_POISONED:
-                    if (Hallucination)
+                    if (Hallucination())
                         pline("There's a tiger in your tank.");
                     else
                         You_feel("in good health again.");
@@ -571,7 +571,7 @@ angrygods (aligntyp resp_god)
         switch (rn2(maxanger)) {
             case 0:
             case 1:     You_feel("that %s is %s.", align_gname(resp_god),
-                            Hallucination ? "bummed" : "displeased");
+                            Hallucination() ? "bummed" : "displeased");
                         break;
             case 2:
             case 3:
@@ -790,10 +790,10 @@ pleased (aligntyp g_align)
 
         You_feel("that %s is %s.", align_gname(g_align),
             u.ualign.record >= DEVOUT ?
-            Hallucination ? "pleased as punch" : "well-pleased" :
+            Hallucination() ? "pleased as punch" : "well-pleased" :
             u.ualign.record >= STRIDENT ?
-            Hallucination ? "ticklish" : "pleased" :
-            Hallucination ? "full" : "satisfied");
+            Hallucination() ? "ticklish" : "pleased" :
+            Hallucination() ? "full" : "satisfied");
 
         /* not your deity */
         if (on_altar() && p_aligntyp != u.ualign.type) {
@@ -1026,7 +1026,7 @@ water_prayer (bool bless_water)
 {
     struct obj* otmp;
     long changed = 0;
-    bool other = false, bc_known = !(Blind || Hallucination);
+    bool other = false, bc_known = !(Blind || Hallucination());
 
     for(otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp->nexthere) {
         /* turn water into (un)holy water */
@@ -1082,7 +1082,7 @@ static const char sacrifice_types[] = { FOOD_CLASS, AMULET_CLASS, 0 };
 static void
 consume_offering (struct obj *otmp)
 {
-    if (Hallucination)
+    if (Hallucination())
         switch (rn2(3)) {
             case 0:
                 Your("sacrifice sprouts wings and a propeller and roars away!");
@@ -1249,7 +1249,7 @@ dosacrifice (void)
 
     if (otmp->otyp == AMULET_OF_YENDOR) {
         if (!Is_astralevel(&u.uz)) {
-            if (Hallucination)
+            if (Hallucination())
                     You_feel("homesick.");
             else
                     You_feel("an urge to return to the surface.");
@@ -1290,7 +1290,7 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
                 You_hear("a nearby thunderclap.");
             if (!otmp->known) {
                 You("realize you have made a %s.",
-                    Hallucination ? "boo-boo" : "mistake");
+                    Hallucination() ? "boo-boo" : "mistake");
                 otmp->known = true;
                 change_luck(-1);
                 return 1;
@@ -1409,17 +1409,17 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
             if(u.ugangr != saved_anger) {
                 if (u.ugangr) {
                     pline("%s seems %s.", u_gname(),
-                          Hallucination ? "groovy" : "slightly mollified");
+                          Hallucination() ? "groovy" : "slightly mollified");
 
                     if ((int)u.uluck < 0) change_luck(1);
                 } else {
-                    pline("%s seems %s.", u_gname(), Hallucination ?
+                    pline("%s seems %s.", u_gname(), Hallucination() ?
                           "cosmic (not a new fact)" : "mollified");
 
                     if ((int)u.uluck < 0) u.uluck = 0;
                 }
             } else { /* not satisfied yet */
-                if (Hallucination)
+                if (Hallucination())
                     pline_The("gods seem tall.");
                 else You("have a feeling of inadequacy.");
             }
@@ -1434,13 +1434,13 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
             if(u.ublesscnt < 0) u.ublesscnt = 0;
             if(u.ublesscnt != saved_cnt) {
                 if (u.ublesscnt) {
-                    if (Hallucination)
+                    if (Hallucination())
                         You("realize that the gods are not like you and I.");
                     else
                         You("have a hopeful feeling.");
                     if ((int)u.uluck < 0) change_luck(1);
                 } else {
-                    if (Hallucination)
+                    if (Hallucination())
                         pline("Overall, there is a smell of fried onions.");
                     else
                         You("have a feeling of reconciliation.");
@@ -1477,7 +1477,7 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
             if (u.uluck != saved_luck) {
                 if (Blind)
                     You("think %s brushed your %s.",something, body_part(FOOT));
-                else You(Hallucination ?
+                else You(Hallucination() ?
                     "see crabgrass at your %s.  A funny thing in a dungeon." :
                     "glimpse a four-leaf clover at your %s.",
                     makeplural(body_part(FOOT)));
@@ -1777,7 +1777,7 @@ halu_gname (aligntyp alignment)
     const char *gnam;
     int which;
 
-    if (!Hallucination) return align_gname(alignment);
+    if (!Hallucination()) return align_gname(alignment);
 
     which = randrole();
     switch (rn2(3)) {

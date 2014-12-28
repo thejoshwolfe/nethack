@@ -146,7 +146,7 @@ static int precheck (struct monst *mon, struct obj *obj) {
                         if (vis) {
                             pline("As %s opens the bottle, an enormous %s emerges!",
                                mon_nam(mon),
-                               Hallucination ? rndmonnam() : (const char *)"ghost");
+                               Hallucination() ? rndmonnam() : (const char *)"ghost");
                             pline("%s is frightened to death, and unable to move.",
                                     Monnam(mon));
                         }
@@ -1676,7 +1676,7 @@ skipmsg:
                     if (See_invisible)
                         pline("%s body takes on a %s transparency.",
                               s_suffix(nambuf),
-                              Hallucination ? "normal" : "strange");
+                              Hallucination() ? "normal" : "strange");
                     else
                         pline("Suddenly you cannot see %s.", nambuf);
                     if (oseen) makeknown(otmp->otyp);
@@ -2044,7 +2044,7 @@ static void mon_consume_unstone (struct monst *mon, struct obj *obj, bool by_you
         return;
     }
     if (stoning && canseemon(mon)) {
-        if (Hallucination)
+        if (Hallucination())
     pline("What a pity - %s just ruined a future piece of art!",
             mon_nam(mon));
         else

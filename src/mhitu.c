@@ -1683,7 +1683,7 @@ gulpmu (        /* monster swallows you, or damage if u.uswallow */
                         You("are covered with a seemingly harmless goo.");
                         tmp = 0;
                     } else {
-                      if (Hallucination) pline("Ouch!  You've been slimed!");
+                      if (Hallucination()) pline("Ouch!  You've been slimed!");
                       else You("are covered in slime!  It burns!");
                       exercise(A_STR, false);
                     }
@@ -1823,9 +1823,9 @@ common:
                          dmgtype(youmonst.data, AD_STUN));
                 if (!not_affected) {
                     bool chg;
-                    if (!Hallucination)
+                    if (!Hallucination())
                         You("are caught in a blast of kaleidoscopic light!");
-                    chg = make_hallucinated(HHallucination + (long)tmp,false,0L);
+                    chg = make_hallucinated(u.uprops[HALLUC].intrinsic + (long)tmp,false,0L);
                     You("%s.", chg ? "are freaked out" : "seem unaffected");
                 }
                 break;

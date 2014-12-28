@@ -117,6 +117,7 @@
 #include "hack.h"
 #include "region.h"
 #include "extern.h"
+#include "dbridge.h"
 #include "winprocs.h"
 
 #include <assert.h>
@@ -382,7 +383,7 @@ static void display_monster (
                 num = detected_monnum_to_glyph(what_mon(PM_LONG_WORM_TAIL));
             else
                 num = detected_mon_to_glyph(mon);
-        } else if (mon->mtame && !Hallucination) {
+        } else if (mon->mtame && !Hallucination()) {
             if (worm_tail)
                 num = petnum_to_glyph(PM_LONG_WORM_TAIL);
             else
@@ -415,7 +416,7 @@ static void display_warning (struct monst *mon) {
         if (wl > WARNCOUNT - 1) wl = WARNCOUNT - 1;
         /* 3.4.1: this really ought to be rn2(WARNCOUNT), but value "0"
            isn't handled correctly by the what_is routine so avoid it */
-        if (Hallucination) wl = rn1(WARNCOUNT-1,1);
+        if (Hallucination()) wl = rn1(WARNCOUNT-1,1);
         glyph = warning_to_glyph(wl);
     } else if (MATCH_WARN_OF_MON(mon)) {
         glyph = mon_to_glyph(mon);

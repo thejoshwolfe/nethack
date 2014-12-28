@@ -1,6 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "extern.h"
+#include "hacklib.h"
+
 /*=
     Assorted 'small' utility routines.  They're virtually independent of
 NetHack, except that rounddiv may call panic().
@@ -113,18 +115,18 @@ char * strkitten(char *s, char c) {
     return s;
 }
 
-/* return a name converted to possessive */
-char * s_suffix(const char *s) {
-    static char buf[BUFSZ];
-
-    strcpy(buf, s);
-    if (!strcmpi(buf, "it"))
-        strcat(buf, "s");
-    else if (*(eos(buf) - 1) == 's')
-        strcat(buf, "'");
+const char *possessive_suffix(const char *s) {
+    if (!strncmpi(s, "it", -1))
+        return "s";
+    else if (*(eos(s) - 1) == 's')
+        return "'";
     else
-        strcat(buf, "'s");
-    return buf;
+        return "'s";
+}
+
+/* return a name converted to possessive */
+size_t s_suffix(char *dest, size_t dest_size, const char *s) {
+    return nh_slprintf(dest, dest_size, "%s%s", s, possessive_suffix(s));
 }
 
 /* trivial text encryption routine (see makedefs) */

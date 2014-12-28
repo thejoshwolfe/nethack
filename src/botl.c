@@ -4,6 +4,7 @@
 #include "wintty.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "hacklib.h"
 #include "winprocs.h"
 #include "color.h"
 #include "youprop.h"
@@ -62,7 +63,7 @@ const char * rank_of(int lev, short monnum, bool female) {
     /* Try the role name, instead */
     if (female && role->name.f) return (role->name.f);
     else if (role->name.m) return (role->name.m);
-    return ("Player");
+    return "Player";
 }
 
 static const char * rank (void) {
@@ -242,7 +243,7 @@ void bot2str (char *newbot2) {
     }
     if(Blind)          sprintf(nb = eos(nb), " Blind");
     if(Stunned)        sprintf(nb = eos(nb), " Stun");
-    if(Hallucination)  sprintf(nb = eos(nb), " Hallu");
+    if(Hallucination())  sprintf(nb = eos(nb), " Hallu");
     if(Slimed)         sprintf(nb = eos(nb), " Slime");
     if(cap > UNENCUMBERED)
         sprintf(nb = eos(nb), " %s", enc_stat[cap]);

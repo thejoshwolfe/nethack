@@ -191,7 +191,7 @@ void
 done_in_by (struct monst *mtmp)
 {
         char buf[BUFSZ];
-        bool distorted = (bool)(Hallucination && canspotmon(mtmp));
+        bool distorted = (bool)(Hallucination() && canspotmon(mtmp));
 
         You("die...");
         mark_synch();   /* flush buffered screen output */
@@ -216,20 +216,20 @@ done_in_by (struct monst *mtmp)
 
         if(mtmp->data == &mons[PM_GHOST]) {
                 strcat(buf, "ghost");
-                if (mtmp->mnamelth) sprintf(eos(buf), " of %s", NAME(mtmp));
+                if (mtmp->mnamelth) sprintf(eos(buf), " of %s", monster_name(mtmp));
         } else if(mtmp->isshk) {
                 sprintf(eos(buf), "%s %s, the shopkeeper",
                         (mtmp->female ? "Ms." : "Mr."), shkname(mtmp));
                 killer_format = KILLED_BY;
         } else if (mtmp->ispriest || mtmp->isminion) {
                 /* m_monnam() suppresses "the" prefix plus "invisible", and
-                   it overrides the effect of Hallucination on priestname() */
+                   it overrides the effect of Hallucination() on priestname() */
                 killer = m_monnam(mtmp);
                 strcat(buf, killer);
         } else {
                 strcat(buf, mtmp->data->mname);
                 if (mtmp->mnamelth)
-                    sprintf(eos(buf), " called %s", NAME(mtmp));
+                    sprintf(eos(buf), " called %s", monster_name(mtmp));
         }
 
         if (multi) strcat(buf, ", while helpless");
@@ -1069,7 +1069,7 @@ do_vanquished (int defquery, bool ask, bool want_dump)
                     if (want_dump)  dump("  ", buf);
                 }
             /*
-             * if (Hallucination)
+             * if (Hallucination())
              *     putstr(klwin, 0, "and a partridge in a pear tree");
              */
             if (ntypes > 1) {

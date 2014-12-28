@@ -126,7 +126,7 @@ doread (void)
           else
             pline("As you read the scroll, it disappears.");
           if(confused) {
-            if (Hallucination)
+            if (Hallucination())
                 pline("Being so trippy, you screw up...");
             else
                 pline("Being confused, you mis%s the magic words...",
@@ -851,12 +851,12 @@ seffects (struct obj *sobj)
         case SPE_REMOVE_CURSE:
             {   struct obj *obj;
                 if(confused)
-                    if (Hallucination)
+                    if (Hallucination())
                         You_feel("the power of the Force against you!");
                     else
                         You_feel("like you need some help.");
                 else
-                    if (Hallucination)
+                    if (Hallucination())
                         You_feel("in touch with the Universal Oneness.");
                     else
                         You_feel("like someone is helping you.");
@@ -1027,7 +1027,7 @@ seffects (struct obj *sobj)
         case SCR_MAGIC_MAPPING:
                 if (level.flags.nommap) {
                     Your("mind is filled with crazy lines!");
-                    if (Hallucination)
+                    if (Hallucination())
                         pline("Wow!  Modern art.");
                     else
                         Your("%s spins in bewilderment.", body_part(HEAD));
@@ -1063,7 +1063,7 @@ seffects (struct obj *sobj)
                 known = true;
                 forget( (!sobj->blessed ? ALL_SPELLS : 0) |
                         (!confused || sobj->cursed ? ALL_MAP : 0) );
-                if (Hallucination) /* Ommmmmm! */
+                if (Hallucination()) /* Ommmmmm! */
                         Your("mind releases itself from mundane concerns.");
                 else if (!strncmpi(plname, "Maud", 4))
                         pline("As your mind turns inward on itself, you forget everything else.");
@@ -1581,7 +1581,7 @@ do_genocide (int how)
         }
 
         which = "all ";
-        if (Hallucination) {
+        if (Hallucination()) {
             if (Upolyd)
                 strcpy(buf,youmonst.data->mname);
             else {

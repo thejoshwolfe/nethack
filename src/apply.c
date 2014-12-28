@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "edog.h"
 #include "objclass.h"
@@ -6,6 +7,10 @@
 #include "youprop.h"
 #include "decl.h"
 #include "extern.h"
+#include "hacklib.h"
+#include "dbridge.h"
+#include "objnam.h"
+#include "do_name.h"
 #include "display.h"
 #include "vision.h"
 #include "winprocs.h"
@@ -94,21 +99,18 @@ static int use_camera (struct obj *obj) {
     consume_obj_charge(obj, true);
 
     if (obj->cursed && !rn2(2)) {
-        (void) zapyourself(obj, true);
+        zapyourself(obj, true);
     } else if (u.uswallow) {
-        You("take a picture of %s %s.", s_suffix(mon_nam(u.ustuck)),
-                mbodypart(u.ustuck, STOMACH));
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, u.ustuck);
+        You("take a picture of %s%s %s.", name, possessive_suffix(name), mbodypart(u.ustuck, STOMACH));
     } else if (u.dz) {
-        You("take a picture of the %s.",
-                (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+        You("take a picture of the %s.", (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
     } else if (!u.dx && !u.dy) {
-        (void) zapyourself(obj, true);
-    } else if ((mtmp = bhit(u.dx, u.dy, COLNO, FLASHED_LIGHT,
-                    (int (*)(struct monst *,struct obj *))0,
-                    (int (*)(struct obj *,struct obj *))0,
-                    obj)) != 0) {
+        zapyourself(obj, true);
+    } else if ((mtmp = bhit(u.dx, u.dy, COLNO, FLASHED_LIGHT, NULL, NULL, obj)) != 0) {
         obj->ox = u.ux,  obj->oy = u.uy;
-        (void) flash_hits_mon(mtmp, obj);
+        flash_hits_mon(mtmp, obj);
     }
     return 1;
 }
@@ -187,7 +189,7 @@ static bool its_dead(int rx, int ry, int *resp) {
     if (!can_reach_floor()) return false;
 
     /* additional stethoscope messages from jyoung@apanix.apana.org.au */
-    if (Hallucination && sobj_at(CORPSE, rx, ry)) {
+    if (Hallucination() && sobj_at(CORPSE, rx, ry)) {
         /* (a corpse doesn't retain the monster's sex,
            so we're forced to use generic pronoun here) */
         You_hear("a voice say, \"It's dead, Jim.\"");
@@ -242,7 +244,9 @@ static int use_stethoscope (struct obj *obj) {
 
     if (u.usteed && u.dz > 0) {
         if (interference) {
-            pline("%s interferes.", Monnam(u.ustuck));
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, u.ustuck);
+            pline("%s interferes.", name);
             mstatusline(u.ustuck);
         } else
             mstatusline(u.usteed);
@@ -252,7 +256,9 @@ static int use_stethoscope (struct obj *obj) {
             mstatusline(u.ustuck);
             return res;
         } else if (u.uswallow && interference) {
-            pline("%s interferes.", Monnam(u.ustuck));
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, u.ustuck);
+            pline("%s interferes.", name);
             mstatusline(u.ustuck);
             return res;
         } else if (u.dz) {
@@ -333,7 +339,7 @@ static void use_magic_whistle (struct obj *obj) {
         wake_nearby();
     } else {
         int pet_cnt = 0;
-        You(whistle_str, Hallucination ? "normal" : "strange");
+        You(whistle_str, Hallucination() ? "normal" : "strange");
         for(mtmp = fmon; mtmp; mtmp = nextmon) {
             nextmon = mtmp->nmon; /* trap might kill mon */
             if (DEADMONSTER(mtmp)) continue;
@@ -380,15 +386,18 @@ void m_unleash(struct monst *mtmp, bool feedback) {
     struct obj *otmp;
 
     if (feedback) {
-        if (canseemon(mtmp))
-            pline("%s pulls free of %s leash!", Monnam(mtmp), mhis(mtmp));
-        else
+        if (canseemon(mtmp)) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s pulls free of %s leash!", name, mhis(mtmp));
+        } else {
             Your("leash falls slack.");
+        }
     }
-    for(otmp = invent; otmp; otmp = otmp->nobj)
-        if(otmp->otyp == LEASH &&
-                otmp->leashmon == (int)mtmp->m_id)
+    for(otmp = invent; otmp; otmp = otmp->nobj) {
+        if(otmp->otyp == LEASH && otmp->leashmon == (int)mtmp->m_id)
             otmp->leashmon = 0;
+    }
     mtmp->mleashed = 0;
 }
 
@@ -435,21 +444,31 @@ static void use_leash (struct obj *obj) {
 got_target:
 
     if(!mtmp->mtame) {
-        if(!spotmon)
+        if(!spotmon) {
             There("is no creature there.");
-        else
-            pline("%s %s leashed!", Monnam(mtmp), (!obj->leashmon) ?
-                    "cannot be" : "is not");
+        } else {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s %s leashed!", name, (!obj->leashmon) ?  "cannot be" : "is not");
+        }
         return;
     }
     if(!obj->leashmon) {
         if(mtmp->mleashed) {
-            pline("This %s is already leashed.",
-                    spotmon ? l_monnam(mtmp) : "monster");
+            const char *name;
+            if (spotmon) {
+                char buf[BUFSZ];
+                l_monnam(buf, BUFSZ, mtmp);
+                name = buf;
+            } else {
+                name = "monster";
+            }
+            pline("This %s is already leashed.", name);
             return;
         }
-        You("slip the leash around %s%s.",
-                spotmon ? "your " : "", l_monnam(mtmp));
+        char name[BUFSZ];
+        l_monnam(name, BUFSZ, mtmp);
+        You("slip the leash around %s%s.", spotmon ? "your " : "", name);
         mtmp->mleashed = 1;
         obj->leashmon = (int)mtmp->m_id;
         mtmp->msleeping = 0;
@@ -466,10 +485,10 @@ got_target:
         }
         mtmp->mleashed = 0;
         obj->leashmon = 0;
-        You("remove the leash from %s%s.",
-                spotmon ? "your " : "", l_monnam(mtmp));
+        char name[BUFSZ];
+        l_monnam(name, BUFSZ, mtmp);
+        You("remove the leash from %s%s.", spotmon ? "your " : "", name);
     }
-    return;
 }
 
 /* assuming mtmp->mleashed has been checked */
@@ -535,7 +554,9 @@ void check_leash (signed char x, signed char y) {
                         (mtmp->mhp -= rnd(2)) <= 0) {
                     long save_pacifism = u.uconduct.killer;
 
-                    Your("leash chokes %s to death!", mon_nam(mtmp));
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mtmp);
+                    Your("leash chokes %s to death!", name);
                     /* hero might not have intended to kill pet, but
                        that's the result of his actions; gain experience,
                        lose pacifism, take alignment and luck hit, make
@@ -544,13 +565,17 @@ void check_leash (signed char x, signed char y) {
                     /* life-saving doesn't ordinarily reset this */
                     if (mtmp->mhp > 0) u.uconduct.killer = save_pacifism;
                 } else {
-                    pline("%s chokes on the leash!", Monnam(mtmp));
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s chokes on the leash!", name);
                     /* tameness eventually drops to 1 here (never 0) */
                     if (mtmp->mtame && rn2(mtmp->mtame)) mtmp->mtame--;
                 }
             } else {
                 if (um_dist(mtmp->mx, mtmp->my, 5)) {
-                    pline("%s leash snaps loose!", s_suffix(Monnam(mtmp)));
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s%s leash snaps loose!", name, possessive_suffix(name));
                     m_unleash(mtmp, false);
                 } else {
                     You("pull on the leash.");
@@ -581,7 +606,7 @@ static int use_mirror (struct obj *obj) {
         if(!Blind && !Invisible) {
             if (u.umonnum == PM_FLOATING_EYE) {
                 if (!Free_action) {
-                    pline(Hallucination ?
+                    pline(Hallucination() ?
                             "Yow!  The mirror stares back!" :
                             "Yikes!  You've frozen yourself!");
                     nomul(-rnd((MAXULEV+6) - u.ulevel));
@@ -591,7 +616,7 @@ static int use_mirror (struct obj *obj) {
             else if (u.umonnum == PM_UMBER_HULK) {
                 pline("Huh?  That doesn't look like you!");
                 make_confused(HConfusion + d(3,4),false);
-            } else if (Hallucination)
+            } else if (Hallucination())
                 You(look_str, hcolor((char *)0));
             else if (Sick)
                 You(look_str, "peaked");
@@ -610,18 +635,20 @@ static int use_mirror (struct obj *obj) {
         }
         return 1;
     }
-    if(u.uswallow) {
-        if (!Blind) You("reflect %s %s.", s_suffix(mon_nam(u.ustuck)),
-                mbodypart(u.ustuck, STOMACH));
+    if (u.uswallow) {
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, u.ustuck);
+        if (!Blind)
+            You("reflect %s%s %s.", name, possessive_suffix(name), mbodypart(u.ustuck, STOMACH));
         return 1;
     }
-    if(Underwater) {
-        You(Hallucination ?
+    if (Underwater) {
+        You(Hallucination() ?
                 "give the fish a chance to fix their makeup." :
                 "reflect the murky water.");
         return 1;
     }
-    if(u.dz) {
+    if (u.dz) {
         if (!Blind)
             You("reflect the %s.",
                     (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
@@ -637,30 +664,43 @@ static int use_mirror (struct obj *obj) {
     vis = canseemon(mtmp);
     mlet = mtmp->data->mlet;
     if (mtmp->msleeping) {
-        if (vis)
-            pline ("%s is too tired to look at your mirror.",
-                    Monnam(mtmp));
+        if (vis) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline ("%s is too tired to look at your mirror.", name);
+        }
     } else if (!mtmp->mcansee) {
-        if (vis)
-            pline("%s can't see anything right now.", Monnam(mtmp));
+        if (vis) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s can't see anything right now.", name);
+        }
         /* some monsters do special things */
     } else if (mlet == S_VAMPIRE || mlet == S_GHOST) {
-        if (vis)
-            pline ("%s doesn't have a reflection.", Monnam(mtmp));
-    } else if(!mtmp->mcan && !mtmp->minvis &&
-            mtmp->data == &mons[PM_MEDUSA]) {
+        if (vis) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline ("%s doesn't have a reflection.", name);
+        }
+    } else if(!mtmp->mcan && !mtmp->minvis && mtmp->data == &mons[PM_MEDUSA]) {
         if (mon_reflects(mtmp, "The gaze is reflected away by %s %s!"))
             return 1;
-        if (vis)
-            pline("%s is turned to stone!", Monnam(mtmp));
+        if (vis) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s is turned to stone!", name);
+        }
         stoned = true;
         killed(mtmp);
     } else if(!mtmp->mcan && !mtmp->minvis &&
             mtmp->data == &mons[PM_FLOATING_EYE]) {
         int tmp = d((int)mtmp->m_lev, (int)mtmp->data->mattk[0].damd);
         if (!rn2(4)) tmp = 120;
-        if (vis)
-            pline("%s is frozen by its reflection.", Monnam(mtmp));
+        if (vis) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s is frozen by its reflection.", name);
+        }
         else You_hear("%s stop moving.",something);
         mtmp->mcanmove = 0;
         if ( (int) mtmp->mfrozen + tmp > 127)
@@ -668,31 +708,46 @@ static int use_mirror (struct obj *obj) {
         else mtmp->mfrozen += tmp;
     } else if(!mtmp->mcan && !mtmp->minvis &&
             mtmp->data == &mons[PM_UMBER_HULK]) {
-        if (vis)
-            pline ("%s confuses itself!", Monnam(mtmp));
+        if (vis) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline ("%s confuses itself!", name);
+        }
         mtmp->mconf = 1;
     } else if(!mtmp->mcan && !mtmp->minvis && (mlet == S_NYMPH
                 || mtmp->data==&mons[PM_SUCCUBUS])) {
         if (vis) {
-            pline ("%s admires herself in your mirror.", Monnam(mtmp));
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline ("%s admires herself in your mirror.", name);
             pline ("She takes it!");
-        } else pline ("It steals your mirror!");
+        } else {
+            pline ("It steals your mirror!");
+        }
         setnotworn(obj); /* in case mirror was wielded */
         freeinv(obj);
-        (void) mpickobj(mtmp,obj);
-        if (!tele_restrict(mtmp)) (void) rloc(mtmp, false);
+        mpickobj(mtmp,obj);
+        if (!tele_restrict(mtmp))
+            rloc(mtmp, false);
     } else if (!is_unicorn(mtmp->data) && !humanoid(mtmp->data) &&
             (!mtmp->minvis || perceives(mtmp->data)) && rn2(5)) {
-        if (vis)
-            pline("%s is frightened by its reflection.", Monnam(mtmp));
+        if (vis) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s is frightened by its reflection.", name);
+        }
         monflee(mtmp, d(2,4), false, false);
     } else if (!Blind) {
         if (mtmp->minvis && !See_invisible) {
             // nothing
         } else if ((mtmp->minvis && !perceives(mtmp->data)) || !haseyes(mtmp->data)) {
-            pline("%s doesn't seem to notice its reflection.", Monnam(mtmp));
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s doesn't seem to notice its reflection.", name);
         } else {
-            pline("%s ignores %s reflection.", Monnam(mtmp), mhis(mtmp));
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s ignores %s reflection.", name, mhis(mtmp));
         }
     }
     return 1;
@@ -724,7 +779,9 @@ static void use_bell (struct obj **optr) {
                 !(mvitals[PM_MOUNTAIN_NYMPH].mvflags & G_GONE) &&
                 (mtmp = makemon(mkclass(S_NYMPH, 0),
                                 u.ux, u.uy, NO_MINVENT)) != 0) {
-            You("summon %s!", a_monnam(mtmp));
+            char a_name[BUFSZ];
+            a_monnam(a_name, BUFSZ, mtmp);
+            You("summon %s!", a_name);
             if (!obj_resists(obj, 93, 100)) {
                 pline("%s shattered!", Tobjnam(obj, "have"));
                 useup(obj);
@@ -1017,8 +1074,8 @@ static void use_lamp (struct obj *obj) {
             check_unpaid(obj);
             pline("%s lamp is now on.", Shk_Your(buf, obj));
         } else {        /* candle(s) */
-            pline("%s flame%s %s%s",
-                    s_suffix(Yname2(obj)),
+            const char *name = Yname2(obj);
+            pline("%s%s flame%s %s%s", name, possessive_suffix(name),
                     plur(obj->quan), otense(obj, "burn"),
                     Blind ? "." : " brightly!");
             if (obj->unpaid && costly_spot(u.ux, u.uy) &&
@@ -1150,16 +1207,18 @@ int jump ( int magic ) {
         pline("This calls for swimming, not jumping!");
         return 0;
     } else if (u.ustuck) {
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, u.ustuck);
         if (u.ustuck->mtame && !Conflict && !u.ustuck->mconf) {
-            You("pull free from %s.", mon_nam(u.ustuck));
+            You("pull free from %s.", name);
             u.ustuck = 0;
             return 1;
         }
         if (magic) {
-            You("writhe a little in the grasp of %s!", mon_nam(u.ustuck));
+            You("writhe a little in the grasp of %s!", name);
             return 1;
         }
-        You("cannot escape from %s!", mon_nam(u.ustuck));
+        You("cannot escape from %s!", name);
         return 0;
     } else if (Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
         if (magic) {
@@ -1179,17 +1238,21 @@ int jump ( int magic ) {
         const char *bp = body_part(LEG);
 
         if (wl == BOTH_SIDES) bp = makeplural(bp);
-        if (u.usteed)
-            pline("%s is in no shape for jumping.", Monnam(u.usteed));
-        else
+        if (u.usteed) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, u.usteed);
+            pline("%s is in no shape for jumping.", name);
+        } else {
             Your("%s%s %s in no shape for jumping.",
                     (wl == LEFT_SIDE) ? "left " :
                     (wl == RIGHT_SIDE) ? "right " : "",
                     bp, (wl == BOTH_SIDES) ? "are" : "is");
+        }
         return 0;
-    }
-    else if (u.usteed && u.utrap) {
-        pline("%s is stuck in a trap.", Monnam(u.usteed));
+    } else if (u.usteed && u.utrap) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, u.usteed);
+        pline("%s is stuck in a trap.", name);
         return (0);
     }
 
@@ -1360,14 +1423,14 @@ void use_unicorn_horn (struct obj *obj) {
                     break;
             case 2: if (!Confusion)
                         You("suddenly feel %s.",
-                                Hallucination ? "trippy" : "confused");
+                                Hallucination() ? "trippy" : "confused");
                     make_confused(HConfusion + lcount, true);
                     break;
             case 3: make_stunned(HStun + lcount, true);
                     break;
             case 4: (void) adjattrib(rn2(A_MAX), -1, false);
                     break;
-            case 5: (void) make_hallucinated(HHallucination + lcount, true, 0L);
+            case 5: (void) make_hallucinated(u.uprops[HALLUC].intrinsic + lcount, true, 0L);
                     break;
         }
         return;
@@ -1382,7 +1445,7 @@ void use_unicorn_horn (struct obj *obj) {
     /* collect property troubles */
     if (Sick) trouble_list[trouble_count++] = prop2trbl(SICK);
     if (Blinded > (long)u.ucreamed) trouble_list[trouble_count++] = prop2trbl(BLINDED);
-    if (HHallucination) trouble_list[trouble_count++] = prop2trbl(HALLUC);
+    if (u.uprops[HALLUC].intrinsic) trouble_list[trouble_count++] = prop2trbl(HALLUC);
     if (Vomiting) trouble_list[trouble_count++] = prop2trbl(VOMITING);
     if (HConfusion) trouble_list[trouble_count++] = prop2trbl(CONFUSION);
     if (HStun) trouble_list[trouble_count++] = prop2trbl(STUNNED);
@@ -1506,7 +1569,9 @@ void fig_transform (void *arg, long timeout) {
     cansee_spot = cansee(cc.x, cc.y);
     mtmp = make_familiar(figurine, cc.x, cc.y, true);
     if (mtmp) {
-        sprintf(monnambuf, "%s",an(m_monnam(mtmp)));
+        char name[BUFSZ];
+        m_monnam(name, BUFSZ, mtmp);
+        sprintf(monnambuf, "%s",an(name));
         switch (figurine->where) {
             case OBJ_INVENT:
                 if (Blind)
@@ -1532,15 +1597,15 @@ void fig_transform (void *arg, long timeout) {
                     mon = figurine->ocarry;
                     /* figurine carring monster might be invisible */
                     if (canseemon(figurine->ocarry)) {
-                        sprintf(carriedby, "%s pack",
-                                s_suffix(a_monnam(mon)));
+                        char name[BUFSZ];
+                        a_monnam(name, BUFSZ, mon);
+                        sprintf(carriedby, "%s%s pack", name, possessive_suffix(name));
                     }
                     else if (is_pool(mon->mx, mon->my))
                         strcpy(carriedby, "empty water");
                     else
                         strcpy(carriedby, "thin air");
-                    You("see %s %s out of %s!", monnambuf,
-                            locomotion(mtmp->data, "drop"), carriedby);
+                    You("see %s %s out of %s!", monnambuf, locomotion(mtmp->data, "drop"), carriedby);
                 }
                 break;
 
@@ -1720,7 +1785,7 @@ static void use_stone (struct obj *tstone) {
             !obj_resists(obj, 80, 100)) {
         if (Blind)
             pline("You feel something shatter.");
-        else if (Hallucination)
+        else if (Hallucination())
             pline("Oh, wow, look at the pretty shards.");
         else
             pline("A sharp crack shatters %s%s.",
@@ -1732,7 +1797,7 @@ static void use_stone (struct obj *tstone) {
     if (Blind) {
         plines(scritch);
         return;
-    } else if (Hallucination) {
+    } else if (Hallucination()) {
         pline("Oh wow, man: Fractals!");
         return;
     }
@@ -1871,8 +1936,10 @@ static void use_trap (struct obj *otmp) {
 
         if (Fumbling || otmp->cursed) chance = (rnl(10) > 3);
         else  chance = (rnl(10) > 5);
-        You("aren't very skilled at reaching from %s.",
-                mon_nam(u.usteed));
+
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, u.usteed);
+        You("aren't very skilled at reaching from %s.", name);
         sprintf(buf, "Continue your attempt to set %s?",
                 the(defsyms[trap_to_defsym(what_trap(ttyp))].explanation));
         if(yn(buf) == 'y') {
@@ -1895,11 +1962,9 @@ static void use_trap (struct obj *otmp) {
             return;
         }
     }
-    You("begin setting %s %s.",
-            shk_your(buf, otmp),
+    You("begin setting %s %s.", shk_your(buf, otmp),
             defsyms[trap_to_defsym(what_trap(ttyp))].explanation);
     set_occupation(set_trap, occutext, 0);
-    return;
 }
 
 static int set_trap (void) {
@@ -1982,13 +2047,13 @@ static int use_whip (struct obj *obj) {
 
         /* Sometimes you hit your steed by mistake */
         if (u.usteed && !rn2(proficient + 2)) {
-            You("whip %s!", mon_nam(u.usteed));
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, u.usteed);
+            You("whip %s!", name);
             kick_steed();
             return 1;
         }
-        if (Levitation
-                || u.usteed
-           ) {
+        if (Levitation || u.usteed) {
             /* Have a shot at snaring something on the floor */
             otmp = level.objects[u.ux][u.uy];
             if (otmp && otmp->otyp == CORPSE && otmp->corpsenm == PM_HORSE) {
@@ -2037,7 +2102,9 @@ static int use_whip (struct obj *obj) {
 
         if (mtmp) {
             if (bigmonst(mtmp->data)) {
-                wrapped_what = strcpy(buf, mon_nam(mtmp));
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mtmp);
+                wrapped_what = strcpy(buf, name);
             } else if (proficient) {
                 if (attack(mtmp)) return 1;
                 else plines(msg_snap);
@@ -2086,8 +2153,9 @@ static int use_whip (struct obj *obj) {
             } else
                 mon_hand = 0;   /* lint suppression */
 
-            You("wrap your bullwhip around %s %s.",
-                    s_suffix(mon_nam(mtmp)), onambuf);
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mtmp);
+            You("wrap your bullwhip around %s%s %s.", name, possessive_suffix(name), onambuf);
             if (gotit && otmp->cursed) {
                 pline("%s welded to %s %s%c",
                         (otmp->quan == 1L) ? "It is" : "They are",
@@ -2101,17 +2169,19 @@ static int use_whip (struct obj *obj) {
                 possibly_unwield(mtmp, false);
                 setmnotwielded(mtmp,otmp);
 
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mtmp);
                 switch (rn2(proficient + 1)) {
                     case 2:
                         /* to floor near you */
-                        You("yank %s %s to the %s!", s_suffix(mon_nam(mtmp)),
+                        You("yank %s%s %s to the %s!", name, possessive_suffix(name),
                                 onambuf, surface(u.ux, u.uy));
                         place_object(otmp, u.ux, u.uy);
                         stackobj(otmp);
                         break;
                     case 3:
                         /* right into your inventory */
-                        You("snatch %s %s!", s_suffix(mon_nam(mtmp)), onambuf);
+                        You("snatch %s%s %s!", name, possessive_suffix(name), onambuf);
                         if (otmp->otyp == CORPSE &&
                                 touch_petrifies(&mons[otmp->corpsenm]) &&
                                 !uarmg && !Stone_resistance &&
@@ -2129,8 +2199,8 @@ static int use_whip (struct obj *obj) {
                         break;
                     default:
                         /* to floor beneath mon */
-                        You("yank %s from %s %s!", the(onambuf),
-                                s_suffix(mon_nam(mtmp)), mon_hand);
+                        You("yank %s from %s%s %s!", the(onambuf),
+                                name, possessive_suffix(name), mon_hand);
                         obj_no_longer_held(otmp);
                         place_object(otmp, mtmp->mx, mtmp->my);
                         stackobj(otmp);
@@ -2141,10 +2211,13 @@ static int use_whip (struct obj *obj) {
             }
             wakeup(mtmp);
         } else {
-            if (mtmp->m_ap_type &&
-                    !Protection_from_shape_changers && !sensemon(mtmp))
+            if (mtmp->m_ap_type && !Protection_from_shape_changers && !sensemon(mtmp)) {
                 stumble_onto_mimic(mtmp);
-            else You("flick your bullwhip towards %s.", mon_nam(mtmp));
+            } else {
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mtmp);
+                You("flick your bullwhip towards %s.", name);
+            }
             if (proficient) {
                 if (attack(mtmp)) return 1;
                 else plines(msg_snap);
@@ -2236,7 +2309,7 @@ static int use_cream_pie (struct obj *obj) {
         several = true;
         obj = splitobj(obj, 1L);
     }
-    if (Hallucination)
+    if (Hallucination())
         You("give yourself a facial.");
     else
         pline("You immerse your %s in %s%s.", body_part(FACE),
@@ -2350,9 +2423,10 @@ static int use_grapple (struct obj *obj) {
             break;
         case 2: /* Monster */
             if ((mtmp = m_at(cc.x, cc.y)) == (struct monst *)0) break;
-            if (verysmall(mtmp->data) && !rn2(4) &&
-                    enexto(&cc, u.ux, u.uy, (struct permonst *)0)) {
-                You("pull in %s!", mon_nam(mtmp));
+            if (verysmall(mtmp->data) && !rn2(4) && enexto(&cc, u.ux, u.uy, NULL)) {
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mtmp);
+                You("pull in %s!", name);
                 mtmp->mundetected = 0;
                 rloc_to(mtmp, cc.x, cc.y);
                 return (1);
@@ -2382,7 +2456,6 @@ static int use_grapple (struct obj *obj) {
     plines(nothing_happens);
     return (1);
 }
-
 
 /* return 1 if the wand is broken, hence some time elapsed */
 static int do_break_wand (struct obj *obj) {
@@ -2812,7 +2885,7 @@ int unfixable_trouble_count(bool is_horn) {
     if (!is_horn) {
         if (Confusion) unfixable_trbl++;
         if (Sick) unfixable_trbl++;
-        if (HHallucination) unfixable_trbl++;
+        if (u.uprops[HALLUC].intrinsic) unfixable_trbl++;
         if (Vomiting) unfixable_trbl++;
         if (HStun) unfixable_trbl++;
     }

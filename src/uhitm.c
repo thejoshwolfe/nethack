@@ -191,7 +191,7 @@ attack_checks (
         }
 
         if (flags.confirm && mtmp->mpeaceful
-            && !Confusion && !Hallucination && !Stunned) {
+            && !Confusion && !Hallucination() && !Stunned) {
                 /* Intelligent chaotic weapons (Stormbringer) want blood */
                 if (wep && wep->oartifact == ART_STORMBRINGER) {
                         override_confirmation = true;

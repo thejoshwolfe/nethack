@@ -682,7 +682,7 @@ dotrap (struct trap *trap, unsigned trflags)
                 if (Levitation || Flying) {
                     if (!Blind) {
                         seetrap(trap);
-                        if (Hallucination)
+                        if (Hallucination())
                                 You("notice a crease in the linoleum.");
                         else
                                 You("notice a loose board below you.");
@@ -1269,7 +1269,7 @@ launch_obj (short otyp, int x1, int y1, int x2, int y2, int style)
         switch (style) {
             case ROLL|LAUNCH_UNSEEN:
                         if (otyp == BOULDER) {
-                            You_hear(Hallucination ?
+                            You_hear(Hallucination() ?
                                      "someone bowling." :
                                      "rumbling in the distance.");
                         }
@@ -2141,7 +2141,7 @@ float_up (void)
                     is_animal(u.ustuck->data) ?
                         surface(u.ux, u.uy) :
                         mon_nam(u.ustuck));
-        else if (Hallucination)
+        else if (Hallucination())
                 pline("Up, up, and awaaaay!  You're walking on air!");
         else if(Is_airlevel(&u.uz))
                 You("gain control over your movements.");
@@ -2243,7 +2243,7 @@ float_down (
                 if (!(emask & W_SADDLE))
                 {
                     bool sokoban_trap = (In_sokoban(&u.uz) && trap);
-                    if (Hallucination)
+                    if (Hallucination())
                         pline("Bummer!  You've %s.",
                               is_pool(u.ux,u.uy) ?
                               "splashed down" : sokoban_trap ? "crashed" :
@@ -2392,7 +2392,7 @@ domagictrap (void)
              case 13:   pline("A shiver runs up and down your %s!",
                               body_part(SPINE));
                         break;
-             case 14:   You_hear(Hallucination ?
+             case 14:   You_hear(Hallucination() ?
                                 "the moon howling at you." :
                                 "distant howling.");
                         break;
@@ -2402,14 +2402,14 @@ domagictrap (void)
                                      "oddly " : "");
                         else
                             You("suddenly yearn for %s.",
-                                Hallucination ? "Cleveland" :
+                                Hallucination() ? "Cleveland" :
                             (In_quest(&u.uz) || at_dgn_entrance("The Quest")) ?
                                                 "your nearby homeland" :
                                                 "your distant homeland");
                         break;
              case 16:   Your("pack shakes violently!");
                         break;
-             case 17:   You(Hallucination ?
+             case 17:   You(Hallucination() ?
                                 "smell hamburgers." :
                                 "smell charred flesh.");
                         break;
@@ -2697,7 +2697,7 @@ drown (void)
                 Amphibious || Swimming ? '.' : '!');
             if (!Swimming && !Is_waterlevel(&u.uz))
                     You("sink like %s.",
-                        Hallucination ? "the Titanic" : "a rock");
+                        Hallucination() ? "the Titanic" : "a rock");
         }
 
         water_damage(invent, false, false);
@@ -2724,7 +2724,7 @@ drown (void)
                         if (flags.verbose)
                                 pline("But you aren't drowning.");
                         if (!Is_waterlevel(&u.uz)) {
-                                if (Hallucination)
+                                if (Hallucination())
                                         Your("keel hits the bottom.");
                                 else
                                         You("touch bottom.");
@@ -2860,7 +2860,7 @@ untrap_prob (struct trap *ttmp)
         /* Only spiders know how to deal with webs reliably */
         if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
                 chance = 30;
-        if (Confusion || Hallucination) chance++;
+        if (Confusion || Hallucination()) chance++;
         if (Blind) chance++;
         if (Stunned) chance += 2;
         if (Fumbling) chance *= 2;
@@ -3228,7 +3228,7 @@ int
 untrap (bool force)
 {
         struct obj *otmp;
-        bool confused = (Confusion > 0 || Hallucination > 0);
+        bool confused = (Confusion > 0 || Hallucination() > 0);
         int x,y;
         int ch;
         struct trap *ttmp;
@@ -3577,7 +3577,7 @@ chest_trap (struct obj *obj, int bodypart, bool disarm)
                                 Blind ? blindgas[rn2(SIZE(blindgas))] :
                                 rndcolor(), the(xname(obj)));
                         if(!Stunned) {
-                            if (Hallucination)
+                            if (Hallucination())
                                 pline("What a groovy feeling!");
                             else if (Blind)
                                 You("%s and get dizzy...",
@@ -3587,7 +3587,7 @@ chest_trap (struct obj *obj, int bodypart, bool disarm)
                                     stagger(youmonst.data, "stagger"));
                         }
                         make_stunned(HStun + rn1(7, 16),false);
-                        (void) make_hallucinated(HHallucination + rn1(5, 16),false,0L);
+                        (void) make_hallucinated(u.uprops[HALLUC].intrinsic + rn1(5, 16),false,0L);
                         break;
                 default: impossible("bad chest trap");
                         break;

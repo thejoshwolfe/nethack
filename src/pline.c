@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #include <stdarg.h>
 #include "hack.h"
 #include "epri.h"
@@ -12,48 +13,43 @@ static bool no_repeat = false;
 
 static char *You_buf(int);
 
-
 static void vpline(const char *line, va_list the_args) {
-        char pbuf[BUFSZ];
-/* Do NOT use va_start and va_start in here... see above */
+    char pbuf[BUFSZ];
+    /* Do NOT use va_start and va_start in here... see above */
 
-        if (!line || !*line) return;
-        if (index(line, '%')) {
-            vsprintf(pbuf,line,the_args);
-            line = pbuf;
-        }
-        plines(line);
+    if (!line || !*line) return;
+    nh_vslprintf(pbuf, BUFSZ, line, the_args);
+    plines(pbuf);
 }
-
 
 void pline(const char * line, ...) {
     va_list the_args;
-        va_start(the_args, line);
-        vpline(line, the_args);
+    va_start(the_args, line);
+    vpline(line, the_args);
     va_end(the_args);
 }
 
 void plines(const char *line) {
-        if (!line || !*line) return;
-        if (!iflags.window_inited) {
-            raw_print(line);
-            return;
-        }
-        if (no_repeat && !strcmp(line, toplines))
-            return;
-        if (vision_full_recalc) vision_recalc(0);
-        if (u.ux) flush_screen(1);              /* %% */
-        putstr(WIN_MESSAGE, 0, line);
+    if (!line || !*line) return;
+    if (!iflags.window_inited) {
+        raw_print(line);
+        return;
+    }
+    if (no_repeat && !strcmp(line, toplines))
+        return;
+    if (vision_full_recalc) vision_recalc(0);
+    if (u.ux) flush_screen(1);              /* %% */
+    putstr(WIN_MESSAGE, 0, line);
 }
 
 void Norep (const char * line, ...) {
     va_list the_args;
-        va_start(the_args, line);
-        no_repeat = true;
-        vpline(line, the_args);
-        no_repeat = false;
+    va_start(the_args, line);
+    no_repeat = true;
+    vpline(line, the_args);
+    no_repeat = false;
     va_end(the_args);
-        return;
+    return;
 }
 
 /* work buffer for You(), &c and verbalize() */
@@ -83,9 +79,9 @@ void free_youbuf (void) {
 
 void You (const char * line, ...) {
     va_list the_args;
-        char *tmp;
-        va_start(the_args, line);
-        vpline(YouMessage(tmp, "You ", line), the_args);
+    char *tmp;
+    va_start(the_args, line);
+    vpline(YouMessage(tmp, "You ", line), the_args);
     va_end(the_args);
 }
 
@@ -348,7 +344,7 @@ void
 self_invis_message (void)
 {
         pline("%s %s.",
-            Hallucination ? "Far out, man!  You" : "Gee!  All of a sudden, you",
+            Hallucination() ? "Far out, man!  You" : "Gee!  All of a sudden, you",
             See_invisible ? "can see right through yourself" :
                 "can't see yourself");
 }

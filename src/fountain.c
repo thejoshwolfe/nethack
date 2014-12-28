@@ -27,7 +27,7 @@ dowatersnakes (void) /* Fountain of snakes! */
     if (!(mvitals[PM_WATER_MOCCASIN].mvflags & G_GONE)) {
         if (!Blind)
             pline("An endless stream of %s pours forth!",
-                  Hallucination ? makeplural(rndmonnam()) : "snakes");
+                  Hallucination() ? makeplural(rndmonnam()) : "snakes");
         else
             You_hear("%s hissing!", something);
         while(num-- > 0)
@@ -516,7 +516,7 @@ drinksink (void)
                         pline("Some %s liquid flows from the faucet.",
                               Blind ? "odd" :
                               hcolor(OBJ_DESCR(objects[otmp->otyp])));
-                        otmp->dknown = !(Blind || Hallucination);
+                        otmp->dknown = !(Blind || Hallucination());
                         otmp->quan++; /* Avoid panic upon useup() */
                         otmp->fromsink = 1; /* kludge for docall() */
                         (void) dopotion(otmp);
@@ -557,7 +557,7 @@ drinksink (void)
                         break;
                 case 12: You_hear("snatches of song from among the sewers...");
                         break;
-                case 19: if (Hallucination) {
+                case 19: if (Hallucination()) {
                    pline("From the murky drain, a hand reaches up... --oops--");
                                 break;
                         }

@@ -773,7 +773,7 @@ cpostfx (               /* called after completely consuming a corpse */
                 if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU) ||
                     pm == PM_VIOLET_FUNGUS) {
                         pline ("Oh wow!  Great stuff!");
-                        make_hallucinated(HHallucination + 200,false,0L);
+                        make_hallucinated(u.uprops[HALLUC].intrinsic + 200,false,0L);
                 }
                 if(is_giant(ptr)) gainstr((struct obj *)0, 0);
 
@@ -898,7 +898,7 @@ opentin (void)               /* called during each move whilst opening a tin */
             else if (tin.tin->spe == -1 && !tin.tin->blessed && !rn2(7))
                 r = ROTTEN_TIN;                 /* some homemade tins go bad */
             which = 0;  /* 0=>plural, 1=>as-is, 2=>"the" prefix */
-            if (Hallucination) {
+            if (Hallucination()) {
                 what = rndmonnam();
             } else {
                 what = mons[tin.tin->corpsenm].mname;
@@ -908,7 +908,7 @@ opentin (void)               /* called during each move whilst opening a tin */
             if (which == 0) what = makeplural(what);
             pline("It smells like %s%s.", (which == 2) ? "the " : "", what);
             if (yn("Eat it?") == 'n') {
-                if (!Hallucination) tin.tin->dknown = tin.tin->known = true;
+                if (!Hallucination()) tin.tin->dknown = tin.tin->known = true;
                 if (flags.verbose) You("discard the open tin.");
                 costly_tin((const char*)0);
                 goto use_me;
@@ -951,7 +951,7 @@ opentin (void)               /* called during each move whilst opening a tin */
                 pline("It contains spinach.");
 
             if (yn("Eat it?") == 'n') {
-                if (!Hallucination && !tin.tin->cursed)
+                if (!Hallucination() && !tin.tin->cursed)
                     tin.tin->dknown = tin.tin->known = true;
                 if (flags.verbose)
                     You("discard the open tin.");
@@ -964,7 +964,7 @@ opentin (void)               /* called during each move whilst opening a tin */
 
             if (!tin.tin->cursed)
                 pline("This makes you feel like %s!",
-                      Hallucination ? "Swee'pea" : "Popeye");
+                      Hallucination() ? "Swee'pea" : "Popeye");
             lesshungry(600);
             gainstr(tin.tin, 0);
             u.uconduct.food++;
@@ -1049,7 +1049,7 @@ rottenfood (struct obj *obj)
 {
         pline("Blecch!  Rotten %s!", foodword(obj));
         if(!rn2(4)) {
-                if (Hallucination) You_feel("rather trippy.");
+                if (Hallucination()) You_feel("rather trippy.");
                 else You_feel("rather %s.", body_part(LIGHT_HEADED));
                 make_confused(HConfusion + d(2,4),false);
         } else if(!rn2(4) && !Blind) {
@@ -1219,7 +1219,7 @@ fprefx (struct obj *otmp)
         switch(otmp->otyp) {
             case FOOD_RATION:
                 if(u.uhunger <= 200)
-                    pline(Hallucination ? "Oh wow, like, superior, man!" :
+                    pline(Hallucination() ? "Oh wow, like, superior, man!" :
                           "That food really hit the spot!");
                 else if(u.uhunger <= 700) pline("That satiated your %s!",
                                                 body_part(STOMACH));
@@ -1228,7 +1228,7 @@ fprefx (struct obj *otmp)
                 if (carnivorous(youmonst.data) && !humanoid(youmonst.data)) {
                     pline("That tripe ration was surprisingly good!");
                 } else if (Upolyd ? is_orc(youmonst.data): Race_if(PM_ORC)) {
-                    pline(Hallucination ? "Tastes great! Less filling!" :
+                    pline(Hallucination() ? "Tastes great! Less filling!" :
                           "Mmm, tripe... not bad!");
                 } else {
                     pline("Yak - dog food!");
@@ -1256,11 +1256,11 @@ fprefx (struct obj *otmp)
                 if (otmp->otyp==SLIME_MOLD && !otmp->cursed
                         && otmp->spe == current_fruit)
                     pline("My, that was a %s %s!",
-                          Hallucination ? "primo" : "yummy",
+                          Hallucination() ? "primo" : "yummy",
                           singular(otmp, xname));
                 else
                 if (otmp->otyp == APPLE || otmp->otyp == PEAR) {
-                    if (!Hallucination) pline("Core dumped.");
+                    if (!Hallucination()) pline("Core dumped.");
                     else {
 /* This is based on an old Usenet joke, a fake a.out manual page */
                         int x = rnd(100);
@@ -1277,12 +1277,12 @@ fprefx (struct obj *otmp)
                 } else
  give_feedback:
                     pline("This %s is %s", singular(otmp, xname),
-                      otmp->cursed ? (Hallucination ? "grody!" : "terrible!") :
+                      otmp->cursed ? (Hallucination() ? "grody!" : "terrible!") :
                       (otmp->otyp == CRAM_RATION
                       || otmp->otyp == K_RATION
                       || otmp->otyp == C_RATION)
                       ? "bland." :
-                      Hallucination ? "gnarly!" : "delicious!");
+                      Hallucination() ? "gnarly!" : "delicious!");
                 break;
         }
 }
@@ -1334,7 +1334,7 @@ eataccessory (struct obj *otmp)
                                         !See_invisible && !Blind) {
                         newsym(u.ux,u.uy);
                         Your("body takes on a %s transparency...",
-                                Hallucination ? "normal" : "strange");
+                                Hallucination() ? "normal" : "strange");
                         makeknown(typ);
                     }
                     break;
@@ -1455,7 +1455,7 @@ eatspecial (void) /* called after eating non-food */
         /* KMH -- idea by "Tommy the Terrorist" */
         if ((otmp->otyp == TRIDENT) && !otmp->cursed)
         {
-                pline(Hallucination ? "Four out of five dentists agree." :
+                pline(Hallucination() ? "Four out of five dentists agree." :
                                 "That was pure chewing satisfaction!");
                 exercise(A_WIS, true);
         }

@@ -113,7 +113,7 @@
  */
 #define is_safepet(mon) \
         (mon && mon->mtame && canspotmon(mon) && flags.safe_dog \
-                && !Confusion && !Hallucination && !Stunned)
+                && !Confusion && !Hallucination() && !Stunned)
 
 
 /*
@@ -147,9 +147,9 @@
  * If hallucinating, choose a random object/monster, otherwise, use the one
  * given.
  */
-#define what_obj(obj)   (Hallucination ? random_object()  : obj)
-#define what_mon(mon)   (Hallucination ? random_monster() : mon)
-#define what_trap(trp)  (Hallucination ? random_trap()    : trp)
+#define what_obj(obj)   (Hallucination() ? random_object()  : obj)
+#define what_mon(mon)   (Hallucination() ? random_monster() : mon)
+#define what_trap(trp)  (Hallucination() ? random_trap()    : trp)
 
 /*
  * covers_objects()
@@ -276,7 +276,7 @@
 /* This has the unfortunate side effect of needing a global variable    */
 /* to store a result. 'otg_temp' is defined and declared in decl.{ch}.  */
 #define obj_to_glyph(obj)                                                     \
-    (Hallucination ?                                                          \
+    (Hallucination() ?                                                          \
         ((otg_temp = random_object()) == CORPSE ?                             \
             random_monster() + GLYPH_BODY_OFF :                               \
             otg_temp + GLYPH_OBJ_OFF)   :                                     \

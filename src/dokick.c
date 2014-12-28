@@ -386,7 +386,7 @@ static int kick_object(signed char x, signed char y) {
                          trap->ttyp == WEB)) {
                 if (!trap->tseen) find_trap(trap);
                 You_cant("kick %s that's in a %s!", something,
-                         Hallucination ? "tizzy" :
+                         Hallucination() ? "tizzy" :
                          (trap->ttyp == WEB) ? "web" : "pit");
                 return 1;
         }

@@ -49,7 +49,7 @@ dev_name (void)
             i = rn2(n);
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if(!is_mplayer(mtmp->data)) continue;
-                if(!strncmp(developers[i], NAME(mtmp),
+                if(!strncmp(developers[i], monster_name(mtmp),
                                        strlen(developers[i]))) {
                     match = true;
                     break;

@@ -224,56 +224,50 @@ priestini (
  *              (coaligned Angels are also created as minions, but they
  *              use the same naming convention)
  *      - minions do not have ispriest but have isminion and emin
- *      - caller needs to inhibit Hallucination if it wants to force
+ *      - caller needs to inhibit Hallucination() if it wants to force
  *              the true name even when under that influence
  */
-char *
-priestname (
-    struct monst *mon,
-    char *pname         /* caller-supplied output buffer */
-)
-{
-        const char *what = Hallucination ? rndmonnam() : mon->data->mname;
+// char *pname         /* caller-supplied output buffer */
+char * priestname ( struct monst *mon, char *pname) {
+    const char *what = Hallucination() ? rndmonnam() : mon->data->mname;
 
-        strcpy(pname, "the ");
-        if (mon->minvis) strcat(pname, "invisible ");
-        if (mon->ispriest || mon->data == &mons[PM_ALIGNED_PRIEST] ||
-                                        mon->data == &mons[PM_ANGEL]) {
-                /* use epri */
-                if (mon->mtame && mon->data == &mons[PM_ANGEL])
-                        strcat(pname, "guardian ");
-                if (mon->data != &mons[PM_ALIGNED_PRIEST] &&
-                                mon->data != &mons[PM_HIGH_PRIEST]) {
-                        strcat(pname, what);
-                        strcat(pname, " ");
-                }
-                if (mon->data != &mons[PM_ANGEL]) {
-                        if (!mon->ispriest && EPRI(mon)->renegade)
-                                strcat(pname, "renegade ");
-                        if (mon->data == &mons[PM_HIGH_PRIEST])
-                                strcat(pname, "high ");
-                        if (Hallucination)
-                                strcat(pname, "poohbah ");
-                        else if (mon->female)
-                                strcat(pname, "priestess ");
-                        else
-                                strcat(pname, "priest ");
-                }
-                strcat(pname, "of ");
-                strcat(pname, halu_gname((int)EPRI(mon)->shralign));
-                return(pname);
+    strcpy(pname, "the ");
+    if (mon->minvis) strcat(pname, "invisible ");
+    if (mon->ispriest || mon->data == &mons[PM_ALIGNED_PRIEST] ||
+            mon->data == &mons[PM_ANGEL]) {
+        /* use epri */
+        if (mon->mtame && mon->data == &mons[PM_ANGEL])
+            strcat(pname, "guardian ");
+        if (mon->data != &mons[PM_ALIGNED_PRIEST] &&
+                mon->data != &mons[PM_HIGH_PRIEST]) {
+            strcat(pname, what);
+            strcat(pname, " ");
         }
-        /* use emin instead of epri */
-        strcat(pname, what);
-        strcat(pname, " of ");
-        strcat(pname, halu_gname(EMIN(mon)->min_align));
+        if (mon->data != &mons[PM_ANGEL]) {
+            if (!mon->ispriest && EPRI(mon)->renegade)
+                strcat(pname, "renegade ");
+            if (mon->data == &mons[PM_HIGH_PRIEST])
+                strcat(pname, "high ");
+            if (Hallucination())
+                strcat(pname, "poohbah ");
+            else if (mon->female)
+                strcat(pname, "priestess ");
+            else
+                strcat(pname, "priest ");
+        }
+        strcat(pname, "of ");
+        strcat(pname, halu_gname((int)EPRI(mon)->shralign));
         return(pname);
+    }
+    /* use emin instead of epri */
+    strcat(pname, what);
+    strcat(pname, " of ");
+    strcat(pname, halu_gname(EMIN(mon)->min_align));
+    return(pname);
 }
 
-bool 
-p_coaligned (struct monst *priest)
-{
-        return((bool)(u.ualign.type == ((int)EPRI(priest)->shralign)));
+bool p_coaligned (struct monst *priest) {
+    return((bool)(u.ualign.type == ((int)EPRI(priest)->shralign)));
 }
 
 static bool 
@@ -325,7 +319,7 @@ intemple (int roomno)
                     /* don't reveal the altar's owner upon temple entry in
                        the endgame; for the Sanctum, the next message names
                        Moloch so suppress the "of Moloch" for him here too */
-                    if (sanctum && !Hallucination) priest->ispriest = 0;
+                    if (sanctum && !Hallucination()) priest->ispriest = 0;
                     pline("%s intones:",
                         canseemon(priest) ? Monnam(priest) : "A nearby voice");
                     priest->ispriest = save_priest;

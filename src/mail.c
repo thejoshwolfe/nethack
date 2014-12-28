@@ -308,10 +308,7 @@ md_rush (
 }
 
 /* Deliver a scroll of mail. */
-/*ARGSUSED*/
-static void
-newmail (struct mail_info *info)
-{
+static void newmail (struct mail_info *info) {
     struct monst *md;
     coord start, stop;
     bool message_seen = false;

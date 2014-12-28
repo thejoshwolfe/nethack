@@ -616,7 +616,7 @@ test_move (int ux, int uy, int dx, int dy, int mode)
     }
 
     if (sobj_at(BOULDER,x,y) && (In_sokoban(&u.uz) || !Passes_walls)) {
-        if (!(Blind || Hallucination) && (flags.run >= 2) && mode != TEST_TRAV)
+        if (!(Blind || Hallucination()) && (flags.run >= 2) && mode != TEST_TRAV)
             return false;
         if (mode == DO_MOVE) {
             /* tunneling monsters will chew before pushing */
@@ -1007,7 +1007,7 @@ domove (void)
                 if(mtmp->m_ap_type && !Protection_from_shape_changers
                                                     && !sensemon(mtmp))
                     stumble_onto_mimic(mtmp);
-                else if (mtmp->mpeaceful && !Hallucination)
+                else if (mtmp->mpeaceful && !Hallucination())
                     pline("Pardon me, %s.", m_monnam(mtmp));
                 else
                     You("move right into %s.", mon_nam(mtmp));
@@ -1093,7 +1093,7 @@ domove (void)
                             Norep("%s is still in a pit.",
                                   upstart(y_monnam(u.usteed)));
                         else
-                        Norep( (Hallucination && !rn2(5)) ?
+                        Norep( (Hallucination() && !rn2(5)) ?
                                 "You've fallen, and you can't get up." :
                                 "You are still in a pit." );
                     }
@@ -1947,7 +1947,7 @@ monster_nearby (void)
                 if((mtmp = m_at(x,y)) &&
                    mtmp->m_ap_type != M_AP_FURNITURE &&
                    mtmp->m_ap_type != M_AP_OBJECT &&
-                   (!mtmp->mpeaceful || Hallucination) &&
+                   (!mtmp->mpeaceful || Hallucination()) &&
                    (!is_hider(mtmp->data) || !mtmp->mundetected) &&
                    !noattacks(mtmp->data) &&
                    mtmp->mcanmove && !mtmp->msleeping &&  /* aplvax!jcn */

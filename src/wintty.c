@@ -1470,9 +1470,7 @@ compress_str (const char *str)
         return cbuf;
 }
 
-void 
-tty_putstr (winid window, int attr, const char *str)
-{
+void tty_putstr (winid window, int attr, const char *str) {
     struct WinDesc *cw = 0;
     char *ob;
     const char *nb;
@@ -1486,8 +1484,7 @@ tty_putstr (winid window, int attr, const char *str)
         return;
     }
 
-    if(str == (const char*)0 ||
-        ((cw->flags & WIN_CANCELLED) && (cw->type != NHW_MESSAGE)))
+    if(str == NULL || ((cw->flags & WIN_CANCELLED) && (cw->type != NHW_MESSAGE)))
         return;
     if(cw->type != NHW_MESSAGE)
         str = compress_str(str);
@@ -1524,7 +1521,7 @@ tty_putstr (winid window, int attr, const char *str)
             if(*ob) ob++;
         }
 
-        (void) strncpy(&cw->data[cw->cury][j], str, cw->cols - j - 1);
+        strncpy(&cw->data[cw->cury][j], str, cw->cols - j - 1);
         cw->data[cw->cury][cw->cols-1] = '\0'; /* null terminate */
         cw->cury = (cw->cury+1) % 2;
         cw->curx = 0;
@@ -1533,7 +1530,7 @@ tty_putstr (winid window, int attr, const char *str)
         tty_curs(window, cw->curx+1, cw->cury);
         term_start_attr(attr);
         while(*str && (int) ttyDisplay->curx < (int) ttyDisplay->cols-1) {
-            (void) putchar(*str);
+            putchar(*str);
             str++;
             ttyDisplay->curx++;
         }
@@ -1550,7 +1547,7 @@ tty_putstr (winid window, int attr, const char *str)
                 cw->cury++;
                 tty_curs(window, cw->curx+1, cw->cury);
             }
-            (void) putchar(*str);
+            putchar(*str);
             str++;
             ttyDisplay->curx++;
         }
@@ -1612,54 +1609,49 @@ tty_putstr (winid window, int attr, const char *str)
 }
 
 void tty_display_file(const char *fname, bool complain) {
-    {
-        dlb *f;
-        char buf[BUFSZ];
-        char *cr;
+    dlb *f;
+    char buf[BUFSZ];
+    char *cr;
 
-        tty_clear_nhwindow(WIN_MESSAGE);
-        f = dlb_fopen(fname, "r");
-        if (!f) {
-            if(complain) {
-                home();  tty_mark_synch();  tty_raw_print("");
-                perror(fname);  tty_wait_synch();
-                pline("Cannot open \"%s\".", fname);
-            } else if(u.ux) docrt();
-        } else {
-            winid datawin = tty_create_nhwindow(NHW_TEXT);
-            bool empty = true;
+    tty_clear_nhwindow(WIN_MESSAGE);
+    f = dlb_fopen(fname, "r");
+    if (!f) {
+        if(complain) {
+            home();  tty_mark_synch();  tty_raw_print("");
+            perror(fname);  tty_wait_synch();
+            pline("Cannot open \"%s\".", fname);
+        } else if(u.ux) docrt();
+    } else {
+        winid datawin = tty_create_nhwindow(NHW_TEXT);
+        bool empty = true;
 
-            if(complain
+        if(complain
                 && nh_CD
-            ) {
-                /* attempt to scroll text below map window if there's room */
-                wins[datawin]->offy = wins[WIN_STATUS]->offy+3;
-                if((int) wins[datawin]->offy + 12 > (int) ttyDisplay->rows)
-                    wins[datawin]->offy = 0;
-            }
-            while (dlb_fgets(buf, BUFSZ, f)) {
-                if ((cr = index(buf, '\n')) != 0) *cr = 0;
-                if (index(buf, '\t') != 0) (void) tabexpand(buf);
-                empty = false;
-                tty_putstr(datawin, 0, buf);
-                if(wins[datawin]->flags & WIN_CANCELLED)
-                    break;
-            }
-            if (!empty) tty_display_nhwindow(datawin, false);
-            tty_destroy_nhwindow(datawin);
-            (void) dlb_fclose(f);
+          ) {
+            /* attempt to scroll text below map window if there's room */
+            wins[datawin]->offy = wins[WIN_STATUS]->offy+3;
+            if((int) wins[datawin]->offy + 12 > (int) ttyDisplay->rows)
+                wins[datawin]->offy = 0;
         }
+        while (dlb_fgets(buf, BUFSZ, f)) {
+            if ((cr = index(buf, '\n')) != 0) *cr = 0;
+            if (index(buf, '\t') != 0) (void) tabexpand(buf);
+            empty = false;
+            tty_putstr(datawin, 0, buf);
+            if(wins[datawin]->flags & WIN_CANCELLED)
+                break;
+        }
+        if (!empty) tty_display_nhwindow(datawin, false);
+        tty_destroy_nhwindow(datawin);
+        (void) dlb_fclose(f);
     }
 }
 
-void 
-tty_start_menu (winid window)
-{
+void tty_start_menu (winid window) {
     tty_clear_nhwindow(window);
     return;
 }
 
-/*ARGSUSED*/
 /*
  * Add a menu item to the beginning of the menu list.  This list is reversed
  * later.

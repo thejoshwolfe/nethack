@@ -3,6 +3,8 @@
 #include "lev.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "do_name.h"
+#include "objnam.h"
 #include "winprocs.h"
 #include "display.h"
 

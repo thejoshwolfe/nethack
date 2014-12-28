@@ -58,7 +58,7 @@ NORMAL_ASS_O_FILES = build/allmain.o build/apply.o build/artifact.o build/attrib
   build/wizard.o build/worm.o build/worn.o build/write.o build/zap.o \
   build/unixtty.o build/unixunix.o \
   build/getline.o build/termcap.o build/topl.o build/wintty.o \
-	build/version.o
+  build/version.o build/util.o
 
 NETHACK_OBJS = $(MAKEDEFS_NEEDS_THESE) $(NORMAL_ASS_O_FILES)
 BUILD_DIR_CHILDREN += $(NETHACK_OBJS)

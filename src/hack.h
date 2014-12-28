@@ -1,8 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef HACK_H
 #define HACK_H
 
 #include "coord.h"
+#include "hacklib.h"
 
 #define TELL            1
 #define NOTELL          0

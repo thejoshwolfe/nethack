@@ -106,11 +106,12 @@
 #define Slimed                  u.uprops[SLIMED].intrinsic      /* [Tom] */
 
 /* Hallucination is solely a timeout; its resistance is extrinsic */
-#define HHallucination          u.uprops[HALLUC].intrinsic
-#define EHalluc_resistance      u.uprops[HALLUC_RES].extrinsic
-#define Halluc_resistance       (EHalluc_resistance || \
-                                 (Upolyd && dmgtype(youmonst.data, AD_HALU)))
-#define Hallucination           (HHallucination && !Halluc_resistance)
+static bool Halluc_resistance(void) {
+    return (u.uprops[HALLUC_RES].extrinsic || (Upolyd && dmgtype(youmonst.data, AD_HALU)));
+}
+static bool Hallucination(void) {
+    return (u.uprops[HALLUC].intrinsic && !Halluc_resistance());
+}
 
 /* Timeout, plus a worn mask */
 #define HFumbling               u.uprops[FUMBLING].intrinsic

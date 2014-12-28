@@ -317,7 +317,7 @@ cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum)
         if (nonliving(youmonst.data) || is_demon(youmonst.data)) {
             You("seem no deader than before.");
         } else if (!Antimagic && rn2(mtmp->m_lev) > 12) {
-            if (Hallucination) {
+            if (Hallucination()) {
                 You("have an out of body experience.");
             } else {
                 killer_format = KILLED_BY_AN;
@@ -599,7 +599,7 @@ cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum)
             dmg = (int)mtmp->m_lev;
             if (Half_spell_damage) dmg = (dmg + 1) / 2;
             make_confused(HConfusion + dmg, true);
-            if (Hallucination)
+            if (Hallucination())
                 You_feel("%s!", oldprop ? "trippier" : "trippy");
             else
                 You_feel("%sconfused!", oldprop ? "more " : "");

@@ -257,7 +257,7 @@ make_corpse (struct monst *mtmp)
         if (flags.bypasses) bypass_obj(obj);
 
         if (mtmp->mnamelth)
-            obj = oname(obj, NAME(mtmp));
+            obj = oname(obj, monster_name(mtmp));
 
         /* Avoid "It was hidden under a green mold corpse!"
          *  during Blind combat. An unseen monster referred to as "it"
@@ -1459,7 +1459,7 @@ monstone (struct monst *mdef)
                    item-conferred attributes */
                 otmp = mkcorpstat(STATUE, KEEPTRAITS(mdef) ? mdef : 0,
                                   mdef->data, x, y, false);
-                if (mdef->mnamelth) otmp = oname(otmp, NAME(mdef));
+                if (mdef->mnamelth) otmp = oname(otmp, monster_name(mdef));
                 while ((obj = oldminvent) != 0) {
                     oldminvent = obj->nobj;
                     (void) add_to_container(otmp, obj);
@@ -1684,7 +1684,7 @@ cleanup:
             adjalign((int)(ALIGNLIM/4));
         else if (mdat->msound == MS_GUARDIAN) { /* Bad */
             adjalign(-(int)(ALIGNLIM/8));
-            if (!Hallucination) pline("That was probably a bad idea...");
+            if (!Hallucination()) pline("That was probably a bad idea...");
             else pline("Whoopsie-daisy!");
         }else if (mtmp->ispriest) {
                 adjalign((p_coaligned(mtmp)) ? -2 : 2);
@@ -1695,7 +1695,7 @@ cleanup:
         } else if (mtmp->mtame) {
                 adjalign(-15);  /* bad!! */
                 /* your god is mighty displeased... */
-                if (!Hallucination) You_hear("the rumble of distant thunder...");
+                if (!Hallucination()) You_hear("the rumble of distant thunder...");
                 else You_hear("the studio audience applaud!");
         } else if (mtmp->mpeaceful)
                 adjalign(-5);
@@ -1922,7 +1922,7 @@ setmangry (struct monst *mtmp)
                     mon->mpeaceful = 0;
                     if (canseemon(mon)) ++got_mad;
                 }
-            if (got_mad && !Hallucination)
+            if (got_mad && !Hallucination())
                 pline_The("%s appear%s to be angry too...",
                       got_mad == 1 ? q_guardian->mname :
                                     makeplural(q_guardian->mname),
@@ -2216,10 +2216,10 @@ newcham (
                  * polymorphed, so dropping the rank for mplayers seems
                  * reasonable.
                  */
-                char *p = index(NAME(mtmp), ' ');
+                char *p = index(monster_name(mtmp), ' ');
                 if (p) {
                         *p = '\0';
-                        mtmp->mnamelth = p - NAME(mtmp) + 1;
+                        mtmp->mnamelth = p - monster_name(mtmp) + 1;
                 }
         }
 

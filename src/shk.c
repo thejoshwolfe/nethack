@@ -127,7 +127,7 @@ static struct monst * next_shkp(struct monst *shkp, bool withbill) {
 }
 
 /* called in do_name.c */
-char * shkname ( struct monst *mtmp) {
+const char * shkname ( struct monst *mtmp) {
     return(ESHK(mtmp)->shknam);
 }
 

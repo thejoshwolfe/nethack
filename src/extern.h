@@ -155,19 +155,6 @@ extern char readchar(void);
 extern void sanity_check(void);
 extern char yn_function(const char *, const char *, char);
 
-/* ### dbridge.c ### */
-
-extern bool is_pool(int,int);
-extern bool is_lava(int,int);
-extern bool is_ice(int,int);
-extern int is_drawbridge_wall(int,int);
-extern bool is_db_wall(int,int);
-extern bool find_drawbridge(int *,int*);
-extern bool create_drawbridge(int,int,int,bool);
-extern void open_drawbridge(int,int);
-extern void close_drawbridge(int,int);
-extern void destroy_drawbridge(int,int);
-
 /* ### decl.c ### */
 
 extern void decl_init(void);
@@ -269,33 +256,6 @@ extern int donull(void);
 extern int dowipe(void);
 extern void set_wounded_legs(long,int);
 extern void heal_legs(void);
-
-/* ### do_name.c ### */
-
-extern int getpos(coord *,bool,const char *);
-extern struct monst *christen_monst(struct monst *,const char *);
-extern int do_mname(void);
-extern struct obj *oname(struct obj *,const char *);
-extern int ddocall(void);
-extern void docall(struct obj *);
-extern const char *rndghostname(void);
-extern char *x_monnam(struct monst *,int,const char *,int,bool);
-extern char *l_monnam(struct monst *);
-extern char *mon_nam(struct monst *);
-extern char *noit_mon_nam(struct monst *);
-extern char *Monnam(struct monst *);
-extern char *noit_Monnam(struct monst *);
-extern char *m_monnam(struct monst *);
-extern char *y_monnam(struct monst *);
-extern char *Adjmonnam(struct monst *,const char *);
-extern char *Amonnam(struct monst *);
-extern char *a_monnam(struct monst *);
-extern char *distant_monnam(struct monst *,int,char *);
-extern const char *rndmonnam(void);
-extern const char *hcolor(const char *);
-extern const char *rndcolor(void);
-extern struct obj *realloc_obj(struct obj *, int, void *, int, const char *);
-extern char *coyotename(struct monst *,char *);
 
 /* ### do_wear.c ### */
 
@@ -582,41 +542,6 @@ extern int calc_capacity(int);
 extern int max_capacity(void);
 extern bool check_capacity(const char *);
 extern int inv_cnt(void);
-
-/* ### hacklib.c ### */
-
-extern bool digit(char);
-extern bool letter(char);
-extern char highc(char);
-extern char lowc(char);
-extern char *lcase(char *);
-extern char *upstart(char *);
-extern char *mungspaces(char *);
-extern char *eos(char *);
-extern char *strkitten(char *,char);
-extern char *s_suffix(const char *);
-extern char *xcrypt(const char *,char *);
-extern bool onlyspace(const char *);
-extern char *tabexpand(char *);
-extern char *visctrl(char);
-extern const char *ordin(int);
-extern char *sitoa(int);
-extern int sgn(int);
-extern int rounddiv(long,int);
-extern int dist2(int,int,int,int);
-extern int distmin(int,int,int,int);
-extern bool online2(int,int,int,int);
-extern bool pmatch(const char *,const char *);
-extern int strncmpi(const char *,const char *,int);
-extern char *strstri(const char *,const char *);
-extern bool fuzzymatch(const char *,const char *,const char *,bool);
-extern void setrandom(void);
-extern int getyear(void);
-extern long yyyymmdd(time_t);
-extern int phase_of_the_moon(void);
-extern bool friday_13th(void);
-extern int night(void);
-extern int midnight(void);
 
 /* ### invent.c ### */
 
@@ -1051,43 +976,6 @@ extern int dodiscovered(void);
 /* ### objects.c ### */
 
 extern void objects_init(void);
-
-/* ### objnam.c ### */
-
-extern char *obj_typename(int);
-extern char *simple_typename(int);
-extern bool obj_is_pname(struct obj *);
-extern char *distant_name(struct obj *,char *(*)(struct obj *));
-extern char *fruitname(bool);
-extern char *xname(struct obj *);
-extern char *mshot_xname(struct obj *);
-extern bool the_unique_obj(struct obj *obj);
-extern char *doname(struct obj *);
-extern bool not_fully_identified(struct obj *);
-extern char *corpse_xname(struct obj *,bool);
-extern char *cxname(struct obj *);
-extern char *cxname2(struct obj *);
-extern char *killer_xname(struct obj *);
-extern const char *singular(struct obj *,char *(*)(struct obj *));
-extern char *an(const char *);
-extern char *An(const char *);
-extern char *The(const char *);
-extern char *the(const char *);
-extern char *aobjnam(struct obj *,const char *);
-extern char *Tobjnam(struct obj *,const char *);
-extern char *otense(struct obj *,const char *);
-extern char *vtense(const char *,const char *);
-extern char *Doname2(struct obj *);
-extern char *yname(struct obj *);
-extern char *Yname2(struct obj *);
-extern char *ysimple_name(struct obj *);
-extern char *Ysimple_name2(struct obj *);
-extern char *makeplural(const char *);
-extern char *makesingular(const char *);
-extern struct obj *readobjnam(char *,struct obj *,bool);
-extern int rnd_class(int,int);
-extern const char *cloak_simple_name(struct obj *);
-extern const char *mimic_obj_name(struct monst *);
 
 /* ### options.c ### */
 

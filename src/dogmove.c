@@ -221,7 +221,7 @@ dog_hunger (struct monst *mtmp, struct edog *edog)
                     pline("%s starves.", Monnam(mtmp));
                 else
                     You_feel("%s for a moment.",
-                        Hallucination ? "bummed" : "sad");
+                        Hallucination() ? "bummed" : "sad");
                 mondied(mtmp);
                 return(true);
             }

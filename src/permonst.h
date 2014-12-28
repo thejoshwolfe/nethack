@@ -34,26 +34,26 @@ struct attack {
 #define WT_HUMAN        1450
 
 struct permonst {
-        const char      *mname;                 /* full name */
-        char            mlet;                   /* symbol */
-        signed char     mlevel,                 /* base monster level */
-                        mmove,                  /* move speed */
-                        ac,                     /* (base) armor class */
-                        mr;                     /* (base) magic resistance */
-        aligntyp        maligntyp;              /* basic monster alignment */
-        unsigned short  geno;                   /* creation/geno mask value */
-        struct  attack  mattk[NATTK];           /* attacks matrix */
-        unsigned short  cwt,                    /* weight of corpse */
-                        cnutrit;                /* its nutritional value */
-        short           pxlth;                  /* length of extension */
-        unsigned char   msound;                 /* noise it makes (6 bits) */
-        unsigned char   msize;                  /* physical size (3 bits) */
-        unsigned char   mresists;               /* resistances */
-        unsigned char   mconveys;               /* conveyed by eating */
-        unsigned long   mflags1,                /* bool bitflags */
-                        mflags2;                /* more bool bitflags */
-        unsigned short  mflags3;                /* yet more bool bitflags */
-        unsigned char   mcolor;                 /* color to use */
+    const char      *mname;                 /* full name */
+    char            mlet;                   /* symbol */
+    signed char     mlevel,                 /* base monster level */
+                    mmove,                  /* move speed */
+                    ac,                     /* (base) armor class */
+                    mr;                     /* (base) magic resistance */
+    aligntyp        maligntyp;              /* basic monster alignment */
+    unsigned short  geno;                   /* creation/geno mask value */
+    struct  attack  mattk[NATTK];           /* attacks matrix */
+    unsigned short  cwt,                    /* weight of corpse */
+                    cnutrit;                /* its nutritional value */
+    short           pxlth;                  /* length of extension */
+    unsigned char   msound;                 /* noise it makes (6 bits) */
+    unsigned char   msize;                  /* physical size (3 bits) */
+    unsigned char   mresists;               /* resistances */
+    unsigned char   mconveys;               /* conveyed by eating */
+    unsigned long   mflags1,                /* bool bitflags */
+                    mflags2;                /* more bool bitflags */
+    unsigned short  mflags3;                /* yet more bool bitflags */
+    unsigned char   mcolor;                 /* color to use */
 };
 
 /* the master list of monster types */

@@ -279,10 +279,12 @@ extern struct c_common_strings {
 extern const char *materialnm[];
 
 /* Monster name articles */
-#define ARTICLE_NONE    0
-#define ARTICLE_THE     1
-#define ARTICLE_A       2
-#define ARTICLE_YOUR    3
+enum {
+    ARTICLE_NONE  = 0,
+    ARTICLE_THE   = 1,
+    ARTICLE_A     = 2,
+    ARTICLE_YOUR  = 3,
+};
 
 /* Monster name suppress masks */
 #define SUPPRESS_IT             0x01

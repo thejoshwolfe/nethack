@@ -389,7 +389,7 @@ attrcurse (void)                        /* remove a random INTRINSIC ability */
                 }
         case 7 : if (HSee_invisible & INTRINSIC) {
                         HSee_invisible &= ~INTRINSIC;
-                        You("%s!", Hallucination ? "tawt you taw a puttie tat"
+                        You("%s!", Hallucination() ? "tawt you taw a puttie tat"
                                                 : "thought you saw something");
                         break;
                 }

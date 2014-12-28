@@ -29,7 +29,7 @@ void dosounds (void) {
 
     if (!flags.soundok || u.uswallow || Underwater) return;
 
-    hallu = Hallucination ? 1 : 0;
+    hallu = Hallucination() ? 1 : 0;
 
     if (level.flags.nfountains && !rn2(400)) {
         static const char * const fountain_msg[4] = {
@@ -277,7 +277,7 @@ void growl (struct monst *mtmp) {
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    if (Hallucination)
+    if (Hallucination())
         growl_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
         growl_verb = growl_sound(mtmp);
@@ -296,7 +296,7 @@ void yelp (struct monst *mtmp) {
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    if (Hallucination)
+    if (Hallucination())
         yelp_verb = h_sounds[rn2(SIZE(h_sounds))];
     else switch (mtmp->data->msound) {
         case MS_MEW:
@@ -334,7 +334,7 @@ void whimper (struct monst *mtmp) {
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    if (Hallucination)
+    if (Hallucination())
         whimper_verb = h_sounds[rn2(SIZE(h_sounds))];
     else switch (mtmp->data->msound) {
         case MS_MEW:

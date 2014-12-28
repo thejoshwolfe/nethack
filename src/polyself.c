@@ -935,12 +935,12 @@ int dogaze(void) {
                         || mtmp->m_ap_type == M_AP_OBJECT) {
                     looked--;
                     continue;
-                } else if (flags.safe_dog && !Confusion && !Hallucination
+                } else if (flags.safe_dog && !Confusion && !Hallucination()
                   && mtmp->mtame) {
                     You("avoid gazing at %s.", y_monnam(mtmp));
                 } else {
                     if (flags.confirm && mtmp->mpeaceful && !Confusion
-                                                        && !Hallucination) {
+                                                        && !Hallucination()) {
                         sprintf(qbuf, "Really %s %s?",
                             (adtyp == AD_CONF) ? "confuse" : "attack",
                             mon_nam(mtmp));
@@ -1018,9 +1018,7 @@ int dogaze(void) {
         return 1;
 }
 
-int
-dohide (void)
-{
+int dohide (void) {
         bool ismimic = youmonst.data->mlet == S_MIMIC;
 
         if (u.uundetected || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
@@ -1037,54 +1035,48 @@ dohide (void)
         return(1);
 }
 
-int
-domindblast (void)
-{
-        struct monst *mtmp, *nmon;
+int domindblast (void) {
+    struct monst *mtmp, *nmon;
 
-        if (u.uen < 10) {
-            You("concentrate but lack the energy to maintain doing so.");
-            return(0);
+    if (u.uen < 10) {
+        You("concentrate but lack the energy to maintain doing so.");
+        return(0);
+    }
+    u.uen -= 10;
+    flags.botl = 1;
+
+    You("concentrate.");
+    pline("A wave of psychic energy pours out.");
+    for(mtmp=fmon; mtmp; mtmp = nmon) {
+        int u_sen;
+
+        nmon = mtmp->nmon;
+        if (DEADMONSTER(mtmp))
+            continue;
+        if (distu(mtmp->mx, mtmp->my) > BOLT_LIM * BOLT_LIM)
+            continue;
+        if (mtmp->mpeaceful)
+            continue;
+        u_sen = telepathic(mtmp->data) && !mtmp->mcansee;
+        if (u_sen || (telepathic(mtmp->data) && rn2(2)) || !rn2(10)) {
+            You("lock in on %s %s.", s_suffix(mon_nam(mtmp)),
+                    u_sen ? "telepathy" :
+                    telepathic(mtmp->data) ? "latent telepathy" :
+                    "mind");
+            mtmp->mhp -= rnd(15);
+            if (mtmp->mhp <= 0)
+                killed(mtmp);
         }
-        u.uen -= 10;
-        flags.botl = 1;
-
-        You("concentrate.");
-        pline("A wave of psychic energy pours out.");
-        for(mtmp=fmon; mtmp; mtmp = nmon) {
-                int u_sen;
-
-                nmon = mtmp->nmon;
-                if (DEADMONSTER(mtmp))
-                        continue;
-                if (distu(mtmp->mx, mtmp->my) > BOLT_LIM * BOLT_LIM)
-                        continue;
-                if(mtmp->mpeaceful)
-                        continue;
-                u_sen = telepathic(mtmp->data) && !mtmp->mcansee;
-                if (u_sen || (telepathic(mtmp->data) && rn2(2)) || !rn2(10)) {
-                        You("lock in on %s %s.", s_suffix(mon_nam(mtmp)),
-                                u_sen ? "telepathy" :
-                                telepathic(mtmp->data) ? "latent telepathy" :
-                                "mind");
-                        mtmp->mhp -= rnd(15);
-                        if (mtmp->mhp <= 0)
-                                killed(mtmp);
-                }
-        }
-        return 1;
+    }
+    return 1;
 }
 
-static void
-uunstick (void)
-{
+static void uunstick (void) {
         pline("%s is no longer in your clutches.", Monnam(u.ustuck));
         u.ustuck = 0;
 }
 
-void 
-skinback (bool silently)
-{
+void skinback (bool silently) {
         if (uskin) {
                 if (!silently) Your("skin returns to its original form.");
                 uarm = uskin;
@@ -1095,9 +1087,7 @@ skinback (bool silently)
 }
 
 
-const char *
-mbodypart (struct monst *mon, int part)
-{
+const char * mbodypart (struct monst *mon, int part) {
         static const char
         *humanoid_parts[] = { "arm", "eye", "face", "finger",
                 "fingertip", "foot", "hand", "handed", "head", "leg",

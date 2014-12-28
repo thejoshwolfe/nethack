@@ -182,7 +182,7 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                         xkilled(mtmp, 3);
                     } else if (newcham(mtmp, (struct permonst *)0,
                                        (otyp != POT_POLYMORPH), false)) {
-                        if (!Hallucination && canspotmon(mtmp))
+                        if (!Hallucination() && canspotmon(mtmp))
                             makeknown(otyp);
                     }
                 }
@@ -2335,7 +2335,7 @@ zap_updown (
                 case SPE_STONE_TO_FLESH:
                     if (e->engr_type == ENGRAVE) {
                         /* only affects things in stone */
-                        pline_The(Hallucination ?
+                        pline_The(Hallucination() ?
                             "floor runs like butter!" :
                             "edges on the floor get smoother.");
                         wipe_engr_at(x, y, d(2,4));
