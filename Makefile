@@ -34,6 +34,9 @@ CC = clang
 C_FLAGS = -Ibuild -Isrc -g -Wimplicit-function-declaration -Werror
 # TODO: remove this and make all id fields not pointers
 C_FLAGS += -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
+# add extra flags from the command line, such as `EXTRA_C_FLAGS=-ferror-limit=2 make`
+EXTRA_C_FLAGS ?=
+C_FLAGS += $(EXTRA_C_FLAGS)
 COMPILE_C = $(CC) -c -o $@ -MMD -MP -MF $@.d $(C_FLAGS) $<
 
 MAKEDEFS = cd dat && ../build/makedefs
