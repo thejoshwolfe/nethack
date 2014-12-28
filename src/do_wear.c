@@ -1,6 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "extern.h"
+#include "do_name.h"
+#include "dbridge.h"
+#include "objnam.h"
 #include "winprocs.h"
 #include "display.h"
 

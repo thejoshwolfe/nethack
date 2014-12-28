@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "shk.h"
 #include "hack.h"
 #include "eshk.h"
 #include "extern.h"
@@ -127,7 +128,7 @@ static struct monst * next_shkp(struct monst *shkp, bool withbill) {
 }
 
 /* called in do_name.c */
-const char * shkname ( struct monst *mtmp) {
+const char *shkname(const struct monst *mtmp) {
     return(ESHK(mtmp)->shknam);
 }
 

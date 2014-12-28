@@ -1252,63 +1252,6 @@ extern void savefruitchn(int,int);
 extern void free_dungeons(void);
 extern void freedynamicdata(void);
 
-/* ### shk.c ### */
-
-extern char *shkname(struct monst *);
-extern void shkgone(struct monst *);
-extern void set_residency(struct monst *,bool);
-extern void replshk(struct monst *,struct monst *);
-extern void restshk(struct monst *,bool);
-extern char inside_shop(signed char,signed char);
-extern void u_left_shop(char *,bool);
-extern void remote_burglary(signed char,signed char);
-extern void u_entered_shop(char *);
-extern bool same_price(struct obj *,struct obj *);
-extern void shopper_financial_report(void);
-extern int inhishop(struct monst *);
-extern struct monst *shop_keeper(char);
-extern bool tended_shop(struct mkroom *);
-extern void delete_contents(struct obj *);
-extern void obfree(struct obj *,struct obj *);
-extern void home_shk(struct monst *,bool);
-extern void make_happy_shk(struct monst *,bool);
-extern void hot_pursuit(struct monst *);
-extern void make_angry_shk(struct monst *,signed char,signed char);
-extern int dopay(void);
-extern bool paybill(int);
-extern void finish_paybill(void);
-extern struct obj *find_oid(unsigned);
-extern long contained_cost(struct obj *,struct monst *,long,bool, bool);
-extern long contained_gold(struct obj *);
-extern void picked_container(struct obj *);
-extern long unpaid_cost(struct obj *);
-extern void addtobill(struct obj *,bool,bool,bool);
-extern void splitbill(struct obj *,struct obj *);
-extern void subfrombill(struct obj *,struct monst *);
-extern long stolen_value(struct obj *,signed char,signed char,bool,bool);
-extern void sellobj_state(int);
-extern void sellobj(struct obj *,signed char,signed char);
-extern int doinvbill(int);
-extern struct monst *shkcatch(struct obj *,signed char,signed char);
-extern void add_damage(signed char,signed char,long);
-extern int repair_damage(struct monst *,struct damage *,bool);
-extern int shk_move(struct monst *);
-extern void after_shk_move(struct monst *);
-extern bool is_fshk(const struct monst *);
-extern void shopdig(int);
-extern void pay_for_damage(const char *,bool);
-extern bool costly_spot(signed char,signed char);
-extern struct obj *shop_object(signed char,signed char);
-extern void price_quote(struct obj *);
-extern void shk_chat(struct monst *);
-extern void check_unpaid_usage(struct obj *,bool);
-extern void check_unpaid(struct obj *);
-extern void costly_gold(signed char,signed char,long);
-extern bool block_door(signed char,signed char);
-extern bool block_entry(signed char,signed char);
-extern char *shk_your(char *,struct obj *);
-extern char *Shk_Your(char *,struct obj *);
-
 /* ### shknam.c ### */
 
 extern void stock_room(int,struct mkroom *);

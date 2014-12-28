@@ -1,8 +1,12 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "edog.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "shk.h"
+#include "do_name.h"
+#include "dbridge.h"
 #include "display.h"
 
 

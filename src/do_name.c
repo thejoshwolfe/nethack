@@ -4,6 +4,7 @@
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "shk.h"
 #include "priest.h"
 #include "objnam.h"
 #include "winprocs.h"

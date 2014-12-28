@@ -7,6 +7,7 @@
 #include "youprop.h"
 #include "decl.h"
 #include "extern.h"
+#include "shk.h"
 #include "hacklib.h"
 #include "dbridge.h"
 #include "objnam.h"

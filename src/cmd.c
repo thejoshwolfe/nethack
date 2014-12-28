@@ -4,6 +4,7 @@
 #include "func_tab.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "shk.h"
 #include "hacklib.h"
 #include "objnam.h"
 #include "do_name.h"
