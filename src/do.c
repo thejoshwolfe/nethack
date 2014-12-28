@@ -6,6 +6,7 @@
 #include "lev.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "priest.h"
 #include "dbridge.h"
 #include "objnam.h"
 #include "do_name.h"
@@ -23,8 +24,16 @@ static int menu_drop(int);
 static int currentlevel_rewrite(void);
 static void final_level(void);
 
+/* on a ladder, used in goto_level */
+static bool at_ladder = false;
 
 static const char drop_types[] = { ALLOW_COUNT, COIN_CLASS, ALL_CLASSES, 0 };
+
+d_level save_dlevel = {0, 0};
+
+static char *dfr_pre_msg = 0,   /* plines() before level change */
+            *dfr_post_msg = 0;  /* plines() after level change */
+
 
 /* 'd' command: drop one inventory item */
 int dodrop (void) {
@@ -112,9 +121,7 @@ bool boulder_hits_pool(struct obj *otmp, int rx, int ry, bool pushing) {
  * called with the object not in any chain.  Returns true if the object goes
  * away.
  */
-bool 
-flooreffects (struct obj *obj, int x, int y, const char *verb)
-{
+bool flooreffects (struct obj *obj, int x, int y, const char *verb) {
         struct trap *t;
         struct monst *mtmp;
 
@@ -127,14 +134,16 @@ flooreffects (struct obj *obj, int x, int y, const char *verb)
         if (obj->otyp == BOULDER && boulder_hits_pool(obj, x, y, false))
                 return true;
         else if (obj->otyp == BOULDER && (t = t_at(x,y)) != 0 &&
-                 (t->ttyp==PIT || t->ttyp==SPIKED_PIT
-                        || t->ttyp==TRAPDOOR || t->ttyp==HOLE)) {
+                 (t->ttyp==PIT || t->ttyp==SPIKED_PIT || t->ttyp==TRAPDOOR || t->ttyp==HOLE))
+        {
                 if (((mtmp = m_at(x, y)) && mtmp->mtrapped) ||
                         (u.utrap && u.ux == x && u.uy == y)) {
-                    if (*verb)
-                        pline_The("boulder %s into the pit%s.",
-                                vtense((const char *)0, verb),
-                                (mtmp) ? "" : " with you");
+                    if (*verb) {
+                        const char *withyou = (mtmp) ? "" : " with you";
+                        char action[BUFSZ];
+                        vtense(action, BUFSZ, NULL, verb);
+                        pline_The("boulder %s into the pit%s.", action, withyou);
+                    }
                     if (mtmp) {
                         if (!passes_walls(mtmp->data) &&
                                 !throws_rocks(mtmp->data)) {
@@ -675,25 +684,23 @@ menu_drop (int retry)
     return n_dropped;
 }
 
+int dodown (void) {
+    struct trap *trap = 0;
+    bool stairs_down = ((u.ux == xdnstair && u.uy == ydnstair) ||
+            (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up)),
+         ladder_down = (u.ux == xdnladder && u.uy == ydnladder);
 
-/* on a ladder, used in goto_level */
-static bool at_ladder = false;
-
-int
-dodown (void)
-{
-        struct trap *trap = 0;
-        bool stairs_down = ((u.ux == xdnstair && u.uy == ydnstair) ||
-                    (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up)),
-                ladder_down = (u.ux == xdnladder && u.uy == ydnladder);
-
-        if (u.usteed && !u.usteed->mcanmove) {
-                pline("%s won't move!", Monnam(u.usteed));
-                return(0);
-        } else if (u.usteed && u.usteed->meating) {
-                pline("%s is still eating.", Monnam(u.usteed));
-                return(0);
-        } else
+    if (u.usteed && !u.usteed->mcanmove) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, u.usteed);
+        pline("%s won't move!", name);
+        return(0);
+    } else if (u.usteed && u.usteed->meating) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, u.usteed);
+        pline("%s is still eating.", name);
+        return(0);
+    } else
         if (Levitation) {
             if ((HLevitation & I_SPECIAL) || (ELevitation & W_ARTI)) {
                 /* end controlled levitation */
@@ -702,7 +709,7 @@ dodown (void)
 
                     for(obj = invent; obj; obj = obj->nobj) {
                         if (obj->oartifact &&
-                                        artifact_has_invprop(obj,LEVITATION)) {
+                                artifact_has_invprop(obj,LEVITATION)) {
                             if (obj->age < monstermoves)
                                 obj->age = monstermoves + rnz(100);
                             else
@@ -714,107 +721,105 @@ dodown (void)
                     return (1);   /* came down, so moved */
             }
             floating_above(stairs_down ? "stairs" : ladder_down ?
-                           "ladder" : surface(u.ux, u.uy));
+                    "ladder" : surface(u.ux, u.uy));
             return (0);   /* didn't move */
         }
-        if (!stairs_down && !ladder_down) {
-                if (!(trap = t_at(u.ux,u.uy)) ||
-                        (trap->ttyp != TRAPDOOR && trap->ttyp != HOLE)
-                        || !Can_fall_thru(&u.uz) || !trap->tseen) {
+    if (!stairs_down && !ladder_down) {
+        if (!(trap = t_at(u.ux,u.uy)) ||
+                (trap->ttyp != TRAPDOOR && trap->ttyp != HOLE)
+                || !Can_fall_thru(&u.uz) || !trap->tseen) {
 
-                        if (flags.autodig && !flags.nopick &&
-                                uwep && is_pick(uwep)) {
-                                return use_pick_axe2(uwep);
-                        } else {
-                                You_cant("go down here.");
-                                return(0);
-                        }
-                }
-        }
-        if(u.ustuck) {
-                You("are %s, and cannot go down.",
-                        !u.uswallow ? "being held" : is_animal(u.ustuck->data) ?
-                        "swallowed" : "engulfed");
-                return(1);
-        }
-        if (on_level(&valley_level, &u.uz) && !u.uevent.gehennom_entered) {
-                You("are standing at the gate to Gehennom.");
-                pline("Unspeakable cruelty and harm lurk down there.");
-                if (yn("Are you sure you want to enter?") != 'y')
-                        return(0);
-                else pline("So be it.");
-                u.uevent.gehennom_entered = 1;  /* don't ask again */
-        }
-
-        if(!next_to_u()) {
-                You("are held back by your pet!");
+            if (flags.autodig && !flags.nopick &&
+                    uwep && is_pick(uwep)) {
+                return use_pick_axe2(uwep);
+            } else {
+                You_cant("go down here.");
                 return(0);
+            }
         }
+    }
+    if(u.ustuck) {
+        You("are %s, and cannot go down.",
+                !u.uswallow ? "being held" : is_animal(u.ustuck->data) ?
+                "swallowed" : "engulfed");
+        return(1);
+    }
+    if (on_level(&valley_level, &u.uz) && !u.uevent.gehennom_entered) {
+        You("are standing at the gate to Gehennom.");
+        pline("Unspeakable cruelty and harm lurk down there.");
+        if (yn("Are you sure you want to enter?") != 'y')
+            return(0);
+        else pline("So be it.");
+        u.uevent.gehennom_entered = 1;  /* don't ask again */
+    }
 
-        if (trap)
-            You("%s %s.", locomotion(youmonst.data, "jump"),
+    if(!next_to_u()) {
+        You("are held back by your pet!");
+        return(0);
+    }
+
+    if (trap)
+        You("%s %s.", locomotion(youmonst.data, "jump"),
                 trap->ttyp == HOLE ? "down the hole" : "through the trap door");
 
-        if (trap && Is_stronghold(&u.uz)) {
-                goto_hell(false, true);
-        } else {
-                at_ladder = (bool) (levl[u.ux][u.uy].typ == LADDER);
-                next_level(!trap);
-                at_ladder = false;
-        }
-        return(1);
-}
-
-int
-doup (void)
-{
-        if( (u.ux != xupstair || u.uy != yupstair)
-             && (!xupladder || u.ux != xupladder || u.uy != yupladder)
-             && (!sstairs.sx || u.ux != sstairs.sx || u.uy != sstairs.sy
-                        || !sstairs.up)
-          ) {
-                You_cant("go up here.");
-                return(0);
-        }
-        if (u.usteed && !u.usteed->mcanmove) {
-                pline("%s won't move!", Monnam(u.usteed));
-                return(0);
-        } else if (u.usteed && u.usteed->meating) {
-                pline("%s is still eating.", Monnam(u.usteed));
-                return(0);
-        } else
-        if(u.ustuck) {
-                You("are %s, and cannot go up.",
-                        !u.uswallow ? "being held" : is_animal(u.ustuck->data) ?
-                        "swallowed" : "engulfed");
-                return(1);
-        }
-        if(near_capacity() > SLT_ENCUMBER) {
-                /* No levitation check; inv_weight() already allows for it */
-                Your("load is too heavy to climb the %s.",
-                        levl[u.ux][u.uy].typ == STAIRS ? "stairs" : "ladder");
-                return(1);
-        }
-        if(ledger_no(&u.uz) == 1) {
-                if (yn("Beware, there will be no return! Still climb?") != 'y')
-                        return(0);
-        }
-        if(!next_to_u()) {
-                You("are held back by your pet!");
-                return(0);
-        }
+    if (trap && Is_stronghold(&u.uz)) {
+        goto_hell(false, true);
+    } else {
         at_ladder = (bool) (levl[u.ux][u.uy].typ == LADDER);
-        prev_level(true);
+        next_level(!trap);
         at_ladder = false;
-        return(1);
+    }
+    return(1);
 }
 
-d_level save_dlevel = {0, 0};
+int doup (void) {
+    if( (u.ux != xupstair || u.uy != yupstair)
+            && (!xupladder || u.ux != xupladder || u.uy != yupladder)
+            && (!sstairs.sx || u.ux != sstairs.sx || u.uy != sstairs.sy
+                || !sstairs.up))
+    {
+        You_cant("go up here.");
+        return(0);
+    }
+    if (u.usteed && !u.usteed->mcanmove) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, u.usteed);
+        pline("%s won't move!", name);
+        return(0);
+    } else if (u.usteed && u.usteed->meating) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, u.usteed);
+        pline("%s is still eating.", name);
+        return(0);
+    } else
+        if(u.ustuck) {
+            You("are %s, and cannot go up.",
+                    !u.uswallow ? "being held" : is_animal(u.ustuck->data) ?
+                    "swallowed" : "engulfed");
+            return(1);
+        }
+    if(near_capacity() > SLT_ENCUMBER) {
+        /* No levitation check; inv_weight() already allows for it */
+        Your("load is too heavy to climb the %s.",
+                levl[u.ux][u.uy].typ == STAIRS ? "stairs" : "ladder");
+        return(1);
+    }
+    if(ledger_no(&u.uz) == 1) {
+        if (yn("Beware, there will be no return! Still climb?") != 'y')
+            return(0);
+    }
+    if(!next_to_u()) {
+        You("are held back by your pet!");
+        return(0);
+    }
+    at_ladder = (bool) (levl[u.ux][u.uy].typ == LADDER);
+    prev_level(true);
+    at_ladder = false;
+    return(1);
+}
 
 /* check that we can write out the current level */
-static int
-currentlevel_rewrite (void)
-{
+static int currentlevel_rewrite (void) {
         int fd;
         char whynot[BUFSZ];
 
@@ -838,9 +843,7 @@ currentlevel_rewrite (void)
         return fd;
 }
 
-void
-save_currentstate (void)
-{
+void save_currentstate (void) {
         int fd;
 
         if (flags.ins_chkpt) {
@@ -1241,9 +1244,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
         (void) pickup(1);
 }
 
-static void
-final_level (void)
-{
+static void final_level (void) {
         struct monst *mtmp;
         struct obj *otmp;
         coord mm;
@@ -1305,9 +1306,6 @@ final_level (void)
         }
 }
 
-static char *dfr_pre_msg = 0,   /* plines() before level change */
-            *dfr_post_msg = 0;  /* plines() after level change */
-
 /* change levels at the end of this turn, after monsters finish moving */
 void schedule_goto(d_level *tolev, bool at_stairs, bool falling,
         int portal_flag, const char *pre_msg, const char *post_msg)
@@ -1355,7 +1353,6 @@ void deferred_goto (void) {
             free((void *)dfr_post_msg),  dfr_post_msg = 0;
 }
 
-
 /*
  * Return true if we created a monster for the corpse.  If successful, the
  * corpse is gone.
@@ -1395,9 +1392,15 @@ bool revive_corpse(struct obj *corpse) {
                 break;
 
             case OBJ_FLOOR:
-                if (cansee(mtmp->mx, mtmp->my))
-                    pline("%s rises from the dead!", chewed ?
-                          Adjmonnam(mtmp, "bite-covered") : Monnam(mtmp));
+                if (cansee(mtmp->mx, mtmp->my)) {
+                    char name[BUFSZ];
+                    if (chewed) {
+                        Adjmonnam(name, BUFSZ, mtmp, "bite-covered");
+                    } else {
+                        Monnam(name, BUFSZ, mtmp);
+                    }
+                    pline("%s rises from the dead!", name);
+                }
                 break;
 
             case OBJ_MINVENT:           /* probably a nymph's */
@@ -1407,8 +1410,13 @@ bool revive_corpse(struct obj *corpse) {
                         mon_nam(name, BUFSZ, mcarry);
                         pline("Startled, %s drops %s as it revives!", name, an(cname));
                     } else {
-                        pline("%s suddenly appears!", chewed ?
-                              Adjmonnam(mtmp, "bite-covered") : Monnam(mtmp));
+                        char name[BUFSZ];
+                        if (chewed) {
+                            Adjmonnam(name, BUFSZ, mtmp, "bite-covered");
+                        } else {
+                            Monnam(name, BUFSZ, mtmp);
+                        }
+                        pline("%s suddenly appears!", name);
                     }
                 }
                 break;
@@ -1416,22 +1424,33 @@ bool revive_corpse(struct obj *corpse) {
                 if (container_where == OBJ_MINVENT && cansee(mtmp->mx, mtmp->my) &&
                     mcarry && canseemon(mcarry) && container)
                 {
+                    char subject[BUFSZ];
+                    Amonnam(subject, BUFSZ, mtmp);
                     char name[BUFSZ];
                     mon_nam(name, BUFSZ, mcarry);
-                    pline("%s writhes out of %s%s %s!", Amonnam(mtmp),
+                    pline("%s writhes out of %s%s %s!", subject,
                             name, possessive_suffix(name), xname(container));
                 } else if (container_where == OBJ_INVENT && container) {
                         char sackname[BUFSZ];
-                        strcpy(sackname, an(xname(container)));
-                        pline("%s %s out of %s in your pack!",
-                                Blind ? Something : Amonnam(mtmp),
-                                locomotion(mtmp->data,"writhes"),
-                                sackname);
+                        nh_strlcpy(sackname, an(xname(container)), BUFSZ);
+                        const char *subject;
+                        if (Blind) {
+                            subject = Something;
+                        } else {
+                            char name[BUFSZ];
+                            Amonnam(name, BUFSZ, mtmp);
+                            subject = name;
+                        }
+                        pline("%s %s out of %s in your pack!", subject,
+                                locomotion(mtmp->data,"writhes"), sackname);
                 } else if (container_where == OBJ_FLOOR && container &&
-                            cansee(mtmp->mx, mtmp->my)) {
+                            cansee(mtmp->mx, mtmp->my))
+                {
                         char sackname[BUFSZ];
-                        strcpy(sackname, an(xname(container)));
-                        pline("%s escapes from %s!", Amonnam(mtmp), sackname);
+                        nh_strlcpy(sackname, an(xname(container)), BUFSZ);
+                        char name[BUFSZ];
+                        Amonnam(name, BUFSZ, mtmp);
+                        pline("%s escapes from %s!", name, sackname);
                 }
                 break;
             default:
@@ -1445,31 +1464,23 @@ bool revive_corpse(struct obj *corpse) {
 }
 
 /* Revive the corpse via a timeout. */
-/*ARGSUSED*/
-void
-revive_mon (void *arg, long timeout)
-{
+void revive_mon(void *arg, long timeout) {
     struct obj *body = (struct obj *) arg;
 
-    /* if we succeed, the corpse is gone, otherwise, rot it away */
+    // if we succeed, the corpse is gone, otherwise, rot it away
     if (!revive_corpse(body)) {
         if (is_rider(&mons[body->corpsenm]))
             You_feel("less hassled.");
-        (void) start_timer(250L - (monstermoves-body->age),
-                                        TIMER_OBJECT, ROT_CORPSE, arg);
+        start_timer(250L - (monstermoves-body->age), TIMER_OBJECT, ROT_CORPSE, arg);
     }
 }
 
-int
-donull (void)
-{
-        return(1);      /* Do nothing, but let other things happen */
+int donull (void) {
+    return(1);      /* Do nothing, but let other things happen */
 }
 
 
-static int
-wipeoff (void)
-{
+static int wipeoff (void) {
         if(u.ucreamed < 4)      u.ucreamed = 0;
         else                    u.ucreamed -= 4;
         if (Blinded < 4)        Blinded = 0;
@@ -1487,9 +1498,7 @@ wipeoff (void)
         return(1);              /* still busy */
 }
 
-int
-dowipe (void)
-{
+int dowipe (void) {
         if(u.ucreamed)  {
                 static char buf[39];
 
@@ -1504,9 +1513,7 @@ dowipe (void)
         return(1);
 }
 
-void
-set_wounded_legs (long side, int timex)
-{
+void set_wounded_legs (long side, int timex) {
         /* KMH -- STEED
          * If you are riding, your steed gets the wounded legs instead.
          * You still call this function, but don't lose hp.
@@ -1524,9 +1531,7 @@ set_wounded_legs (long side, int timex)
         (void)encumber_msg();
 }
 
-void
-heal_legs (void)
-{
+void heal_legs (void) {
         if(Wounded_legs) {
                 if (ATEMP(A_DEX) < 0) {
                         ATEMP(A_DEX)++;
@@ -1548,6 +1553,3 @@ heal_legs (void)
         }
         (void)encumber_msg();
 }
-
-
-/*do.c*/

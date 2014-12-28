@@ -1771,9 +1771,7 @@ align_gname (aligntyp alignment)
 
 /* hallucination handling for priest/minion names: select a random god
    iff character is hallucinating */
-const char *
-halu_gname (aligntyp alignment)
-{
+const char * halu_gname (aligntyp alignment) {
     const char *gnam;
     int which;
 

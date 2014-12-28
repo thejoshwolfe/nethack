@@ -1111,26 +1111,6 @@ extern const char *align_gtitle(aligntyp);
 extern void altar_wrath(int,int);
 
 
-/* ### priest.c ### */
-
-extern int move_special(struct monst *,bool,signed char,bool,bool,
-        signed char,signed char,signed char,signed char);
-extern char temple_occupied(char *);
-extern int pri_move(struct monst *);
-extern void priestini(d_level *,struct mkroom *,int,int,bool);
-extern char *priestname(struct monst *,char *);
-extern bool p_coaligned(struct monst *);
-extern struct monst *findpriest(char);
-extern void intemple(int);
-extern void priest_talk(struct monst *);
-extern struct monst *mk_roamer(struct permonst *,aligntyp, signed char,signed char,bool);
-extern void reset_hostility(struct monst *);
-extern bool in_your_sanctuary(struct monst *,signed char,signed char);
-extern void ghod_hitsu(struct monst *);
-extern void angry_priest(void);
-extern void clearpriests(void);
-extern void restpriest(struct monst *,bool);
-
 /* ### quest.c ### */
 
 extern void onquest(void);

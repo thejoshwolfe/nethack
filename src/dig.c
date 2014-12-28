@@ -3,6 +3,7 @@
 #include "hack.h"
 #include "edog.h"
 #include "extern.h"
+#include "priest.h"
 #include "dbridge.h"
 #include "objnam.h"
 #include "do_name.h"
@@ -515,10 +516,13 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
             if(madeby_u) {
                 You("dig a pit in the %s.", surface_type);
                 if (shopdoor) pay_for_damage("ruin", false);
-            } else if (!madeby_obj && canseemon(madeby))
-                pline("%s digs a pit in the %s.", Monnam(madeby), surface_type);
-            else if (cansee(x, y) && flags.verbose)
+            } else if (!madeby_obj && canseemon(madeby)) {
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, madeby);
+                pline("%s digs a pit in the %s.", name, surface_type);
+            } else if (cansee(x, y) && flags.verbose) {
                 pline("A pit appears in the %s.", surface_type);
+            }
 
             if(at_u) {
                 if (!wont_fall) {
@@ -532,22 +536,26 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
                         (void) pickup(1);       /* detects pit */
             } else if(mtmp) {
                 if(is_flyer(mtmp->data) || is_floater(mtmp->data)) {
-                    if(canseemon(mtmp))
-                        pline("%s %s over the pit.", Monnam(mtmp),
-                                                     (is_flyer(mtmp->data)) ?
-                                                     "flies" : "floats");
-                } else if(mtmp != madeby)
-                    (void) mintrap(mtmp);
+                    if(canseemon(mtmp)) {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mtmp);
+                        const char *verb = (is_flyer(mtmp->data)) ?  "flies" : "floats";
+                        pline("%s %s over the pit.", name, verb);
+                    }
+                } else if(mtmp != madeby) {
+                    mintrap(mtmp);
+                }
             }
         } else {        /* was TRAPDOOR now a HOLE*/
-
-            if(madeby_u)
+            if (madeby_u) {
                 You("dig a hole through the %s.", surface_type);
-            else if(!madeby_obj && canseemon(madeby))
-                pline("%s digs a hole through the %s.",
-                      Monnam(madeby), surface_type);
-            else if(cansee(x, y) && flags.verbose)
+            } else if(!madeby_obj && canseemon(madeby)) {
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, madeby);
+                pline("%s digs a hole through the %s.", name, surface_type);
+            } else if(cansee(x, y) && flags.verbose) {
                 pline("A hole appears in the %s.", surface_type);
+            }
 
             if (at_u) {
                 if (!u.ustuck && !wont_fall && !next_to_u()) {
@@ -603,8 +611,11 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
                         if (Is_stronghold(&u.uz)) {
                             assign_level(&tolevel, &valley_level);
                         } else if (Is_botlevel(&u.uz)) {
-                            if (canseemon(mtmp))
-                                pline("%s avoids the trap.", Monnam(mtmp));
+                            if (canseemon(mtmp)) {
+                                char name[BUFSZ];
+                                Monnam(name, BUFSZ, mtmp);
+                                pline("%s avoids the trap.", name);
+                            }
                             return;
                         } else {
                             get_level(&tolevel, depth(&u.uz) + 1);

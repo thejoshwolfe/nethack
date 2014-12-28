@@ -4,6 +4,7 @@
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "priest.h"
 #include "objnam.h"
 #include "winprocs.h"
 #include "display.h"
@@ -296,7 +297,6 @@ struct monst * christen_monst (struct monst *mtmp, const char *name) {
 }
 
 int do_mname (void) {
-    char buf[BUFSZ];
     coord cc;
     int cx,cy;
     struct monst *mtmp;
@@ -336,18 +336,22 @@ int do_mname (void) {
         return(0);
     }
     /* special case similar to the one in lookat() */
-    (void) distant_monnam(mtmp, ARTICLE_THE, buf);
+    char buf[BUFSZ];
+    distant_monnam(buf, BUFSZ, mtmp, ARTICLE_THE);
     sprintf(qbuf, "What do you want to call %s?", buf);
     getlin(qbuf,buf);
     if(!*buf || *buf == '\033') return(0);
     /* strip leading and trailing spaces; unnames monster if all spaces */
-    (void)mungspaces(buf);
+    mungspaces(buf);
 
-    if (mtmp->data->geno & G_UNIQ)
-        pline("%s doesn't like being called names!", Monnam(mtmp));
-    else
-        (void) christen_monst(mtmp, buf);
-    return(0);
+    if (mtmp->data->geno & G_UNIQ) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, mtmp);
+        pline("%s doesn't like being called names!", name);
+    } else {
+        christen_monst(mtmp, buf);
+    }
+    return 0;
 }
 
 /*
@@ -632,16 +636,10 @@ size_t x_monnam(char *out_buf, int buf_size, const struct monst *mtmp, int artic
 
     /* priests and minions: don't even use this function */
     if (mtmp->ispriest || mtmp->isminion) {
-        long save_prop = u.uprops[HALLUC_RES].extrinsic;
-        unsigned save_invis = mtmp->minvis;
+        char buf[BUFSZ];
+        char *name = buf;
+        priestname(name, BUFSZ, mtmp, true);
 
-        /* when true name is wanted, explicitly block Hallucination() */
-        if (!do_hallu) u.uprops[HALLUC_RES].extrinsic = 1L;
-        if (!do_invis) mtmp->minvis = 0;
-        char priestnambuf[BUFSZ];
-        const char *name = priestname(mtmp, priestnambuf);
-        u.uprops[HALLUC_RES].extrinsic = save_prop;
-        mtmp->minvis = save_invis;
         if (article == ARTICLE_NONE && !strncmp(name, "the ", 4))
             name += 4;
         return nh_strlcpy(out_buf, name, buf_size);

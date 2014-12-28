@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "priest.h"
 #include "hack.h"
 #include "mfndpos.h"
 #include "eshk.h"
@@ -18,8 +20,9 @@ static bool has_shrine(struct monst *);
  * Move for priests and shopkeepers.  Called from shk_move() and pri_move().
  * Valid returns are  1: moved  0: didn't  -1: let m_move do it  -2: died.
  */
-int 
-move_special (struct monst *mtmp, bool in_his_shop, signed char appr, bool uondoor, bool avoid, signed char omx, signed char omy, signed char gx, signed char gy)
+int move_special (struct monst *mtmp, bool in_his_shop, signed char appr,
+        bool uondoor, bool avoid, signed char omx, signed char omy,
+        signed char gx, signed char gy)
 {
         signed char nx,ny,nix,niy;
         signed char i;
@@ -102,11 +105,7 @@ pick_move:
         return(0);
 }
 
-
-
-char
-temple_occupied (char *array)
-{
+char temple_occupied (char *array) {
         char *ptr;
 
         for (ptr = array; *ptr; ptr++)
@@ -114,7 +113,6 @@ temple_occupied (char *array)
                         return(*ptr);
         return('\0');
 }
-
 
 static bool histemple_at(struct monst *priest, signed char x, signed char y) {
         return((bool)((EPRI(priest)->shroom == *in_rooms(x, y, TEMPLE)) &&
@@ -124,9 +122,7 @@ static bool histemple_at(struct monst *priest, signed char x, signed char y) {
 /*
  * pri_move: return 1: moved  0: didn't  -1: let m_move do it  -2: died
  */
-int
-pri_move (struct monst *priest)
-{
+int pri_move (struct monst *priest) {
         signed char gx,gy,omx,omy;
         signed char temple;
         bool avoid = true;
@@ -166,15 +162,8 @@ pri_move (struct monst *priest)
 }
 
 /* exclusively for mktemple() */
-void 
-priestini (
-    d_level *lvl,
-    struct mkroom *sroom,
-    int sx,
-    int sy,
-    bool sanctum   /* is it the seat of the high priest? */
-)
-{
+// bool sanctum   /* is it the seat of the high priest? */
+void priestini ( d_level *lvl, struct mkroom *sroom, int sx, int sy, bool sanctum) {
         struct monst *priest;
         struct obj *otmp;
         int cnt;
@@ -224,55 +213,69 @@ priestini (
  *              (coaligned Angels are also created as minions, but they
  *              use the same naming convention)
  *      - minions do not have ispriest but have isminion and emin
- *      - caller needs to inhibit Hallucination() if it wants to force
- *              the true name even when under that influence
  */
-// char *pname         /* caller-supplied output buffer */
-char * priestname ( struct monst *mon, char *pname) {
-    const char *what = Hallucination() ? rndmonnam() : mon->data->mname;
+size_t priestname(char *out_buf, size_t buf_size, const struct monst *mon,
+        bool block_invis_and_halluc)
+{
+    const char *what = (Hallucination() && !block_invis_and_halluc) ?
+        rndmonnam() : mon->data->mname;
+    const char *invisible = (mon->minvis && !block_invis_and_halluc) ?
+        "invisible " : "";
 
-    strcpy(pname, "the ");
-    if (mon->minvis) strcat(pname, "invisible ");
     if (mon->ispriest || mon->data == &mons[PM_ALIGNED_PRIEST] ||
-            mon->data == &mons[PM_ANGEL]) {
-        /* use epri */
-        if (mon->mtame && mon->data == &mons[PM_ANGEL])
-            strcat(pname, "guardian ");
+            mon->data == &mons[PM_ANGEL])
+    {
+        // use epri
+        const char *guardian = (mon->mtame && mon->data == &mons[PM_ANGEL]) ?
+            "guardian " : "";
+
+        const char *what_subject = "";
+        const char *what_subject_space = "";
         if (mon->data != &mons[PM_ALIGNED_PRIEST] &&
-                mon->data != &mons[PM_HIGH_PRIEST]) {
-            strcat(pname, what);
-            strcat(pname, " ");
+                mon->data != &mons[PM_HIGH_PRIEST])
+        {
+            what_subject = what;
+            what_subject_space = " ";
         }
+
+        const char *renegade = "";
+        const char *high = "";
+        const char *generic_subject = "";
         if (mon->data != &mons[PM_ANGEL]) {
             if (!mon->ispriest && EPRI(mon)->renegade)
-                strcat(pname, "renegade ");
+                renegade = "renegade ";
+
             if (mon->data == &mons[PM_HIGH_PRIEST])
-                strcat(pname, "high ");
-            if (Hallucination())
-                strcat(pname, "poohbah ");
+                high = "high ";
+
+            if (Hallucination() && !block_invis_and_halluc)
+                generic_subject = "poohbah ";
             else if (mon->female)
-                strcat(pname, "priestess ");
+                generic_subject = "priestess ";
             else
-                strcat(pname, "priest ");
+                generic_subject = "priest ";
         }
-        strcat(pname, "of ");
-        strcat(pname, halu_gname((int)EPRI(mon)->shralign));
-        return(pname);
+
+
+        aligntyp alignment = EPRI(mon)->shralign;
+        const char *god_name = block_invis_and_halluc ?
+            align_gname(alignment) : halu_gname(alignment);
+        return nh_slprintf(out_buf, buf_size, "the %s%s%s%s%s%s%sof %s", invisible, guardian,
+                what_subject, what_subject_space, renegade, high, generic_subject god_name);
+    } else {
+        // use emin instead of epri
+        aligntyp alignment = EMIN(mon)->min_align;
+        const char *god_name = block_invis_and_halluc ?
+            align_gname(alignment) : halu_gname(alignment);
+        return nh_slprintf(out_buf, buf_size, "the %s%s of %s", invisible, what, god_name);
     }
-    /* use emin instead of epri */
-    strcat(pname, what);
-    strcat(pname, " of ");
-    strcat(pname, halu_gname(EMIN(mon)->min_align));
-    return(pname);
 }
 
 bool p_coaligned (struct monst *priest) {
     return((bool)(u.ualign.type == ((int)EPRI(priest)->shralign)));
 }
 
-static bool 
-has_shrine (struct monst *pri)
-{
+static bool has_shrine (struct monst *pri) {
         struct rm *lev;
 
         if(!pri)
