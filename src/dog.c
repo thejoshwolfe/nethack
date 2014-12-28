@@ -4,6 +4,7 @@
 #include "edog.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "objnam.h"
 #include "shk.h"
 #include "do_name.h"
 #include "dbridge.h"
@@ -440,103 +441,111 @@ void mon_catchup_elapsed_time (struct monst *mtmp, long nmv) {
 }
 
 
-/* called when you move to another level */
-/* true for ascension or final escape */
+// called when you move to another level
+// true for ascension or final escape
 void keepdogs(bool pets_only) {
-        struct monst *mtmp, *mtmp2;
-        struct obj *obj;
-        int num_segs;
-        bool stay_behind;
+    struct monst *mtmp, *mtmp2;
+    struct obj *obj;
+    int num_segs;
+    bool stay_behind;
 
-        for (mtmp = fmon; mtmp; mtmp = mtmp2) {
-            mtmp2 = mtmp->nmon;
-            if (DEADMONSTER(mtmp)) continue;
-            if (pets_only && !mtmp->mtame) continue;
-            if (((monnear(mtmp, u.ux, u.uy) && levl_follower(mtmp)) ||
-                        (mtmp == u.usteed) ||
-                /* the wiz will level t-port from anywhere to chase
-                   the amulet; if you don't have it, will chase you
-                   only if in range. -3. */
-                        (u.uhave.amulet && mtmp->iswiz))
+    for (mtmp = fmon; mtmp; mtmp = mtmp2) {
+        mtmp2 = mtmp->nmon;
+        if (DEADMONSTER(mtmp)) continue;
+        if (pets_only && !mtmp->mtame) continue;
+        if (((monnear(mtmp, u.ux, u.uy) && levl_follower(mtmp)) ||
+                    (mtmp == u.usteed) ||
+                    /* the wiz will level t-port from anywhere to chase
+                       the amulet; if you don't have it, will chase you
+                       only if in range. -3. */
+                    (u.uhave.amulet && mtmp->iswiz))
                 && ((!mtmp->msleeping && mtmp->mcanmove)
                     /* eg if level teleport or new trap, steed has no control
                        to avoid following */
                     || (mtmp == u.usteed)
-                    )
+                   )
                 /* monster won't follow if it hasn't noticed you yet */
                 && !(mtmp->mstrategy & STRAT_WAITFORU)) {
-                stay_behind = false;
-                if (mtmp->mtame && mtmp->meating) {
-                        if (canseemon(mtmp))
-                            pline("%s is still eating.", Monnam(mtmp));
-                        stay_behind = true;
-                } else if (mon_has_amulet(mtmp)) {
-                        if (canseemon(mtmp))
-                            pline("%s seems very disoriented for a moment.",
-                                Monnam(mtmp));
-                        stay_behind = true;
-                } else if (mtmp->mtame && mtmp->mtrapped) {
-                        if (canseemon(mtmp))
-                            pline("%s is still trapped.", Monnam(mtmp));
-                        stay_behind = true;
+            stay_behind = false;
+            if (mtmp->mtame && mtmp->meating) {
+                if (canseemon(mtmp)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s is still eating.", name);
                 }
-                if (mtmp == u.usteed) stay_behind = false;
-                if (stay_behind) {
-                        if (mtmp->mleashed) {
-                                pline("%s leash suddenly comes loose.",
-                                        humanoid(mtmp->data)
-                                            ? (mtmp->female ? "Her" : "His")
-                                            : "Its");
-                                m_unleash(mtmp, false);
-                        }
-                        continue;
+                stay_behind = true;
+            } else if (mon_has_amulet(mtmp)) {
+                if (canseemon(mtmp)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s seems very disoriented for a moment.", name);
                 }
-                if (mtmp->isshk)
-                        set_residency(mtmp, true);
-
-                if (mtmp->wormno) {
-                    int cnt;
-                    /* NOTE: worm is truncated to # segs = max wormno size */
-                    cnt = count_wsegs(mtmp);
-                    num_segs = min(cnt, MAX_NUM_WORMS - 1);
-                    wormgone(mtmp);
-                } else num_segs = 0;
-
-                /* set minvent's obj->no_charge to 0 */
-                for(obj = mtmp->minvent; obj; obj = obj->nobj) {
-                    if (Has_contents(obj))
-                        picked_container(obj);  /* does the right thing */
-                    obj->no_charge = 0;
+                stay_behind = true;
+            } else if (mtmp->mtame && mtmp->mtrapped) {
+                if (canseemon(mtmp)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s is still trapped.", name);
                 }
-
-                relmon(mtmp);
-                newsym(mtmp->mx,mtmp->my);
-                mtmp->mx = mtmp->my = 0; /* avoid mnexto()/MON_AT() problem */
-                mtmp->wormno = num_segs;
-                mtmp->mlstmv = monstermoves;
-                mtmp->nmon = mydogs;
-                mydogs = mtmp;
-            } else if (mtmp->iswiz) {
-                /* we want to be able to find him when his next resurrection
-                   chance comes up, but have him resume his present location
-                   if player returns to this level before that time */
-                migrate_to_level(mtmp, ledger_no(&u.uz),
-                                 MIGR_EXACT_XY, (coord *)0);
-            } else if (mtmp->mleashed) {
-                /* this can happen if your quest leader ejects you from the
-                   "home" level while a leashed pet isn't next to you */
-                pline("%s leash goes slack.", s_suffix(Monnam(mtmp)));
-                m_unleash(mtmp, false);
+                stay_behind = true;
             }
+            if (mtmp == u.usteed) stay_behind = false;
+            if (stay_behind) {
+                if (mtmp->mleashed) {
+                    pline("%s leash suddenly comes loose.",
+                            humanoid(mtmp->data)
+                            ? (mtmp->female ? "Her" : "His")
+                            : "Its");
+                    m_unleash(mtmp, false);
+                }
+                continue;
+            }
+            if (mtmp->isshk)
+                set_residency(mtmp, true);
+
+            if (mtmp->wormno) {
+                int cnt;
+                /* NOTE: worm is truncated to # segs = max wormno size */
+                cnt = count_wsegs(mtmp);
+                num_segs = min(cnt, MAX_NUM_WORMS - 1);
+                wormgone(mtmp);
+            } else num_segs = 0;
+
+            /* set minvent's obj->no_charge to 0 */
+            for(obj = mtmp->minvent; obj; obj = obj->nobj) {
+                if (Has_contents(obj))
+                    picked_container(obj);  /* does the right thing */
+                obj->no_charge = 0;
+            }
+
+            relmon(mtmp);
+            newsym(mtmp->mx,mtmp->my);
+            mtmp->mx = mtmp->my = 0; /* avoid mnexto()/MON_AT() problem */
+            mtmp->wormno = num_segs;
+            mtmp->mlstmv = monstermoves;
+            mtmp->nmon = mydogs;
+            mydogs = mtmp;
+        } else if (mtmp->iswiz) {
+            /* we want to be able to find him when his next resurrection
+               chance comes up, but have him resume his present location
+               if player returns to this level before that time */
+            migrate_to_level(mtmp, ledger_no(&u.uz), MIGR_EXACT_XY, NULL);
+        } else if (mtmp->mleashed) {
+            /* this can happen if your quest leader ejects you from the
+               "home" level while a leashed pet isn't next to you */
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s%s leash goes slack.", name, possessive_suffix(name));
+            m_unleash(mtmp, false);
         }
+    }
 }
 
-void migrate_to_level (
-    struct monst *mtmp,
-    signed char tolev,  /* destination level */
-    signed char xyloc,  /* MIGR_xxx destination xy location: */
-    coord *cc   /* optional destination coordinates */
-)
+//  signed char tolev,  /* destination level */
+//  signed char xyloc,  /* MIGR_xxx destination xy location: */
+//  coord *cc   /* optional destination coordinates */
+void migrate_to_level ( struct monst *mtmp, signed char tolev,
+        signed char xyloc, coord *cc)
 {
         struct obj *obj;
         d_level new_lev;
@@ -684,98 +693,100 @@ dogfood (struct monst *mon, struct obj *obj)
         }
 }
 
+struct monst * tamedog (struct monst *mtmp, struct obj *obj) {
+    struct monst *mtmp2;
 
-struct monst *
-tamedog (struct monst *mtmp, struct obj *obj)
-{
-        struct monst *mtmp2;
+    /* The Wiz, Medusa and the quest nemeses aren't even made peaceful. */
+    if (mtmp->iswiz || mtmp->data == &mons[PM_MEDUSA]
+            || (mtmp->data->mflags3 & M3_WANTSARTI))
+        return((struct monst *)0);
 
-        /* The Wiz, Medusa and the quest nemeses aren't even made peaceful. */
-        if (mtmp->iswiz || mtmp->data == &mons[PM_MEDUSA]
-                                || (mtmp->data->mflags3 & M3_WANTSARTI))
-                return((struct monst *)0);
+    /* worst case, at least it'll be peaceful. */
+    mtmp->mpeaceful = 1;
+    set_malign(mtmp);
+    if(flags.moonphase == FULL_MOON && night() && rn2(6) && obj
+            && mtmp->data->mlet == S_DOG)
+        return((struct monst *)0);
 
-        /* worst case, at least it'll be peaceful. */
-        mtmp->mpeaceful = 1;
-        set_malign(mtmp);
-        if(flags.moonphase == FULL_MOON && night() && rn2(6) && obj
-                                                && mtmp->data->mlet == S_DOG)
-                return((struct monst *)0);
+    /* If we cannot tame it, at least it's no longer afraid. */
+    mtmp->mflee = 0;
+    mtmp->mfleetim = 0;
 
-        /* If we cannot tame it, at least it's no longer afraid. */
-        mtmp->mflee = 0;
-        mtmp->mfleetim = 0;
+    /* make grabber let go now, whether it becomes tame or not */
+    if (mtmp == u.ustuck) {
+        if (u.uswallow)
+            expels(mtmp, mtmp->data, true);
+        else if (!(Upolyd && sticks(youmonst.data)))
+            unstuck(mtmp);
+    }
 
-        /* make grabber let go now, whether it becomes tame or not */
-        if (mtmp == u.ustuck) {
-            if (u.uswallow)
-                expels(mtmp, mtmp->data, true);
-            else if (!(Upolyd && sticks(youmonst.data)))
-                unstuck(mtmp);
-        }
+    /* feeding it treats makes it tamer */
+    if (mtmp->mtame && obj) {
+        int tasty;
 
-        /* feeding it treats makes it tamer */
-        if (mtmp->mtame && obj) {
-            int tasty;
-
-            if (mtmp->mcanmove && !mtmp->mconf && !mtmp->meating &&
+        if (mtmp->mcanmove && !mtmp->mconf && !mtmp->meating &&
                 ((tasty = dogfood(mtmp, obj)) == DOGFOOD ||
                  (tasty <= ACCFOOD && EDOG(mtmp)->hungrytime <= monstermoves))) {
-                /* pet will "catch" and eat this thrown food */
-                if (canseemon(mtmp)) {
-                    bool big_corpse = (obj->otyp == CORPSE &&
-                                          obj->corpsenm >= LOW_PM &&
-                                mons[obj->corpsenm].msize > mtmp->data->msize);
-                    pline("%s catches %s%s",
-                          Monnam(mtmp), the(xname(obj)),
-                          !big_corpse ? "." : ", or vice versa!");
-                } else if (cansee(mtmp->mx,mtmp->my))
-                    pline("%s.", Tobjnam(obj, "stop"));
-                /* dog_eat expects a floor object */
-                place_object(obj, mtmp->mx, mtmp->my);
-                (void) dog_eat(mtmp, obj, mtmp->mx, mtmp->my, false);
-                /* eating might have killed it, but that doesn't matter here;
-                   a non-null result suppresses "miss" message for thrown
-                   food and also implies that the object has been deleted */
-                return mtmp;
-            } else
-                return (struct monst *)0;
-        }
+            /* pet will "catch" and eat this thrown food */
+            if (canseemon(mtmp)) {
+                bool big_corpse = (obj->otyp == CORPSE && obj->corpsenm >= LOW_PM &&
+                        mons[obj->corpsenm].msize > mtmp->data->msize);
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s catches %s%s", name, the(xname(obj)),
+                        !big_corpse ? "." : ", or vice versa!");
+            } else if (cansee(mtmp->mx,mtmp->my))
+                pline("%s.", Tobjnam(obj, "stop"));
+            /* dog_eat expects a floor object */
+            place_object(obj, mtmp->mx, mtmp->my);
+            (void) dog_eat(mtmp, obj, mtmp->mx, mtmp->my, false);
+            /* eating might have killed it, but that doesn't matter here;
+               a non-null result suppresses "miss" message for thrown
+               food and also implies that the object has been deleted */
+            return mtmp;
+        } else
+            return (struct monst *)0;
+    }
 
-        if (mtmp->mtame || !mtmp->mcanmove ||
+    if (mtmp->mtame || !mtmp->mcanmove ||
             /* monsters with conflicting structures cannot be tamed */
             mtmp->isshk || mtmp->isgd || mtmp->ispriest || mtmp->isminion ||
             is_covetous(mtmp->data) || is_human(mtmp->data) ||
             (is_demon(mtmp->data) && !is_demon(youmonst.data)) ||
-            (obj && dogfood(mtmp, obj) >= MANFOOD)) return (struct monst *)0;
+            (obj && dogfood(mtmp, obj) >= MANFOOD))
+    {
+        return NULL;
+    }
 
-        if (mtmp->m_id == quest_status.leader_m_id)
-            return((struct monst *)0);
+    if (mtmp->m_id == quest_status.leader_m_id)
+        return((struct monst *)0);
 
-        /* make a new monster which has the pet extension */
-        mtmp2 = newmonst(sizeof(struct edog) + mtmp->mnamelth);
-        *mtmp2 = *mtmp;
-        mtmp2->mxlth = sizeof(struct edog);
-        if (mtmp->mnamelth) strcpy(monster_name(mtmp2), monster_name(mtmp));
-        initedog(mtmp2);
-        replmon(mtmp, mtmp2);
-        /* `mtmp' is now obsolete */
+    /* make a new monster which has the pet extension */
+    mtmp2 = newmonst(sizeof(struct edog) + mtmp->mnamelth);
+    *mtmp2 = *mtmp;
+    mtmp2->mxlth = sizeof(struct edog);
+    if (mtmp->mnamelth) {
+        set_monster_name(mtmp2, monster_name(mtmp));
+    }
+    initedog(mtmp2);
+    replmon(mtmp, mtmp2);
+    /* `mtmp' is now obsolete */
 
-        if (obj) {              /* thrown food */
-            /* defer eating until the edog extension has been set up */
-            place_object(obj, mtmp2->mx, mtmp2->my);    /* put on floor */
-            /* devour the food (might grow into larger, genocided monster) */
-            if (dog_eat(mtmp2, obj, mtmp2->mx, mtmp2->my, true) == 2)
-                return mtmp2;           /* oops, it died... */
-            /* `obj' is now obsolete */
-        }
+    if (obj) {              /* thrown food */
+        /* defer eating until the edog extension has been set up */
+        place_object(obj, mtmp2->mx, mtmp2->my);    /* put on floor */
+        /* devour the food (might grow into larger, genocided monster) */
+        if (dog_eat(mtmp2, obj, mtmp2->mx, mtmp2->my, true) == 2)
+            return mtmp2;           /* oops, it died... */
+        /* `obj' is now obsolete */
+    }
 
-        newsym(mtmp2->mx, mtmp2->my);
-        if (attacktype(mtmp2->data, AT_WEAP)) {
-                mtmp2->weapon_check = NEED_HTH_WEAPON;
-                (void) mon_wield_item(mtmp2);
-        }
-        return(mtmp2);
+    newsym(mtmp2->mx, mtmp2->my);
+    if (attacktype(mtmp2->data, AT_WEAP)) {
+        mtmp2->weapon_check = NEED_HTH_WEAPON;
+        (void) mon_wield_item(mtmp2);
+    }
+    return(mtmp2);
 }
 
 /*
@@ -806,15 +817,17 @@ void wary_dog(struct monst *mtmp, bool was_dead) {
             if (!rn2(edog->abuse + 1)) mtmp->mpeaceful = 1;
         if(!quietly && cansee(mtmp->mx, mtmp->my)) {
             if (haseyes(youmonst.data)) {
-                if (haseyes(mtmp->data))
-                        pline("%s %s to look you in the %s.",
-                                Monnam(mtmp),
-                                mtmp->mpeaceful ? "seems unable" :
-                                            "refuses",
-                                body_part(EYE));
-                else
-                        pline("%s avoids your gaze.",
-                                Monnam(mtmp));
+                if (haseyes(mtmp->data)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s %s to look you in the %s.", name,
+                            mtmp->mpeaceful ? "seems unable" : "refuses",
+                            body_part(EYE));
+                } else {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s avoids your gaze.", name);
+                }
             }
         }
     } else {
