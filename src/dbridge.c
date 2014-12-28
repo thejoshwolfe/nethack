@@ -250,17 +250,25 @@ static size_t e_nam(char *out_buf, size_t buf_size, const struct entity *e) {
  * verb, where necessary.
  */
 
-static const char * E_phrase (struct entity *etmp, const char *verb) {
-        static char wholebuf[80];
-
-        strcpy(wholebuf, is_u(etmp) ? "You" : Monnam(etmp->emon));
-        if (!*verb) return(wholebuf);
-        strcat(wholebuf, " ");
-        if (is_u(etmp))
-            strcat(wholebuf, verb);
+static size_t E_phrase (char *out_buf, size_t buf_size,
+        const struct entity *etmp, const char *verb)
+{
+    if (is_u(etmp)) {
+        if (*verb)
+            return nh_slprintf(out_buf, buf_size, "You %s", verb);
         else
-            strcat(wholebuf, vtense((char *)0, verb));
-        return(wholebuf);
+            return nh_strlcpy(out_buf, buf_size, "You");
+    } else {
+        if (*verb) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, etmp->emon);
+            char verb_buf[BUFSZ];
+            vtense(verb_buf, BUFSZ, NULL, verb);
+            return nh_slprintf(out_buf, buf_size, "%s %s", name, verb_buf);
+        } else {
+            return Monnam(out_buf, buf_size, etmp->emon);
+        }
+    }
 }
 
 /*

@@ -789,17 +789,25 @@ void enlightenment (int final) {
      * places in the done() sequence depend on u.usteed, just detect this
      * special case. */
     if (u.usteed && (final < 2 || strcmp(killer, "riding accident"))) {
-        sprintf(buf, "riding %s", y_monnam(u.usteed));
+        char name[BUFSZ];
+        y_monnam(name, BUFSZ, u.usteed);
+        nh_slprintf(buf, BUFSZ, "riding %s", name);
         you_are(buf);
     }
     if (u.uswallow) {
-        sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
-        if (wizard) sprintf(eos(buf), " (%u)", u.uswldtim);
+        char name[BUFSZ];
+        a_monnam(name, BUFSZ, u.ustuck);
+        if (wizard) {
+            nh_slprintf(buf, BUFSZ, "swallowed by %s (%u)", name, u.uswldtim);
+        } else {
+            nh_slprintf(buf, BUFSZ, "swallowed by %s", name);
+        }
         you_are(buf);
     } else if (u.ustuck) {
-        sprintf(buf, "%s %s",
-                (Upolyd && sticks(youmonst.data)) ? "holding" : "held by",
-                a_monnam(u.ustuck));
+        char name[BUFSZ];
+        a_monnam(name, BUFSZ, u.ustuck);
+        const char *held_str = (Upolyd && sticks(youmonst.data)) ? "holding" : "held by";
+        sprintf(buf, "%s %s", held_str, name);
         you_are(buf);
     }
 
@@ -1064,27 +1072,33 @@ void dump_enlightenment (int final) {
     else if (Amphibious) dump(youcould, "breathe water");
     if (Passes_walls) dump(youcould, "walk through walls");
     if (u.usteed && (final < 2 || strcmp(killer, "riding accident"))) {
-        sprintf(buf, "riding %s", y_monnam(u.usteed));
+        char name[BUFSZ];
+        y_monnam(name, BUFSZ, u.usteed);
+        sprintf(buf, "riding %s", name);
         dump(youwere, buf);
     }
     if (u.uswallow) {
-        sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
-        if (wizard) sprintf(eos(buf), " (%u)", u.uswldtim);
+        char name[BUFSZ];
+        a_monnam(name, BUFSZ, u.ustuck);
+        if (wizard) {
+            nh_slprintf(buf, BUFSZ, "swallowed by %s (%u)", name, u.uswldtim);
+        } else {
+            nh_slprintf(buf, BUFSZ, "swallowed by %s", name);
+        }
         dump(youwere, buf);
     } else if (u.ustuck) {
-        sprintf(buf, "%s %s",
-                (Upolyd && sticks(youmonst.data)) ? "holding" : "held by",
-                a_monnam(u.ustuck));
+        char name[BUFSZ];
+        a_monnam(name, BUFSZ, u.ustuck);
+        const char *held_str = (Upolyd && sticks(youmonst.data)) ? "holding" : "held by";
+        nh_slprintf(buf, BUFSZ, "%s %s", held_str, name);
         dump(youwere, buf);
     }
 
     /*** Physical attributes ***/
     if (u.uhitinc)
-        dump(youhad,
-                enlght_combatinc("to hit", u.uhitinc, final, buf));
+        dump(youhad, enlght_combatinc("to hit", u.uhitinc, final, buf));
     if (u.udaminc)
-        dump(youhad,
-                enlght_combatinc("damage", u.udaminc, final, buf));
+        dump(youhad, enlght_combatinc("damage", u.udaminc, final, buf));
     if (Slow_digestion) dump(youhad, "slower digestion");
     if (Regeneration) dump("  ", "You regenerated");
     if (u.uspellprot || Protection) {

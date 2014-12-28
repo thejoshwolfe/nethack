@@ -50,13 +50,109 @@ static struct Jitem Japanese_items[] = {
         {0, "" }
 };
 
+static const char *wrp[] = {
+        "wand", "ring", "potion", "scroll", "gem", "amulet",
+        "spellbook", "spell book",
+        /* for non-specific wishes */
+        "weapon", "armor", "armour", "tool", "food", "comestible",
+};
+static const char wrpsym[] = {
+        WAND_CLASS, RING_CLASS, POTION_CLASS, SCROLL_CLASS, GEM_CLASS,
+        AMULET_CLASS, SPBOOK_CLASS, SPBOOK_CLASS,
+        WEAPON_CLASS, ARMOR_CLASS, ARMOR_CLASS, TOOL_CLASS, FOOD_CLASS,
+        FOOD_CLASS
+};
+
+/* various singular words that vtense would otherwise categorize as plural */
+static const char * const special_subjs[] = {
+        "erinys",
+        "manes",                /* this one is ambiguous */
+        "Cyclops",
+        "Hippocrates",
+        "Pelias",
+        "aklys",
+        "amnesia",
+        "paralysis",
+        0
+};
+
+struct o_range {
+        const char *name, oclass;
+        int  f_o_range, l_o_range;
+};
+
+
+/* wishable subranges of objects */
+static const struct o_range o_ranges[] = {
+        { "bag",        TOOL_CLASS,   SACK,           BAG_OF_TRICKS },
+        { "lamp",       TOOL_CLASS,   OIL_LAMP,       MAGIC_LAMP },
+        { "candle",     TOOL_CLASS,   TALLOW_CANDLE,  WAX_CANDLE },
+        { "horn",       TOOL_CLASS,   TOOLED_HORN,    HORN_OF_PLENTY },
+        { "shield",     ARMOR_CLASS,  SMALL_SHIELD,   SHIELD_OF_REFLECTION },
+        { "helm",       ARMOR_CLASS,  ELVEN_LEATHER_HELM, HELM_OF_TELEPATHY },
+        { "gloves",     ARMOR_CLASS,  LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY },
+        { "gauntlets",  ARMOR_CLASS,  LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY },
+        { "boots",      ARMOR_CLASS,  LOW_BOOTS,      LEVITATION_BOOTS },
+        { "shoes",      ARMOR_CLASS,  LOW_BOOTS,      IRON_SHOES },
+        { "cloak",      ARMOR_CLASS,  MUMMY_WRAPPING, CLOAK_OF_DISPLACEMENT },
+        { "shirt",      ARMOR_CLASS,  HAWAIIAN_SHIRT, T_SHIRT },
+        { "dragon scales",
+                        ARMOR_CLASS,  GRAY_DRAGON_SCALES, YELLOW_DRAGON_SCALES },
+        { "dragon scale mail",
+                        ARMOR_CLASS,  GRAY_DRAGON_SCALE_MAIL, YELLOW_DRAGON_SCALE_MAIL },
+        { "sword",      WEAPON_CLASS, SHORT_SWORD,    KATANA },
+        { "venom",      VENOM_CLASS,  BLINDING_VENOM, ACID_VENOM },
+        { "gray stone", GEM_CLASS,    LUCKSTONE,      FLINT },
+        { "grey stone", GEM_CLASS,    LUCKSTONE,      FLINT },
+};
+
+#define BSTRCMP(base,ptr,string) ((ptr) < base || strcmp((ptr),string))
+#define BSTRCMPI(base,ptr,string) ((ptr) < base || strcmpi((ptr),string))
+#define BSTRNCMP(base,ptr,string,num) ((ptr)<base || strncmp((ptr),string,num))
+#define BSTRNCMPI(base,ptr,string,num) ((ptr)<base||strncmpi((ptr),string,num))
+
+
+/* alternate spellings; if the difference is only the presence or
+   absence of spaces and/or hyphens (such as "pickaxe" vs "pick axe"
+   vs "pick-axe") then there is no need for inclusion in this list;
+   likewise for ``"of" inversions'' ("boots of speed" vs "speed boots") */
+struct alt_spellings {
+        const char *sp;
+        int ob;
+} spellings[] = {
+        { "pickax", PICK_AXE },
+        { "whip", BULLWHIP },
+        { "saber", SILVER_SABER },
+        { "silver sabre", SILVER_SABER },
+        { "smooth shield", SHIELD_OF_REFLECTION },
+        { "grey dragon scale mail", GRAY_DRAGON_SCALE_MAIL },
+        { "grey dragon scales", GRAY_DRAGON_SCALES },
+        { "enchant armour", SCR_ENCHANT_ARMOR },
+        { "destroy armour", SCR_DESTROY_ARMOR },
+        { "scroll of enchant armour", SCR_ENCHANT_ARMOR },
+        { "scroll of destroy armour", SCR_DESTROY_ARMOR },
+        { "leather armour", LEATHER_ARMOR },
+        { "studded leather armour", STUDDED_LEATHER_ARMOR },
+        { "iron ball", HEAVY_IRON_BALL },
+        { "lantern", BRASS_LANTERN },
+        { "mattock", DWARVISH_MATTOCK },
+        { "amulet of poison resistance", AMULET_VERSUS_POISON },
+        { "stone", ROCK },
+        { "camera", EXPENSIVE_CAMERA },
+        { "tee shirt", T_SHIRT },
+        { "can", TIN },
+        { "can opener", TIN_OPENER },
+        { "kelp", KELP_FROND },
+        { "eucalyptus", EUCALYPTUS_LEAF },
+        { "grapple", GRAPPLING_HOOK },
+        { (const char *)0, 0 },
+};
+
 
 static const char *Japanese_item_name(int i);
 
 
-static char *
-strprepend (char *s, const char *pref)
-{
+static char * strprepend (char *s, const char *pref) {
         int i = (int)strlen(pref);
 
         if(i > PREFIX) {
@@ -78,9 +174,7 @@ static char * nextobuf (void) {
         return bufs[bufidx];
 }
 
-char *
-obj_typename (int otyp)
-{
+char * obj_typename (int otyp) {
         char *buf = nextobuf();
         struct objclass *ocl = &objects[otyp];
         const char *actualn = OBJ_NAME(*ocl);
@@ -154,9 +248,7 @@ obj_typename (int otyp)
 
 /* less verbose result than obj_typename(); either the actual name
    or the description (but not both); user-assigned name is ignored */
-char *
-simple_typename (int otyp)
-{
+char * simple_typename (int otyp) {
     char *bufp, *pp, *save_uname = objects[otyp].oc_uname;
 
     objects[otyp].oc_uname = 0;         /* suppress any name given by user */
@@ -167,9 +259,7 @@ simple_typename (int otyp)
     return bufp;
 }
 
-bool 
-obj_is_pname (struct obj *obj)
-{
+bool obj_is_pname (struct obj *obj) {
     return((bool)(obj->dknown && obj->known && obj->onamelth &&
                      /* Since there aren't any objects which are both
                         artifacts and unique, the last check is redundant. */
@@ -183,9 +273,7 @@ obj_is_pname (struct obj *obj)
  * frequently used, it'd probably be better to pass a parameter to xname()
  * or doname() instead.
  */
-char *
-distant_name (struct obj *obj, char *(*func)( struct obj *))
-{
+char * distant_name (struct obj *obj, char *(*func)( struct obj *)) {
         char *str;
 
         long save_Blinded = Blinded;
@@ -197,11 +285,8 @@ distant_name (struct obj *obj, char *(*func)( struct obj *))
 
 /* convert player specified fruit name into corresponding fruit juice name
    ("slice of pizza" -> "pizza juice" rather than "slice of pizza juice") */
-char *
-fruitname (
-    bool juice  /* whether or not to append " juice" to the name */
-)
-{
+//  bool juice  /* whether or not to append " juice" to the name */
+char * fruitname ( bool juice) {
     char *buf = nextobuf();
     const char *fruit_nam = strstri(pl_fruit, " of ");
 
@@ -213,7 +298,6 @@ fruitname (
     sprintf(buf, "%s%s", makesingular(fruit_nam), juice ? " juice" : "");
     return buf;
 }
-
 
 char * xname (struct obj *obj) {
         return xname2(obj, false);
@@ -469,9 +553,7 @@ nameit:
 }
 
 /* xname() output augmented for multishot missile feedback */
-char *
-mshot_xname (struct obj *obj)
-{
+char * mshot_xname (struct obj *obj) {
     char tmpbuf[BUFSZ];
     char *onm = xname(obj);
 
@@ -488,9 +570,7 @@ mshot_xname (struct obj *obj)
 
 
 /* used for naming "the unique_item" instead of "a unique_item" */
-bool 
-the_unique_obj (struct obj *obj)
-{
+bool the_unique_obj (struct obj *obj) {
     if (!obj->dknown)
         return false;
     else if (obj->otyp == FAKE_AMULET_OF_YENDOR && !obj->known)
@@ -500,9 +580,7 @@ the_unique_obj (struct obj *obj)
                          (obj->known || obj->otyp == AMULET_OF_YENDOR));
 }
 
-static void
-add_erosion_words (struct obj *obj, char *prefix)
-{
+static void add_erosion_words (struct obj *obj, char *prefix) {
         bool iscrys = (obj->otyp == CRYSKNIFE);
 
 
@@ -534,9 +612,7 @@ add_erosion_words (struct obj *obj, char *prefix)
                        is_flammable(obj) ? "fireproof " : "");
 }
 
-char *
-doname (struct obj *obj)
-{
+char * doname (struct obj *obj) {
         bool ispoisoned = false;
         char prefix[PREFIX];
         char tmpbuf[PREFIX+1];
@@ -760,9 +836,7 @@ ring:
 
 
 /* used from invent.c */
-bool 
-not_fully_identified (struct obj *otmp)
-{
+bool not_fully_identified (struct obj *otmp) {
     /* check fundamental ID hallmarks first */
     if (!otmp->known || !otmp->dknown ||
             (!otmp->bknown && otmp->otyp != SCR_MAIL) ||
@@ -787,12 +861,8 @@ not_fully_identified (struct obj *otmp)
                          is_flammable(otmp));
 }
 
-char *
-corpse_xname (
-    struct obj *otmp,
-    bool ignore_oquan   /* to force singular */
-)
-{
+// ignore_oquan   /* to force singular */
+char * corpse_xname ( struct obj *otmp, bool ignore_oquan) {
         char *nambuf = nextobuf();
 
         sprintf(nambuf, "%s corpse", mons[otmp->corpsenm].mname);
@@ -804,25 +874,20 @@ corpse_xname (
 }
 
 /* xname, unless it's a corpse, then corpse_xname(obj, false) */
-char *
-cxname (struct obj *obj)
-{
+char * cxname (struct obj *obj) {
         if (obj->otyp == CORPSE)
             return corpse_xname(obj, false);
         return xname(obj);
 }
-char *
-cxname2 (struct obj *obj)
-{
+
+char * cxname2 (struct obj *obj) {
         if (obj->otyp == CORPSE)
             return corpse_xname(obj, true);
         return xname2(obj, true);
 }
 
 /* treat an object as fully ID'd when it might be used as reason for death */
-char *
-killer_xname (struct obj *obj)
-{
+char * killer_xname (struct obj *obj) {
     struct obj save_obj;
     unsigned save_ocknown;
     char *buf, *save_ocuname;
@@ -921,9 +986,7 @@ char * An (const char *str) {
  * Prepend "the" if necessary; assumes str is a subject derived from xname.
  * Use type_is_pname() for monster names, not the().  the() is idempotent.
  */
-char *
-the (const char *str)
-{
+char * the (const char *str) {
         char *buf = nextobuf();
         bool insert_the = false;
 
@@ -967,18 +1030,14 @@ the (const char *str)
         return buf;
 }
 
-char *
-The (const char *str)
-{
+char * The (const char *str) {
     char *tmp = the(str);
     *tmp = highc(*tmp);
     return tmp;
 }
 
 /* returns "count cxname(otmp)" or just cxname(otmp) if count == 1 */
-char *
-aobjnam (struct obj *otmp, const char *verb)
-{
+char * aobjnam (struct obj *otmp, const char *verb) {
         char *bp = cxname(otmp);
         char prefix[PREFIX];
 
@@ -995,9 +1054,7 @@ aobjnam (struct obj *otmp, const char *verb)
 }
 
 /* like aobjnam, but prepend "The", not count, and use xname */
-char *
-Tobjnam (struct obj *otmp, const char *verb)
-{
+char * Tobjnam (struct obj *otmp, const char *verb) {
         char *bp = The(xname(otmp));
 
         if(verb) {
@@ -1008,9 +1065,7 @@ Tobjnam (struct obj *otmp, const char *verb)
 }
 
 /* return form of the verb (input plural) if xname(otmp) were the subject */
-char *
-otense (struct obj *otmp, const char *verb)
-{
+char * otense (struct obj *otmp, const char *verb) {
         char *buf;
 
         /*
@@ -1026,126 +1081,104 @@ otense (struct obj *otmp, const char *verb)
         return buf;
 }
 
-/* various singular words that vtense would otherwise categorize as plural */
-static const char * const special_subjs[] = {
-        "erinys",
-        "manes",                /* this one is ambiguous */
-        "Cyclops",
-        "Hippocrates",
-        "Pelias",
-        "aklys",
-        "amnesia",
-        "paralysis",
-        0
-};
-
 /* return form of the verb (input plural) for present tense 3rd person subj */
-char *
-vtense (const char *subj, const char *verb)
-{
-        char *buf = nextobuf();
-        int len, ltmp;
-        const char *sp, *spot;
-        const char * const *spec;
+size_t vtense (char *out_buf, size_t buf_size, const char *subj, const char *verb) {
+    int len, ltmp;
+    const char *sp, *spot;
+    const char * const *spec;
 
-        /*
-         * verb is given in plural (without trailing s).  Return as input
-         * if subj appears to be plural.  Add special cases as necessary.
-         * Many hard cases can already be handled by using otense() instead.
-         * If this gets much bigger, consider decomposing makeplural.
-         * Note: monster names are not expected here (except before corpse).
-         *
-         * special case: allow null sobj to get the singular 3rd person
-         * present tense form so we don't duplicate this code elsewhere.
-         */
-        if (subj) {
-            if (!strncmpi(subj, "a ", 2) || !strncmpi(subj, "an ", 3))
-                goto sing;
-            spot = (const char *)0;
-            for (sp = subj; (sp = index(sp, ' ')) != 0; ++sp) {
-                if (!strncmp(sp, " of ", 4) ||
+    /*
+     * verb is given in plural (without trailing s).  Return as input
+     * if subj appears to be plural.  Add special cases as necessary.
+     * Many hard cases can already be handled by using otense() instead.
+     * If this gets much bigger, consider decomposing makeplural.
+     * Note: monster names are not expected here (except before corpse).
+     *
+     * special case: allow null sobj to get the singular 3rd person
+     * present tense form so we don't duplicate this code elsewhere.
+     */
+    if (subj) {
+        if (!strncmpi(subj, "a ", 2) || !strncmpi(subj, "an ", 3))
+            goto sing;
+        spot = (const char *)0;
+        for (sp = subj; (sp = index(sp, ' ')) != 0; ++sp) {
+            if (!strncmp(sp, " of ", 4) ||
                     !strncmp(sp, " from ", 6) ||
                     !strncmp(sp, " called ", 8) ||
                     !strncmp(sp, " named ", 7) ||
                     !strncmp(sp, " labeled ", 9)) {
-                    if (sp != subj) spot = sp - 1;
-                    break;
-                }
+                if (sp != subj) spot = sp - 1;
+                break;
             }
-            len = (int) strlen(subj);
-            if (!spot) spot = subj + len - 1;
+        }
+        len = (int) strlen(subj);
+        if (!spot) spot = subj + len - 1;
 
-            /*
-             * plural: anything that ends in 's', but not '*us' or '*ss'.
-             * Guess at a few other special cases that makeplural creates.
-             */
-            if ((*spot == 's' && spot != subj &&
-                        (*(spot-1) != 'u' && *(spot-1) != 's')) ||
+        /*
+         * plural: anything that ends in 's', but not '*us' or '*ss'.
+         * Guess at a few other special cases that makeplural creates.
+         */
+        if ((*spot == 's' && spot != subj &&
+                    (*(spot-1) != 'u' && *(spot-1) != 's')) ||
                 ((spot - subj) >= 4 && !strncmp(spot-3, "eeth", 4)) ||
                 ((spot - subj) >= 3 && !strncmp(spot-3, "feet", 4)) ||
                 ((spot - subj) >= 2 && !strncmp(spot-1, "ia", 2)) ||
-                ((spot - subj) >= 2 && !strncmp(spot-1, "ae", 2))) {
-                /* check for special cases to avoid false matches */
-                len = (int)(spot - subj) + 1;
-                for (spec = special_subjs; *spec; spec++) {
-                    ltmp = strlen(*spec);
-                    if (len == ltmp && !strncmpi(*spec, subj, len)) goto sing;
-                    /* also check for <prefix><space><special_subj>
-                       to catch things like "the invisible erinys" */
-                    if (len > ltmp && *(spot - ltmp) == ' ' &&
-                           !strncmpi(*spec, spot - ltmp + 1, ltmp)) goto sing;
-                }
-
-                return strcpy(buf, verb);
+                ((spot - subj) >= 2 && !strncmp(spot-1, "ae", 2)))
+        {
+            /* check for special cases to avoid false matches */
+            len = (int)(spot - subj) + 1;
+            for (spec = special_subjs; *spec; spec++) {
+                ltmp = strlen(*spec);
+                if (len == ltmp && !strncmpi(*spec, subj, len)) goto sing;
+                /* also check for <prefix><space><special_subj>
+                   to catch things like "the invisible erinys" */
+                if (len > ltmp && *(spot - ltmp) == ' ' &&
+                        !strncmpi(*spec, spot - ltmp + 1, ltmp)) goto sing;
             }
-            /*
-             * 3rd person plural doesn't end in telltale 's';
-             * 2nd person singular behaves as if plural.
-             */
-            if (!strcmpi(subj, "they") || !strcmpi(subj, "you"))
-                return strcpy(buf, verb);
+
+            return nh_strlcpy(out_buf, verb, buf_size);
         }
+        /*
+         * 3rd person plural doesn't end in telltale 's';
+         * 2nd person singular behaves as if plural.
+         */
+        if (!strcmpi(subj, "they") || !strcmpi(subj, "you"))
+            return nh_strlcpy(out_buf, verb, buf_size);
+    }
 
- sing:
-        len = strlen(verb);
-        spot = verb + len - 1;
+sing:
+    len = strlen(verb);
+    spot = verb + len - 1;
 
-        if (!strcmp(verb, "are"))
-            strcpy(buf, "is");
-        else if (!strcmp(verb, "have"))
-            strcpy(buf, "has");
-        else if (index("zxs", *spot) ||
-                 (len >= 2 && *spot=='h' && index("cs", *(spot-1))) ||
-                 (len == 2 && *spot == 'o')) {
-            /* Ends in z, x, s, ch, sh; add an "es" */
-            strcpy(buf, verb);
-            strcat(buf, "es");
-        } else if (*spot == 'y' && (!index(vowels, *(spot-1)))) {
-            /* like "y" case in makeplural */
-            strcpy(buf, verb);
-            strcpy(buf + len - 1, "ies");
-        } else {
-            strcpy(buf, verb);
-            strcat(buf, "s");
-        }
-
-        return buf;
+    if (!strcmp(verb, "are")) {
+        return nh_strlcpy(out_buf, "is", buf_size);
+    } else if (!strcmp(verb, "have")) {
+        return nh_strlcpy(out_buf, "has", buf_size);
+    } else if (index("zxs", *spot) ||
+            (len >= 2 && *spot=='h' && index("cs", *(spot-1))) ||
+            (len == 2 && *spot == 'o'))
+    {
+        // Ends in z, x, s, ch, sh; add an "es"
+        return nh_slprintf(out_buf, buf_size, "%s%s", verb, "es");
+    } else if (*spot == 'y' && (!index(vowels, *(spot-1)))) {
+        /* like "y" case in makeplural */
+        nh_strlcpy(out_buf, verb, buf_size);
+        return nh_strlcpy(out_buf + len - 1, "ies", buf_size - len + 1);
+    } else {
+        return nh_slprintf(out_buf, buf_size, "%s%s", verb, "s");
+    }
 }
 
 /* capitalized variant of doname() */
-char *
-Doname2 (struct obj *obj)
-{
-        char *s = doname(obj);
+char * Doname2 (struct obj *obj) {
+    char *s = doname(obj);
 
-        *s = highc(*s);
-        return(s);
+    *s = highc(*s);
+    return(s);
 }
 
 /* returns "your xname(obj)" or "Foobar's xname(obj)" or "the xname(obj)" */
-char *
-yname (struct obj *obj)
-{
+char * yname (struct obj *obj) {
         char *outbuf = nextobuf();
         char *s = shk_your(outbuf, obj);        /* assert( s == outbuf ); */
         int space_left = BUFSZ - strlen(s) - sizeof " ";
@@ -1154,9 +1187,7 @@ yname (struct obj *obj)
 }
 
 /* capitalized variant of yname() */
-char *
-Yname2 (struct obj *obj)
-{
+char * Yname2 (struct obj *obj) {
         char *s = yname(obj);
 
         *s = highc(*s);
@@ -1167,9 +1198,7 @@ Yname2 (struct obj *obj)
  * or "Foobar's simple_typename(obj->otyp)"
  * or "the simple_typename(obj-otyp)"
  */
-char *
-ysimple_name (struct obj *obj)
-{
+char * ysimple_name (struct obj *obj) {
         char *outbuf = nextobuf();
         char *s = shk_your(outbuf, obj);        /* assert( s == outbuf ); */
         int space_left = BUFSZ - strlen(s) - sizeof " ";
@@ -1178,28 +1207,10 @@ ysimple_name (struct obj *obj)
 }
 
 /* capitalized variant of ysimple_name() */
-char *
-Ysimple_name2 (struct obj *obj)
-{
-        char *s = ysimple_name(obj);
-
+char * Ysimple_name2 (struct obj *obj) { char *s = ysimple_name(obj); 
         *s = highc(*s);
         return s;
 }
-
-static const char *wrp[] = {
-        "wand", "ring", "potion", "scroll", "gem", "amulet",
-        "spellbook", "spell book",
-        /* for non-specific wishes */
-        "weapon", "armor", "armour", "tool", "food", "comestible",
-};
-static const char wrpsym[] = {
-        WAND_CLASS, RING_CLASS, POTION_CLASS, SCROLL_CLASS, GEM_CLASS,
-        AMULET_CLASS, SPBOOK_CLASS, SPBOOK_CLASS,
-        WEAPON_CLASS, ARMOR_CLASS, ARMOR_CLASS, TOOL_CLASS, FOOD_CLASS,
-        FOOD_CLASS
-};
-
 
 /* Plural routine; chiefly used for user-defined fruits.  We have to try to
  * account for everything reasonable the player has; something unreasonable
@@ -1426,49 +1437,12 @@ bottom: if (excess) strcpy(eos(str), excess);
 }
 
 
-struct o_range {
-        const char *name, oclass;
-        int  f_o_range, l_o_range;
-};
-
-
-/* wishable subranges of objects */
-static const struct o_range o_ranges[] = {
-        { "bag",        TOOL_CLASS,   SACK,           BAG_OF_TRICKS },
-        { "lamp",       TOOL_CLASS,   OIL_LAMP,       MAGIC_LAMP },
-        { "candle",     TOOL_CLASS,   TALLOW_CANDLE,  WAX_CANDLE },
-        { "horn",       TOOL_CLASS,   TOOLED_HORN,    HORN_OF_PLENTY },
-        { "shield",     ARMOR_CLASS,  SMALL_SHIELD,   SHIELD_OF_REFLECTION },
-        { "helm",       ARMOR_CLASS,  ELVEN_LEATHER_HELM, HELM_OF_TELEPATHY },
-        { "gloves",     ARMOR_CLASS,  LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY },
-        { "gauntlets",  ARMOR_CLASS,  LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY },
-        { "boots",      ARMOR_CLASS,  LOW_BOOTS,      LEVITATION_BOOTS },
-        { "shoes",      ARMOR_CLASS,  LOW_BOOTS,      IRON_SHOES },
-        { "cloak",      ARMOR_CLASS,  MUMMY_WRAPPING, CLOAK_OF_DISPLACEMENT },
-        { "shirt",      ARMOR_CLASS,  HAWAIIAN_SHIRT, T_SHIRT },
-        { "dragon scales",
-                        ARMOR_CLASS,  GRAY_DRAGON_SCALES, YELLOW_DRAGON_SCALES },
-        { "dragon scale mail",
-                        ARMOR_CLASS,  GRAY_DRAGON_SCALE_MAIL, YELLOW_DRAGON_SCALE_MAIL },
-        { "sword",      WEAPON_CLASS, SHORT_SWORD,    KATANA },
-        { "venom",      VENOM_CLASS,  BLINDING_VENOM, ACID_VENOM },
-        { "gray stone", GEM_CLASS,    LUCKSTONE,      FLINT },
-        { "grey stone", GEM_CLASS,    LUCKSTONE,      FLINT },
-};
-
-#define BSTRCMP(base,ptr,string) ((ptr) < base || strcmp((ptr),string))
-#define BSTRCMPI(base,ptr,string) ((ptr) < base || strcmpi((ptr),string))
-#define BSTRNCMP(base,ptr,string,num) ((ptr)<base || strncmp((ptr),string,num))
-#define BSTRNCMPI(base,ptr,string,num) ((ptr)<base||strncmpi((ptr),string,num))
-
 /*
  * Singularize a string the user typed in; this helps reduce the complexity
  * of readobjnam, and is also used in pager.c to singularize the string
  * for which help is sought.
  */
-char *
-makesingular (const char *oldstr)
-{
+char * makesingular (const char *oldstr) {
         char *p, *bp;
         char *str = nextobuf();
 
@@ -1569,13 +1543,10 @@ makesingular (const char *oldstr)
 }
 
 /* compare user string against object name string using fuzzy matching */
-static bool 
-wishymatch (
-    const char *u_str,      /* from user, so might be variant spelling */
-    const char *o_str,      /* from objects[], so is in canonical form */
-    bool retry_inverted /* optional extra "of" handling */
-)
-{
+//  const char *u_str,      /* from user, so might be variant spelling */
+//  const char *o_str,      /* from objects[], so is in canonical form */
+//  bool retry_inverted /* optional extra "of" handling */
+static bool wishymatch ( const char *u_str, const char *o_str, bool retry_inverted) {
         /* special case: wizards can wish for traps.  The object is "beartrap"
          * and the trap is "bear trap", so to let wizards wish for both we
          * must not fuzzymatch.
@@ -1630,42 +1601,6 @@ wishymatch (
         return false;
 }
 
-/* alternate spellings; if the difference is only the presence or
-   absence of spaces and/or hyphens (such as "pickaxe" vs "pick axe"
-   vs "pick-axe") then there is no need for inclusion in this list;
-   likewise for ``"of" inversions'' ("boots of speed" vs "speed boots") */
-struct alt_spellings {
-        const char *sp;
-        int ob;
-} spellings[] = {
-        { "pickax", PICK_AXE },
-        { "whip", BULLWHIP },
-        { "saber", SILVER_SABER },
-        { "silver sabre", SILVER_SABER },
-        { "smooth shield", SHIELD_OF_REFLECTION },
-        { "grey dragon scale mail", GRAY_DRAGON_SCALE_MAIL },
-        { "grey dragon scales", GRAY_DRAGON_SCALES },
-        { "enchant armour", SCR_ENCHANT_ARMOR },
-        { "destroy armour", SCR_DESTROY_ARMOR },
-        { "scroll of enchant armour", SCR_ENCHANT_ARMOR },
-        { "scroll of destroy armour", SCR_DESTROY_ARMOR },
-        { "leather armour", LEATHER_ARMOR },
-        { "studded leather armour", STUDDED_LEATHER_ARMOR },
-        { "iron ball", HEAVY_IRON_BALL },
-        { "lantern", BRASS_LANTERN },
-        { "mattock", DWARVISH_MATTOCK },
-        { "amulet of poison resistance", AMULET_VERSUS_POISON },
-        { "stone", ROCK },
-        { "camera", EXPENSIVE_CAMERA },
-        { "tee shirt", T_SHIRT },
-        { "can", TIN },
-        { "can opener", TIN_OPENER },
-        { "kelp", KELP_FROND },
-        { "eucalyptus", EUCALYPTUS_LEAF },
-        { "grapple", GRAPPLING_HOOK },
-        { (const char *)0, 0 },
-};
-
 /*
  * Return something wished for.  Specifying a null pointer for
  * the user request string results in a random object.  Otherwise,
@@ -1674,9 +1609,7 @@ struct alt_spellings {
  * return null.
  * If from_user is false, we're reading from the wizkit, nothing was typed in.
  */
-struct obj *
-readobjnam (char *bp, struct obj *no_wish, bool from_user)
-{
+struct obj * readobjnam (char *bp, struct obj *no_wish, bool from_user) {
         char *p;
         int i;
         struct obj *otmp;
@@ -2581,9 +2514,7 @@ typfnd:
         return(otmp);
 }
 
-int
-rnd_class (int first, int last)
-{
+int rnd_class (int first, int last) {
         int i, x, sum=0;
 
         if (first == last)
@@ -2599,9 +2530,7 @@ rnd_class (int first, int last)
         return 0;
 }
 
-static const char *
-Japanese_item_name (int i)
-{
+static const char * Japanese_item_name (int i) {
         struct Jitem *j = Japanese_items;
 
         while(j->item) {
@@ -2612,9 +2541,7 @@ Japanese_item_name (int i)
         return (const char *)0;
 }
 
-const char *
-cloak_simple_name (struct obj *cloak)
-{
+const char * cloak_simple_name (struct obj *cloak) {
     if (cloak) {
         switch (cloak->otyp) {
         case ROBE:

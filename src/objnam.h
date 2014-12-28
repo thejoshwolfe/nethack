@@ -1,6 +1,9 @@
 #ifndef OBJNAM_H
 #define OBJNAM_H
 
+#include <stdbool.h>
+#include <stdlib.h>
+
 char *obj_typename(int);
 char *simple_typename(int);
 bool obj_is_pname(struct obj *);
@@ -24,7 +27,7 @@ char *the(const char *);
 char *aobjnam(struct obj *,const char *);
 char *Tobjnam(struct obj *,const char *);
 char *otense(struct obj *,const char *);
-char *vtense(const char *,const char *);
+size_t vtense (char *out_buf, size_t buf_size, const char *subj, const char *verb);
 char *Doname2(struct obj *);
 char *yname(struct obj *);
 char *Yname2(struct obj *);
