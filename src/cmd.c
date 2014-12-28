@@ -648,7 +648,6 @@ static char * enlght_combatinc (const char *inctyp, int incamt, int final, char 
 
 /* 0 => still in progress; 1 => over, survived; 2 => dead */
 void enlightenment (int final) {
-    int ltmp;
     char buf[BUFSZ];
 
     en_win = create_nhwindow(NHW_MENU);
@@ -849,7 +848,7 @@ void enlightenment (int final) {
 
     /*** Miscellany ***/
     if (Luck) {
-        ltmp = abs((int)Luck);
+        int ltmp = abs((int)Luck);
         sprintf(buf, "%s%slucky",
                 ltmp >= 10 ? "extremely " : ltmp >= 5 ? "very " : "",
                 Luck < 0 ? "un" : "");
@@ -860,7 +859,7 @@ void enlightenment (int final) {
     if (u.moreluck > 0) you_have("extra luck");
     else if (u.moreluck < 0) you_have("reduced luck");
     if (carrying(LUCKSTONE) || stone_luck(true)) {
-        ltmp = stone_luck(false);
+        int ltmp = stone_luck(false);
         if (ltmp <= 0)
             enl_msg("Bad luck ", "does", "did", " not time out for you");
         if (ltmp >= 0)

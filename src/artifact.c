@@ -949,7 +949,9 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
                         mon_nam(name, BUFSZ, mdef);
                         You("slice deeply into %s!", name);
                     } else if (vis) {
-                        pline("%s cuts deeply into %s!", Monnam(magr), hittee);
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, magr);
+                        pline("%s cuts deeply into %s!", name, hittee);
                     }
                     *dmgptr *= 2;
                     return true;
@@ -962,8 +964,10 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
                 return true;
             } else {
                 if (bigmonst(youmonst.data)) {
-                    pline("%s cuts deeply into you!",
-                            magr ? Monnam(magr) : wepdesc);
+                    char name[BUFSZ];
+                    if (magr)
+                        mon_nam(name, BUFSZ, magr);
+                    pline("%s cuts deeply into you!", magr ? name : wepdesc);
                     *dmgptr *= 2;
                     return true;
                 }
