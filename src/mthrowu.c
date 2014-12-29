@@ -1,6 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "extern.h"
+#include "do_name.h"
+#include "shk.h"
+#include "objnam.h"
 #include "display.h"
 #include "winprocs.h"
 
@@ -165,13 +169,21 @@ ohitmon (
                 damage = 0;
             if (ismimic) seemimic(mtmp);
             mtmp->msleeping = 0;
-            if (vis) hit(distant_name(otmp,mshot_xname), mtmp, exclam(damage));
-            else if (verbose) pline("%s is hit%s", Monnam(mtmp), exclam(damage));
+            if (vis) {
+                hit(distant_name(otmp,mshot_xname), mtmp, exclam(damage));
+            } else if (verbose) {
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s is hit%s", name, exclam(damage));
+            }
 
             if (otmp->opoisoned && is_poisonable(otmp)) {
                 if (resists_poison(mtmp)) {
-                    if (vis) pline_The("poison doesn't seem to affect %s.",
-                                   mon_nam(mtmp));
+                    if (vis) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, mtmp);
+                        pline_The("poison doesn't seem to affect %s.", name);
+                    }
                 } else {
                     if (rn2(30)) {
                         damage += rnd(6);
@@ -181,28 +193,42 @@ ohitmon (
                     }
                 }
             }
-            if (objects[otmp->otyp].oc_material == SILVER &&
-                    hates_silver(mtmp->data)) {
-                if (vis) pline_The("silver sears %s flesh!",
-                                s_suffix(mon_nam(mtmp)));
-                else if (verbose) pline("Its flesh is seared!");
+            if (objects[otmp->otyp].oc_material == SILVER && hates_silver(mtmp->data)) {
+                if (vis) {
+                    char pname[BUFSZ];
+                    monster_possessive(pname, BUFSZ, mtmp);
+                    pline_The("silver sears %s flesh!", pname);
+                } else if (verbose) {
+                    pline("Its flesh is seared!");
+                }
             }
             if (otmp->otyp == ACID_VENOM && cansee(mtmp->mx,mtmp->my)) {
                 if (resists_acid(mtmp)) {
-                    if (vis || verbose)
-                        pline("%s is unaffected.", Monnam(mtmp));
+                    if (vis || verbose) {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mtmp);
+                        pline("%s is unaffected.", name);
+                    }
                     damage = 0;
                 } else {
-                    if (vis) pline_The("acid burns %s!", mon_nam(mtmp));
-                    else if (verbose) pline("It is burned!");
+                    if (vis) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, mtmp);
+                        pline_The("acid burns %s!", name);
+                    } else if (verbose) {
+                        pline("It is burned!");
+                    }
                 }
             }
             mtmp->mhp -= damage;
             if (mtmp->mhp < 1) {
-                if (vis || verbose)
-                    pline("%s is %s!", Monnam(mtmp),
+                if (vis || verbose) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s is %s!", name,
                         (nonliving(mtmp->data) || !canspotmon(mtmp))
                         ? "destroyed" : "killed");
+                }
                 /* don't blame hero for unknown rolling boulder trap */
                 if (!flags.mon_moving &&
                     (otmp->otyp != BOULDER || range >= 0 || !otmp->otrapped))
@@ -213,8 +239,11 @@ ohitmon (
             if (can_blnd((struct monst*)0, mtmp,
                     (unsigned char)(otmp->otyp == BLINDING_VENOM ? AT_SPIT : AT_WEAP),
                     otmp)) {
-                if (vis && mtmp->mcansee)
-                    pline("%s is blinded by %s.", Monnam(mtmp), the(xname(otmp)));
+                if (vis && mtmp->mcansee) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s is blinded by %s.", name, the(xname(otmp)));
+                }
                 mtmp->mcansee = 0;
                 tmp = (int)mtmp->mblinded + rnd(25) + 20;
                 if (tmp > 127) tmp = 127;
@@ -279,11 +308,15 @@ m_throw (
 
         if (singleobj->cursed && (dx || dy) && !rn2(7)) {
             if(canseemon(mon) && flags.verbose) {
-                if(is_ammo(singleobj))
-                    pline("%s misfires!", Monnam(mon));
-                else
-                    pline("%s as %s throws it!",
-                          Tobjnam(singleobj, "slip"), mon_nam(mon));
+                if(is_ammo(singleobj)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mon);
+                    pline("%s misfires!", name);
+                } else {
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mon);
+                    pline("%s as %s throws it!", Tobjnam(singleobj, "slip"), name);
+                }
             }
             dx = rn2(3)-1;
             dy = rn2(3)-1;
@@ -323,17 +356,18 @@ m_throw (
 
                     if (singleobj->oclass == GEM_CLASS &&
                             singleobj->otyp <= LAST_GEM+9 /* 9 glass colors */
-                            && is_unicorn(youmonst.data)) {
+                            && is_unicorn(youmonst.data))
+                    {
+                        char pname[BUFSZ];
+                        monster_possessive(pname, BUFSZ, mon);
                         if (singleobj->otyp > LAST_GEM) {
                             You("catch the %s.", xname(singleobj));
-                            You("are not interested in %s junk.",
-                                s_suffix(mon_nam(mon)));
+                            You("are not interested in %s junk.", pname);
                             makeknown(singleobj->otyp);
                             dropy(singleobj);
                         } else {
-                            You("accept %s gift in the spirit in which it was intended.",
-                                s_suffix(mon_nam(mon)));
-                            (void)hold_another_object(singleobj,
+                            You("accept %s gift in the spirit in which it was intended.", pname);
+                            hold_another_object(singleobj,
                                 "You catch, but drop, %s.", xname(singleobj),
                                 "You catch:");
                         }
@@ -497,8 +531,9 @@ thrwmu (struct monst *mtmp)
 
             if (canseemon(mtmp)) {
                 onm = xname(otmp);
-                pline("%s thrusts %s.", Monnam(mtmp),
-                      obj_is_pname(otmp) ? the(onm) : an(onm));
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s thrusts %s.", name, obj_is_pname(otmp) ? the(onm) : an(onm));
             }
 
             dam = dmgval(otmp, &youmonst);
@@ -579,8 +614,9 @@ thrwmu (struct monst *mtmp)
                 onm = obj_is_pname(otmp) ? the(onm) : an(onm);
             }
             m_shot.s = ammo_and_launcher(otmp,mwep) ? true : false;
-            pline("%s %s %s!", Monnam(mtmp),
-                  m_shot.s ? "shoots" : "throws", onm);
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s %s %s!", name, m_shot.s ? "shoots" : "throws", onm);
             m_shot.o = otmp->otyp;
         } else {
             m_shot.o = STRANGE_OBJECT;  /* don't give multishot feedback */
@@ -597,45 +633,45 @@ thrwmu (struct monst *mtmp)
         nomul(0);
 }
 
+/* monster spits substance at you */
+int spitmu ( struct monst *mtmp, struct attack *mattk) {
+    struct obj *otmp;
 
-int
-spitmu (                /* monster spits substance at you */
-    struct monst *mtmp,
-    struct attack *mattk
-)
-{
-        struct obj *otmp;
+    if(mtmp->mcan) {
 
-        if(mtmp->mcan) {
-
-            if(flags.soundok)
-                pline("A dry rattle comes from %s throat.",
-                                      s_suffix(mon_nam(mtmp)));
-            return 0;
-        }
-        if(lined_up(mtmp)) {
-                switch (mattk->adtyp) {
-                    case AD_BLND:
-                    case AD_DRST:
-                        otmp = mksobj(BLINDING_VENOM, true, false);
-                        break;
-                    default:
-                        impossible("bad attack type in spitmu");
-                                /* fall through */
-                    case AD_ACID:
-                        otmp = mksobj(ACID_VENOM, true, false);
-                        break;
-                }
-                if(!rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,mtmp->mux,mtmp->muy))) {
-                    if (canseemon(mtmp))
-                        pline("%s spits venom!", Monnam(mtmp));
-                    m_throw(mtmp, mtmp->mx, mtmp->my, sgn(tbx), sgn(tby),
-                        distmin(mtmp->mx,mtmp->my,mtmp->mux,mtmp->muy), otmp);
-                    nomul(0);
-                    return 0;
-                }
+        if(flags.soundok) {
+            char pname[BUFSZ];
+            monster_possessive(pname, BUFSZ, mtmp);
+            pline("A dry rattle comes from %s throat.", pname);
         }
         return 0;
+    }
+    if(lined_up(mtmp)) {
+        switch (mattk->adtyp) {
+            case AD_BLND:
+            case AD_DRST:
+                otmp = mksobj(BLINDING_VENOM, true, false);
+                break;
+            default:
+                impossible("bad attack type in spitmu");
+                /* fall through */
+            case AD_ACID:
+                otmp = mksobj(ACID_VENOM, true, false);
+                break;
+        }
+        if(!rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,mtmp->mux,mtmp->muy))) {
+            if (canseemon(mtmp)) {
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s spits venom!", name);
+            }
+            m_throw(mtmp, mtmp->mx, mtmp->my, sgn(tbx), sgn(tby),
+                    distmin(mtmp->mx,mtmp->my,mtmp->mux,mtmp->muy), otmp);
+            nomul(0);
+            return 0;
+        }
+    }
+    return 0;
 }
 
 
@@ -652,10 +688,13 @@ breamu (                        /* monster breathes at you (ranged) */
 
             if(mtmp->mcan) {
                 if(flags.soundok) {
-                    if(canseemon(mtmp))
-                        pline("%s coughs.", Monnam(mtmp));
-                    else
+                    if(canseemon(mtmp)) {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mtmp);
+                        pline("%s coughs.", name);
+                    } else {
                         You_hear("a cough.");
+                    }
                 }
                 return(0);
             }
@@ -663,9 +702,11 @@ breamu (                        /* monster breathes at you (ranged) */
 
                 if((typ >= AD_MAGM) && (typ <= AD_ACID)) {
 
-                    if(canseemon(mtmp))
-                        pline("%s breathes %s!", Monnam(mtmp),
-                              breathwep[typ-1]);
+                    if(canseemon(mtmp)) {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mtmp);
+                        pline("%s breathes %s!", name, breathwep[typ-1]);
+                    }
                     buzz((int) (-20 - (typ-1)), (int)mattk->damn,
                          mtmp->mx, mtmp->my, sgn(tbx), sgn(tby));
                     nomul(0);
