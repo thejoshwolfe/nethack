@@ -1,7 +1,12 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "dbridge.h"
+#include "objnam.h"
+#include "do_name.h"
+#include "shk.h"
 #include "winprocs.h"
 #include "display.h"
 #include "timeout.h"
@@ -141,7 +146,8 @@ struct obj * merge_choice (struct obj *objlist, struct obj *obj) {
            that from eliciting an incorrect result from mergable() */
         save_nocharge = obj->no_charge;
         if (objlist == invent && obj->where == OBJ_FLOOR &&
-                (shkp = shop_keeper(inside_shop(obj->ox, obj->oy))) != 0) {
+                (shkp = shop_keeper(inside_shop(obj->ox, obj->oy))) != 0)
+        {
             if (obj->no_charge) obj->no_charge = 0;
             /* A billable object won't have its `unpaid' bit set, so would
                erroneously seem to be a candidate to merge with a similar
@@ -162,61 +168,61 @@ struct obj * merge_choice (struct obj *objlist, struct obj *obj) {
 
 /* merge obj with otmp and delete obj if types agree */
 int merged (struct obj **potmp, struct obj **pobj) {
-        struct obj *otmp = *potmp, *obj = *pobj;
+    struct obj *otmp = *potmp, *obj = *pobj;
 
-        if(mergable(otmp, obj)) {
-                /* Approximate age: we do it this way because if we were to
-                 * do it "accurately" (merge only when ages are identical)
-                 * we'd wind up never merging any corpses.
-                 * otmp->age = otmp->age*(1-proportion) + obj->age*proportion;
-                 *
-                 * Don't do the age manipulation if lit.  We would need
-                 * to stop the burn on both items, then merge the age,
-                 * then restart the burn.
-                 */
-                if (!obj->lamplit)
-                    otmp->age = ((otmp->age*otmp->quan) + (obj->age*obj->quan))
-                            / (otmp->quan + obj->quan);
+    if(mergable(otmp, obj)) {
+        /* Approximate age: we do it this way because if we were to
+         * do it "accurately" (merge only when ages are identical)
+         * we'd wind up never merging any corpses.
+         * otmp->age = otmp->age*(1-proportion) + obj->age*proportion;
+         *
+         * Don't do the age manipulation if lit.  We would need
+         * to stop the burn on both items, then merge the age,
+         * then restart the burn.
+         */
+        if (!obj->lamplit)
+            otmp->age = ((otmp->age*otmp->quan) + (obj->age*obj->quan))
+                / (otmp->quan + obj->quan);
 
-                otmp->quan += obj->quan;
-                if (otmp->oclass == COIN_CLASS) otmp->owt = weight(otmp);
-                else otmp->owt += obj->owt;
-                if(!otmp->onamelth && obj->onamelth)
-                        otmp = *potmp = oname(otmp, ONAME(obj));
-                obj_extract_self(obj);
+        otmp->quan += obj->quan;
+        if (otmp->oclass == COIN_CLASS) otmp->owt = weight(otmp);
+        else otmp->owt += obj->owt;
+        if (!otmp->onamelth && obj->onamelth)
+            otmp = *potmp = oname(otmp, ONAME(obj));
+        obj_extract_self(obj);
 
-                /* really should merge the timeouts */
-                if (obj->lamplit) obj_merge_light_sources(obj, otmp);
-                if (obj->timed) obj_stop_timers(obj);   /* follows lights */
+        /* really should merge the timeouts */
+        if (obj->lamplit) obj_merge_light_sources(obj, otmp);
+        if (obj->timed) obj_stop_timers(obj);   /* follows lights */
 
-                /* fixup for `#adjust' merging wielded darts, daggers, &c */
-                if (obj->owornmask && carried(otmp)) {
-                    long wmask = otmp->owornmask | obj->owornmask;
+        /* fixup for `#adjust' merging wielded darts, daggers, &c */
+        if (obj->owornmask && carried(otmp)) {
+            long wmask = otmp->owornmask | obj->owornmask;
 
-                    /* Both the items might be worn in competing slots;
-                       merger preference (regardless of which is which):
-                         primary weapon + alternate weapon -> primary weapon;
-                         primary weapon + quiver -> primary weapon;
-                         alternate weapon + quiver -> alternate weapon.
-                       (Prior to 3.3.0, it was not possible for the two
-                       stacks to be worn in different slots and `obj'
-                       didn't need to be unworn when merging.) */
-                    if (wmask & W_WEP) wmask = W_WEP;
-                    else if (wmask & W_SWAPWEP) wmask = W_SWAPWEP;
-                    else if (wmask & W_QUIVER) wmask = W_QUIVER;
-                    else {
-                        impossible("merging strangely worn items (%lx)", wmask);
-                        wmask = otmp->owornmask;
-                    }
-                    if ((otmp->owornmask & ~wmask) != 0L) setnotworn(otmp);
-                    setworn(otmp, wmask);
-                    setnotworn(obj);
-                }
-
-                obfree(obj,otmp);       /* free(obj), bill->otmp */
-                return(1);
+            /* Both the items might be worn in competing slots;
+               merger preference (regardless of which is which):
+               primary weapon + alternate weapon -> primary weapon;
+               primary weapon + quiver -> primary weapon;
+               alternate weapon + quiver -> alternate weapon.
+               (Prior to 3.3.0, it was not possible for the two
+               stacks to be worn in different slots and `obj'
+               didn't need to be unworn when merging.) */
+            if (wmask & W_WEP) wmask = W_WEP;
+            else if (wmask & W_SWAPWEP) wmask = W_SWAPWEP;
+            else if (wmask & W_QUIVER) wmask = W_QUIVER;
+            else {
+                impossible("merging strangely worn items (%lx)", wmask);
+                wmask = otmp->owornmask;
+            }
+            if ((otmp->owornmask & ~wmask) != 0L) setnotworn(otmp);
+            setworn(otmp, wmask);
+            setnotworn(obj);
         }
-        return 0;
+
+        obfree(obj,otmp);       /* free(obj), bill->otmp */
+        return(1);
+    }
+    return 0;
 }
 
 /*
@@ -1909,8 +1915,10 @@ int look_here (int obj_cnt, bool picked_some) {
 
         if (u.uswallow && u.ustuck) {
             struct monst *mtmp = u.ustuck;
-            sprintf(fbuf, "Contents of %s %s",
-                s_suffix(mon_nam(mtmp)), mbodypart(mtmp, STOMACH));
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mtmp);
+            sprintf(fbuf, "Contents of %s%s %s", name, possessive_suffix(name),
+                    mbodypart(mtmp, STOMACH));
             /* Skip "Contents of " by using fbuf index 12 */
             You("%s to %s what is lying in %s.",
                 Blind ? "try" : "look around", verb, &fbuf[12]);
@@ -2405,64 +2413,66 @@ static bool worn_wield_only (struct obj *obj) {
  *      MINV_ALL        - display all inventory
  */
 struct obj * display_minventory (struct monst *mon, int dflags, char *title) {
-        struct obj *ret;
-        struct obj m_gold;
-        char tmp[QBUFSZ];
-        int n;
-        menu_item *selected = 0;
-        int do_all = (dflags & MINV_ALL) != 0,
-            do_gold = (do_all && mon->mgold);
+    struct obj *ret;
+    struct obj m_gold;
+    char tmp[QBUFSZ];
+    int n;
+    menu_item *selected = 0;
+    int do_all = (dflags & MINV_ALL) != 0,
+        do_gold = (do_all && mon->mgold);
 
-        sprintf(tmp,"%s %s:", s_suffix(noit_Monnam(mon)),
-                do_all ? "possessions" : "armament");
+    char name[BUFSZ];
+    noit_Monnam(name, BUFSZ, mon);
+    nh_slprintf(tmp, QBUFSZ, "%s%s %s:", name, possessive_suffix(name),
+            do_all ? "possessions" : "armament");
 
-        if (do_all ? (mon->minvent || mon->mgold)
-                   : (mon->misc_worn_check || MON_WEP(mon))) {
-            /* Fool the 'weapon in hand' routine into
-             * displaying 'weapon in claw', etc. properly.
+    if (do_all ? (mon->minvent || mon->mgold)
+            : (mon->misc_worn_check || MON_WEP(mon))) {
+        /* Fool the 'weapon in hand' routine into
+         * displaying 'weapon in claw', etc. properly.
+         */
+        youmonst.data = mon->data;
+
+        if (do_gold) {
+            /*
+             * Make temporary gold object and insert at the head of
+             * the mon's inventory.  We can get away with using a
+             * stack variable object because monsters don't carry
+             * gold in their inventory, so it won't merge.
              */
-            youmonst.data = mon->data;
-
-            if (do_gold) {
-                /*
-                 * Make temporary gold object and insert at the head of
-                 * the mon's inventory.  We can get away with using a
-                 * stack variable object because monsters don't carry
-                 * gold in their inventory, so it won't merge.
-                 */
-                m_gold = zeroobj;
-                m_gold.otyp = GOLD_PIECE;  m_gold.oclass = COIN_CLASS;
-                m_gold.quan = mon->mgold;  m_gold.dknown = 1;
-                m_gold.where = OBJ_FREE;
-                /* we had better not merge and free this object... */
-                if (add_to_minv(mon, &m_gold))
-                    panic("display_minventory: static object freed.");
-            }
-
-            n = query_objlist(title ? title : tmp, mon->minvent, INVORDER_SORT, &selected,
-                        (dflags & MINV_NOLET) ? PICK_NONE : PICK_ONE,
-                        do_all ? allow_all : worn_wield_only);
-
-            if (do_gold) obj_extract_self(&m_gold);
-
-            set_uasmon();
-        } else {
-            invdisp_nothing(title ? title : tmp, "(none)");
-            n = 0;
+            m_gold = zeroobj;
+            m_gold.otyp = GOLD_PIECE;  m_gold.oclass = COIN_CLASS;
+            m_gold.quan = mon->mgold;  m_gold.dknown = 1;
+            m_gold.where = OBJ_FREE;
+            /* we had better not merge and free this object... */
+            if (add_to_minv(mon, &m_gold))
+                panic("display_minventory: static object freed.");
         }
 
-        if (n > 0) {
-            ret = selected[0].item.a_obj;
-            free((void *)selected);
-            /*
-             * Unfortunately, we can't return a pointer to our temporary
-             * gold object.  We'll have to work out a scheme where this
-             * can happen.  Maybe even put gold in the inventory list...
-             */
-            if (ret == &m_gold) ret = (struct obj *) 0;
-        } else
-            ret = (struct obj *) 0;
-        return ret;
+        n = query_objlist(title ? title : tmp, mon->minvent, INVORDER_SORT, &selected,
+                (dflags & MINV_NOLET) ? PICK_NONE : PICK_ONE,
+                do_all ? allow_all : worn_wield_only);
+
+        if (do_gold) obj_extract_self(&m_gold);
+
+        set_uasmon();
+    } else {
+        invdisp_nothing(title ? title : tmp, "(none)");
+        n = 0;
+    }
+
+    if (n > 0) {
+        ret = selected[0].item.a_obj;
+        free((void *)selected);
+        /*
+         * Unfortunately, we can't return a pointer to our temporary
+         * gold object.  We'll have to work out a scheme where this
+         * can happen.  Maybe even put gold in the inventory list...
+         */
+        if (ret == &m_gold) ret = (struct obj *) 0;
+    } else
+        ret = (struct obj *) 0;
+    return ret;
 }
 
 /*
