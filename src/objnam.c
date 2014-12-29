@@ -274,13 +274,11 @@ bool obj_is_pname (struct obj *obj) {
  * or doname() instead.
  */
 char * distant_name (struct obj *obj, char *(*func)( struct obj *)) {
-        char *str;
-
-        long save_Blinded = Blinded;
-        Blinded = 1;
-        str = (*func)(obj);
-        Blinded = save_Blinded;
-        return str;
+    long save_Blinded = Blinded;
+    Blinded = 1;
+    char *str = (*func)(obj);
+    Blinded = save_Blinded;
+    return str;
 }
 
 /* convert player specified fruit name into corresponding fruit juice name
