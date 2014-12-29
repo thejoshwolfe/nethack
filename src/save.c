@@ -578,7 +578,6 @@ void freedynamicdata (void) {
     if (iflags.wc_font_menu) free(iflags.wc_font_menu);
     if (iflags.wc_font_status) free(iflags.wc_font_status);
     if (iflags.wc_tile_file) free(iflags.wc_tile_file);
-    free_autopickup_exceptions();
 
     return;
 }

@@ -763,8 +763,6 @@ parse_config_line (FILE *fp, char *buf, char *tmp_ramdisk, char *tmp_levels)
         parseoptions(bufp, true, true);
         if (plname[0])          /* If a name was given */
             plnamesuffix(); /* set the character class */
-    } else if (match_varname(buf, "AUTOPICKUP_EXCEPTION", 5)) {
-        add_autopickup_exception(bufp);
     } else if (match_varname(buf, "HACKDIR", 4)) {
         adjust_prefix(bufp, HACKPREFIX);
     } else if (match_varname(buf, "LEVELDIR", 4) ||

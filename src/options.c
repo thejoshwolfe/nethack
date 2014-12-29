@@ -28,26 +28,25 @@ static struct Bool_Opt {
     {"altmeta", (bool *)0, true, DISP_IN_GAME},
     {"ascii_map",     &iflags.wc_ascii_map, true, SET_IN_GAME},    /*WC*/
     {"asksavedisk", (bool *)0, false, SET_IN_FILE},
-    {"autodig", &flags.autodig, false, SET_IN_GAME},
-    {"autopickup", &flags.pickup, true, SET_IN_GAME},
+    {"autodig", &flags.autodig, true, SET_IN_GAME},
     {"autoquiver", &flags.autoquiver, false, SET_IN_GAME},
     {"BIOS", (bool *)0, false, SET_IN_FILE},
     {"checkpoint", &flags.ins_chkpt, true, SET_IN_GAME},
     {"checkspace", (bool *)0, false, SET_IN_FILE},
     {"cmdassist", &iflags.cmdassist, true, SET_IN_GAME},
-    {"color",         &iflags.wc_color, false, SET_IN_GAME},        /*WC*/
+    {"color",         &iflags.wc_color, true, SET_IN_GAME},        /*WC*/
     {"confirm",&flags.confirm, true, SET_IN_GAME},
     {"cursesgraphics", (bool *)0, false, SET_IN_FILE},
     {"DECgraphics", &iflags.DECgraphics, false, SET_IN_GAME},
     {"eight_bit_tty", &iflags.wc_eight_bit_input, false, SET_IN_GAME},      /*WC*/
     {"extmenu", &iflags.extmenu, false, SET_IN_GAME},
-    {"hpmon", &iflags.use_hpmon, false, SET_IN_GAME},
+    {"hpmon", &iflags.use_hpmon, true, SET_IN_GAME},
     {"female", &flags.female, false, DISP_IN_GAME},
     {"fixinv", &flags.invlet_constant, true, SET_IN_GAME},
     {"fullscreen", &iflags.wc2_fullscreen, false, SET_IN_FILE},
     {"guicolor", &iflags.wc2_guicolor, true, SET_IN_GAME},
     {"help", &flags.help, true, SET_IN_GAME},
-    {"hilite_pet",    &iflags.wc_hilite_pet, false, SET_IN_GAME},   /*WC*/
+    {"hilite_pet",    &iflags.wc_hilite_pet, true, SET_IN_GAME},   /*WC*/
     {"IBMgraphics", &iflags.IBMgraphics, false, SET_IN_GAME},
     {"ignintr", &flags.ignintr, false, SET_IN_GAME},
     {"large_font", &iflags.obsolete, false, SET_IN_FILE},   /* OBSOLETE */
@@ -389,8 +388,6 @@ static bool is_wc_option(const char *);
 static bool wc_supported(const char *);
 static bool is_wc2_option(const char *);
 static bool wc2_supported(const char *);
-static void remove_autopickup_exception(struct autopickup_exception *);
-static int count_ape_maps(int *, int *);
 
 /* check whether a user-supplied option string is a proper leading
    substring of a particular option name; option string might have
@@ -472,7 +469,6 @@ void initoptions (void) {
     /* assert( sizeof flags.inv_order == sizeof def_inv_order ); */
     (void)memcpy((void *)flags.inv_order,
             (void *)def_inv_order, sizeof flags.inv_order);
-    flags.pickup_types[0] = '\0';
     flags.pickup_burden = MOD_ENCUMBER;
 
     iflags.sortloot = 'n';
@@ -1417,66 +1413,6 @@ goodfruit:
         return;
     }
 
-    /* types of objects to pick up automatically */
-    if (match_optname(opts, "pickup_types", 8, true)) {
-        char ocl[MAXOCLASSES + 1], tbuf[MAXOCLASSES + 1],
-             qbuf[QBUFSZ], abuf[BUFSZ];
-        int oc_sym;
-        bool badopt = false, compat = (strlen(opts) <= 6), use_menu;
-
-        oc_to_str(flags.pickup_types, tbuf);
-        flags.pickup_types[0] = '\0';   /* all */
-        op = string_for_opt(opts, (compat || !initial));
-        if (!op) {
-            if (compat || negated || initial) {
-                /* for backwards compatibility, "pickup" without a
-                   value is a synonym for autopickup of all types
-                   (and during initialization, we can't prompt yet) */
-                flags.pickup = !negated;
-                return;
-            }
-            oc_to_str(flags.inv_order, ocl);
-            use_menu = true;
-            if (flags.menu_style == MENU_TRADITIONAL ||
-                    flags.menu_style == MENU_COMBINATION) {
-                use_menu = false;
-                sprintf(qbuf, "New pickup_types: [%s am] (%s)",
-                        ocl, *tbuf ? tbuf : "all");
-                getlin(qbuf, abuf);
-                op = mungspaces(abuf);
-                if (abuf[0] == '\0' || abuf[0] == '\033')
-                    op = tbuf;          /* restore */
-                else if (abuf[0] == 'm')
-                    use_menu = true;
-            }
-            if (use_menu) {
-                (void) choose_classes_menu("Auto-Pickup what?", 1,
-                        true, ocl, tbuf);
-                op = tbuf;
-            }
-        }
-        if (negated) {
-            bad_negation("pickup_types", true);
-            return;
-        }
-        while (*op == ' ') op++;
-        if (*op != 'a' && *op != 'A') {
-            num = 0;
-            while (*op) {
-                oc_sym = def_char_to_objclass(*op);
-                /* make sure all are valid obj symbols occuring once */
-                if (oc_sym != MAXOCLASSES &&
-                        !index(flags.pickup_types, oc_sym)) {
-                    flags.pickup_types[num] = (char)oc_sym;
-                    flags.pickup_types[++num] = '\0';
-                } else
-                    badopt = true;
-                op++;
-            }
-            if (badopt) badoption(opts);
-        }
-        return;
-    }
     /* WINCAP
      * player_selection: dialog | prompts */
     fullname = "player_selection";
@@ -2140,8 +2076,7 @@ int doset (void) {
                             (pass == DISP_IN_GAME) ? 0 : indexoffset);
             }
     any.a_int = -1;
-    sprintf(buf, "autopickup exceptions (%d currently set)",
-            count_ape_maps((int *)0, (int *)0));
+    sprintf(buf, "autopickup exceptions (%d currently set)", 0);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
 
     any.a_void = 0;
@@ -2475,87 +2410,6 @@ static bool special_handling(const char *optname, bool setinitial, bool setfromf
         }
         destroy_nhwindow(tmpwin);
         retval = true;
-    } else if (!strcmp("autopickup_exception", optname)) {
-        bool retval;
-        int pick_cnt, pick_idx, opt_idx, pass;
-        int totalapes = 0, numapes[2] = {0,0};
-        menu_item *pick_list = (menu_item *)0;
-        anything any;
-        char apebuf[BUFSZ];
-        struct autopickup_exception *ape;
-        static const char *action_titles[] = {
-            "a", "add new autopickup exception",
-            "l", "list autopickup exceptions",
-            "r", "remove existing autopickup exception",
-            "e", "exit this menu",
-        };
-ape_again:
-        opt_idx = 0;
-        totalapes = count_ape_maps(&numapes[AP_LEAVE], &numapes[AP_GRAB]);
-        tmpwin = create_nhwindow(NHW_MENU);
-        start_menu(tmpwin);
-        any.a_int = 0;
-        for (i = 0; i < SIZE(action_titles) ; i += 2) {
-            any.a_int++;
-            if (!totalapes && (i >= 2 && i < 6)) continue;
-            add_menu(tmpwin, NO_GLYPH, &any, *action_titles[i],
-                    0, ATR_NONE, action_titles[i+1], MENU_UNSELECTED);
-        }
-        end_menu(tmpwin, "Do what?");
-        if ((pick_cnt = select_menu(tmpwin, PICK_ONE, &pick_list)) > 0) {
-            for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx) {
-                opt_idx = pick_list[pick_idx].item.a_int - 1;
-            }
-            free((void *)pick_list);
-            pick_list = (menu_item *)0;
-        }
-        destroy_nhwindow(tmpwin);
-        if (pick_cnt < 1) return false;
-
-        if (opt_idx == 0) {     /* add new */
-            getlin("What new autopickup exception pattern?", &apebuf[1]);
-            if (apebuf[1] == '\033') return false;
-            apebuf[0] = '"';
-            strcat(apebuf,"\"");
-            add_autopickup_exception(apebuf);
-            goto ape_again;
-        } else if (opt_idx == 3) {
-            retval = true;
-        } else {        /* remove */
-            tmpwin = create_nhwindow(NHW_MENU);
-            start_menu(tmpwin);
-            for (pass = AP_LEAVE; pass <= AP_GRAB; ++pass) {
-                if (numapes[pass] == 0) continue;
-                ape = iflags.autopickup_exceptions[pass];
-                any.a_void = 0;
-                add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-                        (pass == 0) ? "Never pickup" : "Always pickup",
-                        MENU_UNSELECTED);
-                for (i = 0; i < numapes[pass] && ape; i++) {
-                    any.a_void = (opt_idx == 1) ? 0 : ape;
-                    sprintf(apebuf, "\"%s\"", ape->pattern);
-                    add_menu(tmpwin, NO_GLYPH, &any,
-                            0, 0, ATR_NONE, apebuf, MENU_UNSELECTED);
-                    ape = ape->next;
-                }
-            }
-            sprintf(apebuf, "%s autopickup exceptions",
-                    (opt_idx == 1) ? "List of" : "Remove which");
-            end_menu(tmpwin, apebuf);
-            pick_cnt = select_menu(tmpwin,
-                    (opt_idx == 1) ?  PICK_NONE : PICK_ANY,
-                    &pick_list);
-            if (pick_cnt > 0) {
-                for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx)
-                    remove_autopickup_exception(
-                            (struct autopickup_exception *)pick_list[pick_idx].item.a_void);
-            }
-            free((void *)pick_list);
-            pick_list = (menu_item *)0;
-            destroy_nhwindow(tmpwin);
-            goto ape_again;
-        }
-        retval = true;
     }
     return retval;
 }
@@ -2716,10 +2570,6 @@ static const char * get_compopt_value (const char *optname, char *buf) {
                 (preferred_pet == 'n') ? "none" : "random");
     else if (!strcmp(optname, "pickup_burden"))
         sprintf(buf, "%s", burdentype[flags.pickup_burden] );
-    else if (!strcmp(optname, "pickup_types")) {
-        oc_to_str(flags.pickup_types, ocl);
-        sprintf(buf, "%s", ocl[0] ? ocl : "all" );
-    }
     else if (!strcmp(optname, "race"))
         sprintf(buf, "%s", rolestring(flags.initrace, races, noun));
     else if (!strcmp(optname, "role"))
@@ -2810,104 +2660,7 @@ static const char * get_compopt_value (const char *optname, char *buf) {
 }
 
 int dotogglepickup(void) {
-    char buf[BUFSZ], ocl[MAXOCLASSES+1];
-
-    flags.pickup = !flags.pickup;
-    if (flags.pickup) {
-        oc_to_str(flags.pickup_types, ocl);
-        sprintf(buf, "ON, for %s objects%s", ocl[0] ? ocl : "all",
-                (iflags.autopickup_exceptions[AP_LEAVE] ||
-                 iflags.autopickup_exceptions[AP_GRAB]) ?
-                ((count_ape_maps((int *)0, (int *)0) == 1) ?
-                 ", with one exception" : ", with some exceptions") :
-                "");
-    } else {
-        strcpy(buf, "OFF");
-    }
-    pline("Autopickup: %s.", buf);
     return 0;
-}
-
-int add_autopickup_exception (const char *mapping) {
-    struct autopickup_exception *ape, **apehead;
-    char text[256], *text2;
-    int textsize = 0;
-    bool grab = false;
-
-    if (sscanf(mapping, "\"%255[^\"]\"", text) == 1) {
-        text2 = &text[0];
-        if (*text2 == '<') {            /* force autopickup */
-            grab = true;
-            ++text2;
-        } else if (*text2 == '>') {     /* default - Do not pickup */
-            grab = false;
-            ++text2;
-        }
-        textsize = strlen(text2);
-        apehead = (grab) ? &iflags.autopickup_exceptions[AP_GRAB] :
-            &iflags.autopickup_exceptions[AP_LEAVE];
-        ape = (struct autopickup_exception *)
-            malloc(sizeof(struct autopickup_exception));
-        ape->pattern = (char *) malloc(textsize+1);
-        strcpy(ape->pattern, text2);
-        ape->grab = grab;
-        if (!*apehead) ape->next = (struct autopickup_exception *)0;
-        else ape->next = *apehead;
-        *apehead = ape;
-    } else {
-        raw_print("syntax error in AUTOPICKUP_EXCEPTION");
-        return 0;
-    }
-    return 1;
-}
-
-static void remove_autopickup_exception (struct autopickup_exception *whichape) {
-    struct autopickup_exception *ape, *prev = 0;
-    int chain = whichape->grab ? AP_GRAB : AP_LEAVE;
-
-    for (ape = iflags.autopickup_exceptions[chain]; ape;) {
-        if (ape == whichape) {
-            struct autopickup_exception *freeape = ape;
-            ape = ape->next;
-            if (prev) prev->next = ape;
-            else iflags.autopickup_exceptions[chain] = ape;
-            free(freeape->pattern);
-            free(freeape);
-        } else {
-            prev = ape;
-            ape = ape->next;
-        }
-    }
-}
-
-static int count_ape_maps (int *leave, int *grab) {
-    struct autopickup_exception *ape;
-    int pass, totalapes, numapes[2] = {0,0};
-
-    for (pass = AP_LEAVE; pass <= AP_GRAB; ++pass) {
-        ape = iflags.autopickup_exceptions[pass];
-        while(ape) {
-            ape = ape->next;
-            numapes[pass]++;
-        }
-    }
-    totalapes = numapes[AP_LEAVE] + numapes[AP_GRAB];
-    if (leave) *leave = numapes[AP_LEAVE];
-    if (grab) *grab = numapes[AP_GRAB];
-    return totalapes;
-}
-
-void free_autopickup_exceptions (void) {
-    struct autopickup_exception *ape;
-    int pass;
-
-    for (pass = AP_LEAVE; pass <= AP_GRAB; ++pass) {
-        while((ape = iflags.autopickup_exceptions[pass]) != 0) {
-            free(ape->pattern);
-            iflags.autopickup_exceptions[pass] = ape->next;
-            free(ape);
-        }
-    }
 }
 
 void option_help (void) {

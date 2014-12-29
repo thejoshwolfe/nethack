@@ -996,8 +996,6 @@ extern void set_duplicate_opt_detection(int);
 extern void set_wc_option_mod_status(unsigned long, int);
 extern void set_wc2_option_mod_status(unsigned long, int);
 extern void set_option_mod_status(const char *,int);
-extern int add_autopickup_exception(const char *);
-extern void free_autopickup_exceptions(void);
 
 /* ### pager.c ### */
 
@@ -1029,7 +1027,6 @@ extern int use_container(struct obj *,int);
 extern int loot_mon(struct monst *,int *,bool *);
 extern const char *safe_qbuf(const char *,unsigned,
         const char *,const char *,const char *);
-extern bool is_autopickup_exception(struct obj *, bool);
 
 /* ### pline.c ### */
 
