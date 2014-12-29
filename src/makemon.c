@@ -1,10 +1,15 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "epri.h"
 #include "emin.h"
 #include "edog.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "dbridge.h"
+#include "shk.h"
+#include "objnam.h"
+#include "do_name.h"
 #include "display.h"
 
 static struct monst zeromonst;
@@ -668,7 +673,9 @@ clone_mon (
                 m3 = newmonst(sizeof(struct epri) + mon->mnamelth);
                 *m3 = *m2;
                 m3->mxlth = sizeof(struct epri);
-                if (m2->mnamelth) strcpy(monster_name(m3), monster_name(m2));
+                if (m2->mnamelth) {
+                    set_monster_name(m3, monster_name(m2));
+                }
                 *(EPRI(m3)) = *(EPRI(mon));
                 replmon(m2, m3);
                 m2 = m3;
@@ -1315,10 +1322,13 @@ grow_up (       /* `mtmp' might "grow up" into a bigger version */
         if ((int)++mtmp->m_lev >= mons[newtype].mlevel && newtype != oldtype) {
             ptr = &mons[newtype];
             if (mvitals[newtype].mvflags & G_GENOD) {   /* allow G_EXTINCT */
-                if (sensemon(mtmp))
-                    pline("As %s grows up into %s, %s %s!", mon_nam(mtmp),
+                if (sensemon(mtmp)) {
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mtmp);
+                    pline("As %s grows up into %s, %s %s!", name,
                         an(ptr->mname), mhe(mtmp),
                         nonliving(ptr) ? "expires" : "dies");
+                }
                 set_mon_data(mtmp, ptr, -1);    /* keep mvitals[] accurate */
                 mondied(mtmp);
                 return (struct permonst *)0;
