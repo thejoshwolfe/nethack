@@ -1,7 +1,9 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "dlb.h"
 #include "extern.h"
+#include "objnam.h"
 #include "winprocs.h"
 #include "wintty.h" /* more() */
 #include "youprop.h"
@@ -36,6 +38,10 @@ static int get_uchars(FILE *,char *,char *,unsigned char *,bool,int,const char *
 int parse_config_line(FILE *,char *,char *,char *);
 static void adjust_prefix(char *, int);
 
+static int nesting = 0;
+const char *configfile = ".nethackrc";
+
+
 /*
  * fname_encode()
  *
@@ -57,9 +63,7 @@ static void adjust_prefix(char *, int);
  *      results in this encoding:
  *          "This%20is%20a%20%25%20test%21"
  */
-    char *
-fname_encode (const char *legal, char quotechar, char *s, char *callerbuf, int bufsz)
-{
+char * fname_encode (const char *legal, char quotechar, char *s, char *callerbuf, int bufsz) {
     char *sp, *op;
     int cnt = 0;
     static char hexdigits[] = "0123456789ABCDEF";
@@ -99,9 +103,7 @@ fname_encode (const char *legal, char quotechar, char *s, char *callerbuf, int b
  *      callerbuf       buffer to house result
  *      bufsz           size of callerbuf
  */
-    char *
-fname_decode (char quotechar, char *s, char *callerbuf, int bufsz)
-{
+char * fname_decode (char quotechar, char *s, char *callerbuf, int bufsz) {
     char *sp, *op;
     int k,calc,cnt = 0;
     static char hexdigits[] = "0123456789ABCDEF";
@@ -156,10 +158,7 @@ const char * fqname(const char * basename, int whichprefix, int buffnum) {
 }
 
 /* reasonbuf must be at least BUFSZ, supplied by caller */
-/*ARGSUSED*/
-    int
-validate_prefix_locations (char *reasonbuf)
-{
+int validate_prefix_locations (char *reasonbuf) {
     FILE *fp;
     const char *filename;
     int prefcnt, failcount = 0;
@@ -241,7 +240,6 @@ int create_levelfile(int lev, char errbuf[]) {
     return fd;
 }
 
-
 int open_levelfile(int lev, char errbuf[]) {
     int fd;
     const char *fq_lock;
@@ -261,7 +259,6 @@ int open_levelfile(int lev, char errbuf[]) {
 
     return fd;
 }
-
 
 void delete_levelfile(int lev) {
     /*
@@ -294,9 +291,7 @@ void clearlocks(void) {
 /* set up "file" to be file name for retrieving bones, and return a
  * bonesid to be read/written in the bones file.
  */
-    static char *
-set_bonesfile_name (char *file, d_level *lev)
-{
+static char * set_bonesfile_name (char *file, d_level *lev) {
     s_level *sptr;
     char *dptr;
 
@@ -316,9 +311,7 @@ set_bonesfile_name (char *file, d_level *lev)
  * (we are not reading or writing level files while writing bones files, so
  * the same array may be used instead of copying.)
  */
-    static char *
-set_bonestemp_name (void)
-{
+static char * set_bonestemp_name (void) {
     char *tf;
 
     tf = rindex(lock, '.');
@@ -327,9 +320,7 @@ set_bonestemp_name (void)
     return lock;
 }
 
-    int
-create_bonesfile (d_level *lev, char **bonesid, char errbuf[])
-{
+int create_bonesfile (d_level *lev, char **bonesid, char errbuf[]) {
     const char *file;
     int fd;
 
@@ -362,10 +353,7 @@ void commit_bonesfile(d_level *lev) {
         pline("couldn't rename %s to %s.", tempname, fq_bones);
 }
 
-
-    int
-open_bonesfile (d_level *lev, char **bonesid)
-{
+int open_bonesfile (d_level *lev, char **bonesid) {
     const char *fq_bones;
     int fd;
 
@@ -375,11 +363,8 @@ open_bonesfile (d_level *lev, char **bonesid)
     return fd;
 }
 
-
-    int
-delete_bonesfile (d_level *lev)
-{
-    (void) set_bonesfile_name(bones, lev);
+int delete_bonesfile (d_level *lev) {
+    set_bonesfile_name(bones, lev);
     return !(unlink(fqname(bones, BONESPREFIX, 0)) < 0);
 }
 
@@ -396,18 +381,14 @@ void set_savefile_name(void) {
     regularize(SAVEF+5);    /* avoid . or / in name */
 }
 
-    void
-save_savefile_name (int fd)
-{
-    (void) write(fd, (void *) SAVEF, sizeof(SAVEF));
+void save_savefile_name (int fd) {
+    write(fd, (void *) SAVEF, sizeof(SAVEF));
 }
-
 
 /* change pre-existing savefile name to indicate an error savefile */
 void set_error_savefile(void) {
     strcat(SAVEF, ".e");
 }
-
 
 /* create save file, overwriting one if it already exists */
 int create_savefile(void) {
@@ -419,7 +400,6 @@ int create_savefile(void) {
     return fd;
 }
 
-
 /* open savefile for reading */
 int open_savefile(void) {
     const char *fq_save;
@@ -430,18 +410,14 @@ int open_savefile(void) {
     return fd;
 }
 
-
 /* delete savefile */
 int delete_savefile(void) {
     unlink(fqname(SAVEF, SAVEPREFIX, 0));
     return 0;       /* for restore_saved_game() (ex-xxxmain.c) test */
 }
 
-
 /* try to open up a save file and prepare to restore it */
-    int
-restore_saved_game (void)
-{
+int restore_saved_game (void) {
     const char *fq_save;
     int fd;
 
@@ -478,10 +454,6 @@ void free_saved_games (char **saved) {
 
 /* ----------  BEGIN FILE LOCKING HANDLING ----------- */
 
-static int nesting = 0;
-
-#define HUP     if (!program_state.done_hup)
-
 static char * make_lockname (const char *filename, char *lockname) {
     strcpy(lockname, filename);
     strcat(lockname, "_lock");
@@ -490,9 +462,7 @@ static char * make_lockname (const char *filename, char *lockname) {
 
 
 /* lock a file */
-    bool 
-lock_file (const char *filename, int whichprefix, int retryct)
-{
+bool lock_file (const char *filename, int whichprefix, int retryct) {
     char locknambuf[BUFSZ];
     const char *lockname;
 
@@ -512,13 +482,13 @@ lock_file (const char *filename, int whichprefix, int retryct)
         switch (errnosv) {  /* George Barbanis */
             case EEXIST:
                 if (retryct--) {
-                    HUP raw_printf(
+                    if (!program_state.done_hup) raw_printf(
                             "Waiting for access to %s.  (%d retries left).",
                             filename, retryct);
                     sleep(1);
                 } else {
-                    HUP (void) raw_print("I give up.  Sorry.");
-                    HUP raw_printf("Perhaps there is an old %s around?",
+                    if (!program_state.done_hup) (void) raw_print("I give up.  Sorry.");
+                    if (!program_state.done_hup) raw_printf("Perhaps there is an old %s around?",
                             lockname);
                     nesting--;
                     return false;
@@ -526,16 +496,16 @@ lock_file (const char *filename, int whichprefix, int retryct)
 
                 break;
             case ENOENT:
-                HUP raw_printf("Can't find file %s to lock!", filename);
+                if (!program_state.done_hup) raw_printf("Can't find file %s to lock!", filename);
                 nesting--;
                 return false;
             case EACCES:
-                HUP raw_printf("No write permission to lock %s!", filename);
+                if (!program_state.done_hup) raw_printf("No write permission to lock %s!", filename);
                 nesting--;
                 return false;
             default:
-                HUP perror(lockname);
-                HUP raw_printf(
+                if (!program_state.done_hup) perror(lockname);
+                if (!program_state.done_hup) raw_printf(
                         "Cannot lock %s for unknown reason (%d).",
                         filename, errnosv);
                 nesting--;
@@ -547,7 +517,6 @@ lock_file (const char *filename, int whichprefix, int retryct)
     return true;
 }
 
-
 /* unlock file, which must be currently locked by lock_file */
 void unlock_file(const char *filename) {
     char locknambuf[BUFSZ];
@@ -558,7 +527,7 @@ void unlock_file(const char *filename) {
         lockname = fqname(lockname, LOCKPREFIX, 2);
 
         if (unlink(lockname) < 0)
-            HUP raw_printf("Can't unlink %s.", lockname);
+            if (!program_state.done_hup) raw_printf("Can't unlink %s.", lockname);
 
     }
 
@@ -569,8 +538,6 @@ void unlock_file(const char *filename) {
 
 
 /* ----------  BEGIN CONFIG FILE HANDLING ----------- */
-
-const char *configfile = ".nethackrc";
 
 static FILE * fopen_config_file(const char *filename) {
     FILE *fp;
@@ -628,22 +595,21 @@ static FILE * fopen_config_file(const char *filename) {
 
 }
 
-
 /*
  * Retrieve a list of integers from a file into a unsigned char array.
  *
  * NOTE: zeros are inserted unless modlist is true, in which case the list
  *  location is unchanged.  Callers must handle zeros if modlist is false.
  */
-static int get_uchars (
-    FILE *fp,           /* input file pointer */
-    char *buf,          /* read buffer, must be of size BUFSZ */
-    char *bufp,         /* current pointer */
-    unsigned char *list,        /* return list */
-    bool modlist,    /* true: list is being modified in place */
-    int size,          /* return list size */
-    const char *name           /* name of option for error message */
-)
+// FILE *fp,           /* input file pointer */
+// char *buf,          /* read buffer, must be of size BUFSZ */
+// char *bufp,         /* current pointer */
+// unsigned char *list,        /* return list */
+// bool modlist,    /* true: list is being modified in place */
+// int size,          /* return list size */
+// const char *name           /* name of option for error message */
+static int get_uchars ( FILE *fp, char *buf, char *bufp, unsigned char *list,
+        bool modlist, int size, const char *name)
 {
     unsigned int num = 0;
     int count = 0;
@@ -708,9 +674,7 @@ static void append_slash (char *name) {
     return;
 }
 
-    static void
-adjust_prefix (char *bufp, int prefixid)
-{
+static void adjust_prefix (char *bufp, int prefixid) {
     char *ptr;
 
     if (!bufp) return;
@@ -723,12 +687,7 @@ adjust_prefix (char *bufp, int prefixid)
     }
 }
 
-#define match_varname(INP,NAM,LEN) match_optname(INP, NAM, LEN, true)
-
-/*ARGSUSED*/
-    int 
-parse_config_line (FILE *fp, char *buf, char *tmp_ramdisk, char *tmp_levels)
-{
+int parse_config_line (FILE *fp, char *buf, char *tmp_ramdisk, char *tmp_levels) {
     char            *bufp, *altp;
     unsigned char   translate[MAXPCHARS];
     int   len;
@@ -759,86 +718,81 @@ parse_config_line (FILE *fp, char *buf, char *tmp_ramdisk, char *tmp_levels)
     /* some of these (at least LEVELS and SAVE) should now set the
      * appropriate fqn_prefix[] rather than specialized variables
      */
-    if (match_varname(buf, "OPTIONS", 4)) {
+    if (match_optname(buf, "OPTIONS", 4, true)) {
         parseoptions(bufp, true, true);
         if (plname[0])          /* If a name was given */
             plnamesuffix(); /* set the character class */
-    } else if (match_varname(buf, "HACKDIR", 4)) {
+    } else if (match_optname(buf, "HACKDIR", 4, true)) {
         adjust_prefix(bufp, HACKPREFIX);
-    } else if (match_varname(buf, "LEVELDIR", 4) ||
-            match_varname(buf, "LEVELS", 4)) {
+    } else if (match_optname(buf, "LEVELDIR", 4, true) ||
+            match_optname(buf, "LEVELS", 4, true)) {
         adjust_prefix(bufp, LEVELPREFIX);
-    } else if (match_varname(buf, "SAVEDIR", 4)) {
+    } else if (match_optname(buf, "SAVEDIR", 4, true)) {
         adjust_prefix(bufp, SAVEPREFIX);
-    } else if (match_varname(buf, "BONESDIR", 5)) {
+    } else if (match_optname(buf, "BONESDIR", 5, true)) {
         adjust_prefix(bufp, BONESPREFIX);
-    } else if (match_varname(buf, "DATADIR", 4)) {
+    } else if (match_optname(buf, "DATADIR", 4, true)) {
         adjust_prefix(bufp, DATAPREFIX);
-    } else if (match_varname(buf, "SCOREDIR", 4)) {
+    } else if (match_optname(buf, "SCOREDIR", 4, true)) {
         adjust_prefix(bufp, SCOREPREFIX);
-    } else if (match_varname(buf, "LOCKDIR", 4)) {
+    } else if (match_optname(buf, "LOCKDIR", 4, true)) {
         adjust_prefix(bufp, LOCKPREFIX);
-    } else if (match_varname(buf, "CONFIGDIR", 4)) {
+    } else if (match_optname(buf, "CONFIGDIR", 4, true)) {
         adjust_prefix(bufp, CONFIGPREFIX);
-    } else if (match_varname(buf, "TROUBLEDIR", 4)) {
+    } else if (match_optname(buf, "TROUBLEDIR", 4, true)) {
         adjust_prefix(bufp, TROUBLEPREFIX);
-    } else if (match_varname(buf, "NAME", 4)) {
+    } else if (match_optname(buf, "NAME", 4, true)) {
         (void) strncpy(plname, bufp, PL_NSIZ-1);
         plnamesuffix();
-    } else if (match_varname(buf, "ROLE", 4) ||
-            match_varname(buf, "CHARACTER", 4)) {
+    } else if (match_optname(buf, "ROLE", 4, true) ||
+            match_optname(buf, "CHARACTER", 4, true)) {
         if ((len = str2role(bufp)) >= 0)
             flags.initrole = len;
-    } else if (match_varname(buf, "DOGNAME", 3)) {
+    } else if (match_optname(buf, "DOGNAME", 3, true)) {
         (void) strncpy(dogname, bufp, PL_PSIZ-1);
-    } else if (match_varname(buf, "CATNAME", 3)) {
+    } else if (match_optname(buf, "CATNAME", 3, true)) {
         (void) strncpy(catname, bufp, PL_PSIZ-1);
 
-    } else if (match_varname(buf, "BOULDER", 3)) {
+    } else if (match_optname(buf, "BOULDER", 3, true)) {
         (void) get_uchars(fp, buf, bufp, &iflags.bouldersym, true,
                 1, "BOULDER");
-    } else if (match_varname(buf, "GRAPHICS", 4)) {
+    } else if (match_optname(buf, "GRAPHICS", 4, true)) {
         len = get_uchars(fp, buf, bufp, translate, false,
                 MAXPCHARS, "GRAPHICS");
         assign_graphics(translate, len, MAXPCHARS, 0);
-    } else if (match_varname(buf, "DUNGEON", 4)) {
+    } else if (match_optname(buf, "DUNGEON", 4, true)) {
         len = get_uchars(fp, buf, bufp, translate, false,
                 MAXDCHARS, "DUNGEON");
         assign_graphics(translate, len, MAXDCHARS, 0);
-    } else if (match_varname(buf, "TRAPS", 4)) {
+    } else if (match_optname(buf, "TRAPS", 4, true)) {
         len = get_uchars(fp, buf, bufp, translate, false,
                 MAXTCHARS, "TRAPS");
         assign_graphics(translate, len, MAXTCHARS, MAXDCHARS);
-    } else if (match_varname(buf, "EFFECTS", 4)) {
+    } else if (match_optname(buf, "EFFECTS", 4, true)) {
         len = get_uchars(fp, buf, bufp, translate, false,
                 MAXECHARS, "EFFECTS");
         assign_graphics(translate, len, MAXECHARS, MAXDCHARS+MAXTCHARS);
 
-    } else if (match_varname(buf, "OBJECTS", 3)) {
+    } else if (match_optname(buf, "OBJECTS", 3, true)) {
         /* oc_syms[0] is the RANDOM object, unused */
         (void) get_uchars(fp, buf, bufp, &(oc_syms[1]), true,
                 MAXOCLASSES-1, "OBJECTS");
-    } else if (match_varname(buf, "MONSTERS", 3)) {
+    } else if (match_optname(buf, "MONSTERS", 3, true)) {
         /* monsyms[0] is unused */
         (void) get_uchars(fp, buf, bufp, &(monsyms[1]), true,
                 MAXMCLASSES-1, "MONSTERS");
-    } else if (match_varname(buf, "WARNINGS", 5)) {
+    } else if (match_optname(buf, "WARNINGS", 5, true)) {
         (void) get_uchars(fp, buf, bufp, translate, false,
                 WARNCOUNT, "WARNINGS");
         assign_warnings(translate);
-    } else if (match_varname(buf, "WIZKIT", 6)) {
+    } else if (match_optname(buf, "WIZKIT", 6, true)) {
         (void) strncpy(wizkit, bufp, WIZKIT_MAX-1);
     } else
         return 0;
     return 1;
 }
 
-    void
-read_config_file (const char *filename)
-{
-#define tmp_levels      (char *)0
-#define tmp_ramdisk     (char *)0
-
+void read_config_file (const char *filename) {
     char    buf[4*BUFSZ];
     FILE    *fp;
 
@@ -848,7 +802,7 @@ read_config_file (const char *filename)
     set_duplicate_opt_detection(1);
 
     while (fgets(buf, 4*BUFSZ, fp)) {
-        if (!parse_config_line(fp, buf, tmp_ramdisk, tmp_levels)) {
+        if (!parse_config_line(fp, buf, NULL, NULL)) {
             raw_printf("Bad option line:  \"%.50s\"", buf);
             wait_synch();
         }
@@ -861,9 +815,7 @@ read_config_file (const char *filename)
     return;
 }
 
-    static FILE *
-fopen_wizkit_file (void)
-{
+static FILE * fopen_wizkit_file (void) {
     FILE *fp;
     char    tmp_wizkit[BUFSZ];
     char *envp;
@@ -909,9 +861,7 @@ fopen_wizkit_file (void)
     return (FILE *)0;
 }
 
-    void
-read_wizkit (void)
-{
+void read_wizkit (void) {
     FILE *fp;
     char *ep, buf[BUFSZ];
     struct obj *otmp;
