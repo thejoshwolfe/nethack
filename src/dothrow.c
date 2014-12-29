@@ -1,10 +1,14 @@
 /* See LICENSE in the root of this project for change info */
+
 /* Contains code for 't' (throw) */
 
 #include "hack.h"
 #include "edog.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "shk.h"
+#include "do_name.h"
+#include "objnam.h"
 #include "display.h"
 #include "winprocs.h"
 
@@ -34,9 +38,7 @@ extern bool notonhead;       /* for long worms */
 
 
 /* Throw the selected object, asking for direction */
-static int
-throw_obj (struct obj *obj, int shotlimit)
-{
+static int throw_obj (struct obj *obj, int shotlimit) {
         struct obj *otmp;
         int multishot = 1;
         signed char skill;
@@ -163,10 +165,7 @@ throw_obj (struct obj *obj, int shotlimit)
         return 1;
 }
 
-
-int
-dothrow (void)
-{
+int dothrow (void) {
         struct obj *obj;
         int shotlimit;
 
@@ -200,9 +199,7 @@ dothrow (void)
 
 /* KMH -- Automatically fill quiver */
 /* Suggested by Jeffrey Bay <jbay@convex.hp.com> */
-static void
-autoquiver (void)
-{
+static void autoquiver (void) {
         struct obj *otmp, *oammo = 0, *omissile = 0, *omisc = 0, *altammo = 0;
 
         if (uquiver)
@@ -265,9 +262,7 @@ autoquiver (void)
 
 
 /* Throw from the quiver */
-int
-dofire (void)
-{
+int dofire (void) {
         int shotlimit;
 
         if (notake(youmonst.data)) {
@@ -313,9 +308,7 @@ dofire (void)
 /*
  * Object hits floor at hero's feet.  Called from drop() and throwit().
  */
-void
-hitfloor (struct obj *obj)
-{
+void hitfloor (struct obj *obj) {
         if (IS_SOFT(levl[u.ux][u.uy].typ) || u.uinwater) {
                 dropy(obj);
                 return;
@@ -338,9 +331,7 @@ hitfloor (struct obj *obj)
  * and return false.  If stopped early, dest_cc will be the location
  * before the failed callback.
  */
-bool 
-walk_path (coord *src_cc, coord *dest_cc, bool (*check_proc)(void *, int, int), void *arg)
-{
+bool walk_path (coord *src_cc, coord *dest_cc, bool (*check_proc)(void *, int, int), void *arg) {
     int x, y, dx, dy, x_change, y_change, err, i, prev_x, prev_y;
     bool keep_going = true;
 
@@ -418,9 +409,7 @@ walk_path (coord *src_cc, coord *dest_cc, bool (*check_proc)(void *, int, int), 
  *      o bounce off walls
  *      o let jumps go over boulders
  */
-bool 
-hurtle_step (void *arg, int x, int y)
-{
+bool hurtle_step (void *arg, int x, int y) {
     int ox, oy, *range = (int *)arg;
     struct obj *obj;
     struct monst *mon;
@@ -480,7 +469,9 @@ hurtle_step (void *arg, int x, int y)
     }
 
     if ((mon = m_at(x, y)) != 0) {
-        You("bump into %s.", a_monnam(mon));
+        char name[BUFSZ];
+        a_monnam(name, BUFSZ, mon);
+        You("bump into %s.", name);
         wakeup(mon);
         return false;
     }
@@ -535,9 +526,7 @@ hurtle_step (void *arg, int x, int y)
     return true;
 }
 
-static bool 
-mhurtle_step (void *arg, int x, int y)
-{
+static bool mhurtle_step (void *arg, int x, int y) {
         struct monst *mon = (struct monst *)arg;
 
         /* TODO: Treat walls, doors, iron bars, pools, lava, etc. specially
@@ -613,9 +602,7 @@ void hurtle(int dx, int dy, int range, bool verbose) {
 
 /* Move a monster through the air for a few squares.
  */
-void
-mhurtle (struct monst *mon, int dx, int dy, int range)
-{
+void mhurtle (struct monst *mon, int dx, int dy, int range) {
     coord mc, cc;
 
         /* At the very least, debilitate the monster */
@@ -643,34 +630,34 @@ mhurtle (struct monst *mon, int dx, int dy, int range)
 }
 
 static void check_shop_obj(struct obj *obj, signed char x, signed char y, bool broken) {
-        struct monst *shkp = shop_keeper(*u.ushops);
+    struct monst *shkp = shop_keeper(*u.ushops);
 
-        if(!shkp) return;
+    if(!shkp) return;
 
-        if(broken) {
-                if (obj->unpaid) {
-                    (void)stolen_value(obj, u.ux, u.uy,
-                                       (bool)shkp->mpeaceful, false);
-                    subfrombill(obj, shkp);
-                }
-                obj->no_charge = 1;
-                return;
+    if(broken) {
+        if (obj->unpaid) {
+            (void)stolen_value(obj, u.ux, u.uy,
+                    (bool)shkp->mpeaceful, false);
+            subfrombill(obj, shkp);
         }
+        obj->no_charge = 1;
+        return;
+    }
 
-        if (!costly_spot(x, y) || *in_rooms(x, y, SHOPBASE) != *u.ushops) {
-                /* thrown out of a shop or into a different shop */
-                if (obj->unpaid) {
-                    (void)stolen_value(obj, u.ux, u.uy,
-                                       (bool)shkp->mpeaceful, false);
-                    subfrombill(obj, shkp);
-                }
-        } else {
-                if (costly_spot(u.ux, u.uy) && costly_spot(x, y)) {
-                    if(obj->unpaid) subfrombill(obj, shkp);
-                    else if(!(x == shkp->mx && y == shkp->my))
-                            sellobj(obj, x, y);
-                }
+    if (!costly_spot(x, y) || *in_rooms(x, y, SHOPBASE) != *u.ushops) {
+        /* thrown out of a shop or into a different shop */
+        if (obj->unpaid) {
+            (void)stolen_value(obj, u.ux, u.uy,
+                    (bool)shkp->mpeaceful, false);
+            subfrombill(obj, shkp);
         }
+    } else {
+        if (costly_spot(u.ux, u.uy) && costly_spot(x, y)) {
+            if(obj->unpaid) subfrombill(obj, shkp);
+            else if(!(x == shkp->mx && y == shkp->my))
+                sellobj(obj, x, y);
+        }
+    }
 }
 
 /*
@@ -781,9 +768,7 @@ static bool toss_up(struct obj *obj, bool hitsroof) {
 }
 
 /* return true for weapon meant to be thrown; excludes ammo */
-static bool 
-throwing_weapon (struct obj *obj)
-{
+static bool throwing_weapon (struct obj *obj) {
         return (is_missile(obj) || is_spear(obj) ||
                 /* daggers and knife (excludes scalpel) */
                 (is_blade(obj) && !is_sword(obj) &&
@@ -793,9 +778,7 @@ throwing_weapon (struct obj *obj)
 }
 
 /* the currently thrown object is returning to you (not for boomerangs) */
-static void
-sho_obj_return_to_u (struct obj *obj)
-{
+static void sho_obj_return_to_u (struct obj *obj) {
     /* might already be our location (bounced off a wall) */
     if (bhitpos.x != u.ux || bhitpos.y != u.uy) {
         int x = bhitpos.x - u.dx, y = bhitpos.y - u.dy;
@@ -1024,21 +1007,23 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
                 if(flooreffects(obj,bhitpos.x,bhitpos.y,"fall")) return;
                 obj_no_longer_held(obj);
                 if (mon && mon->isshk && is_pick(obj)) {
-                    if (cansee(bhitpos.x, bhitpos.y))
-                        pline("%s snatches up %s.",
-                              Monnam(mon), the(xname(obj)));
+                    if (cansee(bhitpos.x, bhitpos.y)) {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mon);
+                        pline("%s snatches up %s.", name, the(xname(obj)));
+                    }
                     if(*u.ushops)
                         check_shop_obj(obj, bhitpos.x, bhitpos.y, false);
-                    (void) mpickobj(mon, obj);  /* may merge and free obj */
-                    thrownobj = (struct obj*)0;
+                    mpickobj(mon, obj);  /* may merge and free obj */
+                    thrownobj = NULL;
                     return;
                 }
                 (void) snuff_candle(obj);
                 if (!mon && ship_object(obj, bhitpos.x, bhitpos.y, false)) {
-                    thrownobj = (struct obj*)0;
+                    thrownobj = NULL;
                     return;
                 }
-                thrownobj = (struct obj*)0;
+                thrownobj = NULL;
                 place_object(obj, bhitpos.x, bhitpos.y);
                 if(*u.ushops && obj != uball)
                     check_shop_obj(obj, bhitpos.x, bhitpos.y, false);
@@ -1092,9 +1077,7 @@ int omon_adj(struct monst *mon, struct obj *obj, bool mon_notices) {
 }
 
 /* thrown object misses target monster */
-static void
-tmiss (struct obj *obj, struct monst *mon)
-{
+static void tmiss (struct obj *obj, struct monst *mon) {
     const char *missile = mshot_xname(obj);
 
     /* If the target can't be seen or doesn't look like a valid target,
@@ -1118,9 +1101,7 @@ tmiss (struct obj *obj, struct monst *mon)
  * Return 1 if obj has disappeared or otherwise been taken care of,
  * 0 if caller must take care of it.
  */
-int
-thitmonst (struct monst *mon, struct obj *obj)
-{
+int thitmonst (struct monst *mon, struct obj *obj) {
         int     tmp; /* Base chance to hit */
         int     disttmp; /* distance modifier */
         int otyp = obj->otyp;
@@ -1177,11 +1158,13 @@ thitmonst (struct monst *mon, struct obj *obj)
         }
 
         if (obj->oclass == GEM_CLASS && is_unicorn(mon->data)) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mon);
             if (mon->mtame) {
-                pline("%s catches and drops %s.", Monnam(mon), the(xname(obj)));
+                pline("%s catches and drops %s.", name, the(xname(obj)));
                 return 0;
             } else {
-                pline("%s catches %s.", Monnam(mon), the(xname(obj)));
+                pline("%s catches %s.", name, the(xname(obj)));
                 return gem_accept(mon, obj);
             }
         }
@@ -1194,12 +1177,16 @@ thitmonst (struct monst *mon, struct obj *obj)
             mon->mstrategy &= ~STRAT_WAITMASK;
 
             if (mon->mcanmove) {
-                pline("%s catches %s.", Monnam(mon), the(xname(obj)));
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mon);
+                pline("%s catches %s.", name, the(xname(obj)));
                 if (mon->mpeaceful) {
                     bool next2u = monnear(mon, u.ux, u.uy);
 
                     finish_quest(obj);  /* acknowledge quest completion */
-                    pline("%s %s %s back to you.", Monnam(mon),
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mon);
+                    pline("%s %s %s back to you.", name,
                           (next2u ? "hands" : "tosses"), the(xname(obj)));
                     if (!next2u) sho_obj_return_to_u(obj);
                     obj = addinv(obj);  /* back into your inventory */
@@ -1341,8 +1328,10 @@ thitmonst (struct monst *mon, struct obj *obj)
                         }
                 }
             }
-            pline("%s into %s %s.",
-                Tobjnam(obj, "vanish"), s_suffix(mon_nam(mon)),
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mon);
+            pline("%s into %s%s %s.",
+                Tobjnam(obj, "vanish"), name, possessive_suffix(name),
                 is_animal(u.ustuck->data) ? "entrails" : "currents");
         } else {
             tmiss(obj, mon);
@@ -1351,74 +1340,74 @@ thitmonst (struct monst *mon, struct obj *obj)
         return 0;
 }
 
-static int
-gem_accept (struct monst *mon, struct obj *obj)
-{
-        char buf[BUFSZ];
-        bool is_buddy = sgn(mon->data->maligntyp) == sgn(u.ualign.type);
-        bool is_gem = objects[obj->otyp].oc_material == GEMSTONE;
-        int ret = 0;
-        static const char nogood[] = " is not interested in your junk.";
-        static const char acceptgift[] = " accepts your gift.";
-        static const char maybeluck[] = " hesitatingly";
-        static const char noluck[] = " graciously";
-        static const char addluck[] = " gratefully";
+static int gem_accept (struct monst *mon, struct obj *obj) {
+    char buf[BUFSZ];
+    bool is_buddy = sgn(mon->data->maligntyp) == sgn(u.ualign.type);
+    bool is_gem = objects[obj->otyp].oc_material == GEMSTONE;
+    int ret = 0;
+    static const char nogood[] = " is not interested in your junk.";
+    static const char acceptgift[] = " accepts your gift.";
+    static const char maybeluck[] = " hesitatingly";
+    static const char noluck[] = " graciously";
+    static const char addluck[] = " gratefully";
 
-        strcpy(buf,Monnam(mon));
-        mon->mpeaceful = 1;
-        mon->mavenge = 0;
+    char name[BUFSZ];
+    Monnam(name, BUFSZ, mon);
+    strcpy(buf, name);
+    mon->mpeaceful = 1;
+    mon->mavenge = 0;
 
-        /* object properly identified */
-        if(obj->dknown && objects[obj->otyp].oc_name_known) {
-                if(is_gem) {
-                        if(is_buddy) {
-                                strcat(buf,addluck);
-                                change_luck(5);
-                        } else {
-                                strcat(buf,maybeluck);
-                                change_luck(rn2(7)-3);
-                        }
-                } else {
-                        strcat(buf,nogood);
-                        goto nopick;
-                }
-        /* making guesses */
-        } else if(obj->onamelth || objects[obj->otyp].oc_uname) {
-                if(is_gem) {
-                        if(is_buddy) {
-                                strcat(buf,addluck);
-                                change_luck(2);
-                        } else {
-                                strcat(buf,maybeluck);
-                                change_luck(rn2(3)-1);
-                        }
-                } else {
-                        strcat(buf,nogood);
-                        goto nopick;
-                }
-        /* value completely unknown to @ */
+    /* object properly identified */
+    if(obj->dknown && objects[obj->otyp].oc_name_known) {
+        if(is_gem) {
+            if(is_buddy) {
+                strcat(buf,addluck);
+                change_luck(5);
+            } else {
+                strcat(buf,maybeluck);
+                change_luck(rn2(7)-3);
+            }
         } else {
-                if(is_gem) {
-                        if(is_buddy) {
-                                strcat(buf,addluck);
-                                change_luck(1);
-                        } else {
-                                strcat(buf,maybeluck);
-                                change_luck(rn2(3)-1);
-                        }
-                } else {
-                        strcat(buf,noluck);
-                }
+            strcat(buf,nogood);
+            goto nopick;
         }
-        strcat(buf,acceptgift);
-        if(*u.ushops) check_shop_obj(obj, mon->mx, mon->my, true);
-        (void) mpickobj(mon, obj);      /* may merge and free obj */
-        ret = 1;
+        /* making guesses */
+    } else if(obj->onamelth || objects[obj->otyp].oc_uname) {
+        if(is_gem) {
+            if(is_buddy) {
+                strcat(buf,addluck);
+                change_luck(2);
+            } else {
+                strcat(buf,maybeluck);
+                change_luck(rn2(3)-1);
+            }
+        } else {
+            strcat(buf,nogood);
+            goto nopick;
+        }
+        /* value completely unknown to @ */
+    } else {
+        if(is_gem) {
+            if(is_buddy) {
+                strcat(buf,addluck);
+                change_luck(1);
+            } else {
+                strcat(buf,maybeluck);
+                change_luck(rn2(3)-1);
+            }
+        } else {
+            strcat(buf,noluck);
+        }
+    }
+    strcat(buf,acceptgift);
+    if(*u.ushops) check_shop_obj(obj, mon->mx, mon->my, true);
+    (void) mpickobj(mon, obj);      /* may merge and free obj */
+    ret = 1;
 
 nopick:
-        if(!Blind) pline("%s", buf);
-        if (!tele_restrict(mon)) (void) rloc(mon, false);
-        return(ret);
+    if(!Blind) pline("%s", buf);
+    if (!tele_restrict(mon)) (void) rloc(mon, false);
+    return(ret);
 }
 
 /*
@@ -1557,9 +1546,7 @@ static void breakobj(struct obj *obj, signed char x, signed char y,
  * Check to see if obj is going to break, but don't actually break it.
  * Return 0 if the object isn't going to break, 1 if it is.
  */
-bool 
-breaktest (struct obj *obj)
-{
+bool breaktest (struct obj *obj) {
         if (obj_resists(obj, 1, 99)) return 0;
         if (objects[obj->otyp].oc_material == GLASS && !obj->oartifact &&
                 obj->oclass != GEM_CLASS)
@@ -1578,9 +1565,7 @@ breaktest (struct obj *obj)
         }
 }
 
-static void 
-breakmsg (struct obj *obj, bool in_view)
-{
+static void breakmsg (struct obj *obj, bool in_view) {
         const char *to_pieces;
 
         to_pieces = "";
@@ -1616,70 +1601,69 @@ breakmsg (struct obj *obj, bool in_view)
         }
 }
 
-static int
-throw_gold (struct obj *obj)
-{
-        int range, odx, ody;
-        long zorks = obj->quan;
-        struct monst *mon;
+static int throw_gold (struct obj *obj) {
+    int range, odx, ody;
+    long zorks = obj->quan;
+    struct monst *mon;
 
-        if(!u.dx && !u.dy && !u.dz) {
-                u.ugold += obj->quan;
-                flags.botl = 1;
-                dealloc_obj(obj);
-                You("cannot throw gold at yourself.");
-                return(0);
-        }
-        if(u.uswallow) {
-                pline(is_animal(u.ustuck->data) ?
-                        "%s in the %s's entrails." : "%s into %s.",
-                        "The gold disappears", mon_nam(u.ustuck));
-                u.ustuck->mgold += zorks;
-                dealloc_obj(obj);
-                return(1);
-        }
+    if(!u.dx && !u.dy && !u.dz) {
+        u.ugold += obj->quan;
+        flags.botl = 1;
+        dealloc_obj(obj);
+        You("cannot throw gold at yourself.");
+        return(0);
+    }
+    if (u.uswallow) {
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, u.ustuck);
+        pline(is_animal(u.ustuck->data) ?  "%s in the %s's entrails." : "%s into %s.",
+                "The gold disappears", name);
+        u.ustuck->mgold += zorks;
+        dealloc_obj(obj);
+        return 1;
+    }
 
-        if(u.dz) {
-                if (u.dz < 0 && !Is_airlevel(&u.uz) &&
-                                        !Underwater && !Is_waterlevel(&u.uz)) {
-        pline_The("gold hits the %s, then falls back on top of your %s.",
+    if(u.dz) {
+        if (u.dz < 0 && !Is_airlevel(&u.uz) &&
+                !Underwater && !Is_waterlevel(&u.uz)) {
+            pline_The("gold hits the %s, then falls back on top of your %s.",
                     ceiling(u.ux,u.uy), body_part(HEAD));
-                    /* some self damage? */
-                    if(uarmh) pline("Fortunately, you are wearing a helmet!");
-                }
-                bhitpos.x = u.ux;
-                bhitpos.y = u.uy;
-        } else {
-                /* consistent with range for normal objects */
-                range = (int)((ACURRSTR)/2 - obj->owt/40);
-
-                /* see if the gold has a place to move into */
-                odx = u.ux + u.dx;
-                ody = u.uy + u.dy;
-                if(!ZAP_POS(levl[odx][ody].typ) || closed_door(odx, ody)) {
-                        bhitpos.x = u.ux;
-                        bhitpos.y = u.uy;
-                } else {
-                        mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
-                                   (int (*)(struct monst *,struct obj *))0,
-                                   (int (*)(struct obj *,struct obj *))0,
-                                   obj);
-                        if(mon) {
-                            if (ghitm(mon, obj))        /* was it caught? */
-                                return 1;
-                        } else {
-                            if(ship_object(obj, bhitpos.x, bhitpos.y, false))
-                                return 1;
-                        }
-                }
+            /* some self damage? */
+            if(uarmh) pline("Fortunately, you are wearing a helmet!");
         }
+        bhitpos.x = u.ux;
+        bhitpos.y = u.uy;
+    } else {
+        /* consistent with range for normal objects */
+        range = (int)((ACURRSTR)/2 - obj->owt/40);
 
-        if(flooreffects(obj,bhitpos.x,bhitpos.y,"fall")) return(1);
-        if(u.dz > 0)
-                pline_The("gold hits the %s.", surface(bhitpos.x,bhitpos.y));
-        place_object(obj,bhitpos.x,bhitpos.y);
-        if(*u.ushops) sellobj(obj, bhitpos.x, bhitpos.y);
-        stackobj(obj);
-        newsym(bhitpos.x,bhitpos.y);
-        return(1);
+        /* see if the gold has a place to move into */
+        odx = u.ux + u.dx;
+        ody = u.uy + u.dy;
+        if(!ZAP_POS(levl[odx][ody].typ) || closed_door(odx, ody)) {
+            bhitpos.x = u.ux;
+            bhitpos.y = u.uy;
+        } else {
+            mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
+                    (int (*)(struct monst *,struct obj *))0,
+                    (int (*)(struct obj *,struct obj *))0,
+                    obj);
+            if(mon) {
+                if (ghitm(mon, obj))        /* was it caught? */
+                    return 1;
+            } else {
+                if(ship_object(obj, bhitpos.x, bhitpos.y, false))
+                    return 1;
+            }
+        }
+    }
+
+    if(flooreffects(obj,bhitpos.x,bhitpos.y,"fall")) return(1);
+    if(u.dz > 0)
+        pline_The("gold hits the %s.", surface(bhitpos.x,bhitpos.y));
+    place_object(obj,bhitpos.x,bhitpos.y);
+    if(*u.ushops) sellobj(obj, bhitpos.x, bhitpos.y);
+    stackobj(obj);
+    newsym(bhitpos.x,bhitpos.y);
+    return(1);
 }
