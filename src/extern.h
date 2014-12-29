@@ -675,15 +675,6 @@ extern void mapglyph(int, int *, int *, unsigned *, int, int);
 extern int castmu(struct monst *,struct attack *,bool,bool);
 extern int buzzmu(struct monst *,struct attack *);
 
-/* ### mhitm.c ### */
-
-extern int fightm(struct monst *);
-extern int mattackm(struct monst *,struct monst *);
-extern int noattacks(struct permonst *);
-extern int sleep_monst(struct monst *,int,int);
-extern void slept_monst(struct monst *);
-extern long attk_protection(int);
-
 /* ### mhitu.c ### */
 
 extern const char *mpoisons_subj(struct monst *,struct attack *);

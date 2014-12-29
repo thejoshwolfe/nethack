@@ -2,6 +2,7 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "mhitm.h"
 #include "priest.h"
 #include "dbridge.h"
 #include "shk.h"

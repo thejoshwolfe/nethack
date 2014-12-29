@@ -5,6 +5,7 @@
 #include "mfndpos.h"
 #include "edog.h"
 #include "extern.h"
+#include "mhitm.h"
 #include "priest.h"
 #include "objnam.h"
 #include "do_name.h"

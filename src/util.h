@@ -1,6 +1,9 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <stdlib.h>
+#include <stdarg.h>
+
 // These functions return the number of bytes that we *wanted* to write,
 // including the \0. If this number is greater than dest_size, the buffer was
 // too small.
