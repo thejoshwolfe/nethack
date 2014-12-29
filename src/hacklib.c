@@ -101,7 +101,13 @@ char * mungspaces(char *bp) {
 /* return the end of a string (pointing at '\0') */
 char * eos(char *s) {
     while (*s)
-        s++; /* s += strlen(s); */
+        s++;
+    return s;
+}
+
+const char * const_eos(const char *s) {
+    while (*s)
+        s++;
     return s;
 }
 
@@ -118,7 +124,7 @@ char * strkitten(char *s, char c) {
 const char *possessive_suffix(const char *s) {
     if (!strncmpi(s, "it", -1))
         return "s";
-    else if (*(eos(s) - 1) == 's')
+    else if (*(const_eos(s) - 1) == 's')
         return "'";
     else
         return "'s";

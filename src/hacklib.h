@@ -12,6 +12,7 @@ char *lcase(char *);
 char *upstart(char *);
 char *mungspaces(char *);
 char *eos(char *);
+const char * const_eos(const char *s);
 char *strkitten(char *,char);
 size_t s_suffix(char *dest, size_t dest_size, const char *s);
 const char *possessive_suffix(const char *s);
