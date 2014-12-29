@@ -3,6 +3,7 @@
 #include "lev.h"
 #include "extern.h"
 #include "display.h"
+#include "do_name.h"
 
 #define newseg()                (struct wseg *) malloc(sizeof(struct wseg))
 #define dealloc_seg(wseg)       free((void *) (wseg))
@@ -355,10 +356,13 @@ cutworm (struct monst *worm, signed char x, signed char y, struct obj *weap)
 
     /* Sometimes the tail end dies. */
     if (rn2(3) || !(new_wnum = get_wormno())) {
-        if (flags.mon_moving)
-            pline("Part of the tail of %s is cut off.", mon_nam(worm));
-        else
-            You("cut part of the tail off of %s.", mon_nam(worm));
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, worm);
+        if (flags.mon_moving) {
+            pline("Part of the tail of %s is cut off.", name);
+        } else {
+            You("cut part of the tail off of %s.", name);
+        }
         toss_wsegs(new_tail, true);
         if (worm->mhp > 1) worm->mhp /= 2;
         return;
@@ -389,10 +393,15 @@ cutworm (struct monst *worm, signed char x, signed char y, struct obj *weap)
     /* Place the new monster at all the segment locations. */
     place_wsegs(new_worm);
 
-    if (flags.mon_moving)
-        pline("%s is cut in half.", Monnam(worm));
-    else
-        You("cut %s in half.", mon_nam(worm));
+    if (flags.mon_moving) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, worm);
+        pline("%s is cut in half.", name);
+    } else {
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, worm);
+        You("cut %s in half.", name);
+    }
 }
 
 
