@@ -1,10 +1,13 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "permonst.h"
 #include "monsym.h"
 #include "dungeon.h"    /* prerequisite for eshk,vault,epri */
 #include "eshk.h"
 #include "vault.h"
 #include "epri.h"
+#include "do_name.h"
+#include "hacklib.h"
 
 #define NO_ATTK {0,0,0,0}
 

@@ -1,7 +1,9 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "extern.h"
 #include "hacklib.h"
+#include "do_name.h"
 
 /*=
     Assorted 'small' utility routines.  They're virtually independent of
@@ -133,6 +135,19 @@ const char *possessive_suffix(const char *s) {
 /* return a name converted to possessive */
 size_t s_suffix(char *dest, size_t dest_size, const char *s) {
     return nh_slprintf(dest, dest_size, "%s%s", s, possessive_suffix(s));
+}
+
+size_t monster_possessive(char *dest, size_t dest_size, const struct monst *mon) {
+    char name[BUFSZ];
+    mon_nam(name, BUFSZ, mon);
+    return nh_slprintf(dest, dest_size, "%s%s", name, possessive_suffix(name));
+}
+
+size_t monster_possessive_cap(char *dest, size_t dest_size, const struct monst *mon) {
+    char name[BUFSZ];
+    size_t ret = monster_possessive(name, BUFSZ, mon);
+    upstart(name);
+    return ret;
 }
 
 /* trivial text encryption routine (see makedefs) */

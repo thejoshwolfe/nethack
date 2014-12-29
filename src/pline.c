@@ -177,18 +177,18 @@ static void vraw_printf(const char *line, va_list the_args) {
 
 void impossible (const char * s, ...) {
     va_list the_args;
-        va_start(the_args, s);
-        if (program_state.in_impossible)
-                panic("impossible called impossible");
-        program_state.in_impossible = 1;
-        {
-            char pbuf[BUFSZ];
-            vsprintf(pbuf,s,the_args);
-            paniclog("impossible", pbuf);
-        }
-        vpline(s,the_args);
-        pline("Program in disorder - perhaps you'd better #quit.");
-        program_state.in_impossible = 0;
+    va_start(the_args, s);
+    if (program_state.in_impossible)
+        panic("impossible called impossible");
+    program_state.in_impossible = 1;
+    {
+        char pbuf[BUFSZ];
+        vsprintf(pbuf,s,the_args);
+        paniclog("impossible", pbuf);
+    }
+    vpline(s,the_args);
+    pline("Program in disorder - perhaps you'd better #quit.");
+    program_state.in_impossible = 0;
     va_end(the_args);
 }
 
