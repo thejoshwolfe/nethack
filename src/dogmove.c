@@ -1,9 +1,14 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 
 #include "mfndpos.h"
 #include "edog.h"
 #include "extern.h"
+#include "priest.h"
+#include "objnam.h"
+#include "do_name.h"
+#include "dbridge.h"
 #include "display.h"
 
 extern bool notonhead;
@@ -17,9 +22,7 @@ static struct obj *DROPPABLES(struct monst *);
 static bool can_reach_location(struct monst *,signed char,signed char, signed char,signed char);
 static bool could_reach_item(struct monst *, signed char,signed char);
 
-static struct obj *
-DROPPABLES (struct monst *mon)
-{
+static struct obj * DROPPABLES (struct monst *mon) {
         struct obj *obj;
         struct obj *wep = MON_WEP(mon);
         bool item1 = false, item2 = false;
@@ -52,9 +55,7 @@ static signed char gtyp, gx, gy;    /* type and position of dog's current goal *
 
 static void wantdoor(int, int, void *);
 
-static bool 
-cursed_object_at (int x, int y)
-{
+static bool cursed_object_at (int x, int y) {
         struct obj *otmp;
 
         for(otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere)
@@ -62,9 +63,7 @@ cursed_object_at (int x, int y)
         return false;
 }
 
-int
-dog_nutrition (struct monst *mtmp, struct obj *obj)
-{
+int dog_nutrition (struct monst *mtmp, struct obj *obj) {
         int nutrit;
 
         /*
@@ -141,15 +140,18 @@ int dog_eat(struct monst *mtmp, struct obj *obj, int x, int y, bool devour) {
         if (is_pool(x, y) && !Underwater) {
             /* Don't print obj */
             /* TODO: Reveal presence of sea monster (especially sharks) */
-        } else
-        /* hack: observe the action if either new or old location is in view */
-        /* However, invisible monsters should still be "it" even though out of
-           sight locations should not. */
-        if (cansee(x, y) || cansee(mtmp->mx, mtmp->my))
-            pline("%s %s %s.", mon_visible(mtmp) ? noit_Monnam(mtmp) : "It",
-                  devour ? "devours" : "eats",
-                  (obj->oclass == FOOD_CLASS) ?
-                        singular(obj, doname) : doname(obj));
+        } else {
+            /* hack: observe the action if either new or old location is in view */
+            /* However, invisible monsters should still be "it" even though out of
+               sight locations should not. */
+            char name[BUFSZ];
+            noit_Monnam(name, BUFSZ, mtmp);
+            if (cansee(x, y) || cansee(mtmp->mx, mtmp->my)) {
+                pline("%s %s %s.", mon_visible(mtmp) ? name : "It",
+                      devour ? "devours" : "eats",
+                      (obj->oclass == FOOD_CLASS) ?  singular(obj, doname) : doname(obj));
+            }
+        }
         /* It's a reward if it's DOGFOOD and the player dropped/threw it. */
         /* We know the player had it if invlet is set -dlc */
         if(dogfood(mtmp,obj) == DOGFOOD && obj->invlet)
@@ -160,8 +162,9 @@ int dog_eat(struct monst *mtmp, struct obj *obj, int x, int y, bool devour) {
             obj->oerodeproof = 0;
             mtmp->mstun = 1;
             if (canseemon(mtmp) && flags.verbose) {
-                pline("%s spits %s out in disgust!",
-                      Monnam(mtmp), distant_name(obj,doname));
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s spits %s out in disgust!", name, distant_name(obj,doname));
             }
         } else if (obj == uball) {
             unpunish();
@@ -188,9 +191,7 @@ int dog_eat(struct monst *mtmp, struct obj *obj, int x, int y, bool devour) {
 
 
 /* hunger effects -- returns true on starvation */
-static bool 
-dog_hunger (struct monst *mtmp, struct edog *edog)
-{
+static bool dog_hunger (struct monst *mtmp, struct edog *edog) {
         if (monstermoves > edog->hungrytime + 500) {
             if (!carnivorous(mtmp->data) && !herbivorous(mtmp->data)) {
                 edog->hungrytime = monstermoves + 500;
@@ -204,24 +205,29 @@ dog_hunger (struct monst *mtmp, struct edog *edog)
                 if (mtmp->mhp > mtmp->mhpmax)
                     mtmp->mhp = mtmp->mhpmax;
                 if (mtmp->mhp < 1) goto dog_died;
-                if (cansee(mtmp->mx, mtmp->my))
-                    pline("%s is confused from hunger.", Monnam(mtmp));
-                else if (couldsee(mtmp->mx, mtmp->my))
+                if (cansee(mtmp->mx, mtmp->my)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s is confused from hunger.", name);
+                } else if (couldsee(mtmp->mx, mtmp->my)) {
                     beg(mtmp);
-                else
-                    You_feel("worried about %s.", y_monnam(mtmp));
+                } else {
+                    char name[BUFSZ];
+                    y_monnam(name, BUFSZ, mtmp);
+                    You_feel("worried about %s.", name);
+                }
                 stop_occupation();
             } else if (monstermoves > edog->hungrytime + 750 || mtmp->mhp < 1) {
  dog_died:
-                if (mtmp->mleashed
-                    && mtmp != u.usteed
-                    )
+                if (mtmp->mleashed && mtmp != u.usteed) {
                     Your("leash goes slack.");
-                else if (cansee(mtmp->mx, mtmp->my))
-                    pline("%s starves.", Monnam(mtmp));
-                else
-                    You_feel("%s for a moment.",
-                        Hallucination() ? "bummed" : "sad");
+                } else if (cansee(mtmp->mx, mtmp->my)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s starves.", name);
+                } else {
+                    You_feel("%s for a moment.", Hallucination() ? "bummed" : "sad");
+                }
                 mondied(mtmp);
                 return(true);
             }
@@ -232,9 +238,7 @@ dog_hunger (struct monst *mtmp, struct edog *edog)
 /* do something with object (drop, pick up, eat) at current position
  * returns 1 if object eaten (since that counts as dog's move), 2 if died
  */
-static int
-dog_invent (struct monst *mtmp, struct edog *edog, int udist)
-{
+static int dog_invent (struct monst *mtmp, struct edog *edog, int udist) {
         int omx, omy;
         struct obj *obj;
 
@@ -270,9 +274,11 @@ dog_invent (struct monst *mtmp, struct edog *edog, int udist)
                         could_reach_item(mtmp, obj->ox, obj->oy)) {
                     if(rn2(20) < edog->apport+3) {
                         if (rn2(udist) || !rn2(edog->apport)) {
-                            if (cansee(omx, omy) && flags.verbose)
-                                pline("%s picks up %s.", Monnam(mtmp),
-                                    distant_name(obj, doname));
+                            if (cansee(omx, omy) && flags.verbose) {
+                                char name[BUFSZ];
+                                Monnam(name, BUFSZ, mtmp);
+                                pline("%s picks up %s.", name, distant_name(obj, doname));
+                            }
                             obj_extract_self(obj);
                             newsym(omx,omy);
                             (void) mpickobj(mtmp,obj);
@@ -293,9 +299,7 @@ dog_invent (struct monst *mtmp, struct edog *edog, int udist)
 /* set dog's goal -- gtyp, gx, gy
  * returns -1/0/1 (dog's desire to approach player) or -2 (abort move)
  */
-static int
-dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist, int whappr)
-{
+static int dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist, int whappr) {
         int omx, omy;
         bool in_masters_sight, dog_has_minvent;
         struct obj *obj;
@@ -436,12 +440,8 @@ dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist, int whapp
 }
 
 /* return 0 (no move), 1 (move) or 2 (dead) */
-int
-dog_move (
-    struct monst *mtmp,
-    int after      /* this is extra fast monster movement */
-)
-{
+//  int after      /* this is extra fast monster movement */
+int dog_move ( struct monst *mtmp, int after) {
         int omx, omy;           /* original mtmp position */
         int appr, whappr, udist;
         int i, j, k;
@@ -512,7 +512,9 @@ dog_move (
                  * it disappears, angrily, and sends in some nasties
                  */
                 if (canspotmon(mtmp)) {
-                    pline("%s rebukes you, saying:", Monnam(mtmp));
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s rebukes you, saying:", name);
                     verbalize("Since you desire conflict, have some more!");
                 }
                 mongone(mtmp);
@@ -520,9 +522,9 @@ dog_move (
                 while(i--) {
                     mm.x = u.ux;
                     mm.y = u.uy;
-                    if(enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL]))
-                        (void) mk_roamer(&mons[PM_ANGEL], u.ualign.type,
-                                         mm.x, mm.y, false);
+                    if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])) {
+                        mk_roamer(&mons[PM_ANGEL], u.ualign.type, mm.x, mm.y, false);
+                    }
                 }
                 return(2);
 
@@ -674,13 +676,14 @@ newdogpos:
                 struct obj *mw_tmp;
 
                 if (info[chi] & ALLOW_U) {
-                        if (mtmp->mleashed) { /* play it safe */
-                                pline("%s breaks loose of %s leash!",
-                                      Monnam(mtmp), mhis(mtmp));
-                                m_unleash(mtmp, false);
-                        }
-                        (void) mattacku(mtmp);
-                        return(0);
+                    if (mtmp->mleashed) { /* play it safe */
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mtmp);
+                        pline("%s breaks loose of %s leash!", name, mhis(mtmp));
+                        m_unleash(mtmp, false);
+                    }
+                    mattacku(mtmp);
+                    return(0);
                 }
                 if (!m_in_out_region(mtmp, nix, niy))
                     return 1;
@@ -705,8 +708,11 @@ newdogpos:
                 /* insert a worm_move() if worms ever begin to eat things */
                 remove_monster(omx, omy);
                 place_monster(mtmp, nix, niy);
-                if (cursemsg[chi] && (cansee(omx,omy) || cansee(nix,niy)))
-                        pline("%s moves only reluctantly.", Monnam(mtmp));
+                if (cursemsg[chi] && (cansee(omx,omy) || cansee(nix,niy))) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s moves only reluctantly.", name);
+                }
                 for (j=MTSZ-1; j>0; j--) mtmp->mtrack[j] = mtmp->mtrack[j-1];
                 mtmp->mtrack[0].x = omx;
                 mtmp->mtrack[0].y = omy;
@@ -800,9 +806,7 @@ static bool can_reach_location(struct monst *mon,
 
 
 /*ARGSUSED*/    /* do_clear_area client */
-static void
-wantdoor (int x, int y, void *distance)
-{
+static void wantdoor (int x, int y, void *distance) {
     int ndist;
 
     if (*(int*)distance > (ndist = distu(x, y))) {
@@ -811,6 +815,3 @@ wantdoor (int x, int y, void *distance)
         *(int*)distance = ndist;
     }
 }
-
-
-/*dogmove.c*/

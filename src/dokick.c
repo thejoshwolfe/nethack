@@ -1,8 +1,13 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "eshk.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "dbridge.h"
+#include "shk.h"
+#include "objnam.h"
+#include "do_name.h"
 #include "display.h"
 #include "winprocs.h"
 
@@ -91,15 +96,17 @@ static void kickdmg(struct monst *mon, bool clumsy) {
                 mdx = mon->mx + u.dx;
                 mdy = mon->my + u.dy;
                 if(goodpos(mdx, mdy, mon, 0)) {
-                        pline("%s reels from the blow.", Monnam(mon));
-                        if (m_in_out_region(mon, mdx, mdy)) {
-                            remove_monster(mon->mx, mon->my);
-                            newsym(mon->mx, mon->my);
-                            place_monster(mon, mdx, mdy);
-                            newsym(mon->mx, mon->my);
-                            set_apparxy(mon);
-                            if (mintrap(mon) == 2) trapkilled = true;
-                        }
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mon);
+                    pline("%s reels from the blow.", name);
+                    if (m_in_out_region(mon, mdx, mdy)) {
+                        remove_monster(mon->mx, mon->my);
+                        newsym(mon->mx, mon->my);
+                        place_monster(mon, mdx, mdy);
+                        newsym(mon->mx, mon->my);
+                        set_apparxy(mon);
+                        if (mintrap(mon) == 2) trapkilled = true;
+                    }
                 }
         }
 
@@ -145,10 +152,14 @@ static void kick_monster(signed char x, signed char y) {
                         (!uarmf || !uarmf->blessed)) {
                     /* doesn't matter whether it would have hit or missed,
                        and shades have no passive counterattack */
-                    Your("%s %s.", kick_passes_thru, mon_nam(mon));
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mon);
+                    Your("%s %s.", kick_passes_thru, name);
                     break;      /* skip any additional kicks */
                 } else if (tmp > rnd(20)) {
-                    You("kick %s.", mon_nam(mon));
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mon);
+                    You("kick %s.", name);
                     sum = damageum(mon, uattk);
                     (void)passive(mon, (bool)(sum > 0), (sum != 2), AT_KICK);
                     if (sum == 2)
@@ -188,16 +199,21 @@ static void kick_monster(signed char x, signed char y) {
         else if(uarm && objects[uarm->otyp].oc_big && ACURR(A_DEX) < rnd(25))
                 clumsy = true;
 doit:
-        You("kick %s.", mon_nam(mon));
+        {
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mon);
+            You("kick %s.", name);
+        }
         if(!rn2(clumsy ? 3 : 4) && (clumsy || !bigmonst(mon->data)) &&
            mon->mcansee && !mon->mtrapped && !thick_skinned(mon->data) &&
            mon->data->mlet != S_EEL && haseyes(mon->data) && mon->mcanmove &&
            !mon->mstun && !mon->mconf && !mon->msleeping &&
            mon->data->mmove >= 12) {
                 if(!nohands(mon->data) && !rn2(martial() ? 5 : 3)) {
-                    pline("%s blocks your %skick.", Monnam(mon),
-                                clumsy ? "clumsy " : "");
-                    (void) passive(mon, false, 1, AT_KICK);
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mon);
+                    pline("%s blocks your %skick.", name, clumsy ? "clumsy " : "");
+                    passive(mon, false, 1, AT_KICK);
                     return;
                 } else {
                     mnexto(mon);
@@ -206,7 +222,9 @@ doit:
                             unmap_object(x, y);
                             newsym(x, y);
                         }
-                        pline("%s %s, %s evading your %skick.", Monnam(mon),
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mon);
+                        pline("%s %s, %s evading your %skick.", name,
                                 (can_teleport(mon->data) ? "teleports" :
                                  is_floater(mon->data) ? "floats" :
                                  is_flyer(mon->data) ? "swoops" :
@@ -214,7 +232,7 @@ doit:
                                         "slides" : "jumps"),
                                 clumsy ? "easily" : "nimbly",
                                 clumsy ? "clumsy " : "");
-                        (void) passive(mon, false, 1, AT_KICK);
+                        passive(mon, false, 1, AT_KICK);
                         return;
                     }
                 }
@@ -226,9 +244,7 @@ doit:
  *  Return true if caught (the gold taken care of), false otherwise.
  *  The gold object is *not* attached to the fobj chain!
  */
-bool 
-ghitm (struct monst *mtmp, struct obj *gold)
-{
+bool ghitm (struct monst *mtmp, struct obj *gold) {
         bool msg_given = false;
 
         if(!likes_gold(mtmp->data) && !mtmp->isshk && !mtmp->ispriest
@@ -237,8 +253,9 @@ ghitm (struct monst *mtmp, struct obj *gold)
         } else if (!mtmp->mcanmove) {
                 /* too light to do real damage */
                 if (canseemon(mtmp)) {
-                    pline_The("%s harmlessly %s %s.", xname(gold),
-                              otense(gold, "hit"), mon_nam(mtmp));
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mtmp);
+                    pline_The("%s harmlessly %s %s.", xname(gold), otense(gold, "hit"), name);
                     msg_given = true;
                 }
         } else {
@@ -247,8 +264,11 @@ ghitm (struct monst *mtmp, struct obj *gold)
                 if(!rn2(4)) setmangry(mtmp); /* not always pleasing */
 
                 /* greedy monsters catch gold */
-                if (cansee(mtmp->mx, mtmp->my))
-                    pline("%s catches the gold.", Monnam(mtmp));
+                if (cansee(mtmp->mx, mtmp->my)) {
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s catches the gold.", name);
+                }
                 mtmp->mgold += gold->quan;
                 if (mtmp->isshk) {
                         long robbed = ESHK(mtmp)->robbed;
@@ -260,8 +280,9 @@ ghitm (struct monst *mtmp, struct obj *gold)
                                       !robbed ? "" : "partially ",
                                       mhis(mtmp));
                                 ESHK(mtmp)->robbed = robbed;
-                                if(!robbed)
-                                        make_happy_shk(mtmp, false);
+                                if (!robbed) {
+                                    make_happy_shk(mtmp, false);
+                                }
                         } else {
                                 if(mtmp->mpeaceful) {
                                     ESHK(mtmp)->credit += gold->quan;
@@ -359,8 +380,9 @@ container_impact_dmg (struct obj *obj)
                 You("caused %ld %s worth of damage!", loss, currency(loss));
                 make_angry_shk(shkp, x, y);
             } else {
-                You("owe %s %ld %s for objects destroyed.",
-                    mon_nam(shkp), loss, currency(loss));
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, shkp);
+                You("owe %s %ld %s for objects destroyed.", name, loss, currency(loss));
             }
         }
 }
@@ -598,7 +620,9 @@ dokick (void)
                 no_kick = true;
         } else if (u.usteed) {
                 if (yn_function("Kick your steed?", ynchars, 'y') == 'y') {
-                    You("kick %s.", mon_nam(u.usteed));
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, u.usteed);
+                    You("kick %s.", name);
                     kick_steed();
                     return 1;
                 } else {
@@ -662,8 +686,10 @@ dokick (void)
                 case 0:  You_cant("move your %s!", body_part(LEG));
                          break;
                 case 1:  if (is_animal(u.ustuck->data)) {
-                                pline("%s burps loudly.", Monnam(u.ustuck));
-                                break;
+                             char name[BUFSZ];
+                             Monnam(name, BUFSZ, u.ustuck);
+                             pline("%s burps loudly.", name);
+                             break;
                          }
                 default: Your("feeble kick has no effect."); break;
                 }
@@ -1035,12 +1061,15 @@ dumb:
                         mtmp->data == &mons[PM_WATCH_CAPTAIN]) &&
                         couldsee(mtmp->mx, mtmp->my) &&
                         mtmp->mpeaceful) {
-                        if (canspotmon(mtmp))
-                            pline("%s yells:", Amonnam(mtmp));
-                        else
+                        if (canspotmon(mtmp)) {
+                            char name[BUFSZ];
+                            Amonnam(name, BUFSZ, mtmp);
+                            pline("%s yells:", name);
+                        } else {
                             You_hear("someone yell:");
+                        }
                         verbalize("Halt, thief!  You're under arrest!");
-                        (void) angry_guards(false);
+                        angry_guards(false);
                         break;
                     }
                   }
@@ -1054,13 +1083,16 @@ dumb:
                     if ((mtmp->data == &mons[PM_WATCHMAN] ||
                                 mtmp->data == &mons[PM_WATCH_CAPTAIN]) &&
                             mtmp->mpeaceful && couldsee(mtmp->mx, mtmp->my)) {
-                        if (canspotmon(mtmp))
-                            pline("%s yells:", Amonnam(mtmp));
-                        else
+                        if (canspotmon(mtmp)) {
+                            char name[BUFSZ];
+                            Amonnam(name, BUFSZ, mtmp);
+                            pline("%s yells:", name);
+                        } else {
                             You_hear("someone yell:");
+                        }
                         if(levl[x][y].looted & D_WARNED) {
                             verbalize("Halt, vandal!  You're under arrest!");
-                            (void) angry_guards(false);
+                            angry_guards(false);
                         } else {
                             verbalize("Hey, stop damaging that door!");
                             levl[x][y].looted |= D_WARNED;
@@ -1195,21 +1227,24 @@ void impact_drop(struct obj *missile, signed char x, signed char y, signed char 
                     You("removed %ld %s worth of goods!", price, currency(price));
                     if(cansee(shkp->mx, shkp->my)) {
                         if(ESHK(shkp)->customer[0] == 0)
-                            (void) strncpy(ESHK(shkp)->customer,
-                                           plname, PL_NSIZ);
-                        if(angry)
-                            pline("%s is infuriated!", Monnam(shkp));
-                        else pline("\"%s, you are a thief!\"", plname);
+                            (void) strncpy(ESHK(shkp)->customer, plname, PL_NSIZ);
+                        if (angry) {
+                            char name[BUFSZ];
+                            Monnam(name, BUFSZ, shkp);
+                            pline("%s is infuriated!", name);
+                        } else {
+                            pline("\"%s, you are a thief!\"", plname);
+                        }
                     } else  You_hear("a scream, \"Thief!\"");
                     hot_pursuit(shkp);
                     (void) angry_guards(false);
                     return;
                 }
-                if(ESHK(shkp)->debit > debit) {
+                if (ESHK(shkp)->debit > debit) {
                     long amt = (ESHK(shkp)->debit - debit);
-                    You("owe %s %ld %s for goods lost.",
-                        Monnam(shkp),
-                        amt, currency(amt));
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, shkp);
+                    You("owe %s %ld %s for goods lost.", name, amt, currency(amt));
                 }
         }
 
