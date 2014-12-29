@@ -1,6 +1,11 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "extern.h"
+#include "objnam.h"
+#include "dbridge.h"
+#include "shk.h"
+#include "do_name.h"
 #include "display.h"
 
 static int picklock(void);
@@ -344,12 +349,15 @@ pick_lock ( /* pick a lock with a given object */
             door = &levl[cc.x][cc.y];
             if ((mtmp = m_at(cc.x, cc.y)) && canseemon(mtmp)
                         && mtmp->m_ap_type != M_AP_FURNITURE
-                        && mtmp->m_ap_type != M_AP_OBJECT) {
-                if (picktyp == CREDIT_CARD &&
-                    (mtmp->isshk || mtmp->data == &mons[PM_ORACLE]))
+                        && mtmp->m_ap_type != M_AP_OBJECT)
+            {
+                if (picktyp == CREDIT_CARD && (mtmp->isshk || mtmp->data == &mons[PM_ORACLE])) {
                     verbalize("No checks, no credit, no problem.");
-                else
-                    pline("I don't think %s would appreciate that.", mon_nam(mtmp));
+                } else {
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mtmp);
+                    pline("I don't think %s would appreciate that.", name);
+                }
                 return(0);
             }
             if(!IS_DOOR(door->typ)) {
@@ -553,15 +561,14 @@ doopen (void)                /* try to open a door */
         return(1);
 }
 
-static bool 
-obstructed (int x, int y)
-{
+static bool obstructed (int x, int y) {
         struct monst *mtmp = m_at(x, y);
 
         if(mtmp && mtmp->m_ap_type != M_AP_FURNITURE) {
                 if (mtmp->m_ap_type == M_AP_OBJECT) goto objhere;
-                pline("%s stands in the way!", !canspotmon(mtmp) ?
-                        "Some creature" : Monnam(mtmp));
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s stands in the way!", !canspotmon(mtmp) ?  "Some creature" : name);
                 if (!canspotmon(mtmp))
                     map_invisible(mtmp->mx, mtmp->my);
                 return(true);
@@ -573,9 +580,8 @@ objhere:        pline("%s's in the way.", Something);
         return(false);
 }
 
-int
-doclose (void)               /* try to close a door */
-{
+/* try to close a door */
+int doclose (void) {
         int x, y;
         struct rm *door;
         struct monst *mtmp;

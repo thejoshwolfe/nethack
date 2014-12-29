@@ -3,6 +3,7 @@
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
 #include "extern.h"
+#include "shk.h"
 #include "vision.h"
 #include "timeout.h"
 #include "winprocs.h"
