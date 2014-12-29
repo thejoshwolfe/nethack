@@ -31,12 +31,9 @@ BUILD_DIR_CHILDREN += $(MAKEDEFS_OBJS) $(MAKE_ONAMES_OBJS) $(MAKE_ARTIFACT_NAMES
 					  $(MAKE_PM_OBJS) $(DLB_OBJS) $(DGN_COMP_OBJS) $(LEV_COMP_OBJS) $(RECOVER_OBJS)
 
 CC = clang
-C_FLAGS = -Ibuild -Isrc -g -Wimplicit-function-declaration -Werror
+C_FLAGS += -Ibuild -Isrc -g -Wimplicit-function-declaration -Werror
 # TODO: remove this and make all id fields not pointers
 C_FLAGS += -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
-# add extra flags from the command line, such as `EXTRA_C_FLAGS=-ferror-limit=2 make`
-EXTRA_C_FLAGS ?=
-C_FLAGS += $(EXTRA_C_FLAGS)
 COMPILE_C = $(CC) -c -o $@ -MMD -MP -MF $@.d $(C_FLAGS) $<
 
 MAKEDEFS = cd dat && ../build/makedefs
