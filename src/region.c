@@ -3,6 +3,8 @@
 #include "lev.h"
 #include "extern.h"
 #include "display.h"
+#include "do_name.h"
+#include "objnam.h"
 
 /*
  * This should really go into the level structure, but
@@ -716,8 +718,11 @@ inside_gas_cloud (void *p1, void *p2)
 
         /* Non living and non breathing monsters are not concerned */
         if (!nonliving(mtmp->data) && !breathless(mtmp->data)) {
-            if (cansee(mtmp->mx, mtmp->my))
-                pline("%s coughs!", Monnam(mtmp));
+            if (cansee(mtmp->mx, mtmp->my)) {
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mtmp);
+                pline("%s coughs!", name);
+            }
             setmangry(mtmp);
             if (haseyes(mtmp->data) && mtmp->mcansee) {
                 mtmp->mblinded = 1;
