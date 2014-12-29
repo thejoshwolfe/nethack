@@ -4,6 +4,7 @@
 #include "sp_lev.h"
 #include "lev.h"        /* save & restore info */
 #include "extern.h"
+#include "dbridge.h"
 #include "display.h"
 
 /* from sp_lev.c, for fixup_special() */

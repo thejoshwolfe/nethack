@@ -4,6 +4,10 @@
 #include "prop.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "dbridge.h"
+#include "do_name.h"
+#include "objnam.h"
+#include "shk.h"
 #include "timeout.h"
 #include "vision.h"
 #include "onames.h"
@@ -1431,8 +1435,10 @@ void obj_sanity_check (void) {
                         where_name(obj->where), doname(obj));
             }
             if (obj->ocarry != mon) {
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, mon);
                 pline("%s obj %p (%s) not held by mon %p (%s)\n", mesg, obj,
-                        doname(obj), mon, mon_nam(mon));
+                        doname(obj), mon, name);
             }
             check_contained(obj, mesg);
         }

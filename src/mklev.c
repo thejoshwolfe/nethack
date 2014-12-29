@@ -1,6 +1,9 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "extern.h"
+#include "shk.h"
+#include "dbridge.h"
 #include "display.h"
 #include "winprocs.h"
 

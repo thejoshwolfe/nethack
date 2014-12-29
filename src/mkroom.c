@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 /*
  * Entry points:
  *      mkroom() -- make and stock a room of a given type
@@ -12,6 +13,7 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "priest.h"
 #include "flag.h"
 #include "onames.h"
 #include "artifact_names.h"
