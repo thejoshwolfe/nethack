@@ -1,9 +1,11 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "eshk.h"
 #include "epri.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "shk.h"
 #include "display.h"
 
 /*      These routines provide basic data for any type of monster. */
