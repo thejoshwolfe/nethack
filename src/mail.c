@@ -1,12 +1,15 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
+
+#include "mail.h"
+#include "extern.h"
+#include "do_name.h"
+#include "display.h"
+#include "winprocs.h"
 
 #include <fcntl.h>
 #include <errno.h>
-#include "mail.h"
-#include "extern.h"
-#include "display.h"
-#include "winprocs.h"
 
 /*
  * Notify user when new mail has arrived.  Idea by Merlyn Leroy.
@@ -211,13 +214,8 @@ static const char *mail_text[] = {
  * false if the md gets stuck in a position where there is a monster.  Return
  * true otherwise.
  */
-static bool 
-md_rush (
-    struct monst *md,
-    int tx,
-    int ty         /* destination of mail daemon */
-)
-{
+// int ty         /* destination of mail daemon */
+static bool md_rush ( struct monst *md, int tx, int ty) {
     struct monst *mon;                  /* displaced monster */
     int dx, dy;         /* direction counters */
     int fx = md->mx, fy = md->my;       /* current location */
