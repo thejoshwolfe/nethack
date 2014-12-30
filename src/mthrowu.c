@@ -2,6 +2,7 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "invent.h"
 #include "do_name.h"
 #include "shk.h"
 #include "objnam.h"
@@ -315,7 +316,9 @@ m_throw (
                 } else {
                     char name[BUFSZ];
                     mon_nam(name, BUFSZ, mon);
-                    pline("%s as %s throws it!", Tobjnam(singleobj, "slip"), name);
+                    char slip_clause[BUFSZ];
+                    Tobjnam(slip_clause, BUFSZ, singleobj, "slip");
+                    pline("%s as %s throws it!", slip_clause, name);
                 }
             }
             dx = rn2(3)-1;

@@ -1,8 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "lev.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "invent.h"
 #include "do_name.h"
 #include "objnam.h"
 #include "winprocs.h"

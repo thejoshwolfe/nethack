@@ -5,6 +5,7 @@
 #include "dlb.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "invent.h"
 #include "priest.h"
 #include "objnam.h"
 #include "shk.h"
@@ -949,7 +950,9 @@ void do_containerconts (struct obj *list, bool identified, bool all_containers, 
                                           want_dump);
                     }
                 } else {
-                    pline("%s empty.", Tobjnam(box, "are"));
+                    char are_clause[BUFSZ];
+                    Tobjnam(are_clause, BUFSZ, box, "are");
+                    pline("%s empty.", are_clause);
                     display_nhwindow(WIN_MESSAGE, false);
                     if (want_dump) {
                       dump(The(xname(box)), " is empty.");

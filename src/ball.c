@@ -4,6 +4,7 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "invent.h"
 #include "objnam.h"
 #include "hacklib.h"
 #include "dbridge.h"

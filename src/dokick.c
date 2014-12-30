@@ -4,6 +4,7 @@
 #include "eshk.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "invent.h"
 #include "dbridge.h"
 #include "shk.h"
 #include "objnam.h"

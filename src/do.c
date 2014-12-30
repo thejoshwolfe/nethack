@@ -6,6 +6,8 @@
 #include "lev.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "pickup.h"
+#include "invent.h"
 #include "shk.h"
 #include "priest.h"
 #include "dbridge.h"

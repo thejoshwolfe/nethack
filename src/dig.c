@@ -3,6 +3,8 @@
 #include "hack.h"
 #include "edog.h"
 #include "extern.h"
+#include "pickup.h"
+#include "invent.h"
 #include "shk.h"
 #include "priest.h"
 #include "dbridge.h"

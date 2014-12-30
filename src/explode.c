@@ -2,6 +2,7 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "invent.h"
 #include "objnam.h"
 #include "shk.h"
 #include "do_name.h"
@@ -405,143 +406,147 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
 // int blastforce,                             /* force behind the scattering  */
 // struct obj *obj                     /* only scatter this obj        */
 long scatter ( int sx, int sy, int blastforce, unsigned int scflags, struct obj *obj) {
-        struct obj *otmp;
-        int tmp;
-        int farthest = 0;
-        unsigned char typ;
-        long qtmp;
-        bool used_up;
-        bool individual_object = obj ? true : false;
-        struct monst *mtmp;
-        struct scatter_chain *stmp, *stmp2 = 0;
-        struct scatter_chain *schain = (struct scatter_chain *)0;
-        long total = 0L;
+    struct obj *otmp;
+    int tmp;
+    int farthest = 0;
+    unsigned char typ;
+    long qtmp;
+    bool used_up;
+    bool individual_object = obj ? true : false;
+    struct monst *mtmp;
+    struct scatter_chain *stmp, *stmp2 = 0;
+    struct scatter_chain *schain = (struct scatter_chain *)0;
+    long total = 0L;
 
-        while ((otmp = individual_object ? obj : level.objects[sx][sy]) != 0) {
-            if (otmp->quan > 1L) {
-                qtmp = otmp->quan - 1;
-                if (qtmp > LARGEST_INT) qtmp = LARGEST_INT;
-                qtmp = (long)rnd((int)qtmp);
-                otmp = splitobj(otmp, qtmp);
-            } else {
-                obj = (struct obj *)0; /* all used */
-            }
-            obj_extract_self(otmp);
-            used_up = false;
+    while ((otmp = individual_object ? obj : level.objects[sx][sy]) != 0) {
+        if (otmp->quan > 1L) {
+            qtmp = otmp->quan - 1;
+            if (qtmp > LARGEST_INT) qtmp = LARGEST_INT;
+            qtmp = (long)rnd((int)qtmp);
+            otmp = splitobj(otmp, qtmp);
+        } else {
+            obj = (struct obj *)0; /* all used */
+        }
+        obj_extract_self(otmp);
+        used_up = false;
 
-            /* 9 in 10 chance of fracturing boulders or statues */
-            if ((scflags & MAY_FRACTURE)
-                        && ((otmp->otyp == BOULDER) || (otmp->otyp == STATUE))
-                        && rn2(10)) {
-                if (otmp->otyp == BOULDER) {
-                    pline("%s apart.", Tobjnam(otmp, "break"));
-                    fracture_rock(otmp);
+        /* 9 in 10 chance of fracturing boulders or statues */
+        if ((scflags & MAY_FRACTURE)
+                && ((otmp->otyp == BOULDER) || (otmp->otyp == STATUE))
+                && rn2(10)) {
+            if (otmp->otyp == BOULDER) {
+                char break_clause[BUFSZ];
+                Tobjnam(break_clause, BUFSZ, otmp, "break");
+                pline("%s apart.", break_clause);
+                fracture_rock(otmp);
+                place_object(otmp, sx, sy);
+                if ((otmp = sobj_at(BOULDER, sx, sy)) != 0) {
+                    /* another boulder here, restack it to the top */
+                    obj_extract_self(otmp);
                     place_object(otmp, sx, sy);
-                    if ((otmp = sobj_at(BOULDER, sx, sy)) != 0) {
-                        /* another boulder here, restack it to the top */
-                        obj_extract_self(otmp);
-                        place_object(otmp, sx, sy);
-                    }
-                } else {
-                    struct trap *trap;
-
-                    if ((trap = t_at(sx,sy)) && trap->ttyp == STATUE_TRAP)
-                            deltrap(trap);
-                    pline("%s.", Tobjnam(otmp, "crumble"));
-                    (void) break_statue(otmp);
-                    place_object(otmp, sx, sy); /* put fragments on floor */
                 }
-                used_up = true;
+            } else {
+                struct trap *trap;
+
+                if ((trap = t_at(sx,sy)) && trap->ttyp == STATUE_TRAP)
+                    deltrap(trap);
+                char crumble_clause[BUFSZ];
+                Tobjnam(crumble_clause, BUFSZ, otmp, "crumble");
+                pline("%s.", crumble_clause);
+                break_statue(otmp);
+                place_object(otmp, sx, sy); /* put fragments on floor */
+            }
+            used_up = true;
 
             /* 1 in 10 chance of destruction of obj; glass, egg destruction */
-            } else if ((scflags & MAY_DESTROY) && (!rn2(10)
-                        || (objects[otmp->otyp].oc_material == GLASS
+        } else if ((scflags & MAY_DESTROY) && (!rn2(10)
+                    || (objects[otmp->otyp].oc_material == GLASS
                         || otmp->otyp == EGG))) {
-                if (breaks(otmp, (signed char)sx, (signed char)sy)) used_up = true;
-            }
-
-            if (!used_up) {
-                stmp = (struct scatter_chain *) malloc(sizeof(struct scatter_chain));
-                stmp->next = (struct scatter_chain *)0;
-                stmp->obj = otmp;
-                stmp->ox = sx;
-                stmp->oy = sy;
-                tmp = rn2(8);           /* get the direction */
-                stmp->dx = xdir[tmp];
-                stmp->dy = ydir[tmp];
-                tmp = blastforce - (otmp->owt/40);
-                if (tmp < 1) tmp = 1;
-                stmp->range = rnd(tmp); /* anywhere up to that determ. by wt */
-                if (farthest < stmp->range) farthest = stmp->range;
-                stmp->stopped = false;
-                if (!schain)
-                    schain = stmp;
-                else
-                    stmp2->next = stmp;
-                stmp2 = stmp;
-            }
+            if (breaks(otmp, (signed char)sx, (signed char)sy)) used_up = true;
         }
 
-        while (farthest-- > 0) {
-                for (stmp = schain; stmp; stmp = stmp->next) {
-                   if ((stmp->range-- > 0) && (!stmp->stopped)) {
-                        bhitpos.x = stmp->ox + stmp->dx;
-                        bhitpos.y = stmp->oy + stmp->dy;
-                        typ = levl[bhitpos.x][bhitpos.y].typ;
-                        if(!isok(bhitpos.x, bhitpos.y)) {
-                                bhitpos.x -= stmp->dx;
-                                bhitpos.y -= stmp->dy;
-                                stmp->stopped = true;
-                        } else if(!ZAP_POS(typ) ||
-                                        closed_door(bhitpos.x, bhitpos.y)) {
-                                bhitpos.x -= stmp->dx;
-                                bhitpos.y -= stmp->dy;
-                                stmp->stopped = true;
-                        } else if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
-                                if (scflags & MAY_HITMON) {
-                                    stmp->range--;
-                                    if (ohitmon(mtmp, stmp->obj, 1, false)) {
-                                        stmp->obj = (struct obj *)0;
-                                        stmp->stopped = true;
-                                    }
-                                }
-                        } else if (bhitpos.x==u.ux && bhitpos.y==u.uy) {
-                                if (scflags & MAY_HITYOU) {
-                                    int hitvalu, hitu;
+        if (!used_up) {
+            stmp = (struct scatter_chain *) malloc(sizeof(struct scatter_chain));
+            stmp->next = (struct scatter_chain *)0;
+            stmp->obj = otmp;
+            stmp->ox = sx;
+            stmp->oy = sy;
+            tmp = rn2(8);           /* get the direction */
+            stmp->dx = xdir[tmp];
+            stmp->dy = ydir[tmp];
+            tmp = blastforce - (otmp->owt/40);
+            if (tmp < 1) tmp = 1;
+            stmp->range = rnd(tmp); /* anywhere up to that determ. by wt */
+            if (farthest < stmp->range) farthest = stmp->range;
+            stmp->stopped = false;
+            if (!schain)
+                schain = stmp;
+            else
+                stmp2->next = stmp;
+            stmp2 = stmp;
+        }
+    }
 
-                                    if (multi) nomul(0);
-                                    hitvalu = 8 + stmp->obj->spe;
-                                    if (bigmonst(youmonst.data)) hitvalu++;
-                                    hitu = thitu(hitvalu,
-                                                 dmgval(stmp->obj, &youmonst),
-                                                 stmp->obj, (char *)0);
-                                    if (hitu) {
-                                        stmp->range -= 3;
-                                        stop_occupation();
-                                    }
-                                }
+    while (farthest-- > 0) {
+        for (stmp = schain; stmp; stmp = stmp->next) {
+            if ((stmp->range-- > 0) && (!stmp->stopped)) {
+                bhitpos.x = stmp->ox + stmp->dx;
+                bhitpos.y = stmp->oy + stmp->dy;
+                typ = levl[bhitpos.x][bhitpos.y].typ;
+                if(!isok(bhitpos.x, bhitpos.y)) {
+                    bhitpos.x -= stmp->dx;
+                    bhitpos.y -= stmp->dy;
+                    stmp->stopped = true;
+                } else if(!ZAP_POS(typ) ||
+                        closed_door(bhitpos.x, bhitpos.y)) {
+                    bhitpos.x -= stmp->dx;
+                    bhitpos.y -= stmp->dy;
+                    stmp->stopped = true;
+                } else if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
+                    if (scflags & MAY_HITMON) {
+                        stmp->range--;
+                        if (ohitmon(mtmp, stmp->obj, 1, false)) {
+                            stmp->obj = (struct obj *)0;
+                            stmp->stopped = true;
                         }
-                        stmp->ox = bhitpos.x;
-                        stmp->oy = bhitpos.y;
-                   }
-                }
-        }
-        for (stmp = schain; stmp; stmp = stmp2) {
-                int x,y;
+                    }
+                } else if (bhitpos.x==u.ux && bhitpos.y==u.uy) {
+                    if (scflags & MAY_HITYOU) {
+                        int hitvalu, hitu;
 
-                stmp2 = stmp->next;
-                x = stmp->ox; y = stmp->oy;
-                if (stmp->obj) {
-                        if ( x!=sx || y!=sy )
-                            total += stmp->obj->quan;
-                        place_object(stmp->obj, x, y);
-                        stackobj(stmp->obj);
+                        if (multi) nomul(0);
+                        hitvalu = 8 + stmp->obj->spe;
+                        if (bigmonst(youmonst.data)) hitvalu++;
+                        hitu = thitu(hitvalu,
+                                dmgval(stmp->obj, &youmonst),
+                                stmp->obj, (char *)0);
+                        if (hitu) {
+                            stmp->range -= 3;
+                            stop_occupation();
+                        }
+                    }
                 }
-                free((void *)stmp);
-                newsym(x,y);
+                stmp->ox = bhitpos.x;
+                stmp->oy = bhitpos.y;
+            }
         }
+    }
+    for (stmp = schain; stmp; stmp = stmp2) {
+        int x,y;
 
-        return total;
+        stmp2 = stmp->next;
+        x = stmp->ox; y = stmp->oy;
+        if (stmp->obj) {
+            if ( x!=sx || y!=sy )
+                total += stmp->obj->quan;
+            place_object(stmp->obj, x, y);
+            stackobj(stmp->obj);
+        }
+        free((void *)stmp);
+        newsym(x,y);
+    }
+
+    return total;
 }
 
 

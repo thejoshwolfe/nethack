@@ -117,6 +117,7 @@
 #include "hack.h"
 #include "region.h"
 #include "extern.h"
+#include "invent.h"
 #include "dbridge.h"
 #include "winprocs.h"
 

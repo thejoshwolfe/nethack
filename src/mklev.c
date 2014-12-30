@@ -2,6 +2,7 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "invent.h"
 #include "shk.h"
 #include "dbridge.h"
 #include "display.h"

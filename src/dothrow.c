@@ -6,6 +6,8 @@
 #include "edog.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "pickup.h"
+#include "invent.h"
 #include "shk.h"
 #include "do_name.h"
 #include "objnam.h"
@@ -796,271 +798,276 @@ static void sho_obj_return_to_u (struct obj *obj) {
 // long wep_mask;  /* used to re-equip returning boomerang */
 // bool twoweap; /* used to restore twoweapon mode if wielded weapon returns */
 void throwit(struct obj *obj, long wep_mask, bool twoweap) {
-        struct monst *mon;
-        int range, urange;
-        bool impaired = (Confusion || Stunned || Blind ||
-                           Hallucination() || Fumbling);
+    struct monst *mon;
+    int range, urange;
+    bool impaired = (Confusion || Stunned || Blind ||
+            Hallucination() || Fumbling);
 
-        if ((obj->cursed || obj->greased) && (u.dx || u.dy) && !rn2(7)) {
-            bool slipok = true;
-            if (ammo_and_launcher(obj, uwep))
-                pline("%s!", Tobjnam(obj, "misfire"));
-            else {
-                /* only slip if it's greased or meant to be thrown */
-                if (obj->greased || throwing_weapon(obj))
-                    /* BUG: this message is grammatically incorrect if obj has
-                       a plural name; greased gloves or boots for instance. */
-                    pline("%s as you throw it!", Tobjnam(obj, "slip"));
-                else slipok = false;
-            }
-            if (slipok) {
-                u.dx = rn2(3)-1;
-                u.dy = rn2(3)-1;
-                if (!u.dx && !u.dy) u.dz = 1;
-                impaired = true;
+    if ((obj->cursed || obj->greased) && (u.dx || u.dy) && !rn2(7)) {
+        bool slipok = true;
+        if (ammo_and_launcher(obj, uwep)) {
+            char misfire_clause[BUFSZ];
+            Tobjnam(misfire_clause, BUFSZ, obj, "misfire");
+            pline("%s!", misfire_clause);
+        } else {
+            /* only slip if it's greased or meant to be thrown */
+            if (obj->greased || throwing_weapon(obj)) {
+                /* BUG: this message is grammatically incorrect if obj has
+                   a plural name; greased gloves or boots for instance. */
+                char slip_clause[BUFSZ];
+                Tobjnam(slip_clause, BUFSZ, obj, "slip");
+                pline("%s as you throw it!", slip_clause);
+            } else {
+                slipok = false;
             }
         }
+        if (slipok) {
+            u.dx = rn2(3)-1;
+            u.dy = rn2(3)-1;
+            if (!u.dx && !u.dy) u.dz = 1;
+            impaired = true;
+        }
+    }
 
-        if ((u.dx || u.dy || (u.dz < 1)) &&
+    if ((u.dx || u.dy || (u.dz < 1)) &&
             calc_capacity((int)obj->owt) > SLT_ENCUMBER &&
             (Upolyd ? (u.mh < 5 && u.mh != u.mhmax)
              : (u.uhp < 10 && u.uhp != u.uhpmax)) &&
             obj->owt > (unsigned)((Upolyd ? u.mh : u.uhp) * 2) &&
             !Is_airlevel(&u.uz)) {
-            You("have so little stamina, %s drops from your grasp.",
+        You("have so little stamina, %s drops from your grasp.",
                 the(xname(obj)));
-            exercise(A_CON, false);
-            u.dx = u.dy = 0;
-            u.dz = 1;
+        exercise(A_CON, false);
+        u.dx = u.dy = 0;
+        u.dz = 1;
+    }
+
+    thrownobj = obj;
+
+    if (u.uswallow) {
+        mon = u.ustuck;
+        bhitpos.x = mon->mx;
+        bhitpos.y = mon->my;
+    } else if(u.dz) {
+        if (u.dz < 0 && Role_if(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR && !impaired) {
+            char hit_clause[BUFSZ];
+            Tobjnam(hit_clause, BUFSZ, obj, "hit");
+            pline("%s the %s and returns to your hand!", hit_clause, ceiling(u.ux,u.uy));
+            obj = addinv(obj);
+            encumber_msg();
+            setuwep(obj);
+            u.twoweap = twoweap;
+        } else if (u.dz < 0 && !Is_airlevel(&u.uz) && !Underwater && !Is_waterlevel(&u.uz)) {
+            toss_up(obj, rn2(5));
+        } else {
+            hitfloor(obj);
         }
-
-        thrownobj = obj;
-
-        if(u.uswallow) {
-                mon = u.ustuck;
-                bhitpos.x = mon->mx;
-                bhitpos.y = mon->my;
-        } else if(u.dz) {
-            if (u.dz < 0 && Role_if(PM_VALKYRIE) &&
-                    obj->oartifact == ART_MJOLLNIR && !impaired) {
-                pline("%s the %s and returns to your hand!",
-                      Tobjnam(obj, "hit"), ceiling(u.ux,u.uy));
-                obj = addinv(obj);
-                (void) encumber_msg();
-                setuwep(obj);
+        thrownobj = NULL;
+        return;
+    } else if(obj->otyp == BOOMERANG && !Underwater) {
+        if(Is_airlevel(&u.uz) || Levitation)
+            hurtle(-u.dx, -u.dy, 1, true);
+        mon = boomhit(u.dx, u.dy);
+        if(mon == &youmonst) {          /* the thing was caught */
+            exercise(A_DEX, true);
+            obj = addinv(obj);
+            (void) encumber_msg();
+            if (wep_mask && !(obj->owornmask & wep_mask)) {
+                setworn(obj, wep_mask);
                 u.twoweap = twoweap;
-            } else if (u.dz < 0 && !Is_airlevel(&u.uz) &&
-                    !Underwater && !Is_waterlevel(&u.uz)) {
-                (void) toss_up(obj, rn2(5));
-            } else {
-                hitfloor(obj);
             }
             thrownobj = (struct obj*)0;
             return;
+        }
+    } else {
+        urange = (int)(ACURRSTR)/2;
+        /* balls are easy to throw or at least roll */
+        /* also, this insures the maximum range of a ball is greater
+         * than 1, so the effects from throwing attached balls are
+         * actually possible
+         */
+        if (obj->otyp == HEAVY_IRON_BALL)
+            range = urange - (int)(obj->owt/100);
+        else
+            range = urange - (int)(obj->owt/40);
+        if (obj == uball) {
+            if (u.ustuck) range = 1;
+            else if (range >= 5) range = 5;
+        }
+        if (range < 1) range = 1;
 
-        } else if(obj->otyp == BOOMERANG && !Underwater) {
-                if(Is_airlevel(&u.uz) || Levitation)
-                    hurtle(-u.dx, -u.dy, 1, true);
-                mon = boomhit(u.dx, u.dy);
-                if(mon == &youmonst) {          /* the thing was caught */
-                        exercise(A_DEX, true);
-                        obj = addinv(obj);
-                        (void) encumber_msg();
-                        if (wep_mask && !(obj->owornmask & wep_mask)) {
-                            setworn(obj, wep_mask);
-                            u.twoweap = twoweap;
-                        }
-                        thrownobj = (struct obj*)0;
-                        return;
-                }
-        } else {
-                urange = (int)(ACURRSTR)/2;
-                /* balls are easy to throw or at least roll */
-                /* also, this insures the maximum range of a ball is greater
-                 * than 1, so the effects from throwing attached balls are
-                 * actually possible
-                 */
-                if (obj->otyp == HEAVY_IRON_BALL)
-                        range = urange - (int)(obj->owt/100);
-                else
-                        range = urange - (int)(obj->owt/40);
-                if (obj == uball) {
-                        if (u.ustuck) range = 1;
-                        else if (range >= 5) range = 5;
-                }
-                if (range < 1) range = 1;
-
-                if (is_ammo(obj)) {
-                    if (ammo_and_launcher(obj, uwep))
-                        range++;
-                    else if (obj->oclass != GEM_CLASS)
-                        range /= 2;
-                }
-
-                if (Is_airlevel(&u.uz) || Levitation) {
-                    /* action, reaction... */
-                    urange -= range;
-                    if(urange < 1) urange = 1;
-                    range -= urange;
-                    if(range < 1) range = 1;
-                }
-
-                if (obj->otyp == BOULDER)
-                    range = 20;         /* you must be giant */
-                else if (obj->oartifact == ART_MJOLLNIR)
-                    range = (range + 1) / 2;    /* it's heavy */
-                else if (obj == uball && u.utrap && u.utraptype == TT_INFLOOR)
-                    range = 1;
-
-                if (Underwater) range = 1;
-
-                mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
-                           (int (*)(struct monst *,struct obj *))0,
-                           (int (*)(struct obj *,struct obj *))0,
-                           obj);
-
-                /* have to do this after bhit() so u.ux & u.uy are correct */
-                if(Is_airlevel(&u.uz) || Levitation)
-                    hurtle(-u.dx, -u.dy, urange, true);
+        if (is_ammo(obj)) {
+            if (ammo_and_launcher(obj, uwep))
+                range++;
+            else if (obj->oclass != GEM_CLASS)
+                range /= 2;
         }
 
-        if (mon) {
-                bool obj_gone;
-
-                if (mon->isshk &&
-                    obj->where == OBJ_MINVENT && obj->ocarry == mon) {
-                    thrownobj = (struct obj*)0;
-                    return;             /* alert shk caught it */
-                }
-                (void) snuff_candle(obj);
-                notonhead = (bhitpos.x != mon->mx || bhitpos.y != mon->my);
-                obj_gone = thitmonst(mon, obj);
-                /* Monster may have been tamed; this frees old mon */
-                mon = m_at(bhitpos.x, bhitpos.y);
-
-                /* [perhaps this should be moved into thitmonst or hmon] */
-                if (mon && mon->isshk &&
-                        (!inside_shop(u.ux, u.uy) ||
-                         !index(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
-                    hot_pursuit(mon);
-
-                if (obj_gone) return;
+        if (Is_airlevel(&u.uz) || Levitation) {
+            /* action, reaction... */
+            urange -= range;
+            if(urange < 1) urange = 1;
+            range -= urange;
+            if(range < 1) range = 1;
         }
 
-        if (u.uswallow) {
-                /* ball is not picked up by monster */
-                if (obj != uball) (void) mpickobj(u.ustuck,obj);
-        } else {
-                /* the code following might become part of dropy() */
-                if (obj->oartifact == ART_MJOLLNIR &&
-                        Role_if(PM_VALKYRIE) && rn2(100)) {
-                    /* we must be wearing Gauntlets of Power to get here */
-                    sho_obj_return_to_u(obj);       /* display its flight */
+        if (obj->otyp == BOULDER)
+            range = 20;         /* you must be giant */
+        else if (obj->oartifact == ART_MJOLLNIR)
+            range = (range + 1) / 2;    /* it's heavy */
+        else if (obj == uball && u.utrap && u.utraptype == TT_INFLOOR)
+            range = 1;
 
-                    if (!impaired && rn2(100)) {
-                        pline("%s to your hand!", Tobjnam(obj, "return"));
-                        obj = addinv(obj);
-                        (void) encumber_msg();
-                        setuwep(obj);
-                        u.twoweap = twoweap;
-                        if(cansee(bhitpos.x, bhitpos.y))
-                            newsym(bhitpos.x,bhitpos.y);
-                    } else {
-                        int dmg = rn2(2);
-                        if (!dmg) {
-                            pline(Blind ? "%s lands %s your %s." :
-                                        "%s back to you, landing %s your %s.",
-                                  Blind ? Something : Tobjnam(obj, "return"),
-                                  Levitation ? "beneath" : "at",
-                                  makeplural(body_part(FOOT)));
-                        } else {
-                            dmg += rnd(3);
-                            pline(Blind ? "%s your %s!" :
-                                        "%s back toward you, hitting your %s!",
-                                  Tobjnam(obj, Blind ? "hit" : "fly"),
-                                  body_part(ARM));
-                            (void) artifact_hit((struct monst *)0,
-                                                &youmonst, obj, &dmg, 0);
-                            losehp(dmg, xname(obj),
-                                obj_is_pname(obj) ? KILLED_BY : KILLED_BY_AN);
-                        }
-                        if (ship_object(obj, u.ux, u.uy, false)) {
-                            thrownobj = (struct obj*)0;
-                            return;
-                        }
-                        dropy(obj);
-                    }
-                    thrownobj = (struct obj*)0;
-                    return;
-                }
+        if (Underwater) range = 1;
 
-                if (!IS_SOFT(levl[bhitpos.x][bhitpos.y].typ) &&
-                        breaktest(obj)) {
-                    tmp_at(DISP_FLASH, obj_to_glyph(obj));
-                    tmp_at(bhitpos.x, bhitpos.y);
-                    my_delay_output();
-                    tmp_at(DISP_END, 0);
-                    breakmsg(obj, cansee(bhitpos.x, bhitpos.y));
-                    breakobj(obj, bhitpos.x, bhitpos.y, true, true);
-                    return;
-                }
-                if(flooreffects(obj,bhitpos.x,bhitpos.y,"fall")) return;
-                obj_no_longer_held(obj);
-                if (mon && mon->isshk && is_pick(obj)) {
-                    if (cansee(bhitpos.x, bhitpos.y)) {
-                        char name[BUFSZ];
-                        Monnam(name, BUFSZ, mon);
-                        pline("%s snatches up %s.", name, the(xname(obj)));
-                    }
-                    if(*u.ushops)
-                        check_shop_obj(obj, bhitpos.x, bhitpos.y, false);
-                    mpickobj(mon, obj);  /* may merge and free obj */
-                    thrownobj = NULL;
-                    return;
-                }
-                (void) snuff_candle(obj);
-                if (!mon && ship_object(obj, bhitpos.x, bhitpos.y, false)) {
-                    thrownobj = NULL;
-                    return;
-                }
-                thrownobj = NULL;
-                place_object(obj, bhitpos.x, bhitpos.y);
-                if(*u.ushops && obj != uball)
-                    check_shop_obj(obj, bhitpos.x, bhitpos.y, false);
+        mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
+                (int (*)(struct monst *,struct obj *))0,
+                (int (*)(struct obj *,struct obj *))0,
+                obj);
 
-                stackobj(obj);
-                if (obj == uball)
-                    drop_ball(bhitpos.x, bhitpos.y);
-                if (cansee(bhitpos.x, bhitpos.y))
+        /* have to do this after bhit() so u.ux & u.uy are correct */
+        if(Is_airlevel(&u.uz) || Levitation)
+            hurtle(-u.dx, -u.dy, urange, true);
+    }
+
+    if (mon) {
+        bool obj_gone;
+
+        if (mon->isshk &&
+                obj->where == OBJ_MINVENT && obj->ocarry == mon) {
+            thrownobj = (struct obj*)0;
+            return;             /* alert shk caught it */
+        }
+        (void) snuff_candle(obj);
+        notonhead = (bhitpos.x != mon->mx || bhitpos.y != mon->my);
+        obj_gone = thitmonst(mon, obj);
+        /* Monster may have been tamed; this frees old mon */
+        mon = m_at(bhitpos.x, bhitpos.y);
+
+        /* [perhaps this should be moved into thitmonst or hmon] */
+        if (mon && mon->isshk &&
+                (!inside_shop(u.ux, u.uy) ||
+                 !index(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
+            hot_pursuit(mon);
+
+        if (obj_gone) return;
+    }
+
+    if (u.uswallow) {
+        /* ball is not picked up by monster */
+        if (obj != uball) (void) mpickobj(u.ustuck,obj);
+    } else {
+        /* the code following might become part of dropy() */
+        if (obj->oartifact == ART_MJOLLNIR &&
+                Role_if(PM_VALKYRIE) && rn2(100)) {
+            /* we must be wearing Gauntlets of Power to get here */
+            sho_obj_return_to_u(obj);       /* display its flight */
+
+            if (!impaired && rn2(100)) {
+                char return_clause[BUFSZ];
+                Tobjnam(return_clause, BUFSZ, obj, "return");
+                pline("%s to your hand!", return_clause);
+                obj = addinv(obj);
+                encumber_msg();
+                setuwep(obj);
+                u.twoweap = twoweap;
+                if(cansee(bhitpos.x, bhitpos.y))
                     newsym(bhitpos.x,bhitpos.y);
-                if (obj_sheds_light(obj))
-                    vision_full_recalc = 1;
-                if (!IS_SOFT(levl[bhitpos.x][bhitpos.y].typ))
-                    container_impact_dmg(obj);
+            } else {
+                int dmg = rn2(2);
+                if (!dmg) {
+                    char return_clause[BUFSZ];
+                    Tobjnam(return_clause, BUFSZ, obj, "return");
+                    pline(Blind ? "%s lands %s your %s." :
+                            "%s back to you, landing %s your %s.",
+                            Blind ? Something : return_clause,
+                            Levitation ? "beneath" : "at",
+                            makeplural(body_part(FOOT)));
+                } else {
+                    dmg += rnd(3);
+                    char verb_clause[BUFSZ];
+                    Tobjnam(verb_clause, BUFSZ, obj, Blind ? "hit" : "fly");
+                    pline(Blind ? "%s your %s!" :
+                            "%s back toward you, hitting your %s!", verb_clause, body_part(ARM));
+                    artifact_hit((struct monst *)0, &youmonst, obj, &dmg, 0);
+                    losehp(dmg, xname(obj), obj_is_pname(obj) ? KILLED_BY : KILLED_BY_AN);
+                }
+                if (ship_object(obj, u.ux, u.uy, false)) {
+                    thrownobj = NULL;
+                    return;
+                }
+                dropy(obj);
+            }
+            thrownobj = NULL;
+            return;
         }
+
+        if (!IS_SOFT(levl[bhitpos.x][bhitpos.y].typ) && breaktest(obj)) {
+            tmp_at(DISP_FLASH, obj_to_glyph(obj));
+            tmp_at(bhitpos.x, bhitpos.y);
+            my_delay_output();
+            tmp_at(DISP_END, 0);
+            breakmsg(obj, cansee(bhitpos.x, bhitpos.y));
+            breakobj(obj, bhitpos.x, bhitpos.y, true, true);
+            return;
+        }
+        if(flooreffects(obj,bhitpos.x,bhitpos.y,"fall")) return;
+        obj_no_longer_held(obj);
+        if (mon && mon->isshk && is_pick(obj)) {
+            if (cansee(bhitpos.x, bhitpos.y)) {
+                char name[BUFSZ];
+                Monnam(name, BUFSZ, mon);
+                pline("%s snatches up %s.", name, the(xname(obj)));
+            }
+            if(*u.ushops)
+                check_shop_obj(obj, bhitpos.x, bhitpos.y, false);
+            mpickobj(mon, obj);  /* may merge and free obj */
+            thrownobj = NULL;
+            return;
+        }
+        (void) snuff_candle(obj);
+        if (!mon && ship_object(obj, bhitpos.x, bhitpos.y, false)) {
+            thrownobj = NULL;
+            return;
+        }
+        thrownobj = NULL;
+        place_object(obj, bhitpos.x, bhitpos.y);
+        if(*u.ushops && obj != uball)
+            check_shop_obj(obj, bhitpos.x, bhitpos.y, false);
+
+        stackobj(obj);
+        if (obj == uball)
+            drop_ball(bhitpos.x, bhitpos.y);
+        if (cansee(bhitpos.x, bhitpos.y))
+            newsym(bhitpos.x,bhitpos.y);
+        if (obj_sheds_light(obj))
+            vision_full_recalc = 1;
+        if (!IS_SOFT(levl[bhitpos.x][bhitpos.y].typ))
+            container_impact_dmg(obj);
+    }
 }
 
 /* an object may hit a monster; various factors adjust the chance of hitting */
 int omon_adj(struct monst *mon, struct obj *obj, bool mon_notices) {
-        int tmp = 0;
+    int tmp = 0;
 
-        /* size of target affects the chance of hitting */
-        tmp += (mon->data->msize - MZ_MEDIUM);          /* -2..+5 */
-        /* sleeping target is more likely to be hit */
-        if (mon->msleeping) {
-            tmp += 2;
-            if (mon_notices) mon->msleeping = 0;
+    /* size of target affects the chance of hitting */
+    tmp += (mon->data->msize - MZ_MEDIUM);          /* -2..+5 */
+    /* sleeping target is more likely to be hit */
+    if (mon->msleeping) {
+        tmp += 2;
+        if (mon_notices) mon->msleeping = 0;
+    }
+    /* ditto for immobilized target */
+    if (!mon->mcanmove || !mon->data->mmove) {
+        tmp += 4;
+        if (mon_notices && mon->data->mmove && !rn2(10)) {
+            mon->mcanmove = 1;
+            mon->mfrozen = 0;
         }
-        /* ditto for immobilized target */
-        if (!mon->mcanmove || !mon->data->mmove) {
-            tmp += 4;
-            if (mon_notices && mon->data->mmove && !rn2(10)) {
-                mon->mcanmove = 1;
-                mon->mfrozen = 0;
-            }
-        }
-        /* some objects are more likely to hit than others */
-        switch (obj->otyp) {
+    }
+    /* some objects are more likely to hit than others */
+    switch (obj->otyp) {
         case HEAVY_IRON_BALL:
             if (obj != uball) tmp += 2;
             break;
@@ -1072,8 +1079,8 @@ int omon_adj(struct monst *mon, struct obj *obj, bool mon_notices) {
                     obj->oclass == GEM_CLASS)
                 tmp += hitval(obj, mon);
             break;
-        }
-        return tmp;
+    }
+    return tmp;
 }
 
 /* thrown object misses target monster */
@@ -1330,8 +1337,9 @@ int thitmonst (struct monst *mon, struct obj *obj) {
         }
         char name[BUFSZ];
         mon_nam(name, BUFSZ, mon);
-        pline("%s into %s%s %s.",
-                Tobjnam(obj, "vanish"), name, possessive_suffix(name),
+        char vanish_clause[BUFSZ];
+        Tobjnam(vanish_clause, BUFSZ, obj, "vanish");
+        pline("%s into %s%s %s.", vanish_clause, name, possessive_suffix(name),
                 is_animal(u.ustuck->data) ? "entrails" : "currents");
     } else {
         tmiss(obj, mon);

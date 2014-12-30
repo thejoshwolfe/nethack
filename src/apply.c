@@ -7,6 +7,8 @@
 #include "youprop.h"
 #include "decl.h"
 #include "extern.h"
+#include "pickup.h"
+#include "invent.h"
 #include "shk.h"
 #include "hacklib.h"
 #include "dbridge.h"
@@ -784,7 +786,9 @@ static void use_bell (struct obj **optr) {
             a_monnam(a_name, BUFSZ, mtmp);
             You("summon %s!", a_name);
             if (!obj_resists(obj, 93, 100)) {
-                pline("%s shattered!", Tobjnam(obj, "have"));
+                char clause[BUFSZ];
+                Tobjnam(clause, BUFSZ, obj, "have");
+                pline("%s shattered!", clause);
                 useup(obj);
                 *optr = 0;
             } else switch (rn2(3)) {
@@ -819,9 +823,10 @@ static void use_bell (struct obj **optr) {
             mkundead(&mm, false, NO_MINVENT);
             wakem = true;
 
-        } else  if (invoking) {
-            pline("%s an unsettling shrill sound...",
-                    Tobjnam(obj, "issue"));
+        } else if (invoking) {
+            char clause[BUFSZ];
+            Tobjnam(clause, BUFSZ, obj, "issue");
+            pline("%s an unsettling shrill sound...", clause);
             obj->age = moves;
             learno = true;
             wakem = true;
@@ -886,13 +891,13 @@ static void use_candelabrum (struct obj *obj) {
         char are[BUFSZ];
         vtense(are, BUFSZ, s, "are");
         There("%s only %d %s in %s.", are, obj->spe, s, the(xname(obj)));
-        if (!Blind)
-            pline("%s lit.  %s dimly.",
-                    obj->spe == 1 ? "It is" : "They are",
-                    Tobjnam(obj, "shine"));
+        if (!Blind) {
+            char clause[BUFSZ];
+            Tobjnam(clause, BUFSZ, obj, "shine");
+            pline("%s lit.  %s dimly.", obj->spe == 1 ? "It is" : "They are", clause);
+        }
     } else {
-        pline("%s's %s burn%s", The(xname(obj)), s,
-                (Blind ? "." : " brightly!"));
+        pline("%s's %s burn%s", The(xname(obj)), s, (Blind ? "." : " brightly!"));
     }
     if (!invocation_pos(u.ux, u.uy)) {
         char are[BUFSZ];
@@ -901,10 +906,15 @@ static void use_candelabrum (struct obj *obj) {
         obj->age /= 2;
     } else {
         if(obj->spe == 7) {
-            if (Blind)
-                pline("%s a strange warmth!", Tobjnam(obj, "radiate"));
-            else
-                pline("%s with a strange light!", Tobjnam(obj, "glow"));
+            if (Blind) {
+                char radiate_clause[BUFSZ];
+                Tobjnam(radiate_clause, BUFSZ, obj, "radiate");
+                pline("%s a strange warmth!", radiate_clause);
+            } else {
+                char glow_clause[BUFSZ];
+                Tobjnam(glow_clause, BUFSZ, obj, "glow");
+                pline("%s with a strange light!", glow_clause);
+            }
         }
         obj->known = 1;
     }
@@ -1086,7 +1096,9 @@ static void use_lamp (struct obj *obj) {
     if (obj->cursed && !rn2(2)) {
         char otense_buf[BUFSZ];
         otense(otense_buf, BUFSZ, obj, "die");
-        pline("%s for a moment, then %s.", Tobjnam(obj, "flicker"), otense_buf);
+        char flicker_clause[BUFSZ];
+        Tobjnam(flicker_clause, BUFSZ, obj, "flicker");
+        pline("%s for a moment, then %s.", flicker_clause, otense_buf);
     } else {
         if(obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
                 obj->otyp == BRASS_LANTERN) {
@@ -1710,8 +1722,9 @@ static void use_grease (struct obj *obj) {
     char buf[BUFSZ];
 
     if (Glib) {
-        pline("%s from your %s.", Tobjnam(obj, "slip"),
-                makeplural(body_part(FINGER)));
+        char slip_clause[BUFSZ];
+        Tobjnam(slip_clause, BUFSZ, obj, "slip");
+        pline("%s from your %s.", slip_clause, makeplural(body_part(FINGER)));
         dropx(obj);
         return;
     }
@@ -1720,8 +1733,9 @@ static void use_grease (struct obj *obj) {
         if ((obj->cursed || Fumbling) && !rn2(2)) {
             consume_obj_charge(obj, true);
 
-            pline("%s from your %s.", Tobjnam(obj, "slip"),
-                    makeplural(body_part(FINGER)));
+            char slip_clause[BUFSZ];
+            Tobjnam(slip_clause, BUFSZ, obj, "slip");
+            pline("%s from your %s.", slip_clause, makeplural(body_part(FINGER)));
             dropx(obj);
             return;
         }
@@ -1756,10 +1770,15 @@ static void use_grease (struct obj *obj) {
                     makeplural(body_part(FINGER)));
         }
     } else {
-        if (obj->known)
-            pline("%s empty.", Tobjnam(obj, "are"));
-        else
-            pline("%s to be empty.", Tobjnam(obj, "seem"));
+        if (obj->known) {
+            char are_clause[BUFSZ];
+            Tobjnam(are_clause, BUFSZ, obj, "are");
+            pline("%s empty.", are_clause);
+        } else {
+            char seem_clause[BUFSZ];
+            Tobjnam(seem_clause, BUFSZ, obj, "seem");
+            pline("%s to be empty.", seem_clause);
+        }
     }
     update_inventory();
 }
@@ -1833,7 +1852,8 @@ static void use_stone (struct obj *tstone) {
                 do_scratch = true;
             } else if (obj->oclass == GEM_CLASS && (tstone->blessed ||
                         (!tstone->cursed &&
-                         (Role_if(PM_ARCHEOLOGIST) || Race_if(PM_GNOME))))) {
+                         (Role_if(PM_ARCHEOLOGIST) || Race_if(PM_GNOME)))))
+            {
                 makeknown(TOUCHSTONE);
                 makeknown(obj->otyp);
                 prinv((char *)0, obj, 0L);
@@ -1851,13 +1871,21 @@ static void use_stone (struct obj *tstone) {
         default:
             switch (objects[obj->otyp].oc_material) {
                 case CLOTH:
-                    pline("%s a little more polished now.", Tobjnam(tstone, "look"));
-                    return;
+                    {
+                        char look_clause[BUFSZ];
+                        Tobjnam(look_clause, BUFSZ, tstone, "look");
+                        pline("%s a little more polished now.", look_clause);
+                        return;
+                    }
                 case LIQUID:
-                    if (!obj->known)            /* note: not "whetstone" */
+                    /* note: not "whetstone" */
+                    if (!obj->known) {
                         You("must think this is a wetstone, do you?");
-                    else
-                        pline("%s a little wetter now.", Tobjnam(tstone, "are"));
+                    } else {
+                        char are_clause[BUFSZ];
+                        Tobjnam(are_clause, BUFSZ, tstone, "are");
+                        pline("%s a little wetter now.", are_clause);
+                    }
                     return;
                 case WAX:
                     streak_color = "waxy";

@@ -735,8 +735,11 @@ struct monst * tamedog (struct monst *mtmp, struct obj *obj) {
                 Monnam(name, BUFSZ, mtmp);
                 pline("%s catches %s%s", name, the(xname(obj)),
                         !big_corpse ? "." : ", or vice versa!");
-            } else if (cansee(mtmp->mx,mtmp->my))
-                pline("%s.", Tobjnam(obj, "stop"));
+            } else if (cansee(mtmp->mx,mtmp->my)) {
+                char stop_clause[BUFSZ];
+                Tobjnam(stop_clause, BUFSZ, obj, "stop");
+                pline("%s.", stop_clause);
+            }
             /* dog_eat expects a floor object */
             place_object(obj, mtmp->mx, mtmp->my);
             (void) dog_eat(mtmp, obj, mtmp->mx, mtmp->my, false);

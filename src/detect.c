@@ -8,6 +8,7 @@
 #include "hack.h"
 #include "artifact.h"
 #include "extern.h"
+#include "invent.h"
 #include "dbridge.h"
 #include "objnam.h"
 #include "do_name.h"
@@ -734,28 +735,53 @@ void use_crystal_ball (struct obj *obj) {
     oops = (rnd(20) > ACURR(A_INT) || obj->cursed);
     if (oops && (obj->spe > 0)) {
         switch (rnd(obj->oartifact ? 4 : 5)) {
-            case 1 : pline("%s too much to comprehend!", Tobjnam(obj, "are"));
-                     break;
-            case 2 : pline("%s you!", Tobjnam(obj, "confuse"));
-                     make_confused(HConfusion + rnd(100),false);
-                     break;
-            case 3 : if (!resists_blnd(&youmonst)) {
-                         pline("%s your vision!", Tobjnam(obj, "damage"));
-                         make_blinded(Blinded + rnd(100),false);
-                         if (!Blind) Your("%s", vision_clears);
-                     } else {
-                         pline("%s your vision.", Tobjnam(obj, "assault"));
-                         You("are unaffected!");
-                     }
-                     break;
-            case 4 : pline("%s your mind!", Tobjnam(obj, "zap"));
-                     (void) make_hallucinated(u.uprops[HALLUC].intrinsic + rnd(100),false,0L);
-                     break;
-            case 5 : pline("%s!", Tobjnam(obj, "explode"));
-                     useup(obj);
-                     obj = 0;    /* it's gone */
-                     losehp(rnd(30), "exploding crystal ball", KILLED_BY_AN);
-                     break;
+            case 1:
+                {
+                    char are_clause[BUFSZ];
+                    Tobjnam(are_clause, BUFSZ, obj, "are");
+                    pline("%s too much to comprehend!", are_clause);
+                }
+                break;
+            case 2:
+                {
+                    char confuse_clause[BUFSZ];
+                    Tobjnam(confuse_clause, BUFSZ, obj, "confuse");
+                    pline("%s you!", confuse_clause);
+                    make_confused(HConfusion + rnd(100),false);
+                }
+                break;
+            case 3:
+                if (!resists_blnd(&youmonst)) {
+                    char damage_clause[BUFSZ];
+                    Tobjnam(damage_clause, BUFSZ, obj, "damage");
+                    pline("%s your vision!", damage_clause);
+                    make_blinded(Blinded + rnd(100),false);
+                    if (!Blind) Your("%s", vision_clears);
+                } else {
+                    char assault_clause[BUFSZ];
+                    Tobjnam(assault_clause, BUFSZ, obj, "assault");
+                    pline("%s your vision.", assault_clause);
+                    You("are unaffected!");
+                }
+                break;
+            case 4:
+                {
+                    char zap_clause[BUFSZ];
+                    Tobjnam(zap_clause, BUFSZ, obj, "zap");
+                    pline("%s your mind!", zap_clause);
+                    make_hallucinated(u.uprops[HALLUC].intrinsic + rnd(100),false,0L);
+                }
+                break;
+            case 5:
+                {
+                    char explode_clause[BUFSZ];
+                    Tobjnam(explode_clause, BUFSZ, obj, "explode");
+                    pline("%s!", explode_clause);
+                    useup(obj);
+                    obj = 0;    /* it's gone */
+                    losehp(rnd(30), "exploding crystal ball", KILLED_BY_AN);
+                }
+                break;
         }
         if (obj) consume_obj_charge(obj, true);
         return;

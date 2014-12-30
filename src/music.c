@@ -26,6 +26,7 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "invent.h"
 #include "dbridge.h"
 #include "objnam.h"
 #include "do_name.h"
@@ -349,18 +350,24 @@ static int do_improvisation (struct obj *instr) {
                 break;
             } /* else FALLTHRU */
         case WOODEN_FLUTE:              /* May charm snakes */
-            do_spec &= (rn2(ACURR(A_DEX)) + u.ulevel > 25);
-            pline("%s.", Tobjnam(instr, do_spec ? "trill" : "toot"));
-            if (do_spec) charm_snakes(u.ulevel * 3);
-            exercise(A_DEX, true);
+            {
+                do_spec &= (rn2(ACURR(A_DEX)) + u.ulevel > 25);
+                char verb_clause[BUFSZ];
+                Tobjnam(verb_clause, BUFSZ, instr, do_spec ? "trill" : "toot");
+                pline("%s.", verb_clause);
+                if (do_spec) charm_snakes(u.ulevel * 3);
+                exercise(A_DEX, true);
+            }
             break;
         case FROST_HORN:                /* Idem wand of cold */
         case FIRE_HORN:                 /* Idem wand of fire */
             if (do_spec && instr->spe > 0) {
                 consume_obj_charge(instr, true);
 
-                if (!getdir((char *)0)) {
-                    pline("%s.", Tobjnam(instr, "vibrate"));
+                if (!getdir(NULL)) {
+                    char vibrate_clause[BUFSZ];
+                    Tobjnam(vibrate_clause, BUFSZ, instr, "vibrate");
+                    pline("%s.", vibrate_clause);
                     break;
                 } else if (!u.dx && !u.dy && !u.dz) {
                     if ((damage = zapyourself(instr, true)) != 0) {
@@ -389,7 +396,9 @@ static int do_improvisation (struct obj *instr) {
             if (do_spec && instr->spe > 0) {
                 consume_obj_charge(instr, true);
 
-                pline("%s very attractive music.", Tobjnam(instr, "produce"));
+                char produce_clause[BUFSZ];
+                Tobjnam(produce_clause, BUFSZ, instr, "produce");
+                pline("%s very attractive music.", produce_clause);
                 charm_monsters((u.ulevel - 1) / 3 + 1);
                 exercise(A_DEX, true);
                 break;

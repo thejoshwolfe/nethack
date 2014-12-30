@@ -3,6 +3,7 @@
 #include "hack.h"
 #include "lev.h"
 #include "extern.h"
+#include "invent.h"
 #include "shk.h"
 #include "dbridge.h"
 #include "objnam.h"
@@ -957,12 +958,14 @@ int doengrave (void) {
             if (!Blind) {
                 char fade_tense[BUFSZ];
                 otense(fade_tense, BUFSZ, otmp, "fade");
-                pline("%s, then %s.", Tobjnam(otmp, "glow"), fade_tense);
+                char glow_clause[BUFSZ];
+                Tobjnam(glow_clause, BUFSZ, otmp, "glow");
+                pline("%s, then %s.", glow_clause, fade_tense);
             }
-            return(1);
+            return 1;
         } else {
             plines(Never_mind);
-            return(0);
+            return 0;
         }
     }
 

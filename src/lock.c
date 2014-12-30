@@ -2,6 +2,8 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "invent.h"
+#include "pickup.h"
 #include "objnam.h"
 #include "dbridge.h"
 #include "shk.h"

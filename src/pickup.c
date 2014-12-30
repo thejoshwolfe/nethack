@@ -3,6 +3,7 @@
  *      Contains code for picking objects up, and container use.
  */
 
+#include "pickup.h"
 #include "hack.h"
 #include "extern.h"
 #include "display.h"
@@ -96,8 +97,8 @@ simple_look (
         }
 }
 
-int 
-collect_obj_classes (char ilets[], struct obj *otmp, bool here, bool incl_gold, bool (*filter)(struct obj *), int *itemcount)
+int collect_obj_classes (char ilets[], struct obj *otmp, bool here,
+        bool incl_gold, bool (*filter)(const struct obj *), int *itemcount)
 {
         int iletct = 0;
         char c;
@@ -256,23 +257,16 @@ void add_valid_menu_class (int c) {
 }
 
 /* query_objlist callback: return true if not uchain */
-static bool 
-all_but_uchain (struct obj *obj)
-{
+static bool all_but_uchain (struct obj *obj) {
     return (obj != uchain);
 }
 
 /* query_objlist callback: return true */
-/*ARGSUSED*/
-bool 
-allow_all (struct obj *obj)
-{
+bool allow_all (const struct obj *obj) {
     return true;
 }
 
-bool 
-allow_category (struct obj *obj)
-{
+bool allow_category (const struct obj *obj) {
     if (Role_if(PM_PRIEST)) obj->bknown = true;
     if (((index(valid_menu_classes,'u') != (char *)0) && obj->unpaid) ||
         (index(valid_menu_classes, obj->oclass) != (char *)0))
@@ -294,9 +288,7 @@ allow_category (struct obj *obj)
 }
 
 /* query_objlist callback: return true if valid class and worn */
-bool 
-is_worn_by_type (struct obj *otmp)
-{
+bool is_worn_by_type (const struct obj *otmp) {
         return((bool)(!!(otmp->owornmask &
                         (W_ARMOR | W_RING | W_AMUL | W_TOOL | W_WEP | W_SWAPWEP | W_QUIVER)))
                 && (index(valid_menu_classes, otmp->oclass) != (char *)0));
@@ -554,15 +546,14 @@ static int autopick(struct obj *olist, int follow, menu_item **pick_list) {
  *      INVORDER_SORT     - Use hero's pack order.
  *      SIGNAL_NOMENU     - Return -1 rather than 0 if nothing passes "allow".
  */
-int 
-query_objlist (
-    const char *qstr,               /* query string */
-    struct obj *olist,              /* the list to pick from */
-    int qflags,                     /* options to control the query */
-    menu_item **pick_list,          /* return list of items picked */
-    int how,                        /* type of query */
-    bool (*allow)(struct obj *)/* allow function */
-)
+// const char *qstr,               /* query string */
+// struct obj *olist,              /* the list to pick from */
+// int qflags,                     /* options to control the query */
+// menu_item **pick_list,          /* return list of items picked */
+// int how,                        /* type of query */
+// bool (*allow)(struct obj *)/* allow function */
+int query_objlist(const char *qstr, struct obj *olist, int qflags,
+        menu_item **pick_list, int how, bool (*allow)(const struct obj *))
 {
         int i, j;
         int n;

@@ -13,6 +13,7 @@
 #include "rm.h"
 #include "youprop.h"
 #include "extern.h"
+#include "pickup.h"
 #include "hacklib.h"
 #include "dbridge.h"
 #include "winprocs.h"

@@ -543,71 +543,6 @@ extern int max_capacity(void);
 extern bool check_capacity(const char *);
 extern int inv_cnt(void);
 
-/* ### invent.c ### */
-
-extern void assigninvlet(struct obj *);
-extern struct obj *merge_choice(struct obj *,struct obj *);
-extern int merged(struct obj **,struct obj **);
-extern void addinv_core1(struct obj *);
-extern void addinv_core2(struct obj *);
-extern struct obj *addinv(struct obj *);
-extern struct obj *hold_another_object(struct obj *,const char *,const char *,const char *);
-extern void useupall(struct obj *);
-extern void useup(struct obj *);
-extern void consume_obj_charge(struct obj *,bool);
-extern void freeinv_core(struct obj *);
-extern void freeinv(struct obj *);
-extern void delallobj(int,int);
-extern void delobj(struct obj *);
-extern struct obj *sobj_at(int,int,int);
-extern struct obj *carrying(int);
-extern bool have_lizard(void);
-extern struct obj *o_on(unsigned int,struct obj *);
-extern bool obj_here(struct obj *,int,int);
-extern bool wearing_armor(void);
-extern bool is_worn(struct obj *);
-extern struct obj *g_at(int,int);
-extern struct obj *mkgoldobj(long);
-extern struct obj *getobj(const char *,const char *);
-extern int ggetobj(const char *,int (*)(struct obj *),int,bool,unsigned *);
-extern void fully_identify_obj(struct obj *);
-extern int identify(struct obj *);
-extern void identify_pack(int);
-extern int askchain(struct obj **,const char *,int,int (*)(struct obj *),
-        int (*)(struct obj *),int,const char *);
-extern void prinv(const char *,struct obj *,long);
-extern char *xprname(struct obj *,const char *,char,bool,long,long);
-extern int ddoinv(void);
-extern char display_inventory(const char *,bool);
-extern char dump_inventory(const char *,bool);
-extern int display_binventory(int,int,bool);
-extern struct obj *display_cinventory(struct obj *);
-extern struct obj *display_minventory(struct monst *,int,char *);
-extern int dotypeinv(void);
-extern const char *dfeature_at(int,int,char *);
-extern int look_here(int,bool);
-extern int dolook(void);
-extern bool will_feel_cockatrice(struct obj *,bool);
-extern void feel_cockatrice(struct obj *,bool);
-extern void stackobj(struct obj *);
-extern int doprgold(void);
-extern int doprwep(void);
-extern int doprarm(void);
-extern int doprring(void);
-extern int dopramulet(void);
-extern int doprtool(void);
-extern int doprinuse(void);
-extern void useupf(struct obj *,long);
-extern char *let_to_name(char,bool);
-extern void free_invbuf(void);
-extern void reassign(void);
-extern int doorganize(void);
-extern int count_unpaid(struct obj *);
-extern int count_buc(struct obj *,int);
-extern void carry_obj_effects(struct obj *);
-extern const char *currency(long);
-extern void silly_thing(const char *,struct obj *);
-
 /* ### light.c ### */
 
 extern void new_light_source(signed char, signed char, int, int, void *);
@@ -997,27 +932,6 @@ extern int dowhatdoes(void);
 extern char *dowhatdoes_core(char, char *);
 extern int dohelp(void);
 extern int dohistory(void);
-
-/* ### pickup.c ### */
-
-extern int collect_obj_classes(char *,struct obj *,bool,bool,bool (*)(struct obj *), int *);
-extern void add_valid_menu_class(int);
-extern bool allow_all(struct obj *);
-extern bool allow_category(struct obj *);
-extern bool is_worn_by_type(struct obj *);
-extern int pickup(int);
-extern int pickup_object(struct obj *, long, bool);
-extern int query_category(const char *, struct obj *, int,
-        menu_item **, int);
-extern int query_objlist(const char *, struct obj *, int,
-        menu_item **, int, bool (*)(struct obj *));
-extern struct obj *pick_obj(struct obj *);
-extern int encumber_msg(void);
-extern int doloot(void);
-extern int use_container(struct obj *,int);
-extern int loot_mon(struct monst *,int *,bool *);
-extern const char *safe_qbuf(const char *,unsigned,
-        const char *,const char *,const char *);
 
 /* ### pline.c ### */
 

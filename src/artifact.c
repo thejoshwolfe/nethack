@@ -5,6 +5,7 @@
 #include "artilist.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "invent.h"
 #include "do_name.h"
 #include "hacklib.h"
 #include "objnam.h"
@@ -493,7 +494,11 @@ int touch_artifact (struct obj *obj, struct monst *mon) {
 
     /* can pick it up unless you're totally non-synch'd with the artifact */
     if (badclass && badalign && self_willed) {
-        if (yours) pline("%s your grasp!", Tobjnam(obj, "evade"));
+        if (yours) {
+            char evade_clause[BUFSZ];
+            Tobjnam(evade_clause, BUFSZ, obj, "evade");
+            pline("%s your grasp!", evade_clause);
+        }
         return 0;
     }
 
@@ -1341,7 +1346,9 @@ void arti_speak (struct obj *obj) {
     line = getrumor(bcsign(obj), buf, true);
     if (!*line)
         line = "NetHack rumors file closed for renovation.";
-    pline("%s:", Tobjnam(obj, "whisper"));
+    char whisper_clause[BUFSZ];
+    Tobjnam(whisper_clause, BUFSZ, obj, "whisper");
+    pline("%s:", whisper_clause);
     verbalize("%s", line);
     return;
 }

@@ -2,6 +2,8 @@
 
 #include "hack.h"
 #include "extern.h"
+#include "pickup.h"
+#include "invent.h"
 #include "mhitm.h"
 #include "priest.h"
 #include "dbridge.h"
@@ -139,8 +141,9 @@ static int moverock (void) {
                         place_object(otmp, rx, ry);
                         unblock_point(sx, sy);
                         newsym(sx, sy);
-                        pline("KAABLAMM!!!  %s %s land mine.",
-                              Tobjnam(otmp, "trigger"),
+                        char trigger_clause[BUFSZ];
+                        Tobjnam(trigger_clause, BUFSZ, otmp, "trigger");
+                        pline("KAABLAMM!!!  %s %s land mine.", trigger_clause,
                               ttmp->madeby_u ? "your" : "a");
                         blow_up_landmine(ttmp);
                         /* if the boulder remains, it should fill the pit */
@@ -168,10 +171,11 @@ static int moverock (void) {
                     } else {
                         char plug_tense[BUFSZ];
                         otense(plug_tense, BUFSZ, otmp, "plug");
-                        pline("%s%s and %s a %s in the %s!",
-                          Tobjnam(otmp,
-                           (ttmp->ttyp == TRAPDOOR) ? "trigger" : "fall"),
-                          (ttmp->ttyp == TRAPDOOR) ? nul : " into",
+                        char verb_clause[BUFSZ];
+                        Tobjnam(verb_clause, BUFSZ, otmp,
+                                (ttmp->ttyp == TRAPDOOR) ? "trigger" : "fall");
+                        pline("%s%s and %s a %s in the %s!", verb_clause,
+                          (ttmp->ttyp == TRAPDOOR) ? "" : " into",
                           plug_tense,
                           (ttmp->ttyp == TRAPDOOR) ? "trap door" : "hole",
                           surface(rx, ry));
@@ -1462,7 +1466,8 @@ stillinwater:;
                  pit = (trap && (trap->ttyp == PIT || trap->ttyp == SPIKED_PIT));
                  if (trap && pit)
                      dotrap(trap, 0);        /* fall into pit */
-                 if (pick) (void) pickup(1);
+                 if (pick)
+                     pickup(1);
                  if (trap && !pit)
                      dotrap(trap, 0);        /* fall into arrow trap, etc. */
              }

@@ -5,6 +5,8 @@
 #include "edog.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "invent.h"
+#include "pickup.h"
 #include "priest.h"
 #include "shk.h"
 #include "objnam.h"

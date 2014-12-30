@@ -3,6 +3,7 @@
 #include "hack.h"
 #include "dlb.h"
 #include "extern.h"
+#include "invent.h"
 #include "objnam.h"
 #include "winprocs.h"
 #include "wintty.h" /* more() */
