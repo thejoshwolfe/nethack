@@ -475,10 +475,11 @@ can_twoweapon (void)
                 pline("%s isn't one-handed.", Yname2(otmp));
         } else if (uarms)
                 You_cant("use two weapons while wearing a shield.");
-        else if (uswapwep->oartifact)
-                pline("%s %s being held second to another weapon!",
-                        Yname2(uswapwep), otense(uswapwep, "resist"));
-        else if (!uarmg && !Stone_resistance && (uswapwep->otyp == CORPSE &&
+        else if (uswapwep->oartifact) {
+            char it_resists[BUFSZ];
+            otense(it_resists, BUFSZ, uswapwep, "resist");
+            pline("%s %s being held second to another weapon!", Yname2(uswapwep), it_resists);
+        } else if (!uarmg && !Stone_resistance && (uswapwep->otyp == CORPSE &&
                     touch_petrifies(&mons[uswapwep->corpsenm]))) {
                 char kbuf[BUFSZ];
 
@@ -689,10 +690,13 @@ int chwepon(struct obj *otmp, int amount) {
     }
     /* there is a (soft) upper and lower limit to uwep->spe */
     if (((uwep->spe > 5 && amount >= 0) || (uwep->spe < -5 && amount < 0)) && rn2(3)) {
-        if (!Blind)
-            Your("%s %s for a while and then %s.", aobjnam(uwep, "violently glow"), color, otense(uwep, "evaporate"));
-        else
+        if (!Blind) {
+            char it_evaporates[BUFSZ];
+            otense(it_evaporates, BUFSZ, uwep, "evaporate");
+            Your("%s %s for a while and then %s.", aobjnam(uwep, "violently glow"), color, it_evaporates);
+        } else {
             Your("%s.", aobjnam(uwep, "evaporate"));
+        }
 
         useupall(uwep); /* let all of them disappear */
         return (1);
@@ -736,8 +740,9 @@ void weldmsg(struct obj *obj) {
     long savewornmask;
 
     savewornmask = obj->owornmask;
-    Your("%s %s welded to your %s!", xname(obj), otense(obj, "are"),
-    bimanual(obj) ? (const char *)makeplural(body_part(HAND)) : body_part(HAND));
+    char is_or_are[BUFSZ];
+    otense(is_or_are, BUFSZ, obj, "are");
+    Your("%s %s welded to your %s!", xname(obj), is_or_are, bimanual(obj) ? (const char *)makeplural(body_part(HAND)) : body_part(HAND));
     obj->owornmask = savewornmask;
 }
 
