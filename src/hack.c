@@ -163,17 +163,19 @@ static int moverock (void) {
                     continue;
                 case HOLE:
                 case TRAPDOOR:
-                    if (Blind)
-                        pline("Kerplunk!  You no longer feel %s.",
-                                the(xname(otmp)));
-                    else
+                    if (Blind) {
+                        pline("Kerplunk!  You no longer feel %s.", the(xname(otmp)));
+                    } else {
+                        char plug_tense[BUFSZ];
+                        otense(plug_tense, BUFSZ, otmp, "plug");
                         pline("%s%s and %s a %s in the %s!",
                           Tobjnam(otmp,
                            (ttmp->ttyp == TRAPDOOR) ? "trigger" : "fall"),
                           (ttmp->ttyp == TRAPDOOR) ? nul : " into",
-                          otense(otmp, "plug"),
+                          plug_tense,
                           (ttmp->ttyp == TRAPDOOR) ? "trap door" : "hole",
                           surface(rx, ry));
+                    }
                     deltrap(ttmp);
                     delobj(otmp);
                     bury_objs(rx, ry);

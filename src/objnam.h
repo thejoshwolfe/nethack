@@ -27,7 +27,7 @@ char *An(const char *);
 char *The(const char *);
 char *the(const char *);
 char *aobjnam(struct obj *,const char *);
-char *Tobjnam(struct obj *,const char *);
+size_t Tobjnam (char *out_buf, size_t buf_size, const struct obj *otmp, const char *verb);
 size_t otense (char *out_buf, size_t buf_size, const struct obj *otmp, const char *verb);
 size_t vtense (char *out_buf, size_t buf_size, const char *subj, const char *verb);
 char *Doname2(struct obj *);

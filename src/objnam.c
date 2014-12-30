@@ -1038,30 +1038,28 @@ char * The (const char *str) {
 
 /* returns "count cxname(otmp)" or just cxname(otmp) if count == 1 */
 char * aobjnam (struct obj *otmp, const char *verb) {
-        char *bp = cxname(otmp);
-        char prefix[PREFIX];
+    char *bp = cxname(otmp);
+    char prefix[PREFIX];
 
-        if(otmp->quan != 1L) {
-                sprintf(prefix, "%ld ", otmp->quan);
-                bp = strprepend(bp, prefix);
-        }
+    if (otmp->quan != 1L) {
+        sprintf(prefix, "%ld ", otmp->quan);
+        bp = strprepend(bp, prefix);
+    }
 
-        if(verb) {
-            strcat(bp, " ");
-            strcat(bp, otense(otmp, verb));
-        }
-        return(bp);
+    if (verb) {
+        strcat(bp, " ");
+        char verb_tense[BUFSZ];
+        otense(verb_tense, BUFSZ, otmp, verb);
+        strcat(bp, verb_tense);
+    }
+    return bp;
 }
 
 /* like aobjnam, but prepend "The", not count, and use xname */
-char * Tobjnam (struct obj *otmp, const char *verb) {
-        char *bp = The(xname(otmp));
-
-        if(verb) {
-            strcat(bp, " ");
-            strcat(bp, otense(otmp, verb));
-        }
-        return(bp);
+size_t Tobjnam (char *out_buf, size_t buf_size, struct obj *otmp, const char *verb) {
+    char verb_tense[BUFSZ];
+    otense(verb_tense, BUFSZ, otmp, verb);
+    return nh_slprintf(out_buf, buf_size, "%s %s", The(xname(otmp)), verb_tense);
 }
 
 /* return form of the verb (input plural) if xname(otmp) were the subject */
