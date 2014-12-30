@@ -2108,83 +2108,86 @@ void newuhs ( bool incr) {
 /* get food from floor or pack */
 /* corpsecheck: 0, no check, 1, corpses, 2, tinnable corpses */
 struct obj * floorfood ( const char *verb, int corpsecheck ) {
-        struct obj *otmp;
-        char qbuf[QBUFSZ];
-        char c;
-        bool feeding = (!strcmp(verb, "eat"));
+    struct obj *otmp;
+    char qbuf[QBUFSZ];
+    char c;
+    bool feeding = (!strcmp(verb, "eat"));
 
-        /* if we can't touch floor objects then use invent food only */
-        if (!can_reach_floor() ||
-                (feeding && u.usteed) || /* can't eat off floor while riding */
-                ((is_pool(u.ux, u.uy) || is_lava(u.ux, u.uy)) &&
-                    (Wwalking || is_clinger(youmonst.data) ||
-                        (Flying && !Breathless))))
-            goto skipfloor;
+    /* if we can't touch floor objects then use invent food only */
+    if (!can_reach_floor() ||
+            (feeding && u.usteed) || /* can't eat off floor while riding */
+            ((is_pool(u.ux, u.uy) || is_lava(u.ux, u.uy)) &&
+             (Wwalking || is_clinger(youmonst.data) ||
+              (Flying && !Breathless))))
+        goto skipfloor;
 
-        if (feeding && metallivorous(youmonst.data)) {
-            struct obj *gold;
-            struct trap *ttmp = t_at(u.ux, u.uy);
+    if (feeding && metallivorous(youmonst.data)) {
+        struct obj *gold;
+        struct trap *ttmp = t_at(u.ux, u.uy);
 
-            if (ttmp && ttmp->tseen && ttmp->ttyp == BEAR_TRAP) {
-                /* If not already stuck in the trap, perhaps there should
-                   be a chance to becoming trapped?  Probably not, because
-                   then the trap would just get eaten on the _next_ turn... */
-                sprintf(qbuf, "There is a bear trap here (%s); eat it?",
-                        (u.utrap && u.utraptype == TT_BEARTRAP) ?
-                                "holding you" : "armed");
-                if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
-                    u.utrap = u.utraptype = 0;
-                    deltrap(ttmp);
-                    return mksobj(BEARTRAP, true, false);
-                } else if (c == 'q') {
-                    return (struct obj *)0;
-                }
-            }
-
-            if (youmonst.data != &mons[PM_RUST_MONSTER] &&
-                (gold = g_at(u.ux, u.uy)) != 0) {
-                if (gold->quan == 1L)
-                    sprintf(qbuf, "There is 1 gold piece here; eat it?");
-                else
-                    sprintf(qbuf, "There are %ld gold pieces here; eat them?",
-                            gold->quan);
-                if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
-                    return gold;
-                } else if (c == 'q') {
-                    return (struct obj *)0;
-                }
-            }
-        }
-
-        /* Is there some food (probably a heavy corpse) here on the ground? */
-        for (otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp->nexthere) {
-                if(corpsecheck ?
-                (otmp->otyp==CORPSE && (corpsecheck == 1 || tinnable(otmp))) :
-                    feeding ? (otmp->oclass != COIN_CLASS && is_edible(otmp)) :
-                                                otmp->oclass==FOOD_CLASS) {
-                        sprintf(qbuf, "There %s %s here; %s %s?",
-                                otense(otmp, "are"),
-                                doname(otmp), verb,
-                                (otmp->quan == 1L) ? "it" : "one");
-                        if((c = yn_function(qbuf,ynqchars,'n')) == 'y')
-                                return(otmp);
-                        else if(c == 'q')
-                                return((struct obj *) 0);
-                }
-        }
-
- skipfloor:
-        /* We cannot use ALL_CLASSES since that causes getobj() to skip its
-         * "ugly checks" and we need to check for inedible items.
-         */
-        otmp = getobj(feeding ? (const char *)allobj :
-                                (const char *)comestibles, verb);
-        if (corpsecheck && otmp)
-            if (otmp->otyp != CORPSE || (corpsecheck == 2 && !tinnable(otmp))) {
-                You_cant("%s that!", verb);
+        if (ttmp && ttmp->tseen && ttmp->ttyp == BEAR_TRAP) {
+            /* If not already stuck in the trap, perhaps there should
+               be a chance to becoming trapped?  Probably not, because
+               then the trap would just get eaten on the _next_ turn... */
+            sprintf(qbuf, "There is a bear trap here (%s); eat it?",
+                    (u.utrap && u.utraptype == TT_BEARTRAP) ?
+                    "holding you" : "armed");
+            if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
+                u.utrap = u.utraptype = 0;
+                deltrap(ttmp);
+                return mksobj(BEARTRAP, true, false);
+            } else if (c == 'q') {
                 return (struct obj *)0;
             }
-        return otmp;
+        }
+
+        if (youmonst.data != &mons[PM_RUST_MONSTER] &&
+                (gold = g_at(u.ux, u.uy)) != 0) {
+            if (gold->quan == 1L)
+                sprintf(qbuf, "There is 1 gold piece here; eat it?");
+            else
+                sprintf(qbuf, "There are %ld gold pieces here; eat them?",
+                        gold->quan);
+            if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
+                return gold;
+            } else if (c == 'q') {
+                return (struct obj *)0;
+            }
+        }
+    }
+
+    /* Is there some food (probably a heavy corpse) here on the ground? */
+    for (otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp->nexthere) {
+        if (corpsecheck ?
+                (otmp->otyp==CORPSE && (corpsecheck == 1 || tinnable(otmp))) :
+                feeding ? (otmp->oclass != COIN_CLASS && is_edible(otmp)) :
+                otmp->oclass==FOOD_CLASS)
+        {
+            char are_tense[BUFSZ];
+            otense(are_tense, BUFSZ, otmp, "are");
+            sprintf(qbuf, "There %s %s here; %s %s?",
+                    are_tense,
+                    doname(otmp), verb,
+                    (otmp->quan == 1L) ? "it" : "one");
+            if ((c = yn_function(qbuf,ynqchars,'n')) == 'y')
+                return(otmp);
+            else if(c == 'q')
+                return NULL;
+        }
+    }
+
+skipfloor:
+    /* We cannot use ALL_CLASSES since that causes getobj() to skip its
+     * "ugly checks" and we need to check for inedible items.
+     */
+    otmp = getobj(feeding ? (const char *)allobj :
+            (const char *)comestibles, verb);
+    if (corpsecheck && otmp)
+        if (otmp->otyp != CORPSE || (corpsecheck == 2 && !tinnable(otmp))) {
+            You_cant("%s that!", verb);
+            return (struct obj *)0;
+        }
+    return otmp;
 }
 
 /* Side effects of vomiting */
