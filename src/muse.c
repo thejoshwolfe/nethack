@@ -1926,31 +1926,33 @@ bool searches_for_item(struct monst *mon, struct obj *obj) {
 bool mon_reflects(struct monst *mon, const char *str) {
     struct obj *orefl = which_armor(mon, W_ARMS);
 
+    char pname[BUFSZ];
+    monster_possessive(pname, BUFSZ, mon);
     if (orefl && orefl->otyp == SHIELD_OF_REFLECTION) {
         if (str) {
-            pline(str, s_suffix(mon_nam(mon)), "shield");
+            pline(str, pname, "shield");
             makeknown(SHIELD_OF_REFLECTION);
         }
         return true;
     } else if (arti_reflects(MON_WEP(mon))) {
         /* due to wielded artifact weapon */
         if (str)
-            pline(str, s_suffix(mon_nam(mon)), "weapon");
+            pline(str, pname, "weapon");
         return true;
     } else if ((orefl = which_armor(mon, W_AMUL)) && orefl->otyp == AMULET_OF_REFLECTION) {
         if (str) {
-            pline(str, s_suffix(mon_nam(mon)), "amulet");
+            pline(str, pname, "amulet");
             makeknown(AMULET_OF_REFLECTION);
         }
         return true;
     } else if ((orefl = which_armor(mon, W_ARM)) && (orefl->otyp == SILVER_DRAGON_SCALES || orefl->otyp == SILVER_DRAGON_SCALE_MAIL)) {
         if (str)
-            pline(str, s_suffix(mon_nam(mon)), "armor");
+            pline(str, pname, "armor");
         return true;
     } else if (mon->data == &mons[PM_SILVER_DRAGON] || mon->data == &mons[PM_CHROMATIC_DRAGON]) {
         /* Silver dragons only reflect when mature; babies do not */
         if (str)
-            pline(str, s_suffix(mon_nam(mon)), "scales");
+            pline(str, pname, "scales");
         return true;
     }
     return false;
@@ -2039,10 +2041,13 @@ static void mon_consume_unstone(struct monst *mon, struct obj *obj, bool by_you,
         return;
     }
     if (stoning && canseemon(mon)) {
-        if (Hallucination())
-            pline("What a pity - %s just ruined a future piece of art!", mon_nam(mon));
-        else
+        if (Hallucination()) {
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mon);
+            pline("What a pity - %s just ruined a future piece of art!", name);
+        } else {
             pline("%s seems limber!", name);
+        }
     }
     if (obj->otyp == CORPSE && obj->corpsenm == PM_LIZARD && mon->mconf) {
         mon->mconf = 0;
