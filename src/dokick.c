@@ -245,86 +245,87 @@ doit:
  *  The gold object is *not* attached to the fobj chain!
  */
 bool ghitm (struct monst *mtmp, struct obj *gold) {
-        bool msg_given = false;
+    bool msg_given = false;
 
-        if(!likes_gold(mtmp->data) && !mtmp->isshk && !mtmp->ispriest
-                        && !is_mercenary(mtmp->data)) {
-                wakeup(mtmp);
-        } else if (!mtmp->mcanmove) {
-                /* too light to do real damage */
-                if (canseemon(mtmp)) {
-                    char name[BUFSZ];
-                    mon_nam(name, BUFSZ, mtmp);
-                    pline_The("%s harmlessly %s %s.", xname(gold), otense(gold, "hit"), name);
-                    msg_given = true;
+    if(!likes_gold(mtmp->data) && !mtmp->isshk && !mtmp->ispriest && !is_mercenary(mtmp->data)) {
+        wakeup(mtmp);
+    } else if (!mtmp->mcanmove) {
+        /* too light to do real damage */
+        if (canseemon(mtmp)) {
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mtmp);
+            char hit_tense[BUFSZ];
+            otense(hit_tense, BUFSZ, gold, "hit");
+            pline_The("%s harmlessly %s %s.", xname(gold), hit_tense, name);
+            msg_given = true;
+        }
+    } else {
+        mtmp->msleeping = 0;
+        mtmp->meating = 0;
+        if(!rn2(4)) setmangry(mtmp); /* not always pleasing */
+
+        /* greedy monsters catch gold */
+        if (cansee(mtmp->mx, mtmp->my)) {
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s catches the gold.", name);
+        }
+        mtmp->mgold += gold->quan;
+        if (mtmp->isshk) {
+            long robbed = ESHK(mtmp)->robbed;
+
+            if (robbed) {
+                robbed -= gold->quan;
+                if (robbed < 0) robbed = 0;
+                pline_The("amount %scovers %s recent losses.",
+                        !robbed ? "" : "partially ",
+                        mhis(mtmp));
+                ESHK(mtmp)->robbed = robbed;
+                if (!robbed) {
+                    make_happy_shk(mtmp, false);
                 }
-        } else {
-                mtmp->msleeping = 0;
-                mtmp->meating = 0;
-                if(!rn2(4)) setmangry(mtmp); /* not always pleasing */
+            } else {
+                if(mtmp->mpeaceful) {
+                    ESHK(mtmp)->credit += gold->quan;
+                    You("have %ld %s in credit.",
+                            ESHK(mtmp)->credit,
+                            currency(ESHK(mtmp)->credit));
+                } else verbalize("Thanks, scum!");
+            }
+        } else if (mtmp->ispriest) {
+            if (mtmp->mpeaceful)
+                verbalize("Thank you for your contribution.");
+            else verbalize("Thanks, scum!");
+        } else if (is_mercenary(mtmp->data)) {
+            long goldreqd = 0L;
 
-                /* greedy monsters catch gold */
-                if (cansee(mtmp->mx, mtmp->my)) {
-                    char name[BUFSZ];
-                    Monnam(name, BUFSZ, mtmp);
-                    pline("%s catches the gold.", name);
+            if (rn2(3)) {
+                if (mtmp->data == &mons[PM_SOLDIER])
+                    goldreqd = 100L;
+                else if (mtmp->data == &mons[PM_SERGEANT])
+                    goldreqd = 250L;
+                else if (mtmp->data == &mons[PM_LIEUTENANT])
+                    goldreqd = 500L;
+                else if (mtmp->data == &mons[PM_CAPTAIN])
+                    goldreqd = 750L;
+
+                if (goldreqd) {
+                    if (gold->quan > goldreqd +
+                            (u.ugold + u.ulevel*rn2(5))/ACURR(A_CHA))
+                        mtmp->mpeaceful = true;
                 }
-                mtmp->mgold += gold->quan;
-                if (mtmp->isshk) {
-                        long robbed = ESHK(mtmp)->robbed;
-
-                        if (robbed) {
-                                robbed -= gold->quan;
-                                if (robbed < 0) robbed = 0;
-                                pline_The("amount %scovers %s recent losses.",
-                                      !robbed ? "" : "partially ",
-                                      mhis(mtmp));
-                                ESHK(mtmp)->robbed = robbed;
-                                if (!robbed) {
-                                    make_happy_shk(mtmp, false);
-                                }
-                        } else {
-                                if(mtmp->mpeaceful) {
-                                    ESHK(mtmp)->credit += gold->quan;
-                                    You("have %ld %s in credit.",
-                                        ESHK(mtmp)->credit,
-                                        currency(ESHK(mtmp)->credit));
-                                } else verbalize("Thanks, scum!");
-                        }
-                } else if (mtmp->ispriest) {
-                        if (mtmp->mpeaceful)
-                            verbalize("Thank you for your contribution.");
-                        else verbalize("Thanks, scum!");
-                } else if (is_mercenary(mtmp->data)) {
-                    long goldreqd = 0L;
-
-                    if (rn2(3)) {
-                        if (mtmp->data == &mons[PM_SOLDIER])
-                           goldreqd = 100L;
-                        else if (mtmp->data == &mons[PM_SERGEANT])
-                           goldreqd = 250L;
-                        else if (mtmp->data == &mons[PM_LIEUTENANT])
-                           goldreqd = 500L;
-                        else if (mtmp->data == &mons[PM_CAPTAIN])
-                           goldreqd = 750L;
-
-                        if (goldreqd) {
-                           if (gold->quan > goldreqd +
-                                (u.ugold + u.ulevel*rn2(5))/ACURR(A_CHA))
-                            mtmp->mpeaceful = true;
-                        }
-                     }
-                     if (mtmp->mpeaceful)
-                            verbalize("That should do.  Now beat it!");
-                     else verbalize("That's not enough, coward!");
-                }
-
-                dealloc_obj(gold);
-                return true;
+            }
+            if (mtmp->mpeaceful)
+                verbalize("That should do.  Now beat it!");
+            else verbalize("That's not enough, coward!");
         }
 
-        if (!msg_given) miss(xname(gold), mtmp);
-        return false;
+        dealloc_obj(gold);
+        return true;
+    }
+
+    if (!msg_given) miss(xname(gold), mtmp);
+    return false;
 }
 
 /* container is kicked, dropped, thrown or otherwise impacted by player.
@@ -463,20 +464,22 @@ static int kick_object(signed char x, signed char y) {
         if (IS_ROCK(levl[x][y].typ) || closed_door(x, y)) {
             if ((!martial() && rn2(20) > ACURR(A_DEX)) ||
                     IS_ROCK(levl[u.ux][u.uy].typ) || closed_door(u.ux, u.uy)) {
-                if (Blind)
+                if (Blind) {
                     pline("It doesn't come loose.");
-                else
-                    pline("%s %sn't come loose.",
-                          The(distant_name(kickobj, xname)),
-                          otense(kickobj, "do"));
+                } else {
+                    char do_tense[BUFSZ];
+                    otense(do_tense, BUFSZ, kickobj, "do");
+                    pline("%s %sn't come loose.", The(distant_name(kickobj, xname)), do_tense);
+                }
                 return (!rn2(3) || martial());
             }
-            if (Blind)
+            if (Blind) {
                 pline("It comes loose.");
-            else
-                pline("%s %s loose.",
-                      The(distant_name(kickobj, xname)),
-                      otense(kickobj, "come"));
+            } else {
+                char come_tense[BUFSZ];
+                otense(come_tense, BUFSZ, kickobj, "come");
+                pline("%s %s loose.", The(distant_name(kickobj, xname)), come_tense);
+            }
             obj_extract_self(kickobj);
             newsym(x, y);
             if (costly && (!costly_spot(u.ux, u.uy) ||
@@ -531,12 +534,14 @@ static int kick_object(signed char x, signed char y) {
 
         if (kickobj->quan > 1L && !isgold) kickobj = splitobj(kickobj, 1L);
 
-        if (slide && !Blind)
-            pline("Whee!  %s %s across the %s.", Doname2(kickobj),
-                  otense(kickobj, "slide"), surface(x,y));
+        if (slide && !Blind) {
+            char slide_tense[BUFSZ];
+            otense(slide_tense, BUFSZ, kickobj, "slide");
+            pline("Whee!  %s %s across the %s.", Doname2(kickobj), slide_tense, surface(x,y));
+        }
 
         obj_extract_self(kickobj);
-        (void) snuff_candle(kickobj);
+        snuff_candle(kickobj);
         newsym(x, y);
         mon = bhit(u.dx, u.dy, range, KICKED_WEAPON,
                    (int (*)(struct monst *,struct obj *))0,
@@ -1408,26 +1413,30 @@ obj_delivery (void)
 }
 
 static void otransit_msg(struct obj *otmp, bool nodrop, long num) {
-        char obuf[BUFSZ];
+    char obuf[BUFSZ];
 
-        sprintf(obuf, "%s%s",
-                 (otmp->otyp == CORPSE &&
-                        type_is_pname(&mons[otmp->corpsenm])) ? "" : "The ",
-                 xname(otmp));
+    sprintf(obuf, "%s%s",
+            (otmp->otyp == CORPSE &&
+             type_is_pname(&mons[otmp->corpsenm])) ? "" : "The ",
+            xname(otmp));
 
-        if(num) { /* means: other objects are impacted */
-            sprintf(eos(obuf), " %s %s object%s",
-                    otense(otmp, "hit"),
-                    num == 1L ? "another" : "other",
-                    num > 1L ? "s" : "");
-            if(nodrop)
-                sprintf(eos(obuf), ".");
-            else
-                sprintf(eos(obuf), " and %s %s.",
-                        otense(otmp, "fall"), gate_str);
-            pline("%s", obuf);
-        } else if(!nodrop)
-            pline("%s %s %s.", obuf, otense(otmp, "fall"), gate_str);
+    char fall_tense[BUFSZ];
+    otense(fall_tense, BUFSZ, otmp, "fall");
+    if (num) { /* means: other objects are impacted */
+        char hit_tense[BUFSZ];
+        otense(hit_tense, BUFSZ, otmp, "hit");
+        sprintf(eos(obuf), " %s %s object%s", hit_tense,
+                num == 1L ? "another" : "other",
+                num > 1L ? "s" : "");
+        if (nodrop) {
+            sprintf(eos(obuf), ".");
+        } else {
+            sprintf(eos(obuf), " and %s %s.", fall_tense, gate_str);
+        }
+        pline("%s", obuf);
+    } else if(!nodrop) {
+        pline("%s %s %s.", obuf, fall_tense, gate_str);
+    }
 }
 
 /* migration destination for objects which fall down to next level */
