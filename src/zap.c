@@ -9,6 +9,8 @@
 #include "dbridge.h"
 #include "shk.h"
 #include "priest.h"
+#include "mhitm.h"
+#include "invent.h"
 
 /* Disintegration rays have special treatment; corpses are never left.
  * But the routine which calculates the damage is separate from the routine
@@ -1504,9 +1506,11 @@ bhito (struct obj *obj, struct obj *otmp)
                 /* target object has now been "seen (up close)" */
                 obj->dknown = 1;
                 if (Is_container(obj) || obj->otyp == STATUE) {
-                    if (!obj->cobj)
-                        pline("%s empty.", Tobjnam(obj, "are"));
-                    else {
+                    if (!obj->cobj) {
+                        char it_is[BUFSZ];
+                        Tobjnam(it_is, BUFSZ, obj, "are");
+                        pline("%s empty.", it_is);
+                    } else {
                         struct obj *o;
                         /* view contents (not recursively) */
                         for (o = obj->cobj; o; o = o->nobj)
@@ -1826,7 +1830,9 @@ dozap (void)
                 current_wand = 0;
         }
         if (obj && obj->spe < 0) {
-            pline("%s to dust.", Tobjnam(obj, "turn"));
+            char it_turns[BUFSZ];
+            Tobjnam(it_turns, BUFSZ, obj, "turn");
+            pline("%s to dust.", it_turns);
             useup(obj);
         }
         update_inventory();     /* maybe used a charge */
