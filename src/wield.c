@@ -3,6 +3,9 @@
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
+#include "objnam.h"
+#include "shk.h"
+#include "do_name.h"
 
 /* KMH -- Differences between the three weapon slots.
  *
@@ -576,202 +579,166 @@ untwoweapon (void)
 }
 
 /* Maybe rust object, or corrode it if acid damage is called for */
-void 
-erode_obj (
-    struct obj *target,             /* object (e.g. weapon or armor) to erode */
-    bool acid_dmg,
-    bool fade_scrolls
-)
-{
-        int erosion;
-        struct monst *victim;
-        bool vismon;
-        bool visobj;
+/* target: object (e.g. weapon or armor) to erode */
+void erode_obj(struct obj *target,
+bool acid_dmg,
+bool fade_scrolls) {
+    int erosion;
+    struct monst *victim;
+    bool vismon;
+    bool visobj;
 
-        if (!target)
-            return;
-        victim = carried(target) ? &youmonst :
-            mcarried(target) ? target->ocarry : (struct monst *)0;
-        vismon = victim && (victim != &youmonst) && canseemon(victim);
-        visobj = !victim && cansee(bhitpos.x, bhitpos.y); /* assume thrown */
+    if (!target)
+        return;
+    victim = carried(target) ? &youmonst : mcarried(target) ? target->ocarry : (struct monst *)0;
+    vismon = victim && (victim != &youmonst) && canseemon(victim);
+    visobj = !victim && cansee(bhitpos.x, bhitpos.y); /* assume thrown */
 
-        erosion = acid_dmg ? target->oeroded2 : target->oeroded;
+    erosion = acid_dmg ? target->oeroded2 : target->oeroded;
 
-        if (target->greased) {
-            grease_protect(target,(char *)0,victim);
-        } else if (target->oclass == SCROLL_CLASS) {
-            if(fade_scrolls && target->otyp != SCR_BLANK_PAPER
-            && target->otyp != SCR_MAIL
-                                        )
-            {
-                if (!Blind) {
-                    if (victim == &youmonst)
-                        Your("%s.", aobjnam(target, "fade"));
-                    else if (vismon)
-                        pline("%s's %s.", Monnam(victim),
-                              aobjnam(target, "fade"));
-                    else if (visobj)
-                        pline_The("%s.", aobjnam(target, "fade"));
-                }
-                target->otyp = SCR_BLANK_PAPER;
-                target->spe = 0;
-            }
-        } else if (target->oerodeproof ||
-                (acid_dmg ? !is_corrodeable(target) : !is_rustprone(target))) {
-            if (flags.verbose || !(target->oerodeproof && target->rknown)) {
+    char victim_name[BUFSZ];
+    Monnam(victim_name, BUFSZ, victim);
+    if (target->greased) {
+        grease_protect(target, (char *)0, victim);
+    } else if (target->oclass == SCROLL_CLASS) {
+        if (fade_scrolls && target->otyp != SCR_BLANK_PAPER && target->otyp != SCR_MAIL) {
+            if (!Blind) {
                 if (victim == &youmonst)
-                    Your("%s not affected.", aobjnam(target, "are"));
+                    Your("%s.", aobjnam(target, "fade"));
                 else if (vismon)
-                    pline("%s's %s not affected.", Monnam(victim),
-                        aobjnam(target, "are"));
-                /* no message if not carried */
-            }
-            if (target->oerodeproof) target->rknown = true;
-        } else if (erosion < MAX_ERODE) {
-            if (victim == &youmonst)
-                Your("%s%s!", aobjnam(target, acid_dmg ? "corrode" : "rust"),
-                    erosion+1 == MAX_ERODE ? " completely" :
-                    erosion ? " further" : "");
-            else if (vismon)
-                pline("%s's %s%s!", Monnam(victim),
-                    aobjnam(target, acid_dmg ? "corrode" : "rust"),
-                    erosion+1 == MAX_ERODE ? " completely" :
-                    erosion ? " further" : "");
-            else if (visobj)
-                pline_The("%s%s!",
-                    aobjnam(target, acid_dmg ? "corrode" : "rust"),
-                    erosion+1 == MAX_ERODE ? " completely" :
-                    erosion ? " further" : "");
-            if (acid_dmg)
-                target->oeroded2++;
-            else
-                target->oeroded++;
-        } else {
-            if (flags.verbose) {
-                if (victim == &youmonst)
-                    Your("%s completely %s.",
-                        aobjnam(target, Blind ? "feel" : "look"),
-                        acid_dmg ? "corroded" : "rusty");
-                else if (vismon)
-                    pline("%s's %s completely %s.", Monnam(victim),
-                        aobjnam(target, "look"),
-                        acid_dmg ? "corroded" : "rusty");
+                    pline("%s's %s.", victim_name, aobjnam(target, "fade"));
                 else if (visobj)
-                    pline_The("%s completely %s.",
-                        aobjnam(target, "look"),
-                        acid_dmg ? "corroded" : "rusty");
+                    pline_The("%s.", aobjnam(target, "fade"));
             }
+            target->otyp = SCR_BLANK_PAPER;
+            target->spe = 0;
         }
+    } else if (target->oerodeproof || (acid_dmg ? !is_corrodeable(target) : !is_rustprone(target))) {
+        if (flags.verbose || !(target->oerodeproof && target->rknown)) {
+            if (victim == &youmonst)
+                Your("%s not affected.", aobjnam(target, "are"));
+            else if (vismon)
+                pline("%s's %s not affected.", victim_name, aobjnam(target, "are"));
+            /* no message if not carried */
+        }
+        if (target->oerodeproof)
+            target->rknown = true;
+    } else if (erosion < MAX_ERODE) {
+        if (victim == &youmonst)
+            Your("%s%s!", aobjnam(target, acid_dmg ? "corrode" : "rust"), erosion + 1 == MAX_ERODE ? " completely" : erosion ? " further" : "");
+        else if (vismon)
+            pline("%s's %s%s!", victim_name, aobjnam(target, acid_dmg ? "corrode" : "rust"), erosion + 1 == MAX_ERODE ? " completely" : erosion ? " further" : "");
+        else if (visobj)
+            pline_The("%s%s!", aobjnam(target, acid_dmg ? "corrode" : "rust"), erosion + 1 == MAX_ERODE ? " completely" : erosion ? " further" : "");
+        if (acid_dmg)
+            target->oeroded2++;
+        else
+            target->oeroded++;
+    } else {
+        if (flags.verbose) {
+            if (victim == &youmonst)
+                Your("%s completely %s.", aobjnam(target, Blind ? "feel" : "look"), acid_dmg ? "corroded" : "rusty");
+            else if (vismon)
+                pline("%s's %s completely %s.", victim_name, aobjnam(target, "look"), acid_dmg ? "corroded" : "rusty");
+            else if (visobj)
+                pline_The("%s completely %s.", aobjnam(target, "look"), acid_dmg ? "corroded" : "rusty");
+        }
+    }
 }
 
-int
-chwepon (struct obj *otmp, int amount)
-{
-        const char *color = hcolor((amount < 0) ? NH_BLACK : NH_BLUE);
-        const char *xtime;
-        int otyp = STRANGE_OBJECT;
+int chwepon(struct obj *otmp, int amount) {
+    const char *color = hcolor((amount < 0) ? NH_BLACK : NH_BLUE);
+    const char *xtime;
+    int otyp = STRANGE_OBJECT;
 
-        if(!uwep || (uwep->oclass != WEAPON_CLASS && !is_weptool(uwep))) {
-                char buf[BUFSZ];
+    if (!uwep || (uwep->oclass != WEAPON_CLASS && !is_weptool(uwep))) {
+        char buf[BUFSZ];
 
-                sprintf(buf, "Your %s %s.", makeplural(body_part(HAND)),
-                        (amount >= 0) ? "twitch" : "itch");
-                strange_feeling(otmp, buf);
-                exercise(A_DEX, (bool) (amount >= 0));
-                return(0);
-        }
+        sprintf(buf, "Your %s %s.", makeplural(body_part(HAND)), (amount >= 0) ? "twitch" : "itch");
+        strange_feeling(otmp, buf);
+        exercise(A_DEX, (bool)(amount >= 0));
+        return (0);
+    }
 
-        if (otmp && otmp->oclass == SCROLL_CLASS) otyp = otmp->otyp;
+    if (otmp && otmp->oclass == SCROLL_CLASS)
+        otyp = otmp->otyp;
 
-        if(uwep->otyp == WORM_TOOTH && amount >= 0) {
-                uwep->otyp = CRYSKNIFE;
-                uwep->oerodeproof = 0;
-                Your("weapon seems sharper now.");
-                uwep->cursed = 0;
-                if (otyp != STRANGE_OBJECT) makeknown(otyp);
-                return(1);
-        }
+    if (uwep->otyp == WORM_TOOTH && amount >= 0) {
+        uwep->otyp = CRYSKNIFE;
+        uwep->oerodeproof = 0;
+        Your("weapon seems sharper now.");
+        uwep->cursed = 0;
+        if (otyp != STRANGE_OBJECT)
+            makeknown(otyp);
+        return (1);
+    }
 
-        if(uwep->otyp == CRYSKNIFE && amount < 0) {
-                uwep->otyp = WORM_TOOTH;
-                uwep->oerodeproof = 0;
-                Your("weapon seems duller now.");
-                if (otyp != STRANGE_OBJECT && otmp->bknown) makeknown(otyp);
-                return(1);
-        }
+    if (uwep->otyp == CRYSKNIFE && amount < 0) {
+        uwep->otyp = WORM_TOOTH;
+        uwep->oerodeproof = 0;
+        Your("weapon seems duller now.");
+        if (otyp != STRANGE_OBJECT && otmp->bknown)
+            makeknown(otyp);
+        return (1);
+    }
 
-        if (amount < 0 && uwep->oartifact && restrict_name(uwep, ONAME(uwep))) {
-            if (!Blind)
-                Your("%s %s.", aobjnam(uwep, "faintly glow"), color);
-            return(1);
-        }
-        /* there is a (soft) upper and lower limit to uwep->spe */
-        if(((uwep->spe > 5 && amount >= 0) || (uwep->spe < -5 && amount < 0))
-                                                                && rn2(3)) {
-            if (!Blind)
-            Your("%s %s for a while and then %s.",
-                 aobjnam(uwep, "violently glow"), color,
-                 otense(uwep, "evaporate"));
-            else
-                Your("%s.", aobjnam(uwep, "evaporate"));
+    if (amount < 0 && uwep->oartifact && restrict_name(uwep, ONAME(uwep))) {
+        if (!Blind)
+            Your("%s %s.", aobjnam(uwep, "faintly glow"), color);
+        return (1);
+    }
+    /* there is a (soft) upper and lower limit to uwep->spe */
+    if (((uwep->spe > 5 && amount >= 0) || (uwep->spe < -5 && amount < 0)) && rn2(3)) {
+        if (!Blind)
+            Your("%s %s for a while and then %s.", aobjnam(uwep, "violently glow"), color, otense(uwep, "evaporate"));
+        else
+            Your("%s.", aobjnam(uwep, "evaporate"));
 
-            useupall(uwep);     /* let all of them disappear */
-            return(1);
-        }
-        if (!Blind) {
-            xtime = (amount*amount == 1) ? "moment" : "while";
-            Your("%s %s for a %s.",
-                 aobjnam(uwep, amount == 0 ? "violently glow" : "glow"),
-                 color, xtime);
-            if (otyp != STRANGE_OBJECT && uwep->known &&
-                    (amount > 0 || (amount < 0 && otmp->bknown)))
-                makeknown(otyp);
-        }
-        uwep->spe += amount;
-        if(amount > 0) uwep->cursed = 0;
+        useupall(uwep); /* let all of them disappear */
+        return (1);
+    }
+    if (!Blind) {
+        xtime = (amount * amount == 1) ? "moment" : "while";
+        Your("%s %s for a %s.", aobjnam(uwep, amount == 0 ? "violently glow" : "glow"), color, xtime);
+        if (otyp != STRANGE_OBJECT && uwep->known && (amount > 0 || (amount < 0 && otmp->bknown)))
+            makeknown(otyp);
+    }
+    uwep->spe += amount;
+    if (amount > 0)
+        uwep->cursed = 0;
 
-        /*
-         * Enchantment, which normally improves a weapon, has an
-         * addition adverse reaction on Magicbane whose effects are
-         * spe dependent.  Give an obscure clue here.
-         */
-        if (uwep->oartifact == ART_MAGICBANE && uwep->spe >= 0) {
-                Your("right %s %sches!",
-                        body_part(HAND),
-                        (((amount > 1) && (uwep->spe > 1)) ? "flin" : "it"));
-        }
+    /*
+     * Enchantment, which normally improves a weapon, has an
+     * addition adverse reaction on Magicbane whose effects are
+     * spe dependent.  Give an obscure clue here.
+     */
+    if (uwep->oartifact == ART_MAGICBANE && uwep->spe >= 0) {
+        Your("right %s %sches!", body_part(HAND), (((amount > 1) && (uwep->spe > 1)) ? "flin" : "it"));
+    }
 
-        /* an elven magic clue, cookie@keebler */
-        /* elven weapons vibrate warningly when enchanted beyond a limit */
-        if ((uwep->spe > 5)
-                && (is_elven_weapon(uwep) || uwep->oartifact || !rn2(7)))
-            Your("%s unexpectedly.",
-                aobjnam(uwep, "suddenly vibrate"));
+    /* an elven magic clue, cookie@keebler */
+    /* elven weapons vibrate warningly when enchanted beyond a limit */
+    if ((uwep->spe > 5) && (is_elven_weapon(uwep) || uwep->oartifact || !rn2(7)))
+        Your("%s unexpectedly.", aobjnam(uwep, "suddenly vibrate"));
 
-        return(1);
+    return (1);
 }
 
-int
-welded (struct obj *obj)
-{
-        if (obj && obj == uwep && will_weld(obj)) {
-                obj->bknown = true;
-                return 1;
-        }
-        return 0;
+int welded(struct obj *obj) {
+    if (obj && obj == uwep && will_weld(obj)) {
+        obj->bknown = true;
+        return 1;
+    }
+    return 0;
 }
 
-void
-weldmsg (struct obj *obj)
-{
-        long savewornmask;
+void weldmsg(struct obj *obj) {
+    long savewornmask;
 
-        savewornmask = obj->owornmask;
-        Your("%s %s welded to your %s!",
-                xname(obj), otense(obj, "are"),
-                bimanual(obj) ? (const char *)makeplural(body_part(HAND))
-                                : body_part(HAND));
-        obj->owornmask = savewornmask;
+    savewornmask = obj->owornmask;
+    Your("%s %s welded to your %s!", xname(obj), otense(obj, "are"),
+    bimanual(obj) ? (const char *)makeplural(body_part(HAND)) : body_part(HAND));
+    obj->owornmask = savewornmask;
 }
 
 /*wield.c*/
