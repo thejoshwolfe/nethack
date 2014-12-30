@@ -4,6 +4,7 @@
 #include "extern.h"
 #include "youprop.h"
 #include "flag.h"
+#include "dbridge.h"
 
 /* Circles ==================================================================*/
 
