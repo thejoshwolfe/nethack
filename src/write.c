@@ -8,6 +8,7 @@
 #include "youprop.h"
 #include "objnam.h"
 #include "shk.h"
+#include "invent.h"
 
 static int cost(struct obj *);
 
@@ -86,8 +87,9 @@ dowrite (struct obj *pen)
             You("need hands to be able to write!");
             return 0;
         } else if (Glib) {
-            pline("%s from your %s.",
-                  Tobjnam(pen, "slip"), makeplural(body_part(FINGER)));
+            char it_slips[BUFSZ];
+            Tobjnam(it_slips, BUFSZ, pen, "slip");
+            pline("%s from your %s.", it_slips, makeplural(body_part(FINGER)));
             dropx(pen);
             return 1;
         }

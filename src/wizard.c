@@ -57,12 +57,14 @@ void amulet(void) {
         for (ttmp = ftrap; ttmp; ttmp = ttmp->ntrap) {
             if (ttmp->ttyp == MAGIC_PORTAL) {
                 int du = distu(ttmp->tx, ttmp->ty);
+                char it_feels[BUFSZ];
+                Tobjnam(it_feels, BUFSZ, amu, "feel");
                 if (du <= 9)
-                    pline("%s hot!", Tobjnam(amu, "feel"));
+                    pline("%s hot!", it_feels);
                 else if (du <= 64)
-                    pline("%s very warm.", Tobjnam(amu, "feel"));
+                    pline("%s very warm.", it_feels);
                 else if (du <= 144)
-                    pline("%s warm.", Tobjnam(amu, "feel"));
+                    pline("%s warm.", it_feels);
                 /* else, the amulet feels normal */
                 break;
             }

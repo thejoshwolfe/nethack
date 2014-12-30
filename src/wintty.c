@@ -14,6 +14,7 @@
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
+#include "objnam.h"
 
 extern char mapped_menu_cmds[]; /* from options.c */
 
