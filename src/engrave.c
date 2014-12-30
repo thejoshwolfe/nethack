@@ -760,21 +760,26 @@ int doengrave (void) {
                     if (oep)
                         if ((oep->engr_type == DUST ) ||
                                 (oep->engr_type == ENGR_BLOOD) ||
-                                (oep->engr_type == MARK )) {
-                            if (!Blind)
+                                (oep->engr_type == MARK ))
+                        {
+                            if (!Blind) {
                                 You("wipe out the message here.");
-                            else
-                                Your("%s %s %s.", xname(otmp),
-                                        otense(otmp, "get"),
+                            } else {
+                                char get_tense[BUFSZ];
+                                otense(get_tense, BUFSZ, otmp, "get");
+                                Your("%s %s %s.", xname(otmp), get_tense,
                                         is_ice(u.ux,u.uy) ?
                                         "frosty" : "dusty");
+                            }
                             dengr = true;
-                        } else
-                            Your("%s can't wipe out this engraving.",
-                                    xname(otmp));
-                        else
-                            Your("%s %s %s.", xname(otmp), otense(otmp, "get"),
+                        } else {
+                            Your("%s can't wipe out this engraving.", xname(otmp));
+                        } else {
+                            char get_tense[BUFSZ];
+                            otense(get_tense, BUFSZ, otmp, "get");
+                            Your("%s %s %s.", xname(otmp), get_tense,
                                     is_ice(u.ux,u.uy) ? "frosty" : "dusty");
+                        }
                     break;
                 default:
                     break;
@@ -949,9 +954,11 @@ int doengrave (void) {
 
     if (len == 0 || index(ebuf, '\033')) {
         if (zapwand) {
-            if (!Blind)
-                pline("%s, then %s.",
-                        Tobjnam(otmp, "glow"), otense(otmp, "fade"));
+            if (!Blind) {
+                char fade_tense[BUFSZ];
+                otense(fade_tense, BUFSZ, otmp, "fade");
+                pline("%s, then %s.", Tobjnam(otmp, "glow"), fade_tense);
+            }
             return(1);
         } else {
             plines(Never_mind);
