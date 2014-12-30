@@ -3,6 +3,7 @@
 #include "hack.h"
 #include "lev.h"        /* save & restore info */
 #include "extern.h"
+#include "invent.h"
 #include "objnam.h"
 #include "winprocs.h"
 #include "onames.h"

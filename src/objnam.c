@@ -15,12 +15,6 @@
 #define SCHAR_LIM 127
 #define NUMOBUF 12
 
-static char *strprepend(char *,const char *);
-static bool wishymatch(const char *,const char *,bool);
-static char *nextobuf(void);
-static void add_erosion_words(struct obj *, char *);
-char * xname2(struct obj *, bool);
-
 struct Jitem {
         int item;
         const char *name;
@@ -301,11 +295,7 @@ char * fruitname ( bool juice) {
     return buf;
 }
 
-char * xname (const struct obj *obj) {
-    return xname2(obj, false);
-}
-
-char * xname2 (const struct obj *obj, bool ignore_oquan) {
+static char * xname2 (const struct obj *obj, bool ignore_oquan) {
     char *buf;
     int typ = obj->otyp;
     struct objclass *ocl = &objects[typ];
@@ -379,7 +369,8 @@ char * xname2 (const struct obj *obj, bool ignore_oquan) {
             if(is_boots(obj) || is_gloves(obj)) strcpy(buf,"pair of ");
 
             if(obj->otyp >= ELVEN_SHIELD && obj->otyp <= ORCISH_SHIELD
-                    && !obj->dknown) {
+                    && !obj->dknown)
+            {
                 strcpy(buf, "shield");
                 break;
             }
@@ -388,8 +379,9 @@ char * xname2 (const struct obj *obj, bool ignore_oquan) {
                 break;
             }
 
-            if(nn)  strcat(buf, actualn);
-            else if(un) {
+            if (nn) {
+                strcat(buf, actualn);
+            } else if(un) {
                 if(is_boots(obj))
                     strcat(buf,"boots");
                 else if(is_gloves(obj))
@@ -404,7 +396,9 @@ char * xname2 (const struct obj *obj, bool ignore_oquan) {
                     strcpy(buf,"armor");
                 strcat(buf, " called ");
                 strcat(buf, un);
-            } else  strcat(buf, dn);
+            } else {
+                strcat(buf, dn);
+            }
             break;
         case FOOD_CLASS:
             if (typ == SLIME_MOLD) {
@@ -449,19 +443,17 @@ char * xname2 (const struct obj *obj, bool ignore_oquan) {
             else strcpy(buf, actualn);
             break;
         case BALL_CLASS:
-            sprintf(buf, "%sheavy iron ball",
-                    (obj->owt > ocl->oc_weight) ? "very " : "");
+            sprintf(buf, "%sheavy iron ball", (obj->owt > ocl->oc_weight) ? "very " : "");
             break;
         case POTION_CLASS:
             if (obj->dknown && obj->odiluted)
                 strcpy(buf, "diluted ");
-            if(nn || un || !obj->dknown) {
+            if (nn || un || !obj->dknown) {
                 strcat(buf, "potion");
-                if(!obj->dknown) break;
-                if(nn) {
+                if (!obj->dknown) break;
+                if (nn) {
                     strcat(buf, " of ");
-                    if (typ == POT_WATER &&
-                            obj->bknown && (obj->blessed || obj->cursed)) {
+                    if (typ == POT_WATER && obj->bknown && (obj->blessed || obj->cursed)) {
                         strcat(buf, obj->blessed ? "holy " : "unholy ");
                     }
                     strcat(buf, actualn);
@@ -476,8 +468,8 @@ char * xname2 (const struct obj *obj, bool ignore_oquan) {
             break;
         case SCROLL_CLASS:
             strcpy(buf, "scroll");
-            if(!obj->dknown) break;
-            if(nn) {
+            if (!obj->dknown) break;
+            if (nn) {
                 strcat(buf, " of ");
                 strcat(buf, actualn);
             } else if(un) {
@@ -492,11 +484,11 @@ char * xname2 (const struct obj *obj, bool ignore_oquan) {
             }
             break;
         case WAND_CLASS:
-            if(!obj->dknown)
+            if (!obj->dknown)
                 strcpy(buf, "wand");
-            else if(nn)
+            else if (nn)
                 sprintf(buf, "wand of %s", actualn);
-            else if(un)
+            else if (un)
                 sprintf(buf, "wand called %s", un);
             else
                 sprintf(buf, "%s wand", dn);
@@ -551,7 +543,11 @@ nameit:
     }
 
     if (!strncmpi(buf, "the ", 4)) buf += 4;
-    return(buf);
+    return buf;
+}
+
+char * xname (const struct obj *obj) {
+    return xname2(obj, false);
 }
 
 /* xname() output augmented for multishot missile feedback */
@@ -583,35 +579,35 @@ bool the_unique_obj (const struct obj *obj) {
 }
 
 static void add_erosion_words (const struct obj *obj, char *prefix) {
-        bool iscrys = (obj->otyp == CRYSKNIFE);
+    bool iscrys = (obj->otyp == CRYSKNIFE);
 
 
-        if (!is_damageable(obj) && !iscrys) return;
+    if (!is_damageable(obj) && !iscrys) return;
 
-        /* The only cases where any of these bits do double duty are for
-         * rotted food and diluted potions, which are all not is_damageable().
-         */
-        if (obj->oeroded && !iscrys) {
-                switch (obj->oeroded) {
-                        case 2: strcat(prefix, "very "); break;
-                        case 3: strcat(prefix, "thoroughly "); break;
-                }
-                strcat(prefix, is_rustprone(obj) ? "rusty " : "burnt ");
+    /* The only cases where any of these bits do double duty are for
+     * rotted food and diluted potions, which are all not is_damageable().
+     */
+    if (obj->oeroded && !iscrys) {
+        switch (obj->oeroded) {
+            case 2: strcat(prefix, "very "); break;
+            case 3: strcat(prefix, "thoroughly "); break;
         }
-        if (obj->oeroded2 && !iscrys) {
-                switch (obj->oeroded2) {
-                        case 2: strcat(prefix, "very "); break;
-                        case 3: strcat(prefix, "thoroughly "); break;
-                }
-                strcat(prefix, is_corrodeable(obj) ? "corroded " :
-                        "rotted ");
+        strcat(prefix, is_rustprone(obj) ? "rusty " : "burnt ");
+    }
+    if (obj->oeroded2 && !iscrys) {
+        switch (obj->oeroded2) {
+            case 2: strcat(prefix, "very "); break;
+            case 3: strcat(prefix, "thoroughly "); break;
         }
-        if (obj->rknown && obj->oerodeproof)
-                strcat(prefix,
-                       iscrys ? "fixed " :
-                       is_rustprone(obj) ? "rustproof " :
-                       is_corrodeable(obj) ? "corrodeproof " :  /* "stainless"? */
-                       is_flammable(obj) ? "fireproof " : "");
+        strcat(prefix, is_corrodeable(obj) ? "corroded " :
+                "rotted ");
+    }
+    if (obj->rknown && obj->oerodeproof)
+        strcat(prefix,
+                iscrys ? "fixed " :
+                is_rustprone(obj) ? "rustproof " :
+                is_corrodeable(obj) ? "corrodeproof " :  /* "stainless"? */
+                is_flammable(obj) ? "fireproof " : "");
 }
 
 char * doname (const struct obj *obj) {
