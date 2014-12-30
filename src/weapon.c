@@ -11,6 +11,7 @@
 #include "dbridge.h"
 #include "do_name.h"
 #include "objnam.h"
+#include "invent.h"
 
 static int enhance_skill(bool);
 
@@ -611,9 +612,9 @@ mon_wield_item (struct monst *mon)
                         const char *mon_hand = mbodypart(mon, HAND);
 
                         if (bimanual(mw_tmp)) mon_hand = makeplural(mon_hand);
-                        sprintf(welded_buf, "%s welded to %s %s",
-                                otense(mw_tmp, "are"),
-                                mhis(mon), mon_hand);
+                        char is_or_are[BUFSZ];
+                        otense(is_or_are, BUFSZ, mw_tmp, "are");
+                        sprintf(welded_buf, "%s welded to %s %s", is_or_are, mhis(mon), mon_hand);
 
                         if (obj->otyp == PICK_AXE) {
                             char name[BUFSZ];
@@ -641,8 +642,10 @@ mon_wield_item (struct monst *mon)
                     Monnam(name, BUFSZ, mon);
                     pline("%s wields %s!", name, doname(obj));
                     if (obj->cursed && obj->otyp != CORPSE) {
+                        char the_object_welds[BUFSZ];
+                        Tobjnam(the_object_welds, BUFSZ, obj, "weld");
                         pline("%s %s to %s%s %s!",
-                            Tobjnam(obj, "weld"), is_plural(obj) ? "themselves" : "itself",
+                            the_object_welds, is_plural(obj) ? "themselves" : "itself",
                             monster_name, possessive_suffix(monster_name), mbodypart(mon,HAND));
                         obj->bknown = 1;
                     }
@@ -650,8 +653,9 @@ mon_wield_item (struct monst *mon)
                 if (artifact_light(obj) && !obj->lamplit) {
                     begin_burn(obj, false);
                     if (canseemon(mon)) {
-                        pline("%s brilliantly in %s%s %s!",
-                            Tobjnam(obj, "glow"), monster_name, possessive_suffix(monster_name), mbodypart(mon,HAND));
+                        char the_object_glows[BUFSZ];
+                        Tobjnam(the_object_glows, BUFSZ, obj, "glow");
+                        pline("%s brilliantly in %s%s %s!", the_object_glows, monster_name, possessive_suffix(monster_name), mbodypart(mon, HAND));
                     }
                 }
                 obj->owornmask = W_WEP;
@@ -1296,7 +1300,9 @@ void setmnotwielded(struct monst *mon, struct obj *obj) {
         if (canseemon(mon)) {
             char name[BUFSZ];
             mon_nam(name, BUFSZ, mon);
-            pline("%s in %s%s %s %s glowing.", The(xname(obj)), name, possessive_suffix(name), mbodypart(mon, HAND), otense(obj, "stop"));
+            char stops[BUFSZ];
+            otense(stops, BUFSZ, obj, "stop");
+            pline("%s in %s%s %s %s glowing.", The(xname(obj)), name, possessive_suffix(name), mbodypart(mon, HAND), stops);
         }
     }
     obj->owornmask &= ~W_WEP;
