@@ -8,6 +8,9 @@
 #include "extern.h"
 #include "display.h"
 #include "winprocs.h"
+#include "dbridge.h"
+#include "do_name.h"
+#include "objnam.h"
 
 static int enhance_skill(bool);
 
@@ -513,8 +516,9 @@ possibly_unwield (struct monst *mon, bool polyspot)
                 mon->weapon_check = NO_WEAPON_WANTED;
                 obj_extract_self(obj);
                 if (cansee(mon->mx, mon->my)) {
-                    pline("%s drops %s.", Monnam(mon),
-                          distant_name(obj, doname));
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mon);
+                    pline("%s drops %s.", name, distant_name(obj, doname));
                     newsym(mon->mx, mon->my);
                 }
                 /* might be dropping object into water or lava */
@@ -582,9 +586,12 @@ mon_wield_item (struct monst *mon)
                             if (!obj) obj = m_carrying(mon, AXE);
                         }
                         break;
-                default: impossible("weapon_check %d for %s?",
-                                mon->weapon_check, mon_nam(mon));
+                default: {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, mon);
+                        impossible("weapon_check %d for %s?", mon->weapon_check, name);
                         return 0;
+                }
         }
         if (obj && obj != &zeroobj) {
                 struct obj *mw_tmp = MON_WEP(mon);
@@ -609,17 +616,15 @@ mon_wield_item (struct monst *mon)
                                 mhis(mon), mon_hand);
 
                         if (obj->otyp == PICK_AXE) {
-                            pline("Since %s weapon%s %s,",
-                                  s_suffix(mon_nam(mon)),
-                                  plur(mw_tmp->quan), welded_buf);
-                            pline("%s cannot wield that %s.",
-                                mon_nam(mon), xname(obj));
+                            char name[BUFSZ];
+                            mon_nam(name, BUFSZ, mon);
+                            pline("Since %s%s weapon%s %s,", name, possessive_suffix(name), plur(mw_tmp->quan), welded_buf);
+                            pline("%s cannot wield that %s.", name, xname(obj));
                         } else {
-                            pline("%s tries to wield %s.", Monnam(mon),
-                                doname(obj));
-                            pline("%s %s %s!",
-                                  s_suffix(Monnam(mon)),
-                                  xname(mw_tmp), welded_buf);
+                            char name[BUFSZ];
+                            Monnam(name, BUFSZ, mon);
+                            pline("%s tries to wield %s.", name, doname(obj));
+                            pline("%s%s %s %s!", name, possessive_suffix(name), xname(mw_tmp), welded_buf);
                         }
                         mw_tmp->bknown = 1;
                     }
@@ -629,22 +634,25 @@ mon_wield_item (struct monst *mon)
                 mon->mw = obj;          /* wield obj */
                 setmnotwielded(mon, mw_tmp);
                 mon->weapon_check = NEED_WEAPON;
+                char monster_name[BUFSZ];
+                mon_nam(monster_name, BUFSZ, mon);
                 if (canseemon(mon)) {
-                    pline("%s wields %s!", Monnam(mon), doname(obj));
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mon);
+                    pline("%s wields %s!", name, doname(obj));
                     if (obj->cursed && obj->otyp != CORPSE) {
-                        pline("%s %s to %s %s!",
-                            Tobjnam(obj, "weld"),
-                            is_plural(obj) ? "themselves" : "itself",
-                            s_suffix(mon_nam(mon)), mbodypart(mon,HAND));
+                        pline("%s %s to %s%s %s!",
+                            Tobjnam(obj, "weld"), is_plural(obj) ? "themselves" : "itself",
+                            monster_name, possessive_suffix(monster_name), mbodypart(mon,HAND));
                         obj->bknown = 1;
                     }
                 }
                 if (artifact_light(obj) && !obj->lamplit) {
                     begin_burn(obj, false);
-                    if (canseemon(mon))
-                        pline("%s brilliantly in %s %s!",
-                            Tobjnam(obj, "glow"),
-                            s_suffix(mon_nam(mon)), mbodypart(mon,HAND));
+                    if (canseemon(mon)) {
+                        pline("%s brilliantly in %s%s %s!",
+                            Tobjnam(obj, "glow"), monster_name, possessive_suffix(monster_name), mbodypart(mon,HAND));
+                    }
                 }
                 obj->owornmask = W_WEP;
                 return 1;
@@ -1280,19 +1288,18 @@ skill_init (const struct def_skill *class_skill)
         }
 }
 
-void
-setmnotwielded (struct monst *mon, struct obj *obj)
-{
-    if (!obj) return;
+void setmnotwielded(struct monst *mon, struct obj *obj) {
+    if (!obj)
+        return;
     if (artifact_light(obj) && obj->lamplit) {
         end_burn(obj, false);
-        if (canseemon(mon))
-            pline("%s in %s %s %s glowing.", The(xname(obj)),
-                  s_suffix(mon_nam(mon)), mbodypart(mon,HAND),
-                  otense(obj, "stop"));
+        if (canseemon(mon)) {
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mon);
+            pline("%s in %s%s %s %s glowing.", The(xname(obj)), name, possessive_suffix(name), mbodypart(mon, HAND), otense(obj, "stop"));
+        }
     }
     obj->owornmask &= ~W_WEP;
 }
-
 
 /*weapon.c*/
