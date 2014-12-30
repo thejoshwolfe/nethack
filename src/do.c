@@ -203,231 +203,224 @@ bool flooreffects (struct obj *obj, int x, int y, const char *verb) {
                 (t = t_at(x,y)) != 0 && t->tseen &&
                         (t->ttyp==PIT || t->ttyp==SPIKED_PIT)) {
                 /* you escaped a pit and are standing on the precipice */
-                if (Blind && flags.soundok)
-                        You_hear("%s %s downwards.",
-                                The(xname(obj)), otense(obj, "tumble"));
-                else
-                        pline("%s %s into %s pit.",
-                                The(xname(obj)), otense(obj, "tumble"),
-                                the_your[t->madeby_u]);
+                char tumble_tense[BUFSZ];
+                otense(tumble_tense, BUFSZ, obj, "tumble");
+                if (Blind && flags.soundok) {
+                    You_hear("%s %s downwards.", The(xname(obj)), tumble_tense);
+                } else {
+                    pline("%s %s into %s pit.", The(xname(obj)), tumble_tense, the_your[t->madeby_u]);
+                }
         }
         return false;
 }
 
+/* obj is an object dropped on an altar */
+void doaltarobj (struct obj *obj) {
+    if (Blind)
+        return;
 
-void
-doaltarobj (  /* obj is an object dropped on an altar */
-    struct obj *obj
-)
-{
-        if (Blind)
-                return;
+    /* KMH, conduct */
+    u.uconduct.gnostic++;
 
-        /* KMH, conduct */
-        u.uconduct.gnostic++;
-
-        if ((obj->blessed || obj->cursed) && obj->oclass != COIN_CLASS) {
-                There("is %s flash as %s %s the altar.",
-                        an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)),
-                        doname(obj), otense(obj, "hit"));
-                if (!Hallucination()) obj->bknown = 1;
-        } else {
-                pline("%s %s on the altar.", Doname2(obj),
-                        otense(obj, "land"));
-                obj->bknown = 1;
-        }
+    if ((obj->blessed || obj->cursed) && obj->oclass != COIN_CLASS) {
+        char hit_tense[BUFSZ];
+        otense(hit_tense, BUFSZ, obj, "hit");
+        There("is %s flash as %s %s the altar.",
+                an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)),
+                doname(obj), hit_tense);
+        if (!Hallucination())
+            obj->bknown = 1;
+    } else {
+        char land_tense[BUFSZ];
+        otense(land_tense, BUFSZ, obj, "land");
+        pline("%s %s on the altar.", Doname2(obj), land_tense);
+        obj->bknown = 1;
+    }
 }
 
-static void
-trycall (struct obj *obj)
-{
-        if(!objects[obj->otyp].oc_name_known &&
-           !objects[obj->otyp].oc_uname)
-           docall(obj);
+static void trycall (struct obj *obj) {
+    if(!objects[obj->otyp].oc_name_known &&
+            !objects[obj->otyp].oc_uname)
+        docall(obj);
 }
 
-static void
-dosinkring (  /* obj is a ring being dropped over a kitchen sink */
-    struct obj *obj
-)
-{
-        struct obj *otmp,*otmp2;
-        bool ideed = true;
+/* obj is a ring being dropped over a kitchen sink */
+static void dosinkring (  struct obj *obj) {
+    struct obj *otmp,*otmp2;
+    bool ideed = true;
 
-        You("drop %s down the drain.", doname(obj));
-        obj->in_use = true;     /* block free identification via interrupt */
-        switch(obj->otyp) {     /* effects that can be noticed without eyes */
-            case RIN_SEARCHING:
-                You("thought your %s got lost in the sink, but there it is!",
-                        xname(obj));
-                goto giveback;
-            case RIN_SLOW_DIGESTION:
-                pline_The("ring is regurgitated!");
+    You("drop %s down the drain.", doname(obj));
+    obj->in_use = true;     /* block free identification via interrupt */
+    switch(obj->otyp) {     /* effects that can be noticed without eyes */
+        case RIN_SEARCHING:
+            You("thought your %s got lost in the sink, but there it is!",
+                    xname(obj));
+            goto giveback;
+        case RIN_SLOW_DIGESTION:
+            pline_The("ring is regurgitated!");
 giveback:
-                obj->in_use = false;
-                dropx(obj);
-                trycall(obj);
-                return;
-            case RIN_LEVITATION:
-                pline_The("sink quivers upward for a moment.");
-                break;
-            case RIN_POISON_RESISTANCE:
-                You("smell rotten %s.", makeplural(fruitname(false)));
-                break;
-            case RIN_AGGRAVATE_MONSTER:
-                pline("Several flies buzz angrily around the sink.");
-                break;
-            case RIN_SHOCK_RESISTANCE:
-                pline("Static electricity surrounds the sink.");
-                break;
-            case RIN_CONFLICT:
-                You_hear("loud noises coming from the drain.");
-                break;
-            case RIN_SUSTAIN_ABILITY:   /* KMH */
-                pline_The("water flow seems fixed.");
-                break;
-            case RIN_GAIN_STRENGTH:
-                pline_The("water flow seems %ser now.",
-                        (obj->spe<0) ? "weak" : "strong");
-                break;
-            case RIN_GAIN_CONSTITUTION:
-                pline_The("water flow seems %ser now.",
-                        (obj->spe<0) ? "less" : "great");
-                break;
-            case RIN_INCREASE_ACCURACY: /* KMH */
-                pline_The("water flow %s the drain.",
-                        (obj->spe<0) ? "misses" : "hits");
-                break;
-            case RIN_INCREASE_DAMAGE:
-                pline_The("water's force seems %ser now.",
-                        (obj->spe<0) ? "small" : "great");
-                break;
-            case RIN_HUNGER:
-                ideed = false;
-                for(otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp2) {
-                    otmp2 = otmp->nexthere;
-                    if (otmp != uball && otmp != uchain &&
-                            !obj_resists(otmp, 1, 99)) {
-                        if (!Blind) {
-                            pline("Suddenly, %s %s from the sink!",
-                                  doname(otmp), otense(otmp, "vanish"));
-                            ideed = true;
-                        }
-                        delobj(otmp);
-                    }
-                }
-                break;
-            case MEAT_RING:
-                /* Not the same as aggravate monster; besides, it's obvious. */
-                pline("Several flies buzz around the sink.");
-                break;
-            default:
-                ideed = false;
-                break;
-        }
-        if(!Blind && !ideed && obj->otyp != RIN_HUNGER) {
-            ideed = true;
-            switch(obj->otyp) {         /* effects that need eyes */
-                case RIN_ADORNMENT:
-                    pline_The("faucets flash brightly for a moment.");
-                    break;
-                case RIN_REGENERATION:
-                    pline_The("sink looks as good as new.");
-                    break;
-                case RIN_INVISIBILITY:
-                    You("don't see anything happen to the sink.");
-                    break;
-                case RIN_FREE_ACTION:
-                    You("see the ring slide right down the drain!");
-                    break;
-                case RIN_SEE_INVISIBLE:
-                    You("see some air in the sink.");
-                    break;
-                case RIN_STEALTH:
-                pline_The("sink seems to blend into the floor for a moment.");
-                    break;
-                case RIN_FIRE_RESISTANCE:
-                pline_The("hot water faucet flashes brightly for a moment.");
-                    break;
-                case RIN_COLD_RESISTANCE:
-                pline_The("cold water faucet flashes brightly for a moment.");
-                    break;
-                case RIN_PROTECTION_FROM_SHAPE_CHAN:
-                    pline_The("sink looks nothing like a fountain.");
-                    break;
-                case RIN_PROTECTION:
-                    pline_The("sink glows %s for a moment.",
-                            hcolor((obj->spe<0) ? NH_BLACK : NH_SILVER));
-                    break;
-                case RIN_WARNING:
-                    pline_The("sink glows %s for a moment.", hcolor(NH_WHITE));
-                    break;
-                case RIN_TELEPORTATION:
-                    pline_The("sink momentarily vanishes.");
-                    break;
-                case RIN_TELEPORT_CONTROL:
-            pline_The("sink looks like it is being beamed aboard somewhere.");
-                    break;
-                case RIN_POLYMORPH:
-                    pline_The("sink momentarily looks like a fountain.");
-                    break;
-                case RIN_POLYMORPH_CONTROL:
-        pline_The("sink momentarily looks like a regularly erupting geyser.");
-                    break;
-            }
-        }
-        if(ideed)
+            obj->in_use = false;
+            dropx(obj);
             trycall(obj);
-        else
-            You_hear("the ring bouncing down the drainpipe.");
-        if (!rn2(20)) {
-                pline_The("sink backs up, leaving %s.", doname(obj));
-                obj->in_use = false;
-                dropx(obj);
-        } else
-                useup(obj);
+            return;
+        case RIN_LEVITATION:
+            pline_The("sink quivers upward for a moment.");
+            break;
+        case RIN_POISON_RESISTANCE:
+            You("smell rotten %s.", makeplural(fruitname(false)));
+            break;
+        case RIN_AGGRAVATE_MONSTER:
+            pline("Several flies buzz angrily around the sink.");
+            break;
+        case RIN_SHOCK_RESISTANCE:
+            pline("Static electricity surrounds the sink.");
+            break;
+        case RIN_CONFLICT:
+            You_hear("loud noises coming from the drain.");
+            break;
+        case RIN_SUSTAIN_ABILITY:   /* KMH */
+            pline_The("water flow seems fixed.");
+            break;
+        case RIN_GAIN_STRENGTH:
+            pline_The("water flow seems %ser now.",
+                    (obj->spe<0) ? "weak" : "strong");
+            break;
+        case RIN_GAIN_CONSTITUTION:
+            pline_The("water flow seems %ser now.",
+                    (obj->spe<0) ? "less" : "great");
+            break;
+        case RIN_INCREASE_ACCURACY: /* KMH */
+            pline_The("water flow %s the drain.",
+                    (obj->spe<0) ? "misses" : "hits");
+            break;
+        case RIN_INCREASE_DAMAGE:
+            pline_The("water's force seems %ser now.",
+                    (obj->spe<0) ? "small" : "great");
+            break;
+        case RIN_HUNGER:
+            ideed = false;
+            for(otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp2) {
+                otmp2 = otmp->nexthere;
+                if (otmp != uball && otmp != uchain && !obj_resists(otmp, 1, 99)) {
+                    if (!Blind) {
+                        char vanish_tense[BUFSZ];
+                        otense(vanish_tense, BUFSZ, otmp, "vanish");
+                        pline("Suddenly, %s %s from the sink!", doname(otmp), vanish_tense);
+                        ideed = true;
+                    }
+                    delobj(otmp);
+                }
+            }
+            break;
+        case MEAT_RING:
+            /* Not the same as aggravate monster; besides, it's obvious. */
+            pline("Several flies buzz around the sink.");
+            break;
+        default:
+            ideed = false;
+            break;
+    }
+    if(!Blind && !ideed && obj->otyp != RIN_HUNGER) {
+        ideed = true;
+        switch(obj->otyp) {         /* effects that need eyes */
+            case RIN_ADORNMENT:
+                pline_The("faucets flash brightly for a moment.");
+                break;
+            case RIN_REGENERATION:
+                pline_The("sink looks as good as new.");
+                break;
+            case RIN_INVISIBILITY:
+                You("don't see anything happen to the sink.");
+                break;
+            case RIN_FREE_ACTION:
+                You("see the ring slide right down the drain!");
+                break;
+            case RIN_SEE_INVISIBLE:
+                You("see some air in the sink.");
+                break;
+            case RIN_STEALTH:
+                pline_The("sink seems to blend into the floor for a moment.");
+                break;
+            case RIN_FIRE_RESISTANCE:
+                pline_The("hot water faucet flashes brightly for a moment.");
+                break;
+            case RIN_COLD_RESISTANCE:
+                pline_The("cold water faucet flashes brightly for a moment.");
+                break;
+            case RIN_PROTECTION_FROM_SHAPE_CHAN:
+                pline_The("sink looks nothing like a fountain.");
+                break;
+            case RIN_PROTECTION:
+                pline_The("sink glows %s for a moment.",
+                        hcolor((obj->spe<0) ? NH_BLACK : NH_SILVER));
+                break;
+            case RIN_WARNING:
+                pline_The("sink glows %s for a moment.", hcolor(NH_WHITE));
+                break;
+            case RIN_TELEPORTATION:
+                pline_The("sink momentarily vanishes.");
+                break;
+            case RIN_TELEPORT_CONTROL:
+                pline_The("sink looks like it is being beamed aboard somewhere.");
+                break;
+            case RIN_POLYMORPH:
+                pline_The("sink momentarily looks like a fountain.");
+                break;
+            case RIN_POLYMORPH_CONTROL:
+                pline_The("sink momentarily looks like a regularly erupting geyser.");
+                break;
+        }
+    }
+    if(ideed)
+        trycall(obj);
+    else
+        You_hear("the ring bouncing down the drainpipe.");
+    if (!rn2(20)) {
+        pline_The("sink backs up, leaving %s.", doname(obj));
+        obj->in_use = false;
+        dropx(obj);
+    } else
+        useup(obj);
 }
 
 
 /* some common tests when trying to drop or throw items */
-bool 
-canletgo (struct obj *obj, const char *word)
-{
-        if(obj->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL)){
-                if (*word)
-                        Norep("You cannot %s %s you are wearing.",word,
-                                something);
-                return(false);
+bool canletgo (struct obj *obj, const char *word) {
+    if(obj->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL)){
+        if (*word)
+            Norep("You cannot %s %s you are wearing.",word,
+                    something);
+        return(false);
+    }
+    if (obj->otyp == LOADSTONE && obj->cursed) {
+        /* getobj() kludge sets corpsenm to user's specified count
+           when refusing to split a stack of cursed loadstones */
+        if (*word) {
+            /* getobj() ignores a count for throwing since that is
+               implicitly forced to be 1; replicate its kludge... */
+            if (!strcmp(word, "throw") && obj->quan > 1L)
+                obj->corpsenm = 1;
+            pline("For some reason, you cannot %s%s the stone%s!",
+                    word, obj->corpsenm ? " any of" : "",
+                    plur(obj->quan));
         }
-        if (obj->otyp == LOADSTONE && obj->cursed) {
-                /* getobj() kludge sets corpsenm to user's specified count
-                   when refusing to split a stack of cursed loadstones */
-                if (*word) {
-                        /* getobj() ignores a count for throwing since that is
-                           implicitly forced to be 1; replicate its kludge... */
-                        if (!strcmp(word, "throw") && obj->quan > 1L)
-                            obj->corpsenm = 1;
-                        pline("For some reason, you cannot %s%s the stone%s!",
-                              word, obj->corpsenm ? " any of" : "",
-                              plur(obj->quan));
-                }
-                obj->corpsenm = 0;              /* reset */
-                obj->bknown = 1;
-                return(false);
-        }
-        if (obj->otyp == LEASH && obj->leashmon != 0) {
-                if (*word)
-                        pline_The("leash is tied around your %s.",
-                                        body_part(HAND));
-                return(false);
-        }
-        if (obj->owornmask & W_SADDLE) {
-                if (*word)
-                        You("cannot %s %s you are sitting on.", word,
-                                something);
-                return (false);
-        }
-        return(true);
+        obj->corpsenm = 0;              /* reset */
+        obj->bknown = 1;
+        return(false);
+    }
+    if (obj->otyp == LEASH && obj->leashmon != 0) {
+        if (*word)
+            pline_The("leash is tied around your %s.",
+                    body_part(HAND));
+        return(false);
+    }
+    if (obj->owornmask & W_SADDLE) {
+        if (*word)
+            You("cannot %s %s you are sitting on.", word,
+                    something);
+        return (false);
+    }
+    return(true);
 }
 
 static int drop (struct obj *obj) {
