@@ -1116,9 +1116,10 @@ static int arti_invoke (struct obj *obj) {
     if(oart->inv_prop > LAST_PROP) {
         /* It's a special power, not "just" a property */
         if(obj->age > monstermoves) {
-            /* the artifact is tired :-) */
-            You_feel("that %s %s ignoring you.",
-                    the(xname(obj)), otense(obj, "are"));
+            // the artifact is tired :-)
+            char otense_buf[BUFSZ];
+            otense(otense_buf, BUFSZ, obj, "are");
+            You_feel("that %s %s ignoring you.", the(xname(obj)), otense_buf);
             /* and just got more so; patience is essential... */
             obj->age += (long) d(3,10);
             return 1;
@@ -1276,8 +1277,9 @@ static int arti_invoke (struct obj *obj) {
         if(on && obj->age > monstermoves) {
             /* the artifact is tired :-) */
             u.uprops[oart->inv_prop].extrinsic ^= W_ARTI;
-            You_feel("that %s %s ignoring you.",
-                    the(xname(obj)), otense(obj, "are"));
+            char otense_buf[BUFSZ];
+            otense(otense_buf, BUFSZ, obj, "are");
+            You_feel("that %s %s ignoring you.", the(xname(obj)), otense_buf);
             /* can't just keep repeatedly trying */
             obj->age += (long) d(3,10);
             return 1;

@@ -1,6 +1,8 @@
 #ifndef OBJNAM_H
 #define OBJNAM_H
 
+#include "obj.h"
+
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -26,7 +28,7 @@ char *The(const char *);
 char *the(const char *);
 char *aobjnam(struct obj *,const char *);
 char *Tobjnam(struct obj *,const char *);
-char *otense(struct obj *,const char *);
+size_t otense (char *out_buf, size_t buf_size, const struct obj *otmp, const char *verb);
 size_t vtense (char *out_buf, size_t buf_size, const char *subj, const char *verb);
 char *Doname2(struct obj *);
 char *yname(struct obj *);

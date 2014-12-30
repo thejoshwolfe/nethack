@@ -233,15 +233,16 @@ static int dig (void) {
                     You("fumble and drop your %s.", xname(uwep));
                     dropx(uwep);
                 } else {
+                    char hit_tense[BUFSZ];
+                    otense(hit_tense, BUFSZ, uwep, "hit");
+                    char bounce_tense[BUFSZ];
+                    otense(bounce_tense, BUFSZ, uwep, "bounce");
                     if (u.usteed) {
                         char steed_name[BUFSZ];
                         mon_nam(steed_name, BUFSZ, u.usteed);
-                        Your("%s %s and %s %s!", xname(uwep),
-                                otense(uwep, "bounce"), otense(uwep, "hit"), steed_name);
+                        Your("%s %s and %s %s!", xname(uwep), bounce_tense, hit_tense, steed_name);
                     } else {
-                        pline("Ouch!  Your %s %s and %s you!",
-                                xname(uwep),
-                                otense(uwep, "bounce"), otense(uwep, "hit"));
+                        pline("Ouch!  Your %s %s and %s you!", xname(uwep), bounce_tense, hit_tense);
                     }
                     set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
                 }
@@ -1344,71 +1345,62 @@ unearth_objs (int x, int y)
  * This is used by buried objects other than corpses.  When a container rots
  * away, any contents become newly buried objects.
  */
-/* ARGSUSED */
-void
-rot_organic (
-    void *arg,
-    long timeout        /* unused */
-)
-{
-        struct obj *obj = (struct obj *) arg;
+void rot_organic ( void *arg, long timeout) {
+    struct obj *obj = (struct obj *) arg;
 
-        while (Has_contents(obj)) {
-            /* We don't need to place contained object on the floor
-               first, but we do need to update its map coordinates. */
-            obj->cobj->ox = obj->ox,  obj->cobj->oy = obj->oy;
-            /* Everything which can be held in a container can also be
-               buried, so bury_an_obj's use of obj_extract_self insures
-               that Has_contents(obj) will eventually become false. */
-            (void)bury_an_obj(obj->cobj);
-        }
-        obj_extract_self(obj);
-        obfree(obj, (struct obj *) 0);
+    while (Has_contents(obj)) {
+        /* We don't need to place contained object on the floor
+           first, but we do need to update its map coordinates. */
+        obj->cobj->ox = obj->ox,  obj->cobj->oy = obj->oy;
+        /* Everything which can be held in a container can also be
+           buried, so bury_an_obj's use of obj_extract_self insures
+           that Has_contents(obj) will eventually become false. */
+        (void)bury_an_obj(obj->cobj);
+    }
+    obj_extract_self(obj);
+    obfree(obj, (struct obj *) 0);
 }
 
 /*
  * Called when a corpse has rotted completely away.
  */
-void
-rot_corpse (
-    void *arg,
-    long timeout        /* unused */
-)
-{
-        signed char x = 0, y = 0;
-        struct obj *obj = (struct obj *) arg;
-        bool on_floor = obj->where == OBJ_FLOOR,
-                in_invent = obj->where == OBJ_INVENT;
+void rot_corpse ( void *arg, long timeout) {
+    signed char x = 0, y = 0;
+    struct obj *obj = (struct obj *) arg;
+    bool on_floor = obj->where == OBJ_FLOOR,
+         in_invent = obj->where == OBJ_INVENT;
 
-        if (on_floor) {
-            x = obj->ox;
-            y = obj->oy;
-        } else if (in_invent) {
-            if (flags.verbose) {
-                char *cname = corpse_xname(obj, false);
-                Your("%s%s %s away%c",
-                     obj == uwep ? "wielded " : nul, cname,
-                     otense(obj, "rot"), obj == uwep ? '!' : '.');
-            }
-            if (obj == uwep) {
-                uwepgone();     /* now bare handed */
-                stop_occupation();
-            } else if (obj == uswapwep) {
-                uswapwepgone();
-                stop_occupation();
-            } else if (obj == uquiver) {
-                uqwepgone();
-                stop_occupation();
-            }
-        } else if (obj->where == OBJ_MINVENT && obj->owornmask) {
-            if (obj == MON_WEP(obj->ocarry)) {
-                setmnotwielded(obj->ocarry,obj);
-                MON_NOWEP(obj->ocarry);
-            }
+    if (on_floor) {
+        x = obj->ox;
+        y = obj->oy;
+    } else if (in_invent) {
+        if (flags.verbose) {
+            char *cname = corpse_xname(obj, false);
+            char rot_tense[BUFSZ];
+            otense(rot_tense, BUFSZ, obj, "rot");
+            Your("%s%s %s away%c",
+                    obj == uwep ? "wielded " : nul, cname,
+                    rot_tense, obj == uwep ? '!' : '.');
         }
-        rot_organic(arg, timeout);
-        if (on_floor) newsym(x, y);
-        else if (in_invent) update_inventory();
+        if (obj == uwep) {
+            uwepgone();     /* now bare handed */
+            stop_occupation();
+        } else if (obj == uswapwep) {
+            uswapwepgone();
+            stop_occupation();
+        } else if (obj == uquiver) {
+            uqwepgone();
+            stop_occupation();
+        }
+    } else if (obj->where == OBJ_MINVENT && obj->owornmask) {
+        if (obj == MON_WEP(obj->ocarry)) {
+            setmnotwielded(obj->ocarry,obj);
+            MON_NOWEP(obj->ocarry);
+        }
+    }
+    rot_organic(arg, timeout);
+    if (on_floor) newsym(x, y);
+    else if (in_invent) update_inventory();
 }
 
 

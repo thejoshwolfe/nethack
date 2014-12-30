@@ -1005,10 +1005,14 @@ bool snuff_lit(struct obj *obj) {
 
     if (obj->lamplit) {
         if (obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
-                obj->otyp == BRASS_LANTERN || obj->otyp == POT_OIL) {
-            (void) get_obj_location(obj, &x, &y, 0);
-            if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind)
-                pline("%s %s out!", Yname2(obj), otense(obj, "go"));
+                obj->otyp == BRASS_LANTERN || obj->otyp == POT_OIL)
+        {
+            get_obj_location(obj, &x, &y, 0);
+            if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind) {
+                char otense_buf[BUFSZ];
+                otense(otense_buf, BUFSZ, obj, "go");
+                pline("%s %s out!", Yname2(obj), otense_buf);
+            }
             end_burn(obj, true);
             return true;
         }
@@ -1036,8 +1040,11 @@ bool catch_lit(struct obj *obj) {
         if ((obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
                     obj->otyp == BRASS_LANTERN) && obj->cursed && !rn2(2))
             return false;
-        if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind)
-            pline("%s %s light!", Yname2(obj), otense(obj, "catch"));
+        if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind) {
+            char otense_buf[BUFSZ];
+            otense(otense_buf, BUFSZ, obj, "catch");
+            pline("%s %s light!", Yname2(obj), otense_buf);
+        }
         if (obj->otyp == POT_OIL) makeknown(obj->otyp);
         if (obj->unpaid && costly_spot(u.ux, u.uy) && (obj->where == OBJ_INVENT)) {
             /* if it catches while you have it, then it's your tough luck */
@@ -1077,8 +1084,9 @@ static void use_lamp (struct obj *obj) {
         return;
     }
     if (obj->cursed && !rn2(2)) {
-        pline("%s for a moment, then %s.",
-                Tobjnam(obj, "flicker"), otense(obj, "die"));
+        char otense_buf[BUFSZ];
+        otense(otense_buf, BUFSZ, obj, "die");
+        pline("%s for a moment, then %s.", Tobjnam(obj, "flicker"), otense_buf);
     } else {
         if(obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
                 obj->otyp == BRASS_LANTERN) {
@@ -1086,8 +1094,10 @@ static void use_lamp (struct obj *obj) {
             pline("%s lamp is now on.", Shk_Your(buf, obj));
         } else {        /* candle(s) */
             const char *name = Yname2(obj);
+            char otense_buf[BUFSZ];
+            otense(otense_buf, BUFSZ, obj, "burn");
             pline("%s%s flame%s %s%s", name, possessive_suffix(name),
-                    plur(obj->quan), otense(obj, "burn"),
+                    plur(obj->quan), otense_buf,
                     Blind ? "." : " brightly!");
             if (obj->unpaid && costly_spot(u.ux, u.uy) &&
                     obj->age == 20L * (long)objects[obj->otyp].oc_cost) {

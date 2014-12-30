@@ -4,6 +4,7 @@
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
+#include "shk.h"
 #include "onames.h"
 #include "artifact_names.h"
 #include "youprop.h"
@@ -759,11 +760,12 @@ ring:
                     strcat(prefix, "partly eaten ");
                 if (obj->otyp == CORPSE) {
                     if (mons[obj->corpsenm].geno & G_UNIQ) {
+                        char pname[BUFSZ];
+                        s_suffix(pname, BUFSZ, mons[obj->corpsenm].mname);
                         sprintf(prefix, "%s%s ",
-                                (type_is_pname(&mons[obj->corpsenm]) ?
-                                        "" : "the "),
-                                s_suffix(mons[obj->corpsenm].mname));
-                        if (obj->oeaten) strcat(prefix, "partly eaten ");
+                                (type_is_pname(&mons[obj->corpsenm]) ?  "" : "the "), pname);
+                        if (obj->oeaten)
+                            strcat(prefix, "partly eaten ");
                     } else {
                         strcat(prefix, mons[obj->corpsenm].mname);
                         strcat(prefix, " ");
@@ -1063,20 +1065,16 @@ char * Tobjnam (struct obj *otmp, const char *verb) {
 }
 
 /* return form of the verb (input plural) if xname(otmp) were the subject */
-char * otense (struct obj *otmp, const char *verb) {
-        char *buf;
+size_t otense(char *out_buf, size_t buf_size, const struct obj *otmp, const char *verb) {
+    /*
+     * verb is given in plural (without trailing s).  Return as input
+     * if the result of xname(otmp) would be plural.  Don't bother
+     * recomputing xname(otmp) at this time.
+     */
+    if (!is_plural(otmp))
+        return vtense(out_buf, buf_size, NULL, verb);
 
-        /*
-         * verb is given in plural (without trailing s).  Return as input
-         * if the result of xname(otmp) would be plural.  Don't bother
-         * recomputing xname(otmp) at this time.
-         */
-        if (!is_plural(otmp))
-            return vtense((char *)0, verb);
-
-        buf = nextobuf();
-        strcpy(buf, verb);
-        return buf;
+    return nh_strlcpy(out_buf, verb, buf_size);
 }
 
 /* return form of the verb (input plural) for present tense 3rd person subj */
