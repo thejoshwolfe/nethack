@@ -181,10 +181,10 @@ static int use_stethoscope (struct obj *obj) {
             !rn2(Role_if(PM_HEALER) ? 10 : 3));
 
     if (nohands(youmonst.data)) {   /* should also check for no ears and/or deaf */
-        You("have no hands!");  /* not `body_part(HAND)' */
+        message_const(MSG_YOU_HAVE_NO_HANDS);
         return 0;
     } else if (!freehand()) {
-        You("have no free %s.", body_part(HAND));
+        message_const(MSG_YOU_HAVE_NO_FREE_HANDS);
         return 0;
     }
     if (!getdir((char *)0)) return 0;
@@ -196,9 +196,7 @@ static int use_stethoscope (struct obj *obj) {
 
     if (u.usteed && u.dz > 0) {
         if (interference) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, u.ustuck);
-            pline("%s interferes.", name);
+            message_monster(MSG_MONSTER_INTERFERES, u.ustuck);
             mstatusline(u.ustuck);
         } else
             mstatusline(u.usteed);
@@ -208,27 +206,25 @@ static int use_stethoscope (struct obj *obj) {
             mstatusline(u.ustuck);
             return res;
         } else if (u.uswallow && interference) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, u.ustuck);
-            pline("%s interferes.", name);
+            message_monster(MSG_MONSTER_INTERFERES, u.ustuck);
             mstatusline(u.ustuck);
             return res;
         } else if (u.dz) {
             if (Underwater) {
-                You_hear("faint splashing.");
+                message_const(MSG_YOU_HEAR_FAINT_SPLASHING);
             } else if (u.dz < 0 || !can_reach_floor()) {
-                You_cant("reach the %s.",
+                message_string(MSG_YOU_CANNOT_REACH_THE_DUNGEON,
                         (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
             } else if (its_dead(u.ux, u.uy, &res)) {
                 /* message already given */
             } else if (Is_stronghold(&u.uz)) {
-                You_hear("the crackling of hellfire.");
+                message_const(MSG_YOU_HEAR_CRACKLING_OF_HELLFIRE);
             } else {
-                pline_The("%s seems healthy enough.", surface(u.ux,u.uy));
+                message_string(MSG_DUNGEON_SEEMS_HEALTHY_ENOUGH, surface(u.ux,u.uy));
             }
             return res;
         } else if (obj->cursed && !rn2(2)) {
-            You_hear("your heart beat.");
+            message_const(MSG_YOU_HEAR_YOUR_HEART_BEAT);
             return res;
         }
     if (Stunned || (Confusion && !rn2(5))) confdir();
@@ -238,7 +234,7 @@ static int use_stethoscope (struct obj *obj) {
     }
     rx = u.ux + u.dx; ry = u.uy + u.dy;
     if (!isok(rx,ry)) {
-        You_hear("a faint typing noise.");
+        message_const(MSG_YOU_HEAR_FAINT_TYPING_NOISE);
         return 0;
     }
     if ((mtmp = m_at(rx,ry)) != 0) {
@@ -254,7 +250,7 @@ static int use_stethoscope (struct obj *obj) {
     if (glyph_is_invisible(levl[rx][ry].glyph)) {
         unmap_object(rx, ry);
         newsym(rx, ry);
-        pline_The("invisible monster must have moved.");
+        message_const(MSG_THE_INVISIBLE_MONSTER_MOVED);
     }
     lev = &levl[rx][ry];
     switch(lev->typ) {
@@ -274,7 +270,8 @@ static int use_stethoscope (struct obj *obj) {
     }
 
     if (!its_dead(rx, ry, &res))
-        You("hear nothing special.");       /* not You_hear()  */
+        message_const(MSG_YOU_HEAR_NOTHING_SPECIAL);
+
     return res;
 }
 

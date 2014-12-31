@@ -126,6 +126,43 @@ Your("%s feels clean now.", body_part(FACE));
                     The(mons[otmp->corpsenm].mname),
                     (ttmp && ttmp->ttyp == STATUE_TRAP) ?  "extraordinary" : "excellent");
 
+        message_const(MSG_YOU_HAVE_NO_HANDS);
+        You("have no hands!");  
+
+        message_const(MSG_YOU_HAVE_NO_FREE_HANDS);
+        You("have no free %s.", body_part(HAND));
+
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, u.ustuck);
+            pline("%s interferes.", name);
+            message_monster(MSG_MONSTER_INTERFERES, u.ustuck);
+            mstatusline(u.ustuck);
+
+                You_hear("faint splashing.");
+                message_const(MSG_YOU_HEAR_FAINT_SPLASHING);
+
+                message_string(MSG_YOU_CANNOT_REACH_THE_DUNGEON,
+                        (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+                You_cant("reach the %s.", );
+
+                message_const(MSG_YOU_HEAR_CRACKLING_OF_HELLFIRE);
+                You_hear("the crackling of hellfire.");
+
+                message_string(MSG_DUNGEON_SEEMS_HEALTHY_ENOUGH, surface(u.ux,u.uy));
+                pline_The("%s seems healthy enough.", surface(u.ux,u.uy));
+
+            message_const(MSG_YOU_HEAR_YOUR_HEART_BEAT);
+            You_hear("your heart beat.");
+
+        message_const(MSG_YOU_HEAR_FAINT_TYPING_NOISE);
+        You_hear("a faint typing noise.");
+
+        message_const(MSG_THE_INVISIBLE_MONSTER_MOVED);
+        pline_The("invisible monster must have moved.");
+
+        You("hear nothing special.");       // not You_hear()
+        message_const(MSG_YOU_HEAR_NOTHING_SPECIAL);
+
 MSG_WELDS_TO_YOUR_HAND:
                 const char *tmp = xname(wep), *thestr = "The ";
                 if (strncmp(tmp, thestr, 4) && !strncmp(The(tmp),thestr,4))
