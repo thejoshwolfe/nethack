@@ -1,6 +1,10 @@
 #ifndef WORM_H
 #define WORM_H
 
+#include <stdbool.h>
+#include "monst.h"
+#include "obj.h"
+
 int get_wormno(void);
 void initworm(struct monst *,int);
 void worm_move(struct monst *);

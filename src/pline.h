@@ -2,6 +2,7 @@
 #define PLINE_H
 
 #include "align.h"
+#include "monst.h"
 
 void pline(const char *,...) __attribute__ ((format (printf, 1, 2)));
 void plines(const char *);

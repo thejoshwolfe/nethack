@@ -1,6 +1,10 @@
 #ifndef MAKEMON_H
 #define MAKEMON_H
 
+#include <stdbool.h>
+#include "monst.h"
+#include "obj.h"
+
 bool is_home_elemental(struct permonst *);
 struct monst *clone_mon(struct monst *,signed char,signed char);
 struct monst *makemon(struct permonst *,int,int,int);

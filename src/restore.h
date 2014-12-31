@@ -1,6 +1,8 @@
 #ifndef RESTORE_H
 #define RESTORE_H
 
+#include <stdbool.h>
+
 void inven_inuse(bool);
 int dorecover(int);
 void trickery(char *);

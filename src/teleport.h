@@ -1,6 +1,10 @@
 #ifndef TELEPORT_H
 #define TELEPORT_H
 
+#include <stdbool.h>
+#include "monst.h"
+#include "trap.h"
+
 bool goodpos(int,int,struct monst *,unsigned);
 bool enexto(coord *,signed char,signed char,struct permonst *);
 bool enexto_core(coord *,signed char,signed char,struct permonst *,unsigned);

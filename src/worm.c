@@ -1,5 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "teleport.h"
+#include "restore.h"
+#include "save.h"
+#include "makemon.h"
+#include "pline.h"
+#include "extern.h"
 #include "worm.h"
 #include "hack.h"
 #include "lev.h"
