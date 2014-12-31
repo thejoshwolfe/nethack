@@ -4,6 +4,7 @@
  * Monster item usage routines.
  */
 
+#include "muse.h"
 #include "hack.h"
 #include "edog.h"
 #include "invent.h"

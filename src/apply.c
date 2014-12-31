@@ -30,6 +30,9 @@
 #include "pline.h"
 #include "detect.h"
 #include "mon.h"
+#include "wizard.h"
+#include "sounds.h"
+#include "muse.h"
 
 static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,
@@ -571,8 +574,6 @@ static int use_mirror (struct obj *obj) {
         return 1;
     }
     if (u.uswallow) {
-        char name[BUFSZ];
-        mon_nam(name, BUFSZ, u.ustuck);
         if (!Blind)
             message_monster(MSG_YOU_REFLECT_M_STOMACH, u.ustuck);
         return 1;
@@ -610,33 +611,25 @@ static int use_mirror (struct obj *obj) {
     } else if(!mtmp->mcan && !mtmp->minvis && mtmp->data == &mons[PM_MEDUSA]) {
         if (mon_reflects(mtmp, "The gaze is reflected away by %s %s!"))
             return 1;
-        if (vis) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline("%s is turned to stone!", name);
-        }
+        if (vis)
+            message_monster(MSG_M_IS_TURNED_TO_STONE, mtmp);
         stoned = true;
         killed(mtmp);
     } else if(!mtmp->mcan && !mtmp->minvis &&
             mtmp->data == &mons[PM_FLOATING_EYE]) {
         int tmp = d((int)mtmp->m_lev, (int)mtmp->data->mattk[0].damd);
         if (!rn2(4)) tmp = 120;
-        if (vis) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline("%s is frozen by its reflection.", name);
-        }
-        else You_hear("%s stop moving.",something);
+        if (vis)
+            message_monster(MSG_M_FROZEN_BY_REFLECTION, mtmp);
+        else
+            message_const(MSG_SOMETHING_STOP_MOVING);
         mtmp->mcanmove = 0;
         if ( (int) mtmp->mfrozen + tmp > 127)
             mtmp->mfrozen = 127;
         else mtmp->mfrozen += tmp;
-    } else if(!mtmp->mcan && !mtmp->minvis &&
-            mtmp->data == &mons[PM_UMBER_HULK]) {
+    } else if(!mtmp->mcan && !mtmp->minvis && mtmp->data == &mons[PM_UMBER_HULK]) {
         if (vis) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline ("%s confuses itself!", name);
+            message_monster(MSG_M_CONFUSES_ITSELF, mtmp);
         }
         mtmp->mconf = 1;
     } else if(!mtmp->mcan && !mtmp->minvis && (mlet == S_NYMPH

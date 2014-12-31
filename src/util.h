@@ -17,6 +17,10 @@ void update_inventory(void);
 void getlin(const char *, char *);
 
 enum MessageId {
+    MSG_M_CONFUSES_ITSELF,
+    MSG_SOMETHING_STOP_MOVING,
+    MSG_M_FROZEN_BY_REFLECTION,
+    MSG_M_IS_TURNED_TO_STONE,
     MSG_M_HAS_NO_REFLECTION,
     MSG_M_CANT_SEE_ANYTHING,
     MSG_M_TOO_TIRED_LOOK_MIRROR,

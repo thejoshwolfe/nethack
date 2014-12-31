@@ -205,22 +205,6 @@ extern void m_useup(struct monst *,struct obj *);
 extern void m_throw(struct monst *,int,int,int,int,int,struct obj *);
 extern bool hits_bars(struct obj **,int,int,int,int);
 
-/* ### muse.c ### */
-
-extern bool find_defensive(struct monst *);
-extern int use_defensive(struct monst *);
-extern int rnd_defensive_item(struct monst *);
-extern bool find_offensive(struct monst *);
-extern int use_offensive(struct monst *);
-extern int rnd_offensive_item(struct monst *);
-extern bool find_misc(struct monst *);
-extern int use_misc(struct monst *);
-extern int rnd_misc_item(struct monst *);
-extern bool searches_for_item(struct monst *,struct obj *);
-extern bool mon_reflects(struct monst *,const char *);
-extern bool ureflects(const char *,const char *);
-extern bool munstone(struct monst *,bool);
-
 /* ### music.c ### */
 
 extern void awaken_soldiers(void);

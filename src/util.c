@@ -11,6 +11,14 @@ MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
             message_const(MSG_YOUR_LEASH_FALLS_SLACK);
             Your("leash falls slack.");
 
+            You_hear("%s stop moving.",something);
+            message_const(MSG_SOMETHING_STOP_MOVING);
+
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline ("%s confuses itself!", name);
+            message_monster(MSG_M_CONFUSES_ITSELF, mtmp);
+
             char name[BUFSZ];
             Monnam(name, BUFSZ, mtmp);
             pline ("%s is too tired to look at your mirror.", name);
@@ -25,6 +33,16 @@ MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
             Monnam(name, BUFSZ, mtmp);
             pline ("%s doesn't have a reflection.", name);
             message_monster(MSG_M_HAS_NO_REFLECTION, mtmp);
+
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s is frozen by its reflection.", name);
+            message_monster(MSG_M_FROZEN_BY_REFLECTION, mtmp);
+
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s is turned to stone!", name);
+            message_monster(MSG_M_IS_TURNED_TO_STONE, mtmp);
 
             message_string(MSG_YOU_REFLECT_THE_DUNGEON, 
             You("reflect the %s.", );
