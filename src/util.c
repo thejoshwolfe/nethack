@@ -382,4 +382,16 @@ MSG_POLYPILE_CREATES_GOLEM, "Some %(material)sobjects meld, and %(a_monnam)s ari
         PM_STRAW_GOLEM: "";
     }
 MSG_SHOP_KEEPER_GETS_ANGRY, "%s gets angry!"
+MSG_SHOP_KEEPER_IS_FURIOUS, "%s is furious!"
+MSG_YOU_NEED_HANDS_TO_WRITE, You("need hands to be able to write!");
+MSG_IT_SLIPS_FROM_YOUR_FINGERS, pline("%s from your %s.", Tobjnam(pen, "slip"), makeplural(body_part(FINGER)));
+MSG_YOU_DONT_KNOW_THAT_IS_BLANK, You("don't know if that %s is blank or not!", typeword);
+MSG_THAT_IS_NOT_BLANK, pline("That %s is not blank!", typeword);
+MSG_CANT_WRITE_THAT_ITS_OBSCENE, You_cant("write that!"); pline("It's obscene!");
+MSG_CANT_WRITE_BOOK_OF_THE_DEAD, "No mere dungeon adventurer could write that.";
+MSG_CANT_WRITE_WHAT_YOU_DONT_KNOW, "Unfortunately you don't have enough information to go on.";
+MSG_MARKER_TOO_DRY, Your("marker is too dry to write that!");
+MSG_MARKER_DRIES_OUT, Your("marker dries out!");
+MSG_SPELLBOOK_IS_UNFINISHED, pline_The("spellbook is left unfinished and your writing fades.");
+MSG_SCROLL_IS_NOW_USELESS, pline_The("scroll is now useless and disappears!");
 */
