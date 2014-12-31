@@ -1,9 +1,12 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "pline.h"
+#include "timeout.h"
+#include "artifact.h"
+#include "worn.h"
 #include "wield.h"
 #include "hack.h"
 #include "display.h"
-#include "winprocs.h"
 #include "objnam.h"
 #include "shk.h"
 #include "do_name.h"

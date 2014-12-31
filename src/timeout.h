@@ -2,6 +2,9 @@
 #ifndef TIMEOUT_H
 #define TIMEOUT_H
 
+#include <stdbool.h>
+#include "obj.h"
+
 /* generic timeout function */
 typedef void (*timeout_proc)(void *, long);
 
