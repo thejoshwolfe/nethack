@@ -1,6 +1,10 @@
 #ifndef WIELD_H
 #define WIELD_H
 
+#include <stdbool.h>
+#include "obj.h"
+#include "monst.h"
+
 void setuwep(struct obj *);
 void setuqwep(struct obj *);
 void setuswapwep(struct obj *);

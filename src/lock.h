@@ -1,6 +1,9 @@
 #ifndef LOCK_H
 #define LOCK_H
 
+#include <stdbool.h>
+#include "obj.h"
+
 bool picking_lock(int *,int *);
 bool picking_at(int,int);
 void reset_pick(void);

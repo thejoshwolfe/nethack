@@ -2,6 +2,7 @@
 #define LIGHT_H
 
 #include <stdbool.h>
+#include "obj.h"
 
 void new_light_source(signed char, signed char, int, int, void *);
 void del_light_source(int, void *);

@@ -1,6 +1,10 @@
 #ifndef DO_H
 #define DO_H
 
+#include <stdbool.h>
+#include "obj.h"
+#include "dungeon.h"
+
 int dodrop(void);
 bool boulder_hits_pool(struct obj *,int,int,bool);
 bool flooreffects(struct obj *,int,int,const char *);

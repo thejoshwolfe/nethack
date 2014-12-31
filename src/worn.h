@@ -1,6 +1,10 @@
 #ifndef WORN_H
 #define WORN_H
 
+#include <stdbool.h>
+#include "obj.h"
+#include "monst.h"
+
 void setworn(struct obj *,long);
 void setnotworn(struct obj *);
 void mon_set_minvis(struct monst *);

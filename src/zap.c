@@ -1,5 +1,18 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "questpgr.h"
+#include "do.h"
+#include "muse.h"
+#include "wield.h"
+#include "dokick.h"
+#include "dig.h"
+#include "were.h"
+#include "do_wear.h"
+#include "end.h"
+#include "explode.h"
+#include "lock.h"
+#include "light.h"
+#include "mkobj.h"
 #include "potion.h"
 #include "polyself.h"
 #include "cmd.h"
@@ -2929,8 +2942,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
                 You("aren't affected.");
                 break;
             }
-            killer_format = KILLED_BY_AN;
-            killer = fltxt;
+            killer = killed_by_flash_text(fltxt);
             /* when killed by disintegration breath, don't leave corpse */
             u.ugrave_arise = (type == -ZT_BREATH(ZT_DEATH)) ? -3 : NON_PM;
             done(DIED);
@@ -2972,7 +2984,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
 
     if (Half_spell_damage && dam && type < 0 && (type > -20 || type < -29)) /* !Breath */
         dam = (dam + 1) / 2;
-    losehp(dam, fltxt, KILLED_BY_AN);
+    losehp(dam, killed_by_flash_text(fltxt));
     return;
 }
 
@@ -3245,7 +3257,7 @@ void buzz(int type, int nd, signed char sx, signed char sy, int dx, int dy) {
                 You(are_blinded_by_the_flash);
                 make_blinded((long)d(nd, 50), false);
                 if (!Blind)
-                    Your("%s", vision_clears);
+                    message_const(MSG_VISION_QUICKLY_CLEARS);
             }
             stop_occupation();
             nomul(0);

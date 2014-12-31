@@ -2,6 +2,7 @@
 #define END_H
 
 #include <stdbool.h>
+#include "monst.h"
 
 void done1(int);
 int done2(void);

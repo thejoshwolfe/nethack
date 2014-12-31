@@ -1,6 +1,10 @@
 #ifndef DIG_H
 #define DIG_H
 
+#include <stdbool.h>
+#include "monst.h"
+#include "obj.h"
+
 bool is_digging(void);
 int holetime(void);
 bool dig_check(struct monst *, bool, int, int);

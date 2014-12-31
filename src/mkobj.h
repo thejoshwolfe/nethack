@@ -2,6 +2,8 @@
 #define MKOBJ_H
 
 #include <stdbool.h>
+#include "obj.h"
+#include "monst.h"
 
 struct obj *mkobj_at(char,int,int,bool);
 struct obj *mksobj_at(int,int,int,bool,bool);

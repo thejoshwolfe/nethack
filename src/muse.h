@@ -1,6 +1,10 @@
 #ifndef MUSE_H
 #define MUSE_H
 
+#include <stdbool.h>
+#include "monst.h"
+#include "obj.h"
+
 bool find_defensive(struct monst *);
 int use_defensive(struct monst *);
 int rnd_defensive_item(struct monst *);

@@ -2,6 +2,7 @@
 #define DOKICK_H
 
 #include <stdbool.h>
+#include "obj.h"
 
 bool ghitm(struct monst *,struct obj *);
 void container_impact_dmg(struct obj *);

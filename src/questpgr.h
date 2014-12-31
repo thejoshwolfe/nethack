@@ -1,6 +1,10 @@
 #ifndef QUESTPGR_H
 #define QUESTPGR_H
 
+#include <stdbool.h>
+#include "obj.h"
+#include "permonst.h"
+
 void load_qtlist(void);
 void unload_qtlist(void);
 short quest_info(int);

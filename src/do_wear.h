@@ -1,6 +1,9 @@
 #ifndef DO_WEAR_H
 #define DO_WEAR_H
 
+#include <stdbool.h>
+#include "obj.h"
+
 void off_msg(struct obj *);
 void set_wear(void);
 bool donning(struct obj *);
