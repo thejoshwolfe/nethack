@@ -40,6 +40,24 @@
 #include "makemon.h"
 #include "mkroom.h"
 #include "read.h"
+#include "mkobj.h"
+#include "light.h"
+#include "wield.h"
+#include "dothrow.h"
+#include "eat.h"
+#include "end.h"
+#include "dog.h"
+#include "cmd.h"
+#include "steed.h"
+#include "weapon.h"
+#include "explode.h"
+#include "dig.h"
+#include "botl.h"
+#include "artifact.h"
+#include "lock.h"
+#include "write.h"
+#include "apply.h"
+#include "music.h"
 
 static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,
@@ -765,10 +783,14 @@ static void use_bell (struct obj **optr) {
                 case 0:
                     message_const(MSG_NOTHING_HAPPENS);
                     break;
-                case 1:  pline("%s opens...", Something);
-                         learno = true; break;
-                default: pline("Things open around you...");
-                         learno = true; break;
+                case 1:
+                    pline("%s opens...", Something);
+                    learno = true;
+                    break;
+                default:
+                    pline("Things open around you...");
+                    learno = true;
+                    break;
             }
 
         } else {  /* uncursed */
@@ -845,6 +867,59 @@ static void use_candelabrum (struct obj *obj) {
         obj->known = 1;
     }
     begin_burn(obj, false);
+}
+
+static void use_lamp (struct obj *obj) {
+    char buf[BUFSZ];
+
+    if(Underwater) {
+        pline("This is not a diving lamp.");
+        return;
+    }
+    if(obj->lamplit) {
+        if(obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
+                obj->otyp == BRASS_LANTERN)
+            pline("%s lamp is now off.", Shk_Your(buf, obj));
+        else
+            You("snuff out %s.", yname(obj));
+        end_burn(obj, true);
+        return;
+    }
+    /* magic lamps with an spe == 0 (wished for) cannot be lit */
+    if ((!Is_candle(obj) && obj->age == 0)
+            || (obj->otyp == MAGIC_LAMP && obj->spe == 0)) {
+        if (obj->otyp == BRASS_LANTERN)
+            Your("lamp has run out of power.");
+        else pline("This %s has no oil.", xname(obj));
+        return;
+    }
+    if (obj->cursed && !rn2(2)) {
+        char otense_buf[BUFSZ];
+        otense(otense_buf, BUFSZ, obj, "die");
+        char flicker_clause[BUFSZ];
+        Tobjnam(flicker_clause, BUFSZ, obj, "flicker");
+        pline("%s for a moment, then %s.", flicker_clause, otense_buf);
+    } else {
+        if(obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
+                obj->otyp == BRASS_LANTERN) {
+            check_unpaid(obj);
+            pline("%s lamp is now on.", Shk_Your(buf, obj));
+        } else {        /* candle(s) */
+            const char *name = Yname2(obj);
+            char otense_buf[BUFSZ];
+            otense(otense_buf, BUFSZ, obj, "burn");
+            pline("%s%s flame%s %s%s", name, possessive_suffix(name),
+                    plur(obj->quan), otense_buf,
+                    Blind ? "." : " brightly!");
+            if (obj->unpaid && costly_spot(u.ux, u.uy) &&
+                    obj->age == 20L * (long)objects[obj->otyp].oc_cost) {
+                const char *ithem = obj->quan > 1L ? "them" : "it";
+                verbalize("You burn %s, you bought %s!", ithem, ithem);
+                bill_dummy_object(obj);
+            }
+        }
+        begin_burn(obj, false);
+    }
 }
 
 static void use_candle (struct obj **optr) {
@@ -995,58 +1070,6 @@ bool catch_lit(struct obj *obj) {
     return false;
 }
 
-static void use_lamp (struct obj *obj) {
-    char buf[BUFSZ];
-
-    if(Underwater) {
-        pline("This is not a diving lamp.");
-        return;
-    }
-    if(obj->lamplit) {
-        if(obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
-                obj->otyp == BRASS_LANTERN)
-            pline("%s lamp is now off.", Shk_Your(buf, obj));
-        else
-            You("snuff out %s.", yname(obj));
-        end_burn(obj, true);
-        return;
-    }
-    /* magic lamps with an spe == 0 (wished for) cannot be lit */
-    if ((!Is_candle(obj) && obj->age == 0)
-            || (obj->otyp == MAGIC_LAMP && obj->spe == 0)) {
-        if (obj->otyp == BRASS_LANTERN)
-            Your("lamp has run out of power.");
-        else pline("This %s has no oil.", xname(obj));
-        return;
-    }
-    if (obj->cursed && !rn2(2)) {
-        char otense_buf[BUFSZ];
-        otense(otense_buf, BUFSZ, obj, "die");
-        char flicker_clause[BUFSZ];
-        Tobjnam(flicker_clause, BUFSZ, obj, "flicker");
-        pline("%s for a moment, then %s.", flicker_clause, otense_buf);
-    } else {
-        if(obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
-                obj->otyp == BRASS_LANTERN) {
-            check_unpaid(obj);
-            pline("%s lamp is now on.", Shk_Your(buf, obj));
-        } else {        /* candle(s) */
-            const char *name = Yname2(obj);
-            char otense_buf[BUFSZ];
-            otense(otense_buf, BUFSZ, obj, "burn");
-            pline("%s%s flame%s %s%s", name, possessive_suffix(name),
-                    plur(obj->quan), otense_buf,
-                    Blind ? "." : " brightly!");
-            if (obj->unpaid && costly_spot(u.ux, u.uy) &&
-                    obj->age == 20L * (long)objects[obj->otyp].oc_cost) {
-                const char *ithem = obj->quan > 1L ? "them" : "it";
-                verbalize("You burn %s, you bought %s!", ithem, ithem);
-                bill_dummy_object(obj);
-            }
-        }
-        begin_burn(obj, false);
-    }
-}
 
 /* obj is a potion of oil */
 static void light_cocktail (struct obj *obj) {
@@ -1096,6 +1119,145 @@ static void light_cocktail (struct obj *obj) {
     } else
         begin_burn(obj, false);
 }
+
+/* touchstones - by Ken Arnold */
+static void use_stone (struct obj *tstone) {
+    struct obj *obj;
+    bool do_scratch;
+    const char *streak_color, *choices;
+    char stonebuf[QBUFSZ];
+    static const char scritch[] = "\"scritch, scritch\"";
+    static const char allowall[3] = { COIN_CLASS, ALL_CLASSES, 0 };
+    static const char justgems[3] = { ALLOW_NONE, GEM_CLASS, 0 };
+    struct obj goldobj;
+
+    /* in case it was acquired while blinded */
+    if (!Blind) tstone->dknown = 1;
+    /* when the touchstone is fully known, don't bother listing extra
+       junk as likely candidates for rubbing */
+    choices = (tstone->otyp == TOUCHSTONE && tstone->dknown &&
+            objects[TOUCHSTONE].oc_name_known) ? justgems : allowall;
+    sprintf(stonebuf, "rub on the stone%s", plur(tstone->quan));
+    if ((obj = getobj(choices, stonebuf)) == 0)
+        return;
+    if (obj->oclass == COIN_CLASS) {
+        u.ugold += obj->quan;   /* keep botl up to date */
+        goldobj = *obj;
+        dealloc_obj(obj);
+        obj = &goldobj;
+    }
+
+    if (obj == tstone && obj->quan == 1) {
+        You_cant("rub %s on itself.", the(xname(obj)));
+        return;
+    }
+
+    if (tstone->otyp == TOUCHSTONE && tstone->cursed &&
+            obj->oclass == GEM_CLASS && !is_graystone(obj) &&
+            !obj_resists(obj, 80, 100)) {
+        if (Blind)
+            pline("You feel something shatter.");
+        else if (Hallucination())
+            pline("Oh, wow, look at the pretty shards.");
+        else
+            pline("A sharp crack shatters %s%s.",
+                    (obj->quan > 1) ? "one of " : "", the(xname(obj)));
+        useup(obj);
+        return;
+    }
+
+    if (Blind) {
+        plines(scritch);
+        return;
+    } else if (Hallucination()) {
+        pline("Oh wow, man: Fractals!");
+        return;
+    }
+
+    do_scratch = false;
+    streak_color = 0;
+
+    switch (obj->oclass) {
+        case GEM_CLASS:     /* these have class-specific handling below */
+        case RING_CLASS:
+            if (tstone->otyp != TOUCHSTONE) {
+                do_scratch = true;
+            } else if (obj->oclass == GEM_CLASS && (tstone->blessed ||
+                        (!tstone->cursed &&
+                         (Role_if(PM_ARCHEOLOGIST) || Race_if(PM_GNOME)))))
+            {
+                makeknown(TOUCHSTONE);
+                makeknown(obj->otyp);
+                prinv((char *)0, obj, 0L);
+                return;
+            } else {
+                /* either a ring or the touchstone was not effective */
+                if (objects[obj->otyp].oc_material == GLASS) {
+                    do_scratch = true;
+                    break;
+                }
+            }
+            streak_color = c_obj_colors[objects[obj->otyp].oc_color];
+            break;          /* gem or ring */
+
+        default:
+            switch (objects[obj->otyp].oc_material) {
+                case CLOTH:
+                    {
+                        char look_clause[BUFSZ];
+                        Tobjnam(look_clause, BUFSZ, tstone, "look");
+                        pline("%s a little more polished now.", look_clause);
+                        return;
+                    }
+                case LIQUID:
+                    /* note: not "whetstone" */
+                    if (!obj->known) {
+                        You("must think this is a wetstone, do you?");
+                    } else {
+                        char are_clause[BUFSZ];
+                        Tobjnam(are_clause, BUFSZ, tstone, "are");
+                        pline("%s a little wetter now.", are_clause);
+                    }
+                    return;
+                case WAX:
+                    streak_color = "waxy";
+                    break;              /* okay even if not touchstone */
+                case WOOD:
+                    streak_color = "wooden";
+                    break;              /* okay even if not touchstone */
+                case GOLD:
+                    do_scratch = true;  /* scratching and streaks */
+                    streak_color = "golden";
+                    break;
+                case SILVER:
+                    do_scratch = true;  /* scratching and streaks */
+                    streak_color = "silvery";
+                    break;
+                default:
+                    /* Objects passing the is_flimsy() test will not
+                       scratch a stone.  They will leave streaks on
+                       non-touchstones and touchstones alike. */
+                    if (is_flimsy(obj))
+                        streak_color = c_obj_colors[objects[obj->otyp].oc_color];
+                    else
+                        do_scratch = (tstone->otyp != TOUCHSTONE);
+                    break;
+            }
+            break;          /* default oclass */
+    }
+
+    sprintf(stonebuf, "stone%s", plur(tstone->quan));
+    if (do_scratch)
+        pline("You make %s%sscratch marks on the %s.",
+                streak_color ? streak_color : (const char *)"",
+                streak_color ? " " : "", stonebuf);
+    else if (streak_color)
+        pline("You see %s streaks on the %s.", streak_color, stonebuf);
+    else
+        plines(scritch);
+    return;
+}
+
 
 int dorub (void) {
     struct obj *obj = getobj(cuddly, "rub");
@@ -1246,30 +1408,31 @@ int jump ( int magic ) {
 
         if(u.utrap)
             switch(u.utraptype) {
-                case TT_BEARTRAP: {
-                                      long side = rn2(3) ? LEFT_SIDE : RIGHT_SIDE;
-                                      You("rip yourself free of the bear trap!  Ouch!");
-                                      losehp(rnd(10), "jumping out of a bear trap", KILLED_BY);
-                                      set_wounded_legs(side, rn1(1000,500));
-                                      break;
-                                  }
+                case TT_BEARTRAP:
+                    {
+                        long side = rn2(3) ? LEFT_SIDE : RIGHT_SIDE;
+                        You("rip yourself free of the bear trap!  Ouch!");
+                        losehp(rnd(10), killed_by_const(KM_JUMP_BEAR_TRAP));
+                        set_wounded_legs(side, rn1(1000,500));
+                        break;
+                    }
                 case TT_PIT:
-                                  You("leap from the pit!");
-                                  break;
+                    You("leap from the pit!");
+                    break;
                 case TT_WEB:
-                                  You("tear the web apart as you pull yourself free!");
-                                  deltrap(t_at(u.ux,u.uy));
-                                  break;
+                    You("tear the web apart as you pull yourself free!");
+                    deltrap(t_at(u.ux,u.uy));
+                    break;
                 case TT_LAVA:
-                                  You("pull yourself above the lava!");
-                                  u.utrap = 0;
-                                  return 1;
+                    You("pull yourself above the lava!");
+                    u.utrap = 0;
+                    return 1;
                 case TT_INFLOOR:
-                                  You("strain your %s, but you're still stuck in the floor.",
-                                          makeplural(body_part(LEG)));
-                                  set_wounded_legs(LEFT_SIDE, rn1(10, 11));
-                                  set_wounded_legs(RIGHT_SIDE, rn1(10, 11));
-                                  return 1;
+                    You("strain your %s, but you're still stuck in the floor.",
+                            makeplural(body_part(LEG)));
+                    set_wounded_legs(LEFT_SIDE, rn1(10, 11));
+                    set_wounded_legs(RIGHT_SIDE, rn1(10, 11));
+                    return 1;
             }
 
         /*
@@ -1286,7 +1449,7 @@ int jump ( int magic ) {
         if (temp < 0) temp = -temp;
         if (range < temp)
             range = temp;
-        (void) walk_path(&uc, &cc, hurtle_step, (void *)&range);
+        walk_path(&uc, &cc, hurtle_step, (void *)&range);
 
         /* A little Sokoban guilt... */
         if (In_sokoban(&u.uz))
@@ -1501,6 +1664,37 @@ void use_unicorn_horn (struct obj *obj) {
     flags.botl = (did_attr || did_prop);
 }
 
+static bool figurine_location_checks(struct obj *obj, coord *cc, bool quietly) {
+    signed char x,y;
+
+    if (carried(obj) && u.uswallow) {
+        if (!quietly)
+            You("don't have enough room in here.");
+        return false;
+    }
+    x = cc->x; y = cc->y;
+    if (!isok(x,y)) {
+        if (!quietly)
+            You("cannot put the figurine there.");
+        return false;
+    }
+    if (IS_ROCK(levl[x][y].typ) &&
+            !(passes_walls(&mons[obj->corpsenm]) && may_passwall(x,y))) {
+        if (!quietly)
+            You("cannot place a figurine in %s!",
+                    IS_TREE(levl[x][y].typ) ? "a tree" : "solid rock");
+        return false;
+    }
+    if (sobj_at(BOULDER,x,y) && !passes_walls(&mons[obj->corpsenm])
+            && !throws_rocks(&mons[obj->corpsenm])) {
+        if (!quietly)
+            You("cannot fit the figurine on the boulder.");
+        return false;
+    }
+    return true;
+}
+
+
 /*
  * Timer callback routine: turn figurine into monster
  */
@@ -1521,11 +1715,9 @@ void fig_transform (void *arg, long timeout) {
             figurine->where == OBJ_MINVENT)
         okay_spot = enexto(&cc, cc.x, cc.y,
                 &mons[figurine->corpsenm]);
-    if (!okay_spot ||
-            !figurine_location_checks(figurine,&cc, true)) {
+    if (!okay_spot || !figurine_location_checks(figurine,&cc, true)) {
         /* reset the timer to try again later */
-        (void) start_timer((long)rnd(5000), TIMER_OBJECT,
-                FIG_TRANSFORM, (void *)figurine);
+        start_timer((long)rnd(5000), TIMER_OBJECT, FIG_TRANSFORM, (void *)figurine);
         return;
     }
 
@@ -1582,36 +1774,6 @@ void fig_transform (void *arg, long timeout) {
     obj_extract_self(figurine);
     obfree(figurine, (struct obj *)0);
     if (redraw) newsym(cc.x, cc.y);
-}
-
-static bool figurine_location_checks(struct obj *obj, coord *cc, bool quietly) {
-    signed char x,y;
-
-    if (carried(obj) && u.uswallow) {
-        if (!quietly)
-            You("don't have enough room in here.");
-        return false;
-    }
-    x = cc->x; y = cc->y;
-    if (!isok(x,y)) {
-        if (!quietly)
-            You("cannot put the figurine there.");
-        return false;
-    }
-    if (IS_ROCK(levl[x][y].typ) &&
-            !(passes_walls(&mons[obj->corpsenm]) && may_passwall(x,y))) {
-        if (!quietly)
-            You("cannot place a figurine in %s!",
-                    IS_TREE(levl[x][y].typ) ? "a tree" : "solid rock");
-        return false;
-    }
-    if (sobj_at(BOULDER,x,y) && !passes_walls(&mons[obj->corpsenm])
-            && !throws_rocks(&mons[obj->corpsenm])) {
-        if (!quietly)
-            You("cannot fit the figurine on the boulder.");
-        return false;
-    }
-    return true;
 }
 
 static void use_figurine (struct obj **optr) {
@@ -1714,143 +1876,44 @@ void reset_trapset (void) {
     trapinfo.force_bungle = 0;
 }
 
-/* touchstones - by Ken Arnold */
-static void use_stone (struct obj *tstone) {
-    struct obj *obj;
-    bool do_scratch;
-    const char *streak_color, *choices;
-    char stonebuf[QBUFSZ];
-    static const char scritch[] = "\"scritch, scritch\"";
-    static const char allowall[3] = { COIN_CLASS, ALL_CLASSES, 0 };
-    static const char justgems[3] = { ALLOW_NONE, GEM_CLASS, 0 };
-    struct obj goldobj;
+static int set_trap (void) {
+    struct obj *otmp = trapinfo.tobj;
+    struct trap *ttmp;
+    int ttyp;
 
-    /* in case it was acquired while blinded */
-    if (!Blind) tstone->dknown = 1;
-    /* when the touchstone is fully known, don't bother listing extra
-       junk as likely candidates for rubbing */
-    choices = (tstone->otyp == TOUCHSTONE && tstone->dknown &&
-            objects[TOUCHSTONE].oc_name_known) ? justgems : allowall;
-    sprintf(stonebuf, "rub on the stone%s", plur(tstone->quan));
-    if ((obj = getobj(choices, stonebuf)) == 0)
-        return;
-    if (obj->oclass == COIN_CLASS) {
-        u.ugold += obj->quan;   /* keep botl up to date */
-        goldobj = *obj;
-        dealloc_obj(obj);
-        obj = &goldobj;
+    if (!otmp || !carried(otmp) ||
+            u.ux != trapinfo.tx || u.uy != trapinfo.ty) {
+        /* ?? */
+        reset_trapset();
+        return 0;
     }
 
-    if (obj == tstone && obj->quan == 1) {
-        You_cant("rub %s on itself.", the(xname(obj)));
-        return;
+    if (--trapinfo.time_needed > 0) return 1;       /* still busy */
+
+    ttyp = (otmp->otyp == LAND_MINE) ? LANDMINE : BEAR_TRAP;
+    ttmp = maketrap(u.ux, u.uy, ttyp);
+    if (ttmp) {
+        ttmp->tseen = 1;
+        ttmp->madeby_u = 1;
+        newsym(u.ux, u.uy); /* if our hero happens to be invisible */
+        if (*in_rooms(u.ux,u.uy,SHOPBASE)) {
+            add_damage(u.ux, u.uy, 0L);             /* schedule removal */
+        }
+        if (!trapinfo.force_bungle)
+            You("finish arming %s.",
+                    the(defsyms[trap_to_defsym(what_trap(ttyp))].explanation));
+        if (((otmp->cursed || Fumbling) && (rnl(10) > 5)) || trapinfo.force_bungle)
+            dotrap(ttmp,
+                    (unsigned)(trapinfo.force_bungle ? FORCEBUNGLE : 0));
+    } else {
+        /* this shouldn't happen */
+        Your("trap setting attempt fails.");
     }
-
-    if (tstone->otyp == TOUCHSTONE && tstone->cursed &&
-            obj->oclass == GEM_CLASS && !is_graystone(obj) &&
-            !obj_resists(obj, 80, 100)) {
-        if (Blind)
-            pline("You feel something shatter.");
-        else if (Hallucination())
-            pline("Oh, wow, look at the pretty shards.");
-        else
-            pline("A sharp crack shatters %s%s.",
-                    (obj->quan > 1) ? "one of " : "", the(xname(obj)));
-        useup(obj);
-        return;
-    }
-
-    if (Blind) {
-        plines(scritch);
-        return;
-    } else if (Hallucination()) {
-        pline("Oh wow, man: Fractals!");
-        return;
-    }
-
-    do_scratch = false;
-    streak_color = 0;
-
-    switch (obj->oclass) {
-        case GEM_CLASS:     /* these have class-specific handling below */
-        case RING_CLASS:
-            if (tstone->otyp != TOUCHSTONE) {
-                do_scratch = true;
-            } else if (obj->oclass == GEM_CLASS && (tstone->blessed ||
-                        (!tstone->cursed &&
-                         (Role_if(PM_ARCHEOLOGIST) || Race_if(PM_GNOME)))))
-            {
-                makeknown(TOUCHSTONE);
-                makeknown(obj->otyp);
-                prinv((char *)0, obj, 0L);
-                return;
-            } else {
-                /* either a ring or the touchstone was not effective */
-                if (objects[obj->otyp].oc_material == GLASS) {
-                    do_scratch = true;
-                    break;
-                }
-            }
-            streak_color = c_obj_colors[objects[obj->otyp].oc_color];
-            break;          /* gem or ring */
-
-        default:
-            switch (objects[obj->otyp].oc_material) {
-                case CLOTH:
-                    {
-                        char look_clause[BUFSZ];
-                        Tobjnam(look_clause, BUFSZ, tstone, "look");
-                        pline("%s a little more polished now.", look_clause);
-                        return;
-                    }
-                case LIQUID:
-                    /* note: not "whetstone" */
-                    if (!obj->known) {
-                        You("must think this is a wetstone, do you?");
-                    } else {
-                        char are_clause[BUFSZ];
-                        Tobjnam(are_clause, BUFSZ, tstone, "are");
-                        pline("%s a little wetter now.", are_clause);
-                    }
-                    return;
-                case WAX:
-                    streak_color = "waxy";
-                    break;              /* okay even if not touchstone */
-                case WOOD:
-                    streak_color = "wooden";
-                    break;              /* okay even if not touchstone */
-                case GOLD:
-                    do_scratch = true;  /* scratching and streaks */
-                    streak_color = "golden";
-                    break;
-                case SILVER:
-                    do_scratch = true;  /* scratching and streaks */
-                    streak_color = "silvery";
-                    break;
-                default:
-                    /* Objects passing the is_flimsy() test will not
-                       scratch a stone.  They will leave streaks on
-                       non-touchstones and touchstones alike. */
-                    if (is_flimsy(obj))
-                        streak_color = c_obj_colors[objects[obj->otyp].oc_color];
-                    else
-                        do_scratch = (tstone->otyp != TOUCHSTONE);
-                    break;
-            }
-            break;          /* default oclass */
-    }
-
-    sprintf(stonebuf, "stone%s", plur(tstone->quan));
-    if (do_scratch)
-        pline("You make %s%sscratch marks on the %s.",
-                streak_color ? streak_color : (const char *)"",
-                streak_color ? " " : "", stonebuf);
-    else if (streak_color)
-        pline("You see %s streaks on the %s.", streak_color, stonebuf);
-    else
-        plines(scritch);
-    return;
+    useup(otmp);
+    reset_trapset();
+    return 0;
 }
+
 
 /* Place a landmine/bear trap.  Helge Hafting */
 static void use_trap (struct obj *otmp) {
@@ -1942,44 +2005,6 @@ static void use_trap (struct obj *otmp) {
     set_occupation(set_trap, occutext, 0);
 }
 
-static int set_trap (void) {
-    struct obj *otmp = trapinfo.tobj;
-    struct trap *ttmp;
-    int ttyp;
-
-    if (!otmp || !carried(otmp) ||
-            u.ux != trapinfo.tx || u.uy != trapinfo.ty) {
-        /* ?? */
-        reset_trapset();
-        return 0;
-    }
-
-    if (--trapinfo.time_needed > 0) return 1;       /* still busy */
-
-    ttyp = (otmp->otyp == LAND_MINE) ? LANDMINE : BEAR_TRAP;
-    ttmp = maketrap(u.ux, u.uy, ttyp);
-    if (ttmp) {
-        ttmp->tseen = 1;
-        ttmp->madeby_u = 1;
-        newsym(u.ux, u.uy); /* if our hero happens to be invisible */
-        if (*in_rooms(u.ux,u.uy,SHOPBASE)) {
-            add_damage(u.ux, u.uy, 0L);             /* schedule removal */
-        }
-        if (!trapinfo.force_bungle)
-            You("finish arming %s.",
-                    the(defsyms[trap_to_defsym(what_trap(ttyp))].explanation));
-        if (((otmp->cursed || Fumbling) && (rnl(10) > 5)) || trapinfo.force_bungle)
-            dotrap(ttmp,
-                    (unsigned)(trapinfo.force_bungle ? FORCEBUNGLE : 0));
-    } else {
-        /* this shouldn't happen */
-        Your("trap setting attempt fails.");
-    }
-    useup(otmp);
-    reset_trapset();
-    return 0;
-}
-
 static int use_whip (struct obj *obj) {
     char buf[BUFSZ];
     struct monst *mtmp;
@@ -2046,8 +2071,7 @@ static int use_whip (struct obj *obj) {
         dam = rnd(2) + dbon() + obj->spe;
         if (dam <= 0) dam = 1;
         You("hit your %s with your bullwhip.", body_part(FOOT));
-        sprintf(buf, "killed %sself with %s bullwhip", uhim(), uhis());
-        losehp(dam, buf, NO_KILLER_PREFIX);
+        losehp(dam, killed_by_const(KM_HIT_SELF_BULLWHIP));
         flags.botl = 1;
         return 1;
 
@@ -2355,32 +2379,32 @@ static int use_grapple (struct obj *obj) {
     /* What do you want to hit? */
     tohit = rn2(5);
     if (typ != P_NONE && P_SKILL(typ) >= P_SKILLED) {
-        winid tmpwin = create_nhwindow(NHW_MENU);
+        // winid tmpwin = create_nhwindow(NHW_MENU);
         anything any;
         char buf[BUFSZ];
         menu_item *selected;
 
         any.a_void = 0;     /* set all bits to zero */
         any.a_int = 1;      /* use index+1 (cant use 0) as identifier */
-        start_menu(tmpwin);
-        any.a_int++;
-        sprintf(buf, "an object on the %s", surface(cc.x, cc.y));
-        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                buf, MENU_UNSELECTED);
-        any.a_int++;
-        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                "a monster", MENU_UNSELECTED);
-        any.a_int++;
-        sprintf(buf, "the %s", surface(cc.x, cc.y));
-        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                buf, MENU_UNSELECTED);
-        end_menu(tmpwin, "Aim for what?");
-        tohit = rn2(4);
-        if (select_menu(tmpwin, PICK_ONE, &selected) > 0 &&
-                rn2(P_SKILL(typ) > P_SKILLED ? 20 : 2))
-            tohit = selected[0].item.a_int - 1;
-        free((void *)selected);
-        destroy_nhwindow(tmpwin);
+        // start_menu(tmpwin);
+        // any.a_int++;
+        // sprintf(buf, "an object on the %s", surface(cc.x, cc.y));
+        // add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
+        //         buf, MENU_UNSELECTED);
+        // any.a_int++;
+        // add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
+        //         "a monster", MENU_UNSELECTED);
+        // any.a_int++;
+        // sprintf(buf, "the %s", surface(cc.x, cc.y));
+        // add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
+        //         buf, MENU_UNSELECTED);
+        // end_menu(tmpwin, "Aim for what?");
+        // tohit = rn2(4);
+        // if (select_menu(tmpwin, PICK_ONE, &selected) > 0 &&
+        //         rn2(P_SKILL(typ) > P_SKILLED ? 20 : 2))
+        //     tohit = selected[0].item.a_int - 1;
+        // free((void *)selected);
+        // destroy_nhwindow(tmpwin);
     }
 
     /* What did you hit? */
@@ -2424,7 +2448,7 @@ static int use_grapple (struct obj *obj) {
         default:        /* Yourself (oops!) */
             if (P_SKILL(typ) <= P_BASIC) {
                 You("hook yourself!");
-                losehp(rn1(10,10), "a grappling hook", KILLED_BY);
+                losehp(rn1(10,10), killed_by_const(KM_GRAPPLING_HOOK_SELF));
                 return (1);
             }
             break;
@@ -2502,8 +2526,7 @@ static int do_break_wand (struct obj *obj) {
             dmg *= 2;
         case WAN_MAGIC_MISSILE:
 wanexpl:
-            explode(u.ux, u.uy,
-                    (obj->otyp - WAN_MAGIC_MISSILE), dmg, WAND_CLASS, expltype);
+            explode(u.ux, u.uy, (obj->otyp - WAN_MAGIC_MISSILE), dmg, WAND_CLASS, expltype);
             makeknown(obj->otyp);   /* explode described the effect */
             goto discard_broken_wand;
         case WAN_STRIKING:
@@ -2558,8 +2581,7 @@ wanexpl:
                 }
                 damage = zapyourself(obj, false);
                 if (damage) {
-                    sprintf(buf, "killed %sself by breaking a wand", uhim());
-                    losehp(damage, buf, NO_KILLER_PREFIX);
+                    losehp(damage, killed_by_const(KM_KILLED_SELF_BREAK_WAND));
                 }
                 if (flags.botl) bot();          /* blindness */
             } else if ((mon = m_at(x, y)) != 0) {
@@ -2667,7 +2689,7 @@ int doapply (void) {
         case LOCK_PICK:
         case CREDIT_CARD:
         case SKELETON_KEY:
-            (void) pick_lock(obj);
+            pick_lock(obj);
             break;
         case PICK_AXE:
         case DWARVISH_MATTOCK:

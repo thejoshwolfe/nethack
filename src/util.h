@@ -148,4 +148,10 @@ void message_int(enum MessageId id, int i);
 void message_monster_string(enum MessageId id, const struct monst *m, const char *s);
 void message_string(enum MessageId id, const char *s);
 
+// stuff to make it just friggin compile
+// creep forward and delete all this junk
+
+const char *Something = "Something";
+const char *something = "something";
+
 #endif // UTIL_H

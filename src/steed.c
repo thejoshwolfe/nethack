@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "steed.h"
 #include "hack.h"
 #include "display.h"
 
@@ -351,9 +353,7 @@ exercise_steed (void)
 
 
 /* The player kicks or whips the steed */
-void
-kick_steed (void)
-{
+void kick_steed (void) {
         char He[4];
         if (!u.usteed)
             return;

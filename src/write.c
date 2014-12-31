@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "write.h"
 #include "hack.h"
 #include "onames.h"
 #include "artifact_names.h"

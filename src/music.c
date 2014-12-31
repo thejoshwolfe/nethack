@@ -24,6 +24,7 @@
  *                      called here chasms.
  */
 
+#include "music.h"
 #include "hack.h"
 #include "invent.h"
 #include "dbridge.h"

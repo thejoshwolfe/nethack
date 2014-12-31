@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "lock.h"
 #include "hack.h"
 #include "invent.h"
 #include "pickup.h"

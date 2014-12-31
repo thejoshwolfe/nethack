@@ -9,6 +9,10 @@
 #include "rnd.h"
 
 enum KillerMethod {
+    KM_KILLED_SELF_BREAK_WAND,
+    KM_GRAPPLING_HOOK_SELF,
+    KM_HIT_SELF_BULLWHIP,
+    KM_JUMP_BEAR_TRAP,
     KM_EXPLOSION,
     KM_MOLTEN_LAVA,
 };

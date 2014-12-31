@@ -24,12 +24,6 @@ extern void newexplevel(void);
 extern void pluslvl(bool);
 extern long rndexp(bool);
 
-/* ### explode.c ### */
-
-extern void explode(int,int,int,int,char,int);
-extern long scatter(int, int, int, unsigned int, struct obj *);
-extern void splatter_burning_oil(int, int);
-
 /* ### fountain.c ### */
 
 extern void floating_above(const char *);
@@ -39,37 +33,6 @@ extern void drinkfountain(void);
 extern void dipfountain(struct obj *);
 extern void breaksink(int,int);
 extern void drinksink(void);
-
-/* ### light.c ### */
-
-extern void new_light_source(signed char, signed char, int, int, void *);
-extern void del_light_source(int, void *);
-extern void do_light_sources(char **);
-extern struct monst *find_mid(unsigned, unsigned);
-extern void save_light_sources(int, int, int);
-extern void restore_light_sources(int);
-extern void relink_light_sources(bool);
-extern void obj_move_light_source(struct obj *, struct obj *);
-extern bool any_light_source(void);
-extern void snuff_light_source(int, int);
-extern bool obj_sheds_light(struct obj *);
-extern bool obj_is_burning(struct obj *);
-extern void obj_split_light_source(struct obj *, struct obj *);
-extern void obj_merge_light_sources(struct obj *,struct obj *);
-extern int candle_light_range(struct obj *);
-extern int wiz_light_sources(void);
-
-/* ### lock.c ### */
-
-extern bool picking_lock(int *,int *);
-extern bool picking_at(int,int);
-extern void reset_pick(void);
-extern int pick_lock(struct obj *);
-extern int doforce(void);
-extern bool boxlock(struct obj *,struct obj *);
-extern bool doorlock(struct obj *,int,int);
-extern int doopen(void);
-extern int doclose(void);
 
 /* ### mapglyph.c ### */
 
@@ -111,48 +74,6 @@ extern int lminion(void);
 void flood_fill_rm(int,int,int,bool,bool);
 void remove_rooms(int,int,int,int);
 
-/* ### mkobj.c ### */
-
-extern struct obj *mkobj_at(char,int,int,bool);
-extern struct obj *mksobj_at(int,int,int,bool,bool);
-extern struct obj *mkobj(char,bool);
-extern int rndmonnum(void);
-extern struct obj *splitobj(struct obj *,long);
-extern void replace_object(struct obj *,struct obj *);
-extern void bill_dummy_object(struct obj *);
-extern struct obj *mksobj(int,bool,bool);
-extern int bcsign(struct obj *);
-extern int weight(struct obj *);
-extern struct obj *mkgold(long,int,int);
-extern struct obj *mkcorpstat(int,struct monst *,struct permonst *,int,int,bool);
-extern struct obj *obj_attach_mid(struct obj *, unsigned);
-extern struct monst *get_mtraits(struct obj *, bool);
-extern struct obj *mk_tt_object(int,int,int);
-extern struct obj *mk_named_object(int,struct permonst *,int,int,const char *);
-extern struct obj *rnd_treefruit_at(int, int);
-extern void start_corpse_timeout(struct obj *);
-extern void bless(struct obj *);
-extern void unbless(struct obj *);
-extern void curse(struct obj *);
-extern void uncurse(struct obj *);
-extern void blessorcurse(struct obj *,int);
-extern bool is_flammable(struct obj *);
-extern bool is_rottable(struct obj *);
-extern void place_object(struct obj *,int,int);
-extern void remove_object(struct obj *);
-extern void discard_minvent(struct monst *);
-extern void obj_extract_self(struct obj *);
-extern void extract_nobj(struct obj *, struct obj **);
-extern void extract_nexthere(struct obj *, struct obj **);
-extern int add_to_minv(struct monst *, struct obj *);
-extern struct obj *add_to_container(struct obj *, struct obj *);
-extern void add_to_migration(struct obj *);
-extern void add_to_buried(struct obj *);
-extern void dealloc_obj(struct obj *);
-extern void obj_ice_effects(int, int, bool);
-extern long peek_at_iced_corpse_age(struct obj *);
-extern void obj_sanity_check(void);
-
 /* ### mplayer.c ### */
 
 extern struct monst *mk_mplayer(struct permonst *,signed char, signed char,bool);
@@ -172,11 +93,6 @@ extern struct obj *m_carrying(struct monst *,int);
 extern void m_useup(struct monst *,struct obj *);
 extern void m_throw(struct monst *,int,int,int,int,int,struct obj *);
 extern bool hits_bars(struct obj **,int,int,int,int);
-
-/* ### music.c ### */
-
-extern void awaken_soldiers(void);
-extern int do_play_instrument(struct obj *);
 
 /* ### objects.c ### */
 
@@ -281,19 +197,6 @@ extern bool dig_corridor(coord *,coord *,bool,signed char,signed char);
 extern void fill_room(struct mkroom *,bool);
 extern bool load_special(const char *);
 
-/* ### steed.c ### */
-
-extern void rider_cant_reach(void);
-extern bool can_saddle(struct monst *);
-extern int use_saddle(struct obj *);
-extern bool can_ride(struct monst *);
-extern int doride(void);
-extern bool mount_steed(struct monst *, bool);
-extern void exercise_steed(void);
-extern void kick_steed(void);
-extern void dismount_steed(int);
-extern void place_monster(struct monst *,int,int);
-
 /* ### topten.c ### */
 
 extern void topten(int);
@@ -309,54 +212,5 @@ extern int doextversion(void);
 extern bool check_version(struct version_info *, const char *,bool);
 extern unsigned long get_feature_notice_ver(char *);
 extern unsigned long get_current_feature_ver(void);
-
-/* ### weapon.c ### */
-
-extern int hitval(struct obj *,struct monst *);
-extern int dmgval(struct obj *,struct monst *);
-extern struct obj *select_rwep(struct monst *);
-extern struct obj *select_hwep(struct monst *);
-extern void possibly_unwield(struct monst *,bool);
-extern int mon_wield_item(struct monst *);
-extern int abon(void);
-extern int dbon(void);
-extern int enhance_weapon_skill(void);
-extern void dump_weapon_skill(void);
-extern void unrestrict_weapon_skill(int);
-extern void use_skill(int,int);
-extern void add_weapon_skill(int);
-extern void lose_weapon_skill(int);
-extern int weapon_type(struct obj *);
-extern int uwep_skill_type(void);
-extern int weapon_hit_bonus(struct obj *);
-extern int weapon_dam_bonus(struct obj *);
-extern void skill_init(const struct def_skill *);
-
-/* ### wield.c ### */
-
-extern void setuwep(struct obj *);
-extern void setuqwep(struct obj *);
-extern void setuswapwep(struct obj *);
-extern int dowield(void);
-extern int doswapweapon(void);
-extern int dowieldquiver(void);
-extern bool wield_tool(struct obj *,const char *);
-extern int can_twoweapon(void);
-extern void drop_uswapwep(void);
-extern int dotwoweapon(void);
-extern void uwepgone(void);
-extern void uswapwepgone(void);
-extern void uqwepgone(void);
-extern void untwoweapon(void);
-extern void erode_obj(struct obj *,bool,bool);
-extern int chwepon(struct obj *,int);
-extern int welded(struct obj *);
-extern void weldmsg(struct obj *);
-extern void setmnotwielded(struct monst *,struct obj *);
-
-/* ### write.c ### */
-
-extern int dowrite(struct obj *);
-
 
 #endif /* EXTERN_H */
