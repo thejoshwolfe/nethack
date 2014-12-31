@@ -446,7 +446,7 @@ struct obj * get_mleash (struct monst *mtmp) {
             return(otmp);
         otmp = otmp->nobj;
     }
-    return((struct obj *)0);
+    return NULL;
 }
 
 bool next_to_u(void) {
@@ -459,11 +459,10 @@ bool next_to_u(void) {
             if (distu(mtmp->mx,mtmp->my) > 2) mnexto(mtmp);
             if (distu(mtmp->mx,mtmp->my) > 2) {
                 for(otmp = invent; otmp; otmp = otmp->nobj)
-                    if(otmp->otyp == LEASH &&
-                            otmp->leashmon == (int)mtmp->m_id) {
-                        if(otmp->cursed) return(false);
-                        You_feel("%s leash go slack.",
-                                (number_leashed() > 1) ? "a" : "the");
+                    if(otmp->otyp == LEASH && otmp->leashmon == (int)mtmp->m_id) {
+                        if(otmp->cursed)
+                            return false;
+                        message_const(MSG_YOU_FEEL_LEASH_GO_SLACK);
                         mtmp->mleashed = 0;
                         otmp->leashmon = 0;
                     }
@@ -490,18 +489,14 @@ void check_leash (signed char x, signed char y) {
             otmp->leashmon = 0;
             continue;
         }
-        if (dist2(u.ux,u.uy,mtmp->mx,mtmp->my) >
-                dist2(x,y,mtmp->mx,mtmp->my)) {
+        if (dist2(u.ux,u.uy,mtmp->mx,mtmp->my) > dist2(x,y,mtmp->mx,mtmp->my)) {
             if (!um_dist(mtmp->mx, mtmp->my, 3)) {
                 ;   /* still close enough */
             } else if (otmp->cursed && !breathless(mtmp->data)) {
-                if (um_dist(mtmp->mx, mtmp->my, 5) ||
-                        (mtmp->mhp -= rnd(2)) <= 0) {
+                if (um_dist(mtmp->mx, mtmp->my, 5) || (mtmp->mhp -= rnd(2)) <= 0) {
                     long save_pacifism = u.uconduct.killer;
 
-                    char name[BUFSZ];
-                    mon_nam(name, BUFSZ, mtmp);
-                    Your("leash chokes %s to death!", name);
+                    message_monster(MSG_YOUR_LEASH_CHOKES_M_TO_DEATH, mtmp);
                     /* hero might not have intended to kill pet, but
                        that's the result of his actions; gain experience,
                        lose pacifism, take alignment and luck hit, make
@@ -510,26 +505,25 @@ void check_leash (signed char x, signed char y) {
                     /* life-saving doesn't ordinarily reset this */
                     if (mtmp->mhp > 0) u.uconduct.killer = save_pacifism;
                 } else {
-                    char name[BUFSZ];
-                    Monnam(name, BUFSZ, mtmp);
-                    pline("%s chokes on the leash!", name);
+                    message_monster(MSG_M_CHOKES_ON_LEASH, mtmp);
+
                     /* tameness eventually drops to 1 here (never 0) */
-                    if (mtmp->mtame && rn2(mtmp->mtame)) mtmp->mtame--;
+                    if (mtmp->mtame && rn2(mtmp->mtame))
+                        mtmp->mtame--;
                 }
             } else {
                 if (um_dist(mtmp->mx, mtmp->my, 5)) {
-                    char name[BUFSZ];
-                    Monnam(name, BUFSZ, mtmp);
-                    pline("%s%s leash snaps loose!", name, possessive_suffix(name));
+                    message_monster(MSG_M_LEASH_SNAPS_LOOSE, mtmp);
                     m_unleash(mtmp, false);
                 } else {
-                    You("pull on the leash.");
-                    if (mtmp->data->msound != MS_SILENT)
+                    message_const(MSG_YOU_PULL_ON_LEASH);
+                    if (mtmp->data->msound != MS_SILENT) {
                         switch (rn2(3)) {
                             case 0:  growl(mtmp);   break;
                             case 1:  yelp(mtmp);    break;
                             default: whimper(mtmp); break;
                         }
+                    }
                 }
             }
         }
@@ -543,11 +537,12 @@ static int use_mirror (struct obj *obj) {
 
     if(!getdir((char *)0)) return 0;
     if(obj->cursed && !rn2(2)) {
-        if (!Blind)
-            pline_The("mirror fogs up and doesn't reflect!");
+        if (!Blind) {
+            message_const(MSG_MIRROR_FOGS_UP);
+        }
         return 1;
     }
-    if(!u.dx && !u.dy && !u.dz) {
+    if (!u.dx && !u.dy && !u.dz) {
         if(!Blind && !Invisible) {
             if (u.umonnum == PM_FLOATING_EYE) {
                 if (!Free_action) {
@@ -568,16 +563,10 @@ static int use_mirror (struct obj *obj) {
             } else if (u.uhs >= WEAK) {
                 message_const(MSG_YOU_LOOK_UNDERNOURISHED);
             } else {
-                You("look as %s as ever.",
-                    ACURR(A_CHA) > 14 ?
-                    (poly_gender()==1 ? "beautiful" : "handsome") : "ugly");
+                message_const(MSG_YOU_LOOK_GOOD_AS_EVER);
             }
         } else {
-            You_cant("see your %s %s.",
-                    ACURR(A_CHA) > 14 ?
-                    (poly_gender()==1 ? "beautiful" : "handsome") :
-                    "ugly",
-                    body_part(FACE));
+            message_const(MSG_YOU_CANT_SEE_YOUR_FACE);
         }
         return 1;
     }
@@ -585,25 +574,21 @@ static int use_mirror (struct obj *obj) {
         char name[BUFSZ];
         mon_nam(name, BUFSZ, u.ustuck);
         if (!Blind)
-            You("reflect %s%s %s.", name, possessive_suffix(name), mbodypart(u.ustuck, STOMACH));
+            message_monster(MSG_YOU_REFLECT_M_STOMACH, u.ustuck);
         return 1;
     }
     if (Underwater) {
-        You(Hallucination() ?
-                "give the fish a chance to fix their makeup." :
-                "reflect the murky water.");
+        message_const(MSG_YOU_APPLY_MIRROR_UNDERWATER);
         return 1;
     }
     if (u.dz) {
-        if (!Blind)
-            You("reflect the %s.",
+        if (!Blind) {
+            message_string(MSG_YOU_REFLECT_THE_DUNGEON,
                     (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+        }
         return 1;
     }
-    mtmp = bhit(u.dx, u.dy, COLNO, INVIS_BEAM,
-            (int (*)(struct monst *,struct obj *))0,
-            (int (*)(struct obj *,struct obj *))0,
-            obj);
+    mtmp = bhit(u.dx, u.dy, COLNO, INVIS_BEAM, NULL, NULL, obj);
     if (!mtmp || !haseyes(mtmp->data))
         return 1;
 
@@ -611,22 +596,16 @@ static int use_mirror (struct obj *obj) {
     mlet = mtmp->data->mlet;
     if (mtmp->msleeping) {
         if (vis) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline ("%s is too tired to look at your mirror.", name);
+            message_monster(MSG_M_TOO_TIRED_LOOK_MIRROR, mtmp);
         }
     } else if (!mtmp->mcansee) {
         if (vis) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline("%s can't see anything right now.", name);
+            message_monster(MSG_M_CANT_SEE_ANYTHING, mtmp);
         }
         /* some monsters do special things */
     } else if (mlet == S_VAMPIRE || mlet == S_GHOST) {
         if (vis) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline ("%s doesn't have a reflection.", name);
+            message_monster(MSG_M_HAS_NO_REFLECTION, mtmp);
         }
     } else if(!mtmp->mcan && !mtmp->minvis && mtmp->data == &mons[PM_MEDUSA]) {
         if (mon_reflects(mtmp, "The gaze is reflected away by %s %s!"))

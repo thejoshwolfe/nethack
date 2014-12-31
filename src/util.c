@@ -11,6 +11,54 @@ MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
             message_const(MSG_YOUR_LEASH_FALLS_SLACK);
             Your("leash falls slack.");
 
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline ("%s is too tired to look at your mirror.", name);
+            message_monster(MSG_M_TOO_TIRED_LOOK_MIRROR, mtmp);
+
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s can't see anything right now.", name);
+            message_monster(MSG_M_CANT_SEE_ANYTHING, mtmp);
+
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline ("%s doesn't have a reflection.", name);
+            message_monster(MSG_M_HAS_NO_REFLECTION, mtmp);
+
+            message_string(MSG_YOU_REFLECT_THE_DUNGEON, 
+            You("reflect the %s.", );
+
+        message_const(MSG_YOU_APPLY_MIRROR_UNDERWATER);
+        You(Hallucination() ?
+                "give the fish a chance to fix their makeup." :
+                "reflect the murky water.");
+
+                    You("pull on the leash.");
+                    message_const(MSG_YOU_PULL_ON_LEASH);
+
+            message_const(MSG_MIRROR_FOGS_UP);
+            pline_The("mirror fogs up and doesn't reflect!");
+
+                You("look as %s as ever.",
+                    ACURR(A_CHA) > 14 ?
+                    (poly_gender()==1 ? "beautiful" : "handsome") : "ugly");
+                message_const(MSG_YOU_LOOK_GOOD_AS_EVER);
+
+            message_const(MSG_YOU_CANT_SEE_YOUR_FACE);
+            You_cant("see your %s %s.",
+                    ACURR(A_CHA) > 14 ?
+                    (poly_gender()==1 ? "beautiful" : "handsome") :
+                    "ugly",
+                    body_part(FACE));
+
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, u.ustuck);
+        if (!Blind) {
+            You("reflect %s%s %s.", name, possessive_suffix(name), mbodypart(u.ustuck, STOMACH));
+            message_monster(MSG_YOU_REFLECT_M_STOMACH, u.ustuck);
+        }
+
 MSG_NOTHING_HAPPENS
 struct c_common_strings c_common_strings = {
         "Nothing happens.",             "That's enough tries!",
@@ -67,6 +115,24 @@ struct c_common_strings c_common_strings = {
         l_monnam(name, BUFSZ, mtmp);
         You("remove the leash from %s%s.", spotmon ? "your " : "", name);
         message_monster(MSG_YOU_REMOVE_LEASH_FROM_M, mtmp);
+
+                        You_feel("%s leash go slack.", (number_leashed() > 1) ? "a" : "the");
+                        message_const(MSG_YOU_FEEL_LEASH_GO_SLACK);
+
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s chokes on the leash!", name);
+                    message_monster(MSG_M_CHOKES_ON_LEASH, mtmp);
+
+                    char name[BUFSZ];
+                    Monnam(name, BUFSZ, mtmp);
+                    pline("%s%s leash snaps loose!", name, possessive_suffix(name));
+                    message_monster(MSG_M_LEASH_SNAPS_LOOSE, mtmp);
+
+                    char name[BUFSZ];
+                    mon_nam(name, BUFSZ, mtmp);
+                    Your("leash chokes %s to death!", name);
+                    message_monster(MSG_YOUR_LEASH_CHOKES_M_TO_DEATH, mtmp);
 
 MSG_FOUND_SECRET_DOOR, "You hear a hollow sound.  This must be a secret %s!";
 MSG_FOUND_SECRET_PASSAGE, "You hear a hollow sound.  This must be a secret %s!";

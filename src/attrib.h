@@ -16,7 +16,10 @@
 #define ABASE(x)        (u.acurr.a[x])
 #define ABON(x)         (u.abon.a[x])
 #define AEXE(x)         (u.aexe.a[x])
+
+// client knows this
 #define ACURR(x)        (acurr(x))
+
 #define ACURRSTR        (acurrstr())
 /* should be: */
 /* #define ACURR(x) (ABON(x) + ATEMP(x) + (Upolyd  ? MBASE(x) : ABASE(x)) */

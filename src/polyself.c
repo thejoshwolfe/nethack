@@ -1202,9 +1202,8 @@ body_part (int part)
 }
 
 
-int
-poly_gender (void)
-{
+// client knows this
+int poly_gender (void) {
 /* Returns gender of polymorphed player; 0/1=same meaning as flags.female,
  * 2=none.
  */
