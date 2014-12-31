@@ -1,9 +1,14 @@
 /* See LICENSE in the root of this project for change info */
-/* wizard code - inspired by rogue code from Merlyn Leroy (digi-g!brian) */
-/*             - heavily modified to give the wiz balls.  (genat!mike)   */
-/*             - dewimped and given some maledictions. -3. */
-/*             - generalized for 3.1 (mike@bullns.on01.bull.ca) */
 
+#include "dog.h"
+#include "extern.h"
+#include "makemon.h"
+#include "steal.h"
+#include "mkobj.h"
+#include "mon.h"
+#include "teleport.h"
+#include "questpgr.h"
+#include "pline.h"
 #include "hack.h"
 #include "qtext.h"
 #include "epri.h"
@@ -11,6 +16,11 @@
 #include "objnam.h"
 #include "shk.h"
 #include "do_name.h"
+
+/* wizard code - inspired by rogue code from Merlyn Leroy (digi-g!brian) */
+/*             - heavily modified to give the wiz balls.  (genat!mike)   */
+/*             - dewimped and given some maledictions. -3. */
+/*             - generalized for 3.1 (mike@bullns.on01.bull.ca) */
 
 extern const int monstr[];
 

@@ -6,7 +6,6 @@
 #include "pm_props.h"
 #include "invent.h"
 #include "do_name.h"
-#include "winprocs.h"
 #include "mondata.h"
 #include "youprop.h"
 #include "flag.h"

@@ -1,6 +1,10 @@
 #ifndef MON_H
 #define MON_H
 
+#include "monst.h"
+#include <stdbool.h>
+#include "obj.h"
+
 int undead_to_corpse(int);
 int genus(int,int);
 int pm_to_cham(int);
