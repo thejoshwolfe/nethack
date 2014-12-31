@@ -55,8 +55,14 @@ The goal of this fork is to make the game more approachable for new players.
      In-game time should be randomly initialized for new games, and flow with the turn counter.
      * You can ask the Oracle for the in-game time for free, and then you know it forever afterward (intrinsic chronoscience).
  * Improve the information conveyance.
-   * Non-cursed fortune cookies should be more helpful, and should fill in the encyclopedia.
-     Cursed fortune cookies should just be unhelpful instead of outright lies.
+   * Uncursed fortune cookies should unlock a random tidbit from the encyclopedia.
+     Blessed fortune cookies should do the same, but select from a set of relevant tidbits,
+     such as a possible use for a stethoscope if you're carrying a stethoscope.
+     Cursed fortune cookies should just be vague and unhelpful instead of outright lies.
+     * Monks should start with only cursed fortune cookies,
+       because repeatedly starting a Monk character to slowly unlock the encyclopedia would be dumb.
+       (The BCU status of fortune cookies only matters for the message, not the nutrition.)
+       You should have to work a little to uncurse or bless the fortune cookies if you want good messages.
    * Priest donations should persist and indicate progress toward the next divine protection.
    * The Oracle should be more helpful.
      * At all times, the oracle should direct you toward your next goal for free,
@@ -67,7 +73,7 @@ The goal of this fork is to make the game more approachable for new players.
    * Make the "You hear" and "You feel" messages more direct, possibly after getting them enough times.
    * The retro "Rogue" level has got to go.
    * Provide a high-level map of the dungeon branches you've discovered so far,
-     and a detailed map of each For each floor you've been to.
+     and a detailed map of each floor you've been to.
  * A game mode that allows save states, called "Practice Mode".
    The normal game should be called "Hardcore Mode".
    * You can still unlock encyclopedia entries in Practice Mode.
