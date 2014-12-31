@@ -1,6 +1,8 @@
 #ifndef PLINE_H
 #define PLINE_H
 
+#include "align.h"
+
 void pline(const char *,...) __attribute__ ((format (printf, 1, 2)));
 void plines(const char *);
 void Norep(const char *,...) __attribute__ ((format (printf, 1, 2)));

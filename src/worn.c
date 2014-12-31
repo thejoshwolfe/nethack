@@ -1,9 +1,15 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "mkobj.h"
+#include "worn.h"
+#include "steed.h"
+#include "artifact.h"
 #include "hack.h"
 #include "display.h"
-#include "winprocs.h"
 #include "do_name.h"
 #include "objnam.h"
+#include "pline.h"
+#include "extern.h"
 
 static void m_lose_armor(struct monst *,struct obj *);
 static void m_dowear_type(struct monst *,long, bool, bool);

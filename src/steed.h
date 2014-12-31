@@ -2,6 +2,8 @@
 #define STEED_H
 
 #include <stdbool.h>
+#include "monst.h"
+#include "obj.h"
 
 void rider_cant_reach(void);
 bool can_saddle(struct monst *);
