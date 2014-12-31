@@ -78,7 +78,7 @@ static int use_camera (struct obj *obj) {
 
 static int use_towel (struct obj *obj) {
     if (!freehand()) {
-        message_string(MSG_YOU_HAVE_NO_FREE_HAND, body_part(HAND));
+        message_const(MSG_YOU_HAVE_NO_FREE_HAND);
         return 0;
     } else if (obj->owornmask) {
         message_const(MSG_CANNOT_USE_WHILE_WEARING);
@@ -89,25 +89,20 @@ static int use_towel (struct obj *obj) {
             case 2:
                 old = Glib;
                 Glib += rn1(10, 3);
-                Your("%s %s!", makeplural(body_part(HAND)),
-                        (old ? "are filthier than ever" : "get slimy"));
+                message_const(old ? MSG_YOUR_HANDS_FILTHIER : MSG_YOUR_HANDS_GET_SLIMY);
                 return 1;
             case 1:
                 if (!ublindf) {
                     old = u.ucreamed;
                     u.ucreamed += rn1(10, 3);
-                    pline("Yecch! Your %s %s gunk on it!", body_part(FACE),
-                            (old ? "has more" : "now has"));
+                    message_const(old ? MSG_YOUR_FACE_HAS_MORE_GUNK : MSG_YOUR_FACE_NOW_HAS_GUNK);
                     make_blinded(Blinded + (long)u.ucreamed - old, true);
                 } else {
-                    const char *what = (ublindf->otyp == LENSES) ?
-                        "lenses" : "blindfold";
                     if (ublindf->cursed) {
-                        You("push your %s %s.", what,
-                                rn2(2) ? "cock-eyed" : "crooked");
+                        message_const(MSG_YOU_PUSH_YOUR_LENSES_CROOKED);
                     } else {
+                        message_const(MSG_YOU_PUSH_YOUR_LENSES_OFF);
                         struct obj *saved_ublindf = ublindf;
-                        You("push your %s off.", what);
                         Blindf_off(ublindf);
                         dropx(saved_ublindf);
                     }
@@ -120,24 +115,23 @@ static int use_towel (struct obj *obj) {
 
     if (Glib) {
         Glib = 0;
-        You("wipe off your %s.", makeplural(body_part(HAND)));
+        message_const(MSG_YOU_WIPE_OFF_YOUR_HANDS);
         return 1;
     } else if(u.ucreamed) {
         Blinded -= u.ucreamed;
         u.ucreamed = 0;
 
         if (!Blinded) {
-            pline("You've got the glop off.");
+            message_const(MSG_YOU_GOT_THE_GLOP_OFF);
             Blinded = 1;
             make_blinded(0L,true);
         } else {
-            Your("%s feels clean now.", body_part(FACE));
+            message_const(MSG_YOUR_FACE_FEELS_CLEAN_NOW);
         }
         return 1;
     }
 
-    Your("%s and %s are already clean.",
-            body_part(FACE), makeplural(body_part(HAND)));
+    message_const(MSG_YOUR_FACE_AND_HAND_ARE_CLEAN);
 
     return 0;
 }

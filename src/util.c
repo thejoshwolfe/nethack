@@ -74,11 +74,44 @@ MSG_YOU_TAKE_PICTURE_OF_SWALLOW
 MSG_YOU_TAKE_PICTURE_OF_DUNGEON
         You("take a picture of the %s.", (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
 
-message_string(MSG_YOU_HAVE_NO_FREE_HAND, body_part(HAND));
+message_const(MSG_YOU_HAVE_NO_FREE_HAND);
 You("have no free %s!", body_part(HAND));
 
 message_const(MSG_CANNOT_USE_WHILE_WEARING);
 You("cannot use it while you're wearing it!");
+
+message_const(old ? MSG_YOUR_HANDS_FILTHIER : MSG_YOUR_HANDS_GET_SLIMY)
+Your("%s %s!", makeplural(body_part(HAND)),
+        (old ? "are filthier than ever" : "get slimy"));
+
+message_const(old ? MSG_YOUR_FACE_HAS_MORE_GUNK : MSG_YOUR_FACE_NOW_HAS_GUNK);
+pline("Yecch! Your %s %s gunk on it!", body_part(FACE),
+    (old ? "has more" : "now has"));
+
+const char *what = (ublindf->otyp == LENSES) ?  "lenses" : "blindfold";
+if (ublindf->cursed) {
+    message_const(MSG_YOU_PUSH_YOUR_LENSES_CROOKED);
+    You("push your %s %s.", what, rn2(2) ? "cock-eyed" : "crooked");
+} else {
+    struct obj *saved_ublindf = ublindf;
+    message_const(MSG_YOU_PUSH_YOUR_LENSES_OFF);
+    You("push your %s off.", what);
+    Blindf_off(ublindf);
+    dropx(saved_ublindf);
+}
+
+message_const(MSG_YOU_WIPE_OFF_YOUR_HANDS);
+You("wipe off your %s.", makeplural(body_part(HAND)));
+
+message_const(MSG_YOU_GOT_THE_GLOP_OFF);
+pline("You've got the glop off.");
+
+message_const(MSG_YOUR_FACE_FEELS_CLEAN_NOW);
+Your("%s feels clean now.", body_part(FACE));
+
+    message_const(MSG_YOUR_FACE_AND_HAND_ARE_CLEAN);
+    Your("%s and %s are already clean.",
+            body_part(FACE), makeplural(body_part(HAND)));
 
 MSG_WELDS_TO_YOUR_HAND:
                 const char *tmp = xname(wep), *thestr = "The ";

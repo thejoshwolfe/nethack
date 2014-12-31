@@ -94,22 +94,24 @@ int inv_cnt(void);
  * in end.c and topten.c will need to be changed.  Some parts of the
  * code assume that PANIC separates the deaths from the non-deaths.
  */
-#define DIED             0
-#define CHOKING          1
-#define POISONING        2
-#define STARVING         3
-#define DROWNING         4
-#define BURNING          5
-#define DISSOLVED        6
-#define CRUSHING         7
-#define STONING          8
-#define TURNED_SLIME     9
-#define GENOCIDED       10
-#define PANICKED        11
-#define TRICKED         12
-#define QUIT            13
-#define ESCAPED         14
-#define ASCENDED        15
+enum {
+    DIED          =  0,
+    CHOKING       =  1,
+    POISONING     =  2,
+    STARVING      =  3,
+    DROWNING      =  4,
+    BURNING       =  5,
+    DISSOLVED     =  6,
+    CRUSHING      =  7,
+    STONING       =  8,
+    TURNED_SLIME  =  9,
+    GENOCIDED     = 10,
+    PANICKED      = 11,
+    TRICKED       = 12,
+    QUIT          = 13,
+    ESCAPED       = 14,
+    ASCENDED      = 15,
+};
 
 extern coord bhitpos;   /* place where throw or zap hits or stops */
 
@@ -206,35 +208,39 @@ extern coord bhitpos;   /* place where throw or zap hits or stops */
 #define LAUNCH_KNOWN    0x80    /* the hero caused this by explicit action */
 
 /* Macros for explosion types */
-#define EXPL_DARK       0
-#define EXPL_NOXIOUS    1
-#define EXPL_MUDDY      2
-#define EXPL_WET        3
-#define EXPL_MAGICAL    4
-#define EXPL_FIERY      5
-#define EXPL_FROSTY     6
-#define EXPL_MAX        7
+enum {
+    EXPL_DARK     = 0,
+    EXPL_NOXIOUS  = 1,
+    EXPL_MUDDY    = 2,
+    EXPL_WET      = 3,
+    EXPL_MAGICAL  = 4,
+    EXPL_FIERY    = 5,
+    EXPL_FROSTY   = 6,
+    EXPL_MAX      = 7,
+};
 
 /* Macros for messages referring to hands, eyes, feet, etc... */
-#define ARM 0
-#define EYE 1
-#define FACE 2
-#define FINGER 3
-#define FINGERTIP 4
-#define FOOT 5
-#define HAND 6
-#define HANDED 7
-#define HEAD 8
-#define LEG 9
-#define LIGHT_HEADED 10
-#define NECK 11
-#define SPINE 12
-#define TOE 13
-#define HAIR 14
-#define BLOOD 15
-#define LUNG 16
-#define NOSE 17
-#define STOMACH 18
+enum {
+    ARM = 0,
+    EYE = 1,
+    FACE = 2,
+    FINGER = 3,
+    FINGERTIP = 4,
+    FOOT = 5,
+    HAND = 6,
+    HANDED = 7,
+    HEAD = 8,
+    LEG = 9,
+    LIGHT_HEADED = 10,
+    NECK = 11,
+    SPINE = 12,
+    TOE = 13,
+    HAIR = 14,
+    BLOOD = 15,
+    LUNG = 16,
+    NOSE = 17,
+    STOMACH = 18,
+};
 
 /* Flags to control menus */
 #define MENUTYPELEN sizeof("traditional ")
