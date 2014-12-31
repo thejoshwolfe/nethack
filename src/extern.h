@@ -527,47 +527,5 @@ extern bool worm_known(const struct monst *);
 
 extern int dowrite(struct obj *);
 
-/* ### zap.c ### */
-
-extern int bhitm(struct monst *,struct obj *);
-extern void probe_monster(struct monst *);
-extern bool get_obj_location(struct obj *,signed char *,signed char *,int);
-extern bool get_mon_location(struct monst *,signed char *,signed char *,int);
-extern struct monst *get_container_location(struct obj *obj, int *, int *);
-extern struct monst *montraits(struct obj *,coord *);
-extern struct monst *revive(struct obj *);
-extern int unturn_dead(struct monst *);
-extern void cancel_item(struct obj *);
-extern bool drain_item(struct obj *);
-extern struct obj *poly_obj(struct obj *, int);
-extern bool obj_resists(struct obj *,int,int);
-extern bool obj_shudders(struct obj *);
-extern void do_osshock(struct obj *);
-extern int bhito(struct obj *,struct obj *);
-extern int bhitpile(struct obj *,int (*)(struct obj *,struct obj *),int,int);
-extern int zappable(struct obj *);
-extern void zapnodir(struct obj *);
-extern int dozap(void);
-extern int zapyourself(struct obj *,bool);
-extern bool cancel_monst(struct monst *,struct obj *,
-        bool,bool,bool);
-extern void weffects(struct obj *);
-extern int spell_damage_bonus(void);
-extern const char *exclam(int force);
-extern void hit(const char *,struct monst *,const char *);
-extern void miss(const char *,struct monst *);
-extern struct monst *bhit(int,int,int,int,int (*)(struct monst *,struct obj *),
-        int (*)(struct obj *,struct obj *),struct obj *);
-extern struct monst *boomhit(int,int);
-extern int burn_floor_paper(int,int,bool,bool);
-extern void buzz(int,int,signed char,signed char,int,int);
-extern void melt_ice(signed char,signed char);
-extern int zap_over_floor(signed char,signed char,int,bool *);
-extern void fracture_rock(struct obj *);
-extern bool break_statue(struct obj *);
-extern void destroy_item(int,int);
-extern int destroy_mitem(struct monst *,int,int);
-extern int resist(struct monst *,char,int,int);
-extern void makewish(void);
 
 #endif /* EXTERN_H */
