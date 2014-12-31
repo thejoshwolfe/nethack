@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "mapglyph.h"
 #include "hack.h"
 #include "color.h"
 #include "display.h"

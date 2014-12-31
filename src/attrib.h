@@ -4,6 +4,10 @@
 #ifndef ATTRIB_H
 #define ATTRIB_H
 
+#include "obj.h"
+
+#include <stdbool.h>
+
 #define A_STR   0
 #define A_INT   1
 #define A_WIS   2

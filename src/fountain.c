@@ -2,6 +2,7 @@
 
 /* Code for drinking from fountains. */
 
+#include "fountain.h"
 #include "hack.h"
 #include "invent.h"
 #include "shk.h"

@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "save.h"
 #include "hack.h"
 #include "lev.h"
 #include "quest.h"

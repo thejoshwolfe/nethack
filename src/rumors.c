@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "rumors.h"
 #include "hack.h"
 #include "lev.h"
 #include "dlb.h"

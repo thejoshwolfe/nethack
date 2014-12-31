@@ -9,6 +9,7 @@
 #include "rnd.h"
 
 enum KillerMethod {
+    KM_TOUCH_ARTIFACT,
     KM_KILLED_SELF_BREAK_WAND,
     KM_GRAPPLING_HOOK_SELF,
     KM_HIT_SELF_BULLWHIP,
@@ -23,12 +24,14 @@ enum KillerMethod {
 struct Killer {
     enum KillerMethod method;
     const struct monst *monster;
+    const struct artifact *art;
 };
 
 struct Killer killed_by_const(enum KillerMethod method);
 struct Killer killed_by_monster(enum KillerMethod method, const struct monst *mon);
 // see flash_types
 struct Killer killed_by_flash_text(const char * fltxt);
+struct Killer killed_by_artifact(enum KillerMethod method, const struct artifact *art);
 
 bool revive_nasty(int,int,const char*);
 void movobj(struct obj *,signed char,signed char);

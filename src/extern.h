@@ -15,29 +15,6 @@
 #include "rect.h"
 #include "region.h"
 
-/* ### exper.c ### */
-
-extern int experience(struct monst *,int);
-extern void more_experienced(int,int);
-extern void losexp(const char *);
-extern void newexplevel(void);
-extern void pluslvl(bool);
-extern long rndexp(bool);
-
-/* ### fountain.c ### */
-
-extern void floating_above(const char *);
-extern void dogushforth(int);
-extern void dryup(signed char,signed char, bool);
-extern void drinkfountain(void);
-extern void dipfountain(struct obj *);
-extern void breaksink(int,int);
-extern void drinksink(void);
-
-/* ### mapglyph.c ### */
-
-extern void mapglyph(int, int *, int *, unsigned *, int, int);
-
 /* ### mcastu.c ### */
 
 extern int castmu(struct monst *,struct attack *,bool,bool);
@@ -148,31 +125,6 @@ extern void split_rects(NhRect *,NhRect *);
 /* ### rip.c ### */
 
 extern void genl_outrip(winid,int);
-
-/* ### rumors.c ### */
-
-extern char *getrumor(int,char *, bool);
-extern void outrumor(int,int);
-extern void outoracle(bool, bool);
-extern void save_oracles(int,int);
-extern void restore_oracles(int);
-extern int doconsult(struct monst *);
-
-/* ### save.c ### */
-
-extern int dosave(void);
-extern void hangup(int);
-extern int dosave0(void);
-extern void savestateinlock(void);
-extern void savelev(int,signed char,int);
-extern void bufon(int);
-extern void bufoff(int);
-extern void bflush(int);
-extern void bwrite(int,void *,unsigned int);
-extern void bclose(int);
-extern void savefruitchn(int,int);
-extern void free_dungeons(void);
-extern void freedynamicdata(void);
 
 /* ### shknam.c ### */
 
