@@ -6,7 +6,6 @@
 
 #include "hack.h"
 #include "edog.h"
-#include "extern.h"
 #include "invent.h"
 #include "display.h"
 #include "winprocs.h"

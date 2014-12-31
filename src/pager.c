@@ -5,7 +5,6 @@
 
 #include "hack.h"
 #include "dlb.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 

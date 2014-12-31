@@ -1,8 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "sounds.h"
 #include "hack.h"
 #include "edog.h"
-#include "extern.h"
 #include "display.h"
 
 static const char * const h_sounds[] = {

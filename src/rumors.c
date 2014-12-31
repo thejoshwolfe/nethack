@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "lev.h"
 #include "dlb.h"
-#include "extern.h"
 #include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"

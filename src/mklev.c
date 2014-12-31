@@ -1,7 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "mklev.h"
 #include "hack.h"
-#include "extern.h"
 #include "invent.h"
 #include "shk.h"
 #include "dbridge.h"

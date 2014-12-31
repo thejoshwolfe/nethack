@@ -3,7 +3,6 @@
 #include "do_name.h"
 #include "hack.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "invent.h"
 #include "shk.h"
 #include "priest.h"

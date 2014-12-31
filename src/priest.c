@@ -6,7 +6,6 @@
 #include "eshk.h"
 #include "epri.h"
 #include "emin.h"
-#include "extern.h"
 #include "display.h"
 
 /* this matches the categorizations shown by enlightenment */

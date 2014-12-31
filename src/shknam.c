@@ -3,7 +3,6 @@
 
 #include "hack.h"
 #include "eshk.h"
-#include "extern.h"
 #include "onames.h"
 #include "artifact_names.h"
 

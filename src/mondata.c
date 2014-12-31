@@ -4,7 +4,6 @@
 #include "eshk.h"
 #include "epri.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "shk.h"
 #include "display.h"
 

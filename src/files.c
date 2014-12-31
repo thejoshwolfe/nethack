@@ -1,12 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "files.h"
 #include "hack.h"
 #include "dlb.h"
-#include "extern.h"
 #include "invent.h"
 #include "objnam.h"
-#include "winprocs.h"
-#include "wintty.h" /* more() */
 #include "youprop.h"
 #include "flag.h"
 

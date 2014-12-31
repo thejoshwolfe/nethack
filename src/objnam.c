@@ -3,7 +3,6 @@
 #include "objnam.h"
 #include "hack.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "shk.h"
 #include "onames.h"
 #include "artifact_names.h"

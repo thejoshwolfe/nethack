@@ -12,7 +12,6 @@
  */
 
 #include "hack.h"
-#include "extern.h"
 #include "invent.h"
 #include "priest.h"
 #include "flag.h"

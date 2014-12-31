@@ -5,7 +5,6 @@
  *      code for monsters.
  */
 #include "hack.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 #include "dbridge.h"

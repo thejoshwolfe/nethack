@@ -1,6 +1,9 @@
 #ifndef SHK_H
 #define SHK_H
 
+#include "mkroom.h"
+#include "rm.h"
+
 #include <stdbool.h>
 
 const char *shkname(const struct monst *mtmp);

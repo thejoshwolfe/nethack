@@ -1,8 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "artifact.h"
-#include "extern.h"
-#include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"
 

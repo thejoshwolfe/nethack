@@ -4,7 +4,6 @@
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
 #include "pm_props.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 

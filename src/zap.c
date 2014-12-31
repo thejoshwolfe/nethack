@@ -2,7 +2,6 @@
 
 #include "hack.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "display.h"
 #include "do_name.h"
 #include "objnam.h"

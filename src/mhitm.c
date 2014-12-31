@@ -4,7 +4,6 @@
 #include "hack.h"
 #include "artifact.h"
 #include "edog.h"
-#include "extern.h"
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"

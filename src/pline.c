@@ -1,13 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 
-#include <stdarg.h>
+#include "pline.h"
 #include "hack.h"
 #include "epri.h"
 #include "edog.h"
-#include "extern.h"
-#include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"
+
+#include <stdarg.h>
 
 static bool no_repeat = false;
 

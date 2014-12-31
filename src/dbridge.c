@@ -8,7 +8,6 @@
  */
 
 #include "hack.h"
-#include "extern.h"
 #include "invent.h"
 #include "dbridge.h"
 #include "do_name.h"

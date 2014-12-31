@@ -4,7 +4,6 @@
 #include "dlb.h"
 #include "patchlevel.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "winprocs.h"
 #include "flag.h"
 #include "onames.h"

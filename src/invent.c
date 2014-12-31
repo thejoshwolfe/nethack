@@ -3,7 +3,6 @@
 #include "invent.h"
 #include "hack.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "pickup.h"
 #include "dbridge.h"
 #include "objnam.h"

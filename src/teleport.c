@@ -1,6 +1,7 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "teleport.h"
 #include "hack.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 

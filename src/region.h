@@ -63,4 +63,17 @@ typedef struct {
                                    force field, damage of a fire zone, ...*/
 } NhRegion;
 
+void clear_regions(void);
+void run_regions(void);
+bool in_out_region(signed char,signed char);
+bool m_in_out_region(struct monst *,signed char,signed char);
+void update_player_regions(void);
+void update_monster_region(struct monst *);
+NhRegion *visible_region_at(signed char,signed char);
+void show_region(NhRegion*, signed char, signed char);
+void save_regions(int,int);
+void rest_regions(int,bool);
+NhRegion* create_gas_cloud(signed char, signed char, int, int);
+
+
 #endif /* REGION_H */

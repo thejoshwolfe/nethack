@@ -1,8 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef VAULT_H
 #define VAULT_H
 
 #include "dungeon.h"
+#include "monst.h"
 
 #define FCSIZ   (ROWNO+COLNO)
 struct fakecorridor {
@@ -22,5 +24,13 @@ struct egd {
 };
 
 #define EGD(mon)        ((struct egd *)&(mon)->mextra[0])
+
+bool grddead(struct monst *);
+char vault_occupied(char *);
+void invault(void);
+int gd_move(struct monst *);
+void paygd(void);
+long hidden_gold(void);
+bool gd_sound(void);
 
 #endif /* VAULT_H */

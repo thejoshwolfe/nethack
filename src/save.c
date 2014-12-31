@@ -3,7 +3,6 @@
 #include "hack.h"
 #include "lev.h"
 #include "quest.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 #include "timeout.h"

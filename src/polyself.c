@@ -9,7 +9,6 @@
 
 #include "hack.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 

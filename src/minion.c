@@ -4,7 +4,6 @@
 #include "emin.h"
 #include "epri.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "invent.h"
 #include "do_name.h"
 #include "winprocs.h"

@@ -15,4 +15,8 @@ struct mail_info {
         const char *response_cmd;       /* command to eventually execute */
 };
 
+void getmailstatus(void);
+void ckmailstatus(void);
+void readmail(struct obj *);
+
 #endif /* MAIL_H */

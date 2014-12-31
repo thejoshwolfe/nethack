@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "dlb.h"
-#include "extern.h"
 
 #define DATAPREFIX 4
 

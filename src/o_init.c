@@ -1,8 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "o_init.h"
 #include "hack.h"
 #include "lev.h"        /* save & restore info */
-#include "extern.h"
 #include "invent.h"
 #include "objnam.h"
 #include "onames.h"

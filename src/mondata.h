@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef MONDATA_H
 #define MONDATA_H
 
@@ -6,8 +7,39 @@
 #include "pm.h"
 #include "monsym.h"
 #include "you.h"
-#include "extern.h"
 #include "epri.h"
+
+void set_mon_data(struct monst *,struct permonst *,int);
+const struct attack * attacktype_fordmg(const struct permonst *, int, int);
+bool attacktype(const struct permonst *,int);
+bool poly_when_stoned(const struct permonst *);
+bool resists_drli(const struct monst *);
+bool resists_magm(const struct monst *);
+bool resists_blnd(const struct monst *);
+bool can_blnd(const struct monst *,const struct monst *,unsigned char,const struct obj *);
+bool ranged_attk(const struct permonst *);
+bool hates_silver(const struct permonst *);
+bool passes_bars(const struct permonst *);
+bool can_track(const struct permonst *);
+bool breakarm(const struct permonst *);
+bool sliparm(const struct permonst *);
+bool sticks(const struct permonst *);
+int num_horns(const struct permonst *);
+const struct attack * dmgtype_fromattack(const struct permonst *,int,int);
+bool dmgtype(const struct permonst *,int);
+int max_passive_dmg(const struct monst *,const struct monst *);
+int monsndx(const struct permonst *);
+int name_to_mon(const char *);
+int gender(const struct monst *);
+int pronoun_gender(const struct monst *);
+bool levl_follower(const struct monst *);
+int little_to_big(int);
+int big_to_little(int);
+const char *locomotion(const struct permonst *,const char *);
+const char *stagger(const struct permonst *,const char *);
+const char *on_fire(const struct permonst *,const struct attack *);
+const struct permonst * raceptr(const struct monst *);
+
 
 static bool verysmall(const struct permonst * ptr) {
     return ptr->msize < MZ_SMALL;

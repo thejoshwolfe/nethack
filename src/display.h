@@ -7,6 +7,7 @@
 #include "vision.h"
 #include "youprop.h"
 #include "flag.h"
+#include "trap.h"
 
 #define vobj_at(x,y) (level.objects[x][y])
 

@@ -1,9 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "mkmaze.h"
 #include "hack.h"
 #include "sp_lev.h"
 #include "lev.h"        /* save & restore info */
-#include "extern.h"
 #include "dbridge.h"
 #include "display.h"
 

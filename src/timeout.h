@@ -44,4 +44,30 @@ typedef struct fe {
     unsigned needs_fixup:1;   /* does arg need to be patched? */
 } timer_element;
 
+void burn_away_slime(void);
+void nh_timeout(void);
+void fall_asleep(int, bool);
+void attach_egg_hatch_timeout(struct obj *);
+void attach_fig_transform_timeout(struct obj *);
+void kill_egg(struct obj *);
+void hatch_egg(void *, long);
+void learn_egg_type(int);
+void burn_object(void *, long);
+void begin_burn(struct obj *, bool);
+void end_burn(struct obj *, bool);
+void do_storms(void);
+bool start_timer(long, short, short, void *);
+long stop_timer(short, void *);
+void run_timers(void);
+void obj_move_timers(struct obj *, struct obj *);
+void obj_split_timers(struct obj *, struct obj *);
+void obj_stop_timers(struct obj *);
+bool obj_is_local(struct obj *);
+void save_timers(int,int,int);
+void restore_timers(int,int,bool,long);
+void relink_timers(bool);
+int wiz_timeout_queue(void);
+void timer_sanity_check(void);
+
+
 #endif /* TIMEOUT_H */

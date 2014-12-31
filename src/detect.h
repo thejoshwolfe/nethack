@@ -1,6 +1,8 @@
 #ifndef DETECT_H
 #define DETECT_H
 
+#include "trap.h"
+
 struct obj *o_in(struct obj*,char);
 struct obj *o_material(struct obj*,unsigned);
 int gold_detect(struct obj *);

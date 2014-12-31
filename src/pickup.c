@@ -5,7 +5,6 @@
 
 #include "pickup.h"
 #include "hack.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 #include "timeout.h"

@@ -3,7 +3,6 @@
 #include "hack.h"
 
 #include "mail.h"
-#include "extern.h"
 #include "invent.h"
 #include "do_name.h"
 #include "display.h"

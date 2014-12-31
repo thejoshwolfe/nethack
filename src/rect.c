@@ -1,6 +1,5 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
-#include "extern.h"
 #include "flag.h"
 
 int get_rect_ind(NhRect *);

@@ -1,9 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "questpgr.h"
 #include "hack.h"
 #include "dlb.h"
 #include "qtext.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"

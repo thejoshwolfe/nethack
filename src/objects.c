@@ -876,7 +876,3 @@ OBJECT("acid venom", "splash of venom",
                 ILLOBJ_CLASS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 }; /* objects[] */
 
-/* dummy routine used to force linkage */
-void objects_init(void) {
-    return;
-}

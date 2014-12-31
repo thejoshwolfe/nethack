@@ -16,4 +16,16 @@ struct spell {
 #define spellid(spell)          spl_book[spell].sp_id
 #define spellknow(spell)        spl_book[spell].sp_know
 
+int study_book(struct obj *);
+void book_disappears(struct obj *);
+void book_substitution(struct obj *,struct obj *);
+void age_spells(void);
+int docast(void);
+int spell_skilltype(int);
+int spelleffects(int,bool);
+void losespells(void);
+int dovspell(void);
+void initialspell(struct obj *);
+
+
 #endif /* SPELL_H */

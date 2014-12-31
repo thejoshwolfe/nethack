@@ -3,7 +3,6 @@
 #include "shk.h"
 #include "hack.h"
 #include "eshk.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 

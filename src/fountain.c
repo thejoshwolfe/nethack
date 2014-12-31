@@ -3,7 +3,6 @@
 /* Code for drinking from fountains. */
 
 #include "hack.h"
-#include "extern.h"
 #include "invent.h"
 #include "shk.h"
 #include "objnam.h"

@@ -1,9 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "restore.h"
 #include "hack.h"
 #include "lev.h"
-#include "extern.h"
-#include "winprocs.h"
 #include "timeout.h"
 #include "onames.h"
 #include "artifact_names.h"

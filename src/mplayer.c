@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "hack.h"
-#include "extern.h"
 #include "objnam.h"
 #include "do_name.h"
 #include "youprop.h"

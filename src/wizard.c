@@ -7,7 +7,6 @@
 #include "hack.h"
 #include "qtext.h"
 #include "epri.h"
-#include "extern.h"
 #include "display.h"
 #include "objnam.h"
 #include "shk.h"

@@ -1,8 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "hack.h"
-#include "extern.h"
-#include "winprocs.h"
 
 extern const char * const killed_by_prefix[];   /* from topten.c */
 

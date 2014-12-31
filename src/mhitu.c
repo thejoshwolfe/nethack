@@ -3,7 +3,6 @@
 #include "hack.h"
 #include "artifact.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "invent.h"
 #include "pickup.h"
 #include "dbridge.h"

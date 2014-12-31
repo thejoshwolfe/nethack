@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "quest.h"
 #include "qtext.h"
-#include "extern.h"
 #include "display.h"
 #include "winprocs.h"
 

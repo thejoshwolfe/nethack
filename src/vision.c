@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "vision.h"
 #include "hack.h"
-#include "extern.h"
 #include "youprop.h"
 #include "flag.h"
 #include "dbridge.h"

@@ -1,7 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 #include "hack.h"
 #include "sp_lev.h"
-#include "extern.h"
 
 #define HEIGHT  (ROWNO - 1)
 #define WIDTH   (COLNO - 2)

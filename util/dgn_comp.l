@@ -4,7 +4,6 @@
 
 #include "dgn_comp.h"
 #include "dgn_file.h"
-#include "extern.h"
 
 #define YY_MALLOC_DECL \
                void * malloc(size_t); \

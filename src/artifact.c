@@ -4,7 +4,6 @@
 #include "hack.h"
 #include "artilist.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "invent.h"
 #include "do_name.h"
 #include "hacklib.h"

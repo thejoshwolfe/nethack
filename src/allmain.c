@@ -24,6 +24,33 @@
 #include "end.h"
 #include "artifact.h"
 #include "dog.h"
+#include "pline.h"
+#include "track.h"
+#include "mon.h"
+#include "rnd.h"
+#include "makemon.h"
+#include "worn.h"
+#include "timeout.h"
+#include "region.h"
+#include "polyself.h"
+#include "teleport.h"
+#include "were.h"
+#include "sounds.h"
+#include "spell.h"
+#include "vault.h"
+#include "wizard.h"
+#include "engrave.h"
+#include "mkmaze.h"
+#include "vision.h"
+#include "mail.h"
+#include "o_init.h"
+#include "role.h"
+#include "u_init.h"
+#include "questpgr.h"
+#include "mklev.h"
+#include "options.h"
+#include "files.h"
+#include "restore.h"
 
 #include <sys/stat.h>
 #include <signal.h>
@@ -98,7 +125,9 @@ void moveloop(void) {
 
                     if(!rn2(u.uevent.udemigod ? 25 :
                                 (depth(&u.uz) > depth(&stronghold_level)) ? 50 : 70))
-                        (void) makemon((struct permonst *)0, 0, 0, NO_MM_FLAGS);
+                    {
+                        makemon(NULL, 0, 0, NO_MM_FLAGS);
+                    }
 
                     /* calculate how much time passed. */
                     if (u.usteed && u.umoved) {

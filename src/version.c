@@ -2,7 +2,6 @@
 #include "hack.h"
 #include "date.h"
 #include "patchlevel.h"
-#include "extern.h"
 #include "winprocs.h"
 
 /* fill buffer with short version (so caller can avoid including date.h) */

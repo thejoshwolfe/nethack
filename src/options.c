@@ -2,10 +2,7 @@
 #include <ctype.h>
 
 #include "hack.h"
-#include "tcap.h"
 #include "pm_props.h"
-#include "extern.h"
-#include "winprocs.h"
 #include "display.h"
 
 #define WINTYPELEN 16

@@ -46,4 +46,14 @@
 /* Use this macro to get a list of distances of the edges (see vision.c). */
 #define circle_ptr(z) (&circle_data[(int)circle_start[z]])
 
+void vision_init(void);
+int does_block(int,int,struct rm*);
+void vision_reset(void);
+void vision_recalc(int);
+void block_point(int,int);
+void unblock_point(int,int);
+bool clear_path(int,int,int,int);
+void do_clear_area(int,int,int, void (*)(int,int,void *),void *);
+
+
 #endif /* VISION_H */

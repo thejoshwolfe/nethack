@@ -4,7 +4,6 @@
 #include "mfndpos.h"
 #include "artifact.h"
 #include "epri.h"
-#include "extern.h"
 #include "invent.h"
 #include "dbridge.h"
 #include "objnam.h"
