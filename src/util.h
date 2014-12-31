@@ -17,6 +17,10 @@ void update_inventory(void);
 void getlin(const char *, char *);
 
 enum MessageId {
+    MSG_STATUE_APPEARS_EXCELLENT,
+    MSG_STATUE_APPEARS_EXTRAORDINARY,
+    MSG_YOU_DETERMINE_ITS_DEAD,
+    MSG_ITS_DEAD_JIM,
     MSG_YOUR_FACE_AND_HAND_ARE_CLEAN,
     MSG_YOUR_FACE_FEELS_CLEAN_NOW,
     MSG_YOU_GOT_THE_GLOP_OFF,

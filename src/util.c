@@ -113,6 +113,19 @@ Your("%s feels clean now.", body_part(FACE));
     Your("%s and %s are already clean.",
             body_part(FACE), makeplural(body_part(HAND)));
 
+        message_const(MSG_ITS_DEAD_JIM);
+        You_hear("a voice say, \"It's dead, Jim.\"");
+
+            message_const(MSG_YOU_DETERMINE_ITS_DEAD);
+            You("determine that %s unfortunate being is dead.",
+                    (rx == u.ux && ry == u.uy) ? "this" : "that");
+
+            message_object((ttmp && ttmp->ttyp == STATUE_TRAP) ?
+                    MSG_STATUE_APPEARS_EXCELLENT : MSG_STATUE_APPEARS_EXTRAORDINARY);
+            pline("%s appears to be in %s health for a statue.",
+                    The(mons[otmp->corpsenm].mname),
+                    (ttmp && ttmp->ttyp == STATUE_TRAP) ?  "extraordinary" : "excellent");
+
 MSG_WELDS_TO_YOUR_HAND:
                 const char *tmp = xname(wep), *thestr = "The ";
                 if (strncmp(tmp, thestr, 4) && !strncmp(The(tmp),thestr,4))

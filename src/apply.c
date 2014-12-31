@@ -147,7 +147,7 @@ static bool its_dead(int rx, int ry, int *resp) {
     if (Hallucination() && sobj_at(CORPSE, rx, ry)) {
         /* (a corpse doesn't retain the monster's sex,
            so we're forced to use generic pronoun here) */
-        You_hear("a voice say, \"It's dead, Jim.\"");
+        message_const(MSG_ITS_DEAD_JIM);
         *resp = 1;
         return true;
     } else if (Role_if(PM_HEALER) && ((otmp = sobj_at(CORPSE, rx, ry)) != 0 ||
@@ -156,14 +156,11 @@ static bool its_dead(int rx, int ry, int *resp) {
            if both types are present, but it's not worth the effort */
         if (vobj_at(rx, ry)->otyp == STATUE) otmp = vobj_at(rx, ry);
         if (otmp->otyp == CORPSE) {
-            You("determine that %s unfortunate being is dead.",
-                    (rx == u.ux && ry == u.uy) ? "this" : "that");
+            message_const(MSG_YOU_DETERMINE_ITS_DEAD);
         } else {
             ttmp = t_at(rx, ry);
-            pline("%s appears to be in %s health for a statue.",
-                    The(mons[otmp->corpsenm].mname),
-                    (ttmp && ttmp->ttyp == STATUE_TRAP) ?
-                    "extraordinary" : "excellent");
+            message_object((ttmp && ttmp->ttyp == STATUE_TRAP) ?
+                    MSG_STATUE_APPEARS_EXCELLENT : MSG_STATUE_APPEARS_EXTRAORDINARY, otmp);
         }
         return true;
     }
