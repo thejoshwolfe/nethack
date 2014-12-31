@@ -162,7 +162,7 @@ char pgetchar (void) {               /* curtesy of aeb@cwi.nl */
     int ch;
 
     if(!(ch = popch()))
-        ch = nhgetch();
+        ch = getchar();
     return((char)ch);
 }
 
@@ -1833,9 +1833,7 @@ void sanity_check (void) {
 #define unmeta(c)       (0x7f & (c))
 
 
-    void
-rhack (char *cmd)
-{
+void rhack (char *cmd) {
     bool do_walk, do_rush, prefix_seen, bad_command,
             firsttime = (cmd == 0);
 

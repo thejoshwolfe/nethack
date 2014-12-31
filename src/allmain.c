@@ -64,7 +64,7 @@ void moveloop(void) {
 
     if (wizard) add_debug_extended_commands();
 
-    (void) encumber_msg(); /* in case they auto-picked up something */
+    encumber_msg(); /* in case they auto-picked up something */
 
     u.uz0.dlevel = u.uz.dlevel;
     youmonst.movement = NORMAL_SPEED;   /* give the hero some movement points */
@@ -106,8 +106,7 @@ void moveloop(void) {
                     if (u.usteed && u.umoved) {
                         /* your speed doesn't augment steed's speed */
                         moveamt = mcalcmove(u.usteed);
-                    } else
-                    {
+                    } else {
                         moveamt = youmonst.data->mmove;
 
                         if (Very_fast) {        /* speed boots or potion */
@@ -381,7 +380,7 @@ void moveloop(void) {
             }
         } else if (multi == 0) {
             ckmailstatus();
-            rhack((char *)0);
+            rhack(NULL);
         }
         if (u.utotype)          /* change dungeon level */
             deferred_goto();    /* after rhack() */
@@ -512,52 +511,24 @@ void welcome(bool new_game) {
 }
 
 int main (int argc, char *argv[]) {
-    int fd;
-    bool exact_username;
-
-    hname = argv[0];
-    hackpid = getpid();
-    (void) umask(0777 & ~0660);
-
-    choose_windows("tty");
-
-    if(argc > 1) {
-        /*
-         * Now we know the directory containing 'record' and
-         * may do a prscore().  Exclude `-style' - it's a Qt option.
-         */
-        if (!strncmp(argv[1], "-s", 2) && strncmp(argv[1], "-style", 6)) {
-            prscore(argc, argv);
-            exit(EXIT_SUCCESS);
-        }
-    }
-
     /*
      * Change directories before we initialize the window system so
      * we can find the tile file.
      */
 
-    check_linux_console();
     initoptions();
-    init_nhwindows(&argc,argv);
-    exact_username = whoami();
-    init_linux_cons();
 
     /*
      * It seems you really want to play.
      */
     u.uhp = 1;      /* prevent RIP on early quits */
-    signal(SIGHUP, hangup);
-    signal(SIGXCPU, hangup);
 
     process_options(argc, argv);    /* command line options */
 
-    getmailstatus();
     if (wizard)
         strcpy(plname, "wizard");
     else
-        if(!*plname || !strncmp(plname, "player", 4)
-                || !strncmp(plname, "games", 4)) {
+        if(!*plname || !strncmp(plname, "player", 4) || !strncmp(plname, "games", 4)) {
             askname();
         } else if (exact_username) {
             /* guard against user names with hyphens in them */
@@ -569,20 +540,6 @@ int main (int argc, char *argv[]) {
     plnamesuffix();         /* strip suffix from name; calls askname() */
     /* again if suffix was whole name */
     /* accepts any suffix */
-    if(!wizard) {
-        /*
-         * check for multiple games under the same name
-         * (if !locknum) or check max nr of players (otherwise)
-         */
-        (void) signal(SIGQUIT,SIG_IGN);
-        (void) signal(SIGINT,SIG_IGN);
-        if(!locknum)
-            sprintf(lock, "%d%s", (int)getuid(), plname);
-        getlock();
-    } else {
-        sprintf(lock, "%d%s", (int)getuid(), plname);
-        getlock();
-    }
 
     dlb_init();     /* must be before newgame() */
 
@@ -603,8 +560,6 @@ int main (int argc, char *argv[]) {
      */
     vision_init();
 
-    display_gamewindows();
-
     if ((fd = restore_saved_game()) >= 0) {
         /* Since wizard is actually flags.debug, restoring might
          * overwrite it.
@@ -612,8 +567,6 @@ int main (int argc, char *argv[]) {
         bool remember_wiz_mode = wizard;
         const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
-        (void) chmod(fq_save,0);        /* disallow parallel restores */
-        (void) signal(SIGINT, done1);
         if(iflags.news) {
             display_file(NEWS, false);
             iflags.news = false; /* in case dorecover() fails */

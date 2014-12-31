@@ -54,10 +54,10 @@ NORMAL_ASS_O_FILES = build/allmain.o build/apply.o build/artifact.o build/attrib
   build/quest.o build/questpgr.o build/read.o build/rect.o build/region.o build/restore.o build/rip.o build/rnd.o \
   build/role.o build/rumors.o build/save.o build/shk.o build/shknam.o build/sit.o build/sounds.o build/sp_lev.o build/spell.o \
   build/steal.o build/steed.o build/teleport.o build/timeout.o build/topten.o build/track.o build/trap.o build/u_init.o \
-  build/uhitm.o build/vault.o build/vision.o build/weapon.o build/were.o build/wield.o build/windows.o \
+  build/uhitm.o build/vault.o build/vision.o build/weapon.o build/were.o build/wield.o \
   build/wizard.o build/worm.o build/worn.o build/write.o build/zap.o \
   build/unixtty.o build/unixunix.o \
-  build/getline.o build/termcap.o build/topl.o build/wintty.o \
+  build/getline.o build/termcap.o build/topl.o \
   build/version.o build/util.o
 
 NETHACK_OBJS = $(MAKEDEFS_NEEDS_THESE) $(NORMAL_ASS_O_FILES)
