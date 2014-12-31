@@ -6,6 +6,7 @@
 #include "coord.h"
 #include "hacklib.h"
 #include "o_init.h"
+#include "rnd.h"
 
 enum KillerMethod {
     KM_EXPLOSION,

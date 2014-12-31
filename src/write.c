@@ -7,6 +7,9 @@
 #include "objnam.h"
 #include "shk.h"
 #include "invent.h"
+#include "pline.h"
+#include "do.h"
+#include "extern.h"
 
 static int cost(struct obj *);
 

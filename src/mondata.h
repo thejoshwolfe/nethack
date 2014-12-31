@@ -8,6 +8,8 @@
 #include "monsym.h"
 #include "you.h"
 #include "epri.h"
+#include "obj.h"
+#include "objclass.h"
 
 void set_mon_data(struct monst *,struct permonst *,int);
 const struct attack * attacktype_fordmg(const struct permonst *, int, int);
