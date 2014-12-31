@@ -6,6 +6,46 @@
 #include "coord.h"
 #include "hacklib.h"
 
+enum KillerMethod {
+    KM_EXPLOSION,
+    KM_MOLTEN_LAVA,
+};
+struct Killer {
+    enum KillerMethod method;
+    const struct monst *monster;
+};
+
+struct Killer killed_by_const(enum KillerMethod method);
+struct Killer killed_by_monster(enum KillerMethod method, const struct monst *mon);
+
+bool revive_nasty(int,int,const char*);
+void movobj(struct obj *,signed char,signed char);
+bool may_dig(signed char,signed char);
+bool may_passwall(signed char,signed char);
+bool bad_rock(struct permonst *,signed char,signed char);
+bool invocation_pos(signed char,signed char);
+bool test_move(int, int, int, int, int);
+void domove(void);
+void invocation_message(void);
+void spoteffects(bool);
+char *in_rooms(signed char,signed char,int);
+bool in_town(int,int);
+void check_special_room(bool);
+int dopickup(void);
+void lookaround(void);
+int monster_nearby(void);
+void nomul(int);
+void unmul(const char *);
+void losehp(int, struct Killer);
+int weight_cap(void);
+int inv_weight(void);
+int near_capacity(void);
+int calc_capacity(int);
+int max_capacity(void);
+bool check_capacity(const char *);
+int inv_cnt(void);
+
+
 #define TELL            1
 #define NOTELL          0
 #define ON              1

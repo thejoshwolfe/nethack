@@ -2038,30 +2038,29 @@ static void maybe_wail (void) {
     }
 }
 
-void losehp (int n, const char *knam, bool k_format) {
-        if (Upolyd) {
-                u.mh -= n;
-                if (u.mhmax < u.mh) u.mhmax = u.mh;
-                flags.botl = 1;
-                if (u.mh < 1)
-                    rehumanize();
-                else if (n > 0 && u.mh*10 < u.mhmax && Unchanging)
-                    maybe_wail();
-                return;
-        }
-
-        u.uhp -= n;
-        if(u.uhp > u.uhpmax)
-                u.uhpmax = u.uhp;       /* perhaps n was negative */
+void losehp (int n, struct Killer k) {
+    if (Upolyd) {
+        u.mh -= n;
+        if (u.mhmax < u.mh) u.mhmax = u.mh;
         flags.botl = 1;
-        if(u.uhp < 1) {
-                killer_format = k_format;
-                killer = knam;          /* the thing that killed you */
-                You("die...");
-                done(DIED);
-        } else if (n > 0 && u.uhp*10 < u.uhpmax) {
-                maybe_wail();
-        }
+        if (u.mh < 1)
+            rehumanize();
+        else if (n > 0 && u.mh*10 < u.mhmax && Unchanging)
+            maybe_wail();
+        return;
+    }
+
+    u.uhp -= n;
+    if(u.uhp > u.uhpmax)
+        u.uhpmax = u.uhp;       /* perhaps n was negative */
+    flags.botl = 1;
+    if(u.uhp < 1) {
+        killer = k;          /* the thing that killed you */
+        You("die...");
+        done(DIED);
+    } else if (n > 0 && u.uhp*10 < u.uhpmax) {
+        maybe_wail();
+    }
 }
 
 int weight_cap (void) {

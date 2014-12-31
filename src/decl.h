@@ -155,13 +155,9 @@ extern const char disclosure_options[];
 extern int smeq[];
 extern int doorindex;
 extern char *save_cm;
-#define KILLED_BY_AN     0
-#define KILLED_BY        1
-#define NO_KILLER_PREFIX 2
-extern int killer_format;
-extern const char *killer;
-extern const char *delayed_killer;
-extern char killer_buf[BUFSZ];
+
+extern struct Killer killer;
+
 extern char dump_fn[];          /* dumpfile name (dump patch) */
 extern const char *configfile;
 extern char plname[PL_NSIZ];

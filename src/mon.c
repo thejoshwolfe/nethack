@@ -14,7 +14,6 @@
 #include "do_name.h"
 #include "dbridge.h"
 #include "display.h"
-#include "winprocs.h"
 
 #include <ctype.h>
 
@@ -1343,9 +1342,8 @@ bool corpse_chance ( struct monst *mon, struct monst *magr, bool was_swallowed) 
             if (was_swallowed && magr) {
                 if (magr == &youmonst) {
                     There("is an explosion in your %s!", body_part(STOMACH));
-                    sprintf(killer_buf, "%s%s explosion", mdat->mname, possessive_suffix(mdat->mname));
                     if (Half_physical_damage) tmp = (tmp+1) / 2;
-                    losehp(tmp, killer_buf, KILLED_BY_AN);
+                    losehp(tmp, killed_by_monster(KM_EXPLOSION, mon));
                 } else {
                     if (flags.soundok) You_hear("an explosion.");
                     magr->mhp -= tmp;
@@ -1367,10 +1365,9 @@ bool corpse_chance ( struct monst *mon, struct monst *magr, bool was_swallowed) 
             }
 
             sprintf(killer_buf, "%s%s explosion", mdat->mname, possessive_suffix(mdat->mname));
-            killer = killer_buf;
-            killer_format = KILLED_BY_AN;
+            killer = {KM_EXPLOSION, mon};
             explode(mon->mx, mon->my, -1, tmp, MON_EXPLODE, EXPL_NOXIOUS);
-            return (false);
+            return false;
         }
     }
 

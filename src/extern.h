@@ -514,35 +514,6 @@ extern void dipfountain(struct obj *);
 extern void breaksink(int,int);
 extern void drinksink(void);
 
-/* ### hack.c ### */
-
-extern bool revive_nasty(int,int,const char*);
-extern void movobj(struct obj *,signed char,signed char);
-extern bool may_dig(signed char,signed char);
-extern bool may_passwall(signed char,signed char);
-extern bool bad_rock(struct permonst *,signed char,signed char);
-extern bool invocation_pos(signed char,signed char);
-extern bool test_move(int, int, int, int, int);
-extern void domove(void);
-extern void invocation_message(void);
-extern void spoteffects(bool);
-extern char *in_rooms(signed char,signed char,int);
-extern bool in_town(int,int);
-extern void check_special_room(bool);
-extern int dopickup(void);
-extern void lookaround(void);
-extern int monster_nearby(void);
-extern void nomul(int);
-extern void unmul(const char *);
-extern void losehp(int,const char *,bool);
-extern int weight_cap(void);
-extern int inv_weight(void);
-extern int near_capacity(void);
-extern int calc_capacity(int);
-extern int max_capacity(void);
-extern bool check_capacity(const char *);
-extern int inv_cnt(void);
-
 /* ### light.c ### */
 
 extern void new_light_source(signed char, signed char, int, int, void *);

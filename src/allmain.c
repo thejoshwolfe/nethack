@@ -2,9 +2,6 @@
 /* various code that was replicated in *main.c */
 
 #include "hack.h"
-
-#include <signal.h>
-
 #include "dlb.h"
 #include "pm_props.h"
 #include "flag.h"
@@ -29,9 +26,6 @@ extern void check_linux_console(void);
 extern void init_linux_cons(void);
 
 static void wd_message(void);
-
-// the file containing the latest hack news
-static const char *NEWS = "news";
 
 void moveloop(void) {
     int moveamt = 0, wtcap = 0, change = 0;
@@ -342,8 +336,7 @@ void moveloop(void) {
             else if (!u.uinvulnerable) {
                 u.utrap -= 1<<8;
                 if(u.utrap < 1<<8) {
-                    killer_format = KILLED_BY;
-                    killer = "molten lava";
+                    killer = killed_by_const(KM_MOLTEN_LAVA);
                     You("sink below the surface and die.");
                     done(DISSOLVED);
                 } else if(didmove && !u.umoved) {
@@ -408,22 +401,6 @@ void stop_occupation (void) {
     }
 }
 
-void display_gamewindows(void) {
-    WIN_MESSAGE = create_nhwindow(NHW_MESSAGE);
-    WIN_STATUS = create_nhwindow(NHW_STATUS);
-    WIN_MAP = create_nhwindow(NHW_MAP);
-    WIN_INVEN = create_nhwindow(NHW_MENU);
-
-    /*
-     * The mac port is not DEPENDENT on the order of these
-     * displays, but it looks a lot better this way...
-     */
-    display_nhwindow(WIN_STATUS, false);
-    display_nhwindow(WIN_MESSAGE, false);
-    clear_glyph_buffer();
-    display_nhwindow(WIN_MAP, false);
-}
-
 void newgame(void) {
     int i;
 
@@ -445,8 +422,6 @@ void newgame(void) {
                              * any artifacts */
     u_init();
 
-    (void) signal(SIGINT, done1);
-    if(iflags.news) display_file(NEWS, false);
     load_qtlist();  /* load up the quest text info */
     /*      quest_init();*/ /* Now part of role_init() */
 
@@ -478,34 +453,6 @@ void newgame(void) {
     return;
 }
 
-/* show "welcome [back] to nethack" message at program startup */
-/* false => restoring an old game */
-void welcome(bool new_game) {
-    char buf[BUFSZ];
-    bool currentgend = Upolyd ? u.mfemale : flags.female;
-
-    /*
-     * The "welcome back" message always describes your innate form
-     * even when polymorphed or wearing a helm of opposite alignment.
-     * Alignment is shown unconditionally for new games; for restores
-     * it's only shown if it has changed from its original value.
-     * Sex is shown for new games except when it is redundant; for
-     * restores it's only shown if different from its original value.
-     */
-    *buf = '\0';
-    if (new_game || u.ualignbase[A_ORIGINAL] != u.ualignbase[A_CURRENT])
-        sprintf(eos(buf), " %s", align_str(u.ualignbase[A_ORIGINAL]));
-    if (!urole.name.f &&
-            (new_game ? (urole.allow & ROLE_GENDMASK) == (ROLE_MALE|ROLE_FEMALE) :
-             currentgend != flags.initgend))
-        sprintf(eos(buf), " %s", genders[currentgend].adj);
-
-    pline(new_game ? "%s %s, welcome to NetHack!  You are a%s %s %s."
-            : "%s %s, the%s %s %s, welcome back to NetHack!",
-            Hello((struct monst *) 0), plname, buf, urace.adj,
-            (currentgend && urole.name.f) ? urole.name.f : urole.name.m);
-}
-
 int main (int argc, char *argv[]) {
     /*
      * Change directories before we initialize the window system so
@@ -521,18 +468,7 @@ int main (int argc, char *argv[]) {
 
     process_options(argc, argv);    /* command line options */
 
-    if (wizard)
-        strcpy(plname, "wizard");
-    else
-        if(!*plname || !strncmp(plname, "player", 4) || !strncmp(plname, "games", 4)) {
-            askname();
-        } else if (exact_username) {
-            /* guard against user names with hyphens in them */
-            int len = strlen(plname);
-            /* append the current role, if any, so that last dash is ours */
-            if (++len < sizeof plname)
-                strncat(strcat(plname, "-"), pl_character, sizeof plname - len - 1);
-        }
+    strcpy(plname, "derpface");
     plnamesuffix();         /* strip suffix from name; calls askname() */
     /* again if suffix was whole name */
     /* accepts any suffix */
@@ -556,6 +492,7 @@ int main (int argc, char *argv[]) {
      */
     vision_init();
 
+    int fd;
     if ((fd = restore_saved_game()) >= 0) {
         /* Since wizard is actually flags.debug, restoring might
          * overwrite it.
@@ -563,12 +500,8 @@ int main (int argc, char *argv[]) {
         bool remember_wiz_mode = wizard;
         const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
-        if(iflags.news) {
-            display_file(NEWS, false);
-            iflags.news = false; /* in case dorecover() fails */
-        }
         pline("Restoring save file...");
-        mark_synch();   /* flush output */
+        // mark_synch();
         if(!dorecover(fd))
             goto not_recovered;
         if(!wizard && remember_wiz_mode) wizard = true;
@@ -585,7 +518,7 @@ int main (int argc, char *argv[]) {
         flags.move = 0;
     } else {
 not_recovered:
-        player_selection();
+        // player_selection();
         newgame();
         wd_message();
 
@@ -627,8 +560,9 @@ static void process_options (int argc, char *argv[]) {
                     argc--;
                     argv++;
                     (void) strncpy(plname, argv[0], sizeof(plname)-1);
-                } else
-                    raw_print("Player name expected after -u");
+                } else {
+                    fprintf(stderr, "Player name expected after -u\n");
+                }
                 break;
             case 'I':
             case 'i':
