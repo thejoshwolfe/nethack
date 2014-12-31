@@ -224,5 +224,22 @@ size_t nh_slprintf(char *dest, size_t dest_size, char *format, ...) {
 
 MSG_YOU_DISRUPT, You("disrupt %s!", name);
 MSG_A_HUGE_HOLE_OPENS_UP, "A huge hole opens up..."
+MSG_MONSTER_TURNS_INVISIBLE, "%s turns transparent!"
+MSG_ENGULFER_OPENS_ITS_MOUTH:
+                            if (Blind) {
+                                You_feel("a sudden rush of air!");
+                            } else {
+                                char name[BUFSZ];
+                                Monnam(name, BUFSZ, mtmp);
+                                pline("%s opens its mouth!", name);
+                            }
+MSG_MONSTER_LOOKS_BETTER, "%s looks better."
+MSG_MONSTER_LOOKS_MUCH_BETTER, "%s looks much better."
+MSG_GOLEM_TURNS_TO_FLESH, "%s turns to flesh!"
+MSG_GOLEM_LOOKS_FLESHY, "%s looks rather fleshy for a moment."
+MSG_MONSTER_LOOKS_WEAKER, "%s suddenly seems weaker!"
+MSG_MONSTER_IS_NOT_CARRYING_ANYTHING, "%s is not carrying anything."
+MSG_DRAWN_INTO_FORMER_BODY, "%s is suddenly drawn into its former body!"
+MSG_A_MONSTER_SUDDENLY_APPEARS, "%s suddenly appears!" % Amonnam()
 
 */

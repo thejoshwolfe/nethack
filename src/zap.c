@@ -205,13 +205,9 @@ bhitm (struct monst *mtmp, struct obj *otmp)
         case WAN_MAKE_INVISIBLE:
             {
                 int oldinvis = mtmp->minvis;
-                char name[BUFSZ];
-
-                /* get monster's name before altering its visibility */
-                Monnam(name, BUFSZ, mtmp);
                 mon_set_minvis(mtmp);
                 if (!oldinvis && knowninvisible(mtmp)) {
-                    pline("%s turns transparent!", name);
+                    message_monster_force_visible(MSG_MONSTER_TURNS_INVISIBLE, mtmp);
                     makeknown(otyp);
                 }
                 break;
@@ -232,13 +228,7 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                 wake = false;   /* don't want immediate counterattack */
                 if (u.uswallow && mtmp == u.ustuck) {
                         if (is_animal(mtmp->data)) {
-                            if (Blind) {
-                                You_feel("a sudden rush of air!");
-                            } else {
-                                char name[BUFSZ];
-                                Monnam(name, BUFSZ, mtmp);
-                                pline("%s opens its mouth!", name);
-                            }
+                            message_monster(MSG_ENGULFER_OPENS_ITS_MOUTH, mtmp);
                         }
                         expels(mtmp, mtmp->data, true);
                 } else if (!!(obj = which_armor(mtmp, W_SADDLE))) {
@@ -273,9 +263,10 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                         } else
                             mimic_hit_msg(mtmp, otyp);
                     } else {
-                        char name[BUFSZ];
-                        Monnam(name, BUFSZ, mtmp);
-                        pline("%s looks%s better.", name, otyp == SPE_EXTRA_HEALING ? " much" : "" );
+                        if (otyp == SPE_EXTRA_HEALING)
+                            message_monster(MSG_MONSTER_LOOKS_BETTER, mtmp);
+                        else
+                            message_monster(MSG_MONSTER_LOOKS_MUCH_BETTER, mtmp);
                     }
                 }
                 if (mtmp->mtame || mtmp->mpeaceful) {
@@ -303,16 +294,13 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                 break;
         case SPE_STONE_TO_FLESH:
                 if (monsndx(mtmp->data) == PM_STONE_GOLEM) {
-                    char name[BUFSZ];
-                    Monnam(name, BUFSZ, mtmp);
                     /* turn into flesh golem */
                     if (newcham(mtmp, &mons[PM_FLESH_GOLEM], false, false)) {
                         if (canseemon(mtmp))
-                            pline("%s turns to flesh!", name);
+                            message_monster(MSG_GOLEM_TURNS_TO_FLESH, mtmp);
                     } else {
                         if (canseemon(mtmp))
-                            pline("%s looks rather fleshy for a moment.",
-                                  name);
+                            message_monster(MSG_GOLEM_LOOKS_FLESHY, mtmp);
                     }
                 } else
                     wake = false;
@@ -332,11 +320,8 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                         xkilled(mtmp, 1);
                     else {
                         mtmp->m_lev--;
-                        if (canseemon(mtmp)) {
-                            char name[BUFSZ];
-                            Monnam(name, BUFSZ, mtmp);
-                            pline("%s suddenly seems weaker!", name);
-                        }
+                        if (canseemon(mtmp))
+                            message_monster(MSG_MONSTER_LOOKS_WEAKER, mtmp);
                     }
                 }
                 break;
@@ -364,23 +349,19 @@ bhitm (struct monst *mtmp, struct obj *otmp)
         return 0;
 }
 
-void
-probe_monster (struct monst *mtmp)
-{
-        struct obj *otmp;
+void probe_monster (struct monst *mtmp) {
+    struct obj *otmp;
 
-        mstatusline(mtmp);
-        if (notonhead) return;  /* don't show minvent for long worm tail */
+    mstatusline(mtmp);
+    if (notonhead) return;  /* don't show minvent for long worm tail */
 
-        if (mtmp->minvent || mtmp->mgold) {
-            for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
-                otmp->dknown = 1;       /* treat as "seen" */
-            (void) display_minventory(mtmp, MINV_ALL, (char *)0);
-        } else {
-            char name[BUFSZ];
-            noit_Monnam(name, BUFSZ, mtmp);
-            pline("%s is not carrying anything.", name);
-        }
+    if (mtmp->minvent || mtmp->mgold) {
+        for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
+            otmp->dknown = 1;       /* treat as "seen" */
+        (void) display_minventory(mtmp, MINV_ALL, (char *)0);
+    } else {
+        message_monster_force_visible(MSG_MONSTER_IS_NOT_CARRYING_ANYTHING, mtmp);
+    }
 }
 
 
@@ -395,127 +376,116 @@ probe_monster (struct monst *mtmp)
  * from turn to turn.  This function returns false if the position
  * is not available or subject to the constraints above.
  */
-bool 
-get_obj_location (struct obj *obj, signed char *xp, signed char *yp, int locflags)
-{
-        switch (obj->where) {
-            case OBJ_INVENT:
-                *xp = u.ux;
-                *yp = u.uy;
-                return true;
-            case OBJ_FLOOR:
-                *xp = obj->ox;
-                *yp = obj->oy;
-                return true;
-            case OBJ_MINVENT:
-                if (obj->ocarry->mx) {
-                    *xp = obj->ocarry->mx;
-                    *yp = obj->ocarry->my;
-                    return true;
-                }
-                break;  /* !mx => migrating monster */
-            case OBJ_BURIED:
-                if (locflags & BURIED_TOO) {
-                    *xp = obj->ox;
-                    *yp = obj->oy;
-                    return true;
-                }
-                break;
-            case OBJ_CONTAINED:
-                if (locflags & CONTAINED_TOO)
-                    return get_obj_location(obj->ocontainer, xp, yp, locflags);
-                break;
-        }
-        *xp = *yp = 0;
-        return false;
-}
-
-bool 
-get_mon_location (
-    struct monst *mon,
-    signed char *xp,
-    signed char *yp,
-    int locflags   /* non-zero means get location even if monster is buried */
-)
-{
-        if (mon == &youmonst) {
+bool get_obj_location(struct obj *obj, signed char *xp, signed char *yp, int locflags) {
+    switch (obj->where) {
+        case OBJ_INVENT:
             *xp = u.ux;
             *yp = u.uy;
             return true;
-        } else if (mon->mx > 0 && (!mon->mburied || locflags)) {
-            *xp = mon->mx;
-            *yp = mon->my;
+        case OBJ_FLOOR:
+            *xp = obj->ox;
+            *yp = obj->oy;
             return true;
-        } else {        /* migrating or buried */
-            *xp = *yp = 0;
-            return false;
-        }
+        case OBJ_MINVENT:
+            if (obj->ocarry->mx) {
+                *xp = obj->ocarry->mx;
+                *yp = obj->ocarry->my;
+                return true;
+            }
+            break; /* !mx => migrating monster */
+        case OBJ_BURIED:
+            if (locflags & BURIED_TOO) {
+                *xp = obj->ox;
+                *yp = obj->oy;
+                return true;
+            }
+            break;
+        case OBJ_CONTAINED:
+            if (locflags & CONTAINED_TOO)
+                return get_obj_location(obj->ocontainer, xp, yp, locflags);
+            break;
+    }
+    *xp = *yp = 0;
+    return false;
+}
+
+/* locflags: non-zero means get location even if monster is buried */
+bool get_mon_location(struct monst *mon, signed char *xp, signed char *yp, int locflags) {
+    if (mon == &youmonst) {
+        *xp = u.ux;
+        *yp = u.uy;
+        return true;
+    } else if (mon->mx > 0 && (!mon->mburied || locflags)) {
+        *xp = mon->mx;
+        *yp = mon->my;
+        return true;
+    } else { /* migrating or buried */
+        *xp = *yp = 0;
+        return false;
+    }
 }
 
 /* used by revive() and animate_statue() */
-struct monst *
-montraits (struct obj *obj, coord *cc)
-{
-        struct monst *mtmp = (struct monst *)0;
-        struct monst *mtmp2 = (struct monst *)0;
+struct monst * montraits(struct obj *obj, coord *cc) {
+    struct monst *mtmp = (struct monst *)0;
+    struct monst *mtmp2 = (struct monst *)0;
 
-        if (obj->oxlth && (obj->oattached == OATTACHED_MONST))
-                mtmp2 = get_mtraits(obj, true);
-        if (mtmp2) {
-                /* save_mtraits() validated mtmp2->mnum */
-                mtmp2->data = &mons[mtmp2->mnum];
-                if (mtmp2->mhpmax <= 0 && !is_rider(mtmp2->data))
-                        return (struct monst *)0;
-                mtmp = makemon(mtmp2->data,
-                                cc->x, cc->y, NO_MINVENT|MM_NOWAIT|MM_NOCOUNTBIRTH);
-                if (!mtmp) return mtmp;
+    if (obj->oxlth && (obj->oattached == OATTACHED_MONST))
+        mtmp2 = get_mtraits(obj, true);
+    if (mtmp2) {
+        /* save_mtraits() validated mtmp2->mnum */
+        mtmp2->data = &mons[mtmp2->mnum];
+        if (mtmp2->mhpmax <= 0 && !is_rider(mtmp2->data))
+            return (struct monst *)0;
+        mtmp = makemon(mtmp2->data, cc->x, cc->y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
+        if (!mtmp)
+            return mtmp;
 
-                /* heal the monster */
-                if (mtmp->mhpmax > mtmp2->mhpmax && is_rider(mtmp2->data))
-                        mtmp2->mhpmax = mtmp->mhpmax;
-                mtmp2->mhp = mtmp2->mhpmax;
-                /* Get these ones from mtmp */
-                mtmp2->minvent = mtmp->minvent; /*redundant*/
-                /* monster ID is available if the monster died in the current
-                   game, but should be zero if the corpse was in a bones level
-                   (we cleared it when loading bones) */
-                if (!mtmp2->m_id)
-                    mtmp2->m_id = mtmp->m_id;
-                mtmp2->mx   = mtmp->mx;
-                mtmp2->my   = mtmp->my;
-                mtmp2->mux  = mtmp->mux;
-                mtmp2->muy  = mtmp->muy;
-                mtmp2->mw   = mtmp->mw;
-                mtmp2->wormno = mtmp->wormno;
-                mtmp2->misc_worn_check = mtmp->misc_worn_check;
-                mtmp2->weapon_check = mtmp->weapon_check;
-                mtmp2->mtrapseen = mtmp->mtrapseen;
-                mtmp2->mflee = mtmp->mflee;
-                mtmp2->mburied = mtmp->mburied;
-                mtmp2->mundetected = mtmp->mundetected;
-                mtmp2->mfleetim = mtmp->mfleetim;
-                mtmp2->mlstmv = mtmp->mlstmv;
-                mtmp2->m_ap_type = mtmp->m_ap_type;
-                /* set these ones explicitly */
-                mtmp2->mavenge = 0;
-                mtmp2->meating = 0;
-                mtmp2->mleashed = 0;
-                mtmp2->mtrapped = 0;
-                mtmp2->msleeping = 0;
-                mtmp2->mfrozen = 0;
-                mtmp2->mcanmove = 1;
-                /* most cancelled monsters return to normal,
-                   but some need to stay cancelled */
-                if (!dmgtype(mtmp2->data, AD_SEDU)
-                                && !dmgtype(mtmp2->data, AD_SSEX)
-                    ) mtmp2->mcan = 0;
-                mtmp2->mcansee = 1;     /* set like in makemon */
-                mtmp2->mblinded = 0;
-                mtmp2->mstun = 0;
-                mtmp2->mconf = 0;
-                replmon(mtmp,mtmp2);
-        }
-        return mtmp2;
+        /* heal the monster */
+        if (mtmp->mhpmax > mtmp2->mhpmax && is_rider(mtmp2->data))
+            mtmp2->mhpmax = mtmp->mhpmax;
+        mtmp2->mhp = mtmp2->mhpmax;
+        /* Get these ones from mtmp */
+        mtmp2->minvent = mtmp->minvent; /*redundant*/
+        /* monster ID is available if the monster died in the current
+         game, but should be zero if the corpse was in a bones level
+         (we cleared it when loading bones) */
+        if (!mtmp2->m_id)
+            mtmp2->m_id = mtmp->m_id;
+        mtmp2->mx = mtmp->mx;
+        mtmp2->my = mtmp->my;
+        mtmp2->mux = mtmp->mux;
+        mtmp2->muy = mtmp->muy;
+        mtmp2->mw = mtmp->mw;
+        mtmp2->wormno = mtmp->wormno;
+        mtmp2->misc_worn_check = mtmp->misc_worn_check;
+        mtmp2->weapon_check = mtmp->weapon_check;
+        mtmp2->mtrapseen = mtmp->mtrapseen;
+        mtmp2->mflee = mtmp->mflee;
+        mtmp2->mburied = mtmp->mburied;
+        mtmp2->mundetected = mtmp->mundetected;
+        mtmp2->mfleetim = mtmp->mfleetim;
+        mtmp2->mlstmv = mtmp->mlstmv;
+        mtmp2->m_ap_type = mtmp->m_ap_type;
+        /* set these ones explicitly */
+        mtmp2->mavenge = 0;
+        mtmp2->meating = 0;
+        mtmp2->mleashed = 0;
+        mtmp2->mtrapped = 0;
+        mtmp2->msleeping = 0;
+        mtmp2->mfrozen = 0;
+        mtmp2->mcanmove = 1;
+        /* most cancelled monsters return to normal,
+         but some need to stay cancelled */
+        if (!dmgtype(mtmp2->data, AD_SEDU) && !dmgtype(mtmp2->data, AD_SSEX))
+            mtmp2->mcan = 0;
+        mtmp2->mcansee = 1; /* set like in makemon */
+        mtmp2->mblinded = 0;
+        mtmp2->mstun = 0;
+        mtmp2->mconf = 0;
+        replmon(mtmp, mtmp2);
+    }
+    return mtmp2;
 }
 
 /*
@@ -644,11 +614,8 @@ revive (struct obj *obj)
                                     x2 = ghost->mx; y2 = ghost->my;
                                     if (ghost->mtame)
                                         savetame = ghost->mtame;
-                                    if (canseemon(ghost)) {
-                                        char name[BUFSZ];
-                                        Monnam(name, BUFSZ, ghost);
-                                        pline("%s is suddenly drawn into its former body!", name);
-                                    }
+                                    if (canseemon(ghost))
+                                        message_monster(MSG_DRAWN_INTO_FORMER_BODY, ghost);
                                     mondead(ghost);
                                     recorporealization = true;
                                     newsym(x2, y2);
@@ -725,45 +692,42 @@ revive_egg (struct obj *obj)
 
 /* try to revive all corpses and eggs carried by `mon' */
 int unturn_dead (struct monst *mon) {
-        struct obj *otmp, *otmp2;
+    char corpse[BUFSZ];
+    int once = 0, res = 0;
+
+    bool youseeit = (mon == &youmonst) ? true : canseemon(mon);
+    struct obj * otmp2 = (mon == &youmonst) ? invent : mon->minvent;
+
+    char owner[BUFSZ];
+    if (mon == &youmonst) {
+        strcpy(owner, "Your");
+    } else {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, mon);
+        nh_slprintf(owner, BUFSZ, "%s%s", name, possessive_suffix(name));
+    }
+
+    struct obj *otmp;
+    while ((otmp = otmp2) != 0) {
+        otmp2 = otmp->nobj;
+        if (otmp->otyp == EGG)
+            revive_egg(otmp);
+        if (otmp->otyp != CORPSE) continue;
+        /* save the name; the object is liable to go away */
+        if (youseeit) strcpy(corpse, corpse_xname(otmp, true));
+
+        /* for a merged group, only one is revived; should this be fixed? */
         struct monst *mtmp2;
-        char corpse[BUFSZ];
-        bool youseeit;
-        int once = 0, res = 0;
-
-        youseeit = (mon == &youmonst) ? true : canseemon(mon);
-        otmp2 = (mon == &youmonst) ? invent : mon->minvent;
-
-        char owner[BUFSZ];
-        if (mon == &youmonst) {
-            strcpy(owner, "Your");
-        } else {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mon);
-            nh_slprintf(owner, BUFSZ, "%s%s", name, possessive_suffix(name));
-        }
-
-        while ((otmp = otmp2) != 0) {
-            otmp2 = otmp->nobj;
-            if (otmp->otyp == EGG)
-                revive_egg(otmp);
-            if (otmp->otyp != CORPSE) continue;
-            /* save the name; the object is liable to go away */
-            if (youseeit) strcpy(corpse, corpse_xname(otmp, true));
-
-            /* for a merged group, only one is revived; should this be fixed? */
-            if ((mtmp2 = revive(otmp)) != 0) {
-                ++res;
-                if (youseeit) {
-                    pline("%s %s suddenly comes alive!", owner, corpse);
-                } else if (canseemon(mtmp2)) {
-                    char name[BUFSZ];
-                    Amonnam(name, BUFSZ, mtmp2);
-                    pline("%s suddenly appears!", name);
-                }
+        if ((mtmp2 = revive(otmp)) != 0) {
+            ++res;
+            if (youseeit) {
+                pline("%s %s suddenly comes alive!", owner, corpse);
+            } else if (canseemon(mtmp2)) {
+                message_monster(MSG_A_MONSTER_SUDDENLY_APPEARS, mtmp2);
             }
         }
-        return res;
+    }
+    return res;
 }
 
 static const char charged_objs[] = { WAND_CLASS, WEAPON_CLASS, ARMOR_CLASS, 0 };
