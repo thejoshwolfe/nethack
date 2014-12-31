@@ -124,6 +124,7 @@ enum MessageId {
     MSG_MARKER_DRIES_OUT,
     MSG_SPELLBOOK_IS_UNFINISHED,
     MSG_SCROLL_IS_NOW_USELESS,
+    MSG_YOU_DISTRUPT_ENGULFER,
 };
 
 struct Message {
@@ -138,6 +139,7 @@ struct Message {
 
 void message_const(enum MessageId id);
 void message_monster(enum MessageId id, const struct monst *m);
+void message_monster_force_visible(enum MessageId id, const struct monst *m);
 void message_object(enum MessageId id, const struct obj *o);
 void message_object2(enum MessageId id, const struct obj *o1, const struct obj *o2);
 void message_object3(enum MessageId id, const struct obj *o1, const struct obj *o2,

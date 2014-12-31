@@ -4,6 +4,7 @@
 #ifndef TRAP_H
 #define TRAP_H
 
+#include "monst.h"
 #include "dungeon.h"
 #include "coord.h"
 

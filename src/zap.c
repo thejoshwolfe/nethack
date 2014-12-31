@@ -1,5 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "cmd.h"
+#include "detect.h"
+#include "dothrow.h"
+#include "steal.h"
 #include "zap.h"
 #include "hack.h"
 #include "pm_props.h"
@@ -11,6 +15,19 @@
 #include "priest.h"
 #include "mhitm.h"
 #include "invent.h"
+#include "extern.h"
+#include "worn.h"
+#include "util.h"
+#include "mon.h"
+#include "teleport.h"
+#include "makemon.h"
+#include "uhitm.h"
+#include "pline.h"
+#include "dog.h"
+#include "eat.h"
+#include "monmove.h"
+#include "read.h"
+#include "timeout.h"
 
 /* Disintegration rays have special treatment; corpses are never left.
  * But the routine which calculates the damage is separate from the routine
@@ -180,7 +197,7 @@ int bhitm(struct monst *mtmp, struct obj *otmp) {
                  with their metabolism...) */
                 if (mtmp->cham == CHAM_ORDINARY && !rn2(25)) {
                     if (canseemon(mtmp)) {
-                        monster_message(MSG_FAILED_POLYMORPH, mtmp);
+                        message_monster(MSG_FAILED_POLYMORPH, mtmp);
                         makeknown(otyp);
                     }
                     /* dropped inventory shouldn't be hit by this zap */
@@ -669,7 +686,7 @@ struct monst * revive(struct obj *obj) {
                     obfree(obj, (struct obj *)0);
                     break;
                 default:
-                    panic("revive");
+                    impossible("revive");
             }
         }
     }

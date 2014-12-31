@@ -2,6 +2,8 @@
 #ifndef VISION_H
 #define VISION_H
 
+#include "rm.h"
+
 #define COULD_SEE 0x1           /* location could be seen, if it were lit */
 #define IN_SIGHT  0x2           /* location can be seen */
 #define TEMP_LIT  0x4           /* location is temporarily lit */

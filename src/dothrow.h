@@ -3,6 +3,10 @@
 
 #include <stdbool.h>
 
+#include "monst.h"
+#include "obj.h"
+#include "coord.h"
+
 int dothrow(void);
 int dofire(void);
 void hitfloor(struct obj *);

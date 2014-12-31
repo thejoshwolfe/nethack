@@ -1,6 +1,8 @@
 #ifndef CMD_H
 #define CMD_H
 
+#include "coord.h"
+
 void reset_occupations(void);
 void set_occupation(int (*)(void),const char *,int);
 char pgetchar(void);

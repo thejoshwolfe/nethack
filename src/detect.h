@@ -2,6 +2,7 @@
 #define DETECT_H
 
 #include "trap.h"
+#include "rm.h"
 
 struct obj *o_in(struct obj*,char);
 struct obj *o_material(struct obj*,unsigned);

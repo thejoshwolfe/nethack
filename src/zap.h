@@ -1,6 +1,10 @@
 #ifndef ZAP_H
 #define ZAP_H
 
+#include "global.h"
+#include "monst.h"
+#include "obj.h"
+
 int bhitm(struct monst *,struct obj *);
 void probe_monster(struct monst *);
 bool get_obj_location(struct obj *,signed char *,signed char *,int);
