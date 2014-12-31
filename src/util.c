@@ -241,5 +241,20 @@ MSG_MONSTER_LOOKS_WEAKER, "%s suddenly seems weaker!"
 MSG_MONSTER_IS_NOT_CARRYING_ANYTHING, "%s is not carrying anything."
 MSG_DRAWN_INTO_FORMER_BODY, "%s is suddenly drawn into its former body!"
 MSG_A_MONSTER_SUDDENLY_APPEARS, "%s suddenly appears!" % Amonnam()
-
+MSG_POLYPILE_CREATES_GOLEM, "Some %(material)sobjects meld, and %(a_monnam)s arises from the pile!"
+    material = {
+        PM_IRON_GOLEM: "metal ";
+        PM_STONE_GOLEM: "lithic ";
+        PM_CLAY_GOLEM: "lithic ";
+        PM_FLESH_GOLEM: "organic ";
+        PM_WOOD_GOLEM: "wood ";
+        PM_LEATHER_GOLEM: "leather ";
+        PM_ROPE_GOLEM: "cloth ";
+        PM_SKELETON: "bony ";
+        PM_GOLD_GOLEM: "gold ";
+        PM_GLASS_GOLEM: "glassy ";
+        PM_PAPER_GOLEM: "paper ";
+        PM_STRAW_GOLEM: "";
+    }
+MSG_SHOP_KEEPER_GETS_ANGRY, "%s gets angry!"
 */

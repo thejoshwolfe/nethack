@@ -728,34 +728,35 @@ int unturn_dead (struct monst *mon) {
 
 static const char charged_objs[] = { WAND_CLASS, WEAPON_CLASS, ARMOR_CLASS, 0 };
 
-static void
-costly_cancel (struct obj *obj)
-{
-        char objroom;
-        struct monst *shkp = (struct monst *)0;
+static void costly_cancel(struct obj *obj) {
+    char objroom;
+    struct monst *shkp = (struct monst *)0;
 
-        if (obj->no_charge) return;
+    if (obj->no_charge)
+        return;
 
-        switch (obj->where) {
+    switch (obj->where) {
         case OBJ_INVENT:
-                if (obj->unpaid) {
-                    shkp = shop_keeper(*u.ushops);
-                    if (!shkp) return;
-                    Norep("You cancel an unpaid object, you pay for it!");
-                    bill_dummy_object(obj);
-                }
-                break;
+            if (obj->unpaid) {
+                shkp = shop_keeper(*u.ushops);
+                if (!shkp)
+                    return;
+                Norep("You cancel an unpaid object, you pay for it!");
+                bill_dummy_object(obj);
+            }
+            break;
         case OBJ_FLOOR:
-                objroom = *in_rooms(obj->ox, obj->oy, SHOPBASE);
-                shkp = shop_keeper(objroom);
-                if (!shkp || !inhishop(shkp)) return;
-                if (costly_spot(u.ux, u.uy) && objroom == *u.ushops) {
-                    Norep("You cancel it, you pay for it!");
-                    bill_dummy_object(obj);
-                } else
-                    (void) stolen_value(obj, obj->ox, obj->oy, false, false);
-                break;
-        }
+            objroom = *in_rooms(obj->ox, obj->oy, SHOPBASE);
+            shkp = shop_keeper(objroom);
+            if (!shkp || !inhishop(shkp))
+                return;
+            if (costly_spot(u.ux, u.uy) && objroom == *u.ushops) {
+                Norep("You cancel it, you pay for it!");
+                bill_dummy_object(obj);
+            } else
+                (void)stolen_value(obj, obj->ox, obj->oy, false, false);
+            break;
+    }
 }
 
 /* cancel obj, possibly carried by you or a monster */
@@ -982,7 +983,6 @@ static void polyuse(struct obj *objhdr, int mat, int minwt) {
 static void create_polymon(struct obj *obj, int okind) {
     struct permonst *mdat = (struct permonst *)0;
     struct monst *mtmp;
-    const char *material;
     int pm_index;
 
     /* no golems if you zap only one object -- not enough stuff */
@@ -995,7 +995,6 @@ static void create_polymon(struct obj *obj, int okind) {
         case METAL:
         case MITHRIL:
             pm_index = PM_IRON_GOLEM;
-            material = "metal ";
             break;
         case COPPER:
         case SILVER:
@@ -1003,46 +1002,36 @@ static void create_polymon(struct obj *obj, int okind) {
         case GEMSTONE:
         case MINERAL:
             pm_index = rn2(2) ? PM_STONE_GOLEM : PM_CLAY_GOLEM;
-            material = "lithic ";
             break;
         case 0:
         case FLESH:
             /* there is no flesh type, but all food is type 0, so we use it */
             pm_index = PM_FLESH_GOLEM;
-            material = "organic ";
             break;
         case WOOD:
             pm_index = PM_WOOD_GOLEM;
-            material = "wood ";
             break;
         case LEATHER:
             pm_index = PM_LEATHER_GOLEM;
-            material = "leather ";
             break;
         case CLOTH:
             pm_index = PM_ROPE_GOLEM;
-            material = "cloth ";
             break;
         case BONE:
             pm_index = PM_SKELETON; /* nearest thing to "bone golem" */
-            material = "bony ";
             break;
         case GOLD:
             pm_index = PM_GOLD_GOLEM;
-            material = "gold ";
             break;
         case GLASS:
             pm_index = PM_GLASS_GOLEM;
-            material = "glassy ";
             break;
         case PAPER:
             pm_index = PM_PAPER_GOLEM;
-            material = "paper ";
             break;
         default:
             /* if all else fails... */
             pm_index = PM_STRAW_GOLEM;
-            material = "";
             break;
     }
 
@@ -1052,11 +1041,8 @@ static void create_polymon(struct obj *obj, int okind) {
     mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
     polyuse(obj, okind, (int)mons[pm_index].cwt);
 
-    if (mtmp && cansee(mtmp->mx, mtmp->my)) {
-        char name[BUFSZ];
-        a_monnam(name, BUFSZ, mtmp);
-        pline("Some %sobjects meld, and %s arises from the pile!", material, name);
-    }
+    if (mtmp && cansee(mtmp->mx, mtmp->my))
+        message_monster(MSG_POLYPILE_CREATES_GOLEM, mtmp);
 }
 
 /* Assumes obj is on the floor. */
@@ -1325,15 +1311,11 @@ struct obj * poly_obj(struct obj *obj, int id) {
                 if (*u.ushops && *in_rooms(u.ux, u.uy, 0) == *in_rooms(shkp->mx, shkp->my, 0) && !costly_spot(u.ux, u.uy)) {
                     make_angry_shk(shkp, ox, oy);
                 } else {
-                    char name[BUFSZ];
-                    Monnam(name, BUFSZ, shkp);
-                    pline("%s gets angry!", name);
+                    message_monster(MSG_SHOP_KEEPER_GETS_ANGRY, shkp);
                     hot_pursuit(shkp);
                 }
             } else {
-                char name[BUFSZ];
-                Monnam(name, BUFSZ, shkp);
-                Norep("%s is furious!", name);
+                message_monster(MSG_SHOP_KEEPER_IS_FURIOUS, shkp);
             }
         }
     }
