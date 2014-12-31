@@ -5,7 +5,6 @@
 #include "save.h"
 #include "makemon.h"
 #include "pline.h"
-#include "extern.h"
 #include "worm.h"
 #include "hack.h"
 #include "lev.h"

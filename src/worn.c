@@ -9,7 +9,6 @@
 #include "do_name.h"
 #include "objnam.h"
 #include "pline.h"
-#include "extern.h"
 
 static void m_lose_armor(struct monst *,struct obj *);
 static void m_dowear_type(struct monst *,long, bool, bool);

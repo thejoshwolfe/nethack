@@ -30,7 +30,6 @@
 #include "priest.h"
 #include "mhitm.h"
 #include "invent.h"
-#include "extern.h"
 #include "worn.h"
 #include "util.h"
 #include "mon.h"

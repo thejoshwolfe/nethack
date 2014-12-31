@@ -10,7 +10,6 @@
 #include "invent.h"
 #include "pline.h"
 #include "do.h"
-#include "extern.h"
 
 static int cost(struct obj *);
 
