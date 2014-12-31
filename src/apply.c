@@ -297,7 +297,7 @@ static void use_magic_whistle (struct obj *obj) {
     struct monst *mtmp, *nextmon;
 
     if(obj->cursed && !rn2(2)) {
-        You("produce a high-pitched humming noise.");
+        message_const(MSG_YOU_PRODUCE_HIGH_HUMMING_NOISE);
         wake_nearby();
     } else {
         message_const(MSG_WHISTLE_MAGIC);
@@ -349,11 +349,9 @@ void m_unleash(struct monst *mtmp, bool feedback) {
 
     if (feedback) {
         if (canseemon(mtmp)) {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline("%s pulls free of %s leash!", name, mhis(mtmp));
+            message_monster(MSG_M_PULLS_FREE_OF_LEASH, mtmp);
         } else {
-            Your("leash falls slack.");
+            message_const(MSG_YOUR_LEASH_FALLS_SLACK);
         }
     }
     for(otmp = invent; otmp; otmp = otmp->nobj) {
@@ -374,14 +372,13 @@ void unleash_all (void) {
         mtmp->mleashed = 0;
 }
 
-/* ARGSUSED */
 static void use_leash (struct obj *obj) {
     coord cc;
     struct monst *mtmp;
     int spotmon;
 
-    if(!obj->leashmon && number_leashed() >= MAXLEASHED) {
-        You("cannot leash any more pets.");
+    if (!obj->leashmon && number_leashed() >= MAXLEASHED) {
+        message_const(MSG_YOU_CANNOT_LEASH_MORE_PETS);
         return;
     }
 
@@ -393,12 +390,12 @@ static void use_leash (struct obj *obj) {
             spotmon = 1;
             goto got_target;
         }
-        pline("Leash yourself?  Very funny...");
+        message_const(MSG_LEASH_YOURSELF);
         return;
     }
 
     if(!(mtmp = m_at(cc.x, cc.y))) {
-        There("is no creature there.");
+        message_const(MSG_THERE_IS_NO_CREATURE_THERE);
         return;
     }
 
@@ -407,49 +404,35 @@ got_target:
 
     if(!mtmp->mtame) {
         if(!spotmon) {
-            There("is no creature there.");
+            message_const(MSG_THERE_IS_NO_CREATURE_THERE);
         } else {
-            char name[BUFSZ];
-            Monnam(name, BUFSZ, mtmp);
-            pline("%s %s leashed!", name, (!obj->leashmon) ?  "cannot be" : "is not");
+            message_monster(MSG_M_NOT_LEASHED, mtmp);
         }
         return;
     }
     if(!obj->leashmon) {
         if(mtmp->mleashed) {
-            const char *name;
-            if (spotmon) {
-                char buf[BUFSZ];
-                l_monnam(buf, BUFSZ, mtmp);
-                name = buf;
-            } else {
-                name = "monster";
-            }
-            pline("This %s is already leashed.", name);
+            message_monster(MSG_M_ALREADY_LEASHED, mtmp);
             return;
         }
-        char name[BUFSZ];
-        l_monnam(name, BUFSZ, mtmp);
-        You("slip the leash around %s%s.", spotmon ? "your " : "", name);
+        message_monster(MSG_YOU_SLIP_LEASH_AROUND_M, mtmp);
         mtmp->mleashed = 1;
         obj->leashmon = (int)mtmp->m_id;
         mtmp->msleeping = 0;
         return;
     }
     if(obj->leashmon != (int)mtmp->m_id) {
-        pline("This leash is not attached to that creature.");
+        message_const(MSG_LEASH_NOT_ATTACHED_TO_CREATURE);
         return;
     } else {
         if(obj->cursed) {
-            pline_The("leash would not come off!");
+            message_const(MSG_LEASH_NOT_COME_OFF);
             obj->bknown = true;
             return;
         }
         mtmp->mleashed = 0;
         obj->leashmon = 0;
-        char name[BUFSZ];
-        l_monnam(name, BUFSZ, mtmp);
-        You("remove the leash from %s%s.", spotmon ? "your " : "", name);
+        message_monster(MSG_YOU_REMOVE_LEASH_FROM_M, mtmp);
     }
 }
 

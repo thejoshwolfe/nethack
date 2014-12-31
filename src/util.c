@@ -8,6 +8,9 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+            message_const(MSG_YOUR_LEASH_FALLS_SLACK);
+            Your("leash falls slack.");
+
 MSG_NOTHING_HAPPENS
 struct c_common_strings c_common_strings = {
         "Nothing happens.",             "That's enough tries!",
@@ -16,6 +19,54 @@ struct c_common_strings c_common_strings = {
         "vision quickly clears.", {"the", "your"}
 };
 
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s pulls free of %s leash!", name, mhis(mtmp));
+            message_monster(MSG_M_PULLS_FREE_OF_LEASH, mtmp);
+
+        message_const(MSG_YOU_PRODUCE_HIGH_HUMMING_NOISE);
+        You("produce a high-pitched humming noise.");
+
+        message_const(MSG_YOU_CANNOT_LEASH_MORE_PETS);
+        You("cannot leash any more pets.");
+
+        message_const(MSG_LEASH_YOURSELF);
+        pline("Leash yourself?  Very funny...");
+
+        message_const(MSG_THERE_IS_NO_CREATURE_THERE);
+        There("is no creature there.");
+
+            char name[BUFSZ];
+            Monnam(name, BUFSZ, mtmp);
+            pline("%s %s leashed!", name, (!obj->leashmon) ?  "cannot be" : "is not");
+            message_monster(MSG_M_NOT_LEASHED, mtmp);
+
+            const char *name;
+            if (spotmon) {
+                char buf[BUFSZ];
+                l_monnam(buf, BUFSZ, mtmp);
+                name = buf;
+            } else {
+                name = "monster";
+            }
+            pline("This %s is already leashed.", name);
+            message_monster(MSG_M_ALREADY_LEASHED, mtmp);
+
+        char name[BUFSZ];
+        l_monnam(name, BUFSZ, mtmp);
+        You("slip the leash around %s%s.", spotmon ? "your " : "", name);
+        message_monster(MSG_YOU_SLIP_LEASH_AROUND_M, mtmp);
+
+        pline("This leash is not attached to that creature.");
+        message_const(MSG_LEASH_NOT_ATTACHED_TO_CREATURE);
+
+            message_const(MSG_LEASH_NOT_COME_OFF);
+            pline_The("leash would not come off!");
+
+        char name[BUFSZ];
+        l_monnam(name, BUFSZ, mtmp);
+        You("remove the leash from %s%s.", spotmon ? "your " : "", name);
+        message_monster(MSG_YOU_REMOVE_LEASH_FROM_M, mtmp);
 
 MSG_FOUND_SECRET_DOOR, "You hear a hollow sound.  This must be a secret %s!";
 MSG_FOUND_SECRET_PASSAGE, "You hear a hollow sound.  This must be a secret %s!";
