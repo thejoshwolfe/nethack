@@ -413,4 +413,5 @@ MSG_MARKER_DRIES_OUT, Your("marker dries out!");
 MSG_SPELLBOOK_IS_UNFINISHED, pline_The("spellbook is left unfinished and your writing fades.");
 MSG_SCROLL_IS_NOW_USELESS, pline_The("scroll is now useless and disappears!");
 MSG_YOU_DISTRUPT_ENGULFER, You("disrupt %s!", name)
+MSG_VISION_QUICKLY_CLEARS, Your("vision quickly clears.");
 */

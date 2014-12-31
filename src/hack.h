@@ -15,6 +15,10 @@ enum KillerMethod {
     KM_JUMP_BEAR_TRAP,
     KM_EXPLOSION,
     KM_MOLTEN_LAVA,
+    KM_EXPLODING_WAND, // "exploding wand"
+    KM_SELF_WITH_WAND, // "zapped %sself with a wand", uhim()
+    KM_SELF_WITH_DEATH_RAY, // "shot %sself with a death ray", uhim()
+    KM_FALLING_ROCK, //  "falling rock"
 };
 struct Killer {
     enum KillerMethod method;

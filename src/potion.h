@@ -2,6 +2,8 @@
 #define POTION_H
 
 #include <stdbool.h>
+#include "obj.h"
+#include "monst.h"
 
 void set_itimeout(long *,long);
 void incr_itimeout(long *,int);

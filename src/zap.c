@@ -1,5 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "potion.h"
+#include "polyself.h"
 #include "cmd.h"
 #include "detect.h"
 #include "dothrow.h"
@@ -1688,7 +1690,7 @@ void zapnodir(struct obj *obj) {
 static void backfire(struct obj *otmp) {
     otmp->in_use = true; /* in case losehp() is fatal */
     pline("%s suddenly explodes!", The(xname(otmp)));
-    losehp(d(otmp->spe + 2, 6), "exploding wand", KILLED_BY_AN);
+    losehp(d(otmp->spe + 2, 6), killed_by_const(KM_EXPLODING_WAND));
     useup(otmp);
 }
 
@@ -1721,7 +1723,7 @@ int dozap(void) {
         if ((damage = zapyourself(obj, true)) != 0) {
             char buf[BUFSZ];
             sprintf(buf, "zapped %sself with a wand", uhim());
-            losehp(damage, buf, NO_KILLER_PREFIX);
+            losehp(damage, killed_by_const(KM_SELF_WITH_WAND));
         }
     } else {
 
@@ -1784,7 +1786,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
                 You(are_blinded_by_the_flash);
                 make_blinded((long)rnd(100), false);
                 if (!Blind)
-                    Your("%s", vision_clears);
+                    message_const(MSG_VISION_QUICKLY_CLEARS);
             }
             break;
 
@@ -1927,9 +1929,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
                         : "You seem no deader than before.");
                 break;
             }
-            sprintf(buf, "shot %sself with a death ray", uhim());
-            killer = buf;
-            killer_format = NO_KILLER_PREFIX;
+            killer = killed_by_const(KM_SELF_WITH_DEATH_RAY);
             You("irradiate yourself with pure energy!");
             You("die.");
             makeknown(obj->otyp);
@@ -1963,7 +1963,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
                 You(are_blinded_by_the_flash);
                 make_blinded((long)damage, false);
                 makeknown(obj->otyp);
-                if (!Blind) Your("%s", vision_clears);
+                if (!Blind) message_const(MSG_VISION_QUICKLY_CLEARS);
             }
             damage = 0; /* reset */
             break;
@@ -2197,7 +2197,7 @@ static bool zap_updown(struct obj *obj /* wand or spell */
             } else if (striking && u.dz < 0 && rn2(3) && !Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz) && !Underwater && !Is_qstart(&u.uz)) {
                 /* similar to zap_dig() */
                 pline("A rock is dislodged from the %s and falls on your %s.", ceiling(x, y), body_part(HEAD));
-                losehp(rnd((uarmh && is_metallic(uarmh)) ? 2 : 6), "falling rock", KILLED_BY_AN);
+                losehp(rnd((uarmh && is_metallic(uarmh)) ? 2 : 6), killed_by_const(KM_FALLING_ROCK));
                 if ((otmp = mksobj_at(ROCK, x, y, false, false)) != 0) {
                     (void)xname(otmp); /* set dknown, maybe bknown */
                     stackobj(otmp);

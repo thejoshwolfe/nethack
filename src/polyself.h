@@ -1,6 +1,9 @@
 #ifndef POLYSELF_H
 #define POLYSELF_H
 
+#include <stdbool.h>
+#include "monst.h"
+
 void set_uasmon(void);
 void change_sex(void);
 void polyself(bool);
