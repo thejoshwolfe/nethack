@@ -3704,13 +3704,12 @@ void destroy_item(int osym, int dmgtyp) {
             for (i = 0; i < cnt; i++)
                 useup(obj);
             if (dmg) {
-                if (xresist)
+                if (xresist) {
                     You("aren't hurt!");
-                else {
-                    const char *how = destroy_strings[dindx * 3 + 2];
+                } else {
+                    const char * how = destroy_strings[dindx * 3 + 2];
                     bool one = (cnt == 1L);
-
-                    losehp(dmg, one ? how : (const char *)makeplural(how), one ? KILLED_BY_AN : KILLED_BY);
+                    losehp(dmg, killed_by_destroy_string(how, one));
                     exercise(A_STR, false);
                 }
             }
@@ -3903,7 +3902,7 @@ void makewish(void) {
         pline("Nothing fitting that description exists in the game.");
         if (++tries < 5)
             goto retry;
-        plines(thats_enough_tries);
+        message_const(MSG_THATS_ENOUGH_TRIES);
         otmp = readobjnam((char *)0, (struct obj *)0, true);
         if (!otmp)
             return; /* for safety; should never happen */

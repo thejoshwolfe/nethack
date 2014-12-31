@@ -29,9 +29,14 @@ struct Killer {
 
 struct Killer killed_by_const(enum KillerMethod method);
 struct Killer killed_by_monster(enum KillerMethod method, const struct monst *mon);
+
 // see flash_types
 struct Killer killed_by_flash_text(const char * fltxt);
 struct Killer killed_by_artifact(enum KillerMethod method, const struct artifact *art);
+
+// const char * how = destroy_strings[dindx * 3 + 2];
+// bool one = (cnt == 1L);
+struct Killer killed_by_destroy_string(const char * how, bool one);
 
 bool revive_nasty(int,int,const char*);
 void movobj(struct obj *,signed char,signed char);
