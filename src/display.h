@@ -3,6 +3,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "worm.h"
 #include "pm_props.h"
 #include "vision.h"
 #include "youprop.h"

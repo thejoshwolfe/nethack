@@ -20,6 +20,16 @@
 #include "cmd.h"
 #include "rnd.h"
 #include "zap.h"
+#include "polyself.h"
+#include "engrave.h"
+#include "uhitm.h"
+#include "potion.h"
+#include "do_wear.h"
+#include "do.h"
+#include "trap.h"
+#include "pline.h"
+#include "detect.h"
+#include "mon.h"
 
 static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,

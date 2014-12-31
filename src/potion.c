@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "potion.h"
 #include "hack.h"
 #include "pm_props.h"
 #include "display.h"

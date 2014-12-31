@@ -240,29 +240,6 @@ extern char *dowhatdoes_core(char, char *);
 extern int dohelp(void);
 extern int dohistory(void);
 
-/* ### potion.c ### */
-
-extern void set_itimeout(long *,long);
-extern void incr_itimeout(long *,int);
-extern void make_confused(long,bool);
-extern void make_stunned(long,bool);
-extern void make_blinded(long,bool);
-extern void make_sick(long, const char *, bool,int);
-extern void make_vomiting(long,bool);
-extern bool make_hallucinated(long,bool,long);
-extern int dodrink(void);
-extern int dopotion(struct obj *);
-extern int peffects(struct obj *);
-extern void healup(int,int,bool,bool);
-extern void strange_feeling(struct obj *,const char *);
-extern void potionhit(struct monst *,struct obj *,bool);
-extern void potionbreathe(struct obj *);
-extern bool get_wet(struct obj *);
-extern int dodip(void);
-extern void djinni_from_bottle(struct obj *);
-extern struct monst *split_mon(struct monst *,struct monst *);
-extern const char *bottlename(void);
-
 /* ### pray.c ### */
 
 extern int dosacrifice(void);
@@ -399,57 +376,6 @@ extern void topten(int);
 extern void prscore(int,char **);
 extern struct obj *tt_oname(struct obj *);
 
-/* ### trap.c ### */
-
-extern bool burnarmor(struct monst *);
-extern bool rust_dmg(struct obj *,const char *,int,bool,struct monst *);
-extern void grease_protect(struct obj *,const char *,struct monst *);
-extern struct trap *maketrap(int,int,int);
-extern void fall_through(bool);
-extern struct monst *animate_statue(struct obj *,signed char,signed char,int,int *);
-extern struct monst *activate_statue_trap(struct trap *,signed char,signed char,bool);
-extern void dotrap(struct trap *, unsigned);
-extern void seetrap(struct trap *);
-extern int mintrap(struct monst *);
-extern void instapetrify(const char *);
-extern void minstapetrify(struct monst *,bool);
-extern void selftouch(const char *);
-extern void mselftouch(struct monst *,const char *,bool);
-extern void float_up(void);
-extern void fill_pit(int,int);
-extern int float_down(long, long);
-extern int fire_damage(struct obj *,bool,bool,signed char,signed char);
-extern void water_damage(struct obj *,bool,bool);
-extern bool drown(void);
-extern void drain_en(int);
-extern int dountrap(void);
-extern int untrap(bool);
-extern bool chest_trap(struct obj *,int,bool);
-extern void deltrap(struct trap *);
-extern bool delfloortrap(struct trap *);
-extern struct trap *t_at(int,int);
-extern void b_trapped(const char *,int);
-extern bool unconscious(void);
-extern bool lava_effects(void);
-extern void blow_up_landmine(struct trap *);
-extern int launch_obj(short,int,int,int,int,int);
-
-/* ### uhitm.c ### */
-
-extern void hurtmarmor(struct monst *,int);
-extern bool attack_checks(struct monst *,struct obj *);
-extern void check_caitiff(struct monst *);
-extern signed char find_roll_to_hit(struct monst *);
-extern bool attack(struct monst *);
-extern bool hmon(struct monst *,struct obj *,int);
-extern int damageum(struct monst *,struct attack *);
-extern void missum(struct monst *,struct attack *);
-extern int passive(struct monst *,bool,int,unsigned char);
-extern void passive_obj(struct monst *,struct obj *,struct attack *);
-extern void stumble_onto_mimic(struct monst *);
-extern int flash_hits_mon(struct monst *,struct obj *);
-
-
 /* ### version.c ### */
 
 extern char *version_string(char *);
@@ -503,25 +429,6 @@ extern int chwepon(struct obj *,int);
 extern int welded(struct obj *);
 extern void weldmsg(struct obj *);
 extern void setmnotwielded(struct monst *,struct obj *);
-
-/* ### worm.c ### */
-
-extern int get_wormno(void);
-extern void initworm(struct monst *,int);
-extern void worm_move(struct monst *);
-extern void worm_nomove(struct monst *);
-extern void wormgone(struct monst *);
-extern void wormhitu(struct monst *);
-extern void cutworm(struct monst *,signed char,signed char,struct obj *);
-extern void see_wsegs(struct monst *);
-extern void detect_wsegs(struct monst *,bool);
-extern void save_worm(int,int);
-extern void rest_worm(int);
-extern void place_wsegs(struct monst *);
-extern void remove_worm(struct monst *);
-extern void place_worm_tail_randomly(struct monst *,signed char,signed char);
-extern int count_wsegs(struct monst *);
-extern bool worm_known(const struct monst *);
 
 /* ### write.c ### */
 

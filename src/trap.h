@@ -74,4 +74,38 @@ extern struct trap *ftrap;
 #define POLY_TRAP       22
 #define TRAPNUM 23
 
+bool burnarmor(struct monst *);
+bool rust_dmg(struct obj *,const char *,int,bool,struct monst *);
+void grease_protect(struct obj *,const char *,struct monst *);
+struct trap *maketrap(int,int,int);
+void fall_through(bool);
+struct monst *animate_statue(struct obj *,signed char,signed char,int,int *);
+struct monst *activate_statue_trap(struct trap *,signed char,signed char,bool);
+void dotrap(struct trap *, unsigned);
+void seetrap(struct trap *);
+int mintrap(struct monst *);
+void instapetrify(const char *);
+void minstapetrify(struct monst *,bool);
+void selftouch(const char *);
+void mselftouch(struct monst *,const char *,bool);
+void float_up(void);
+void fill_pit(int,int);
+int float_down(long, long);
+int fire_damage(struct obj *,bool,bool,signed char,signed char);
+void water_damage(struct obj *,bool,bool);
+bool drown(void);
+void drain_en(int);
+int dountrap(void);
+int untrap(bool);
+bool chest_trap(struct obj *,int,bool);
+void deltrap(struct trap *);
+bool delfloortrap(struct trap *);
+struct trap *t_at(int,int);
+void b_trapped(const char *,int);
+bool unconscious(void);
+bool lava_effects(void);
+void blow_up_landmine(struct trap *);
+int launch_obj(short,int,int,int,int,int);
+
+
 #endif /* TRAP_H */
