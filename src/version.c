@@ -1,8 +1,9 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "version.h"
 #include "hack.h"
 #include "date.h"
 #include "patchlevel.h"
-#include "winprocs.h"
 
 /* fill buffer with short version (so caller can avoid including date.h) */
 char * version_string (char *buf) {

@@ -251,4 +251,12 @@ typedef struct {
         corridor **corrs;
 } splev;
 
+bool check_room(signed char *,signed char *,signed char *,signed char *,bool);
+bool create_room(signed char,signed char,signed char,signed char,
+        signed char,signed char,signed char,signed char);
+void create_secret_door(struct mkroom *,signed char);
+bool dig_corridor(coord *,coord *,bool,signed char,signed char);
+void fill_room(struct mkroom *,bool);
+bool load_special(const char *);
+
 #endif /* SP_LEV_H */

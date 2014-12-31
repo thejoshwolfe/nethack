@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "mcastu.h"
 #include "hack.h"
 #include "objnam.h"
 #include "do_name.h"

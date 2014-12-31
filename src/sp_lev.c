@@ -6,10 +6,10 @@
  *
  */
 
+#include "sp_lev.h"
 #include "hack.h"
 #include "dlb.h"
 
-#include "sp_lev.h"
 #include "rect.h"
 #include "pm_props.h"
 #include "youprop.h"

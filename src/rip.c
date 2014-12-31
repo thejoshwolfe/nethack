@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "rip.h"
 #include "hack.h"
 
 extern const char * const killed_by_prefix[];   /* from topten.c */

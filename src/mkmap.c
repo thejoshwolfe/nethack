@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "mkmap.h"
 #include "hack.h"
 #include "sp_lev.h"
 

@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "minion.h"
 #include "hack.h"
 #include "emin.h"
 #include "epri.h"

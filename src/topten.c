@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "topten.h"
 #include "hack.h"
 #include "dlb.h"
 #include "patchlevel.h"

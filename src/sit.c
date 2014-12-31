@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "sit.h"
 #include "hack.h"
 #include "artifact.h"
 #include "youprop.h"

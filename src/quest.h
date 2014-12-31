@@ -3,6 +3,8 @@
 #ifndef QUEST_H
 #define QUEST_H
 
+#include "monst.h"
+
 struct q_score {                        /* Quest "scorecard" */
     unsigned first_start:1;        /* only set the first time */
     unsigned met_leader:1;         /* has met the leader */
@@ -37,5 +39,17 @@ enum {
     MIN_QUEST_LEVEL = 14,      /* at least this u.ulevel to start */
   /* note: exp.lev. 14 is threshold level for 5th rank (class title, role.c) */
 };
+
+
+void onquest(void);
+void nemdead(void);
+void artitouch(void);
+bool ok_to_quest(void);
+void leader_speaks(struct monst *);
+void nemesis_speaks(void);
+void quest_chat(struct monst *);
+void quest_talk(struct monst *);
+void quest_stat_check(struct monst *);
+void finish_quest(struct obj *);
 
 #endif /* QUEST_H */
