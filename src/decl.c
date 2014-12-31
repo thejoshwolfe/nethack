@@ -1,8 +1,10 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "extern.h"
 #include "display.h"
 #include "color.h"
+#include "quest.h"
 
 int (*afternmv)(void);
 int (*occupation)(void);
@@ -30,7 +32,6 @@ int in_doagain = 0;
  */
 struct dgn_topology dungeon_topology = {DUMMY};
 
-#include "quest.h"
 struct q_score  quest_status = DUMMY;
 
 int smeq[MAXNROFROOMS+1] = DUMMY;
@@ -239,11 +240,16 @@ char *fqn_prefix_names[PREFIX_COUNT] = { "hackdir", "leveldir", "savedir",
                                         "bonesdir", "datadir", "scoredir",
                                         "lockdir", "configdir", "troubledir" };
 
-/* dummy routine used to force linkage */
-void
-decl_init (void)
-{
-    return;
+void stop_occupation (void) {
+    if(occupation) {
+        if (!maybe_finished_meal(true))
+            You("stop %s.", occtxt);
+        occupation = 0;
+        flags.botl = 1; /* in case u.uhs changed */
+        /* fainting stops your occupation, there's no reason to sync.
+           sync_hunger();
+           */
+        nomul(0);
+        pushch(0);
+    }
 }
-
-/*decl.c*/

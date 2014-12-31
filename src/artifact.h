@@ -1,9 +1,13 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef ARTIFACT_H
 #define ARTIFACT_H
 
 #include "align.h"
 #include "permonst.h"
+#include "monst.h"
+
+#include <stdbool.h>
 
 #define SPFX_NONE   0x0000000L  /* no special effects, just a bonus */
 #define SPFX_NOGEN  0x0000001L  /* item is special, bequeathed by gods */
@@ -60,5 +64,35 @@ struct artifact {
 #define CREATE_PORTAL   (LAST_PROP+7)
 #define ENLIGHTENING    (LAST_PROP+8)
 #define CREATE_AMMO     (LAST_PROP+9)
+
+void init_artifacts(void);
+void save_artifacts(int);
+void restore_artifacts(int);
+const char *artiname(int);
+struct obj *mk_artifact(struct obj *,aligntyp);
+const char *artifact_name(const char *,short *);
+bool exist_artifact(int,const char *);
+void artifact_exists(struct obj *,const char *,bool);
+int nartifact_exist(void);
+bool spec_ability(struct obj *,unsigned long);
+bool confers_luck(struct obj *);
+bool arti_reflects(struct obj *);
+bool restrict_name(struct obj *,const char *);
+bool defends(int,const struct obj *);
+bool protects(int,const struct obj *);
+void set_artifact_intrinsic(struct obj *,bool,long);
+int touch_artifact(struct obj *,struct monst *);
+int spec_abon(struct obj *,struct monst *);
+int spec_dbon(struct obj *,struct monst *,int);
+void discover_artifact(signed char);
+bool undiscovered_artifact(signed char);
+bool artifact_hit(struct monst *,struct monst *, struct obj *,int *,int);
+int doinvoke(void);
+void arti_speak(struct obj *);
+bool artifact_light(struct obj *);
+long spec_m2(struct obj *);
+bool artifact_has_invprop(struct obj *,unsigned char);
+long arti_cost(struct obj *);
+
 
 #endif /* ARTIFACT_H */

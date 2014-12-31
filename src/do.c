@@ -2,10 +2,10 @@
 
 /* Contains code for 'd', 'D' (drop), '>', '<' (up, down) */
 
+#include "do.h"
 #include "hack.h"
 #include "lev.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "pickup.h"
 #include "invent.h"
 #include "shk.h"

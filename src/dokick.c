@@ -1,9 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "dokick.h"
 #include "hack.h"
 #include "eshk.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "invent.h"
 #include "dbridge.h"
 #include "shk.h"

@@ -2,8 +2,8 @@
 
 /*  attribute modification routines. */
 
+#include "attrib.h"
 #include "hack.h"
-#include "extern.h"
 #include "pickup.h"
 #include "invent.h"
 #include "hacklib.h"

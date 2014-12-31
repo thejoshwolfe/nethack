@@ -1,14 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "engrave.h"
 #include "hack.h"
 #include "lev.h"
-#include "extern.h"
 #include "invent.h"
 #include "shk.h"
 #include "dbridge.h"
 #include "objnam.h"
 #include "do_name.h"
-#include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"
 

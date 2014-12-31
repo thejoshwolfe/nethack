@@ -1,12 +1,12 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "apply.h"
 #include "hack.h"
 #include "edog.h"
 #include "objclass.h"
 #include "obj.h"
 #include "youprop.h"
 #include "decl.h"
-#include "extern.h"
 #include "pickup.h"
 #include "invent.h"
 #include "shk.h"

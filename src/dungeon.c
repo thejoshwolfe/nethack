@@ -1,10 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "dungeon.h"
 #include "hack.h"
 #include "dgn_file.h"
 #include "dlb.h"
-#include "extern.h"
-#include "winprocs.h"
 #include "display.h"
 
 

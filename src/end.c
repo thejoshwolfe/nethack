@@ -1,10 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "end.h"
 #include "hack.h"
 #include "eshk.h"
 #include "dlb.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "invent.h"
 #include "priest.h"
 #include "objnam.h"

@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 /* various code that was replicated in *main.c */
 
 #include "hack.h"
@@ -9,10 +10,20 @@
 #include "permonst.h"
 #include "rm.h"
 #include "youprop.h"
-#include "extern.h"
+#include "cmd.h"
 #include "pickup.h"
 #include "hacklib.h"
 #include "dbridge.h"
+#include "do_wear.h"
+#include "apply.h"
+#include "detect.h"
+#include "eat.h"
+#include "display.h"
+#include "do.h"
+#include "botl.h"
+#include "end.h"
+#include "artifact.h"
+#include "dog.h"
 
 #include <sys/stat.h>
 #include <signal.h>
@@ -50,10 +61,6 @@ void moveloop(void) {
     /* Note:  these initializers don't do anything except guarantee that
        we're linked properly.
        */
-    decl_init();
-    monst_init();
-    monstr_init();      /* monster strengths */
-    objects_init();
 
     if (wizard) add_debug_extended_commands();
 
@@ -387,21 +394,7 @@ void moveloop(void) {
     }
 }
 
-void stop_occupation (void) {
-    if(occupation) {
-        if (!maybe_finished_meal(true))
-            You("stop %s.", occtxt);
-        occupation = 0;
-        flags.botl = 1; /* in case u.uhs changed */
-        /* fainting stops your occupation, there's no reason to sync.
-           sync_hunger();
-           */
-        nomul(0);
-        pushch(0);
-    }
-}
-
-void newgame(void) {
+static void newgame(void) {
     int i;
 
     flags.ident = 1;
@@ -437,7 +430,7 @@ void newgame(void) {
      *                      - ucsfcgl!kneller
      */
     if(MON_AT(u.ux, u.uy)) mnexto(m_at(u.ux, u.uy));
-    (void) makedog();
+    makedog();
     docrt();
 
     if (flags.legacy) {
@@ -449,7 +442,6 @@ void newgame(void) {
     program_state.something_worth_saving++; /* useful data now exists */
 
     /* Success! */
-    welcome(true);
     return;
 }
 
@@ -563,16 +555,6 @@ static void process_options (int argc, char *argv[]) {
                 } else {
                     fprintf(stderr, "Player name expected after -u\n");
                 }
-                break;
-            case 'I':
-            case 'i':
-                if (!strncmpi(argv[0]+1, "IBM", 3))
-                    switch_graphics(IBM_GRAPHICS);
-                break;
-                /*  case 'D': */
-            case 'd':
-                if (!strncmpi(argv[0]+1, "DEC", 3))
-                    switch_graphics(DEC_GRAPHICS);
                 break;
             case 'p': /* profession (role) */
                 if (argv[0][2]) {

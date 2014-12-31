@@ -2,8 +2,8 @@
 
 /* Ball & Chain =============================================================*/
 
+#include "ball.h"
 #include "hack.h"
-#include "extern.h"
 #include "invent.h"
 #include "objnam.h"
 #include "hacklib.h"

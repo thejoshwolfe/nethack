@@ -1,11 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "botl.h"
 #include "hack.h"
-#include "wintty.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "hacklib.h"
-#include "winprocs.h"
 #include "color.h"
 #include "youprop.h"
 #include "flag.h"

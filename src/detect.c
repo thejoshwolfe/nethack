@@ -5,9 +5,9 @@
  * command.
  */
 
+#include "detect.h"
 #include "hack.h"
 #include "artifact.h"
-#include "extern.h"
 #include "invent.h"
 #include "dbridge.h"
 #include "objnam.h"

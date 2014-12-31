@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef ENGRAVE_H
 #define ENGRAVE_H
 
@@ -20,5 +21,26 @@ struct engr {
 
 #define newengr(lth) (struct engr *)malloc((unsigned)(lth) + sizeof(struct engr))
 #define dealloc_engr(engr) free((void *) (engr))
+
+char *random_engraving(char *);
+void wipeout_text(char *,int,unsigned);
+bool can_reach_floor(void);
+const char *surface(int,int);
+const char *ceiling(int,int);
+struct engr *engr_at(signed char,signed char);
+int sengr_at(const char *,signed char,signed char);
+void u_wipe_engr(int);
+void wipe_engr_at(signed char,signed char,signed char);
+void read_engr_at(int,int);
+void make_engr_at(int,int,const char *,long,signed char);
+void del_engr_at(int,int);
+int freehand(void);
+int doengrave(void);
+void save_engravings(int,int);
+void rest_engravings(int);
+void del_engr(struct engr *);
+void rloc_engr(struct engr *);
+void make_grave(int,int,const char *);
+
 
 #endif /* ENGRAVE_H */

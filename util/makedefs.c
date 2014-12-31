@@ -51,9 +51,6 @@ static char     in_line[256], filename[60];
 
 static void do_makedefs(char *);
 
-extern void monst_init(void);           /* monst.c */
-extern void objects_init(void); /* objects.c */
-
 static const char *xcrypt(const char *);
 static bool d_filter(char *);
 static bool h_filter(char *);
@@ -508,14 +505,6 @@ static void do_monstr (void) {
     /* might want to insert a final 0 entry here instead of just newline */
     fprintf(ofp,"%s};\n", (j & 15) ? "\n" : "");
 
-    fprintf(ofp,"\nvoid monstr_init(void);\n");
-    fprintf(ofp,"\nvoid\n");
-    fprintf(ofp,"monstr_init()\n");
-    fprintf(ofp,"{\n");
-    fprintf(ofp,"    return;\n");
-    fprintf(ofp,"}\n");
-    fprintf(ofp,"\n/*monstr.c*/\n");
-
     fclose(ofp);
     return;
 }
@@ -747,12 +736,6 @@ static char * eos (char *str) {
 
 static void do_makedefs(char *options) {
     bool more_than_one;
-
-    /* Note:  these initializers don't do anything except guarantee that
-     we're linked properly.
-     */
-    monst_init();
-    objects_init();
 
     more_than_one = strlen(options) > 1;
     while (*options) {

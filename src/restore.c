@@ -535,8 +535,7 @@ dorecover (int fd)
         program_state.something_worth_saving++; /* useful data now exists */
 
         /* Success! */
-        welcome(false);
-        return(1);
+        return 1;
 }
 
 void

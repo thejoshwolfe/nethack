@@ -1,8 +1,8 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "eat.h"
 #include "hack.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "invent.h"
 #include "do_name.h"
 #include "shk.h"

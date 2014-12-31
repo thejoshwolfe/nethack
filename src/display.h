@@ -1,6 +1,8 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef DISPLAY_H
 #define DISPLAY_H
+
 #include "pm_props.h"
 #include "vision.h"
 #include "youprop.h"
@@ -376,4 +378,39 @@
     ((glyph) >= GLYPH_SWALLOW_OFF && (glyph) < (GLYPH_SWALLOW_OFF+(NUMMONS << 3)))
 #define glyph_is_warning(glyph) \
     ((glyph) >= GLYPH_WARNING_OFF && (glyph) < (GLYPH_WARNING_OFF + WARNCOUNT))
+
+
+void magic_map_background(signed char,signed char,int);
+void map_background(signed char,signed char,int);
+void map_trap(struct trap *,int);
+void map_object(struct obj *,int);
+void map_invisible(signed char,signed char);
+void unmap_object(int,int);
+void map_location(int,int,int);
+void feel_location(signed char,signed char);
+void newsym(int,int);
+void shieldeff(signed char,signed char);
+void tmp_at(int,int);
+void swallowed(int);
+void under_ground(int);
+void under_water(int);
+void see_monsters(void);
+void set_mimic_blocking(void);
+void see_objects(void);
+void see_traps(void);
+void curs_on_u(void);
+int doredraw(void);
+void docrt(void);
+void show_glyph(int,int,int);
+void clear_glyph_buffer(void);
+void row_refresh(int,int,int);
+void cls(void);
+void flush_screen(int);
+void dump_screen(void);
+int back_to_glyph(signed char,signed char);
+int zapdir_to_glyph(int,int,int);
+int glyph_at(signed char,signed char);
+void set_wall_state(void);
+
+
 #endif /* DISPLAY_H */

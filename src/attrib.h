@@ -38,4 +38,22 @@ struct  attribs {
 #define ATTRMAX(x) ((x == A_STR && Upolyd && strongmonst(youmonst.data)) ? STR18(100) : urace.attrmax[x])
 #define ATTRMIN(x) (urace.attrmin[x])
 
-#endif /* ATTRIB_H */
+bool adjattrib(int,int,int);
+void change_luck(signed char);
+int stone_luck(bool);
+void set_moreluck(void);
+void gainstr(struct obj *,int);
+void losestr(int);
+void restore_attrib(void);
+void exercise(int,bool);
+void exerchk(void);
+void reset_attribute_clock(void);
+void init_attr(int);
+void redist_attr(void);
+void adjabil(int,int);
+int newhp(void);
+signed char acurr(int);
+signed char acurrstr(void);
+void adjalign(int);
+
+#endif // ATTRIB_H

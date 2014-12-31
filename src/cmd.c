@@ -1,9 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "cmd.h"
 #include "hack.h"
 #include "func_tab.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "pickup.h"
 #include "invent.h"
 #include "shk.h"

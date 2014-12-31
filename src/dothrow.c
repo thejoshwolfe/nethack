@@ -2,10 +2,10 @@
 
 /* Contains code for 't' (throw) */
 
+#include "dothrow.h"
 #include "hack.h"
 #include "edog.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "pickup.h"
 #include "invent.h"
 #include "shk.h"

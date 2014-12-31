@@ -1,9 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "dog.h"
 #include "hack.h"
 #include "edog.h"
 #include "pm_props.h"
-#include "extern.h"
 #include "objnam.h"
 #include "shk.h"
 #include "do_name.h"

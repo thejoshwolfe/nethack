@@ -1,13 +1,12 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "do_wear.h"
 #include "hack.h"
-#include "extern.h"
 #include "pickup.h"
 #include "invent.h"
 #include "do_name.h"
 #include "dbridge.h"
 #include "objnam.h"
-#include "winprocs.h"
 #include "display.h"
 
 

@@ -1,8 +1,9 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "drawing.h"
 #include "hack.h"
-#include "tcap.h"
-#include "extern.h"
 #include "flag.h"
+
 /* Relevent header information in rm.h and objclass.h. */
 
 #define g_FILLER(symbol) 0
@@ -519,38 +520,4 @@ assign_graphics (unsigned char *graph_chars, int glth, int maxlen, int offset)
         showsyms[i+offset] = (((i < glth) && graph_chars[i]) ?
                        graph_chars[i] : defsyms[i+offset].sym);
 }
-
-void
-switch_graphics (int gr_set_flag)
-{
-    switch (gr_set_flag) {
-        default:
-        case ASCII_GRAPHICS:
-            assign_graphics((unsigned char *)0, 0, MAXPCHARS, 0);
-            break;
-        case IBM_GRAPHICS:
-/*
- * Use the nice IBM Extended ASCII line-drawing characters (codepage 437).
- *
- * OS/2 defaults to a multilingual character set (codepage 850, corresponding
- * to the ISO 8859 character set.  We should probably do a VioSetCp() call to
- * set the codepage to 437.
- */
-            iflags.IBMgraphics = true;
-            iflags.DECgraphics = false;
-            assign_graphics(ibm_graphics, SIZE(ibm_graphics), MAXPCHARS, 0);
-            break;
-        case DEC_GRAPHICS:
-/*
- * Use the VT100 line drawing character set.
- */
-            iflags.DECgraphics = true;
-            iflags.IBMgraphics = false;
-            assign_graphics(dec_graphics, SIZE(dec_graphics), MAXPCHARS, 0);
-            if (decgraphics_mode_callback) (*decgraphics_mode_callback)();
-            break;
-        }
-    return;
-}
-
 

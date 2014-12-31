@@ -1,7 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "hack.h"
 #include "artifact.h"
+#include "hack.h"
 #include "artilist.h"
 #include "pm_props.h"
 #include "extern.h"

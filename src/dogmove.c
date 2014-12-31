@@ -2,9 +2,9 @@
 
 #include "hack.h"
 
+#include "dogmove.h"
 #include "mfndpos.h"
 #include "edog.h"
-#include "extern.h"
 #include "invent.h"
 #include "mhitm.h"
 #include "priest.h"
