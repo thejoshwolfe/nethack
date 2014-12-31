@@ -100,4 +100,20 @@ extern coord doors[DOORMAX];
 #define IS_LAST_ROOM_PTR(x)     (ROOM_INDEX(x) == nroom)
 #define IS_LAST_SUBROOM_PTR(x)  (!nsubroom || SUBROOM_INDEX(x) == nsubroom)
 
+void mkroom(int);
+void fill_zoo(struct mkroom *);
+bool nexttodoor(int,int);
+bool has_dnstairs(struct mkroom *);
+bool has_upstairs(struct mkroom *);
+int somex(struct mkroom *);
+int somey(struct mkroom *);
+bool inside_room(struct mkroom *,signed char,signed char);
+bool somexy(struct mkroom *,coord *);
+void mkundead(coord *,bool,int);
+struct permonst *courtmon(void);
+void save_rooms(int);
+void rest_rooms(int);
+struct mkroom *search_special(signed char);
+
+
 #endif /* MKROOM_H */

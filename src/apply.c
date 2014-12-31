@@ -33,6 +33,13 @@
 #include "wizard.h"
 #include "sounds.h"
 #include "muse.h"
+#include "worn.h"
+#include "steal.h"
+#include "teleport.h"
+#include "monmove.h"
+#include "makemon.h"
+#include "mkroom.h"
+#include "read.h"
 
 static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,

@@ -11,6 +11,7 @@
  *      rest_rooms() -- restore rooms from file fd
  */
 
+#include "mkroom.h"
 #include "hack.h"
 #include "invent.h"
 #include "priest.h"

@@ -1,4 +1,6 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "steal.h"
 #include "hack.h"
 #include "display.h"
 

@@ -153,38 +153,6 @@ extern void obj_ice_effects(int, int, bool);
 extern long peek_at_iced_corpse_age(struct obj *);
 extern void obj_sanity_check(void);
 
-/* ### mkroom.c ### */
-
-extern void mkroom(int);
-extern void fill_zoo(struct mkroom *);
-extern bool nexttodoor(int,int);
-extern bool has_dnstairs(struct mkroom *);
-extern bool has_upstairs(struct mkroom *);
-extern int somex(struct mkroom *);
-extern int somey(struct mkroom *);
-extern bool inside_room(struct mkroom *,signed char,signed char);
-extern bool somexy(struct mkroom *,coord *);
-extern void mkundead(coord *,bool,int);
-extern struct permonst *courtmon(void);
-extern void save_rooms(int);
-extern void rest_rooms(int);
-extern struct mkroom *search_special(signed char);
-
-/* ### monmove.c ### */
-
-extern bool itsstuck(struct monst *);
-extern bool mb_trapped(struct monst *);
-extern void mon_regen(struct monst *,bool);
-extern int dochugw(struct monst *);
-extern bool onscary(int,int,struct monst *);
-extern void monflee(struct monst *, int, bool, bool);
-extern int dochug(struct monst *);
-extern int m_move(struct monst *,int);
-extern bool closed_door(int,int);
-extern bool accessible(int,int);
-extern void set_apparxy(struct monst *);
-extern bool can_ooze(struct monst *);
-
 /* ### mplayer.c ### */
 
 extern struct monst *mk_mplayer(struct permonst *,signed char, signed char,bool);
@@ -252,23 +220,6 @@ extern void quest_talk(struct monst *);
 extern void quest_stat_check(struct monst *);
 extern void finish_quest(struct obj *);
 
-/* ### read.c ### */
-
-extern int doread(void);
-extern bool is_chargeable(struct obj *);
-extern void recharge(struct obj *,int);
-extern void forget_objects(int);
-extern void forget_levels(int);
-extern void forget_traps(void);
-extern void forget_map(int);
-extern int seffects(struct obj *);
-extern void litroom(bool,struct obj *);
-extern void do_genocide(int);
-extern void punish(struct obj *);
-extern void unpunish(void);
-extern bool cant_create(int *, bool);
-extern bool create_particular(void);
-
 /* ### rect.c ### */
 
 extern void init_rect(void);
@@ -329,17 +280,6 @@ extern void create_secret_door(struct mkroom *,signed char);
 extern bool dig_corridor(coord *,coord *,bool,signed char,signed char);
 extern void fill_room(struct mkroom *,bool);
 extern bool load_special(const char *);
-
-/* ### steal.c ### */
-
-extern long somegold(void);
-extern void stealgold(struct monst *);
-extern void remove_worn_item(struct obj *,bool);
-extern int steal(struct monst *, char *);
-extern int mpickobj(struct monst *,struct obj *);
-extern void stealamulet(struct monst *);
-extern void mdrop_special_objs(struct monst *);
-extern void relobj(struct monst *,int,bool);
 
 /* ### steed.c ### */
 
