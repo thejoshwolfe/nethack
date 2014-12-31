@@ -855,9 +855,12 @@ const char * rndmonnam (void) {
     return mons[name].mname;
 }
 
+int halluc_color_int(void) {
+    return rn2(SIZE(hcolors));
+}
+
 const char * hcolor (const char *colorpref) {
-    return (Hallucination() || !colorpref) ?
-        hcolors[rn2(SIZE(hcolors))] : colorpref;
+    return (Hallucination() || !colorpref) ?  hcolors[halluc_color_int] : colorpref;
 }
 
 /* return a random real color unless hallucinating */

@@ -16,67 +16,25 @@
 #include "do_name.h"
 #include "display.h"
 #include "vision.h"
-#include "winprocs.h"
 #include "timeout.h"
 
 static const char tools[] = { TOOL_CLASS, WEAPON_CLASS, WAND_CLASS, 0 };
 static const char tools_too[] = { ALL_CLASSES, TOOL_CLASS, POTION_CLASS,
     WEAPON_CLASS, WAND_CLASS, GEM_CLASS, 0 };
 
-static int use_camera(struct obj *);
-static int use_towel(struct obj *);
-static bool its_dead(int,int,int *);
-static int use_stethoscope(struct obj *);
-static void use_whistle(struct obj *);
-static void use_magic_whistle(struct obj *);
-static void use_leash(struct obj *);
-static int use_mirror(struct obj *);
-static void use_bell(struct obj **);
-static void use_candelabrum(struct obj *);
-static void use_candle(struct obj **);
-static void use_lamp(struct obj *);
-static void light_cocktail(struct obj *);
-static void use_tinning_kit(struct obj *);
-static void use_figurine(struct obj **);
-static void use_grease(struct obj *);
-static void use_trap(struct obj *);
-static void use_stone(struct obj *);
-static int set_trap(void);          /* occupation callback */
-static int use_whip(struct obj *);
-static int use_pole(struct obj *);
-static int use_cream_pie(struct obj *);
-static int use_grapple(struct obj *);
-static int do_break_wand(struct obj *);
-static bool figurine_location_checks(struct obj *, coord *, bool);
-static bool uhave_graystone(void);
-static void add_class(char *, char);
-
-static const char no_elbow_room[] = "don't have enough elbow-room to maneuver.";
-static const char hollow_str[] = "a hollow sound.  This must be a secret %s!";
-static const char whistle_str[] = "produce a %s whistling sound.";
-
 #define MAXLEASHED      2
 
 
 #define WEAK    3       /* from eat.c */
 
-static const char look_str[] = "look %s.";
 static const char cuddly[] = { TOOL_CLASS, GEM_CLASS, 0 };
 static const char lubricables[] = { ALL_CLASSES, ALLOW_NONE, 0 };
-static const char need_to_remove_outer_armor[] =
-"need to remove your %s to grease your %s.";
 static struct trapinfo {
     struct obj *tobj;
     signed char tx, ty;
     int time_needed;
     bool force_bungle;
 } trapinfo;
-
-static const char
-not_enough_room[] = "There's not enough room here to use that.",
-    where_to_hit[] = "Where do you want to hit?",
-    cant_see_spot[] = "won't hit anything if you can't see that spot.",
-    cant_reach[] = "can't reach that spot from here.";
 
 #define BY_OBJECT       ((struct monst *)0)
 
@@ -89,8 +47,8 @@ not_enough_room[] = "There's not enough room here to use that.",
 static int use_camera (struct obj *obj) {
     struct monst *mtmp;
 
-    if(Underwater) {
-        pline("Using your camera underwater would void the warranty.");
+    if (Underwater) {
+        message_const(MSG_USING_CAMERA_UNDERWATER);
         return(0);
     }
     if(!getdir((char *)0)) return(0);
@@ -104,11 +62,11 @@ static int use_camera (struct obj *obj) {
     if (obj->cursed && !rn2(2)) {
         zapyourself(obj, true);
     } else if (u.uswallow) {
-        char name[BUFSZ];
-        mon_nam(name, BUFSZ, u.ustuck);
-        You("take a picture of %s%s %s.", name, possessive_suffix(name), mbodypart(u.ustuck, STOMACH));
+        message_monster_string(MSG_YOU_TAKE_PICTURE_OF_SWALLOW, u.ustuck,
+                mbodypart(u.ustuck, STOMACH));
     } else if (u.dz) {
-        You("take a picture of the %s.", (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+        message_string(MSG_YOU_TAKE_PICTURE_OF_DUNGEON,
+                (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
     } else if (!u.dx && !u.dy) {
         zapyourself(obj, true);
     } else if ((mtmp = bhit(u.dx, u.dy, COLNO, FLASHED_LIGHT, NULL, NULL, obj)) != 0) {
@@ -119,11 +77,11 @@ static int use_camera (struct obj *obj) {
 }
 
 static int use_towel (struct obj *obj) {
-    if(!freehand()) {
-        You("have no free %s!", body_part(HAND));
+    if (!freehand()) {
+        message_string(MSG_YOU_HAVE_NO_FREE_HAND, body_part(HAND));
         return 0;
     } else if (obj->owornmask) {
-        You("cannot use it while you're wearing it!");
+        message_const(MSG_CANNOT_USE_WHILE_WEARING);
         return 0;
     } else if (obj->cursed) {
         long old;
@@ -310,13 +268,13 @@ static int use_stethoscope (struct obj *obj) {
     lev = &levl[rx][ry];
     switch(lev->typ) {
         case SDOOR:
-            You_hear(hollow_str, "door");
+            message_const(MSG_FOUND_SECRET_DOOR);
             cvt_sdoor_to_door(lev);         /* ->typ = DOOR */
             if (Blind) feel_location(rx,ry);
             else newsym(rx,ry);
             return res;
         case SCORR:
-            You_hear(hollow_str, "passage");
+            message_const(MSG_FOUND_SECRET_PASSAGE);
             lev->typ = CORR;
             unblock_point(rx,ry);
             if (Blind) feel_location(rx,ry);
@@ -330,7 +288,7 @@ static int use_stethoscope (struct obj *obj) {
 }
 
 static void use_whistle (struct obj *obj) {
-    You(whistle_str, obj->cursed ? "shrill" : "high");
+    message_const(obj->cursed ? MSG_WHISTLE_SHRILL : MSG_WHISTLE_HIGH);
     wake_nearby();
 }
 
@@ -341,8 +299,8 @@ static void use_magic_whistle (struct obj *obj) {
         You("produce a high-pitched humming noise.");
         wake_nearby();
     } else {
+        message_const(MSG_WHISTLE_MAGIC);
         int pet_cnt = 0;
-        You(whistle_str, Hallucination() ? "normal" : "strange");
         for(mtmp = fmon; mtmp; mtmp = nextmon) {
             nextmon = mtmp->nmon; /* trap might kill mon */
             if (DEADMONSTER(mtmp)) continue;
@@ -609,26 +567,27 @@ static int use_mirror (struct obj *obj) {
         if(!Blind && !Invisible) {
             if (u.umonnum == PM_FLOATING_EYE) {
                 if (!Free_action) {
-                    pline(Hallucination() ?
-                            "Yow!  The mirror stares back!" :
-                            "Yikes!  You've frozen yourself!");
+                    message_const(MSG_MIRROR_STARES_BACK);
                     nomul(-rnd((MAXULEV+6) - u.ulevel));
-                } else You("stiffen momentarily under your gaze.");
-            } else if (youmonst.data->mlet == S_VAMPIRE)
-                You("don't have a reflection.");
-            else if (u.umonnum == PM_UMBER_HULK) {
-                pline("Huh?  That doesn't look like you!");
-                make_confused(HConfusion + d(3,4),false);
-            } else if (Hallucination())
-                You(look_str, hcolor((char *)0));
-            else if (Sick)
-                You(look_str, "peaked");
-            else if (u.uhs >= WEAK)
-                You(look_str, "undernourished");
-            else You("look as %s as ever.",
+                } else {
+                    message_const(MSG_YOU_STIFFEN_MOMENTARILY_UNDER_YOUR_GAZE);
+                }
+            } else if (youmonst.data->mlet == S_VAMPIRE) {
+                message_const(MSG_YOU_HAVE_NO_REFLECTION);
+            } else if (u.umonnum == PM_UMBER_HULK) {
+                message_const(MSG_HUH_NO_LOOK_LIKE_YOU);
+                make_confused(HConfusion + d(3,4), false);
+            } else if (Hallucination()) {
+                message_int(MSG_YOU_LOOK_COLOR, halluc_color_int());
+            } else if (Sick) {
+                message_const(MSG_YOU_LOOK_PEAKED);
+            } else if (u.uhs >= WEAK) {
+                message_const(MSG_YOU_LOOK_UNDERNOURISHED);
+            } else {
+                You("look as %s as ever.",
                     ACURR(A_CHA) > 14 ?
-                    (poly_gender()==1 ? "beautiful" : "handsome") :
-                    "ugly");
+                    (poly_gender()==1 ? "beautiful" : "handsome") : "ugly");
+            }
         } else {
             You_cant("see your %s %s.",
                     ACURR(A_CHA) > 14 ?
@@ -928,7 +887,7 @@ static void use_candle (struct obj **optr) {
     char qbuf[QBUFSZ];
 
     if(u.uswallow) {
-        You(no_elbow_room);
+        message_const(MSG_NO_ELBOW_ROOM);
         return;
     }
     if(Underwater) {
@@ -1127,7 +1086,7 @@ static void light_cocktail (struct obj *obj) {
     char buf[BUFSZ];
 
     if (u.uswallow) {
-        You(no_elbow_room);
+        message_const(MSG_NO_ELBOW_ROOM);
         return;
     }
 
@@ -1742,15 +1701,11 @@ static void use_grease (struct obj *obj) {
         otmp = getobj(lubricables, "grease");
         if (!otmp) return;
         if ((otmp->owornmask & WORN_ARMOR) && uarmc) {
-            strcpy(buf, xname(uarmc));
-            You(need_to_remove_outer_armor, buf, xname(otmp));
+            message_object2(MSG_YOU_MUST_REMOVE_O_TO_GREASE_O, uarmc, otmp);
             return;
         }
         if ((otmp->owornmask & WORN_SHIRT) && (uarmc || uarm)) {
-            strcpy(buf, uarmc ? xname(uarmc) : "");
-            if (uarmc && uarm) strcat(buf, " and ");
-            strcat(buf, uarm ? xname(uarm) : "");
-            You(need_to_remove_outer_armor, buf, xname(otmp));
+            message_object3(MSG_YOU_MUST_REMOVE_O_AND_O_TO_GREASE_O, uarmc, uarm, otmp);
             return;
         }
         consume_obj_charge(obj, true);
@@ -2293,8 +2248,8 @@ static int use_pole (struct obj *obj) {
 
     /* Are you allowed to use the pole? */
     if (u.uswallow) {
-        plines(not_enough_room);
-        return (0);
+        message_const(MSG_NOT_ENOUGH_ROOM_TO_USE);
+        return 0;
     }
     if (obj != uwep) {
         if (!wield_tool(obj, "swing")) return(0);
@@ -2303,7 +2258,7 @@ static int use_pole (struct obj *obj) {
     /* assert(obj == uwep); */
 
     /* Prompt for a location */
-    plines(where_to_hit);
+    // plines(where_to_hit);
     cc.x = u.ux;
     cc.y = u.uy;
     if (getpos(&cc, true, "the spot to hit") < 0)
@@ -2322,11 +2277,12 @@ static int use_pole (struct obj *obj) {
         return (res);
     } else if (!cansee(cc.x, cc.y) &&
             ((mtmp = m_at(cc.x, cc.y)) == (struct monst *)0 ||
-             !canseemon(mtmp))) {
-        You("%s", cant_see_spot);
-        return (res);
+             !canseemon(mtmp)))
+    {
+        message_const(MSG_NO_HIT_IF_CANNOT_SEE_SPOT);
+        return res;
     } else if (!couldsee(cc.x, cc.y)) { /* Eyes of the Overworld */
-        You("%s", cant_reach);
+        message_const(MSG_YOU_CANNOT_REACH_SPOT_FROM_HERE);
         return res;
     }
 
@@ -2393,8 +2349,8 @@ static int use_grapple (struct obj *obj) {
 
     /* Are you allowed to use the hook? */
     if (u.uswallow) {
-        plines(not_enough_room);
-        return (0);
+        message_const(MSG_NOT_ENOUGH_ROOM_TO_USE);
+        return 0;
     }
     if (obj != uwep) {
         if (!wield_tool(obj, "cast")) return(0);
@@ -2403,7 +2359,7 @@ static int use_grapple (struct obj *obj) {
     /* assert(obj == uwep); */
 
     /* Prompt for a location */
-    plines(where_to_hit);
+    // plines(where_to_hit);
     cc.x = u.ux;
     cc.y = u.uy;
     if (getpos(&cc, true, "the spot to hit") < 0)
@@ -2418,10 +2374,10 @@ static int use_grapple (struct obj *obj) {
         pline("Too far!");
         return (res);
     } else if (!cansee(cc.x, cc.y)) {
-        You("%s", cant_see_spot);
-        return (res);
+        message_const(MSG_NO_HIT_IF_CANNOT_SEE_SPOT);
+        return res;
     } else if (!couldsee(cc.x, cc.y)) { /* Eyes of the Overworld */
-        You("%s", cant_reach);
+        message_const(MSG_YOU_CANNOT_REACH_SPOT_FROM_HERE);
         return res;
     }
 

@@ -28,6 +28,7 @@ size_t a_monnam(char *out_buf, size_t buf_size, const struct monst *mtmp);
 size_t distant_monnam(char *out_buf, size_t buf_size, const struct monst *mon, int article);
 const char *rndmonnam(void);
 const char *hcolor(const char *);
+int halluc_color_int(void);
 const char *rndcolor(void);
 struct obj *realloc_obj(struct obj *, int, void *, int, const char *);
 size_t coyotename (char *out_buf, size_t buf_size, const struct monst *mtmp);
