@@ -17,6 +17,7 @@ void update_inventory(void);
 void getlin(const char *, char *);
 
 enum MessageId {
+    MSG_NOTHING_HAPPENS,
     MSG_YOU_HEAR_NOTHING_SPECIAL,
     MSG_THE_INVISIBLE_MONSTER_MOVED,
     MSG_YOU_HEAR_FAINT_TYPING_NOISE,

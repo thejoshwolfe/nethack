@@ -8,6 +8,14 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+MSG_NOTHING_HAPPENS
+struct c_common_strings c_common_strings = {
+        "Nothing happens.",             "That's enough tries!",
+        "That is a silly thing to %s.", "shudder for a moment.",
+        "something", "Something", "You can move again.", "Never mind.",
+        "vision quickly clears.", {"the", "your"}
+};
+
 
 MSG_FOUND_SECRET_DOOR, "You hear a hollow sound.  This must be a secret %s!";
 MSG_FOUND_SECRET_PASSAGE, "You hear a hollow sound.  This must be a secret %s!";

@@ -55,8 +55,8 @@ static int use_camera (struct obj *obj) {
     if(!getdir((char *)0)) return(0);
 
     if (obj->spe <= 0) {
-        plines(nothing_happens);
-        return (1);
+        message_const(MSG_NOTHING_HAPPENS);
+        return 1;
     }
     consume_obj_charge(obj, true);
 
@@ -761,7 +761,7 @@ static void use_bell (struct obj **optr) {
             if (!obj->cursed)
                 (void) openit();
             else
-                plines(nothing_happens);
+                message_const(MSG_NOTHING_HAPPENS);
 
         } else if (obj->cursed) {
             coord mm;
@@ -788,7 +788,9 @@ static void use_bell (struct obj **optr) {
             }
             res += openit();
             switch (res) {
-                case 0:  plines(nothing_happens); break;
+                case 0:
+                    message_const(MSG_NOTHING_HAPPENS);
+                    break;
                 case 1:  pline("%s opens...", Something);
                          learno = true; break;
                 default: pline("Things open around you...");
@@ -796,8 +798,10 @@ static void use_bell (struct obj **optr) {
             }
 
         } else {  /* uncursed */
-            if (findit() != 0) learno = true;
-            else plines(nothing_happens);
+            if (findit() != 0)
+                learno = true;
+            else
+                message_const(MSG_NOTHING_HAPPENS);
         }
 
     }       /* charged BofO */
@@ -1145,14 +1149,18 @@ int dorub (void) {
             uwep->age = rn1(500,1000);
             if (uwep->lamplit) begin_burn(uwep, true);
             update_inventory();
-        } else if (rn2(2) && !Blind)
+        } else if (rn2(2) && !Blind) {
             You("see a puff of smoke.");
-        else plines(nothing_happens);
+        } else {
+            message_const(MSG_NOTHING_HAPPENS);
+        }
     } else if (obj->otyp == BRASS_LANTERN) {
         /* message from Adventure */
         pline("Rubbing the electric lamp is not particularly rewarding.");
         pline("Anyway, nothing exciting happens.");
-    } else plines(nothing_happens);
+    } else {
+        message_const(MSG_NOTHING_HAPPENS);
+    }
     return 1;
 }
 
@@ -1448,7 +1456,7 @@ void use_unicorn_horn (struct obj *obj) {
     }
 
     if (trouble_count == 0) {
-        plines(nothing_happens);
+        message_const(MSG_NOTHING_HAPPENS);
         return;
     } else if (trouble_count > 1) {         /* shuffle */
         int i, j, k;
@@ -2290,7 +2298,7 @@ static int use_pole (struct obj *obj) {
             u.uconduct.weaphit++;
     } else
         /* Now you know that nothing is there... */
-        plines(nothing_happens);
+        message_const(MSG_NOTHING_HAPPENS);
     return (1);
 }
 
@@ -2447,7 +2455,7 @@ static int use_grapple (struct obj *obj) {
             }
             break;
     }
-    plines(nothing_happens);
+    message_const(MSG_NOTHING_HAPPENS);
     return (1);
 }
 
@@ -2828,7 +2836,7 @@ int doapply (void) {
                         (const char *)0);
                 makeknown(HORN_OF_PLENTY);
             } else
-                plines(nothing_happens);
+                message_const(MSG_NOTHING_HAPPENS);
             break;
         case LAND_MINE:
         case BEARTRAP:

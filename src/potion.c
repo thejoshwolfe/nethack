@@ -1543,7 +1543,7 @@ poof:
                 obj == uball || obj == uskin ||
                 obj_resists(obj->otyp == POT_POLYMORPH ?
                     potion : obj, 5, 95)) {
-            plines(nothing_happens);
+            message_const(MSG_NOTHING_HAPPENS);
         } else {
             bool was_wep = false, was_swapwep = false, was_quiver = false;
             short save_otyp = obj->otyp;

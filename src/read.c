@@ -150,14 +150,17 @@ doread (void)
 static void
 stripspe (struct obj *obj)
 {
-        if (obj->blessed) plines(nothing_happens);
-        else {
+        if (obj->blessed) {
+            message_const(MSG_NOTHING_HAPPENS);
+        } else {
                 if (obj->spe > 0) {
                     obj->spe = 0;
                     if (obj->otyp == OIL_LAMP || obj->otyp == BRASS_LANTERN)
                         obj->age = 0;
                     Your("%s %s briefly.",xname(obj), otense(obj, "vibrate"));
-                } else plines(nothing_happens);
+                } else {
+                    message_const(MSG_NOTHING_HAPPENS);
+                }
         }
 }
 
@@ -306,7 +309,7 @@ recharge (struct obj *obj, int curse_bless)
                     if (obj->spe < 3)
                         Your("marker seems permanently dried out.");
                     else
-                        plines(nothing_happens);
+                        message_const(MSG_NOTHING_HAPPENS);
                 } else if (is_blessed) {
                     n = rn1(16,15);             /* 15..30 */
                     if (obj->spe + n <= 50)
@@ -364,7 +367,9 @@ recharge (struct obj *obj, int curse_bless)
                     if (obj->spe < 5) {
                         obj->spe++;
                         p_glow1(obj);
-                    } else plines(nothing_happens);
+                    } else {
+                        message_const(MSG_NOTHING_HAPPENS);
+                    }
                 }
                 break;
             case HORN_OF_PLENTY:
@@ -1652,7 +1657,7 @@ do_genocide (int how)
             if (cnt)
                 pline("Sent in some %s.", makeplural(buf));
             else
-                plines(nothing_happens);
+                message_const(MSG_NOTHING_HAPPENS);
         }
 }
 

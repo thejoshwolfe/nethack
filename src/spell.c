@@ -934,7 +934,7 @@ spelleffects (int spell, bool atme)
                 break;
         case SPE_JUMPING:
                 if (!jump(max(role_skill,1)))
-                        plines(nothing_happens);
+                        message_const(MSG_NOTHING_HAPPENS);
                 break;
         default:
                 impossible("Unknown spell %d attempted.", spell);

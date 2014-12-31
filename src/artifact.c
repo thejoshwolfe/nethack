@@ -1113,7 +1113,7 @@ static int arti_invoke (struct obj *obj) {
         if(obj->otyp == CRYSTAL_BALL)
             use_crystal_ball(obj);
         else
-            plines(nothing_happens);
+            message_const(MSG_NOTHING_HAPPENS);
         return 1;
     }
 

@@ -1633,7 +1633,7 @@ bagotricks (struct obj *bag)
     if (!bag || bag->otyp != BAG_OF_TRICKS) {
         impossible("bad bag o' tricks");
     } else if (bag->spe < 1) {
-        plines(nothing_happens);
+        message_const(MSG_NOTHING_HAPPENS);
     } else {
         bool gotone = false;
         int cnt = 1;
@@ -1648,6 +1648,3 @@ bagotricks (struct obj *bag)
         if (gotone) makeknown(BAG_OF_TRICKS);
     }
 }
-
-
-/*makemon.c*/

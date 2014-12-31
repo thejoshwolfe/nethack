@@ -1690,7 +1690,7 @@ int dozap(void) {
 
     /* zappable addition done by GAN 11/03/86 */
     if (!zappable(obj))
-        plines(nothing_happens);
+        message_const(MSG_NOTHING_HAPPENS);
     else if (obj->cursed && !rn2(100)) {
         backfire(obj); /* the wand blows up in your face! */
         exercise(A_STR, false);
@@ -2204,7 +2204,7 @@ static bool zap_updown(struct obj *obj /* wand or spell */
         case SPE_STONE_TO_FLESH:
             if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz) ||
             Underwater || (Is_qstart(&u.uz) && u.dz < 0)) {
-                plines(nothing_happens);
+                message_const(MSG_NOTHING_HAPPENS);
             } else if (u.dz < 0) { /* we should do more... */
                 pline("Blood drips on your %s.", body_part(FACE));
             } else if (u.dz > 0 && !OBJ_AT(u.ux, u.uy)) {
@@ -2215,7 +2215,7 @@ static bool zap_updown(struct obj *obj /* wand or spell */
                 e = engr_at(u.ux, u.uy);
                 if (!(e && e->engr_type == ENGRAVE)) {
                     if (is_pool(u.ux, u.uy) || is_ice(u.ux, u.uy))
-                        plines(nothing_happens);
+                        message_const(MSG_NOTHING_HAPPENS);
                     else
                         pline("Blood %ss %s your %s.", is_lava(u.ux, u.uy) ? "boil" : "pool",
                         Levitation ? "beneath" : "at", makeplural(body_part(FOOT)));
