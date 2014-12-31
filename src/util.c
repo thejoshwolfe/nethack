@@ -33,7 +33,7 @@ size_t nh_vslprintf(char *dest, size_t dest_size, char *format, va_list ap) {
     int ret = vsnprintf(dest, n, format, ap);
     assert(ret >= 0);
     dest[(ret > n) ? n : ret] = 0;
-    return ret + 1;
+    return ret;
 }
 
 size_t nh_slprintf(char *dest, size_t dest_size, char *format, ...) {
