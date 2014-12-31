@@ -136,10 +136,8 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                         mon_adjust_speed(mtmp, -1, otmp);
                         m_dowear(mtmp, false); /* might want speed boots */
                         if (u.uswallow && (mtmp == u.ustuck) && is_whirly(mtmp->data)) {
-                            char name[BUFSZ];
-                            mon_nam(name, BUFSZ, mtmp);
-                            You("disrupt %s!", name);
-                            pline("A huge hole opens up...");
+                            message_monster(MSG_YOU_DISTRUPT_ENGULFER, mtmp);
+                            message_const(MSG_A_HUGE_HOLE_OPENS_UP);
                             expels(mtmp, mtmp->data, true);
                         }
                 }

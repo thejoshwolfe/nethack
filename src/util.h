@@ -27,6 +27,7 @@ struct Message {
     const struct obj *object1;
 };
 
+void message_const(enum MessageId id);
 void message_monster(enum MessageId id, const struct monst *m);
 void message_object(enum MessageId id, const struct obj *o);
 

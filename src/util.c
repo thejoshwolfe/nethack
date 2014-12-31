@@ -63,3 +63,10 @@ size_t nh_slprintf(char *dest, size_t dest_size, char *format, ...) {
     va_end(ap);
     return ret;
 }
+
+/*
+
+MSG_YOU_DISRUPT, You("disrupt %s!", name);
+MSG_A_HUGE_HOLE_OPENS_UP, "A huge hole opens up..."
+
+*/
