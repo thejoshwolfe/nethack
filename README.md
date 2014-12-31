@@ -54,6 +54,12 @@ The goal of this fork is to make the game more approachable for new players.
      Move the all the nighttime/moon-phase mechanics to correspond to in-game time.
      In-game time should be randomly initialized for new games, and flow with the turn counter.
      * You can ask the Oracle for the in-game time for free, and then you know it forever afterward (intrinsic chronoscience).
+   * Blacklist all special names.
+     This includes the names of unique monsters, artifact names, and anything containing "elbereth" (ignoring case).
+     These names would be forbidden for usernames, pet names, custom fruits, and the Call command.
+     * Fixes the [artifact naming exploit](http://nethackwiki.com/wiki/Naming_artifacts).
+     * Claiming that you're Creosus is more fair to users on a server.
+     * No need for special logic for Elbereth on tombstones.
  * Improve the information conveyance.
    * Uncursed fortune cookies should unlock a random tidbit from the encyclopedia.
      Blessed fortune cookies should do the same, but select from a set of relevant tidbits,
