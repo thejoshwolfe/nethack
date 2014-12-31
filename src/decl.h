@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef DECL_H
 #define DECL_H
 
@@ -13,8 +14,6 @@
 #include "monst.h"
 #include "you.h"
 #include "obj.h"
-
-#include "tcap.h"
 
 
 extern int (*occupation)(void);

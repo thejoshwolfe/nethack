@@ -1,9 +1,9 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "pm_props.h"
 #include "extern.h"
 #include "display.h"
-#include "winprocs.h"
 #include "do_name.h"
 #include "objnam.h"
 #include "dbridge.h"
@@ -180,9 +180,7 @@ bhitm (struct monst *mtmp, struct obj *otmp)
                        with their metabolism...) */
                     if (mtmp->cham == CHAM_ORDINARY && !rn2(25)) {
                         if (canseemon(mtmp)) {
-                            char name[BUFSZ];
-                            Monnam(name, BUFSZ, mtmp);
-                            pline("%s shudders!", name);
+                            monster_message(MSG_FAILED_POLYMORPH, mtmp);
                             makeknown(otyp);
                         }
                         /* dropped inventory shouldn't be hit by this zap */
@@ -1765,7 +1763,6 @@ zapnodir (struct obj *obj)
                 case WAN_ENLIGHTENMENT:
                         known = true;
                         You_feel("self-knowledgeable...");
-                        display_nhwindow(WIN_MESSAGE, false);
                         enlightenment(false);
                         pline_The("feeling subsides.");
                         exercise(A_WIS, true);
@@ -2744,7 +2741,6 @@ bhit (
                     newsym(x, y);
                 }
                 tmp_at(bhitpos.x, bhitpos.y);
-                my_delay_output();
                 /* kicked objects fall in pools */
                 if((weapon == KICKED_WEAPON) &&
                    (is_pool(bhitpos.x, bhitpos.y) ||
@@ -2836,7 +2832,6 @@ boomhit (int dx, int dy)
                         }
                 }
                 tmp_at(bhitpos.x, bhitpos.y);
-                my_delay_output();
                 if(ct % 5 != 0) i++;
                 if(IS_SINK(levl[bhitpos.x][bhitpos.y].typ))
                         break;  /* boomerang falls on sink */
@@ -3247,7 +3242,6 @@ buzz (int type, int nd, signed char sx, signed char sy, int dx, int dy)
                 }
                 if(ZAP_POS(lev->typ) || cansee(lsx,lsy))
                     tmp_at(sx,sy);
-                my_delay_output(); /* wait a little */
             }
         } else
             goto make_bounce;

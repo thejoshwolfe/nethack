@@ -145,15 +145,7 @@ ready_weapon (struct obj *wep)
             /* Weapon WILL be wielded after this point */
             res++;
             if (will_weld(wep)) {
-                const char *tmp = xname(wep), *thestr = "The ";
-                if (strncmp(tmp, thestr, 4) && !strncmp(The(tmp),thestr,4))
-                    tmp = thestr;
-                else tmp = "";
-                pline("%s%s %s to your %s!", tmp, aobjnam(wep, "weld"),
-                        (wep->quan == 1L) ? "itself" : "themselves", /* a3 */
-                        bimanual(wep) ?
-                                (const char *)makeplural(body_part(HAND))
-                                : body_part(HAND));
+                message_object(MSG_WELDS_TO_YOUR_HAND, wep);
                 wep->bknown = true;
             } else {
                 /* The message must be printed before setuwep (since

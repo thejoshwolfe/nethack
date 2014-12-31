@@ -16,7 +16,6 @@
 #include "pickup.h"
 #include "hacklib.h"
 #include "dbridge.h"
-#include "winprocs.h"
 
 #include <sys/stat.h>
 #include <signal.h>
@@ -70,8 +69,6 @@ void moveloop(void) {
     youmonst.movement = NORMAL_SPEED;   /* give the hero some movement points */
 
     for(;;) {
-        get_nh_event();
-
         didmove = flags.move;
         if(didmove) {
             /* actual time passed */
@@ -393,7 +390,6 @@ void moveloop(void) {
         if ((!flags.run || iflags.runmode == RUN_TPORT) &&
                 (multi && (!flags.travel ? !(multi % 7) : !(moves % 7L)))) {
             if (flags.time && flags.run) flags.botl = 1;
-            display_nhwindow(WIN_MAP, false);
         }
     }
 }
