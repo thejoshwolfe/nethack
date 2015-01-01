@@ -20,7 +20,6 @@
 #include "eat.h"
 #include "display.h"
 #include "do.h"
-#include "botl.h"
 #include "end.h"
 #include "artifact.h"
 #include "dog.h"
@@ -347,7 +346,7 @@ void moveloop(void) {
 
             if (vision_full_recalc) vision_recalc(0);   /* vision! */
         }
-        if(flags.botl || flags.botlx) bot();
+        // if(flags.botl || flags.botlx) bot();
 
         flags.move = 1;
 

@@ -10,7 +10,6 @@
 #include "hacklib.h"
 #include "objnam.h"
 #include "do_name.h"
-#include "winprocs.h"
 #include "display.h"
 #include "vision.h"
 
