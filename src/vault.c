@@ -1,9 +1,19 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "engrave.h"
+#include "apply.h"
+#include "eat.h"
+#include "mkobj.h"
+#include "weapon.h"
+#include "makemon.h"
+#include "steed.h"
+#include "mon.h"
+#include "pline.h"
+#include "teleport.h"
+#include "sounds.h"
 #include "vault.h"
 #include "hack.h"
 #include "display.h"
-#include "winprocs.h"
 #include "objnam.h"
 #include "do_name.h"
 #include "invent.h"
@@ -574,7 +584,7 @@ int gd_move(struct monst *grd) {
         goto nextpos;
 
     /* look around (hor & vert only) for accessible places */
-    for (nx = x - 1; nx <= x + 1; nx++)
+    for (nx = x - 1; nx <= x + 1; nx++) {
         for (ny = y - 1; ny <= y + 1; ny++) {
             if ((nx == x || ny == y) && (nx != x || ny != y) && isok(nx, ny)) {
 
@@ -599,6 +609,7 @@ int gd_move(struct monst *grd) {
             }
             nextnxy: ;
         }
+    }
     nextpos: nx = x;
     ny = y;
     gx = egrd->gdx;
@@ -644,7 +655,7 @@ int gd_move(struct monst *grd) {
 
     fcp = &(egrd->fakecorr[egrd->fcend]);
     if (egrd->fcend++ == FCSIZ)
-        panic("fakecorr overflow");
+        impossible("fakecorr overflow");
     fcp->fx = nx;
     fcp->fy = ny;
     fcp->ftyp = typ;
@@ -733,8 +744,8 @@ long hidden_gold(void) {
     return (value);
 }
 
-bool gd_sound(void) /* prevent "You hear footsteps.." when inappropriate */
-{
+/* prevent "You hear footsteps.." when inappropriate */
+bool gd_sound(void) {
     struct monst *grd = findgd();
 
     if (vault_occupied(u.urooms))

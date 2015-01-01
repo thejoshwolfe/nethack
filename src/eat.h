@@ -1,6 +1,9 @@
 #ifndef EAT_H
 #define EAT_H
 
+#include <stdbool.h>
+#include "obj.h"
+
 bool is_edible(struct obj *);
 void init_uhunger(void);
 int Hear_again(void);

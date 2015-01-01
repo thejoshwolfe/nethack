@@ -1,6 +1,8 @@
 #ifndef SOUNDS_H
 #define SOUNDS_H
 
+#include "monst.h"
+
 void dosounds(void);
 const char *growl_sound(struct monst *);
 void growl(struct monst *);
