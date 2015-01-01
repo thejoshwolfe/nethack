@@ -7,6 +7,7 @@
 #include "hacklib.h"
 #include "o_init.h"
 #include "rnd.h"
+#include "cmd.h"
 
 enum KillerMethod {
     KM_IRON_BALL_COLLISON,

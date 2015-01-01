@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "sit.h"
 #include "minion.h"
 #include "dog.h"
 #include "makemon.h"

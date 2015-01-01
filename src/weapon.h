@@ -2,6 +2,9 @@
 #define WEAPON_H
 
 #include <stdbool.h>
+#include "obj.h"
+#include "monst.h"
+#include "skills.h"
 
 int hitval(struct obj *,struct monst *);
 int dmgval(struct obj *,struct monst *);

@@ -1,5 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "polyself.h"
+#include "dog.h"
+#include "makemon.h"
+#include "weapon.h"
+#include "worn.h"
+#include "pline.h"
 #include "were.h"
 #include "hack.h"
 #include "pm_props.h"
