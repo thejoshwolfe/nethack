@@ -2,6 +2,7 @@
 #define MTHROWU_H
 
 #include "monst.h"
+#include "permonst.h"
 #include "obj.h"
 
 #include <stdbool.h>

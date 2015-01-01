@@ -1,12 +1,12 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "mthrowu.h"
 #include "hack.h"
 #include "invent.h"
 #include "do_name.h"
 #include "shk.h"
 #include "objnam.h"
 #include "display.h"
-#include "winprocs.h"
 
 static int drop_throw(struct obj *,bool,int,int);
 

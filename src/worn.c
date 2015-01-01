@@ -1,5 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "engrave.h"
+#include "mthrowu.h"
 #include "mkobj.h"
 #include "worn.h"
 #include "steed.h"

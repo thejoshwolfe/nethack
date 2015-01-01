@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "mhitu.h"
 #include "teleport.h"
 #include "restore.h"
 #include "save.h"

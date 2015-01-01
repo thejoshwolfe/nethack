@@ -3,6 +3,8 @@
 #ifndef ENGRAVE_H
 #define ENGRAVE_H
 
+#include <stdbool.h>
+
 struct engr {
         struct engr *nxt_engr;
         char *engr_txt;
