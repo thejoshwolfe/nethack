@@ -1,7 +1,7 @@
 #ifndef BALL_H
 #define BALL_H
 
-/* ### ball.c ### */
+#include <stdbool.h>
 
 void ballfall(void);
 void placebc(void);

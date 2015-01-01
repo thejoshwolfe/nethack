@@ -10,38 +10,39 @@
 #include "dbridge.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
 static int bc_order(void);
 static void litter(void);
 
 void ballfall (void) {
-        bool gets_hit;
+    bool gets_hit;
 
-        gets_hit = (((uball->ox != u.ux) || (uball->oy != u.uy)) &&
-                    ((uwep == uball)? false : (bool)rn2(5)));
-        if (carried(uball)) {
-                pline("Startled, you drop the iron ball.");
-                if (uwep == uball)
-                        setuwep((struct obj *)0);
-                if (uswapwep == uball)
-                        setuswapwep((struct obj *)0);
-                if (uquiver == uball)
-                        setuqwep((struct obj *)0);;
-                if (uwep != uball)
-                        freeinv(uball);
+    gets_hit = (((uball->ox != u.ux) || (uball->oy != u.uy)) &&
+            ((uwep == uball)? false : (bool)rn2(5)));
+    if (carried(uball)) {
+        pline("Startled, you drop the iron ball.");
+        if (uwep == uball)
+            setuwep((struct obj *)0);
+        if (uswapwep == uball)
+            setuswapwep((struct obj *)0);
+        if (uquiver == uball)
+            setuqwep((struct obj *)0);;
+        if (uwep != uball)
+            freeinv(uball);
+    }
+    if(gets_hit){
+        int dmg = rn1(7,25);
+        pline_The("iron ball falls on your %s.", body_part(HEAD));
+        if (uarmh) {
+            if(is_metallic(uarmh)) {
+                pline("Fortunately, you are wearing a hard helmet.");
+                dmg = 3;
+            } else if (flags.verbose)
+                Your("%s does not protect you.", xname(uarmh));
         }
-        if(gets_hit){
-                int dmg = rn1(7,25);
-                pline_The("iron ball falls on your %s.", body_part(HEAD));
-                if (uarmh) {
-                    if(is_metallic(uarmh)) {
-                        pline("Fortunately, you are wearing a hard helmet.");
-                        dmg = 3;
-                    } else if (flags.verbose)
-                        Your("%s does not protect you.", xname(uarmh));
-                }
-                losehp(dmg, "crunched in the head by an iron ball", NO_KILLER_PREFIX);
-        }
+        losehp(dmg, killed_by_const(KM_CRUNCHED_IN_HEAD_BY_IRON_BALL));
+    }
 }
 
 /*
@@ -102,7 +103,7 @@ void placebc (void) {
         return;
     }
 
-    (void) flooreffects(uchain, u.ux, u.uy, "");        /* chain might rust */
+    flooreffects(uchain, u.ux, u.uy, "");        /* chain might rust */
 
     if (carried(uball))         /* the ball is carried */
         u.bc_order = BCPOS_DIFFER;
@@ -657,11 +658,7 @@ void drop_ball (signed char x, signed char y) {
                 set_wounded_legs(side, rn1(1000, 500));
                 if (!u.usteed)
                 {
-                    Your("%s %s is severely damaged.",
-                                        (side == LEFT_SIDE) ? "left" : "right",
-                                        body_part(LEG));
-                    losehp(2, "leg damage from being pulled out of a bear trap",
-                                        KILLED_BY);
+                    losehp(2, killed_by_const(KM_LEG_DAMAGE_PULLED_BEAR_TRAP));
                 }
                 break;
               }
@@ -724,43 +721,40 @@ static void litter (void) {
 }
 
 void drag_down(void) {
-        bool forward;
-        unsigned char dragchance = 3;
+    unsigned char dragchance = 3;
 
-        /*
-         *      Assume that the ball falls forward if:
-         *
-         *      a) the character is wielding it, or
-         *      b) the character has both hands available to hold it (i.e. is
-         *         not wielding any weapon), or
-         *      c) (perhaps) it falls forward out of his non-weapon hand
-         */
+    /*
+     *      Assume that the ball falls forward if:
+     *
+     *      a) the character is wielding it, or
+     *      b) the character has both hands available to hold it (i.e. is
+     *         not wielding any weapon), or
+     *      c) (perhaps) it falls forward out of his non-weapon hand
+     */
 
-        forward = carried(uball) && (uwep == uball || !uwep || !rn2(3));
+    bool forward = carried(uball) && (uwep == uball || !uwep || !rn2(3));
 
-        if (carried(uball))
-                You("lose your grip on the iron ball.");
+    if (carried(uball))
+        You("lose your grip on the iron ball.");
 
-        if (forward) {
-                if(rn2(6)) {
-                        pline_The("iron ball drags you downstairs!");
-                        losehp(rnd(6), "dragged downstairs by an iron ball",
-                                NO_KILLER_PREFIX);
-                        litter();
-                }
-        } else {
-                if(rn2(2)) {
-                        pline_The("iron ball smacks into you!");
-                        losehp(rnd(20), "iron ball collision", KILLED_BY_AN);
-                        exercise(A_STR, false);
-                        dragchance -= 2;
-                }
-                if( (int) dragchance >= rnd(6)) {
-                        pline_The("iron ball drags you downstairs!");
-                        losehp(rnd(3), "dragged downstairs by an iron ball",
-                                NO_KILLER_PREFIX);
-                        exercise(A_STR, false);
-                        litter();
-                }
+    if (forward) {
+        if(rn2(6)) {
+            pline_The("iron ball drags you downstairs!");
+            losehp(rnd(6), killed_by_const(KM_DRAGGED_DOWNSTAIRS_IRON_BALL));
+            litter();
         }
+    } else {
+        if(rn2(2)) {
+            pline_The("iron ball smacks into you!");
+            losehp(rnd(20), killed_by_const(KM_IRON_BALL_COLLISON));
+            exercise(A_STR, false);
+            dragchance -= 2;
+        }
+        if( (int) dragchance >= rnd(6)) {
+            pline_The("iron ball drags you downstairs!");
+            losehp(rnd(3), killed_by_const(KM_DRAGGED_DOWNSTAIRS_IRON_BALL));
+            exercise(A_STR, false);
+            litter();
+        }
+    }
 }

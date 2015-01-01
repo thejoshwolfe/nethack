@@ -9,6 +9,7 @@
 #include "hacklib.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
         /* part of the output on gain or loss of attribute */
 static
