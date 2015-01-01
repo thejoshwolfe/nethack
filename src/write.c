@@ -1,5 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "engrave.h"
+#include "mkobj.h"
 #include "write.h"
 #include "hack.h"
 #include "onames.h"

@@ -1,5 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "fountain.h"
+#include "engrave.h"
+#include "exper.h"
+#include "mthrowu.h"
+#include "mhitu.h"
 #include "questpgr.h"
 #include "do.h"
 #include "muse.h"

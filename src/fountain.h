@@ -1,6 +1,9 @@
 #ifndef FOUNTAIN_H
 #define FOUNTAIN_H
 
+#include <stdbool.h>
+#include "obj.h"
+
 void floating_above(const char *);
 void dogushforth(int);
 void dryup(signed char,signed char, bool);
