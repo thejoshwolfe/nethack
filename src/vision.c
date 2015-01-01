@@ -1,4 +1,8 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "pline.h"
+#include "light.h"
+#include "display.h"
 #include "vision.h"
 #include "hack.h"
 #include "youprop.h"
@@ -1509,7 +1513,7 @@ view_from (
 
     if(range) {
         if(range > MAX_RADIUS || range < 1)
-            panic("view_from called with range %d", range);
+            impossible("view_from called with range %d", range);
         limits = circle_ptr(range) + 1; /* start at next row */
         if(left < scol - range) left = scol - range;
         if(right > scol + range) right = scol + range;
@@ -1571,7 +1575,7 @@ do_clear_area (int scol, int srow, int range, void (*func)(int, int, void *), vo
             char *limits;
 
             if (range > MAX_RADIUS || range < 1)
-                panic("do_clear_area:  illegal range %d", range);
+                impossible("do_clear_area:  illegal range %d", range);
             if(vision_full_recalc)
                 vision_recalc(0);       /* recalc vision if dirty */
             limits = circle_ptr(range);
