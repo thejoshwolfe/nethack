@@ -415,4 +415,6 @@ MSG_SCROLL_IS_NOW_USELESS, pline_The("scroll is now useless and disappears!");
 MSG_YOU_DISTRUPT_ENGULFER, You("disrupt %s!", name)
 MSG_VISION_QUICKLY_CLEARS, Your("vision quickly clears.");
 MSG_THATS_ENOUGH_TRIES, "That's enough tries!"
+MSG_OBJECT_STOPS_GLOWING, pline("%s glowing.", Tobjnam(olduwep, "stop"))
+MSG_OBJECT_GLOWS_BRILLIANTLY, pline("%s to glow brilliantly!", Tobjnam(wep, "begin"));;
 */

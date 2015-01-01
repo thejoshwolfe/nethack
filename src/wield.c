@@ -1,5 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "potion.h"
+#include "do.h"
+#include "do_wear.h"
+#include "invent.h"
+#include "polyself.h"
 #include "pline.h"
 #include "timeout.h"
 #include "artifact.h"
@@ -97,7 +102,7 @@ void setuwep(struct obj *obj) {
     if (uwep == obj && artifact_light(olduwep) && olduwep->lamplit) {
         end_burn(olduwep, false);
         if (!Blind)
-            pline("%s glowing.", Tobjnam(olduwep, "stop"));
+            message_object(MSG_OBJECT_STOPS_GLOWING, olduwep);
     }
     /* Note: Explicitly wielding a pick-axe will not give a "bashing"
      * message.  Wielding one via 'a'pplying it will.
@@ -162,7 +167,7 @@ static int ready_weapon(struct obj *wep) {
         if (artifact_light(wep) && !wep->lamplit) {
             begin_burn(wep, false);
             if (!Blind)
-                pline("%s to glow brilliantly!", Tobjnam(wep, "begin"));
+                message_object(MSG_OBJECT_GLOWS_BRILLIANTLY, wep);
         }
 
         if (wep->unpaid) {
@@ -488,7 +493,7 @@ void uwepgone(void) {
         if (artifact_light(uwep) && uwep->lamplit) {
             end_burn(uwep, false);
             if (!Blind)
-                pline("%s glowing.", Tobjnam(uwep, "stop"));
+                message_object(MSG_OBJECT_STOPS_GLOWING, uwep);
         }
         setworn((struct obj *)0, W_WEP);
         unweapon = true;
