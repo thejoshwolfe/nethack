@@ -25,5 +25,6 @@ int uwep_skill_type(void);
 int weapon_hit_bonus(struct obj *);
 int weapon_dam_bonus(struct obj *);
 void skill_init(const struct def_skill *);
+void setmnotwielded(struct monst *,struct obj *);
 
 #endif // WEAPON_H

@@ -1,16 +1,28 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "end.h"
+#include "makemon.h"
+#include "timeout.h"
+#include "polyself.h"
+#include "worn.h"
+#include "do.h"
+#include "mkobj.h"
+#include "weapon.h"
+#include "mthrowu.h"
+#include "artifact.h"
+#include "pline.h"
+#include "hack.h"
+#include "display.h"
+#include "dbridge.h"
+#include "do_name.h"
+#include "objnam.h"
+#include "invent.h"
+
 /*
  *      This module contains code for calculation of "to hit" and damage
  *      bonuses for any given weapon used, as well as weapons selection
  *      code for monsters.
  */
-#include "hack.h"
-#include "display.h"
-#include "winprocs.h"
-#include "dbridge.h"
-#include "do_name.h"
-#include "objnam.h"
-#include "invent.h"
 
 static int enhance_skill(bool);
 
@@ -865,33 +877,33 @@ int enhance_skill(bool want_dump)
             if (want_dump)
                 dump("","Your skills at the end");
             else {
-            win = create_nhwindow(NHW_MENU);
-            start_menu(win);
+                win = create_nhwindow(NHW_MENU);
+                start_menu(win);
 
-            /* start with a legend if any entries will be annotated
+                /* start with a legend if any entries will be annotated
                with "*" or "#" below */
-            if (eventually_advance > 0 || maxxed_cnt > 0) {
-                any.a_void = 0;
-                if (eventually_advance > 0) {
-                    sprintf(buf,
-                            "(Skill%s flagged by \"*\" may be enhanced %s.)",
-                            plur(eventually_advance),
-                            (u.ulevel < MAXULEV) ?
-                                "when you're more experienced" :
-                                "if skill slots become available");
+                if (eventually_advance > 0 || maxxed_cnt > 0) {
+                    any.a_void = 0;
+                    if (eventually_advance > 0) {
+                        sprintf(buf,
+                                "(Skill%s flagged by \"*\" may be enhanced %s.)",
+                                plur(eventually_advance),
+                                (u.ulevel < MAXULEV) ?
+                                        "when you're more experienced" :
+                                        "if skill slots become available");
+                        add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
+                                buf, MENU_UNSELECTED);
+                    }
+                    if (maxxed_cnt > 0) {
+                        sprintf(buf,
+                                "(Skill%s flagged by \"#\" cannot be enhanced any further.)",
+                                plur(maxxed_cnt));
+                        add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
+                                buf, MENU_UNSELECTED);
+                    }
                     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                             buf, MENU_UNSELECTED);
+                            "", MENU_UNSELECTED);
                 }
-                if (maxxed_cnt > 0) {
-                    sprintf(buf,
-                  "(Skill%s flagged by \"#\" cannot be enhanced any further.)",
-                            plur(maxxed_cnt));
-                    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                             buf, MENU_UNSELECTED);
-                }
-                add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                             "", MENU_UNSELECTED);
-            }
             } /* want_dump or not */
 
             /* List the skills, making ones that could be advanced

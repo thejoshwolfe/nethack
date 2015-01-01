@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include "obj.h"
-#include "monst.h"
 
 void setuwep(struct obj *);
 void setuqwep(struct obj *);
@@ -23,6 +22,5 @@ void erode_obj(struct obj *,bool,bool);
 int chwepon(struct obj *,int);
 int welded(struct obj *);
 void weldmsg(struct obj *);
-void setmnotwielded(struct monst *,struct obj *);
 
 #endif // WIELD_H
