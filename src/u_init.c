@@ -1,4 +1,15 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "wield.h"
+#include "worn.h"
+#include "invent.h"
+#include "mkobj.h"
+#include "do_wear.h"
+#include "vault.h"
+#include "files.h"
+#include "weapon.h"
+#include "eat.h"
+#include "polyself.h"
 #include "hack.h"
 #include "pm_props.h"
 #include "onames.h"
@@ -7,11 +18,11 @@
 #include "flag.h"
 
 struct trobj {
-        short trotyp;
-        signed char trspe;
-        char trclass;
-        unsigned trquan:6;
-        unsigned trbless:2;
+    short trotyp;
+    signed char trspe;
+    char trclass;
+    unsigned trquan :6;
+    unsigned trbless :2;
 };
 
 static void ini_inv(struct trobj *);
@@ -464,207 +475,201 @@ static const struct def_skill Skill_W[] = {
 };
 
 
-static void
-knows_object (int obj)
-{
-        discover_object(obj,true,false);
-        objects[obj].oc_pre_discovered = 1;     /* not a "discovery" */
+static void knows_object(int obj) {
+    discover_object(obj, true, false);
+    objects[obj].oc_pre_discovered = 1; /* not a "discovery" */
 }
 
 /* Know ordinary (non-magical) objects of a certain class,
  * like all gems except the loadstone and luckstone.
  */
-static void
-knows_class (char sym)
-{
-        int ct;
-        for (ct = 1; ct < NUM_OBJECTS; ct++)
-                if (objects[ct].oc_class == sym && !objects[ct].oc_magic)
-                        knows_object(ct);
+static void knows_class(char sym) {
+    int ct;
+    for (ct = 1; ct < NUM_OBJECTS; ct++)
+        if (objects[ct].oc_class == sym && !objects[ct].oc_magic)
+            knows_object(ct);
 }
 
-void
-u_init (void)
-{
-        int i;
+void u_init(void) {
+    int i;
 
-        flags.female = flags.initgend;
-        flags.beginner = 1;
+    flags.female = flags.initgend;
+    flags.beginner = 1;
 
-        /* zero u, including pointer values --
-         * necessary when aborting from a failed restore */
-        (void) memset((void *)&u, 0, sizeof(u));
-        u.ustuck = (struct monst *)0;
+    /* zero u, including pointer values --
+     * necessary when aborting from a failed restore */
+    (void)memset((void *)&u, 0, sizeof(u));
+    u.ustuck = (struct monst *)0;
 
+    u.uz.dlevel = 1;
+    u.uz0.dlevel = 0;
+    u.utolev = u.uz;
 
-        u.uz.dlevel = 1;
-        u.uz0.dlevel = 0;
-        u.utolev = u.uz;
+    u.umoved = false;
+    u.umortality = 0;
+    u.ugrave_arise = NON_PM;
 
-        u.umoved = false;
-        u.umortality = 0;
-        u.ugrave_arise = NON_PM;
+    u.umonnum = u.umonster = (flags.female && urole.femalenum != NON_PM) ? urole.femalenum : urole.malenum;
+    set_uasmon();
 
-        u.umonnum = u.umonster = (flags.female &&
-                        urole.femalenum != NON_PM) ? urole.femalenum :
-                        urole.malenum;
-        set_uasmon();
+    u.ulevel = 0; /* set up some of the initial attributes */
+    u.uhp = u.uhpmax = newhp();
+    u.uenmax = urole.enadv.infix + urace.enadv.infix;
+    if (urole.enadv.inrnd > 0)
+        u.uenmax += rnd(urole.enadv.inrnd);
+    if (urace.enadv.inrnd > 0)
+        u.uenmax += rnd(urace.enadv.inrnd);
+    u.uen = u.uenmax;
+    u.uspellprot = 0;
+    adjabil(0, 1);
+    u.ulevel = u.ulevelmax = 1;
 
-        u.ulevel = 0;   /* set up some of the initial attributes */
-        u.uhp = u.uhpmax = newhp();
-        u.uenmax = urole.enadv.infix + urace.enadv.infix;
-        if (urole.enadv.inrnd > 0)
-            u.uenmax += rnd(urole.enadv.inrnd);
-        if (urace.enadv.inrnd > 0)
-            u.uenmax += rnd(urace.enadv.inrnd);
-        u.uen = u.uenmax;
-        u.uspellprot = 0;
-        adjabil(0,1);
-        u.ulevel = u.ulevelmax = 1;
+    init_uhunger();
+    for (i = 0; i <= MAXSPELL; i++)
+        spl_book[i].sp_id = NO_SPELL;
+    u.ublesscnt = 300; /* no prayers just yet */
+    u.ualignbase[A_CURRENT] = u.ualignbase[A_ORIGINAL] = u.ualign.type = aligns[flags.initalign].value;
+    u.ulycn = NON_PM;
 
-        init_uhunger();
-        for (i = 0; i <= MAXSPELL; i++) spl_book[i].sp_id = NO_SPELL;
-        u.ublesscnt = 300;                      /* no prayers just yet */
-        u.ualignbase[A_CURRENT] = u.ualignbase[A_ORIGINAL] = u.ualign.type =
-                        aligns[flags.initalign].value;
-        u.ulycn = NON_PM;
+    time(&u.ubirthday);
 
-        time(&u.ubirthday);
+    /*
+     *  For now, everyone starts out with a night vision range of 1 and
+     *  their xray range disabled.
+     */
+    u.nv_range = 1;
+    u.xray_range = -1;
 
-        /*
-         *  For now, everyone starts out with a night vision range of 1 and
-         *  their xray range disabled.
-         */
-        u.nv_range   =  1;
-        u.xray_range = -1;
-
-
-        /*** Role-specific initializations ***/
-        switch (Role_switch) {
+    /*** Role-specific initializations ***/
+    switch (Role_switch) {
         /* rn2(100) > 50 necessary for some choices because some
          * random number generators are bad enough to seriously
          * skew the results if we use rn2(2)...  --KAA
          */
         case PM_ARCHEOLOGIST:
-                ini_inv(Archeologist);
-                if(!rn2(10)) ini_inv(Tinopener);
-                else if(!rn2(4)) ini_inv(Lamp);
-                else if(!rn2(10)) ini_inv(Magicmarker);
-                knows_object(SACK);
-                knows_object(TOUCHSTONE);
-                skill_init(Skill_A);
-                break;
+            ini_inv(Archeologist);
+            if (!rn2(10))
+                ini_inv(Tinopener);
+            else if (!rn2(4))
+                ini_inv(Lamp);
+            else if (!rn2(10))
+                ini_inv(Magicmarker);
+            knows_object(SACK);
+            knows_object(TOUCHSTONE);
+            skill_init(Skill_A);
+            break;
         case PM_BARBARIAN:
-                if (rn2(100) >= 50) {   /* see above comment */
-                    Barbarian[B_MAJOR].trotyp = BATTLE_AXE;
-                    Barbarian[B_MINOR].trotyp = SHORT_SWORD;
-                }
-                ini_inv(Barbarian);
-                if(!rn2(6)) ini_inv(Lamp);
-                knows_class(WEAPON_CLASS);
-                knows_class(ARMOR_CLASS);
-                skill_init(Skill_B);
-                break;
+            if (rn2(100) >= 50) { /* see above comment */
+                Barbarian[B_MAJOR].trotyp = BATTLE_AXE;
+                Barbarian[B_MINOR].trotyp = SHORT_SWORD;
+            }
+            ini_inv(Barbarian);
+            if (!rn2(6))
+                ini_inv(Lamp);
+            knows_class(WEAPON_CLASS);
+            knows_class(ARMOR_CLASS);
+            skill_init(Skill_B);
+            break;
         case PM_CAVEMAN:
-                Cave_man[C_AMMO].trquan = rn1(11, 10);  /* 10..20 */
-                ini_inv(Cave_man);
-                skill_init(Skill_C);
-                break;
+            Cave_man[C_AMMO].trquan = rn1(11, 10); /* 10..20 */
+            ini_inv(Cave_man);
+            skill_init(Skill_C);
+            break;
         case PM_HEALER:
-                u.ugold = u.ugold0 = rn1(1000, 1001);
-                ini_inv(Healer);
-                if(!rn2(25)) ini_inv(Lamp);
-                knows_object(POT_FULL_HEALING);
-                skill_init(Skill_H);
-                break;
+            u.ugold = u.ugold0 = rn1(1000, 1001);
+            ini_inv(Healer);
+            if (!rn2(25))
+                ini_inv(Lamp);
+            knows_object(POT_FULL_HEALING);
+            skill_init(Skill_H);
+            break;
         case PM_KNIGHT:
-                ini_inv(Knight);
-                knows_class(WEAPON_CLASS);
-                knows_class(ARMOR_CLASS);
-                /* give knights chess-like mobility
-                 * -- idea from wooledge@skybridge.scl.cwru.edu */
-                HJumping |= FROMOUTSIDE;
-                skill_init(Skill_K);
-                break;
+            ini_inv(Knight);
+            knows_class(WEAPON_CLASS);
+            knows_class(ARMOR_CLASS);
+            /* give knights chess-like mobility
+             * -- idea from wooledge@skybridge.scl.cwru.edu */
+            HJumping|= FROMOUTSIDE;
+            skill_init(Skill_K);
+            break;
         case PM_MONK:
-                switch (rn2(90) / 30) {
+            switch (rn2(90) / 30) {
                 case 0: Monk[M_BOOK].trotyp = SPE_HEALING; break;
                 case 1: Monk[M_BOOK].trotyp = SPE_PROTECTION; break;
                 case 2: Monk[M_BOOK].trotyp = SPE_SLEEP; break;
-                }
-                ini_inv(Monk);
-                if(!rn2(5)) ini_inv(Magicmarker);
-                else if(!rn2(10)) ini_inv(Lamp);
-                knows_class(ARMOR_CLASS);
-                skill_init(Skill_Mon);
-                break;
-        case PM_PRIEST:
-                ini_inv(Priest);
-                if(!rn2(10)) ini_inv(Magicmarker);
-                else if(!rn2(10)) ini_inv(Lamp);
-                knows_object(POT_WATER);
-                skill_init(Skill_P);
-                /* KMH, conduct --
-                 * Some may claim that this isn't agnostic, since they
-                 * are literally "priests" and they have holy water.
-                 * But we don't count it as such.  Purists can always
-                 * avoid playing priests and/or confirm another player's
-                 * role in their YAAP.
-                 */
-                break;
-        case PM_RANGER:
-                Ranger[RAN_TWO_ARROWS].trquan = rn1(10, 50);
-                Ranger[RAN_ZERO_ARROWS].trquan = rn1(10, 30);
-                ini_inv(Ranger);
-                skill_init(Skill_Ran);
-                break;
-        case PM_ROGUE:
-                Rogue[R_DAGGERS].trquan = rn1(10, 6);
-                u.ugold = u.ugold0 = 0;
-                ini_inv(Rogue);
-                if(!rn2(5)) ini_inv(Blindfold);
-                knows_object(SACK);
-                skill_init(Skill_R);
-                break;
-        case PM_SAMURAI:
-                Samurai[S_ARROWS].trquan = rn1(20, 26);
-                ini_inv(Samurai);
-                if(!rn2(5)) ini_inv(Blindfold);
-                knows_class(WEAPON_CLASS);
-                knows_class(ARMOR_CLASS);
-                skill_init(Skill_S);
-                break;
-        case PM_TOURIST:
-                Tourist[T_DARTS].trquan = rn1(20, 21);
-                u.ugold = u.ugold0 = rnd(1000);
-                ini_inv(Tourist);
-                if(!rn2(25)) ini_inv(Tinopener);
-                else if(!rn2(25)) ini_inv(Leash);
-                else if(!rn2(25)) ini_inv(Towel);
-                else if(!rn2(25)) ini_inv(Magicmarker);
-                skill_init(Skill_T);
-                break;
-        case PM_VALKYRIE:
-                ini_inv(Valkyrie);
-                if(!rn2(6)) ini_inv(Lamp);
-                knows_class(WEAPON_CLASS);
-                knows_class(ARMOR_CLASS);
-                skill_init(Skill_V);
-                break;
-        case PM_WIZARD:
-                ini_inv(Wizard);
-                if(!rn2(5)) ini_inv(Magicmarker);
-                if(!rn2(5)) ini_inv(Blindfold);
-                skill_init(Skill_W);
-                break;
+            }
+            ini_inv(Monk);
+            if(!rn2(5)) ini_inv(Magicmarker);
+            else if(!rn2(10)) ini_inv(Lamp);
+            knows_class(ARMOR_CLASS);
+            skill_init(Skill_Mon);
+            break;
+                case PM_PRIEST:
+                    ini_inv(Priest);
+                    if(!rn2(10)) ini_inv(Magicmarker);
+                    else if(!rn2(10)) ini_inv(Lamp);
+                    knows_object(POT_WATER);
+                    skill_init(Skill_P);
+                    /* KMH, conduct --
+                     * Some may claim that this isn't agnostic, since they
+                     * are literally "priests" and they have holy water.
+                     * But we don't count it as such.  Purists can always
+                     * avoid playing priests and/or confirm another player's
+                     * role in their YAAP.
+                     */
+                    break;
+                case PM_RANGER:
+                    Ranger[RAN_TWO_ARROWS].trquan = rn1(10, 50);
+                    Ranger[RAN_ZERO_ARROWS].trquan = rn1(10, 30);
+                    ini_inv(Ranger);
+                    skill_init(Skill_Ran);
+                    break;
+                case PM_ROGUE:
+                    Rogue[R_DAGGERS].trquan = rn1(10, 6);
+                    u.ugold = u.ugold0 = 0;
+                    ini_inv(Rogue);
+                    if(!rn2(5)) ini_inv(Blindfold);
+                    knows_object(SACK);
+                    skill_init(Skill_R);
+                    break;
+                case PM_SAMURAI:
+                    Samurai[S_ARROWS].trquan = rn1(20, 26);
+                    ini_inv(Samurai);
+                    if(!rn2(5)) ini_inv(Blindfold);
+                    knows_class(WEAPON_CLASS);
+                    knows_class(ARMOR_CLASS);
+                    skill_init(Skill_S);
+                    break;
+                case PM_TOURIST:
+                    Tourist[T_DARTS].trquan = rn1(20, 21);
+                    u.ugold = u.ugold0 = rnd(1000);
+                    ini_inv(Tourist);
+                    if(!rn2(25)) ini_inv(Tinopener);
+                    else if(!rn2(25)) ini_inv(Leash);
+                    else if(!rn2(25)) ini_inv(Towel);
+                    else if(!rn2(25)) ini_inv(Magicmarker);
+                    skill_init(Skill_T);
+                    break;
+                case PM_VALKYRIE:
+                    ini_inv(Valkyrie);
+                    if(!rn2(6)) ini_inv(Lamp);
+                    knows_class(WEAPON_CLASS);
+                    knows_class(ARMOR_CLASS);
+                    skill_init(Skill_V);
+                    break;
+                case PM_WIZARD:
+                    ini_inv(Wizard);
+                    if(!rn2(5)) ini_inv(Magicmarker);
+                    if(!rn2(5)) ini_inv(Blindfold);
+                    skill_init(Skill_W);
+                    break;
 
-        default:        /* impossible */
-                break;
-        }
+                default: /* impossible */
+                    break;
+    }
 
-
-        /*** Race-specific initializations ***/
-        switch (Race_switch) {
+    /*** Race-specific initializations ***/
+    switch (Race_switch) {
         case PM_HUMAN:
             /* Nothing special */
             break;
@@ -676,10 +681,7 @@ u_init (void)
              * get only non-magic instruments.
              */
             if (Role_if(PM_PRIEST) || Role_if(PM_WIZARD)) {
-                static int trotyp[] = {
-                    WOODEN_FLUTE, TOOLED_HORN, WOODEN_HARP,
-                    BELL, BUGLE, LEATHER_DRUM
-                };
+                static int trotyp[] = { WOODEN_FLUTE, TOOLED_HORN, WOODEN_HARP, BELL, BUGLE, LEATHER_DRUM };
                 Instrument[0].trotyp = trotyp[rn2(SIZE(trotyp))];
                 ini_inv(Instrument);
             }
@@ -730,68 +732,96 @@ u_init (void)
             knows_object(ORCISH_CLOAK);
             break;
 
-        default:        /* impossible */
-                break;
+        default: /* impossible */
+            break;
+    }
+
+    if (discover)
+        ini_inv(Wishing);
+
+    if (wizard)
+        read_wizkit();
+
+    u.ugold0 += hidden_gold(); /* in case sack has gold in it */
+
+    find_ac(); /* get initial ac value */
+    init_attr(75); /* init attribute values */
+    /*
+     *      Do we really need this?
+     */
+    for (i = 0; i < A_MAX; i++) {
+        if (!rn2(20)) {
+            int xd = rn2(7) - 2; /* biased variation */
+            (void)adjattrib(i, xd, true);
+            if (ABASE(i) < AMAX(i))
+                AMAX(i) = ABASE(i);
         }
+    }
 
-        if (discover)
-                ini_inv(Wishing);
-
-        if (wizard)
-                read_wizkit();
-
-        u.ugold0 += hidden_gold();      /* in case sack has gold in it */
-
-        find_ac();                      /* get initial ac value */
-        init_attr(75);                  /* init attribute values */
-        max_rank_sz();                  /* set max str size for class ranks */
-/*
- *      Do we really need this?
- */
-        for(i = 0; i < A_MAX; i++)
-            if(!rn2(20)) {
-                int xd = rn2(7) - 2;    /* biased variation */
-                (void) adjattrib(i, xd, true);
-                if (ABASE(i) < AMAX(i)) AMAX(i) = ABASE(i);
-            }
-
-        /* make sure you can carry all you have - especially for Tourists */
-        while (inv_weight() > 0) {
-                if (adjattrib(A_STR, 1, true)) continue;
-                if (adjattrib(A_CON, 1, true)) continue;
-                /* only get here when didn't boost strength or constitution */
-                break;
-        }
-
-        return;
+    /* make sure you can carry all you have - especially for Tourists */
+    while (inv_weight() > 0) {
+        if (adjattrib(A_STR, 1, true))
+            continue;
+        if (adjattrib(A_CON, 1, true))
+            continue;
+        /* only get here when didn't boost strength or constitution */
+        break;
+    }
 }
 
 /* skills aren't initialized, so we use the role-specific skill lists */
-static bool 
-restricted_spell_discipline (int otyp)
-{
+static bool restricted_spell_discipline(int otyp) {
     const struct def_skill *skills;
     int this_skill = spell_skilltype(otyp);
 
     switch (Role_switch) {
-     case PM_ARCHEOLOGIST:      skills = Skill_A; break;
-     case PM_BARBARIAN:         skills = Skill_B; break;
-     case PM_CAVEMAN:           skills = Skill_C; break;
-     case PM_HEALER:            skills = Skill_H; break;
-     case PM_KNIGHT:            skills = Skill_K; break;
-     case PM_MONK:              skills = Skill_Mon; break;
-     case PM_PRIEST:            skills = Skill_P; break;
-     case PM_RANGER:            skills = Skill_Ran; break;
-     case PM_ROGUE:             skills = Skill_R; break;
-     case PM_SAMURAI:           skills = Skill_S; break;
-     case PM_TOURIST:           skills = Skill_T; break;
-     case PM_VALKYRIE:          skills = Skill_V; break;
-     case PM_WIZARD:            skills = Skill_W; break;
-     default:                   skills = 0; break;      /* lint suppression */
+        case PM_ARCHEOLOGIST:
+            skills = Skill_A;
+            break;
+        case PM_BARBARIAN:
+            skills = Skill_B;
+            break;
+        case PM_CAVEMAN:
+            skills = Skill_C;
+            break;
+        case PM_HEALER:
+            skills = Skill_H;
+            break;
+        case PM_KNIGHT:
+            skills = Skill_K;
+            break;
+        case PM_MONK:
+            skills = Skill_Mon;
+            break;
+        case PM_PRIEST:
+            skills = Skill_P;
+            break;
+        case PM_RANGER:
+            skills = Skill_Ran;
+            break;
+        case PM_ROGUE:
+            skills = Skill_R;
+            break;
+        case PM_SAMURAI:
+            skills = Skill_S;
+            break;
+        case PM_TOURIST:
+            skills = Skill_T;
+            break;
+        case PM_VALKYRIE:
+            skills = Skill_V;
+            break;
+        case PM_WIZARD:
+            skills = Skill_W;
+            break;
+        default:
+            skills = 0;
+            break; /* lint suppression */
     }
 
     while (skills->skill != P_NONE) {
-        if (skills->skill == this_skill) return false;
+        if (skills->skill == this_skill)
+            return false;
         ++skills;
     }
     return true;

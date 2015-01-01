@@ -1,6 +1,10 @@
 #ifndef FILES_H
 #define FILES_H
 
+#include <stdio.h>
+#include <stdbool.h>
+#include "dungeon.h"
+
 char *fname_encode(const char *, char, char *, char *, int);
 char *fname_decode(char, char *, char *, int);
 const char *fqname(const char *, int, int);
