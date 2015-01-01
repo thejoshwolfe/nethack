@@ -449,112 +449,109 @@ landing_spot (
 }
 
 /* Stop riding the current steed */
-void
-dismount_steed (
-    int reason          /* Player was thrown off etc. */
-)
-{
-        struct monst *mtmp;
-        struct obj *otmp;
-        coord cc;
-        const char *verb = "fall";
-        bool repair_leg_damage = true;
-        unsigned save_utrap = u.utrap;
-        bool have_spot = landing_spot(&cc,reason,0);
+/* Player was thrown off etc. */
+void dismount_steed ( int reason) {
+    struct monst *mtmp;
+    struct obj *otmp;
+    coord cc;
+    const char *verb = "fall";
+    bool repair_leg_damage = true;
+    unsigned save_utrap = u.utrap;
+    bool have_spot = landing_spot(&cc,reason,0);
 
-        mtmp = u.usteed;                /* make a copy of steed pointer */
-        /* Sanity check */
-        if (!mtmp)              /* Just return silently */
-            return;
+    mtmp = u.usteed;                /* make a copy of steed pointer */
+    /* Sanity check */
+    if (!mtmp)              /* Just return silently */
+        return;
 
-        /* Check the reason for dismounting */
-        otmp = which_armor(mtmp, W_SADDLE);
-        switch (reason) {
-            case DISMOUNT_THROWN:
-                verb = "are thrown";
-            case DISMOUNT_FELL:
-                You("%s off of %s!", verb, mon_nam(mtmp));
-                if (!have_spot) have_spot = landing_spot(&cc,reason,1);
-                losehp(rn1(10,10), "riding accident", KILLED_BY_AN);
-                set_wounded_legs(BOTH_SIDES, (int)HWounded_legs + rn1(5,5));
-                repair_leg_damage = false;
-                break;
-            case DISMOUNT_POLY:
-                You("can no longer ride %s.", mon_nam(u.usteed));
-                if (!have_spot) have_spot = landing_spot(&cc,reason,1);
-                break;
-            case DISMOUNT_ENGULFED:
-                /* caller displays message */
-                break;
-            case DISMOUNT_BONES:
-                /* hero has just died... */
-                break;
-            case DISMOUNT_GENERIC:
-                /* no messages, just make it so */
-                break;
-            case DISMOUNT_BYCHOICE:
-            default:
-                if (otmp && otmp->cursed) {
-                    You("can't.  The saddle %s cursed.",
+    /* Check the reason for dismounting */
+    otmp = which_armor(mtmp, W_SADDLE);
+    switch (reason) {
+        case DISMOUNT_THROWN:
+            verb = "are thrown";
+        case DISMOUNT_FELL:
+            You("%s off of %s!", verb, mon_nam(mtmp));
+            if (!have_spot) have_spot = landing_spot(&cc,reason,1);
+            losehp(rn1(10,10), "riding accident", KILLED_BY_AN);
+            set_wounded_legs(BOTH_SIDES, (int)HWounded_legs + rn1(5,5));
+            repair_leg_damage = false;
+            break;
+        case DISMOUNT_POLY:
+            You("can no longer ride %s.", mon_nam(u.usteed));
+            if (!have_spot) have_spot = landing_spot(&cc,reason,1);
+            break;
+        case DISMOUNT_ENGULFED:
+            /* caller displays message */
+            break;
+        case DISMOUNT_BONES:
+            /* hero has just died... */
+            break;
+        case DISMOUNT_GENERIC:
+            /* no messages, just make it so */
+            break;
+        case DISMOUNT_BYCHOICE:
+        default:
+            if (otmp && otmp->cursed) {
+                You("can't.  The saddle %s cursed.",
                         otmp->bknown ? "is" : "seems to be");
-                    otmp->bknown = true;
-                    return;
-                }
-                if (!have_spot) {
-                    You("can't. There isn't anywhere for you to stand.");
-                    return;
-                }
-                if (!mtmp->mnamelth) {
-                        pline("You've been through the dungeon on %s with no name.",
-                                an(mtmp->data->mname));
-                        if (Hallucination())
-                                pline("It felt good to get out of the rain.");
-                } else
-                        You("dismount %s.", mon_nam(mtmp));
-        }
-        /* While riding these refer to the steed's legs
-         * so after dismounting they refer to the player's
-         * legs once again.
-         */
-        if (repair_leg_damage) HWounded_legs = EWounded_legs = 0;
+                otmp->bknown = true;
+                return;
+            }
+            if (!have_spot) {
+                You("can't. There isn't anywhere for you to stand.");
+                return;
+            }
+            if (!mtmp->mnamelth) {
+                pline("You've been through the dungeon on %s with no name.",
+                        an(mtmp->data->mname));
+                if (Hallucination())
+                    pline("It felt good to get out of the rain.");
+            } else
+                You("dismount %s.", mon_nam(mtmp));
+    }
+    /* While riding these refer to the steed's legs
+     * so after dismounting they refer to the player's
+     * legs once again.
+     */
+    if (repair_leg_damage) HWounded_legs = EWounded_legs = 0;
 
-        /* Release the steed and saddle */
-        u.usteed = 0;
-        u.ugallop = 0L;
+    /* Release the steed and saddle */
+    u.usteed = 0;
+    u.ugallop = 0L;
 
-        /* Set player and steed's position.  Try moving the player first
-           unless we're in the midst of creating a bones file. */
-        if (reason == DISMOUNT_BONES) {
-            /* move the steed to an adjacent square */
-            if (enexto(&cc, u.ux, u.uy, mtmp->data))
-                rloc_to(mtmp, cc.x, cc.y);
-            else        /* evidently no room nearby; move steed elsewhere */
-                (void) rloc(mtmp, false);
-            return;
-        }
-        if (!DEADMONSTER(mtmp)) {
-            place_monster(mtmp, u.ux, u.uy);
-            if (!u.uswallow && !u.ustuck && have_spot) {
-                struct permonst *mdat = mtmp->data;
+    /* Set player and steed's position.  Try moving the player first
+       unless we're in the midst of creating a bones file. */
+    if (reason == DISMOUNT_BONES) {
+        /* move the steed to an adjacent square */
+        if (enexto(&cc, u.ux, u.uy, mtmp->data))
+            rloc_to(mtmp, cc.x, cc.y);
+        else        /* evidently no room nearby; move steed elsewhere */
+            (void) rloc(mtmp, false);
+        return;
+    }
+    if (!DEADMONSTER(mtmp)) {
+        place_monster(mtmp, u.ux, u.uy);
+        if (!u.uswallow && !u.ustuck && have_spot) {
+            struct permonst *mdat = mtmp->data;
 
-                /* The steed may drop into water/lava */
-                if (!is_flyer(mdat) && !is_floater(mdat) && !is_clinger(mdat)) {
-                    if (is_pool(u.ux, u.uy)) {
-                        if (!Underwater)
-                            pline("%s falls into the %s!", Monnam(mtmp),
-                                                        surface(u.ux, u.uy));
-                        if (!is_swimmer(mdat) && !amphibious(mdat)) {
-                            killed(mtmp);
-                            adjalign(-1);
-                        }
-                    } else if (is_lava(u.ux, u.uy)) {
-                        pline("%s is pulled into the lava!", Monnam(mtmp));
-                        if (!likes_lava(mdat)) {
-                            killed(mtmp);
-                            adjalign(-1);
-                        }
+            /* The steed may drop into water/lava */
+            if (!is_flyer(mdat) && !is_floater(mdat) && !is_clinger(mdat)) {
+                if (is_pool(u.ux, u.uy)) {
+                    if (!Underwater)
+                        pline("%s falls into the %s!", Monnam(mtmp),
+                                surface(u.ux, u.uy));
+                    if (!is_swimmer(mdat) && !amphibious(mdat)) {
+                        killed(mtmp);
+                        adjalign(-1);
+                    }
+                } else if (is_lava(u.ux, u.uy)) {
+                    pline("%s is pulled into the lava!", Monnam(mtmp));
+                    if (!likes_lava(mdat)) {
+                        killed(mtmp);
+                        adjalign(-1);
                     }
                 }
+            }
             /* Steed dismounting consists of two steps: being moved to another
              * square, and descending to the floor.  We have functions to do
              * each of these activities, but they're normally called
@@ -572,44 +569,44 @@ dismount_steed (
              * able to walk onto a square with a hole, and autopickup before
              * falling into the hole).
              */
-                /* [ALI] No need to move the player if the steed died. */
-                if (!DEADMONSTER(mtmp)) {
-                    /* Keep steed here, move the player to cc;
-                     * teleds() clears u.utrap
-                     */
-                    in_steed_dismounting = true;
-                    teleds(cc.x, cc.y, true);
-                    in_steed_dismounting = false;
+            /* [ALI] No need to move the player if the steed died. */
+            if (!DEADMONSTER(mtmp)) {
+                /* Keep steed here, move the player to cc;
+                 * teleds() clears u.utrap
+                 */
+                in_steed_dismounting = true;
+                teleds(cc.x, cc.y, true);
+                in_steed_dismounting = false;
 
-                    /* Put your steed in your trap */
-                    if (save_utrap)
-                        (void) mintrap(mtmp);
-                }
-            /* Couldn't... try placing the steed */
-            } else if (enexto(&cc, u.ux, u.uy, mtmp->data)) {
-                /* Keep player here, move the steed to cc */
-                rloc_to(mtmp, cc.x, cc.y);
-                /* Player stays put */
-            /* Otherwise, kill the steed */
-            } else {
-                killed(mtmp);
-                adjalign(-1);
+                /* Put your steed in your trap */
+                if (save_utrap)
+                    (void) mintrap(mtmp);
             }
+            /* Couldn't... try placing the steed */
+        } else if (enexto(&cc, u.ux, u.uy, mtmp->data)) {
+            /* Keep player here, move the steed to cc */
+            rloc_to(mtmp, cc.x, cc.y);
+            /* Player stays put */
+            /* Otherwise, kill the steed */
+        } else {
+            killed(mtmp);
+            adjalign(-1);
         }
+    }
 
-        /* Return the player to the floor */
-        if (reason != DISMOUNT_ENGULFED) {
-            in_steed_dismounting = true;
-            (void) float_down(0L, W_SADDLE);
-            in_steed_dismounting = false;
-            flags.botl = 1;
-            (void)encumber_msg();
-            vision_full_recalc = 1;
-        } else
-            flags.botl = 1;
-        /* polearms behave differently when not mounted */
-        if (uwep && is_pole(uwep)) unweapon = true;
-        return;
+    /* Return the player to the floor */
+    if (reason != DISMOUNT_ENGULFED) {
+        in_steed_dismounting = true;
+        (void) float_down(0L, W_SADDLE);
+        in_steed_dismounting = false;
+        flags.botl = 1;
+        (void)encumber_msg();
+        vision_full_recalc = 1;
+    } else
+        flags.botl = 1;
+    /* polearms behave differently when not mounted */
+    if (uwep && is_pole(uwep)) unweapon = true;
+    return;
 }
 
 void

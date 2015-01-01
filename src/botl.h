@@ -1,6 +1,8 @@
 #ifndef BOTL_H
 #define BOTL_H
 
+#include <stdbool.h>
+
 int xlev_to_rank(int);
 int title_to_mon(const char *,int *,int *);
 void max_rank_sz(void);

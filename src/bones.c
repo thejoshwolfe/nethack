@@ -7,8 +7,8 @@
 #include "invent.h"
 #include "do_name.h"
 #include "objnam.h"
-#include "winprocs.h"
 #include "display.h"
+#include "everything.h"
 
 extern char bones[];    /* from files.c */
 
@@ -252,7 +252,7 @@ void savebones (struct obj *corpse) {
                 newsym(u.ux, u.uy);
                 Your("body rises from the dead as %s...",
                         an(mons[u.ugrave_arise].mname));
-                display_nhwindow(WIN_MESSAGE, false);
+                // display_nhwindow(WIN_MESSAGE, false);
                 drop_upon_death(mtmp, (struct obj *)0);
                 m_dowear(mtmp, true);
         }
