@@ -9,7 +9,7 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 static void dowatersnakes(void);
 static void dowaterdemon(void);
@@ -257,12 +257,11 @@ drinkfountain (void)
                            pline(
                               "Perhaps it is runoff from the nearby %s farm.",
                                  fruitname(false));
-                           losehp(rnd(4),"unrefrigerated sip of juice",
-                                KILLED_BY_AN);
+                           losehp(rnd(4), killed_by_const(KM_UNREFRIGERATED_JUICE));
                            break;
                         }
                         losestr(rn1(4,3));
-                        losehp(rnd(10),"contaminated water", KILLED_BY);
+                        losehp(rnd(10), killed_by_const(KM_CONTAMINATED_WATER));
                         exercise(A_CON, false);
                         break;
 
@@ -497,7 +496,7 @@ void drinksink (void) {
                 if (Fire_resistance)
                     pline("It seems quite tasty.");
                 else
-                    losehp(rnd(6), "sipping boiling water", KILLED_BY);
+                    losehp(rnd(6), killed_by_const(KM_SIP_BOILING_WATER));
                 break;
         case 3: if (mvitals[PM_SEWER_RAT].mvflags & G_GONE) {
                     pline_The("sink seems quite dirty.");
