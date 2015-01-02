@@ -8,6 +8,7 @@
 #include "dbridge.h"
 #include "objnam.h"
 #include "display.h"
+#include "everything.h"
 
 
 static long takeoff_mask = 0L;

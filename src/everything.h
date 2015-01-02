@@ -55,3 +55,6 @@
 #include "mklev.h"
 #include "track.h"
 #include "mplayer.h"
+#include "dogmove.h"
+#include "mthrowu.h"
+#include "explode.h"

@@ -10,7 +10,7 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 #define is_bigfoot(x)   ((x) == &mons[PM_SASQUATCH])
 #define martial()       (martial_bonus() || is_bigfoot(youmonst.data) || \
@@ -24,7 +24,6 @@ extern bool notonhead;       /* for long worms */
 static void kickdmg(struct monst *, bool);
 static void kick_monster(signed char, signed char);
 static int kick_object(signed char, signed char);
-static char *kickstr(char *);
 static void otransit_msg(struct obj *, bool, long);
 static void drop_to(coord *,signed char);
 
@@ -428,11 +427,8 @@ static int kick_object(signed char x, signed char y) {
                 corpse_xname(kickobj, true), makeplural(body_part(FOOT)));
             if (!(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
                 You("turn to stone...");
-                killer_format = KILLED_BY;
                 /* KMH -- otmp should be kickobj */
-                sprintf(kbuf, "kicking %s without boots",
-                        an(corpse_xname(kickobj, true)));
-                killer = kbuf;
+                killer = killed_by_object(KM_KICKING_O_WITHOUT_BOOTS, kickobj);
                 done(STONING);
             }
         }
@@ -586,27 +582,50 @@ static int kick_object(signed char x, signed char y) {
         return(1);
 }
 
-static char *
-kickstr (char *buf)
-{
-        const char *what;
+static struct Killer kick_killer(void) {
+    if (kickobj)
+        return killed_by_object(KM_KICKING_O, kickobj);
 
-        if (kickobj) what = distant_name(kickobj,doname);
-        else if (IS_DOOR(maploc->typ)) what = "a door";
-        else if (IS_TREE(maploc->typ)) what = "a tree";
-        else if (IS_STWALL(maploc->typ)) what = "a wall";
-        else if (IS_ROCK(maploc->typ)) what = "a rock";
-        else if (IS_THRONE(maploc->typ)) what = "a throne";
-        else if (IS_FOUNTAIN(maploc->typ)) what = "a fountain";
-        else if (IS_GRAVE(maploc->typ)) what = "a headstone";
-        else if (IS_SINK(maploc->typ)) what = "a sink";
-        else if (IS_ALTAR(maploc->typ)) what = "an altar";
-        else if (IS_DRAWBRIDGE(maploc->typ)) what = "a drawbridge";
-        else if (maploc->typ == STAIRS) what = "the stairs";
-        else if (maploc->typ == LADDER) what = "a ladder";
-        else if (maploc->typ == IRONBARS) what = "an iron bar";
-        else what = "something weird";
-        return strcat(strcpy(buf, "kicking "), what);
+    if (IS_DOOR(maploc->typ))
+        return killed_by_const(KM_KICKING_DOOR);
+
+    if (IS_TREE(maploc->typ))
+        return killed_by_const(KM_KICKING_TREE);
+
+    if (IS_STWALL(maploc->typ))
+        return killed_by_const(KM_KICKING_WALL);
+
+    if (IS_ROCK(maploc->typ))
+        return killed_by_const(KM_KICKING_ROCK);
+
+    if (IS_THRONE(maploc->typ))
+        return killed_by_const(KM_KICKING_THRONE);
+
+    if (IS_FOUNTAIN(maploc->typ))
+        return killed_by_const(KM_KICKING_FOUNTAIN);
+
+    if (IS_GRAVE(maploc->typ))
+        return killed_by_const(KM_KICKING_HEADSTONE);
+
+    if (IS_SINK(maploc->typ))
+        return killed_by_const(KM_KICKING_SINK);
+
+    if (IS_ALTAR(maploc->typ))
+        return killed_by_const(KM_KICKING_ALTAR);
+
+    if (IS_DRAWBRIDGE(maploc->typ))
+        return killed_by_const(KM_KICKING_DRAWBRIDGE);
+
+    if (maploc->typ == STAIRS)
+        return killed_by_const(KM_KICKING_STAIRS);
+
+    if (maploc->typ == LADDER)
+        return killed_by_const(KM_KICKING_LADDER);
+
+    if (maploc->typ == IRONBARS)
+        return killed_by_const(KM_KICKING_IRON_BAR);
+
+    return killed_by_const(KM_KICKING_SOMETHING_WEIRD);
 }
 
 int
@@ -1001,8 +1020,8 @@ ouch:
                         maploc = &levl[x][y];
                     }
                     if(!rn2(3)) set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
-                    losehp(rnd(ACURR(A_CON) > 15 ? 3 : 5), kickstr(buf),
-                        KILLED_BY);
+                    int hp_to_lose = rnd(ACURR(A_CON) > 15 ? 3 : 5);
+                    losehp(hp_to_lose, kick_killer());
                     if(Is_airlevel(&u.uz) || Levitation)
                         hurtle(-u.dx, -u.dy, rn1(2,4), true); /* assume it's heavy */
                     return(1);

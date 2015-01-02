@@ -12,6 +12,7 @@
 #include "do_name.h"
 #include "dbridge.h"
 #include "display.h"
+#include "everything.h"
 
 extern bool notonhead;
 

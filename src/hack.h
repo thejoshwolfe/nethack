@@ -28,6 +28,22 @@ enum KillerMethod {
     KM_ESCAPED,
     KM_ASCENDED,
 
+    KM_KICKING_O,
+    KM_KICKING_DOOR,
+    KM_KICKING_TREE,
+    KM_KICKING_WALL,
+    KM_KICKING_ROCK,
+    KM_KICKING_THRONE,
+    KM_KICKING_FOUNTAIN,
+    KM_KICKING_HEADSTONE,
+    KM_KICKING_SINK,
+    KM_KICKING_ALTAR,
+    KM_KICKING_DRAWBRIDGE,
+    KM_KICKING_STAIRS,
+    KM_KICKING_LADDER,
+    KM_KICKING_IRON_BAR,
+    KM_KICKING_SOMETHING_WEIRD,
+    KM_KICKING_O_WITHOUT_BOOTS,
     KM_FALLING_DOWNSTAIRS,
     KM_SQUISHED_UNDER_BOULDER,
     KM_AXING_HARD_OBJECT,
@@ -60,11 +76,13 @@ struct Killer {
     const struct monst *monster;
     const struct obj *object;
     const struct artifact *art;
+    const char *string;
 };
 
 struct Killer killed_by_const(enum KillerMethod method);
-struct Killer killed_by_monster(enum KillerMethod method, const struct monst *mon);
-struct Killer killed_by_object(enum KillerMethod method, const struct obj *o);
+struct Killer killed_by_monster(enum KillerMethod method, const struct monst *);
+struct Killer killed_by_object(enum KillerMethod method, const struct obj *);
+struct Killer killed_by_string(enum KillerMethod method, const char *);
 
 // see flash_types
 struct Killer killed_by_flash_text(const char * fltxt);
