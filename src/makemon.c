@@ -11,6 +11,7 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
+#include "everything.h"
 
 static struct monst zeromonst;
 

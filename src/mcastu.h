@@ -2,6 +2,7 @@
 #define MCASTU_H
 
 #include "monst.h"
+#include "permonst.h"
 
 #include <stdbool.h>
 

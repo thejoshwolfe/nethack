@@ -62,3 +62,5 @@
 #include "rumors.h"
 #include "bones.h"
 #include "role.h"
+#include "muse.h"
+#include "shknam.h"

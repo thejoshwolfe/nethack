@@ -1,12 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "hack.h"
-
 #include "mail.h"
 #include "invent.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 #include <fcntl.h>
 #include <errno.h>
@@ -375,7 +374,7 @@ void ckmailstatus(void) {
 }
 
 void readmail(struct obj *otmp) {
-    display_file(mailbox, true);
+    fprintf(stderr, "TODO: display file");
 
     /* get new stat; not entirely correct: there is a small time
        window where we do not see new mail */

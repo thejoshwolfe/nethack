@@ -46,7 +46,7 @@ NORMAL_ASS_O_FILES = build/allmain.o build/apply.o build/artifact.o build/attrib
   build/do.o build/do_name.o build/do_wear.o build/dog.o build/dogmove.o build/dokick.o build/dothrow.o \
   build/drawing.o build/dungeon.o build/eat.o build/end.o build/engrave.o build/exper.o build/explode.o \
   build/files.o build/fountain.o build/hack.o build/hacklib.o build/invent.o build/light.o \
-  build/lock.o build/mail.o build/makemon.o build/mapglyph.o build/mcastu.o build/mhitm.o build/mhitu.o \
+  build/lock.o build/mail.o build/makemon.o build/mcastu.o build/mhitm.o build/mhitu.o \
   build/minion.o build/mklev.o build/mkmap.o \
   build/mkmaze.o build/mkobj.o build/mkroom.o build/mon.o build/mondata.o build/monmove.o build/monstr.o \
   build/mplayer.o build/mthrowu.o build/muse.o build/music.o build/o_init.o build/objnam.o build/options.o \

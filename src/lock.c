@@ -9,6 +9,7 @@
 #include "shk.h"
 #include "do_name.h"
 #include "display.h"
+#include "everything.h"
 
 static int picklock(void);
 static int forcelock(void);
