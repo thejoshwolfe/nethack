@@ -8,9 +8,9 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "shk.h"
-#include "winprocs.h"
 #include "display.h"
 #include "timeout.h"
+#include "everything.h"
 
 #define NOINVSYM        '#'
 #define CONTAINED_SYM   '>'     /* designator for inside a container */

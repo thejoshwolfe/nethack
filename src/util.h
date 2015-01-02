@@ -203,6 +203,11 @@ int query_objlist(const char *qstr, struct obj *olist, int qflags,
 void mark_synch(void);
 void wait_synch(void);
 void bot(void);
+char message_menu(char, int, const char *);
+void start_menu(int);
+void add_menu(int, int, const void *, char, char, int, const char *, bool);
+void end_menu(int, const char *);
+int select_menu(int, int, menu_item **);
 
 void putstr(int, int, const char *);
 

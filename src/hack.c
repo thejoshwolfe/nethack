@@ -10,7 +10,7 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 static void maybe_wail(void);
 static int moverock(void);
@@ -439,14 +439,13 @@ static void dosinkfall (void) {
                are really still worn has no effect on bones data */
             ELevitation = HLevitation = 0L;
             You("crash to the floor!");
-            losehp(rn1(8, 25 - (int)ACURR(A_CON)),
-                   fell_on_sink, NO_KILLER_PREFIX);
+            losehp(rn1(8, 25 - (int)ACURR(A_CON)), killed_by_const(KM_FELL_ON_SINK));
             exercise(A_DEX, false);
             selftouch("Falling, you");
             for (obj = level.objects[u.ux][u.uy]; obj; obj = obj->nexthere)
                 if (obj->oclass == WEAPON_CLASS || is_weptool(obj)) {
                     You("fell on %s.", doname(obj));
-                    losehp(rnd(3), fell_on_sink, NO_KILLER_PREFIX);
+                    losehp(rnd(3), killed_by_const(KM_FELL_ON_SINK));
                     exercise(A_CON, false);
                 }
             ELevitation = save_ELev;

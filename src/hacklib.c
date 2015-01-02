@@ -3,6 +3,8 @@
 #include "hack.h"
 #include "hacklib.h"
 #include "do_name.h"
+#include "global.h"
+#include "end.h"
 
 /*=
     Assorted 'small' utility routines.  They're virtually independent of
