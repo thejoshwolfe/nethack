@@ -863,15 +863,8 @@ die:
 
         /* "So when I die, the first thing I will see in Heaven is a
          * score list?" */
-        if (flags.toptenwin) {
-            topten(how);
-            if (have_windows)
-                exit_nhwindows((char *)0);
-        } else {
-            if (have_windows)
-                exit_nhwindows((char *)0);
-            topten(how);
-        }
+        if (have_windows)
+            exit_nhwindows((char *)0);
         if (dump_fp) dump_exit();
 
         if(done_stopprint) { raw_print(""); raw_print(""); }

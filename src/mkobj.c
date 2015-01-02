@@ -958,23 +958,14 @@ get_mtraits (struct obj *obj, bool copyof)
 
 
 /* make an object named after someone listed in the scoreboard file */
-struct obj *
-mk_tt_object (
-    int objtype, /* CORPSE or STATUE */
-    int x,
-    int y
-)
-{
-        struct obj *otmp, *otmp2;
-        bool initialize_it;
+/* objtype: CORPSE or STATUE */
+struct obj * mk_tt_object(int objtype, int x, int y) {
+    struct obj *otmp, *otmp2;
+    bool initialize_it;
 
-        /* player statues never contain books */
-        initialize_it = (objtype != STATUE);
-        if ((otmp = mksobj_at(objtype, x, y, initialize_it, false)) != 0) {
-            /* tt_oname will return null if the scoreboard is empty */
-            if ((otmp2 = tt_oname(otmp)) != 0) otmp = otmp2;
-        }
-        return(otmp);
+    /* player statues never contain books */
+    initialize_it = (objtype != STATUE);
+    return mksobj_at(objtype, x, y, initialize_it, false);
 }
 
 /* make a new corpse or statue, uninitialized if a statue (i.e. no books) */
