@@ -35,7 +35,6 @@ int smeq[MAXNROFROOMS+1] = DUMMY;
 int doorindex = 0;
 
 char *save_cm = 0;
-int killer_format = 0;
 const struct Killer killer;
 
 const char *nomovemsg = 0;

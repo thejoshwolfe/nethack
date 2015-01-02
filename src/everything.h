@@ -41,3 +41,4 @@
 #include "options.h"
 #include "sit.h"
 #include "version.h"
+#include "region.h"

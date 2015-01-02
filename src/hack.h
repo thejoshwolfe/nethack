@@ -10,6 +10,29 @@
 #include "cmd.h"
 
 enum KillerMethod {
+    // This first section is based on a bunch of #defines from original game
+    KM_DIED,
+    KM_CHOKING,
+    KM_POISONING,
+    KM_STARVING,
+    KM_DROWNING,
+    KM_BURNING,
+    KM_DISSOLVED,
+    KM_CRUSHING,
+    KM_STONING,
+    KM_TURNED_SLIME,
+    KM_GENOCIDED,
+    KM_PANICKED,
+    KM_TRICKED,
+    KM_QUIT,
+    KM_ESCAPED,
+    KM_ASCENDED,
+
+    KM_FALLING_DRAWBRIDGE,
+    KM_CLOSING_DRAWBRIDGE,
+    KM_FELL_FROM_DRAWBRIDGE,
+    KM_EXPLODING_DRAWBRIDGE,
+    KM_COLLAPSING_DRAWBRIDGE,
     KM_RIDING_ACCIDENT,
     KM_IRON_BALL_COLLISON,
     KM_DRAGGED_DOWNSTAIRS_IRON_BALL,
@@ -114,30 +137,6 @@ int inv_cnt(void);
 #define SELL_NORMAL     (0)
 #define SELL_DELIBERATE (1)
 #define SELL_DONTSELL   (2)
-
-/*
- * This is the way the game ends.  If these are rearranged, the arrays
- * in end.c and topten.c will need to be changed.  Some parts of the
- * code assume that PANIC separates the deaths from the non-deaths.
- */
-enum {
-    DIED          =  0,
-    CHOKING       =  1,
-    POISONING     =  2,
-    STARVING      =  3,
-    DROWNING      =  4,
-    BURNING       =  5,
-    DISSOLVED     =  6,
-    CRUSHING      =  7,
-    STONING       =  8,
-    TURNED_SLIME  =  9,
-    GENOCIDED     = 10,
-    PANICKED      = 11,
-    TRICKED       = 12,
-    QUIT          = 13,
-    ESCAPED       = 14,
-    ASCENDED      = 15,
-};
 
 extern coord bhitpos;   /* place where throw or zap hits or stops */
 

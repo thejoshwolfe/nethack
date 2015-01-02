@@ -13,6 +13,7 @@
 #include "do_name.h"
 #include "objnam.h"
 #include "display.h"
+#include "everything.h"
 
 static void get_wall_for_db(int *, int *);
 static struct entity *e_at(int, int);
@@ -294,57 +295,55 @@ static bool e_survives_at (struct entity *etmp, int x, int y) {
 }
 
 static void e_died (struct entity *etmp, int dest, int how) {
-        if (is_u(etmp)) {
-                if (how == DROWNING) {
-                        killer = 0;     /* drown() sets its own killer */
-                        (void) drown();
-                } else if (how == BURNING) {
-                        killer = 0;     /* lava_effects() sets its own killer */
-                        (void) lava_effects();
-                } else {
-                        coord xy;
-
-                        /* use more specific killer if specified */
-                        if (!killer) {
-                            killer_format = KILLED_BY_AN;
-                            killer = "falling drawbridge";
-                        }
-                        done(how);
-                        /* So, you didn't die */
-                        if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
-                            if (enexto(&xy, etmp->ex, etmp->ey, etmp->edata)) {
-                                pline("A %s force teleports you away...",
-                                      Hallucination() ? "normal" : "strange");
-                                teleds(xy.x, xy.y, false);
-                            }
-                            /* otherwise on top of the drawbridge is the
-                             * only viable spot in the dungeon, so stay there
-                             */
-                        }
-                }
-                /* we might have crawled out of the moat to survive */
-                etmp->ex = u.ux,  etmp->ey = u.uy;
+    if (is_u(etmp)) {
+        if (how == DROWNING) {
+            killer.method = KM_DIED; // drown() sets its own killer
+            drown();
+        } else if (how == BURNING) {
+            killer.method = KM_DIED; // lava_effects() sets its own killer
+            lava_effects();
         } else {
-                int entitycnt;
+            coord xy;
 
-                killer = 0;
-                /* fake "digested to death" damage-type suppresses corpse */
-                /* if monsters are moving, one of them caused the destruction */
-                if (flags.mon_moving) {
-                    monkilled(etmp->emon, (dest & 1) ? "" : NULL, (dest & 2) ? AD_DGST : AD_PHYS);
-                } else {
-                    // you caused it
-                    xkilled(etmp->emon, dest);
+            /* use more specific killer if specified */
+            if (killer.method != KM_DIED) {
+                killer.method = KM_FALLING_DRAWBRIDGE;
+            }
+            done(how);
+            /* So, you didn't die */
+            if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
+                if (enexto(&xy, etmp->ex, etmp->ey, etmp->edata)) {
+                    pline("A %s force teleports you away...",
+                            Hallucination() ? "normal" : "strange");
+                    teleds(xy.x, xy.y, false);
                 }
-                etmp->edata = (struct permonst *)0;
-
-                /* dead long worm handling */
-                for (entitycnt = 0; entitycnt < ENTITIES; entitycnt++) {
-                    if (etmp != &(occupants[entitycnt]) &&
-                        etmp->emon == occupants[entitycnt].emon)
-                        occupants[entitycnt].edata = (struct permonst *)0;
-                }
+                /* otherwise on top of the drawbridge is the
+                 * only viable spot in the dungeon, so stay there
+                 */
+            }
         }
+        /* we might have crawled out of the moat to survive */
+        etmp->ex = u.ux,  etmp->ey = u.uy;
+    } else {
+        int entitycnt;
+
+        /* fake "digested to death" damage-type suppresses corpse */
+        /* if monsters are moving, one of them caused the destruction */
+        if (flags.mon_moving) {
+            monkilled(etmp->emon, (dest & 1) ? "" : NULL, (dest & 2) ? AD_DGST : AD_PHYS);
+        } else {
+            // you caused it
+            xkilled(etmp->emon, dest);
+        }
+        etmp->edata = (struct permonst *)0;
+
+        /* dead long worm handling */
+        for (entitycnt = 0; entitycnt < ENTITIES; entitycnt++) {
+            if (etmp != &(occupants[entitycnt]) &&
+                    etmp->emon == occupants[entitycnt].emon)
+                occupants[entitycnt].edata = (struct permonst *)0;
+        }
+    }
 }
 
 /*
@@ -540,9 +539,8 @@ static void do_entity (struct entity *etmp) {
             }
         }
         if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
-            killer_format = KILLED_BY_AN;
-            killer = "closing drawbridge";
-            e_died(etmp, 0, CRUSHING);             /* no message */
+            killer.method = KM_CLOSING_DRAWBRIDGE;
+            e_died(etmp, 0, KM_CRUSHING);
             return;
         }
     } else {
@@ -550,9 +548,7 @@ static void do_entity (struct entity *etmp) {
             if (flags.soundok)
                 You_hear("a splash.");
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
-            if (e_inview && !is_flyer(etmp->edata) &&
-                    !is_floater(etmp->edata))
-            {
+            if (e_inview && !is_flyer(etmp->edata) && !is_floater(etmp->edata)) {
                 char subject[BUFSZ];
                 E_phrase(subject, BUFSZ, etmp, "fall");
                 pline("%s from the bridge.", subject);
@@ -573,12 +569,11 @@ static void do_entity (struct entity *etmp) {
                     pline("%s into the %s.", subject, moat_str);
                 }
             }
-        killer_format = NO_KILLER_PREFIX;
-        killer = "fell from a drawbridge";
+        killer.method = KM_FELL_FROM_DRAWBRIDGE;
         e_died(etmp, e_inview ? 3 : 2,      /* CRUSHING is arbitrary */
-                (is_pool(etmp->ex, etmp->ey)) ? DROWNING :
-                (is_lava(etmp->ex, etmp->ey)) ? BURNING :
-                CRUSHING); /*no corpse*/
+                (is_pool(etmp->ex, etmp->ey)) ? KM_DROWNING :
+                (is_lava(etmp->ex, etmp->ey)) ? KM_BURNING :
+                KM_CRUSHING); /*no corpse*/
         return;
     }
 }
@@ -672,98 +667,96 @@ void open_drawbridge (int x, int y) {
  */
 
 void destroy_drawbridge (int x, int y) {
-        struct rm *lev1, *lev2;
-        struct trap *t;
-        int x2, y2;
-        bool e_inview;
-        struct entity *etmp1 = &(occupants[0]), *etmp2 = &(occupants[1]);
+    struct rm *lev1, *lev2;
+    struct trap *t;
+    int x2, y2;
+    bool e_inview;
+    struct entity *etmp1 = &(occupants[0]), *etmp2 = &(occupants[1]);
 
-        lev1 = &levl[x][y];
-        if (!IS_DRAWBRIDGE(lev1->typ))
-                return;
-        x2 = x; y2 = y;
-        get_wall_for_db(&x2,&y2);
-        lev2 = &levl[x2][y2];
-        if ((lev1->drawbridgemask & DB_UNDER) == DB_MOAT ||
+    lev1 = &levl[x][y];
+    if (!IS_DRAWBRIDGE(lev1->typ))
+        return;
+    x2 = x; y2 = y;
+    get_wall_for_db(&x2,&y2);
+    lev2 = &levl[x2][y2];
+    if ((lev1->drawbridgemask & DB_UNDER) == DB_MOAT ||
             (lev1->drawbridgemask & DB_UNDER) == DB_LAVA) {
-                struct obj *otmp;
-                bool lava = (lev1->drawbridgemask & DB_UNDER) == DB_LAVA;
-                if (lev1->typ == DRAWBRIDGE_UP) {
-                        if (cansee(x2,y2))
-                            pline_The("portcullis of the drawbridge falls into the %s!",
-                                  lava ? "lava" : "moat");
-                        else if (flags.soundok)
-                                You_hear("a loud *SPLASH*!");
-                } else {
-                        if (cansee(x,y))
-                            pline_The("drawbridge collapses into the %s!",
-                                  lava ? "lava" : "moat");
-                        else if (flags.soundok)
-                                You_hear("a loud *SPLASH*!");
-                }
-                lev1->typ = lava ? LAVAPOOL : MOAT;
-                lev1->drawbridgemask = 0;
-                if ((otmp = sobj_at(BOULDER,x,y)) != 0) {
-                    obj_extract_self(otmp);
-                    (void) flooreffects(otmp,x,y,"fall");
-                }
+        struct obj *otmp;
+        bool lava = (lev1->drawbridgemask & DB_UNDER) == DB_LAVA;
+        if (lev1->typ == DRAWBRIDGE_UP) {
+            if (cansee(x2,y2))
+                pline_The("portcullis of the drawbridge falls into the %s!",
+                        lava ? "lava" : "moat");
+            else if (flags.soundok)
+                You_hear("a loud *SPLASH*!");
         } else {
-                if (cansee(x,y))
-                        pline_The("drawbridge disintegrates!");
-                else
-                        You_hear("a loud *CRASH*!");
-                lev1->typ =
-                        ((lev1->drawbridgemask & DB_ICE) ? ICE : ROOM);
-                lev1->icedpool =
-                        ((lev1->drawbridgemask & DB_ICE) ? ICED_MOAT : 0);
+            if (cansee(x,y))
+                pline_The("drawbridge collapses into the %s!",
+                        lava ? "lava" : "moat");
+            else if (flags.soundok)
+                You_hear("a loud *SPLASH*!");
         }
-        wake_nearto(x, y, 500);
-        lev2->typ = DOOR;
-        lev2->doormask = D_NODOOR;
-        if ((t = t_at(x, y)) != 0) deltrap(t);
-        if ((t = t_at(x2, y2)) != 0) deltrap(t);
-        newsym(x,y);
-        newsym(x2,y2);
-        if (!does_block(x2,y2,lev2)) unblock_point(x2,y2);      /* vision */
-        if (Is_stronghold(&u.uz)) u.uevent.uopened_dbridge = true;
+        lev1->typ = lava ? LAVAPOOL : MOAT;
+        lev1->drawbridgemask = 0;
+        if ((otmp = sobj_at(BOULDER,x,y)) != 0) {
+            obj_extract_self(otmp);
+            (void) flooreffects(otmp,x,y,"fall");
+        }
+    } else {
+        if (cansee(x,y))
+            pline_The("drawbridge disintegrates!");
+        else
+            You_hear("a loud *CRASH*!");
+        lev1->typ =
+            ((lev1->drawbridgemask & DB_ICE) ? ICE : ROOM);
+        lev1->icedpool =
+            ((lev1->drawbridgemask & DB_ICE) ? ICED_MOAT : 0);
+    }
+    wake_nearto(x, y, 500);
+    lev2->typ = DOOR;
+    lev2->doormask = D_NODOOR;
+    if ((t = t_at(x, y)) != 0) deltrap(t);
+    if ((t = t_at(x2, y2)) != 0) deltrap(t);
+    newsym(x,y);
+    newsym(x2,y2);
+    if (!does_block(x2,y2,lev2)) unblock_point(x2,y2);      /* vision */
+    if (Is_stronghold(&u.uz)) u.uevent.uopened_dbridge = true;
 
-        set_entity(x2, y2, etmp2); /* currently only automissers can be here */
-        if (etmp2->edata) {
-                e_inview = e_canseemon(etmp2);
-                if (!automiss(etmp2)) {
-                        if (e_inview) {
-                            char subject[BUFSZ];
-                            E_phrase(subject, BUFSZ, etmp2, "are");
-                            pline("%s blown apart by flying debris.", subject);
-                        }
-                        killer_format = KILLED_BY_AN;
-                        killer = "exploding drawbridge";
-                        e_died(etmp2, e_inview? 3 : 2, CRUSHING); /*no corpse*/
-                }            /* nothing which is vulnerable can survive this */
-        }
-        set_entity(x, y, etmp1);
-        if (etmp1->edata) {
-                e_inview = e_canseemon(etmp1);
-                if (e_missed(etmp1, true)) {
+    set_entity(x2, y2, etmp2); /* currently only automissers can be here */
+    if (etmp2->edata) {
+        e_inview = e_canseemon(etmp2);
+        if (!automiss(etmp2)) {
+            if (e_inview) {
+                char subject[BUFSZ];
+                E_phrase(subject, BUFSZ, etmp2, "are");
+                pline("%s blown apart by flying debris.", subject);
+            }
+            killer.method = KM_EXPLODING_DRAWBRIDGE;
+            e_died(etmp2, e_inview? 3 : 2, KM_CRUSHING); /*no corpse*/
+        }            /* nothing which is vulnerable can survive this */
+    }
+    set_entity(x, y, etmp1);
+    if (etmp1->edata) {
+        e_inview = e_canseemon(etmp1);
+        if (e_missed(etmp1, true)) {
+        } else {
+            if (e_inview) {
+                if (!is_u(etmp1) && Hallucination()) {
+                    char subject[BUFSZ];
+                    E_phrase(subject, BUFSZ, etmp1, "get");
+                    pline("%s into some heavy metal!", subject);
                 } else {
-                        if (e_inview) {
-                            if (!is_u(etmp1) && Hallucination()) {
-                                char subject[BUFSZ];
-                                E_phrase(subject, BUFSZ, etmp1, "get");
-                                pline("%s into some heavy metal!", subject);
-                            } else {
-                                char subject[BUFSZ];
-                                E_phrase(subject, BUFSZ, etmp1, "are");
-                                pline("%s hit by a huge chunk of metal!", subject);
-                            }
-                        } else {
-                            if (flags.soundok && !is_u(etmp1) && !is_pool(x,y))
-                                You_hear("a crushing sound.");
-                        }
-                        killer_format = KILLED_BY_AN;
-                        killer = "collapsing drawbridge";
-                        e_died(etmp1, e_inview? 3 : 2, CRUSHING); /*no corpse*/
-                        if(lev1->typ == MOAT) do_entity(etmp1);
+                    char subject[BUFSZ];
+                    E_phrase(subject, BUFSZ, etmp1, "are");
+                    pline("%s hit by a huge chunk of metal!", subject);
                 }
+            } else {
+                if (flags.soundok && !is_u(etmp1) && !is_pool(x,y))
+                    You_hear("a crushing sound.");
+            }
+            killer.method = KM_COLLAPSING_DRAWBRIDGE;
+            e_died(etmp1, e_inview? 3 : 2, KM_CRUSHING); /*no corpse*/
+            if(lev1->typ == MOAT) do_entity(etmp1);
         }
+    }
 }

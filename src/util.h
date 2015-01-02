@@ -161,4 +161,21 @@ const char *Something = "Something";
 const char *something = "something";
 const char *Never_mind = "Never mind.";
 
+#define DIED           KM_DIED
+#define CHOKING        KM_CHOKING
+#define POISONING      KM_POISONING
+#define STARVING       KM_STARVING
+#define DROWNING       KM_DROWNING
+#define BURNING        KM_BURNING
+#define DISSOLVED      KM_DISSOLVED
+#define CRUSHING       KM_CRUSHING
+#define STONING        KM_STONING
+#define TURNED_SLIME   KM_TURNED_SLIME
+#define GENOCIDED      KM_GENOCIDED
+#define PANICKED       KM_PANICKED
+#define TRICKED        KM_TRICKED
+#define QUIT           KM_QUIT
+#define ESCAPED        KM_ESCAPED
+#define ASCENDED       KM_ASCENDED
+
 #endif // UTIL_H
