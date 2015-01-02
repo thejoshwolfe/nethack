@@ -27,8 +27,6 @@ int create_savefile(void);
 int open_savefile(void);
 int delete_savefile(void);
 int restore_saved_game(void);
-bool lock_file(const char *,int,int);
-void unlock_file(const char *);
 void read_config_file(const char *);
 void check_recordfile(const char *);
 void read_wizkit(void);

@@ -7,6 +7,7 @@
 #include "objnam.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
 #include <ctype.h>
 #include <fcntl.h>
@@ -374,6 +375,14 @@ int delete_bonesfile (d_level *lev) {
 
 /* set savefile name in OS-dependent manner from pre-existing plname,
  * avoiding troublesome characters */
+
+static void regularize(char * s) {
+    char *lp;
+
+    while((lp=index(s, '.')) || (lp=index(s, '/')) || (lp=index(s,' ')))
+        *lp = '_';
+}
+
 void set_savefile_name(void) {
     sprintf(SAVEF, "run/save/%d%s", (int)getuid(), plname);
     regularize(SAVEF+5);    /* avoid . or / in name */
@@ -447,92 +456,6 @@ void free_saved_games (char **saved) {
 /* ----------  END SAVE FILE HANDLING ----------- */
 
 
-
-
-
-/* ----------  BEGIN FILE LOCKING HANDLING ----------- */
-
-static char * make_lockname (const char *filename, char *lockname) {
-    strcpy(lockname, filename);
-    strcat(lockname, "_lock");
-    return lockname;
-}
-
-
-/* lock a file */
-bool lock_file (const char *filename, int whichprefix, int retryct) {
-    char locknambuf[BUFSZ];
-    const char *lockname;
-
-    nesting++;
-    if (nesting > 1) {
-        impossible("TRIED TO NEST LOCKS");
-        return true;
-    }
-
-    lockname = make_lockname(filename, locknambuf);
-    filename = fqname(filename, whichprefix, 0);
-    lockname = fqname(lockname, LOCKPREFIX, 2);
-
-    while (link(filename, lockname) == -1) {
-        int errnosv = errno;
-
-        switch (errnosv) {  /* George Barbanis */
-            case EEXIST:
-                if (retryct--) {
-                    if (!program_state.done_hup) raw_printf(
-                            "Waiting for access to %s.  (%d retries left).",
-                            filename, retryct);
-                    sleep(1);
-                } else {
-                    if (!program_state.done_hup) (void) raw_print("I give up.  Sorry.");
-                    if (!program_state.done_hup) raw_printf("Perhaps there is an old %s around?",
-                            lockname);
-                    nesting--;
-                    return false;
-                }
-
-                break;
-            case ENOENT:
-                if (!program_state.done_hup) raw_printf("Can't find file %s to lock!", filename);
-                nesting--;
-                return false;
-            case EACCES:
-                if (!program_state.done_hup) raw_printf("No write permission to lock %s!", filename);
-                nesting--;
-                return false;
-            default:
-                if (!program_state.done_hup) perror(lockname);
-                if (!program_state.done_hup) raw_printf(
-                        "Cannot lock %s for unknown reason (%d).",
-                        filename, errnosv);
-                nesting--;
-                return false;
-        }
-
-    }
-
-    return true;
-}
-
-/* unlock file, which must be currently locked by lock_file */
-void unlock_file(const char *filename) {
-    char locknambuf[BUFSZ];
-    const char *lockname;
-
-    if (nesting == 1) {
-        lockname = make_lockname(filename, locknambuf);
-        lockname = fqname(lockname, LOCKPREFIX, 2);
-
-        if (unlink(lockname) < 0)
-            if (!program_state.done_hup) raw_printf("Can't unlink %s.", lockname);
-
-    }
-
-    nesting--;
-}
-
-/* ----------  END FILE LOCKING HANDLING ----------- */
 
 
 /* ----------  BEGIN CONFIG FILE HANDLING ----------- */
