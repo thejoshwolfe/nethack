@@ -3,6 +3,8 @@
 #include "drawing.h"
 #include "hack.h"
 #include "flag.h"
+#include "rm.h"
+#include "color.h"
 
 /* Relevent header information in rm.h and objclass.h. */
 
