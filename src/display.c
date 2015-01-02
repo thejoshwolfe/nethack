@@ -118,7 +118,7 @@
 #include "region.h"
 #include "invent.h"
 #include "dbridge.h"
-#include "winprocs.h"
+#include "everything.h"
 
 #include <assert.h>
 
@@ -1221,11 +1221,6 @@ void clear_glyph_buffer (void) {
  * Assumes that the indicated positions are filled with S_stone glyphs.
  */
 void row_refresh (int start, int stop, int y) {
-    int x;
-
-    for (x = start; x <= stop; x++)
-        if (gbuf[y][x].glyph != cmap_to_glyph(S_stone))
-            print_glyph(WIN_MAP,x,y,gbuf[y][x].glyph);
 }
 
 void cls (void) {
@@ -1240,32 +1235,6 @@ void cls (void) {
  * Synch the third screen with the display.
  */
 void flush_screen (int cursor_on_u) {
-    /* Prevent infinite loops on errors:
-     *      flush_screen->print_glyph->impossible->pline->flush_screen
-     */
-    static   bool flushing = 0;
-    static   bool delay_flushing = 0;
-    int x,y;
-
-    if (cursor_on_u == -1) delay_flushing = !delay_flushing;
-    if (delay_flushing) return;
-    if (flushing) return;       /* if already flushing then return */
-    flushing = 1;
-
-    for (y = 0; y < ROWNO; y++) {
-        gbuf_entry *gptr = &gbuf[y][x = gbuf_start[y]];
-        for (; x <= gbuf_stop[y]; gptr++, x++)
-            if (gptr->new) {
-                print_glyph(WIN_MAP,x,y,gptr->glyph);
-                gptr->new = 0;
-            }
-    }
-
-    if (cursor_on_u) curs(WIN_MAP, u.ux,u.uy); /* move cursor to the hero */
-    display_nhwindow(WIN_MAP, false);
-    reset_glyph_bbox();
-    flushing = 0;
-    if(flags.botl || flags.botlx) bot();
 }
 
 /* ========================================================================= */
@@ -1315,32 +1284,6 @@ extern const char * compress_str(const char *);
 
 /* Take a screen dump */
 void dump_screen (void) {
-    int x,y;
-    int lastc;
-    /* D: botl.c has a closer approximation to the size, but we'll go with
-     *    this */
-    char buf[300], *ptr;
-
-    for (y = 0; y < ROWNO; y++) {
-        lastc = 0;
-        ptr = buf;
-        for (x = 1; x < COLNO; x++) {
-            unsigned char c = get_glyph_char(gbuf[y][x].glyph);
-            *ptr++ = c;
-            if (c != ' ')
-                lastc = x;
-        }
-        buf[lastc] = '\0';
-        dump("", buf);
-    }
-    dump("", "");
-    bot1str(buf);
-    ptr = (char *) compress_str((const char *) buf);
-    dump("", ptr);
-    bot2str(buf);
-    dump("", buf);
-    dump("", "");
-    dump("", "");
 }
 
 /*
