@@ -13,17 +13,9 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 extern bool known;   /* from read.c */
-
-static void do_dknown_of(struct obj *);
-static bool check_map_spot(int,int,char,unsigned);
-static bool clear_stale_map(char,unsigned);
-static void sense_trap(struct trap *,signed char,signed char,int);
-static void show_map_spot(int,int);
-static void findone(int,int,void *);
-static void openone(int,int,void *);
 
 static const struct {
     const char *what;
@@ -191,12 +183,11 @@ int gold_detect (struct obj *sobj) {
             if (youmonst.data == &mons[PM_GOLD_GOLEM]) {
                 sprintf(buf, "You feel like a million %s!",
                         currency(2L));
-            } else if (hidden_gold() ||
-                    u.ugold)
-                strcpy(buf,
-                        "You feel worried about your future financial situation.");
-            else
+            } else if (hidden_gold() || u.ugold) {
+                strcpy(buf, "You feel worried about your future financial situation.");
+            } else {
                 strcpy(buf, "You feel materially poor.");
+            }
             strange_feeling(sobj, buf);
         }
         return(1);
@@ -252,7 +243,7 @@ outgoldmap:
     newsym(u.ux,u.uy);
     You_feel("very greedy, and sense gold!");
     exercise(A_WIS, true);
-    display_nhwindow(WIN_MAP, true);
+    // display_nhwindow(WIN_MAP, true);
     docrt();
     u.uinwater = uw;
     if (Underwater) under_water(2);
@@ -349,7 +340,7 @@ int food_detect (struct obj *sobj) {
                 Your("%s tingles and you smell %s.", body_part(NOSE), what);
         }
         else You("sense %s.", what);
-        display_nhwindow(WIN_MAP, true);
+        //display_nhwindow(WIN_MAP, true);
         exercise(A_WIS, true);
         docrt();
         u.uinwater = uw;
@@ -521,7 +512,7 @@ int object_detect (struct obj *detector, int class) {
 
     newsym(u.ux,u.uy);
     You("detect the %s of %s.", ct ? "presence" : "absence", stuff);
-    display_nhwindow(WIN_MAP, true);
+    //display_nhwindow(WIN_MAP, true);
     /*
      * What are we going to do when the hero does an object detect while blind
      * and the detected object covers a known pool?
@@ -592,7 +583,7 @@ int monster_detect (struct obj *otmp, int mclass) {
         You("sense the presence of monsters.");
         if (woken)
             pline("Monsters sense the presence of you.");
-        display_nhwindow(WIN_MAP, true);
+        //display_nhwindow(WIN_MAP, true);
         docrt();
         if (Underwater) under_water(2);
         if (u.uburied) under_ground(2);
@@ -687,7 +678,7 @@ outtrapmap:
 
     newsym(u.ux,u.uy);
     You_feel("%s.", sobj && sobj->cursed ? "very greedy" : "entrapped");
-    display_nhwindow(WIN_MAP, true);
+    //display_nhwindow(WIN_MAP, true);
     docrt();
     u.uinwater = uw;
     if (Underwater) under_water(2);
@@ -779,7 +770,7 @@ void use_crystal_ball (struct obj *obj) {
                     pline("%s!", explode_clause);
                     useup(obj);
                     obj = 0;    /* it's gone */
-                    losehp(rnd(30), "exploding crystal ball", KILLED_BY_AN);
+                    losehp(rnd(30), killed_by_const(KM_EXPLODING_CRYSTAL_BALL));
                 }
                 break;
         }
@@ -907,7 +898,7 @@ void do_mapping (void) {
     u.uinwater = uw;
     if (!level.flags.hero_memory || Underwater) {
         flush_screen(1);                        /* flush temp screen */
-        display_nhwindow(WIN_MAP, true);        /* wait */
+        //display_nhwindow(WIN_MAP, true);        /* wait */
         docrt();
     }
 }

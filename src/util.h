@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdbool.h>
 
 // These functions return the number of bytes that we *wanted* to write,
 // excluding the \0. If this number is >= than dest_size, the buffer was
@@ -160,6 +161,12 @@ void message_monster_object(enum MessageId id, const struct monst * mtmp, struct
 const char *Something = "Something";
 const char *something = "something";
 const char *Never_mind = "Never mind.";
+const char *nothing_happens = "Nothing happens.";
+const char *thats_enough_tries = "That's enough tries!";
+const char *silly_thing_to = "That is a silly thing to %s.";
+const char *shudder_for_moment = "shudder for a moment.";
+const char *You_can_move_again = "You can move again.";
+const char *vision_clears = "vision quickly clears.";
 
 #define DIED           KM_DIED
 #define CHOKING        KM_CHOKING
@@ -177,5 +184,9 @@ const char *Never_mind = "Never mind.";
 #define QUIT           KM_QUIT
 #define ESCAPED        KM_ESCAPED
 #define ASCENDED       KM_ASCENDED
+
+#define the_your {"the", "your"}
+
+void display_nhwindow(int, bool);
 
 #endif // UTIL_H
