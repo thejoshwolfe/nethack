@@ -870,11 +870,12 @@ dokick (void)
                     You("kick %s.",(Blind ? something : "the fountain"));
                     if(!rn2(3)) goto ouch;
                     /* make metal boots rust */
-                    if(uarmf && rn2(3))
+                    if(uarmf && rn2(3)) {
                         if (!rust_dmg(uarmf, "metal boots", 1, false, &youmonst)) {
                                 Your("boots get wet.");
                                 /* could cause short-lived fumbling here */
                         }
+                    }
                     exercise(A_DEX, true);
                     return(1);
                 }
