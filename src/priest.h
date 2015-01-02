@@ -3,14 +3,15 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include "monst.h"
+#include "mkroom.h"
+#include "dungeon.h"
 
-int move_special(struct monst *,bool,signed char,bool,bool,
-        signed char,signed char,signed char,signed char);
+int move_special(struct monst *,bool,signed char,bool,bool, signed char,signed char,signed char,signed char);
 char temple_occupied(char *);
 int pri_move(struct monst *);
 void priestini(d_level *,struct mkroom *,int,int,bool);
-size_t priestname(char *out_buf, size_t buf_size, const struct monst *mon,
-        bool block_invis_and_halluc);
+size_t priestname(char *out_buf, size_t buf_size, const struct monst *mon, bool block_invis_and_halluc);
 bool p_coaligned(struct monst *);
 struct monst *findpriest(char);
 void intemple(int);

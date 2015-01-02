@@ -1,6 +1,11 @@
 #ifndef UHITM_H
 #define UHITM_H
 
+#include <stdbool.h>
+#include "monst.h"
+#include "obj.h"
+#include "permonst.h"
+
 void hurtmarmor(struct monst *,int);
 bool attack_checks(struct monst *,struct obj *);
 void check_caitiff(struct monst *);

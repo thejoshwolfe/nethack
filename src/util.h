@@ -129,6 +129,8 @@ enum MessageId {
     MSG_THATS_ENOUGH_TRIES,
     MSG_OBJECT_STOPS_GLOWING,
     MSG_OBJECT_GLOWS_BRILLIANTLY,
+    MSG_MONSTER_HIDING_UNDER_OBJECT,
+    MSG_YOUR_OBJECT_IS_NO_LONGER_POISONED,
 };
 
 struct Message {
@@ -146,11 +148,11 @@ void message_monster(enum MessageId id, const struct monst *m);
 void message_monster_force_visible(enum MessageId id, const struct monst *m);
 void message_object(enum MessageId id, const struct obj *o);
 void message_object2(enum MessageId id, const struct obj *o1, const struct obj *o2);
-void message_object3(enum MessageId id, const struct obj *o1, const struct obj *o2,
-        const struct obj *o3);
+void message_object3(enum MessageId id, const struct obj *o1, const struct obj *o2, const struct obj *o3);
 void message_int(enum MessageId id, int i);
 void message_monster_string(enum MessageId id, const struct monst *m, const char *s);
 void message_string(enum MessageId id, const char *s);
+void message_monster_object(enum MessageId id, const struct monst * mtmp, struct obj * obj);
 
 // stuff to make it just friggin compile
 // creep forward and delete all this junk
