@@ -189,6 +189,8 @@ const char *the_your[2] = {"the", "your"};
 #define ESCAPED        KM_ESCAPED
 #define ASCENDED       KM_ASCENDED
 
+int create_nhwindow(int);
+void destroy_nhwindow(int);
 void display_nhwindow(int, bool);
 void clear_nhwindow(int);
 void my_delay_output(void);

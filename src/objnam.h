@@ -41,5 +41,6 @@ struct obj *readobjnam(char *,const struct obj *,bool);
 int rnd_class(int,int);
 const char *cloak_simple_name(const struct obj *);
 const char *mimic_obj_name(const struct monst *);
+const char * rank_of(int lev, short monnum, bool female);
 
 #endif // OBJNAM_H

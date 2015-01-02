@@ -2555,3 +2555,27 @@ const char * mimic_obj_name (const struct monst *mtmp) {
     }
     return "whatcha-may-callit";
 }
+
+const char * rank_of(int lev, short monnum, bool female) {
+    struct Role *role;
+    int i;
+
+
+    /* Find the role */
+    for (role = (struct Role *) roles; role->name.m; role++)
+        if (monnum == role->malenum || monnum == role->femalenum)
+            break;
+    if (!role->name.m)
+        role = &urole;
+
+    /* Find the rank */
+    for (i = xlev_to_rank((int)lev); i >= 0; i--) {
+        if (female && role->rank[i].f) return (role->rank[i].f);
+        if (role->rank[i].m) return (role->rank[i].m);
+    }
+
+    /* Try the role name, instead */
+    if (female && role->name.f) return (role->name.f);
+    else if (role->name.m) return (role->name.m);
+    return ("Player");
+}
