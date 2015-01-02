@@ -14,8 +14,8 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
 #include "timeout.h"
+#include "everything.h"
 
 static void trycall(struct obj *);
 static void dosinkring(struct obj *);
@@ -102,14 +102,12 @@ bool boulder_hits_pool(struct obj *otmp, int rx, int ry, bool pushing) {
                     vision_full_recalc = 1;
                     You("find yourself on dry land again!");
                 } else if (lava && distu(rx,ry) <= 2) {
-                    You("are hit by molten lava%c",
-                        Fire_resistance ? '.' : '!');
-                        burn_away_slime();
-                    losehp(d((Fire_resistance ? 1 : 3), 6),
-                           "molten lava", KILLED_BY);
-                } else if (!fills_up && flags.verbose &&
-                           (pushing ? !Blind : cansee(rx,ry)))
+                    You("are hit by molten lava%c", Fire_resistance ? '.' : '!');
+                    burn_away_slime();
+                    losehp(d((Fire_resistance ? 1 : 3), 6), killed_by_const(KM_MOLTEN_LAVA));
+                } else if (!fills_up && flags.verbose && (pushing ? !Blind : cansee(rx,ry))) {
                     pline("It sinks without a trace!");
+                }
             }
 
             /* boulder is now gone */
@@ -156,8 +154,7 @@ bool flooreffects (struct obj *obj, int x, int y, const char *verb) {
                         mtmp->mtrapped = 0;
                     } else {
                         if (!Passes_walls && !throws_rocks(youmonst.data)) {
-                            losehp(rnd(15), "squished under a boulder",
-                                   NO_KILLER_PREFIX);
+                            losehp(rnd(15), killed_by_const(KM_SQUISHED_UNDER_BOULDER));
                             return false;       /* player remains trapped */
                         } else u.utrap = 0;
                     }
@@ -507,7 +504,7 @@ dropy (struct obj *obj)
                     could_grow = (obj->corpsenm == PM_WRAITH);
                     could_heal = (obj->corpsenm == PM_NURSE);
                 }
-                (void) mpickobj(u.ustuck,obj);
+                mpickobj(u.ustuck,obj);
                 if (is_animal(u.ustuck->data)) {
                     if (could_poly || could_slime) {
                         (void) newcham(u.ustuck,
@@ -998,10 +995,10 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
                 if (fd < 0) {
                         pline("%s", whynot);
                         pline("Probably someone removed it.");
-                        killer = whynot;
-                        done(TRICKED);
+                        killer.method = KM_TRICKED;
+                        done(KM_TRICKED);
                         /* we'll reach here if running in wizard mode */
-                        error("Cannot continue this game.");
+                        fprintf(stderr, "Cannot continue this game.\n");
                 }
                 minit();        /* ZEROCOMP */
                 getlev(fd, hackpid, new_ledger, false);
@@ -1072,10 +1069,11 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
                         }
                     }
                     /* falling off steed has its own losehp() call */
-                    if (u.usteed)
+                    if (u.usteed) {
                         dismount_steed(DISMOUNT_FELL);
-                    else
-                        losehp(rnd(3), "falling downstairs", KILLED_BY);
+                    } else {
+                        losehp(rnd(3), killed_by_const(KM_FALLING_DOWNSTAIRS));
+                    }
                     selftouch("Falling, you");
                 } else if (u.dz && at_ladder)
                     You("climb down the ladder.");

@@ -1,6 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include "wintype.h"
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -167,6 +169,8 @@ const char *silly_thing_to = "That is a silly thing to %s.";
 const char *shudder_for_moment = "shudder for a moment.";
 const char *You_can_move_again = "You can move again.";
 const char *vision_clears = "vision quickly clears.";
+const char *the_your[2] = {"the", "your"};
+
 
 #define DIED           KM_DIED
 #define CHOKING        KM_CHOKING
@@ -185,11 +189,13 @@ const char *vision_clears = "vision quickly clears.";
 #define ESCAPED        KM_ESCAPED
 #define ASCENDED       KM_ASCENDED
 
-#define the_your {"the", "your"}
-
 void display_nhwindow(int, bool);
 void clear_nhwindow(int);
 void my_delay_output(void);
 void print_glyph(int, signed char x, signed char y, int glyph);
+int query_category ( const char *qstr, struct obj *olist, int qflags, menu_item **pick_list, int how);
+int query_objlist(const char *qstr, struct obj *olist, int qflags,
+        menu_item **pick_list, int how, bool (*allow)(const struct obj *));
+void mark_synch(void);
 
 #endif // UTIL_H
