@@ -28,6 +28,8 @@ enum KillerMethod {
     KM_ESCAPED,
     KM_ASCENDED,
 
+    KM_AXING_HARD_OBJECT,
+    KM_YOUR_OWN_O,
     KM_EXPLODING_CRYSTAL_BALL,
     KM_FALLING_DRAWBRIDGE,
     KM_CLOSING_DRAWBRIDGE,
@@ -54,11 +56,13 @@ enum KillerMethod {
 struct Killer {
     enum KillerMethod method;
     const struct monst *monster;
+    const struct obj *object;
     const struct artifact *art;
 };
 
 struct Killer killed_by_const(enum KillerMethod method);
 struct Killer killed_by_monster(enum KillerMethod method, const struct monst *mon);
+struct Killer killed_by_object(enum KillerMethod method, const struct obj *o);
 
 // see flash_types
 struct Killer killed_by_flash_text(const char * fltxt);

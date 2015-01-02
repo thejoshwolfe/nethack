@@ -188,5 +188,6 @@ const char *vision_clears = "vision quickly clears.";
 #define the_your {"the", "your"}
 
 void display_nhwindow(int, bool);
+void my_delay_output(void);
 
 #endif // UTIL_H

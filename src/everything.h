@@ -46,3 +46,4 @@
 #include "mkroom.h"
 #include "drawing.h"
 #include "mhitu.h"
+#include "monmove.h"

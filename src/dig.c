@@ -14,6 +14,7 @@
 #include "display.h"
 #include "vision.h"
 #include "timeout.h"
+#include "everything.h"
 
 static bool did_dig_msg;
 
@@ -844,150 +845,145 @@ use_pick_axe (struct obj *obj)
 /*       the "In what direction do you want to dig?" query.        */
 /*       use_pick_axe2() uses the existing u.dx, u.dy and u.dz    */
 
-int
-use_pick_axe2 (struct obj *obj)
-{
-        int rx, ry;
-        struct rm *lev;
-        int dig_target;
-        bool ispick = is_pick(obj);
-        const char *verbing = ispick ? "digging" : "chopping";
+int use_pick_axe2 (struct obj *obj) {
+    int rx, ry;
+    struct rm *lev;
+    int dig_target;
+    bool ispick = is_pick(obj);
+    const char *verbing = ispick ? "digging" : "chopping";
 
-        if (u.uswallow && attack(u.ustuck)) {
-                ;  /* return(1) */
-        } else if (Underwater) {
-                pline("Turbulence torpedoes your %s attempts.", verbing);
-        } else if(u.dz < 0) {
-                if(Levitation)
-                        You("don't have enough leverage.");
-                else
-                        You_cant("reach the %s.",ceiling(u.ux,u.uy));
-        } else if(!u.dx && !u.dy && !u.dz) {
-                char buf[BUFSZ];
-                int dam;
+    if (u.uswallow && attack(u.ustuck)) {
+        ;  /* return(1) */
+    } else if (Underwater) {
+        pline("Turbulence torpedoes your %s attempts.", verbing);
+    } else if(u.dz < 0) {
+        if(Levitation)
+            You("don't have enough leverage.");
+        else
+            You_cant("reach the %s.",ceiling(u.ux,u.uy));
+    } else if(!u.dx && !u.dy && !u.dz) {
+        char buf[BUFSZ];
+        int dam;
 
-                dam = rnd(2) + dbon() + obj->spe;
-                if (dam <= 0) dam = 1;
-                You("hit yourself with %s.", yname(uwep));
-                sprintf(buf, "%s own %s", uhis(),
-                                OBJ_NAME(objects[obj->otyp]));
-                losehp(dam, buf, KILLED_BY);
-                flags.botl=1;
-                return(1);
-        } else if(u.dz == 0) {
-                if(Stunned || (Confusion && !rn2(5))) confdir();
-                rx = u.ux + u.dx;
-                ry = u.uy + u.dy;
-                if(!isok(rx, ry)) {
-                        pline("Clash!");
-                        return(1);
-                }
-                lev = &levl[rx][ry];
-                if(MON_AT(rx, ry) && attack(m_at(rx, ry)))
-                        return(1);
-                dig_target = dig_typ(obj, rx, ry);
-                if (dig_target == DIGTYP_UNDIGGABLE) {
-                        /* ACCESSIBLE or POOL */
-                        struct trap *trap = t_at(rx, ry);
-
-                        if (trap && trap->ttyp == WEB) {
-                            if (!trap->tseen) {
-                                seetrap(trap);
-                                There("is a spider web there!");
-                            }
-                            Your("%s entangled in the web.",
-                                aobjnam(obj, "become"));
-                            /* you ought to be able to let go; tough luck */
-                            /* (maybe `move_into_trap()' would be better) */
-                            nomul(-d(2,2));
-                            nomovemsg = "You pull free.";
-                        } else if (lev->typ == IRONBARS) {
-                            pline("Clang!");
-                            wake_nearby();
-                        } else if (IS_TREE(lev->typ))
-                            You("need an axe to cut down a tree.");
-                        else if (IS_ROCK(lev->typ))
-                            You("need a pick to dig rock.");
-                        else if (!ispick && (sobj_at(STATUE, rx, ry) ||
-                                             sobj_at(BOULDER, rx, ry))) {
-                            bool vibrate = !rn2(3);
-                            pline("Sparks fly as you whack the %s.%s",
-                                sobj_at(STATUE, rx, ry) ? "statue" : "boulder",
-                                vibrate ? " The axe-handle vibrates violently!" : "");
-                            if (vibrate) losehp(2, "axing a hard object", KILLED_BY);
-                        }
-                        else
-                            You("swing your %s through thin air.",
-                                aobjnam(obj, (char *)0));
-                } else {
-                        static const char * const d_action[6] = {
-                                                "swinging",
-                                                "digging",
-                                                "chipping the statue",
-                                                "hitting the boulder",
-                                                "chopping at the door",
-                                                "cutting the tree"
-                        };
-                        did_dig_msg = false;
-                        digging.quiet = false;
-                        if (digging.pos.x != rx || digging.pos.y != ry ||
-                            !on_level(&digging.level, &u.uz) || digging.down) {
-                            if (flags.autodig &&
-                                dig_target == DIGTYP_ROCK && !digging.down &&
-                                digging.pos.x == u.ux &&
-                                digging.pos.y == u.uy &&
-                                (moves <= digging.lastdigtime+2 &&
-                                 moves >= digging.lastdigtime)) {
-                                /* avoid messages if repeated autodigging */
-                                did_dig_msg = true;
-                                digging.quiet = true;
-                            }
-                            digging.down = digging.chew = false;
-                            digging.warned = false;
-                            digging.pos.x = rx;
-                            digging.pos.y = ry;
-                            assign_level(&digging.level, &u.uz);
-                            digging.effort = 0;
-                            if (!digging.quiet)
-                                You("start %s.", d_action[dig_target]);
-                        } else {
-                            You("%s %s.", digging.chew ? "begin" : "continue",
-                                        d_action[dig_target]);
-                            digging.chew = false;
-                        }
-                        set_occupation(dig, verbing, 0);
-                }
-        } else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
-                /* it must be air -- water checked above */
-                You("swing your %s through thin air.", aobjnam(obj, (char *)0));
-        } else if (!can_reach_floor()) {
-                You_cant("reach the %s.", surface(u.ux,u.uy));
-        } else if (is_pool(u.ux, u.uy) || is_lava(u.ux, u.uy)) {
-                /* Monsters which swim also happen not to be able to dig */
-                You("cannot stay under%s long enough.",
-                                is_pool(u.ux, u.uy) ? "water" : " the lava");
-        } else if (!ispick) {
-                Your("%s merely scratches the %s.",
-                                aobjnam(obj, (char *)0), surface(u.ux,u.uy));
-                u_wipe_engr(3);
-        } else {
-                if (digging.pos.x != u.ux || digging.pos.y != u.uy ||
-                        !on_level(&digging.level, &u.uz) || !digging.down) {
-                    digging.chew = false;
-                    digging.down = true;
-                    digging.warned = false;
-                    digging.pos.x = u.ux;
-                    digging.pos.y = u.uy;
-                    assign_level(&digging.level, &u.uz);
-                    digging.effort = 0;
-                    You("start %s downward.", verbing);
-                    if (*u.ushops) shopdig(0);
-                } else
-                    You("continue %s downward.", verbing);
-                did_dig_msg = false;
-                set_occupation(dig, verbing, 0);
-        }
+        dam = rnd(2) + dbon() + obj->spe;
+        if (dam <= 0) dam = 1;
+        You("hit yourself with %s.", yname(uwep));
+        losehp(dam, killed_by_object(KM_YOUR_OWN_O, obj));
+        flags.botl=1;
         return(1);
+    } else if(u.dz == 0) {
+        if(Stunned || (Confusion && !rn2(5))) confdir();
+        rx = u.ux + u.dx;
+        ry = u.uy + u.dy;
+        if(!isok(rx, ry)) {
+            pline("Clash!");
+            return(1);
+        }
+        lev = &levl[rx][ry];
+        if(MON_AT(rx, ry) && attack(m_at(rx, ry)))
+            return(1);
+        dig_target = dig_typ(obj, rx, ry);
+        if (dig_target == DIGTYP_UNDIGGABLE) {
+            /* ACCESSIBLE or POOL */
+            struct trap *trap = t_at(rx, ry);
+
+            if (trap && trap->ttyp == WEB) {
+                if (!trap->tseen) {
+                    seetrap(trap);
+                    There("is a spider web there!");
+                }
+                Your("%s entangled in the web.",
+                        aobjnam(obj, "become"));
+                /* you ought to be able to let go; tough luck */
+                /* (maybe `move_into_trap()' would be better) */
+                nomul(-d(2,2));
+                nomovemsg = "You pull free.";
+            } else if (lev->typ == IRONBARS) {
+                pline("Clang!");
+                wake_nearby();
+            } else if (IS_TREE(lev->typ)) {
+                You("need an axe to cut down a tree.");
+            } else if (IS_ROCK(lev->typ)) {
+                You("need a pick to dig rock.");
+            } else if (!ispick && (sobj_at(STATUE, rx, ry) || sobj_at(BOULDER, rx, ry))) {
+                bool vibrate = !rn2(3);
+                pline("Sparks fly as you whack the %s.%s",
+                        sobj_at(STATUE, rx, ry) ? "statue" : "boulder",
+                        vibrate ? " The axe-handle vibrates violently!" : "");
+                if (vibrate)
+                    losehp(2, killed_by_const(KM_AXING_HARD_OBJECT));
+            } else {
+                You("swing your %s through thin air.", aobjnam(obj, NULL));
+            }
+        } else {
+            static const char * const d_action[6] = {
+                "swinging",
+                "digging",
+                "chipping the statue",
+                "hitting the boulder",
+                "chopping at the door",
+                "cutting the tree"
+            };
+            did_dig_msg = false;
+            digging.quiet = false;
+            if (digging.pos.x != rx || digging.pos.y != ry ||
+                    !on_level(&digging.level, &u.uz) || digging.down) {
+                if (flags.autodig &&
+                        dig_target == DIGTYP_ROCK && !digging.down &&
+                        digging.pos.x == u.ux &&
+                        digging.pos.y == u.uy &&
+                        (moves <= digging.lastdigtime+2 &&
+                         moves >= digging.lastdigtime)) {
+                    /* avoid messages if repeated autodigging */
+                    did_dig_msg = true;
+                    digging.quiet = true;
+                }
+                digging.down = digging.chew = false;
+                digging.warned = false;
+                digging.pos.x = rx;
+                digging.pos.y = ry;
+                assign_level(&digging.level, &u.uz);
+                digging.effort = 0;
+                if (!digging.quiet)
+                    You("start %s.", d_action[dig_target]);
+            } else {
+                You("%s %s.", digging.chew ? "begin" : "continue",
+                        d_action[dig_target]);
+                digging.chew = false;
+            }
+            set_occupation(dig, verbing, 0);
+        }
+    } else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
+        /* it must be air -- water checked above */
+        You("swing your %s through thin air.", aobjnam(obj, (char *)0));
+    } else if (!can_reach_floor()) {
+        You_cant("reach the %s.", surface(u.ux,u.uy));
+    } else if (is_pool(u.ux, u.uy) || is_lava(u.ux, u.uy)) {
+        /* Monsters which swim also happen not to be able to dig */
+        You("cannot stay under%s long enough.",
+                is_pool(u.ux, u.uy) ? "water" : " the lava");
+    } else if (!ispick) {
+        Your("%s merely scratches the %s.",
+                aobjnam(obj, (char *)0), surface(u.ux,u.uy));
+        u_wipe_engr(3);
+    } else {
+        if (digging.pos.x != u.ux || digging.pos.y != u.uy ||
+                !on_level(&digging.level, &u.uz) || !digging.down) {
+            digging.chew = false;
+            digging.down = true;
+            digging.warned = false;
+            digging.pos.x = u.ux;
+            digging.pos.y = u.uy;
+            assign_level(&digging.level, &u.uz);
+            digging.effort = 0;
+            You("start %s downward.", verbing);
+            if (*u.ushops) shopdig(0);
+        } else
+            You("continue %s downward.", verbing);
+        did_dig_msg = false;
+        set_occupation(dig, verbing, 0);
+    }
+    return(1);
 }
 
 /*
@@ -1152,8 +1148,8 @@ void zap_dig(void) {
                               "ladder" : "stairs", ceiling(u.ux, u.uy));
                     You("loosen a rock from the %s.", ceiling(u.ux, u.uy));
                     pline("It falls on your %s!", body_part(HEAD));
-                    losehp(rnd((uarmh && is_metallic(uarmh)) ? 2 : 6),
-                           "falling rock", KILLED_BY_AN);
+                    int lost_hp = rnd((uarmh && is_metallic(uarmh)) ? 2 : 6);
+                    losehp(lost_hp, killed_by_const(KM_FALLING_ROCK));
                     otmp = mksobj_at(ROCK, u.ux, u.uy, false, false);
                     if (otmp) {
                         (void)xname(otmp);      /* set dknown, maybe bknown */
