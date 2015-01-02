@@ -142,8 +142,7 @@ const char * fqname(const char * basename, int whichprefix, int buffnum) {
     if (!fqn_prefix[whichprefix])
         return basename;
     if (buffnum < 0 || buffnum >= FQN_NUMBUF) {
-        impossible("Invalid fqn_filename_buffer specified: %d",
-                buffnum);
+        impossible("Invalid fqn_filename_buffer specified: %d", buffnum);
         buffnum = 0;
     }
     if (strlen(fqn_prefix[whichprefix]) + strlen(basename) >=

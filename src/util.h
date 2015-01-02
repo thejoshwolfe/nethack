@@ -171,6 +171,7 @@ const char *shudder_for_moment = "shudder for a moment.";
 const char *You_can_move_again = "You can move again.";
 const char *vision_clears = "vision quickly clears.";
 const char *the_your[2] = {"the", "your"};
+char killer_buf[256] = {0};
 
 
 #define DIED           KM_DIED
@@ -204,7 +205,5 @@ void wait_synch(void);
 void bot(void);
 
 void putstr(int, int, const char *);
-
-char killer_buf[256] = {0};
 
 #endif // UTIL_H

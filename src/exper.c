@@ -5,6 +5,7 @@
 #include "pm_props.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
 static long newuexp(int);
 static int enermod(int);
@@ -102,57 +103,54 @@ more_experienced (int exp, int rexp)
                 flags.beginner = 0;
 }
 
-void
-losexp (                /* e.g., hit by drain life attack */
-    const char *drainer /* cause of death, if drain should be fatal */
-)
-{
-        int num;
+/* e.g., hit by drain life attack */
+// const char *drainer /* cause of death, if drain should be fatal */
+void losexp ( const char *drainer ) {
+    int num;
 
-        /* override life-drain resistance when handling an explicit
-           wizard mode request to reduce level; never fatal though */
-        if (drainer && !strcmp(drainer, "#levelchange"))
-            drainer = 0;
-        else
-            if (resists_drli(&youmonst)) return;
+    /* override life-drain resistance when handling an explicit
+       wizard mode request to reduce level; never fatal though */
+    if (drainer && !strcmp(drainer, "#levelchange"))
+        drainer = 0;
+    else
+        if (resists_drli(&youmonst)) return;
 
-        if (u.ulevel > 1) {
-                pline("%s level %d.", Goodbye(), u.ulevel--);
-                /* remove intrinsic abilities */
-                adjabil(u.ulevel + 1, u.ulevel);
-                reset_rndmonst(NON_PM); /* new monster selection */
-        } else {
-                if (drainer) {
-                        killer_format = KILLED_BY;
-                        killer = drainer;
-                        done(DIED);
-                }
-                /* no drainer or lifesaved */
-                u.uexp = 0;
+    if (u.ulevel > 1) {
+        pline("%s level %d.", Goodbye(), u.ulevel--);
+        /* remove intrinsic abilities */
+        adjabil(u.ulevel + 1, u.ulevel);
+        reset_rndmonst(NON_PM); /* new monster selection */
+    } else {
+        if (drainer) {
+            fprintf(stderr, "TODO: killer = %s\n", drainer);
+            done(DIED);
         }
-        num = newhp();
-        u.uhpmax -= num;
-        if (u.uhpmax < 1) u.uhpmax = 1;
-        u.uhp -= num;
-        if (u.uhp < 1) u.uhp = 1;
-        else if (u.uhp > u.uhpmax) u.uhp = u.uhpmax;
+        /* no drainer or lifesaved */
+        u.uexp = 0;
+    }
+    num = newhp();
+    u.uhpmax -= num;
+    if (u.uhpmax < 1) u.uhpmax = 1;
+    u.uhp -= num;
+    if (u.uhp < 1) u.uhp = 1;
+    else if (u.uhp > u.uhpmax) u.uhp = u.uhpmax;
 
-        if (u.ulevel < urole.xlev)
-            num = rn1((int)ACURR(A_WIS)/2 + urole.enadv.lornd + urace.enadv.lornd,
-                        urole.enadv.lofix + urace.enadv.lofix);
-        else
-            num = rn1((int)ACURR(A_WIS)/2 + urole.enadv.hirnd + urace.enadv.hirnd,
-                        urole.enadv.hifix + urace.enadv.hifix);
-        num = enermod(num);             /* M. Stephenson */
-        u.uenmax -= num;
-        if (u.uenmax < 0) u.uenmax = 0;
-        u.uen -= num;
-        if (u.uen < 0) u.uen = 0;
-        else if (u.uen > u.uenmax) u.uen = u.uenmax;
+    if (u.ulevel < urole.xlev)
+        num = rn1((int)ACURR(A_WIS)/2 + urole.enadv.lornd + urace.enadv.lornd,
+                urole.enadv.lofix + urace.enadv.lofix);
+    else
+        num = rn1((int)ACURR(A_WIS)/2 + urole.enadv.hirnd + urace.enadv.hirnd,
+                urole.enadv.hifix + urace.enadv.hifix);
+    num = enermod(num);             /* M. Stephenson */
+    u.uenmax -= num;
+    if (u.uenmax < 0) u.uenmax = 0;
+    u.uen -= num;
+    if (u.uen < 0) u.uen = 0;
+    else if (u.uen > u.uenmax) u.uen = u.uenmax;
 
-        if (u.uexp > 0)
-                u.uexp = newuexp(u.ulevel) - 1;
-        flags.botl = 1;
+    if (u.uexp > 0)
+        u.uexp = newuexp(u.ulevel) - 1;
+    flags.botl = 1;
 }
 
 /*

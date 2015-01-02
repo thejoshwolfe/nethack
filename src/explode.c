@@ -7,7 +7,7 @@
 #include "shk.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 
 /* Note: Arrays are column first, while the screen is row first */
@@ -52,50 +52,62 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
     bool shopdamage = false;
     bool generic = false;
 
-    if (olet == WAND_CLASS)         /* retributive strike */
+    /* retributive strike */
+    if (olet == WAND_CLASS) {
         switch (Role_switch) {
             case PM_PRIEST:
             case PM_MONK:
-            case PM_WIZARD: damu /= 5;
-                            break;
+            case PM_WIZARD:
+                damu /= 5;
+                break;
             case PM_HEALER:
-            case PM_KNIGHT: damu /= 2;
-                            break;
+            case PM_KNIGHT:
+                damu /= 2;
+                break;
             default:  break;
         }
+    }
 
     if (olet == MON_EXPLODE) {
-        str = killer;
-        killer = 0;         /* set again later as needed */
+        str = render_killer_no_prefix(&killer);
+        killer.method = KM_DIED;         /* set again later as needed */
         adtyp = AD_PHYS;
-    } else
+    } else {
         switch (abs(type) % 10) {
-            case 0: str = "magical blast";
-                    adtyp = AD_MAGM;
-                    break;
-            case 1: str =   olet == BURNING_OIL ?   "burning oil" :
+            case 0:
+                str = "magical blast";
+                adtyp = AD_MAGM;
+                break;
+            case 1:
+                str =   olet == BURNING_OIL ?   "burning oil" :
                     olet == SCROLL_CLASS ?  "tower of flame" :
-                        "fireball";
-                    adtyp = AD_FIRE;
-                    break;
-            case 2: str = "ball of cold";
-                    adtyp = AD_COLD;
-                    break;
-            case 4: str =  (olet == WAND_CLASS) ? "death field" :
+                    "fireball";
+                adtyp = AD_FIRE;
+                break;
+            case 2:
+                str = "ball of cold";
+                adtyp = AD_COLD;
+                break;
+            case 4:
+                str =  (olet == WAND_CLASS) ? "death field" :
                     "disintegration field";
-                    adtyp = AD_DISN;
-                    break;
-            case 5: str = "ball of lightning";
-                    adtyp = AD_ELEC;
-                    break;
-            case 6: str = "poison gas cloud";
-                    adtyp = AD_DRST;
-                    break;
-            case 7: str = "splash of acid";
-                    adtyp = AD_ACID;
-                    break;
+                adtyp = AD_DISN;
+                break;
+            case 5:
+                str = "ball of lightning";
+                adtyp = AD_ELEC;
+                break;
+            case 6:
+                str = "poison gas cloud";
+                adtyp = AD_DRST;
+                break;
+            case 7:
+                str = "splash of acid";
+                adtyp = AD_ACID;
+                break;
             default: impossible("explosion base type %d?", type); return;
         }
+    }
 
     any_shield = visible = false;
     for (i=0; i<3; i++) for (j=0; j<3; j++) {
@@ -356,20 +368,16 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                     /* killer handled by caller */
                     if (str != killer_buf && !generic)
                         strcpy(killer_buf, str);
-                    killer_format = KILLED_BY_AN;
                 } else if (type >= 0 && olet != SCROLL_CLASS) {
-                    killer_format = NO_KILLER_PREFIX;
                     sprintf(killer_buf, "caught %sself in %s own %s",
                             uhim(), uhis(), str);
                 } else if (!strncmpi(str,"tower of flame", 8) ||
                         !strncmpi(str,"fireball", 8)) {
-                    killer_format = KILLED_BY_AN;
                     strcpy(killer_buf, str);
                 } else {
-                    killer_format = KILLED_BY;
                     strcpy(killer_buf, str);
                 }
-                killer = killer_buf;
+                fprintf(stderr, "TODO: killer = %s\n", killer_buf);
                 /* Known BUG: BURNING suppresses corpse in bones data,
                    but done does not handle killer reason correctly */
                 done((adtyp == AD_FIRE) ? BURNING : DIED);

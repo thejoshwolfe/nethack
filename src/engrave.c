@@ -10,6 +10,7 @@
 #include "do_name.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
 #include <ctype.h>
 
