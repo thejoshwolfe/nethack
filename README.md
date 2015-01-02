@@ -67,8 +67,14 @@ The goal of this fork is to make the game more approachable for new players.
      Cursed fortune cookies should just be vague and unhelpful instead of outright lies.
      * Monks should start with only cursed fortune cookies,
        because repeatedly starting a Monk character to slowly unlock the encyclopedia would be dumb.
-       (The BCU status of fortune cookies only matters for the message, not the nutrition.)
+       (The BUC status of fortune cookies only matters for the message, not the nutrition.)
        You should have to work a little to uncurse or bless the fortune cookies if you want good messages.
+   * If you are carrying a stethoscope that you can use,
+     display the information for using it on yourself in the status bar at all times.
+     This eliminates the tedium of having to apply it to yourself for free at every step.
+     * Blessed stethoscopes should provide more information, including exercise scores.
+       While carrying a blessed stethoscope, you will learn the actions that exercise and abuse attributes
+       and add that information to the encyclopedia as you go.
    * Priest donations should persist and indicate progress toward the next divine protection.
    * The Oracle should be more helpful.
      * At all times, the oracle should direct you toward your next goal for free,
@@ -76,7 +82,17 @@ The goal of this fork is to make the game more approachable for new players.
      * The Major Consultations should tell you something important and relevant,
        such as the weaknesses of your quest nemesis.
        Major Consultations should be added to your encyclopedia, and should never repeat.
-   * Make the "You hear" and "You feel" messages more direct, possibly after getting them enough times.
+   * Once you identify a unique-appearance item, such as an apron always being an alchemy smock,
+     add that to the encyclopedia, and have that translation resolved for all future games.
+   * After getting a "You hear" or "You feel" message and experiencing the consequences,
+     asscociate the two in the encyclopedia, and add an explanation when future games get that message.
+     For example:
+     * "You hear the chime of a cash register", then "You hear someone counting money", then you find a shop.
+       You learn that the former message meant there was a store, and the latter message is still a mystery.
+     * "You feel full of hot air", then you resist a cold attack;
+       you learn that the message means you got cold resistance.
+       Display the fact that you have cold resistance at all times;
+       if you lose cold resistance for any reason, explain it immediately, and update the display.
    * The retro "Rogue" level has got to go.
    * Provide a high-level map of the dungeon branches you've discovered so far,
      and a detailed map of each floor you've been to.
