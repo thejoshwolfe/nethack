@@ -4,6 +4,9 @@
 #include "display.h"
 #include "color.h"
 #include "quest.h"
+#include "mkroom.h"
+#include "eat.h"
+#include "pline.h"
 
 int (*afternmv)(void);
 int (*occupation)(void);
@@ -35,7 +38,7 @@ int smeq[MAXNROFROOMS+1] = DUMMY;
 int doorindex = 0;
 
 char *save_cm = 0;
-const struct Killer killer;
+struct Killer killer;
 
 const char *nomovemsg = 0;
 const char nul[40] = DUMMY;                     /* contains zeros */
@@ -218,8 +221,6 @@ char     **viz_array = 0;/* used in cansee() and couldsee() macros */
 winid WIN_MESSAGE = WIN_ERR, WIN_STATUS = WIN_ERR;
 winid WIN_MAP = WIN_ERR, WIN_INVEN = WIN_ERR;
 char toplines[TBUFSZ];
-/* Windowing stuff that's really tty oriented, but present for all ports */
-struct tc_gbl_data tc_gbl_data = { 0,0, 0,0 };  /* AS,AE, LI,CO */
 
 char *fqn_prefix[PREFIX_COUNT] = { (char *)0, (char *)0, (char *)0, (char *)0,
                                 (char *)0, (char *)0, (char *)0, (char *)0, (char *)0 };
