@@ -200,4 +200,6 @@ int query_objlist(const char *qstr, struct obj *olist, int qflags,
         menu_item **pick_list, int how, bool (*allow)(const struct obj *));
 void mark_synch(void);
 
+char killer_buf[256] = {0};
+
 #endif // UTIL_H

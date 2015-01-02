@@ -12,7 +12,7 @@
 #include "do_name.h"
 #include "objnam.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 static int throw_obj(struct obj *,int);
 static void autoquiver(void);
@@ -80,9 +80,9 @@ static int throw_obj (struct obj *obj, int shotlimit) {
     }
     u_wipe_engr(2);
     if (!uarmg && !Stone_resistance && (obj->otyp == CORPSE &&
-                touch_petrifies(&mons[obj->corpsenm]))) {
-        You("throw the %s corpse with your bare %s.",
-                mons[obj->corpsenm].mname, body_part(HAND));
+                touch_petrifies(&mons[obj->corpsenm])))
+    {
+        You("throw the %s corpse with your bare %s.", mons[obj->corpsenm].mname, body_part(HAND));
         sprintf(killer_buf, "%s corpse", an(mons[obj->corpsenm].mname));
         instapetrify(killer_buf);
     }
@@ -429,42 +429,43 @@ bool hurtle_step (void *arg, int x, int y) {
 
     if (!Passes_walls || !(may_pass = may_passwall(x, y))) {
         if (IS_ROCK(levl[x][y].typ) || closed_door(x,y)) {
-            const char *s;
+            struct Killer k;
 
             pline("Ouch!");
             if (IS_TREE(levl[x][y].typ))
-                s = "bumping into a tree";
+                k = killed_by_const(KM_BUMP_INTO_TREE);
             else if (IS_ROCK(levl[x][y].typ))
-                s = "bumping into a wall";
+                k = killed_by_const(KM_BUMP_INTO_WALL);
             else
-                s = "bumping into a door";
-            losehp(rnd(2+*range), s, KILLED_BY);
+                k = killed_by_const(KM_BUMP_INTO_DOOR);
+            losehp(rnd(2+*range), k);
             return false;
         }
         if (levl[x][y].typ == IRONBARS) {
             You("crash into some iron bars.  Ouch!");
-            losehp(rnd(2+*range), "crashing into iron bars", KILLED_BY);
+            losehp(rnd(2+*range), killed_by_const(KM_CRASH_INTO_IRON_BARS));
             return false;
         }
         if ((obj = sobj_at(BOULDER,x,y)) != 0) {
             You("bump into a %s.  Ouch!", xname(obj));
-            losehp(rnd(2+*range), "bumping into a boulder", KILLED_BY);
+            losehp(rnd(2+*range), killed_by_const(KM_BUMP_INTO_BOULDER));
             return false;
         }
         if (!may_pass) {
             /* did we hit a no-dig non-wall position? */
             You("smack into something!");
-            losehp(rnd(2+*range), "touching the edge of the universe", KILLED_BY);
+            losehp(rnd(2+*range), killed_by_const(KM_TOUCH_EDGE_UNIVERSE));
             return false;
         }
         if ((u.ux - x) && (u.uy - y) &&
-                bad_rock(youmonst.data,u.ux,y) && bad_rock(youmonst.data,x,u.uy)) {
+                bad_rock(youmonst.data,u.ux,y) && bad_rock(youmonst.data,x,u.uy))
+        {
             bool too_much = (invent && (inv_weight() + weight_cap() > 600));
             /* Move at a diagonal. */
             if (bigmonst(youmonst.data) || too_much) {
                 You("%sget forcefully wedged into a crevice.",
                         too_much ? "and all your belongings " : "");
-                losehp(rnd(2+*range), "wedging into a narrow crevice", KILLED_BY);
+                losehp(rnd(2+*range), killed_by_const(KM_WEDGING_INTO_NARROW_CREVICE));
                 return false;
             }
         }
@@ -753,18 +754,19 @@ static bool toss_up(struct obj *obj, bool hitsroof) {
                 Your("%s does not protect you.", xname(uarmh));
         } else if (obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])) {
             if (!Stone_resistance &&
-                    !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
+                    !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)))
+            {
  petrify:
-                killer_format = KILLED_BY;
-                killer = "elementary physics";  /* "what goes up..." */
+                killer.method = KM_ELEMENTARY_PHYSICS; // "what goes up..."
                 You("turn to stone.");
-                if (obj) dropy(obj);    /* bypass most of hitfloor() */
-                done(STONING);
+                if (obj)
+                    dropy(obj);    /* bypass most of hitfloor() */
+                done(KM_STONING);
                 return obj ? true : false;
             }
         }
         hitfloor(obj);
-        losehp(dmg, "falling object", KILLED_BY_AN);
+        losehp(dmg, killed_by_const(KM_FALLING_OBJECT));
     }
     return true;
 }
@@ -989,8 +991,8 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
                     Tobjnam(verb_clause, BUFSZ, obj, Blind ? "hit" : "fly");
                     pline(Blind ? "%s your %s!" :
                             "%s back toward you, hitting your %s!", verb_clause, body_part(ARM));
-                    artifact_hit((struct monst *)0, &youmonst, obj, &dmg, 0);
-                    losehp(dmg, xname(obj), obj_is_pname(obj) ? KILLED_BY : KILLED_BY_AN);
+                    artifact_hit(NULL, &youmonst, obj, &dmg, 0);
+                    losehp(dmg, killed_by_object(KM_O, obj));
                 }
                 if (ship_object(obj, u.ux, u.uy, false)) {
                     thrownobj = NULL;
