@@ -11,8 +11,8 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
-#include "winprocs.h"
 #include "edog.h"
+#include "everything.h"
 
 static struct obj *otmp;
 
@@ -1085,8 +1085,7 @@ dopois:
                             pline("Unfortunately your brain is still gone.");
                         else
                             Your("last thought fades away.");
-                        killer = "brainlessness";
-                        killer_format = KILLED_BY;
+                        killer = killed_by_const(KM_BRAINLESSNESS);
                         done(DIED);
                         lifesaved++;
                     }
@@ -1182,18 +1181,15 @@ do_stone:
                                     polymon(PM_STONE_GOLEM)))
                         {
                             Stoned = 5;
-                            delayed_killer = mtmp->data->mname;
+                            fprintf(stderr, "TODO: delayed_killer = %s\n", mtmp->data->mname);
                             if (mtmp->data->geno & G_UNIQ) {
                                 if (!type_is_pname(mtmp->data)) {
                                     static char kbuf[BUFSZ];
 
                                     /* "the" buffer may be reallocated */
-                                    strcpy(kbuf, the(delayed_killer));
-                                    delayed_killer = kbuf;
+                                    strcpy(kbuf, the(mtmp->data->mname));
+                                    fprintf(stderr, "TODO: delayed_killer = %s\n", kbuf);
                                 }
-                                killer_format = KILLED_BY;
-                            } else {
-                                killer_format = KILLED_BY_AN;
                             }
 
                             return 1;
@@ -1231,11 +1227,10 @@ do_stone:
                             !Is_waterlevel(&u.uz);
 
                         pline("%s drowns you...", attacker);
-                        killer_format = KILLED_BY_AN;
                         sprintf(buf, "%s by %s",
                                 moat ? "moat" : "pool of water",
                                 an(mtmp->data->mname));
-                        killer = buf;
+                        fprintf(stderr, "TODO: killer %s\n", buf);
                         done(DROWNING);
                     } else if(mattk->aatyp == AT_HUGS) {
                         You("are being crushed.");
@@ -1496,8 +1491,7 @@ do_stone:
             switch (rn2(20)) {
                 case 19: case 18: case 17:
                     if (!Antimagic) {
-                        killer_format = KILLED_BY_AN;
-                        killer = "touch of death";
+                        killer = killed_by_const(KM_TOUCH_OF_DEATH);
                         done(DIED);
                         dmg = 0;
                         break;
@@ -1546,8 +1540,7 @@ do_stone:
                 You("don't feel very well.");
                 Slimed = 10L;
                 flags.botl = 1;
-                killer_format = KILLED_BY_AN;
-                delayed_killer = mtmp->data->mname;
+                fprintf(stderr, "TODO: delayed_killer = %s\n", mtmp->data->mname);
             } else
                 pline("Yuck!");
             break;
@@ -1964,8 +1957,7 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
                 if(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
                     break;
                 You("turn to stone...");
-                killer_format = KILLED_BY;
-                killer = mtmp->data->mname;
+                killer = killed_by_monster(KM_MONSTER, mtmp);
                 done(STONING);
             }
             break;
@@ -2306,7 +2298,7 @@ int doseduce (struct monst *mon) {
                         exercise(A_STR, false);
                         tmp = rn1(10, 6);
                         if(Half_physical_damage) tmp = (tmp+1) / 2;
-                        losehp(tmp, "exhaustion", KILLED_BY);
+                        losehp(tmp, killed_by_const(KM_EXHAUSTION));
                         break;
                     }
         }

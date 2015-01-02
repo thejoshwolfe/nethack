@@ -28,6 +28,7 @@ enum KillerMethod {
     KM_ESCAPED,
     KM_ASCENDED,
 
+    KM_BRAINLESSNESS,
     KM_TOUCH_OF_DEATH,
     KM_FELL_ON_SINK,
     KM_SIP_BOILING_WATER,

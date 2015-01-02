@@ -64,3 +64,5 @@
 #include "role.h"
 #include "muse.h"
 #include "shknam.h"
+#include "minion.h"
+#include "mcastu.h"
