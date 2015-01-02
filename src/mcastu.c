@@ -5,6 +5,7 @@
 #include "objnam.h"
 #include "do_name.h"
 #include "display.h"
+#include "everything.h"
 
 /* monster mage spells */
 enum {
@@ -337,8 +338,7 @@ static void cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum) {
             if (Hallucination()) {
                 You("have an out of body experience.");
             } else {
-                killer_format = KILLED_BY_AN;
-                killer = "touch of death";
+                killer = killed_by_const(KM_TOUCH_OF_DEATH);
                 done(DIED);
             }
         } else {
