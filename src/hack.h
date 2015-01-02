@@ -28,6 +28,7 @@ enum KillerMethod {
     KM_ESCAPED,
     KM_ASCENDED,
 
+    KM_MONSTER,
     KM_EXHAUSTION,
     KM_CADAVER,
     KM_POISONOUS_CORPSE,

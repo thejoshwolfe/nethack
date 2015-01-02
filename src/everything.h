@@ -60,3 +60,5 @@
 #include "explode.h"
 #include "were.h"
 #include "rumors.h"
+#include "bones.h"
+#include "role.h"
