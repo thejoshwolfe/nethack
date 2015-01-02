@@ -155,6 +155,7 @@ extern int doorindex;
 extern char *save_cm;
 
 extern struct Killer killer;
+extern struct Killer delayed_killer;
 
 extern char dump_fn[];          /* dumpfile name (dump patch) */
 extern const char *configfile;

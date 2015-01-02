@@ -200,6 +200,7 @@ int query_category ( const char *qstr, struct obj *olist, int qflags, menu_item 
 int query_objlist(const char *qstr, struct obj *olist, int qflags,
         menu_item **pick_list, int how, bool (*allow)(const struct obj *));
 void mark_synch(void);
+void bot(void);
 
 char killer_buf[256] = {0};
 

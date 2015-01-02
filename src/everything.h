@@ -58,3 +58,5 @@
 #include "dogmove.h"
 #include "mthrowu.h"
 #include "explode.h"
+#include "were.h"
+#include "rumors.h"

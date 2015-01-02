@@ -8,40 +8,10 @@
 #include "shk.h"
 #include "objnam.h"
 #include "dbridge.h"
-#include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
-
-static int eatmdone(void);
-static int eatfood(void);
-static void costly_tin(const char*);
-static int opentin(void);
-static int unfaint(void);
-
-static const char *food_xname(struct obj *,bool);
-static void choke(struct obj *);
-static void recalc_wt(void);
-static struct obj *touchfood(struct obj *);
-static void do_reset_eat(void);
-static void done_eating(bool);
-static void cprefx(int);
-static int intrinsic_possible(int,struct permonst *);
-static void givit(int,struct permonst *);
-static void cpostfx(int);
-static void start_tin(struct obj *);
-static int eatcorpse(struct obj *);
-static void start_eating(struct obj *);
-static void fprefx(struct obj *);
-static void accessory_has_effect(struct obj *);
-static void fpostfx(struct obj *);
-static int bite(void);
-static int edibility_prompts(struct obj *);
-static int rottenfood(struct obj *);
-static void eatspecial(void);
-static void eataccessory(struct obj *);
-static const char *foodword(struct obj *);
-static bool maybe_cannibal(int,bool);
 
 char msgbuf[BUFSZ];
 
@@ -204,6 +174,15 @@ static const char * food_xname (struct obj *food, bool the_pfx) {
         return result;
 }
 
+static const char * foodword (struct obj *otmp) {
+        if (otmp->oclass == FOOD_CLASS) return "food";
+        if (otmp->oclass == GEM_CLASS &&
+            objects[otmp->otyp].oc_material == GLASS &&
+            otmp->dknown)
+                makeknown(otmp->otyp);
+        return foodwords[objects[otmp->otyp].oc_material];
+}
+
 /* Created by GAN 01/28/87
  * Amended by AKP 09/22/87: if not hard, don't choke, just vomit.
  * Amended by 3.  06/12/89: if not hard, sometimes choke anyway, to keep risk.
@@ -211,53 +190,42 @@ static const char * food_xname (struct obj *food, bool the_pfx) {
  */
 /* To a full belly all food is bad. (It.) */
 static void choke ( struct obj *food) {
-        /* only happens if you were satiated */
-        if (u.uhs != SATIATED) {
-                if (!food || food->otyp != AMULET_OF_STRANGULATION)
-                        return;
-        } else if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL) {
-                        adjalign(-1);           /* gluttony is unchivalrous */
-                        You_feel("like a glutton!");
+    /* only happens if you were satiated */
+    if (u.uhs != SATIATED) {
+        if (!food || food->otyp != AMULET_OF_STRANGULATION)
+            return;
+    } else if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL) {
+        adjalign(-1);           /* gluttony is unchivalrous */
+        You_feel("like a glutton!");
+    }
+
+    exercise(A_CON, false);
+
+    if (Breathless || (!Strangled && !rn2(20))) {
+        /* choking by eating AoS doesn't involve stuffing yourself */
+        if (food && food->otyp == AMULET_OF_STRANGULATION) {
+            You("choke, but recover your composure.");
+            return;
         }
-
-        exercise(A_CON, false);
-
-        if (Breathless || (!Strangled && !rn2(20))) {
-                /* choking by eating AoS doesn't involve stuffing yourself */
-                if (food && food->otyp == AMULET_OF_STRANGULATION) {
-                        You("choke, but recover your composure.");
-                        return;
-                }
-                You("stuff yourself and then vomit voluminously.");
-                morehungry(1000);       /* you just got *very* sick! */
-                nomovemsg = 0;
-                vomit();
+        You("stuff yourself and then vomit voluminously.");
+        morehungry(1000);       /* you just got *very* sick! */
+        nomovemsg = 0;
+        vomit();
+    } else {
+        /*
+         * Note all "killer"s below read "Choked on %s" on the
+         * high score list & tombstone.  So plan accordingly.
+         */
+        if (food) {
+            You("choke over your %s.", foodword(food));
+            killer = killed_by_object(KM_CHOKE_ON_FOOD, food);
         } else {
-                killer_format = KILLED_BY_AN;
-                /*
-                 * Note all "killer"s below read "Choked on %s" on the
-                 * high score list & tombstone.  So plan accordingly.
-                 */
-                if(food) {
-                        You("choke over your %s.", foodword(food));
-                        if (food->oclass == COIN_CLASS) {
-                                killer = "a very rich meal";
-                        } else {
-                                killer = food_xname(food, false);
-                                if (food->otyp == CORPSE &&
-                                    (mons[food->corpsenm].geno & G_UNIQ)) {
-                                    if (!type_is_pname(&mons[food->corpsenm]))
-                                        killer = the(killer);
-                                    killer_format = KILLED_BY;
-                                }
-                        }
-                } else {
-                        You("choke over it.");
-                        killer = "quick snack";
-                }
-                You("die...");
-                done(CHOKING);
+            You("choke over it.");
+            killer = killed_by_const(KM_CHOKE_QUICK_SNACK);
         }
+        You("die...");
+        done(KM_CHOKING);
+    }
 }
 
 /* modify object wt. depending on time spent consuming it */
@@ -347,131 +315,29 @@ static void do_reset_eat (void) {
         newuhs(false);
 }
 
-/* called each move during eating process */
-static int eatfood (void) {
-        if(!victual.piece ||
-         (!carried(victual.piece) && !obj_here(victual.piece, u.ux, u.uy))) {
-                /* maybe it was stolen? */
+/* Take a single bite from a piece of food, checking for choking and
+ * modifying usedtime.  Returns 1 if they choked and survived, 0 otherwise.
+ */
+static int bite (void) {
+        if(victual.canchoke && u.uhunger >= 2000) {
+                choke(victual.piece);
+                return 1;
+        }
+        if (victual.doreset) {
                 do_reset_eat();
-                return(0);
+                return 0;
         }
-        if(!victual.eating) return(0);
-
-        if(++victual.usedtime <= victual.reqtime) {
-            if(bite()) return(0);
-            return(1);  /* still busy */
-        } else {        /* done */
-            done_eating(true);
-            return(0);
+        force_save_hs = true;
+        if(victual.nmod < 0) {
+                lesshungry(-victual.nmod);
+                consume_oeaten(victual.piece, victual.nmod); /* -= -nmod */
+        } else if(victual.nmod > 0 && (victual.usedtime % victual.nmod)) {
+                lesshungry(1);
+                consume_oeaten(victual.piece, -1);                /* -= 1 */
         }
-}
-
-static void done_eating (bool message) {
-        victual.piece->in_use = true;
-        occupation = 0; /* do this early, so newuhs() knows we're done */
-        newuhs(false);
-        if (nomovemsg) {
-                if (message) plines(nomovemsg);
-                nomovemsg = 0;
-        } else if (message)
-                You("finish eating %s.", food_xname(victual.piece, true));
-
-        if(victual.piece->otyp == CORPSE)
-                cpostfx(victual.piece->corpsenm);
-        else
-                fpostfx(victual.piece);
-
-        if (carried(victual.piece)) useup(victual.piece);
-        else useupf(victual.piece, 1L);
-        victual.piece = (struct obj *) 0;
-        victual.fullwarn = victual.eating = victual.doreset = false;
-}
-
-static bool maybe_cannibal (int pm, bool allowmsg) {
-        if (!CANNIBAL_ALLOWED() && your_race(&mons[pm])) {
-                if (allowmsg) {
-                        if (Upolyd)
-                                You("have a bad feeling deep inside.");
-                        You("cannibal!  You will regret this!");
-                }
-                HAggravate_monster |= FROMOUTSIDE;
-                change_luck(-rn1(4,2));         /* -5..-2 */
-                return true;
-        }
-        return false;
-}
-
-static void cprefx (int pm) {
-        (void) maybe_cannibal(pm,true);
-        if (touch_petrifies(&mons[pm]) || pm == PM_MEDUSA) {
-            if (!Stone_resistance &&
-                !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
-                sprintf(killer_buf, "tasting %s meat", mons[pm].mname);
-                killer_format = KILLED_BY;
-                killer = killer_buf;
-                You("turn to stone.");
-                done(STONING);
-                if (victual.piece)
-                    victual.eating = false;
-                return; /* lifesaved */
-            }
-        }
-
-        switch(pm) {
-            case PM_LITTLE_DOG:
-            case PM_DOG:
-            case PM_LARGE_DOG:
-            case PM_KITTEN:
-            case PM_HOUSECAT:
-            case PM_LARGE_CAT:
-                if (!CANNIBAL_ALLOWED()) {
-                    You_feel("that eating the %s was a bad idea.", mons[pm].mname);
-                    HAggravate_monster |= FROMOUTSIDE;
-                }
-                break;
-            case PM_LIZARD:
-                if (Stoned) fix_petrification();
-                break;
-            case PM_DEATH:
-            case PM_PESTILENCE:
-            case PM_FAMINE:
-                { char buf[BUFSZ];
-                    pline("Eating that is instantly fatal.");
-                    sprintf(buf, "unwisely ate the body of %s",
-                            mons[pm].mname);
-                    killer = buf;
-                    killer_format = NO_KILLER_PREFIX;
-                    done(DIED);
-                    /* It so happens that since we know these monsters */
-                    /* cannot appear in tins, victual.piece will always */
-                    /* be what we want, which is not generally true. */
-                    if (revive_corpse(victual.piece))
-                        victual.piece = (struct obj *)0;
-                    return;
-                }
-            case PM_GREEN_SLIME:
-                if (!Slimed && !Unchanging && !flaming(youmonst.data) &&
-                        youmonst.data != &mons[PM_GREEN_SLIME]) {
-                    You("don't feel very well.");
-                    Slimed = 10L;
-                    flags.botl = 1;
-                }
-                /* Fall through */
-            default:
-                if (acidic(&mons[pm]) && Stoned)
-                    fix_petrification();
-                break;
-        }
-}
-
-void fix_petrification (void) {
-        Stoned = 0;
-        delayed_killer = 0;
-        if (Hallucination)
-            pline("What a pity - you just ruined a future piece of %sart!",
-                  ACURR(A_CHA) > 15 ? "fine " : "");
-        else
-            You_feel("limber!");
+        force_save_hs = false;
+        recalc_wt();
+        return 0;
 }
 
 /*
@@ -811,6 +677,188 @@ static void cpostfx(int pm) {
         return;
 }
 
+/* called after consuming (non-corpse) food */
+static void fpostfx (struct obj *otmp) {
+        switch(otmp->otyp) {
+            case SPRIG_OF_WOLFSBANE:
+                if (u.ulycn >= LOW_PM || is_were(youmonst.data))
+                    you_unwere(true);
+                break;
+            case CARROT:
+                make_blinded((long)u.ucreamed,true);
+                break;
+            case FORTUNE_COOKIE:
+                outrumor(bcsign(otmp), BY_COOKIE);
+                if (!Blind) u.uconduct.literate++;
+                break;
+            case LUMP_OF_ROYAL_JELLY:
+                /* This stuff seems to be VERY healthy! */
+                gainstr(otmp, 1);
+                if (Upolyd) {
+                    u.mh += otmp->cursed ? -rnd(20) : rnd(20);
+                    if (u.mh > u.mhmax) {
+                        if (!rn2(17)) u.mhmax++;
+                        u.mh = u.mhmax;
+                    } else if (u.mh <= 0) {
+                        rehumanize();
+                    }
+                } else {
+                    u.uhp += otmp->cursed ? -rnd(20) : rnd(20);
+                    if (u.uhp > u.uhpmax) {
+                        if(!rn2(17)) u.uhpmax++;
+                        u.uhp = u.uhpmax;
+                    } else if (u.uhp <= 0) {
+                        killer = killed_by_const(KM_ROTTEN_ROYAL_JELLY);
+                        done(KM_POISONING);
+                    }
+                }
+                if(!otmp->cursed) heal_legs();
+                break;
+            case EGG:
+                if (touch_petrifies(&mons[otmp->corpsenm])) {
+                    if (!Stone_resistance &&
+                        !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)))
+                    {
+                        if (!Stoned) Stoned = 5;
+                        delayed_killer = killed_by_int(KM_O_EGG, otmp->corpsenm);
+                    }
+                }
+                break;
+            case EUCALYPTUS_LEAF:
+                if (Sick && !otmp->cursed)
+                    make_sick(0L, (char *)0, true, SICK_ALL);
+                if (Vomiting && !otmp->cursed)
+                    make_vomiting(0L, true);
+                break;
+        }
+        return;
+}
+
+
+static void done_eating (bool message) {
+        victual.piece->in_use = true;
+        occupation = 0; /* do this early, so newuhs() knows we're done */
+        newuhs(false);
+        if (nomovemsg) {
+                if (message) plines(nomovemsg);
+                nomovemsg = 0;
+        } else if (message)
+                You("finish eating %s.", food_xname(victual.piece, true));
+
+        if(victual.piece->otyp == CORPSE)
+                cpostfx(victual.piece->corpsenm);
+        else
+                fpostfx(victual.piece);
+
+        if (carried(victual.piece)) useup(victual.piece);
+        else useupf(victual.piece, 1L);
+        victual.piece = (struct obj *) 0;
+        victual.fullwarn = victual.eating = victual.doreset = false;
+}
+
+
+/* called each move during eating process */
+static int eatfood (void) {
+        if(!victual.piece ||
+         (!carried(victual.piece) && !obj_here(victual.piece, u.ux, u.uy))) {
+                /* maybe it was stolen? */
+                do_reset_eat();
+                return(0);
+        }
+        if(!victual.eating) return(0);
+
+        if(++victual.usedtime <= victual.reqtime) {
+            if(bite()) return(0);
+            return(1);  /* still busy */
+        } else {        /* done */
+            done_eating(true);
+            return(0);
+        }
+}
+
+static bool maybe_cannibal (int pm, bool allowmsg) {
+        if (!CANNIBAL_ALLOWED() && your_race(&mons[pm])) {
+                if (allowmsg) {
+                        if (Upolyd)
+                                You("have a bad feeling deep inside.");
+                        You("cannibal!  You will regret this!");
+                }
+                HAggravate_monster |= FROMOUTSIDE;
+                change_luck(-rn1(4,2));         /* -5..-2 */
+                return true;
+        }
+        return false;
+}
+
+static void cprefx (int pm) {
+    (void) maybe_cannibal(pm,true);
+    if (touch_petrifies(&mons[pm]) || pm == PM_MEDUSA) {
+        if (!Stone_resistance &&
+                !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
+            killer = killed_by_int(KM_TASTING_O_MEAT, pm);
+            You("turn to stone.");
+            done(KM_STONING);
+            if (victual.piece)
+                victual.eating = false;
+            return; /* lifesaved */
+        }
+    }
+
+    switch(pm) {
+        case PM_LITTLE_DOG:
+        case PM_DOG:
+        case PM_LARGE_DOG:
+        case PM_KITTEN:
+        case PM_HOUSECAT:
+        case PM_LARGE_CAT:
+            if (!CANNIBAL_ALLOWED()) {
+                You_feel("that eating the %s was a bad idea.", mons[pm].mname);
+                HAggravate_monster |= FROMOUTSIDE;
+            }
+            break;
+        case PM_LIZARD:
+            if (Stoned) fix_petrification();
+            break;
+        case PM_DEATH:
+        case PM_PESTILENCE:
+        case PM_FAMINE:
+            {
+                pline("Eating that is instantly fatal.");
+                killer = killed_by_int(KM_ATE_HORSEMAN, pm);
+                done(DIED);
+                /* It so happens that since we know these monsters */
+                /* cannot appear in tins, victual.piece will always */
+                /* be what we want, which is not generally true. */
+                if (revive_corpse(victual.piece))
+                    victual.piece = NULL;
+                return;
+            }
+        case PM_GREEN_SLIME:
+            if (!Slimed && !Unchanging && !flaming(youmonst.data) &&
+                    youmonst.data != &mons[PM_GREEN_SLIME]) {
+                You("don't feel very well.");
+                Slimed = 10L;
+                flags.botl = 1;
+            }
+            /* Fall through */
+        default:
+            if (acidic(&mons[pm]) && Stoned)
+                fix_petrification();
+            break;
+    }
+}
+
+void fix_petrification (void) {
+    Stoned = 0;
+    delayed_killer = killed_by_const(KM_DIED);
+    if (Hallucination)
+        pline("What a pity - you just ruined a future piece of %sart!",
+                ACURR(A_CHA) > 15 ? "fine " : "");
+    else
+        You_feel("limber!");
+}
+
+
 void violated_vegetarian (void) {
     u.uconduct.unvegetarian++;
     if (Role_if(PM_MONK)) {
@@ -1047,105 +1095,106 @@ static int rottenfood (struct obj *obj) {
 
 /* called when a corpse is selected as food */
 static int eatcorpse (struct obj *otmp) {
-        int tp = 0, mnum = otmp->corpsenm;
-        long rotted = 0L;
-        bool uniq = !!(mons[mnum].geno & G_UNIQ);
-        int retcode = 0;
-        bool stoneable = (touch_petrifies(&mons[mnum]) && !Stone_resistance &&
-                                !poly_when_stoned(youmonst.data));
+    int tp = 0, mnum = otmp->corpsenm;
+    long rotted = 0L;
+    bool uniq = !!(mons[mnum].geno & G_UNIQ);
+    int retcode = 0;
+    bool stoneable = (touch_petrifies(&mons[mnum]) && !Stone_resistance &&
+            !poly_when_stoned(youmonst.data));
 
-        /* KMH, conduct */
-        if (!vegan(&mons[mnum])) u.uconduct.unvegan++;
-        if (!vegetarian(&mons[mnum])) violated_vegetarian();
+    /* KMH, conduct */
+    if (!vegan(&mons[mnum])) u.uconduct.unvegan++;
+    if (!vegetarian(&mons[mnum])) violated_vegetarian();
 
-        if (mnum != PM_LIZARD && mnum != PM_LICHEN) {
-                long age = peek_at_iced_corpse_age(otmp);
+    if (mnum != PM_LIZARD && mnum != PM_LICHEN) {
+        long age = peek_at_iced_corpse_age(otmp);
 
-                rotted = (monstermoves - age)/(10L + rn2(20));
-                if (otmp->cursed) rotted += 2L;
-                else if (otmp->blessed) rotted -= 2L;
-        }
+        rotted = (monstermoves - age)/(10L + rn2(20));
+        if (otmp->cursed) rotted += 2L;
+        else if (otmp->blessed) rotted -= 2L;
+    }
 
-        if (mnum != PM_ACID_BLOB && !stoneable && rotted > 5L) {
-                bool cannibal = maybe_cannibal(mnum, false);
-                pline("Ulch - that %s was tainted%s!",
-                      mons[mnum].mlet == S_FUNGUS ? "fungoid vegetation" :
-                      !vegetarian(&mons[mnum]) ? "meat" : "protoplasm",
-                      cannibal ? " cannibal" : "");
-                if (Sick_resistance) {
-                        pline("It doesn't seem at all sickening, though...");
-                } else {
-                        char buf[BUFSZ];
-                        long sick_time;
-
-                        sick_time = (long) rn1(10, 10);
-                        /* make sure new ill doesn't result in improvement */
-                        if (Sick && (sick_time > Sick))
-                            sick_time = (Sick > 1L) ? Sick - 1L : 1L;
-
-                        if (!uniq) {
-                            sprintf(buf, "rotted %s", corpse_xname(otmp,true));
-                        } else {
-                            const char *name = mons[mnum].mname;
-                            sprintf(buf, "%s%s%s rotted corpse",
-                                    !type_is_pname(&mons[mnum]) ? "the " : "",
-                                    name, possessive_suffix(name));
-                        }
-                        make_sick(sick_time, buf, true, SICK_VOMITABLE);
-                }
-                if (carried(otmp)) useup(otmp);
-                else useupf(otmp, 1L);
-                return(2);
-        } else if (acidic(&mons[mnum]) && !Acid_resistance) {
-                tp++;
-                You("have a very bad case of stomach acid."); /* not body_part() */
-                losehp(rnd(15), "acidic corpse", KILLED_BY_AN);
-        } else if (poisonous(&mons[mnum]) && rn2(5)) {
-                tp++;
-                pline("Ecch - that must have been poisonous!");
-                if(!Poison_resistance) {
-                        losestr(rnd(4));
-                        losehp(rnd(15), "poisonous corpse", KILLED_BY_AN);
-                } else  You("seem unaffected by the poison.");
-        /* now any corpse left too long will make you mildly ill */
-        } else if ((rotted > 5L || (rotted > 3L && rn2(5)))
-                                        && !Sick_resistance) {
-                tp++;
-                You_feel("%ssick.", (Sick) ? "very " : "");
-                losehp(rnd(8), "cadaver", KILLED_BY_AN);
-        }
-
-        /* delay is weight dependent */
-        victual.reqtime = 3 + (mons[mnum].cwt >> 6);
-
-        if (!tp && mnum != PM_LIZARD && mnum != PM_LICHEN &&
-                        (otmp->orotten || !rn2(7))) {
-            if (rottenfood(otmp)) {
-                otmp->orotten = true;
-                (void)touchfood(otmp);
-                retcode = 1;
-            }
-
-            if (!mons[otmp->corpsenm].cnutrit) {
-                /* no nutrution: rots away, no message if you passed out */
-                if (!retcode) pline_The("corpse rots away completely.");
-                if (carried(otmp)) useup(otmp);
-                else useupf(otmp, 1L);
-                retcode = 2;
-            }
-
-            if (!retcode) consume_oeaten(otmp, 2);      /* oeaten >>= 2 */
+    if (mnum != PM_ACID_BLOB && !stoneable && rotted > 5L) {
+        bool cannibal = maybe_cannibal(mnum, false);
+        pline("Ulch - that %s was tainted%s!",
+                mons[mnum].mlet == S_FUNGUS ? "fungoid vegetation" :
+                !vegetarian(&mons[mnum]) ? "meat" : "protoplasm",
+                cannibal ? " cannibal" : "");
+        if (Sick_resistance) {
+            pline("It doesn't seem at all sickening, though...");
         } else {
-            pline("%s%s %s!",
-                  !uniq ? "This " : !type_is_pname(&mons[mnum]) ? "The " : "",
-                  food_xname(otmp, false),
-                  (vegan(&mons[mnum]) ?
-                   (!carnivorous(youmonst.data) && herbivorous(youmonst.data)) :
-                   (carnivorous(youmonst.data) && !herbivorous(youmonst.data)))
-                  ? "is delicious" : "tastes terrible");
+            char buf[BUFSZ];
+            long sick_time;
+
+            sick_time = (long) rn1(10, 10);
+            /* make sure new ill doesn't result in improvement */
+            if (Sick && (sick_time > Sick))
+                sick_time = (Sick > 1L) ? Sick - 1L : 1L;
+
+            if (!uniq) {
+                sprintf(buf, "rotted %s", corpse_xname(otmp,true));
+            } else {
+                const char *name = mons[mnum].mname;
+                sprintf(buf, "%s%s%s rotted corpse",
+                        !type_is_pname(&mons[mnum]) ? "the " : "",
+                        name, possessive_suffix(name));
+            }
+            make_sick(sick_time, buf, true, SICK_VOMITABLE);
+        }
+        if (carried(otmp)) useup(otmp);
+        else useupf(otmp, 1L);
+        return(2);
+    } else if (acidic(&mons[mnum]) && !Acid_resistance) {
+        tp++;
+        You("have a very bad case of stomach acid."); /* not body_part() */
+        losehp(rnd(15), killed_by_const(KM_ACIDIC_CORPSE));
+    } else if (poisonous(&mons[mnum]) && rn2(5)) {
+        tp++;
+        pline("Ecch - that must have been poisonous!");
+        if(!Poison_resistance) {
+            losestr(rnd(4));
+            losehp(rnd(15), killed_by_const(KM_POISONOUS_CORPSE));
+        } else {
+            You("seem unaffected by the poison.");
+        }
+        /* now any corpse left too long will make you mildly ill */
+    } else if ((rotted > 5L || (rotted > 3L && rn2(5))) && !Sick_resistance) {
+        tp++;
+        You_feel("%ssick.", (Sick) ? "very " : "");
+        losehp(rnd(8), killed_by_const(KM_CADAVER));
+    }
+
+    /* delay is weight dependent */
+    victual.reqtime = 3 + (mons[mnum].cwt >> 6);
+
+    if (!tp && mnum != PM_LIZARD && mnum != PM_LICHEN &&
+            (otmp->orotten || !rn2(7))) {
+        if (rottenfood(otmp)) {
+            otmp->orotten = true;
+            (void)touchfood(otmp);
+            retcode = 1;
         }
 
-        return(retcode);
+        if (!mons[otmp->corpsenm].cnutrit) {
+            /* no nutrution: rots away, no message if you passed out */
+            if (!retcode) pline_The("corpse rots away completely.");
+            if (carried(otmp)) useup(otmp);
+            else useupf(otmp, 1L);
+            retcode = 2;
+        }
+
+        if (!retcode) consume_oeaten(otmp, 2);      /* oeaten >>= 2 */
+    } else {
+        pline("%s%s %s!",
+                !uniq ? "This " : !type_is_pname(&mons[mnum]) ? "The " : "",
+                food_xname(otmp, false),
+                (vegan(&mons[mnum]) ?
+                 (!carnivorous(youmonst.data) && herbivorous(youmonst.data)) :
+                 (carnivorous(youmonst.data) && !herbivorous(youmonst.data)))
+                ? "is delicious" : "tastes terrible");
+    }
+
+    return(retcode);
 }
 
 /* called as you start to eat */
@@ -1432,74 +1481,6 @@ static void eatspecial (void) {
         else useupf(otmp, 1L);
 }
 
-static const char * foodword (struct obj *otmp) {
-        if (otmp->oclass == FOOD_CLASS) return "food";
-        if (otmp->oclass == GEM_CLASS &&
-            objects[otmp->otyp].oc_material == GLASS &&
-            otmp->dknown)
-                makeknown(otmp->otyp);
-        return foodwords[objects[otmp->otyp].oc_material];
-}
-
-/* called after consuming (non-corpse) food */
-static void fpostfx (struct obj *otmp) {
-        switch(otmp->otyp) {
-            case SPRIG_OF_WOLFSBANE:
-                if (u.ulycn >= LOW_PM || is_were(youmonst.data))
-                    you_unwere(true);
-                break;
-            case CARROT:
-                make_blinded((long)u.ucreamed,true);
-                break;
-            case FORTUNE_COOKIE:
-                outrumor(bcsign(otmp), BY_COOKIE);
-                if (!Blind) u.uconduct.literate++;
-                break;
-            case LUMP_OF_ROYAL_JELLY:
-                /* This stuff seems to be VERY healthy! */
-                gainstr(otmp, 1);
-                if (Upolyd) {
-                    u.mh += otmp->cursed ? -rnd(20) : rnd(20);
-                    if (u.mh > u.mhmax) {
-                        if (!rn2(17)) u.mhmax++;
-                        u.mh = u.mhmax;
-                    } else if (u.mh <= 0) {
-                        rehumanize();
-                    }
-                } else {
-                    u.uhp += otmp->cursed ? -rnd(20) : rnd(20);
-                    if (u.uhp > u.uhpmax) {
-                        if(!rn2(17)) u.uhpmax++;
-                        u.uhp = u.uhpmax;
-                    } else if (u.uhp <= 0) {
-                        killer_format = KILLED_BY_AN;
-                        killer = "rotten lump of royal jelly";
-                        done(POISONING);
-                    }
-                }
-                if(!otmp->cursed) heal_legs();
-                break;
-            case EGG:
-                if (touch_petrifies(&mons[otmp->corpsenm])) {
-                    if (!Stone_resistance &&
-                        !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
-                        if (!Stoned) Stoned = 5;
-                        killer_format = KILLED_BY_AN;
-                        sprintf(killer_buf, "%s egg", mons[otmp->corpsenm].mname);
-                        delayed_killer = killer_buf;
-                    }
-                }
-                break;
-            case EUCALYPTUS_LEAF:
-                if (Sick && !otmp->cursed)
-                    make_sick(0L, (char *)0, true, SICK_ALL);
-                if (Vomiting && !otmp->cursed)
-                    make_vomiting(0L, true);
-                break;
-        }
-        return;
-}
-
 /*
  * return 0 if the food was not dangerous.
  * return 1 if the food was dangerous and you chose to stop.
@@ -1735,9 +1716,10 @@ int doeat (void) {
                 pline("Ecch - that must have been poisonous!");
                 if(!Poison_resistance) {
                     losestr(rnd(4));
-                    losehp(rnd(15), xname(otmp), KILLED_BY_AN);
-                } else
+                    losehp(rnd(15), killed_by_object(KM_O, otmp));
+                } else {
                     You("seem unaffected by the poison.");
+                }
             } else if (!otmp->cursed)
                 pline("This %s is delicious!",
                       otmp->oclass == COIN_CLASS ? foodword(otmp) :
@@ -1849,31 +1831,6 @@ int doeat (void) {
         return(1);
 }
 
-/* Take a single bite from a piece of food, checking for choking and
- * modifying usedtime.  Returns 1 if they choked and survived, 0 otherwise.
- */
-static int bite (void) {
-        if(victual.canchoke && u.uhunger >= 2000) {
-                choke(victual.piece);
-                return 1;
-        }
-        if (victual.doreset) {
-                do_reset_eat();
-                return 0;
-        }
-        force_save_hs = true;
-        if(victual.nmod < 0) {
-                lesshungry(-victual.nmod);
-                consume_oeaten(victual.piece, victual.nmod); /* -= -nmod */
-        } else if(victual.nmod > 0 && (victual.usedtime % victual.nmod)) {
-                lesshungry(1);
-                consume_oeaten(victual.piece, -1);                /* -= 1 */
-        }
-        force_save_hs = false;
-        recalc_wt();
-        return 0;
-}
-
 /* as time goes by - called by moveloop() and domove() */
 void gethungry (void) {
         if (u.uinvulnerable) return;    /* you don't feel hungrier */
@@ -1980,129 +1937,127 @@ void reset_faint (void) {
 
 /* compute and comment on your (new?) hunger status */
 void newuhs ( bool incr) {
-        unsigned newhs;
-        static unsigned save_hs;
-        static bool saved_hs = false;
-        int h = u.uhunger;
+    unsigned newhs;
+    static unsigned save_hs;
+    static bool saved_hs = false;
+    int h = u.uhunger;
 
-        newhs = (h > 1000) ? SATIATED :
-                (h > 150) ? NOT_HUNGRY :
-                (h > 50) ? HUNGRY :
-                (h > 0) ? WEAK : FAINTING;
+    newhs = (h > 1000) ? SATIATED :
+        (h > 150) ? NOT_HUNGRY :
+        (h > 50) ? HUNGRY :
+        (h > 0) ? WEAK : FAINTING;
 
-        /* While you're eating, you may pass from WEAK to HUNGRY to NOT_HUNGRY.
-         * This should not produce the message "you only feel hungry now";
-         * that message should only appear if HUNGRY is an endpoint.  Therefore
-         * we check to see if we're in the middle of eating.  If so, we save
-         * the first hunger status, and at the end of eating we decide what
-         * message to print based on the _entire_ meal, not on each little bit.
-         */
-        /* It is normally possible to check if you are in the middle of a meal
-         * by checking occupation == eatfood, but there is one special case:
-         * start_eating() can call bite() for your first bite before it
-         * sets the occupation.
-         * Anyone who wants to get that case to work _without_ an ugly static
-         * force_save_hs variable, feel free.
-         */
-        /* Note: If you become a certain hunger status in the middle of the
-         * meal, and still have that same status at the end of the meal,
-         * this will incorrectly print the associated message at the end of
-         * the meal instead of the middle.  Such a case is currently
-         * impossible, but could become possible if a message for SATIATED
-         * were added or if HUNGRY and WEAK were separated by a big enough
-         * gap to fit two bites.
-         */
-        if (occupation == eatfood || force_save_hs) {
-                if (!saved_hs) {
-                        save_hs = u.uhs;
-                        saved_hs = true;
-                }
-                u.uhs = newhs;
-                return;
-        } else {
-                if (saved_hs) {
-                        u.uhs = save_hs;
-                        saved_hs = false;
-                }
+    /* While you're eating, you may pass from WEAK to HUNGRY to NOT_HUNGRY.
+     * This should not produce the message "you only feel hungry now";
+     * that message should only appear if HUNGRY is an endpoint.  Therefore
+     * we check to see if we're in the middle of eating.  If so, we save
+     * the first hunger status, and at the end of eating we decide what
+     * message to print based on the _entire_ meal, not on each little bit.
+     */
+    /* It is normally possible to check if you are in the middle of a meal
+     * by checking occupation == eatfood, but there is one special case:
+     * start_eating() can call bite() for your first bite before it
+     * sets the occupation.
+     * Anyone who wants to get that case to work _without_ an ugly static
+     * force_save_hs variable, feel free.
+     */
+    /* Note: If you become a certain hunger status in the middle of the
+     * meal, and still have that same status at the end of the meal,
+     * this will incorrectly print the associated message at the end of
+     * the meal instead of the middle.  Such a case is currently
+     * impossible, but could become possible if a message for SATIATED
+     * were added or if HUNGRY and WEAK were separated by a big enough
+     * gap to fit two bites.
+     */
+    if (occupation == eatfood || force_save_hs) {
+        if (!saved_hs) {
+            save_hs = u.uhs;
+            saved_hs = true;
         }
-
-        if(newhs == FAINTING) {
-                if(is_fainted()) newhs = FAINTED;
-                if(u.uhs <= WEAK || rn2(20-u.uhunger/10) >= 19) {
-                        if(!is_fainted() && multi >= 0 /* %% */) {
-                                /* stop what you're doing, then faint */
-                                stop_occupation();
-                                You("faint from lack of food.");
-                                flags.soundok = 0;
-                                nomul(-10+(u.uhunger/10));
-                                nomovemsg = "You regain consciousness.";
-                                afternmv = unfaint;
-                                newhs = FAINTED;
-                        }
-                } else
-                if(u.uhunger < -(int)(200 + 20*ACURR(A_CON))) {
-                        u.uhs = STARVED;
-                        flags.botl = 1;
-                        bot();
-                        You("die from starvation.");
-                        killer_format = KILLED_BY;
-                        killer = "starvation";
-                        done(STARVING);
-                        /* if we return, we lifesaved, and that calls newuhs */
-                        return;
-                }
+        u.uhs = newhs;
+        return;
+    } else {
+        if (saved_hs) {
+            u.uhs = save_hs;
+            saved_hs = false;
         }
+    }
 
-        if(newhs != u.uhs) {
-                if(newhs >= WEAK && u.uhs < WEAK)
-                        losestr(1);     /* this may kill you -- see below */
-                else if(newhs < WEAK && u.uhs >= WEAK)
-                        losestr(-1);
-                switch(newhs){
-                case HUNGRY:
-                        if (Hallucination) {
-                            You((!incr) ?
-                                "now have a lesser case of the munchies." :
-                                "are getting the munchies.");
-                        } else
-                            You((!incr) ? "only feel hungry now." :
-                                  (u.uhunger < 145) ? "feel hungry." :
-                                   "are beginning to feel hungry.");
-                        if (incr && occupation &&
-                            (occupation != eatfood && occupation != opentin))
-                            stop_occupation();
-                        break;
-                case WEAK:
-                        if (Hallucination)
-                            plines((!incr) ?
-                                  "You still have the munchies." :
-      "The munchies are interfering with your motor capabilities.");
-                        else if (incr &&
-                                (Role_if(PM_WIZARD) || Race_if(PM_ELF) ||
-                                 Role_if(PM_VALKYRIE)))
-                            pline("%s needs food, badly!",
-                                  (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ?
-                                  urole.name.m : "Elf");
-                        else
-                            You((!incr) ? "feel weak now." :
-                                  (u.uhunger < 45) ? "feel weak." :
-                                   "are beginning to feel weak.");
-                        if (incr && occupation &&
-                            (occupation != eatfood && occupation != opentin))
-                            stop_occupation();
-                        break;
-                }
-                u.uhs = newhs;
+    if(newhs == FAINTING) {
+        if(is_fainted()) newhs = FAINTED;
+        if(u.uhs <= WEAK || rn2(20-u.uhunger/10) >= 19) {
+            if(!is_fainted() && multi >= 0 /* %% */) {
+                /* stop what you're doing, then faint */
+                stop_occupation();
+                You("faint from lack of food.");
+                flags.soundok = 0;
+                nomul(-10+(u.uhunger/10));
+                nomovemsg = "You regain consciousness.";
+                afternmv = unfaint;
+                newhs = FAINTED;
+            }
+        } else
+            if(u.uhunger < -(int)(200 + 20*ACURR(A_CON))) {
+                u.uhs = STARVED;
                 flags.botl = 1;
                 bot();
-                if ((Upolyd ? u.mh : u.uhp) < 1) {
-                        You("die from hunger and exhaustion.");
-                        killer_format = KILLED_BY;
-                        killer = "exhaustion";
-                        done(STARVING);
-                        return;
-                }
+                You("die from starvation.");
+                killer = killed_by_const(KM_STARVING);
+                done(KM_STARVING);
+                /* if we return, we lifesaved, and that calls newuhs */
+                return;
+            }
+    }
+
+    if(newhs != u.uhs) {
+        if(newhs >= WEAK && u.uhs < WEAK)
+            losestr(1);     /* this may kill you -- see below */
+        else if(newhs < WEAK && u.uhs >= WEAK)
+            losestr(-1);
+        switch(newhs){
+            case HUNGRY:
+                if (Hallucination) {
+                    You((!incr) ?
+                            "now have a lesser case of the munchies." :
+                            "are getting the munchies.");
+                } else
+                    You((!incr) ? "only feel hungry now." :
+                            (u.uhunger < 145) ? "feel hungry." :
+                            "are beginning to feel hungry.");
+                if (incr && occupation &&
+                        (occupation != eatfood && occupation != opentin))
+                    stop_occupation();
+                break;
+            case WEAK:
+                if (Hallucination)
+                    plines((!incr) ?
+                            "You still have the munchies." :
+                            "The munchies are interfering with your motor capabilities.");
+                else if (incr &&
+                        (Role_if(PM_WIZARD) || Race_if(PM_ELF) ||
+                         Role_if(PM_VALKYRIE)))
+                    pline("%s needs food, badly!",
+                            (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ?
+                            urole.name.m : "Elf");
+                else
+                    You((!incr) ? "feel weak now." :
+                            (u.uhunger < 45) ? "feel weak." :
+                            "are beginning to feel weak.");
+                if (incr && occupation &&
+                        (occupation != eatfood && occupation != opentin))
+                    stop_occupation();
+                break;
         }
+        u.uhs = newhs;
+        flags.botl = 1;
+        bot();
+        if ((Upolyd ? u.mh : u.uhp) < 1) {
+            You("die from hunger and exhaustion.");
+            killer = killed_by_const(KM_EXHAUSTION);
+            done(KM_STARVING);
+            return;
+        }
+    }
 }
 
 /* Returns an object representing food.  Object may be either on floor or
