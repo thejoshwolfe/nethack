@@ -1,5 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "do_wear.h"
+#include "invent.h"
+#include "objnam.h"
+#include "do_name.h"
+#include "polyself.h"
+#include "potion.h"
+#include "eat.h"
+#include "pline.h"
 #include "timeout.h"
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
@@ -196,7 +204,7 @@ void nh_timeout(void) {
 
     if (u.ugallop) {
         if (--u.ugallop == 0L && u.usteed)
-            pline("%s stops galloping.", Monnam(u.usteed));
+            message_monster(MSG_STEED_STOPS_GALLOPING, u.usteed);
     }
 
     for (upp = u.uprops; upp < u.uprops + SIZE(u.uprops); upp++)

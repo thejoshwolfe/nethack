@@ -419,4 +419,6 @@ MSG_OBJECT_STOPS_GLOWING, pline("%s glowing.", Tobjnam(olduwep, "stop"))
 MSG_OBJECT_GLOWS_BRILLIANTLY, pline("%s to glow brilliantly!", Tobjnam(wep, "begin"));;
 MSG_MONSTER_HIDING_UNDER_OBJECT, pline("Wait!  There's %s hiding under %s!", an(l_monnam(mtmp)), doname(obj));
 MSG_YOUR_OBJECT_IS_NO_LONGER_POISONED, Your("%s %s no longer poisoned.", xname(obj), otense(obj, "are"));
+MSG_STEED_STOPS_GALLOPING, pline("%s stops galloping.", Monnam(u.usteed));
+
 */
