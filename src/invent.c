@@ -1011,10 +1011,7 @@ struct obj * getobj (const char *let, const char *word) {
                         sprintf(qbuf, "What do you want to %s? [%s or ?*]",
                                 word, buf);
                 }
-                if (in_doagain)
-                    ilet = readchar();
-                else
-                    ilet = yn_function(qbuf, (char *)0, '\0');
+                ilet = yn_function(qbuf, (char *)0, '\0');
                 if(ilet == '0') prezero = true;
                 while(digit(ilet) && allowcnt) {
                         if (ilet != '?' && ilet != '*') savech(ilet);
@@ -1102,12 +1099,10 @@ struct obj * getobj (const char *let, const char *word) {
                         if (otmp->invlet == ilet) break;
                 if(!otmp) {
                         You("don't have that object.");
-                        if (in_doagain) return((struct obj *) 0);
                         continue;
                 } else if (cnt < 0 || otmp->quan < cnt) {
                         You("don't have that many!  You have only %ld.",
                             otmp->quan);
-                        if (in_doagain) return((struct obj *) 0);
                         continue;
                 }
                 break;

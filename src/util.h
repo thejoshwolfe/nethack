@@ -159,5 +159,6 @@ void message_monster_object(enum MessageId id, const struct monst * mtmp, struct
 
 const char *Something = "Something";
 const char *something = "something";
+const char *Never_mind = "Never mind.";
 
 #endif // UTIL_H

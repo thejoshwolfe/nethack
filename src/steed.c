@@ -472,7 +472,7 @@ void dismount_steed ( int reason) {
         case DISMOUNT_FELL:
             You("%s off of %s!", verb, mon_nam(mtmp));
             if (!have_spot) have_spot = landing_spot(&cc,reason,1);
-            losehp(rn1(10,10), "riding accident", KILLED_BY_AN);
+            losehp(rn1(10,10), killed_by_const(KM_RIDING_ACCIDENT));
             set_wounded_legs(BOTH_SIDES, (int)HWounded_legs + rn1(5,5));
             repair_leg_damage = false;
             break;
