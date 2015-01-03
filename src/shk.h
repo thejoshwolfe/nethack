@@ -30,10 +30,10 @@ int dopay(void);
 bool paybill(int);
 void finish_paybill(void);
 struct obj *find_oid(unsigned);
-long contained_cost(struct obj *,struct monst *,long,bool, bool);
+long contained_cost(const struct obj *,struct monst *,long,bool, bool);
 long contained_gold(struct obj *);
 void picked_container(struct obj *);
-long unpaid_cost(struct obj *);
+long unpaid_cost(const struct obj *);
 void addtobill(struct obj *,bool,bool,bool);
 void splitbill(struct obj *,struct obj *);
 void subfrombill(struct obj *,struct monst *);
@@ -58,7 +58,7 @@ void check_unpaid(struct obj *);
 void costly_gold(signed char,signed char,long);
 bool block_door(signed char,signed char);
 bool block_entry(signed char,signed char);
-char *shk_your(char *,struct obj *);
+char *shk_your(char *,const struct obj *);
 char *Shk_Your(char *,struct obj *);
 
 #endif // SHK_H

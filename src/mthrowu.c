@@ -46,7 +46,8 @@ thitu (
             if (!obj) panic("thitu: name & obj both null?");
             name = strcpy(onmbuf,
                          (obj->quan > 1L) ? doname(obj) : mshot_xname(obj));
-            knm = strcpy(knmbuf, killer_xname(obj));
+            fprintf(stderr, "TODO: strcpy knmbuf killer_xname(obj)\n");
+            knm = "TODO: killer_xname";
         } else {
             knm = name;
         }
@@ -405,13 +406,11 @@ m_throw (
                             if (dam < 1) dam = 1;
                             hitu = thitu(hitv, dam, singleobj, (char *)0);
                     }
-                    if (hitu && singleobj->opoisoned &&
-                        is_poisonable(singleobj)) {
-                        char onmbuf[BUFSZ], knmbuf[BUFSZ];
+                    if (hitu && singleobj->opoisoned && is_poisonable(singleobj)) {
+                        char onmbuf[BUFSZ];
 
                         strcpy(onmbuf, xname(singleobj));
-                        strcpy(knmbuf, killer_xname(singleobj));
-                        poisoned(onmbuf, A_STR, knmbuf, -10);
+                        poisoned(onmbuf, A_STR, "TODO: poison str param", -10);
                     }
                     if(hitu &&
                        can_blnd((struct monst*)0, &youmonst,

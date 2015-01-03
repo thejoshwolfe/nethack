@@ -8,6 +8,7 @@
 #include "artifact_names.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX  80      /* (56) */
@@ -314,9 +315,11 @@ static char * xname2 (const struct obj *obj, bool ignore_oquan) {
      * printed for the object is tied to the combination of the two
      * and printing the wrong article gives away information.
      */
-    if (!nn && ocl->oc_uses_known && ocl->oc_unique) obj->known = 0;
-    if (!Blind) obj->dknown = true;
-    if (Role_if(PM_PRIEST)) obj->bknown = true;
+    struct obj *wtf_hax_it_should_have_been_const = (struct obj *) (void *)obj;
+    if (!nn && ocl->oc_uses_known && ocl->oc_unique) wtf_hax_it_should_have_been_const->known = 0;
+    if (!Blind) wtf_hax_it_should_have_been_const->dknown = true;
+    if (Role_if(PM_PRIEST)) wtf_hax_it_should_have_been_const->bknown = true;
+
     if (obj_is_pname(obj))
         goto nameit;
     switch (obj->oclass) {
@@ -884,60 +887,11 @@ char * cxname2 (const struct obj *obj) {
         return xname2(obj, true);
 }
 
-/* treat an object as fully ID'd when it might be used as reason for death */
-char * killer_xname (const struct obj *obj) {
-    struct obj save_obj;
-    unsigned save_ocknown;
-    char *buf, *save_ocuname;
-
-    /* remember original settings for core of the object;
-       oname and oattached extensions don't matter here--since they
-       aren't modified they don't need to be saved and restored */
-    save_obj = *obj;
-    /* killer name should be more specific than general xname; however, exact
-       info like blessed/cursed and rustproof makes things be too verbose */
-    obj->known = obj->dknown = 1;
-    obj->bknown = obj->rknown = obj->greased = 0;
-    /* if character is a priest[ess], bknown will get toggled back on */
-    obj->blessed = obj->cursed = 0;
-    /* "killed by poisoned <obj>" would be misleading when poison is
-       not the cause of death and "poisoned by poisoned <obj>" would
-       be redundant when it is, so suppress "poisoned" prefix */
-    obj->opoisoned = 0;
-    /* strip user-supplied name; artifacts keep theirs */
-    if (!obj->oartifact) obj->onamelth = 0;
-    /* temporarily identify the type of object */
-    save_ocknown = objects[obj->otyp].oc_name_known;
-    objects[obj->otyp].oc_name_known = 1;
-    save_ocuname = objects[obj->otyp].oc_uname;
-    objects[obj->otyp].oc_uname = 0;    /* avoid "foo called bar" */
-
-    buf = xname(obj);
-    if (obj->quan == 1L) buf = obj_is_pname(obj) ? the(buf) : an(buf);
-
-    objects[obj->otyp].oc_name_known = save_ocknown;
-    objects[obj->otyp].oc_uname = save_ocuname;
-    *obj = save_obj;    /* restore object's core settings */
-
-    return buf;
-}
-
 /*
  * Used if only one of a collection of objects is named (e.g. in eat.c).
  */
 const char * singular (const struct obj *otmp, char *(*func)( const struct obj *)) {
-    long savequan;
-    char *nam;
-
-    /* Note: using xname for corpses will not give the monster type */
-    if (otmp->otyp == CORPSE && func == xname)
-        return corpse_xname(otmp, true);
-
-    savequan = otmp->quan;
-    otmp->quan = 1L;
-    nam = (*func)(otmp);
-    otmp->quan = savequan;
-    return nam;
+    return "TODO: singular";
 }
 
 const char *an_prefix(const char *str) {
@@ -1190,7 +1144,7 @@ char * Yname2 (const struct obj *obj) {
  * or "Foobar's simple_typename(obj->otyp)"
  * or "the simple_typename(obj-otyp)"
  */
-char * ysimple_name (struct obj *obj) {
+char * ysimple_name (const struct obj *obj) {
     char *outbuf = nextobuf();
     char *s = shk_your(outbuf, obj);        /* assert( s == outbuf ); */
     int space_left = BUFSZ - strlen(s) - sizeof " ";

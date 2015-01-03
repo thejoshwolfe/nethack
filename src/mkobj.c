@@ -982,7 +982,7 @@ mk_named_object (
 }
 
 bool 
-is_flammable (struct obj *otmp)
+is_flammable (const struct obj *otmp)
 {
         int otyp = otmp->otyp;
         int omat = objects[otyp].oc_material;
@@ -994,7 +994,7 @@ is_flammable (struct obj *otmp)
 }
 
 bool 
-is_rottable (struct obj *otmp)
+is_rottable (const struct obj *otmp)
 {
         int otyp = otmp->otyp;
 

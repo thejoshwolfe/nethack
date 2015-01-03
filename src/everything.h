@@ -68,3 +68,4 @@
 #include "mcastu.h"
 #include "objnam.h"
 #include "music.h"
+#include "invent.h"

@@ -1564,7 +1564,7 @@ static long get_cost ( struct obj *obj, struct monst *shkp ) {
  * of the "top" container is added in the calling functions.
  * a different price quoted for selling as vs. buying.
  */
-long contained_cost(struct obj *obj, struct monst *shkp, long price,
+long contained_cost(const struct obj *obj, struct monst *shkp, long price,
         bool usell, bool unpaid_only)
 {
     struct obj *otmp;
@@ -1666,7 +1666,7 @@ static long set_cost (struct obj *obj, struct monst *shkp) {
 
 /* called from doinv(invent.c) for inventory of unpaid objects */
 /* known to be unpaid */
-long unpaid_cost ( struct obj *unp_obj) {
+long unpaid_cost ( const struct obj *unp_obj) {
     struct bill_x *bp = (struct bill_x *)0;
     struct monst *shkp;
 
@@ -3388,7 +3388,7 @@ bool block_entry(signed char x,signed char y) {
     return(false);
 }
 
-char * shk_your (char *buf, struct obj *obj) {
+char * shk_your (char *buf, const struct obj *obj) {
     if (!shk_owns(buf, obj) && !mon_owns(buf, obj))
         strcpy(buf, carried(obj) ? "your" : "the");
     return buf;

@@ -411,7 +411,7 @@ void probe_monster (struct monst *mtmp) {
  * from turn to turn.  This function returns false if the position
  * is not available or subject to the constraints above.
  */
-bool get_obj_location(struct obj *obj, signed char *xp, signed char *yp, int locflags) {
+bool get_obj_location(const struct obj *obj, signed char *xp, signed char *yp, int locflags) {
     switch (obj->where) {
         case OBJ_INVENT:
             *xp = u.ux;

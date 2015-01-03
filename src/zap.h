@@ -7,7 +7,7 @@
 
 int bhitm(struct monst *,struct obj *);
 void probe_monster(struct monst *);
-bool get_obj_location(struct obj *,signed char *,signed char *,int);
+bool get_obj_location(const struct obj *,signed char *,signed char *,int);
 bool get_mon_location(struct monst *,signed char *,signed char *,int);
 struct monst *get_container_location(struct obj *obj, int *, int *);
 struct monst *montraits(struct obj *,coord *);
