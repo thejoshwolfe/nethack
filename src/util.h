@@ -161,17 +161,17 @@ void message_monster_object(enum MessageId id, const struct monst * mtmp, struct
 // stuff to make it just friggin compile
 // creep forward and delete all this junk
 
-const char *Something = "Something";
-const char *something = "something";
-const char *Never_mind = "Never mind.";
-const char *nothing_happens = "Nothing happens.";
-const char *thats_enough_tries = "That's enough tries!";
-const char *silly_thing_to = "That is a silly thing to %s.";
-const char *shudder_for_moment = "shudder for a moment.";
-const char *You_can_move_again = "You can move again.";
-const char *vision_clears = "vision quickly clears.";
-const char *the_your[2] = {"the", "your"};
-char killer_buf[256] = {0};
+static const char *Something = "Something";
+static const char *something = "something";
+static const char *Never_mind = "Never mind.";
+static const char *nothing_happens = "Nothing happens.";
+static const char *thats_enough_tries = "That's enough tries!";
+static const char *silly_thing_to = "That is a silly thing to %s.";
+static const char *shudder_for_moment = "shudder for a moment.";
+static const char *You_can_move_again = "You can move again.";
+static const char *vision_clears = "vision quickly clears.";
+static const char *the_your[2] = {"the", "your"};
+static char killer_buf[256] = {0};
 
 
 #define DIED           KM_DIED

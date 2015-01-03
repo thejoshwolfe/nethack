@@ -2,6 +2,7 @@
 #define OBJNAM_H
 
 #include "obj.h"
+#include "monst.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -42,5 +43,6 @@ int rnd_class(int,int);
 const char *cloak_simple_name(const struct obj *);
 const char *mimic_obj_name(const struct monst *);
 const char * rank_of(int lev, short monnum, bool female);
+int title_to_mon (const char *str, int *rank_indx, int *title_length);
 
 #endif // OBJNAM_H

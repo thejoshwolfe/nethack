@@ -66,3 +66,4 @@
 #include "shknam.h"
 #include "minion.h"
 #include "mcastu.h"
+#include "objnam.h"

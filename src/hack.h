@@ -28,6 +28,7 @@ enum KillerMethod {
     KM_ESCAPED,
     KM_ASCENDED,
 
+    KM_PSYCHIC_BLAST,
     KM_TODO,
     KM_BRAINLESSNESS,
     KM_TOUCH_OF_DEATH,

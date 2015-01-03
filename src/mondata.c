@@ -6,6 +6,7 @@
 #include "pm_props.h"
 #include "shk.h"
 #include "display.h"
+#include "everything.h"
 
 /*      These routines provide basic data for any type of monster. */
 
@@ -317,7 +318,6 @@ int monsndx(const struct permonst *ptr) {
     }
     return (i);
 }
-
 
 
 int name_to_mon (const char *in_str) {

@@ -12,6 +12,7 @@
 #include "mhitm.h"
 #include "do_name.h"
 #include "display.h"
+#include "everything.h"
 
 extern bool notonhead;
 
@@ -378,7 +379,7 @@ int dochug (struct monst *mtmp) {
                         Blind_telepat ? "latent telepathy" : "mind");
                 dmg = rnd(15);
                 if (Half_spell_damage) dmg = (dmg+1) / 2;
-                losehp(dmg, "psychic blast", KILLED_BY_AN);
+                losehp(dmg, killed_by_const(KM_PSYCHIC_BLAST));
             }
         }
         for(m2=fmon; m2; m2 = nmon) {
