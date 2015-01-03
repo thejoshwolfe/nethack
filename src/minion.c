@@ -10,6 +10,7 @@
 #include "mondata.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
 /* mon summons a monster */
 void msummon ( struct monst *mon) {

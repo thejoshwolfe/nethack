@@ -6,7 +6,18 @@
 #include "shk.h"
 #include "dbridge.h"
 #include "display.h"
-#include "winprocs.h"
+#include "mkmaze.h"
+#include "rect.h"
+#include "sp_lev.h"
+#include "makemon.h"
+#include "engrave.h"
+#include "mkobj.h"
+#include "region.h"
+#include "options.h"
+#include "pline.h"
+#include "bones.h"
+#include "end.h"
+#include "zap.h"
 
 /* for UNIX, Rand #def'd to (long)lrand48() or (long)random() */
 /* croom->lx etc are signed char (width <= int), so % arith ensures that */
@@ -178,26 +189,24 @@ add_subroom (struct mkroom *proom, int lowx, int lowy, int hix, int hiy, bool li
         nsubroom++;
 }
 
-static void
-makerooms (void)
-{
-        bool tried_vault = false;
+static void makerooms (void) {
+    bool tried_vault = false;
 
-        /* make rooms until satisfied */
-        /* rnd_rect() will returns 0 if no more rects are available... */
-        while(nroom < MAXNROFROOMS && rnd_rect()) {
-                if(nroom >= (MAXNROFROOMS/6) && rn2(2) && !tried_vault) {
-                        tried_vault = true;
-                        if (create_vault()) {
-                                vault_x = rooms[nroom].lx;
-                                vault_y = rooms[nroom].ly;
-                                rooms[nroom].hx = -1;
-                        }
-                } else
-                    if (!create_room(-1, -1, -1, -1, -1, -1, OROOM, -1))
-                        return;
-        }
-        return;
+    /* make rooms until satisfied */
+    /* rnd_rect() will returns 0 if no more rects are available... */
+    while(nroom < MAXNROFROOMS && rnd_rect()) {
+        if(nroom >= (MAXNROFROOMS/6) && rn2(2) && !tried_vault) {
+            tried_vault = true;
+            if (create_vault()) {
+                vault_x = rooms[nroom].lx;
+                vault_y = rooms[nroom].ly;
+                rooms[nroom].hx = -1;
+            }
+        } else
+            if (!create_room(-1, -1, -1, -1, -1, -1, OROOM, -1))
+                return;
+    }
+    return;
 }
 
 static void 

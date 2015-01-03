@@ -2,6 +2,7 @@
 #define MKLEV_H
 
 #include "mkroom.h"
+#include "dungeon.h"
 
 void sort_rooms(void);
 void add_room(int,int,int,int,bool,signed char,bool);
