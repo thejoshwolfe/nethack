@@ -1,9 +1,19 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "region.h"
 #include "hack.h"
 #include "lev.h"
 #include "display.h"
 #include "do_name.h"
 #include "objnam.h"
+#include "monst.h"
+#include "mon.h"
+#include "pline.h"
+#include "polyself.h"
+#include "restore.h"
+#include "light.h"
+#include "save.h"
+#include "potion.h"
 
 /*
  * This should really go into the level structure, but
@@ -706,7 +716,7 @@ inside_gas_cloud (void *p1, void *p2)
         if (!Poison_resistance) {
             pline("%s is burning your %s!", Something, makeplural(body_part(LUNG)));
             You("cough and spit blood!");
-            losehp(rnd(dam) + 5, "gas cloud", KILLED_BY_AN);
+            losehp(rnd(dam) + 5, killed_by_const(KM_GAS_CLOUD));
             return false;
         } else {
             You("cough!");

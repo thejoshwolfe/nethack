@@ -4,6 +4,7 @@
 
 #include "global.h"
 #include "rect.h"
+#include "monst.h"
 
 /* generic callback function */
 typedef bool (*callback_proc)(void *, void *);
