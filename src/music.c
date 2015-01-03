@@ -33,7 +33,7 @@
 #include "shk.h"
 #include "mhitm.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 static void awaken_monsters(int);
 static void put_monsters_to_sleep(int);
@@ -301,16 +301,14 @@ do_pit:             chasm = maketrap(x,y,PIT);
                                 }
                         }
                     } else if (x == u.ux && y == u.uy) {
-                        if (Levitation || Flying ||
-                                is_clinger(youmonst.data)) {
+                        if (Levitation || Flying || is_clinger(youmonst.data)) {
                             pline("A chasm opens up under you!");
                             You("don't fall in!");
                         } else {
                             You("fall into a chasm!");
                             u.utrap = rn1(6,2);
                             u.utraptype = TT_PIT;
-                            losehp(rnd(6),"fell into a chasm",
-                                    NO_KILLER_PREFIX);
+                            losehp(rnd(6), killed_by_const(KM_FELL_INTO_CHASM));
                             selftouch("Falling, you");
                         }
                     } else newsym(x,y);
@@ -371,9 +369,7 @@ static int do_improvisation (struct obj *instr) {
                     break;
                 } else if (!u.dx && !u.dy && !u.dz) {
                     if ((damage = zapyourself(instr, true)) != 0) {
-                        char buf[BUFSZ];
-                        sprintf(buf, "using a magical horn on %sself", uhim());
-                        losehp(damage, buf, KILLED_BY);
+                        losehp(damage, killed_by_const(KM_USING_MAGIC_HORN_ON_SELF));
                     }
                 } else {
                     buzz((instr->otyp == FROST_HORN) ? AD_COLD-1 : AD_FIRE-1,
