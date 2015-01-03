@@ -9,12 +9,12 @@
 #include "edog.h"
 #include "invent.h"
 #include "display.h"
-#include "winprocs.h"
 #include "do_name.h"
 #include "objnam.h"
 #include "dbridge.h"
 #include "shk.h"
 #include "priest.h"
+#include "everything.h"
 
 extern const int monstr[];
 
@@ -25,16 +25,6 @@ bool m_using = false;
  * cannot recognize if items are cursed are not, monsters which are confused
  * don't know not to read scrolls, etc....
  */
-
-static struct permonst *muse_newcham_mon(struct monst *);
-static int precheck(struct monst *, struct obj *);
-static void mzapmsg(struct monst *, struct obj *, bool);
-static void mreadmsg(struct monst *, struct obj *);
-static void mquaffmsg(struct monst *, struct obj *);
-static int mbhitm(struct monst *, struct obj *);
-static void mbhit(struct monst *, int, int (*)(struct monst *, struct obj *), int (*)(struct obj *, struct obj *), struct obj *);
-static void you_aggravate(struct monst *);
-static void mon_consume_unstone(struct monst *, struct obj *, bool, bool);
 
 static struct musable {
     struct obj *offensive;
@@ -118,6 +108,19 @@ enum {
     MUSE_POT_POLYMORPH = 9,
 };
 
+#define POTION_OCCUPANT_CHANCE(n) (13 + 2*(n))  /* also in potion.c */
+
+static void mquaffmsg(struct monst *mtmp, struct obj *otmp) {
+    if (canseemon(mtmp)) {
+        otmp->dknown = 1;
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, mtmp);
+        pline("%s drinks %s!", name, singular(otmp, doname));
+    } else if (flags.soundok) {
+        You_hear("a chugging sound.");
+    }
+}
+
 
 /* Any preliminary checks which may result in the monster being unable to use
  * the item.  Returns 0 if nothing happened, 2 if the monster can't do anything
@@ -135,7 +138,6 @@ static int precheck(struct monst *mon, struct obj *obj) {
         static const char *empty = "The potion turns out to be empty.";
         const char *potion_descr;
         struct monst *mtmp;
-#define POTION_OCCUPANT_CHANCE(n) (13 + 2*(n))  /* also in potion.c */
 
         potion_descr = OBJ_DESCR(objects[obj->otyp]);
         if (potion_descr && !strcmp(potion_descr, "milky")) {
@@ -278,17 +280,6 @@ static void mreadmsg(struct monst *mtmp, struct obj *otmp) {
         else
             strcpy(name_lowercase, mhe(mtmp));
         pline("Being confused, %s mispronounces the magic words...", name_lowercase);
-    }
-}
-
-static void mquaffmsg(struct monst *mtmp, struct obj *otmp) {
-    if (canseemon(mtmp)) {
-        otmp->dknown = 1;
-        char name[BUFSZ];
-        Monnam(name, BUFSZ, mtmp);
-        pline("%s drinks %s!", name, singular(otmp, doname));
-    } else if (flags.soundok) {
-        You_hear("a chugging sound.");
     }
 }
 
@@ -566,6 +557,227 @@ static void m_flee(struct monst *m) {
     int fleetim = !m->mflee ? (33 - (30 * m->mhp / m->mhpmax)) : 0;
     if (fleetim && !m->iswiz)
         monflee(m, fleetim, false, false);
+}
+
+/* A modified bhit() for monsters.  Based on bhit() in zap.c.  Unlike
+ * buzz(), bhit() doesn't take into account the possibility of a monster
+ * zapping you, so we need a special function for it.  (Unless someone wants
+ * to merge the two functions...)
+ */
+static void mbhit (
+    struct monst *mon,                      /* monster shooting the wand */
+    int range,                      /* direction and range */
+    int (*fhitm)( struct monst *,  struct obj *),
+    int (*fhito)( struct obj *,  struct obj *),      /* fns called when mon/obj hit */
+    struct obj *obj                        /* 2nd arg to fhitm/fhito */
+) {
+    struct monst *mtmp;
+    struct obj *otmp;
+    unsigned char typ;
+    int ddx, ddy;
+
+    bhitpos.x = mon->mx;
+    bhitpos.y = mon->my;
+    ddx = sgn(mon->mux - mon->mx);
+    ddy = sgn(mon->muy - mon->my);
+
+    while (range-- > 0) {
+        int x, y;
+
+        bhitpos.x += ddx;
+        bhitpos.y += ddy;
+        x = bhitpos.x;
+        y = bhitpos.y;
+
+        if (!isok(x, y)) {
+            bhitpos.x -= ddx;
+            bhitpos.y -= ddy;
+            break;
+        }
+        if (find_drawbridge(&x, &y)) {
+            switch (obj->otyp) {
+                case WAN_STRIKING:
+                    destroy_drawbridge(x, y);
+            }
+        }
+        if (bhitpos.x == u.ux && bhitpos.y == u.uy) {
+            (*fhitm)(&youmonst, obj);
+            range -= 3;
+        } else if (MON_AT(bhitpos.x, bhitpos.y)) {
+            mtmp = m_at(bhitpos.x, bhitpos.y);
+            if (cansee(bhitpos.x,bhitpos.y) && !canspotmon(mtmp))
+                map_invisible(bhitpos.x, bhitpos.y);
+            (*fhitm)(mtmp, obj);
+            range -= 3;
+        }
+        /* modified by GAN to hit all objects */
+        if (fhito) {
+            int hitanything = 0;
+            struct obj *next_obj;
+
+            for (otmp = level.objects[bhitpos.x][bhitpos.y]; otmp; otmp = next_obj) {
+                /* Fix for polymorph bug, Tim Wright */
+                next_obj = otmp->nexthere;
+                hitanything += (*fhito)(otmp, obj);
+            }
+            if (hitanything)
+                range--;
+        }
+        typ = levl[bhitpos.x][bhitpos.y].typ;
+        if (IS_DOOR(typ) || typ == SDOOR) {
+            switch (obj->otyp) {
+                /* note: monsters don't use opening or locking magic
+                 at present, but keep these as placeholders */
+                case WAN_OPENING:
+                case WAN_LOCKING:
+                case WAN_STRIKING:
+                    if (doorlock(obj, bhitpos.x, bhitpos.y)) {
+                        makeknown(obj->otyp);
+                        /* if a shop door gets broken, add it to
+                         the shk's fix list (no cost to player) */
+                        if (levl[bhitpos.x][bhitpos.y].doormask == D_BROKEN && *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE))
+                            add_damage(bhitpos.x, bhitpos.y, 0L);
+                    }
+                    break;
+            }
+        }
+        if (!ZAP_POS(typ) || (IS_DOOR(typ) && (levl[bhitpos.x][bhitpos.y].doormask & (D_LOCKED | D_CLOSED)))) {
+            bhitpos.x -= ddx;
+            bhitpos.y -= ddy;
+            break;
+        }
+    }
+}
+
+static int mbhitm(struct monst *mtmp, struct obj *otmp) {
+    int tmp;
+
+    bool reveal_invis = false;
+    if (mtmp != &youmonst) {
+        mtmp->msleeping = 0;
+        if (mtmp->m_ap_type)
+            seemimic(mtmp);
+    }
+    switch (otmp->otyp) {
+        case WAN_STRIKING:
+            reveal_invis = true;
+            if (mtmp == &youmonst) {
+                if (zap_oseen)
+                    makeknown(WAN_STRIKING);
+                if (Antimagic) {
+                    shieldeff(u.ux, u.uy);
+                    pline("Boing!");
+                } else if (rnd(20) < 10 + u.uac) {
+                    pline_The("wand hits you!");
+                    tmp = d(2, 12);
+                    if (Half_spell_damage)
+                        tmp = (tmp + 1) / 2;
+                    losehp(tmp, killed_by_const(KM_WAND));
+                } else
+                    pline_The("wand misses you.");
+                stop_occupation();
+                nomul(0);
+            } else if (resists_magm(mtmp)) {
+                shieldeff(mtmp->mx, mtmp->my);
+                pline("Boing!");
+            } else if (rnd(20) < 10 + find_mac(mtmp)) {
+                tmp = d(2, 12);
+                hit("wand", mtmp, exclam(tmp));
+                (void)resist(mtmp, otmp->oclass, tmp, TELL);
+                if (cansee(mtmp->mx, mtmp->my) && zap_oseen)
+                    makeknown(WAN_STRIKING);
+            } else {
+                miss("wand", mtmp);
+                if (cansee(mtmp->mx, mtmp->my) && zap_oseen)
+                    makeknown(WAN_STRIKING);
+            }
+            break;
+        case WAN_TELEPORTATION:
+            if (mtmp == &youmonst) {
+                if (zap_oseen)
+                    makeknown(WAN_TELEPORTATION);
+                tele();
+            } else {
+                /* for consistency with zap.c, don't identify */
+                if (mtmp->ispriest && *in_rooms(mtmp->mx, mtmp->my, TEMPLE)) {
+                    if (cansee(mtmp->mx, mtmp->my)) {
+                        char name[BUFSZ];
+                        Monnam(name, BUFSZ, mtmp);
+                        pline("%s resists the magic!", name);
+                    }
+                    mtmp->msleeping = 0;
+                    if (mtmp->m_ap_type)
+                        seemimic(mtmp);
+                } else if (!tele_restrict(mtmp))
+                    (void)rloc(mtmp, false);
+            }
+            break;
+        case WAN_CANCELLATION:
+        case SPE_CANCELLATION:
+            (void)cancel_monst(mtmp, otmp, false, true, false);
+            break;
+    }
+    if (reveal_invis) {
+        if (mtmp->mhp > 0 && cansee(bhitpos.x, bhitpos.y) && !canspotmon(mtmp))
+            map_invisible(bhitpos.x, bhitpos.y);
+    }
+    return 0;
+}
+
+static void mon_consume_unstone(struct monst *mon, struct obj *obj, bool by_you, bool stoning) {
+    int nutrit = (obj->otyp == CORPSE) ? dog_nutrition(mon, obj) : 0;
+    /* also sets meating */
+
+    /* give a "<mon> is slowing down" message and also remove
+     intrinsic speed (comparable to similar effect on the hero) */
+    mon_adjust_speed(mon, -3, (struct obj *)0);
+
+    char name[BUFSZ];
+    Monnam(name, BUFSZ, mon);
+    if (canseemon(mon)) {
+        long save_quan = obj->quan;
+
+        obj->quan = 1L;
+        pline("%s %ss %s.", name, (obj->otyp == POT_ACID) ? "quaff" : "eat", distant_name(obj, doname));
+        obj->quan = save_quan;
+    } else if (flags.soundok)
+        You_hear("%s.", (obj->otyp == POT_ACID) ? "drinking" : "chewing");
+    m_useup(mon, obj);
+    if (((obj->otyp == POT_ACID) || acidic(&mons[obj->corpsenm])) && !resists_acid(mon)) {
+        mon->mhp -= rnd(15);
+        pline("%s has a very bad case of stomach acid.", name);
+    }
+    if (mon->mhp <= 0) {
+        pline("%s dies!", name);
+        if (by_you)
+            xkilled(mon, 0);
+        else
+            mondead(mon);
+        return;
+    }
+    if (stoning && canseemon(mon)) {
+        if (Hallucination()) {
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, mon);
+            pline("What a pity - %s just ruined a future piece of art!", name);
+        } else {
+            pline("%s seems limber!", name);
+        }
+    }
+    if (obj->otyp == CORPSE && obj->corpsenm == PM_LIZARD && mon->mconf) {
+        mon->mconf = 0;
+        if (canseemon(mon))
+            pline("%s seems steadier now.", name);
+    }
+    if (mon->mtame && !mon->isminion && nutrit > 0) {
+        struct edog *edog = EDOG(mon);
+
+        if (edog->hungrytime < monstermoves)
+            edog->hungrytime = monstermoves;
+        edog->hungrytime += nutrit;
+        mon->mconf = 0;
+    }
+    mon->mlstmv = monstermoves; /* it takes a turn */
 }
 
 /* Perform a defensive action for a monster.  Must be called immediately
@@ -1104,171 +1316,6 @@ bool find_offensive(struct monst *mtmp) {
     return ((bool)(!!m.has_offense));
 }
 
-static int mbhitm(struct monst *mtmp, struct obj *otmp) {
-    int tmp;
-
-    bool reveal_invis = false;
-    if (mtmp != &youmonst) {
-        mtmp->msleeping = 0;
-        if (mtmp->m_ap_type)
-            seemimic(mtmp);
-    }
-    switch (otmp->otyp) {
-        case WAN_STRIKING:
-            reveal_invis = true;
-            if (mtmp == &youmonst) {
-                if (zap_oseen)
-                    makeknown(WAN_STRIKING);
-                if (Antimagic) {
-                    shieldeff(u.ux, u.uy);
-                    pline("Boing!");
-                } else if (rnd(20) < 10 + u.uac) {
-                    pline_The("wand hits you!");
-                    tmp = d(2, 12);
-                    if (Half_spell_damage)
-                        tmp = (tmp + 1) / 2;
-                    losehp(tmp, "wand", KILLED_BY_AN);
-                } else
-                    pline_The("wand misses you.");
-                stop_occupation();
-                nomul(0);
-            } else if (resists_magm(mtmp)) {
-                shieldeff(mtmp->mx, mtmp->my);
-                pline("Boing!");
-            } else if (rnd(20) < 10 + find_mac(mtmp)) {
-                tmp = d(2, 12);
-                hit("wand", mtmp, exclam(tmp));
-                (void)resist(mtmp, otmp->oclass, tmp, TELL);
-                if (cansee(mtmp->mx, mtmp->my) && zap_oseen)
-                    makeknown(WAN_STRIKING);
-            } else {
-                miss("wand", mtmp);
-                if (cansee(mtmp->mx, mtmp->my) && zap_oseen)
-                    makeknown(WAN_STRIKING);
-            }
-            break;
-        case WAN_TELEPORTATION:
-            if (mtmp == &youmonst) {
-                if (zap_oseen)
-                    makeknown(WAN_TELEPORTATION);
-                tele();
-            } else {
-                /* for consistency with zap.c, don't identify */
-                if (mtmp->ispriest && *in_rooms(mtmp->mx, mtmp->my, TEMPLE)) {
-                    if (cansee(mtmp->mx, mtmp->my)) {
-                        char name[BUFSZ];
-                        Monnam(name, BUFSZ, mtmp);
-                        pline("%s resists the magic!", name);
-                    }
-                    mtmp->msleeping = 0;
-                    if (mtmp->m_ap_type)
-                        seemimic(mtmp);
-                } else if (!tele_restrict(mtmp))
-                    (void)rloc(mtmp, false);
-            }
-            break;
-        case WAN_CANCELLATION:
-        case SPE_CANCELLATION:
-            (void)cancel_monst(mtmp, otmp, false, true, false);
-            break;
-    }
-    if (reveal_invis) {
-        if (mtmp->mhp > 0 && cansee(bhitpos.x, bhitpos.y) && !canspotmon(mtmp))
-            map_invisible(bhitpos.x, bhitpos.y);
-    }
-    return 0;
-}
-
-/* A modified bhit() for monsters.  Based on bhit() in zap.c.  Unlike
- * buzz(), bhit() doesn't take into account the possibility of a monster
- * zapping you, so we need a special function for it.  (Unless someone wants
- * to merge the two functions...)
- */
-static void mbhit (
-    struct monst *mon,                      /* monster shooting the wand */
-    int range,                      /* direction and range */
-    int (*fhitm)( struct monst *,  struct obj *),
-    int (*fhito)( struct obj *,  struct obj *),      /* fns called when mon/obj hit */
-    struct obj *obj                        /* 2nd arg to fhitm/fhito */
-) {
-    struct monst *mtmp;
-    struct obj *otmp;
-    unsigned char typ;
-    int ddx, ddy;
-
-    bhitpos.x = mon->mx;
-    bhitpos.y = mon->my;
-    ddx = sgn(mon->mux - mon->mx);
-    ddy = sgn(mon->muy - mon->my);
-
-    while (range-- > 0) {
-        int x, y;
-
-        bhitpos.x += ddx;
-        bhitpos.y += ddy;
-        x = bhitpos.x;
-        y = bhitpos.y;
-
-        if (!isok(x, y)) {
-            bhitpos.x -= ddx;
-            bhitpos.y -= ddy;
-            break;
-        }
-        if (find_drawbridge(&x, &y)) {
-            switch (obj->otyp) {
-                case WAN_STRIKING:
-                    destroy_drawbridge(x, y);
-            }
-        }
-        if (bhitpos.x == u.ux && bhitpos.y == u.uy) {
-            (*fhitm)(&youmonst, obj);
-            range -= 3;
-        } else if (MON_AT(bhitpos.x, bhitpos.y)) {
-            mtmp = m_at(bhitpos.x, bhitpos.y);
-            if (cansee(bhitpos.x,bhitpos.y) && !canspotmon(mtmp))
-                map_invisible(bhitpos.x, bhitpos.y);
-            (*fhitm)(mtmp, obj);
-            range -= 3;
-        }
-        /* modified by GAN to hit all objects */
-        if (fhito) {
-            int hitanything = 0;
-            struct obj *next_obj;
-
-            for (otmp = level.objects[bhitpos.x][bhitpos.y]; otmp; otmp = next_obj) {
-                /* Fix for polymorph bug, Tim Wright */
-                next_obj = otmp->nexthere;
-                hitanything += (*fhito)(otmp, obj);
-            }
-            if (hitanything)
-                range--;
-        }
-        typ = levl[bhitpos.x][bhitpos.y].typ;
-        if (IS_DOOR(typ) || typ == SDOOR) {
-            switch (obj->otyp) {
-                /* note: monsters don't use opening or locking magic
-                 at present, but keep these as placeholders */
-                case WAN_OPENING:
-                case WAN_LOCKING:
-                case WAN_STRIKING:
-                    if (doorlock(obj, bhitpos.x, bhitpos.y)) {
-                        makeknown(obj->otyp);
-                        /* if a shop door gets broken, add it to
-                         the shk's fix list (no cost to player) */
-                        if (levl[bhitpos.x][bhitpos.y].doormask == D_BROKEN && *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE))
-                            add_damage(bhitpos.x, bhitpos.y, 0L);
-                    }
-                    break;
-            }
-        }
-        if (!ZAP_POS(typ) || (IS_DOOR(typ) && (levl[bhitpos.x][bhitpos.y].doormask & (D_LOCKED | D_CLOSED)))) {
-            bhitpos.x -= ddx;
-            bhitpos.y -= ddy;
-            break;
-        }
-    }
-}
-
 /* Perform an offensive action for a monster.  Must be called immediately
  * after find_offensive().  Return values are same as use_defensive().
  */
@@ -1439,7 +1486,7 @@ int use_offensive(struct monst *mtmp) {
                     newsym(u.ux, u.uy);
                 }
                 if (dmg)
-                    losehp(dmg, "scroll of earth", KILLED_BY_AN);
+                    losehp(dmg, killed_by_const(KM_SCROLL_OF_EARTH));
             }
             xxx_noobj:
 
@@ -1625,6 +1672,26 @@ static struct permonst * muse_newcham_mon(struct monst *mon) {
     }
     return rndmonst();
 }
+
+static void you_aggravate(struct monst *mtmp) {
+    char the_monster[BUFSZ];
+    noit_mon_nam(the_monster, BUFSZ, mtmp);
+    pline("For some reason, %s%s presence is known to you.", the_monster, possessive_suffix(the_monster));
+    cls();
+    show_glyph(mtmp->mx, mtmp->my, mon_to_glyph(mtmp));
+    display_self();
+    You_feel("aggravated at %s.", the_monster);
+    display_nhwindow(WIN_MAP, true);
+    docrt();
+    if (unconscious()) {
+        multi = -1;
+        nomovemsg = "Aggravated, you are jolted into full consciousness.";
+    }
+    newsym(mtmp->mx, mtmp->my);
+    if (!canspotmon(mtmp))
+        map_invisible(mtmp->mx, mtmp->my);
+}
+
 
 int use_misc(struct monst *mtmp) {
     int i;
@@ -1814,25 +1881,6 @@ int use_misc(struct monst *mtmp) {
     return 0;
 }
 
-static void you_aggravate(struct monst *mtmp) {
-    char the_monster[BUFSZ];
-    noit_mon_nam(the_monster, BUFSZ, mtmp);
-    pline("For some reason, %s%s presence is known to you.", the_monster, possessive_suffix(the_monster));
-    cls();
-    show_glyph(mtmp->mx, mtmp->my, mon_to_glyph(mtmp));
-    display_self();
-    You_feel("aggravated at %s.", the_monster);
-    display_nhwindow(WIN_MAP, true);
-    docrt();
-    if (unconscious()) {
-        multi = -1;
-        nomovemsg = "Aggravated, you are jolted into full consciousness.";
-    }
-    newsym(mtmp->mx, mtmp->my);
-    if (!canspotmon(mtmp))
-        map_invisible(mtmp->mx, mtmp->my);
-}
-
 int rnd_misc_item(struct monst *mtmp) {
     struct permonst *pm = mtmp->data;
     int difficulty = monstr[(monsndx(pm))];
@@ -2010,58 +2058,3 @@ bool munstone(struct monst *mon, bool by_you) {
     return false;
 }
 
-static void mon_consume_unstone(struct monst *mon, struct obj *obj, bool by_you, bool stoning) {
-    int nutrit = (obj->otyp == CORPSE) ? dog_nutrition(mon, obj) : 0;
-    /* also sets meating */
-
-    /* give a "<mon> is slowing down" message and also remove
-     intrinsic speed (comparable to similar effect on the hero) */
-    mon_adjust_speed(mon, -3, (struct obj *)0);
-
-    char name[BUFSZ];
-    Monnam(name, BUFSZ, mon);
-    if (canseemon(mon)) {
-        long save_quan = obj->quan;
-
-        obj->quan = 1L;
-        pline("%s %ss %s.", name, (obj->otyp == POT_ACID) ? "quaff" : "eat", distant_name(obj, doname));
-        obj->quan = save_quan;
-    } else if (flags.soundok)
-        You_hear("%s.", (obj->otyp == POT_ACID) ? "drinking" : "chewing");
-    m_useup(mon, obj);
-    if (((obj->otyp == POT_ACID) || acidic(&mons[obj->corpsenm])) && !resists_acid(mon)) {
-        mon->mhp -= rnd(15);
-        pline("%s has a very bad case of stomach acid.", name);
-    }
-    if (mon->mhp <= 0) {
-        pline("%s dies!", name);
-        if (by_you)
-            xkilled(mon, 0);
-        else
-            mondead(mon);
-        return;
-    }
-    if (stoning && canseemon(mon)) {
-        if (Hallucination()) {
-            char name[BUFSZ];
-            mon_nam(name, BUFSZ, mon);
-            pline("What a pity - %s just ruined a future piece of art!", name);
-        } else {
-            pline("%s seems limber!", name);
-        }
-    }
-    if (obj->otyp == CORPSE && obj->corpsenm == PM_LIZARD && mon->mconf) {
-        mon->mconf = 0;
-        if (canseemon(mon))
-            pline("%s seems steadier now.", name);
-    }
-    if (mon->mtame && !mon->isminion && nutrit > 0) {
-        struct edog *edog = EDOG(mon);
-
-        if (edog->hungrytime < monstermoves)
-            edog->hungrytime = monstermoves;
-        edog->hungrytime += nutrit;
-        mon->mconf = 0;
-    }
-    mon->mlstmv = monstermoves; /* it takes a turn */
-}
