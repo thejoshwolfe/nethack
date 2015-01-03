@@ -8,9 +8,56 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+    pline("%s is no longer in your clutches.", Monnam(u.ustuck));
+    message_monster(MSG_M_NO_LONGER_IN_YOUR_CLUTCHES, u.ustuck);
+
+                        message_monster(MSG_GAZING_AT_AWAKE_MEDUSA_BAD_IDEA, mtmp);
+                        pline( "Gazing at the awake %s is not a very good idea.", l_monnam(mtmp));
+
+                    message_monster(MSG_M_SEEMS_NOT_NOTICE_GAZE, mtmp);
+                    pline("%s seems not to notice your gaze.", Monnam(mtmp));
+
+                    message_monster(MSG_YOU_AVOID_GAZING_AT_M, mtmp);
+                    You("avoid gazing at %s.", y_monnam(mtmp));
+
+                    You_cant("see where to gaze at %s.", Monnam(mtmp));
+                    message_monster(MSG_YOU_CANT_SEE_WHERE_GAZE_M, mtmp);
+
+                            You("stiffen momentarily under %s gaze.", s_suffix(mon_nam(mtmp)));
+                            message_monster(MSG_STIFFEN_MOMENTARILY_UNDER_M_GAZE, mtmp);
+
+                            You("are frozen by %s gaze!", s_suffix(mon_nam(mtmp)));
+                            message_monster(MSG_YOU_ARE_FROZEN_BY_M_GAZE, mtmp);
+
+                            pline_The("fire doesn't burn %s!", mon_nam(mtmp));
+                            message_monster(MSG_FIRE_DOES_NOT_BURN_M, mtmp);
+
+                        message_monster(MSG_ATTACK_M_WITH_FIERY_GAZE, mtmp);
+                        You("attack %s with a fiery gaze!", mon_nam(mtmp));
+
                     You_cant("loot anything %sthere with %s in the way.",
                             prev_inquiry ? "else " : "", mon_nam(mtmp));
                     message_monster(MSG_YOU_CANT_LOOT_WITH_M_IN_THE_WAY, mtmp);
+
+                pline("No longer petrifying-resistant, you touch %s.", mon_nam(u.usteed));
+                message_monster(MSG_TOUCH_PETRIFYING_STEED, u.usteed);
+
+        You("release web fluid inside %s.", mon_nam(u.ustuck));
+        message_monster(MSG_RELEASE_WEB_FLUID_INSIDE_M, u.ustuck);
+
+        pline_The("web dissolves into %s.", mon_nam(u.ustuck));
+        message_monster(MSG_WEB_DISSOLVES_INTO_M, u.ustuck);
+
+                            message_monster(MSG_GAZE_CONFUSES_M, mtmp);
+                            Your("gaze confuses %s!", mon_nam(mtmp));
+
+                            message_monster(MSG_M_GETTING_MORE_CONFUSED, mtmp);
+                            pline("%s is getting more and more confused.", Monnam(mtmp));
+
+                sprintf(hornbuf, "horn%s", plur(num_horns(youmonst.data)));
+                message_object(MSG_YOUR_HORNS_PIERCE_O, otmp);
+                Your("%s %s through %s %s.", hornbuf, vtense(hornbuf, "pierce"),
+                     shk_your(yourbuf, otmp), xname(otmp));
 
         message_object(MSG_O_SEEMS_TO_BE_LOCKED, obj);
         pline("%s to be locked.", Tobjnam(obj, "seem"));
