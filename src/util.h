@@ -20,6 +20,7 @@ void update_inventory(void);
 void getlin(const char *, char *);
 
 enum MessageId {
+    MSG_M_SPEAKS,
     MSG_YOUR_DISPLACED_IMAGE_DOESNT_FOOL_M,
     MSG_M_ASKS_FOR_CONTRIBUTION_TEMPLE,
     MSG_M_IS_NOT_INTERESTED,

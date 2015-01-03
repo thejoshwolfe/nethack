@@ -8,6 +8,9 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+            pline("%s speaks:", Monnam(mtmp));
+            message_monster(MSG_M_SPEAKS, mtmp);
+
                 Your("displaced image doesn't fool %s!", mon_nam(priest));
                 message_monster(MSG_YOUR_DISPLACED_IMAGE_DOESNT_FOOL_M, priest);
 
