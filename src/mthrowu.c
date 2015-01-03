@@ -7,8 +7,7 @@
 #include "shk.h"
 #include "objnam.h"
 #include "display.h"
-
-static int drop_throw(struct obj *,bool,int,int);
+#include "everything.h"
 
 #define URETREATING(x,y) (distmin(u.ux,u.uy,x,y) > distmin(u.ux0,u.uy0,x,y))
 
@@ -41,7 +40,6 @@ thitu (
 {
         const char *onm, *knm;
         bool is_acid;
-        int kprefix = KILLED_BY_AN;
         char onmbuf[BUFSZ], knmbuf[BUFSZ];
 
         if (!name) {
@@ -49,13 +47,8 @@ thitu (
             name = strcpy(onmbuf,
                          (obj->quan > 1L) ? doname(obj) : mshot_xname(obj));
             knm = strcpy(knmbuf, killer_xname(obj));
-            kprefix = KILLED_BY;  /* killer_name supplies "an" if warranted */
         } else {
             knm = name;
-            /* [perhaps ought to check for plural here to] */
-            if (!strncmpi(name, "the ", 4) ||
-                    !strncmpi(name, "an ", 3) ||
-                    !strncmpi(name, "a ", 2)) kprefix = KILLED_BY;
         }
         onm = (obj && obj_is_pname(obj)) ? the(name) :
                             (obj && obj->quan > 1L) ? name : an(name);
@@ -80,7 +73,8 @@ thitu (
                 else {
                         if (is_acid) pline("It burns!");
                         if (Half_physical_damage) dam = (dam+1) / 2;
-                        losehp(dam, knm, kprefix);
+                        fprintf(stderr, "TODO: killer = %s\n", knm);
+                        losehp(dam, killed_by_const(KM_TODO));
                         exercise(A_STR, false);
                 }
                 return(1);
@@ -442,9 +436,10 @@ m_throw (
                     if (hitu && singleobj->otyp == EGG) {
                         if (!Stone_resistance
                             && !(poly_when_stoned(youmonst.data) &&
-                                 polymon(PM_STONE_GOLEM))) {
+                                 polymon(PM_STONE_GOLEM)))
+                        {
                             Stoned = 5;
-                            killer = (char *) 0;
+                            killer.method = KM_DIED;
                         }
                     }
                     stop_occupation();
