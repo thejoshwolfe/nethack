@@ -5,7 +5,7 @@
 #include "epri.h"
 #include "pm_props.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 static int prayer_done(void);
 static struct obj *worst_cursed_item(void);
@@ -256,209 +256,203 @@ worst_cursed_item (void)
     return otmp;
 }
 
-static void
-fix_worst_trouble (int trouble)
-{
-        int i;
-        struct obj *otmp = 0;
-        const char *what = (const char *)0;
-        struct monst *mtmp;
-        static const char leftglow[] = "left ring softly glows",
-                                   rightglow[] = "right ring softly glows";
+static void fix_worst_trouble (int trouble) {
+    int i;
+    struct obj *otmp = 0;
+    const char *what = (const char *)0;
+    struct monst *mtmp;
+    static const char leftglow[] = "left ring softly glows",
+                 rightglow[] = "right ring softly glows";
 
-        switch (trouble) {
-            case TROUBLE_STONED:
-                    You_feel("more limber.");
-                    Stoned = 0;
-                    flags.botl = 1;
-                    delayed_killer = 0;
-                    break;
-            case TROUBLE_SLIMED:
-                    pline_The("slime disappears.");
-                    Slimed = 0;
-                    flags.botl = 1;
-                    delayed_killer = 0;
-                    break;
-            case TROUBLE_STRANGLED:
-                    if (uamul && uamul->otyp == AMULET_OF_STRANGULATION) {
-                        Your("amulet vanishes!");
-                        useup(uamul);
-                    }
-                    You("can breathe again.");
-                    Strangled = 0;
-                    flags.botl = 1;
-                    break;
-            case TROUBLE_LAVA:
-                    You("are back on solid ground.");
-                    /* teleport should always succeed, but if not,
-                     * just untrap them.
-                     */
-                    if(!safe_teleds(false))
-                        u.utrap = 0;
-                    break;
-            case TROUBLE_STARVING:
-                    losestr(-1);
-                    /* fall into... */
-            case TROUBLE_HUNGRY:
-                    Your("%s feels content.", body_part(STOMACH));
-                    init_uhunger();
-                    flags.botl = 1;
-                    break;
-            case TROUBLE_SICK:
-                    You_feel("better.");
-                    make_sick(0L, (char *) 0, false, SICK_ALL);
-                    break;
-                case TROUBLE_ENGULFED:
-                    mtmp = u.ustuck;
-                    if (is_animal(mtmp->data)) {
-                        You_hear("a %s of divine fear!", growl_sound(mtmp));
-                    } else {
-                        You_feel("a strange distortion in your surroundings!");
-                    }
-                    expels(mtmp, mtmp->data, true);
-                    /* Make the monster who's just barfed you out run! */
-                    monflee(mtmp, rnd(10), true, false);
-                        pline("%s looks rather %s.", Monnam(mtmp),
-                                is_animal(mtmp->data) ? "nauseated" : "shook up");
-                    break;
-            case TROUBLE_HIT:
-                    /* "fix all troubles" will keep trying if hero has
-                       5 or less hit points, so make sure they're always
-                       boosted to be more than that */
-                    You_feel("much better.");
-                    if (Upolyd) {
-                        u.mhmax += rnd(5);
-                        if (u.mhmax <= 5) u.mhmax = 5+1;
-                        u.mh = u.mhmax;
-                    }
-                    if (u.uhpmax < u.ulevel * 5 + 11) u.uhpmax += rnd(5);
-                    if (u.uhpmax <= 5) u.uhpmax = 5+1;
-                    u.uhp = u.uhpmax;
-                    flags.botl = 1;
-                    break;
-            case TROUBLE_COLLAPSING:
-                    ABASE(A_STR) = AMAX(A_STR);
-                    flags.botl = 1;
-                    break;
-            case TROUBLE_STUCK_IN_WALL:
-                    Your("surroundings change.");
-                    /* no control, but works on no-teleport levels */
-                    (void) safe_teleds(false);
-                    break;
-            case TROUBLE_CURSED_LEVITATION:
-                    if (Cursed_obj(uarmf, LEVITATION_BOOTS)) {
-                        otmp = uarmf;
-                    } else if ((otmp = stuck_ring(uleft,RIN_LEVITATION)) !=0) {
-                        if (otmp == uleft) what = leftglow;
-                    } else if ((otmp = stuck_ring(uright,RIN_LEVITATION))!=0) {
-                        if (otmp == uright) what = rightglow;
-                    }
+    switch (trouble) {
+        case TROUBLE_STONED:
+            You_feel("more limber.");
+            Stoned = 0;
+            flags.botl = 1;
+            delayed_killer.method = KM_DIED;
+            break;
+        case TROUBLE_SLIMED:
+            pline_The("slime disappears.");
+            Slimed = 0;
+            flags.botl = 1;
+            delayed_killer.method = KM_DIED;
+            break;
+        case TROUBLE_STRANGLED:
+            if (uamul && uamul->otyp == AMULET_OF_STRANGULATION) {
+                Your("amulet vanishes!");
+                useup(uamul);
+            }
+            You("can breathe again.");
+            Strangled = 0;
+            flags.botl = 1;
+            break;
+        case TROUBLE_LAVA:
+            You("are back on solid ground.");
+            /* teleport should always succeed, but if not,
+             * just untrap them.
+             */
+            if(!safe_teleds(false))
+                u.utrap = 0;
+            break;
+        case TROUBLE_STARVING:
+            losestr(-1);
+            /* fall into... */
+        case TROUBLE_HUNGRY:
+            Your("%s feels content.", body_part(STOMACH));
+            init_uhunger();
+            flags.botl = 1;
+            break;
+        case TROUBLE_SICK:
+            You_feel("better.");
+            make_sick(0L, (char *) 0, false, SICK_ALL);
+            break;
+        case TROUBLE_ENGULFED:
+            mtmp = u.ustuck;
+            if (is_animal(mtmp->data)) {
+                You_hear("a %s of divine fear!", growl_sound(mtmp));
+            } else {
+                You_feel("a strange distortion in your surroundings!");
+            }
+            expels(mtmp, mtmp->data, true);
+            /* Make the monster who's just barfed you out run! */
+            monflee(mtmp, rnd(10), true, false);
+            message_monster(MSG_M_LOOKS_RATHER_NAUSEATED, mtmp);
+            break;
+        case TROUBLE_HIT:
+            /* "fix all troubles" will keep trying if hero has
+               5 or less hit points, so make sure they're always
+               boosted to be more than that */
+            You_feel("much better.");
+            if (Upolyd) {
+                u.mhmax += rnd(5);
+                if (u.mhmax <= 5) u.mhmax = 5+1;
+                u.mh = u.mhmax;
+            }
+            if (u.uhpmax < u.ulevel * 5 + 11) u.uhpmax += rnd(5);
+            if (u.uhpmax <= 5) u.uhpmax = 5+1;
+            u.uhp = u.uhpmax;
+            flags.botl = 1;
+            break;
+        case TROUBLE_COLLAPSING:
+            ABASE(A_STR) = AMAX(A_STR);
+            flags.botl = 1;
+            break;
+        case TROUBLE_STUCK_IN_WALL:
+            Your("surroundings change.");
+            /* no control, but works on no-teleport levels */
+            (void) safe_teleds(false);
+            break;
+        case TROUBLE_CURSED_LEVITATION:
+            if (Cursed_obj(uarmf, LEVITATION_BOOTS)) {
+                otmp = uarmf;
+            } else if ((otmp = stuck_ring(uleft,RIN_LEVITATION)) !=0) {
+                if (otmp == uleft) what = leftglow;
+            } else if ((otmp = stuck_ring(uright,RIN_LEVITATION))!=0) {
+                if (otmp == uright) what = rightglow;
+            }
+            goto decurse;
+        case TROUBLE_UNUSEABLE_HANDS:
+            if (welded(uwep)) {
+                otmp = uwep;
+                goto decurse;
+            }
+            if (Upolyd && nohands(youmonst.data)) {
+                if (!Unchanging) {
+                    Your("shape becomes uncertain.");
+                    rehumanize();  /* "You return to {normal} form." */
+                } else if ((otmp = unchanger()) != 0 && otmp->cursed) {
+                    /* otmp is an amulet of unchanging */
                     goto decurse;
-            case TROUBLE_UNUSEABLE_HANDS:
-                    if (welded(uwep)) {
-                        otmp = uwep;
-                        goto decurse;
-                    }
-                    if (Upolyd && nohands(youmonst.data)) {
-                        if (!Unchanging) {
-                            Your("shape becomes uncertain.");
-                            rehumanize();  /* "You return to {normal} form." */
-                        } else if ((otmp = unchanger()) != 0 && otmp->cursed) {
-                            /* otmp is an amulet of unchanging */
-                            goto decurse;
-                        }
-                    }
-                    if (nohands(youmonst.data) || !freehand())
-                        impossible("fix_worst_trouble: couldn't cure hands.");
-                    break;
-            case TROUBLE_CURSED_BLINDFOLD:
-                    otmp = ublindf;
-                    goto decurse;
-            case TROUBLE_LYCANTHROPE:
-                    you_unwere(true);
-                    break;
-        /*
-         */
-            case TROUBLE_PUNISHED:
-                    Your("chain disappears.");
-                    unpunish();
-                    break;
-            case TROUBLE_FUMBLING:
-                    if (Cursed_obj(uarmg, GAUNTLETS_OF_FUMBLING))
-                        otmp = uarmg;
-                    else if (Cursed_obj(uarmf, FUMBLE_BOOTS))
-                        otmp = uarmf;
-                    goto decurse;
-                    /*NOTREACHED*/
-                    break;
-            case TROUBLE_CURSED_ITEMS:
-                    otmp = worst_cursed_item();
-                    if (otmp == uright) what = rightglow;
-                    else if (otmp == uleft) what = leftglow;
-decurse:
-                    if (!otmp) {
-                        impossible("fix_worst_trouble: nothing to uncurse.");
-                        return;
-                    }
-                    uncurse(otmp);
-                    if (!Blind) {
-                        Your("%s %s.", what ? what :
-                                (const char *)aobjnam(otmp, "softly glow"),
-                             hcolor(NH_AMBER));
-                        otmp->bknown = true;
-                    }
-                    update_inventory();
-                    break;
-            case TROUBLE_POISONED:
-                    if (Hallucination())
-                        pline("There's a tiger in your tank.");
-                    else
-                        You_feel("in good health again.");
-                    for(i=0; i<A_MAX; i++) {
-                        if(ABASE(i) < AMAX(i)) {
-                                ABASE(i) = AMAX(i);
-                                flags.botl = 1;
-                        }
-                    }
-                    (void) encumber_msg();
-                    break;
-            case TROUBLE_BLIND:
-                {
-                    int num_eyes = eyecount(youmonst.data);
-                    const char *eye = body_part(EYE);
-
-                    Your("%s feel%s better.",
-                         (num_eyes == 1) ? eye : makeplural(eye),
-                         (num_eyes == 1) ? "s" : "");
-                    u.ucreamed = 0;
-                    make_blinded(0L,false);
-                    break;
                 }
-            case TROUBLE_WOUNDED_LEGS:
-                    heal_legs();
-                    break;
-            case TROUBLE_STUNNED:
-                    make_stunned(0L,true);
-                    break;
-            case TROUBLE_CONFUSED:
-                    make_confused(0L,true);
-                    break;
-            case TROUBLE_HALLUCINATION:
-                    pline ("Looks like you are back in Kansas.");
-                    (void) make_hallucinated(0L,false,0L);
-                    break;
-            case TROUBLE_SADDLE:
-                    otmp = which_armor(u.usteed, W_SADDLE);
-                    uncurse(otmp);
-                    if (!Blind) {
-                        pline("%s %s %s.",
-                              s_suffix(upstart(y_monnam(u.usteed))),
-                              aobjnam(otmp, "softly glow"),
-                              hcolor(NH_AMBER));
-                        otmp->bknown = true;
-                    }
-                    break;
-        }
+            }
+            if (nohands(youmonst.data) || !freehand())
+                impossible("fix_worst_trouble: couldn't cure hands.");
+            break;
+        case TROUBLE_CURSED_BLINDFOLD:
+            otmp = ublindf;
+            goto decurse;
+        case TROUBLE_LYCANTHROPE:
+            you_unwere(true);
+            break;
+            /*
+            */
+        case TROUBLE_PUNISHED:
+            Your("chain disappears.");
+            unpunish();
+            break;
+        case TROUBLE_FUMBLING:
+            if (Cursed_obj(uarmg, GAUNTLETS_OF_FUMBLING))
+                otmp = uarmg;
+            else if (Cursed_obj(uarmf, FUMBLE_BOOTS))
+                otmp = uarmf;
+            goto decurse;
+            /*NOTREACHED*/
+            break;
+        case TROUBLE_CURSED_ITEMS:
+            otmp = worst_cursed_item();
+            if (otmp == uright) what = rightglow;
+            else if (otmp == uleft) what = leftglow;
+decurse:
+            if (!otmp) {
+                impossible("fix_worst_trouble: nothing to uncurse.");
+                return;
+            }
+            uncurse(otmp);
+            if (!Blind) {
+                Your("%s %s.", what ? what :
+                        (const char *)aobjnam(otmp, "softly glow"),
+                        hcolor(NH_AMBER));
+                otmp->bknown = true;
+            }
+            update_inventory();
+            break;
+        case TROUBLE_POISONED:
+            if (Hallucination())
+                pline("There's a tiger in your tank.");
+            else
+                You_feel("in good health again.");
+            for(i=0; i<A_MAX; i++) {
+                if(ABASE(i) < AMAX(i)) {
+                    ABASE(i) = AMAX(i);
+                    flags.botl = 1;
+                }
+            }
+            (void) encumber_msg();
+            break;
+        case TROUBLE_BLIND:
+            {
+                int num_eyes = eyecount(youmonst.data);
+                const char *eye = body_part(EYE);
+
+                Your("%s feel%s better.",
+                        (num_eyes == 1) ? eye : makeplural(eye),
+                        (num_eyes == 1) ? "s" : "");
+                u.ucreamed = 0;
+                make_blinded(0L,false);
+                break;
+            }
+        case TROUBLE_WOUNDED_LEGS:
+            heal_legs();
+            break;
+        case TROUBLE_STUNNED:
+            make_stunned(0L,true);
+            break;
+        case TROUBLE_CONFUSED:
+            make_confused(0L,true);
+            break;
+        case TROUBLE_HALLUCINATION:
+            pline ("Looks like you are back in Kansas.");
+            (void) make_hallucinated(0L,false,0L);
+            break;
+        case TROUBLE_SADDLE:
+            otmp = which_armor(u.usteed, W_SADDLE);
+            uncurse(otmp);
+            if (!Blind) {
+                message_monster_object(MSG_M_O_SOFTLY_GLOWS_AMBER, u.usteed, otmp);
+                otmp->bknown = true;
+            }
+            break;
+    }
 }
 
 /* "I am sometimes shocked by...  the nuns who never take a bath without
@@ -468,87 +462,81 @@ decurse:
  * bathroom walls, but who is foiled by bathrobes." --Bertrand Russell, 1943
  * Divine wrath, dungeon walls, and armor follow the same principle.
  */
-static void
-god_zaps_you (aligntyp resp_god)
-{
-        if (u.uswallow) {
-            pline("Suddenly a bolt of lightning comes down at you from the heavens!");
-            pline("It strikes %s!", mon_nam(u.ustuck));
-            if (!resists_elec(u.ustuck)) {
-                pline("%s fries to a crisp!", Monnam(u.ustuck));
-                /* Yup, you get experience.  It takes guts to successfully
-                 * pull off this trick on your god, anyway.
-                 */
-                xkilled(u.ustuck, 0);
-            } else
-                pline("%s seems unaffected.", Monnam(u.ustuck));
-        } else {
-            pline("Suddenly, a bolt of lightning strikes you!");
-            if (Reflecting) {
-                shieldeff(u.ux, u.uy);
-                if (Blind)
-                    pline("For some reason you're unaffected.");
-                else
-                    (void) ureflects("%s reflects from your %s.", "It");
-            } else if (Shock_resistance) {
-                shieldeff(u.ux, u.uy);
-                pline("It seems not to affect you.");
-            } else
-                fry_by_god(resp_god);
-        }
-
-        pline("%s is not deterred...", align_gname(resp_god));
-        if (u.uswallow) {
-            pline("A wide-angle disintegration beam aimed at you hits %s!",
-                        mon_nam(u.ustuck));
-            if (!resists_disint(u.ustuck)) {
-                pline("%s fries to a crisp!", Monnam(u.ustuck));
-                xkilled(u.ustuck, 2); /* no corpse */
-            } else
-                pline("%s seems unaffected.", Monnam(u.ustuck));
-        } else {
-            pline("A wide-angle disintegration beam hits you!");
-
-            /* disintegrate shield and body armor before disintegrating
-             * the impudent mortal, like black dragon breath -3.
+static void god_zaps_you (aligntyp resp_god) {
+    if (u.uswallow) {
+        pline("Suddenly a bolt of lightning comes down at you from the heavens!");
+        message_monster(MSG_IT_STRIKES_M, u.ustuck);
+        if (!resists_elec(u.ustuck)) {
+            message_monster(MSG_M_FRIES_TO_CRISP, u.ustuck);
+            /* Yup, you get experience.  It takes guts to successfully
+             * pull off this trick on your god, anyway.
              */
-            if (uarms && !(EReflecting & W_ARMS) &&
-                        !(EDisint_resistance & W_ARMS))
-                (void) destroy_arm(uarms);
-            if (uarmc && !(EReflecting & W_ARMC) &&
-                        !(EDisint_resistance & W_ARMC))
-                (void) destroy_arm(uarmc);
-            if (uarm && !(EReflecting & W_ARM) &&
-                        !(EDisint_resistance & W_ARM) && !uarmc)
-                (void) destroy_arm(uarm);
-            if (uarmu && !uarm && !uarmc) (void) destroy_arm(uarmu);
-            if (!Disint_resistance)
-                fry_by_god(resp_god);
-            else {
-                You("bask in its %s glow for a minute...", NH_BLACK);
-                godvoice(resp_god, "I believe it not!");
-            }
-            if (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)) {
-                /* one more try for high altars */
-                verbalize("Thou cannot escape my wrath, mortal!");
-                summon_minion(resp_god, false);
-                summon_minion(resp_god, false);
-                summon_minion(resp_god, false);
-                verbalize("Destroy %s, my servants!", uhim());
-            }
+            xkilled(u.ustuck, 0);
+        } else {
+            message_monster(MSG_M_SEEMS_UNAFFECTED, u.ustuck);
         }
+    } else {
+        pline("Suddenly, a bolt of lightning strikes you!");
+        if (Reflecting) {
+            shieldeff(u.ux, u.uy);
+            if (Blind)
+                pline("For some reason you're unaffected.");
+            else
+                (void) ureflects("%s reflects from your %s.", "It");
+        } else if (Shock_resistance) {
+            shieldeff(u.ux, u.uy);
+            pline("It seems not to affect you.");
+        } else
+            fry_by_god(resp_god);
+    }
+
+    pline("%s is not deterred...", align_gname(resp_god));
+    if (u.uswallow) {
+        message_monster(MSG_WIDE_ANGLE_DISINTEGRATION_BEAM_HITS_M, u.ustuck);
+        if (!resists_disint(u.ustuck)) {
+            message_monster(MSG_M_FRIES_TO_CRISP, u.ustuck);
+            xkilled(u.ustuck, 2); /* no corpse */
+        } else {
+            message_monster(MSG_M_SEEMS_UNAFFECTED, u.ustuck);
+        }
+    } else {
+        pline("A wide-angle disintegration beam hits you!");
+
+        /* disintegrate shield and body armor before disintegrating
+         * the impudent mortal, like black dragon breath -3.
+         */
+        if (uarms && !(EReflecting & W_ARMS) && !(EDisint_resistance & W_ARMS))
+            destroy_arm(uarms);
+        if (uarmc && !(EReflecting & W_ARMC) && !(EDisint_resistance & W_ARMC))
+            destroy_arm(uarmc);
+        if (uarm && !(EReflecting & W_ARM) && !(EDisint_resistance & W_ARM) && !uarmc)
+            destroy_arm(uarm);
+        if (uarmu && !uarm && !uarmc)
+            destroy_arm(uarmu);
+        if (!Disint_resistance) {
+            fry_by_god(resp_god);
+        } else {
+            You("bask in its %s glow for a minute...", NH_BLACK);
+            godvoice(resp_god, "I believe it not!");
+        }
+        if (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)) {
+            /* one more try for high altars */
+            verbalize("Thou cannot escape my wrath, mortal!");
+            summon_minion(resp_god, false);
+            summon_minion(resp_god, false);
+            summon_minion(resp_god, false);
+            verbalize("Destroy %s, my servants!", uhim());
+        }
+    }
 }
 
-static void
-fry_by_god (aligntyp resp_god)
-{
-        char killerbuf[64];
+static void fry_by_god (aligntyp resp_god) {
+    char killerbuf[64];
 
-        You("fry to a crisp.");
-        killer_format = KILLED_BY;
-        sprintf(killerbuf, "the wrath of %s", align_gname(resp_god));
-        killer = killerbuf;
-        done(DIED);
+    You("fry to a crisp.");
+    sprintf(killerbuf, "the wrath of %s", align_gname(resp_god));
+    fprintf(stderr, "TODO: killer = %s\n", killerbuf);
+    done(DIED);
 }
 
 static void
@@ -624,11 +612,11 @@ at_your_feet (const char *str)
         if (Blind) str = Something;
         if (u.uswallow) {
             /* barrier between you and the floor */
-            pline("%s %s into %s %s.", str, vtense(str, "drop"),
-                  s_suffix(mon_nam(u.ustuck)), mbodypart(u.ustuck, STOMACH));
+            pline("%s %s into %s %s.", str, "TODO: vtense(str, \"drop\")",
+                  "TODO: s_suffix(mon_nam(u.ustuck))", mbodypart(u.ustuck, STOMACH));
         } else {
             pline("%s %s %s your %s!", str,
-                  Blind ? "lands" : vtense(str, "appear"),
+                  Blind ? "lands" : "TODO: vtense(str, \"appear\")",
                   Levitation ? "beneath" : "at",
                   makeplural(body_part(FOOT)));
         }
@@ -854,8 +842,7 @@ pleased (aligntyp g_align)
 
                 *repair_buf = '\0';
                 if (uwep->oeroded || uwep->oeroded2)
-                    sprintf(repair_buf, " and %s now as good as new",
-                            otense(uwep, "are"));
+                    sprintf(repair_buf, " and %s now as good as new", "TODO: otense(uwep, \"are\")");
 
                 if (uwep->cursed) {
                     uncurse(uwep);
@@ -1189,8 +1176,9 @@ dosacrifice (void)
                     demonless_msg = "blood coagulates";
                 }
                 if ((pm = dlord(altaralign)) != NON_PM &&
-                    (dmon = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS))) {
-                    You("have summoned %s!", a_monnam(dmon));
+                    (dmon = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS)))
+                {
+                    message_monster(MSG_YOU_HAVE_SUMMONED_M, dmon);
                     if (sgn(u.ualign.type) == sgn(dmon->data->maligntyp))
                         dmon->mpeaceful = true;
                     You("are terrified, and unable to move.");
@@ -1594,7 +1582,7 @@ prayer_done (void)           /* M. Stephenson (1.0.3b) */
         You_feel("like you are falling apart.");
         /* KMH -- Gods have mastery over unchanging */
         rehumanize();
-        losehp(rnd(20), "residual undead turning effect", KILLED_BY_AN);
+        losehp(rnd(20), killed_by_const(KM_RESIDUAL_UNDEAD_TURNING));
         exercise(A_CON, false);
         return(1);
     }

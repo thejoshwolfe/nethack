@@ -8,6 +8,37 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                    You("have summoned %s!", a_monnam(dmon));
+                    message_monster(MSG_YOU_HAVE_SUMMONED_M, dmon);
+
+            pline("%s seems unaffected.", Monnam(u.ustuck));
+            message_monster(MSG_M_SEEMS_UNAFFECTED, u.ustuck);
+
+            pline("%s fries to a crisp!", Monnam(u.ustuck));
+            message_monster(MSG_M_FRIES_TO_CRISP, u.ustuck);
+
+        pline("A wide-angle disintegration beam aimed at you hits %s!", mon_nam(u.ustuck));
+        message_monster(MSG_WIDE_ANGLE_DISINTEGRATION_BEAM_HITS_M, u.ustuck);
+
+            pline("%s seems unaffected.", Monnam(u.ustuck));
+            message_monster(MSG_M_SEEMS_UNAFFECTED, u.ustuck);
+
+            pline("%s fries to a crisp!", Monnam(u.ustuck));
+            message_monster(MSG_M_FRIES_TO_CRISP, u.ustuck);
+
+        pline("It strikes %s!", mon_nam(u.ustuck));
+        message_monster(MSG_IT_STRIKES_M, u.ustuck);
+
+                pline("%s %s %s.",
+                        s_suffix(upstart(y_monnam(u.usteed))),
+                        aobjnam(otmp, "softly glow"),
+                        hcolor(NH_AMBER));
+                message_monster_object(MSG_M_O_SOFTLY_GLOWS_AMBER, u.usteed, otmp);
+
+            pline("%s looks rather %s.", Monnam(mtmp),
+                    is_animal(mtmp->data) ? "nauseated" : "shook up");
+            message_monster(MSG_M_LOOKS_RATHER_NAUSEATED, mtmp);
+
                 pline("%s multiplies%s!", Monnam(mon), reason);
                 message_monster(MSG_M_MULTIPLIES, mon);
 

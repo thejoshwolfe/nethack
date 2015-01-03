@@ -1,6 +1,8 @@
 #ifndef PRAY_H
 #define PRAY_H
 
+#include "align.h"
+
 #include <stdbool.h>
 
 int dosacrifice(void);
