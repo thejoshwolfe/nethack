@@ -6,6 +6,12 @@
 #include "edog.h"
 #include "youprop.h"
 #include "flag.h"
+#include "vision.h"
+#include "end.h"
+#include "do_name.h"
+#include "worn.h"
+#include "polyself.h"
+#include "objnam.h"
 
 #include <stdarg.h>
 
@@ -32,13 +38,13 @@ void pline(const char * line, ...) {
 void plines(const char *line) {
     if (!line || !*line) return;
     if (!iflags.window_inited) {
-        raw_print(line);
+        fprintf(stderr, "%s\n", line);
         return;
     }
     if (no_repeat && !strcmp(line, toplines))
         return;
-    if (vision_full_recalc) vision_recalc(0);
-    if (u.ux) flush_screen(1);              /* %% */
+    if (vision_full_recalc)
+        vision_recalc(0);
     putstr(WIN_MESSAGE, 0, line);
 }
 
@@ -162,16 +168,15 @@ void raw_printf (const char * line, ...) {
 }
 
 static void vraw_printf(const char *line, va_list the_args) {
+    /* Do NOT use va_start and va_end in here... see above */
 
-/* Do NOT use va_start and va_end in here... see above */
-
-        if(!index(line, '%'))
-            raw_print(line);
-        else {
-            char pbuf[BUFSZ];
-            vsprintf(pbuf,line,the_args);
-            raw_print(pbuf);
-        }
+    if (!index(line, '%')) {
+        fprintf(stderr, "%s\n", line);
+    } else {
+        char pbuf[BUFSZ];
+        vsprintf(pbuf,line,the_args);
+        fprintf(stderr, "%s\n", pbuf);
+    }
 }
 
 
@@ -181,11 +186,6 @@ void impossible (const char * s, ...) {
     if (program_state.in_impossible)
         panic("impossible called impossible");
     program_state.in_impossible = 1;
-    {
-        char pbuf[BUFSZ];
-        vsprintf(pbuf,s,the_args);
-        paniclog("impossible", pbuf);
-    }
     vpline(s,the_args);
     pline("Program in disorder - perhaps you'd better #quit.");
     program_state.in_impossible = 0;
@@ -203,70 +203,71 @@ const char * align_str (aligntyp alignment) {
 }
 
 void mstatusline (struct monst *mtmp) {
-        aligntyp alignment;
-        char info[BUFSZ], monnambuf[BUFSZ];
+    aligntyp alignment;
+    char info[BUFSZ], monnambuf[BUFSZ];
 
-        if (mtmp->ispriest || mtmp->data == &mons[PM_ALIGNED_PRIEST]
-                                || mtmp->data == &mons[PM_ANGEL])
-                alignment = EPRI(mtmp)->shralign;
-        else
-                alignment = mtmp->data->maligntyp;
-        alignment = (alignment > 0) ? A_LAWFUL :
-                (alignment < 0) ? A_CHAOTIC :
-                A_NEUTRAL;
+    if (mtmp->ispriest || mtmp->data == &mons[PM_ALIGNED_PRIEST]
+            || mtmp->data == &mons[PM_ANGEL])
+        alignment = EPRI(mtmp)->shralign;
+    else
+        alignment = mtmp->data->maligntyp;
+    alignment = (alignment > 0) ? A_LAWFUL :
+        (alignment < 0) ? A_CHAOTIC :
+        A_NEUTRAL;
 
-        info[0] = 0;
-        if (mtmp->mtame) {        strcat(info, ", tame");
-            if (wizard) {
-                sprintf(eos(info), " (%d", mtmp->mtame);
-                if (!mtmp->isminion)
-                    sprintf(eos(info), "; hungry %ld; apport %d",
+    info[0] = 0;
+    if (mtmp->mtame) {        strcat(info, ", tame");
+        if (wizard) {
+            sprintf(eos(info), " (%d", mtmp->mtame);
+            if (!mtmp->isminion)
+                sprintf(eos(info), "; hungry %ld; apport %d",
                         EDOG(mtmp)->hungrytime, EDOG(mtmp)->apport);
-                strcat(info, ")");
-            }
+            strcat(info, ")");
         }
-        else if (mtmp->mpeaceful) strcat(info, ", peaceful");
-        if (mtmp->meating)        strcat(info, ", eating");
-        if (mtmp->mcan)           strcat(info, ", cancelled");
-        if (mtmp->mconf)          strcat(info, ", confused");
-        if (mtmp->mblinded || !mtmp->mcansee)
-                                  strcat(info, ", blind");
-        if (mtmp->mstun)          strcat(info, ", stunned");
-        if (mtmp->msleeping)      strcat(info, ", asleep");
-        else if (mtmp->mfrozen || !mtmp->mcanmove)
-                                  strcat(info, ", can't move");
-                                  /* [arbitrary reason why it isn't moving] */
-        else if (mtmp->mstrategy & STRAT_WAITMASK)
-                                  strcat(info, ", meditating");
-        else if (mtmp->mflee)     strcat(info, ", scared");
-        if (mtmp->mtrapped)       strcat(info, ", trapped");
-        if (mtmp->mspeed)         strcat(info,
-                                        mtmp->mspeed == MFAST ? ", fast" :
-                                        mtmp->mspeed == MSLOW ? ", slow" :
-                                        ", ???? speed");
-        if (mtmp->mundetected)    strcat(info, ", concealed");
-        if (mtmp->minvis)         strcat(info, ", invisible");
-        if (mtmp == u.ustuck)     strcat(info,
-                        (sticks(youmonst.data)) ? ", held by you" :
-                                u.uswallow ? (is_animal(u.ustuck->data) ?
-                                ", swallowed you" :
-                                ", engulfed you") :
-                                ", holding you");
-        if (mtmp == u.usteed)     strcat(info, ", carrying you");
+    }
+    else if (mtmp->mpeaceful) strcat(info, ", peaceful");
+    if (mtmp->meating)        strcat(info, ", eating");
+    if (mtmp->mcan)           strcat(info, ", cancelled");
+    if (mtmp->mconf)          strcat(info, ", confused");
+    if (mtmp->mblinded || !mtmp->mcansee)
+        strcat(info, ", blind");
+    if (mtmp->mstun)          strcat(info, ", stunned");
+    if (mtmp->msleeping)      strcat(info, ", asleep");
+    else if (mtmp->mfrozen || !mtmp->mcanmove)
+        strcat(info, ", can't move");
+    /* [arbitrary reason why it isn't moving] */
+    else if (mtmp->mstrategy & STRAT_WAITMASK)
+        strcat(info, ", meditating");
+    else if (mtmp->mflee)     strcat(info, ", scared");
+    if (mtmp->mtrapped)       strcat(info, ", trapped");
+    if (mtmp->mspeed)         strcat(info,
+            mtmp->mspeed == MFAST ? ", fast" :
+            mtmp->mspeed == MSLOW ? ", slow" :
+            ", ???? speed");
+    if (mtmp->mundetected)    strcat(info, ", concealed");
+    if (mtmp->minvis)         strcat(info, ", invisible");
+    if (mtmp == u.ustuck)     strcat(info,
+            (sticks(youmonst.data)) ? ", held by you" :
+            u.uswallow ? (is_animal(u.ustuck->data) ?
+                ", swallowed you" :
+                ", engulfed you") :
+            ", holding you");
+    if (mtmp == u.usteed)     strcat(info, ", carrying you");
 
-        /* avoid "Status of the invisible newt ..., invisible" */
-        /* and unlike a normal mon_nam, use "saddled" even if it has a name */
-        strcpy(monnambuf, x_monnam(mtmp, ARTICLE_THE, (char *)0,
-            (SUPPRESS_IT|SUPPRESS_INVISIBLE), false));
+    /* avoid "Status of the invisible newt ..., invisible" */
+    /* and unlike a normal mon_nam, use "saddled" even if it has a name */
+    char name[BUFSZ];
+    x_monnam(name, BUFSZ, mtmp, ARTICLE_THE, NULL, (SUPPRESS_IT|SUPPRESS_INVISIBLE), false);
+    strcpy(monnambuf, name);
 
-        pline("Status of %s (%s):  Level %d  HP %d(%d)  AC %d%s.",
-                monnambuf,
-                align_str(alignment),
-                mtmp->m_lev,
-                mtmp->mhp,
-                mtmp->mhpmax,
-                find_mac(mtmp),
-                info);
+    pline("Status of %s (%s):  Level %d  HP %d(%d)  AC %d%s.",
+            monnambuf,
+            align_str(alignment),
+            mtmp->m_lev,
+            mtmp->mhp,
+            mtmp->mhpmax,
+            find_mac(mtmp),
+            info);
 }
 
 void
@@ -319,7 +320,9 @@ ustatusline (void)
                 strcat(info, ", holding ");
             else
                 strcat(info, ", held by ");
-            strcat(info, mon_nam(u.ustuck));
+            char name[BUFSZ];
+            mon_nam(name, BUFSZ, u.ustuck);
+            strcat(info, name);
         }
 
         pline("Status of %s (%s%s):  Level %d  HP %d(%d)  AC %d%s.",

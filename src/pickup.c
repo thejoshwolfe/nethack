@@ -6,30 +6,8 @@
 #include "pickup.h"
 #include "hack.h"
 #include "display.h"
-#include "winprocs.h"
 #include "timeout.h"
-
-static void simple_look(struct obj *,bool);
-static bool query_classes(char *,bool *,bool *,
-                const char *,struct obj *,bool,bool,int *);
-static void check_here(bool);
-static bool n_or_more(struct obj *);
-static bool all_but_uchain(struct obj *);
-static int autopick(struct obj*, int, menu_item **);
-static int count_categories(struct obj *,int);
-static long carry_count(struct obj *,struct obj *,long,bool,int *,int *);
-static int lift_object(struct obj *,struct obj *,long *,bool);
-static bool mbag_explodes(struct obj *,int);
-static int in_container(struct obj *);
-static int ck_bag(struct obj *);
-static int out_container(struct obj *);
-static long mbag_item_gone(int,struct obj *);
-static void observe_quantum_cat(struct obj *);
-static int menu_loot(int, struct obj *, bool);
-static int in_or_out_menu(const char *,struct obj *, bool, bool);
-static int container_at(int, int, bool);
-static bool able_to_loot(int, int);
-static bool mon_beside(int, int);
+#include "everything.h"
 
 /* define for query_objlist() and autopickup() */
 #define FOLLOW(curr, flags) \
@@ -62,7 +40,7 @@ static char valid_menu_classes[MAXOCLASSES + 2];
 static struct obj *current_container;
 
 /* query_objlist callback: return true if obj's count is >= reference value */
-static bool n_or_more (struct obj *obj) {
+static bool n_or_more (const struct obj *obj) {
     if (obj == uchain) return false;
     return (obj->quan >= val_for_n_or_more);
 }
@@ -129,97 +107,96 @@ int collect_obj_classes (char ilets[], struct obj *otmp, bool here,
  *      "?/a" or "a?/" or "/a?",&c picks all '?' even though no '/'
  *          (ie, treated as if it had just been "?a").
  */
-static bool 
-query_classes (char oclasses[], bool *one_at_a_time, bool *everything, const char *action, struct obj *objs, bool here, bool incl_gold, int *menu_on_demand)
+static bool query_classes (char oclasses[], bool *one_at_a_time,
+        bool *everything, const char *action, struct obj *objs, bool here,
+        bool incl_gold, int *menu_on_demand)
 {
-        char ilets[20], inbuf[BUFSZ];
-        int iletct, oclassct;
-        bool not_everything;
-        char qbuf[QBUFSZ];
-        bool m_seen;
-        int itemcount;
+    char ilets[20], inbuf[BUFSZ];
+    int iletct, oclassct;
+    bool not_everything;
+    char qbuf[QBUFSZ];
+    bool m_seen;
+    int itemcount;
 
-        oclasses[oclassct = 0] = '\0';
-        *one_at_a_time = *everything = m_seen = false;
-        iletct = collect_obj_classes(ilets, objs, here,
-                                     incl_gold,
-                                     (bool (*)(struct obj *)) 0, &itemcount);
-        if (iletct == 0) {
-                return false;
-        } else if (iletct == 1) {
-                oclasses[0] = def_char_to_objclass(ilets[0]);
-                oclasses[1] = '\0';
-                if (itemcount && menu_on_demand) {
-                        ilets[iletct++] = 'm';
-                        *menu_on_demand = 0;
-                        ilets[iletct] = '\0';
-                }
-        } else  {       /* more than one choice available */
-                const char *where = 0;
-                char sym, oc_of_sym, *p;
-                /* additional choices */
-                ilets[iletct++] = ' ';
-                ilets[iletct++] = 'a';
-                ilets[iletct++] = 'A';
-                ilets[iletct++] = (objs == invent ? 'i' : ':');
-                if (menu_on_demand) {
-                        ilets[iletct++] = 'm';
-                        *menu_on_demand = 0;
-                }
-                ilets[iletct] = '\0';
-ask_again:
-                oclasses[oclassct = 0] = '\0';
-                *one_at_a_time = *everything = false;
-                not_everything = false;
-                sprintf(qbuf,"What kinds of thing do you want to %s? [%s]",
-                        action, ilets);
-                getlin(qbuf,inbuf);
-                if (*inbuf == '\033') return false;
-
-                for (p = inbuf; (sym = *p++); ) {
-                    /* new A function (selective all) added by GAN 01/09/87 */
-                    if (sym == ' ') continue;
-                    else if (sym == 'A') *one_at_a_time = true;
-                    else if (sym == 'a') *everything = true;
-                    else if (sym == ':') {
-                        simple_look(objs, here);  /* dumb if objs==invent */
-                        goto ask_again;
-                    } else if (sym == 'i') {
-                        (void) display_inventory((char *)0, true);
-                        goto ask_again;
-                    } else if (sym == 'm') {
-                        m_seen = true;
-                    } else {
-                        oc_of_sym = def_char_to_objclass(sym);
-                        if (index(ilets,sym)) {
-                            add_valid_menu_class(oc_of_sym);
-                            oclasses[oclassct++] = oc_of_sym;
-                            oclasses[oclassct] = '\0';
-                        } else {
-                            if (!where)
-                                where = !strcmp(action,"pick up")  ? "here" :
-                                        !strcmp(action,"take out") ?
-                                                            "inside" : "";
-                            if (*where)
-                                There("are no %c's %s.", sym, where);
-                            else
-                                You("have no %c's.", sym);
-                            not_everything = true;
-                        }
-                    }
-                }
-                if (m_seen && menu_on_demand) {
-                        *menu_on_demand = (*everything || !oclassct) ? -2 : -3;
-                        return false;
-                }
-                if (!oclassct && (!*everything || not_everything)) {
-                    /* didn't pick anything,
-                       or tried to pick something that's not present */
-                    *one_at_a_time = true;      /* force 'A' */
-                    *everything = false;        /* inhibit 'a' */
-                }
+    oclasses[oclassct = 0] = '\0';
+    *one_at_a_time = *everything = m_seen = false;
+    iletct = collect_obj_classes(ilets, objs, here, incl_gold, NULL, &itemcount);
+    if (iletct == 0) {
+        return false;
+    } else if (iletct == 1) {
+        oclasses[0] = def_char_to_objclass(ilets[0]);
+        oclasses[1] = '\0';
+        if (itemcount && menu_on_demand) {
+            ilets[iletct++] = 'm';
+            *menu_on_demand = 0;
+            ilets[iletct] = '\0';
         }
-        return true;
+    } else  {       /* more than one choice available */
+        const char *where = 0;
+        char sym, oc_of_sym, *p;
+        /* additional choices */
+        ilets[iletct++] = ' ';
+        ilets[iletct++] = 'a';
+        ilets[iletct++] = 'A';
+        ilets[iletct++] = (objs == invent ? 'i' : ':');
+        if (menu_on_demand) {
+            ilets[iletct++] = 'm';
+            *menu_on_demand = 0;
+        }
+        ilets[iletct] = '\0';
+ask_again:
+        oclasses[oclassct = 0] = '\0';
+        *one_at_a_time = *everything = false;
+        not_everything = false;
+        sprintf(qbuf,"What kinds of thing do you want to %s? [%s]",
+                action, ilets);
+        getlin(qbuf,inbuf);
+        if (*inbuf == '\033') return false;
+
+        for (p = inbuf; (sym = *p++); ) {
+            /* new A function (selective all) added by GAN 01/09/87 */
+            if (sym == ' ') continue;
+            else if (sym == 'A') *one_at_a_time = true;
+            else if (sym == 'a') *everything = true;
+            else if (sym == ':') {
+                simple_look(objs, here);  /* dumb if objs==invent */
+                goto ask_again;
+            } else if (sym == 'i') {
+                (void) display_inventory((char *)0, true);
+                goto ask_again;
+            } else if (sym == 'm') {
+                m_seen = true;
+            } else {
+                oc_of_sym = def_char_to_objclass(sym);
+                if (index(ilets,sym)) {
+                    add_valid_menu_class(oc_of_sym);
+                    oclasses[oclassct++] = oc_of_sym;
+                    oclasses[oclassct] = '\0';
+                } else {
+                    if (!where)
+                        where = !strcmp(action,"pick up")  ? "here" :
+                            !strcmp(action,"take out") ?
+                            "inside" : "";
+                    if (*where)
+                        There("are no %c's %s.", sym, where);
+                    else
+                        You("have no %c's.", sym);
+                    not_everything = true;
+                }
+            }
+        }
+        if (m_seen && menu_on_demand) {
+            *menu_on_demand = (*everything || !oclassct) ? -2 : -3;
+            return false;
+        }
+        if (!oclassct && (!*everything || not_everything)) {
+            /* didn't pick anything,
+               or tried to pick something that's not present */
+            *one_at_a_time = true;      /* force 'A' */
+            *everything = false;        /* inhibit 'a' */
+        }
+    }
+    return true;
 }
 
 /* look at the objects at our location, unless there are too many of them */
@@ -256,7 +233,7 @@ void add_valid_menu_class (int c) {
 }
 
 /* query_objlist callback: return true if not uchain */
-static bool all_but_uchain (struct obj *obj) {
+static bool all_but_uchain (const struct obj *obj) {
     return (obj != uchain);
 }
 
@@ -266,20 +243,22 @@ bool allow_all (const struct obj *obj) {
 }
 
 bool allow_category (const struct obj *obj) {
-    if (Role_if(PM_PRIEST)) obj->bknown = true;
-    if (((index(valid_menu_classes,'u') != (char *)0) && obj->unpaid) ||
-        (index(valid_menu_classes, obj->oclass) != (char *)0))
+    struct obj *wtf_hax = (struct obj *)(void *) obj;
+    if (Role_if(PM_PRIEST)) wtf_hax->bknown = true;
+
+    if (((index(valid_menu_classes,'u') != NULL) && obj->unpaid) ||
+        (index(valid_menu_classes, obj->oclass) != NULL))
         return true;
-    else if (((index(valid_menu_classes,'U') != (char *)0) &&
+    else if (((index(valid_menu_classes,'U') != NULL) &&
         (obj->oclass != COIN_CLASS && obj->bknown && !obj->blessed && !obj->cursed)))
         return true;
-    else if (((index(valid_menu_classes,'B') != (char *)0) &&
+    else if (((index(valid_menu_classes,'B') != NULL) &&
         (obj->oclass != COIN_CLASS && obj->bknown && obj->blessed)))
         return true;
-    else if (((index(valid_menu_classes,'C') != (char *)0) &&
+    else if (((index(valid_menu_classes,'C') != NULL) &&
         (obj->oclass != COIN_CLASS && obj->bknown && obj->cursed)))
         return true;
-    else if (((index(valid_menu_classes,'X') != (char *)0) &&
+    else if (((index(valid_menu_classes,'X') != NULL) &&
         (obj->oclass != COIN_CLASS && !obj->bknown)))
         return true;
     else
@@ -294,6 +273,19 @@ bool is_worn_by_type (const struct obj *otmp) {
 }
 
 /*
+ * Pick from the given list using flags.pickup_types.  Return the number
+ * of items picked (not counts).  Create an array that returns pointers
+ * and counts of the items to be picked up.  If the number of items
+ * picked is zero, the pickup list is left alone.  The caller of this
+ * function must free the pickup list.
+ */
+static int autopick(struct obj *olist, int follow, menu_item **pick_list) {
+    return 0;
+}
+
+
+
+/*
  * Have the hero pick things from the ground
  * or a monster's inventory if swallowed.
  *
@@ -305,230 +297,216 @@ bool is_worn_by_type (const struct obj *otmp) {
  * Returns 1 if tried to pick something up, whether
  * or not it succeeded.
  */
-int
-pickup (
-    int what            /* should be a long */
-)
-{
-        int i, n, res, count, n_tried = 0, n_picked = 0;
-        menu_item *pick_list = (menu_item *) 0;
-        bool autopickup = what > 0;
-        struct obj *objchain;
-        int traverse_how;
+// int what            /* should be a long */
+int pickup ( int what) {
+    int i, n, res, count, n_tried = 0, n_picked = 0;
+    menu_item *pick_list = NULL;
+    bool autopickup = what > 0;
+    struct obj *objchain;
+    int traverse_how;
 
-        if (what < 0)           /* pick N of something */
-            count = -what;
-        else                    /* pick anything */
-            count = 0;
+    if (what < 0)           /* pick N of something */
+        count = -what;
+    else                    /* pick anything */
+        count = 0;
 
-        if (!u.uswallow) {
-                struct trap *ttmp = t_at(u.ux, u.uy);
-                /* no auto-pick if no-pick move, nothing there, or in a pool */
-                if (autopickup && (flags.nopick || !OBJ_AT(u.ux, u.uy) ||
-                        (is_pool(u.ux, u.uy) && !Underwater) || is_lava(u.ux, u.uy))) {
-                        read_engr_at(u.ux, u.uy);
-                        return (0);
-                }
-
-                /* no pickup if levitating & not on air or water level */
-                if (!can_reach_floor()) {
-                    if ((multi && !flags.run) || autopickup)
-                        read_engr_at(u.ux, u.uy);
-                    return (0);
-                }
-                if (ttmp && ttmp->tseen) {
-                    /* Allow pickup from holes and trap doors that you escaped
-                     * from because that stuff is teetering on the edge just
-                     * like you, but not pits, because there is an elevation
-                     * discrepancy with stuff in pits.
-                     */
-                    if ((ttmp->ttyp == PIT || ttmp->ttyp == SPIKED_PIT) &&
-                        (!u.utrap || (u.utrap && u.utraptype != TT_PIT))) {
-                        read_engr_at(u.ux, u.uy);
-                        return(0);
-                    }
-                }
-                /* multi && !flags.run means they are in the middle of some other
-                 * action, or possibly paralyzed, sleeping, etc.... and they just
-                 * teleported onto the object.  They shouldn't pick it up.
-                 */
-                if ((multi && !flags.run) || autopickup) {
-                    check_here(false);
-                    return (0);
-                }
-                if (notake(youmonst.data)) {
-                    if (!autopickup)
-                        You("are physically incapable of picking anything up.");
-                    else
-                        check_here(false);
-                    return (0);
-                }
-
-                /* if there's anything here, stop running */
-                if (OBJ_AT(u.ux,u.uy) && flags.run && flags.run != 8 && !flags.nopick) nomul(0);
+    if (!u.uswallow) {
+        struct trap *ttmp = t_at(u.ux, u.uy);
+        /* no auto-pick if no-pick move, nothing there, or in a pool */
+        if (autopickup && (flags.nopick || !OBJ_AT(u.ux, u.uy) ||
+                    (is_pool(u.ux, u.uy) && !Underwater) || is_lava(u.ux, u.uy)))
+        {
+            read_engr_at(u.ux, u.uy);
+            return (0);
         }
 
-        add_valid_menu_class(0);        /* reset */
-        if (!u.uswallow) {
-                objchain = level.objects[u.ux][u.uy];
-                traverse_how = BY_NEXTHERE;
-        } else {
-                objchain = u.ustuck->minvent;
-                traverse_how = 0;       /* nobj */
+        /* no pickup if levitating & not on air or water level */
+        if (!can_reach_floor()) {
+            if ((multi && !flags.run) || autopickup)
+                read_engr_at(u.ux, u.uy);
+            return (0);
         }
-        /*
-         * Start the actual pickup process.  This is split into two main
-         * sections, the newer menu and the older "traditional" methods.
-         * Automatic pickup has been split into its own menu-style routine
-         * to make things less confusing.
+        if (ttmp && ttmp->tseen) {
+            /* Allow pickup from holes and trap doors that you escaped
+             * from because that stuff is teetering on the edge just
+             * like you, but not pits, because there is an elevation
+             * discrepancy with stuff in pits.
+             */
+            if ((ttmp->ttyp == PIT || ttmp->ttyp == SPIKED_PIT) &&
+                    (!u.utrap || (u.utrap && u.utraptype != TT_PIT))) {
+                read_engr_at(u.ux, u.uy);
+                return(0);
+            }
+        }
+        /* multi && !flags.run means they are in the middle of some other
+         * action, or possibly paralyzed, sleeping, etc.... and they just
+         * teleported onto the object.  They shouldn't pick it up.
          */
-        if (autopickup) {
-            n = autopick(objchain, traverse_how, &pick_list);
-            goto menu_pickup;
+        if ((multi && !flags.run) || autopickup) {
+            check_here(false);
+            return (0);
+        }
+        if (notake(youmonst.data)) {
+            if (!autopickup)
+                You("are physically incapable of picking anything up.");
+            else
+                check_here(false);
+            return (0);
         }
 
-        if (flags.menu_style != MENU_TRADITIONAL || iflags.menu_requested) {
+        /* if there's anything here, stop running */
+        if (OBJ_AT(u.ux,u.uy) && flags.run && flags.run != 8 && !flags.nopick) nomul(0);
+    }
 
-            /* use menus exclusively */
-            if (count) {        /* looking for N of something */
-                char buf[QBUFSZ];
-                sprintf(buf, "Pick %d of what?", count);
-                val_for_n_or_more = count;      /* set up callback selector */
-                n = query_objlist(buf, objchain,
-                            traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT,
-                            &pick_list, PICK_ONE, n_or_more);
-                /* correct counts, if any given */
-                for (i = 0; i < n; i++)
-                    pick_list[i].count = count;
-            } else {
-                n = query_objlist("Pick up what?", objchain,
-                        traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT|FEEL_COCKATRICE,
-                        &pick_list, PICK_ANY, all_but_uchain);
-            }
-menu_pickup:
-            n_tried = n;
-            for (n_picked = i = 0 ; i < n; i++) {
-                res = pickup_object(pick_list[i].item.a_obj,pick_list[i].count,
-                                        false);
-                if (res < 0) break;     /* can't continue */
-                n_picked += res;
-            }
-            if (pick_list) free((void *)pick_list);
+    add_valid_menu_class(0);        /* reset */
+    if (!u.uswallow) {
+        objchain = level.objects[u.ux][u.uy];
+        traverse_how = BY_NEXTHERE;
+    } else {
+        objchain = u.ustuck->minvent;
+        traverse_how = 0;       /* nobj */
+    }
+    /*
+     * Start the actual pickup process.  This is split into two main
+     * sections, the newer menu and the older "traditional" methods.
+     * Automatic pickup has been split into its own menu-style routine
+     * to make things less confusing.
+     */
+    if (autopickup) {
+        n = autopick(objchain, traverse_how, &pick_list);
+        goto menu_pickup;
+    }
 
+    if (flags.menu_style != MENU_TRADITIONAL || iflags.menu_requested) {
+
+        /* use menus exclusively */
+        if (count) {        /* looking for N of something */
+            char buf[QBUFSZ];
+            sprintf(buf, "Pick %d of what?", count);
+            val_for_n_or_more = count;      /* set up callback selector */
+            n = query_objlist(buf, objchain,
+                    traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT,
+                    &pick_list, PICK_ONE, n_or_more);
+            /* correct counts, if any given */
+            for (i = 0; i < n; i++)
+                pick_list[i].count = count;
         } else {
-            /* old style interface */
-            int ct = 0;
-            long lcount;
-            bool all_of_a_type, selective;
-            char oclasses[MAXOCLASSES];
-            struct obj *obj, *obj2;
+            n = query_objlist("Pick up what?", objchain,
+                    traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT|FEEL_COCKATRICE,
+                    &pick_list, PICK_ANY, all_but_uchain);
+        }
+menu_pickup:
+        n_tried = n;
+        for (n_picked = i = 0 ; i < n; i++) {
+            res = pickup_object(pick_list[i].item.a_obj,pick_list[i].count,
+                    false);
+            if (res < 0) break;     /* can't continue */
+            n_picked += res;
+        }
+        if (pick_list) free((void *)pick_list);
 
-            oclasses[0] = '\0';         /* types to consider (empty for all) */
-            all_of_a_type = true;       /* take all of considered types */
-            selective = false;          /* ask for each item */
+    } else {
+        /* old style interface */
+        int ct = 0;
+        long lcount;
+        bool all_of_a_type, selective;
+        char oclasses[MAXOCLASSES];
+        struct obj *obj, *obj2;
 
-            /* check for more than one object */
-            for (obj = objchain;
-                  obj; obj = (traverse_how == BY_NEXTHERE) ? obj->nexthere : obj->nobj)
-                ct++;
+        oclasses[0] = '\0';         /* types to consider (empty for all) */
+        all_of_a_type = true;       /* take all of considered types */
+        selective = false;          /* ask for each item */
 
-            if (ct == 1 && count) {
-                /* if only one thing, then pick it */
-                obj = objchain;
-                lcount = min(obj->quan, (long)count);
-                n_tried++;
-                if (pickup_object(obj, lcount, false) > 0)
-                    n_picked++; /* picked something */
-                goto end_query;
+        /* check for more than one object */
+        for (obj = objchain;
+                obj; obj = (traverse_how == BY_NEXTHERE) ? obj->nexthere : obj->nobj)
+            ct++;
 
-            } else if (ct >= 2) {
-                int via_menu = 0;
+        if (ct == 1 && count) {
+            /* if only one thing, then pick it */
+            obj = objchain;
+            lcount = min(obj->quan, (long)count);
+            n_tried++;
+            if (pickup_object(obj, lcount, false) > 0)
+                n_picked++; /* picked something */
+            goto end_query;
 
-                There("are %s objects here.",
-                      (ct <= 10) ? "several" : "many");
-                if (!query_classes(oclasses, &selective, &all_of_a_type,
-                                   "pick up", objchain,
-                                   traverse_how == BY_NEXTHERE,
-                                   false,
-                                   &via_menu)) {
-                    if (!via_menu) return (0);
-                    n = query_objlist("Pick up what?",
-                                  objchain,
-                                  traverse_how|(selective ? 0 : INVORDER_SORT),
-                                  &pick_list, PICK_ANY,
-                                  via_menu == -2 ? allow_all : allow_category);
-                    goto menu_pickup;
-                }
+        } else if (ct >= 2) {
+            int via_menu = 0;
+
+            There("are %s objects here.",
+                    (ct <= 10) ? "several" : "many");
+            if (!query_classes(oclasses, &selective, &all_of_a_type,
+                        "pick up", objchain,
+                        traverse_how == BY_NEXTHERE,
+                        false,
+                        &via_menu)) {
+                if (!via_menu) return (0);
+                n = query_objlist("Pick up what?",
+                        objchain,
+                        traverse_how|(selective ? 0 : INVORDER_SORT),
+                        &pick_list, PICK_ANY,
+                        via_menu == -2 ? allow_all : allow_category);
+                goto menu_pickup;
             }
+        }
 
-            for (obj = objchain; obj; obj = obj2) {
-                if (traverse_how == BY_NEXTHERE)
-                        obj2 = obj->nexthere;   /* perhaps obj will be picked up */
-                else
-                        obj2 = obj->nobj;
-                lcount = -1L;
+        for (obj = objchain; obj; obj = obj2) {
+            if (traverse_how == BY_NEXTHERE)
+                obj2 = obj->nexthere;   /* perhaps obj will be picked up */
+            else
+                obj2 = obj->nobj;
+            lcount = -1L;
 
-                if (!selective && oclasses[0] && !index(oclasses,obj->oclass))
-                    continue;
+            if (!selective && oclasses[0] && !index(oclasses,obj->oclass))
+                continue;
 
-                if (!all_of_a_type) {
-                    char qbuf[BUFSZ];
-                    sprintf(qbuf, "Pick up %s?",
+            if (!all_of_a_type) {
+                char qbuf[BUFSZ];
+                sprintf(qbuf, "Pick up %s?",
                         safe_qbuf("", sizeof("Pick up ?"), doname(obj),
-                                        an(simple_typename(obj->otyp)), "something"));
-                    switch ((obj->quan < 2L) ? ynaq(qbuf) : ynNaq(qbuf)) {
+                            an(simple_typename(obj->otyp)), "something"));
+                switch ((obj->quan < 2L) ? ynaq(qbuf) : ynNaq(qbuf)) {
                     case 'q': goto end_query;   /* out 2 levels */
                     case 'n': continue;
                     case 'a':
-                        all_of_a_type = true;
-                        if (selective) {
-                            selective = false;
-                            oclasses[0] = obj->oclass;
-                            oclasses[1] = '\0';
-                        }
-                        break;
+                              all_of_a_type = true;
+                              if (selective) {
+                                  selective = false;
+                                  oclasses[0] = obj->oclass;
+                                  oclasses[1] = '\0';
+                              }
+                              break;
                     case '#':   /* count was entered */
-                        if (!yn_number) continue; /* 0 count => No */
-                        lcount = (long) yn_number;
-                        if (lcount > obj->quan) lcount = obj->quan;
-                        /* fall thru */
+                              if (!yn_number) continue; /* 0 count => No */
+                              lcount = (long) yn_number;
+                              if (lcount > obj->quan) lcount = obj->quan;
+                              /* fall thru */
                     default:    /* 'y' */
-                        break;
-                    }
+                              break;
                 }
-                if (lcount == -1L) lcount = obj->quan;
-
-                n_tried++;
-                if ((res = pickup_object(obj, lcount, false)) < 0) break;
-                n_picked += res;
             }
+            if (lcount == -1L) lcount = obj->quan;
+
+            n_tried++;
+            if ((res = pickup_object(obj, lcount, false)) < 0) break;
+            n_picked += res;
+        }
 end_query:
-            ;   /* semicolon needed by brain-damaged compilers */
-        }
+        ;   /* semicolon needed by brain-damaged compilers */
+    }
 
-        if (!u.uswallow) {
-                if (!OBJ_AT(u.ux,u.uy)) u.uundetected = 0;
+    if (!u.uswallow) {
+        if (!OBJ_AT(u.ux,u.uy)) u.uundetected = 0;
 
-                /* position may need updating (invisible hero) */
-                if (n_picked) newsym(u.ux,u.uy);
+        /* position may need updating (invisible hero) */
+        if (n_picked) newsym(u.ux,u.uy);
 
-                /* see whether there's anything else here, after auto-pickup is done */
-                if (autopickup) check_here(n_picked > 0);
-        }
-        return (n_tried > 0);
+        /* see whether there's anything else here, after auto-pickup is done */
+        if (autopickup) check_here(n_picked > 0);
+    }
+    return (n_tried > 0);
 }
-
-/*
- * Pick from the given list using flags.pickup_types.  Return the number
- * of items picked (not counts).  Create an array that returns pointers
- * and counts of the items to be picked up.  If the number of items
- * picked is zero, the pickup list is left alone.  The caller of this
- * function must free the pickup list.
- */
-static int autopick(struct obj *olist, int follow, menu_item **pick_list) {
-    return 0;
-}
-
 
 /*
  * Put up a menu using the given object list.  Only those objects on the
@@ -668,6 +646,33 @@ int query_objlist(const char *qstr, struct obj *olist, int qflags,
         }
         return n;
 }
+
+static int count_categories (struct obj *olist, int qflags) {
+    char *pack;
+    bool counted_category;
+    int ccount = 0;
+    struct obj *curr;
+
+    pack = flags.inv_order;
+    do {
+        counted_category = false;
+        for (curr = olist; curr; curr = FOLLOW(curr, qflags)) {
+            if (curr->oclass == *pack) {
+                if ((qflags & WORN_TYPES) &&
+                        !(curr->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL |
+                                W_WEP | W_SWAPWEP | W_QUIVER)))
+                    continue;
+                if (!counted_category) {
+                    ccount++;
+                    counted_category = true;
+                }
+            }
+        }
+        pack++;
+    } while (*pack);
+    return ccount;
+}
+
 
 /*
  * allow menu-based category (class) selection (for Drop,take off etc.)
@@ -830,32 +835,6 @@ int query_category ( const char *qstr, struct obj *olist, int qflags,
     if (n < 0)
         n = 0;      /* caller's don't expect -1 */
     return n;
-}
-
-static int count_categories (struct obj *olist, int qflags) {
-    char *pack;
-    bool counted_category;
-    int ccount = 0;
-    struct obj *curr;
-
-    pack = flags.inv_order;
-    do {
-        counted_category = false;
-        for (curr = olist; curr; curr = FOLLOW(curr, qflags)) {
-            if (curr->oclass == *pack) {
-                if ((qflags & WORN_TYPES) &&
-                        !(curr->owornmask & (W_ARMOR | W_RING | W_AMUL | W_TOOL |
-                                W_WEP | W_SWAPWEP | W_QUIVER)))
-                    continue;
-                if (!counted_category) {
-                    ccount++;
-                    counted_category = true;
-                }
-            }
-        }
-        pack++;
-    } while (*pack);
-    return ccount;
 }
 
 /* could we carry `obj'? if not, could we carry some of it/them? */
@@ -1168,7 +1147,9 @@ int pickup_object ( struct obj *obj, long count, bool telekinesis) {
                     (obj->quan == 1L) ? "it" : "them");
             if (!(objects[SCR_SCARE_MONSTER].oc_name_known) &&
                     !(objects[SCR_SCARE_MONSTER].oc_uname))
+            {
                 docall(obj);
+            }
             useupf(obj, obj->quan);
             return 1;       /* tried to pick something up and failed, but
                                don't want to terminate pickup loop yet   */
@@ -1367,7 +1348,7 @@ lootcont:
                     pline("It develops a huge set of teeth and bites you!");
                     tmp = rnd(10);
                     if (Half_physical_damage) tmp = (tmp+1) / 2;
-                    losehp(tmp, "carnivorous bag", KILLED_BY_AN);
+                    losehp(tmp, killed_by_const(KM_CARNIVOROUS_BAG));
                     makeknown(BAG_OF_TRICKS);
                     timepassed = 1;
                     continue;
@@ -1443,8 +1424,7 @@ gotit:
         if (!underfoot) {
             if (container_at(cc.x, cc.y, false)) {
                 if (mtmp) {
-                    You_cant("loot anything %sthere with %s in the way.",
-                            prev_inquiry ? "else " : "", mon_nam(mtmp));
+                    message_monster(MSG_YOU_CANT_LOOT_WITH_M_IN_THE_WAY, mtmp);
                     return timepassed;
                 } else {
                     You("have to be at a container to loot it.");
@@ -1476,33 +1456,30 @@ int loot_mon (struct monst *mtmp, int *passed_info, bool *prev_loot) {
     if (mtmp && mtmp != u.usteed && (otmp = which_armor(mtmp, W_SADDLE))) {
         long unwornmask;
         if (passed_info) *passed_info = 1;
-        sprintf(qbuf, "Do you want to remove the saddle from %s?",
-                x_monnam(mtmp, ARTICLE_THE, (char *)0, SUPPRESS_SADDLE, false));
+        sprintf(qbuf, "Do you want to remove the saddle from %s?", "TODO: x_monnam");
         if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
-                if (nolimbs(youmonst.data)) {
-                    You_cant("do that without limbs."); /* not body_part(HAND) */
-                    return (0);
-                }
-                if (otmp->cursed) {
-                    You("can't. The saddle seems to be stuck to %s.",
-                        x_monnam(mtmp, ARTICLE_THE, (char *)0,
-                                SUPPRESS_SADDLE, false));
-
-                    /* the attempt costs you time */
-                        return (1);
-                }
-                obj_extract_self(otmp);
-                if ((unwornmask = otmp->owornmask) != 0L) {
-                    mtmp->misc_worn_check &= ~unwornmask;
-                    otmp->owornmask = 0L;
-                    update_mon_intrinsics(mtmp, otmp, false, false);
-                }
-                otmp = hold_another_object(otmp, "You drop %s!", doname(otmp),
-                                        (const char *)0);
-                timepassed = rnd(3);
-                if (prev_loot) *prev_loot = true;
-        } else if (c == 'q') {
+            if (nolimbs(youmonst.data)) {
+                You_cant("do that without limbs."); /* not body_part(HAND) */
                 return (0);
+            }
+            if (otmp->cursed) {
+                You("can't. The saddle seems to be stuck to %s.", "TODO: x_monnam");
+
+                /* the attempt costs you time */
+                return 1;
+            }
+            obj_extract_self(otmp);
+            if ((unwornmask = otmp->owornmask) != 0L) {
+                mtmp->misc_worn_check &= ~unwornmask;
+                otmp->owornmask = 0L;
+                update_mon_intrinsics(mtmp, otmp, false, false);
+            }
+            otmp = hold_another_object(otmp, "You drop %s!", doname(otmp),
+                    (const char *)0);
+            timepassed = rnd(3);
+            if (prev_loot) *prev_loot = true;
+        } else if (c == 'q') {
+            return (0);
         }
     }
     /* 3.4.0 introduced the ability to pick things up from within swallower's stomach */
@@ -1570,20 +1547,20 @@ static int in_container (struct obj *obj) {
         pline("%s cannot be confined in such trappings.", The(xname(obj)));
         return 0;
     } else if (obj->otyp == LEASH && obj->leashmon != 0) {
-        pline("%s attached to your pet.", Tobjnam(obj, "are"));
+        message_object(MSG_O_ARE_ATTACHED_TO_PET, obj);
         return 0;
     } else if (obj == uwep) {
         if (welded(obj)) {
             weldmsg(obj);
             return 0;
         }
-        setuwep((struct obj *) 0);
+        setuwep(NULL);
         if (uwep) return 0;     /* unwielded, died, rewielded */
     } else if (obj == uswapwep) {
-        setuswapwep((struct obj *) 0);
+        setuswapwep(NULL);
         if (uswapwep) return 0;     /* unwielded, died, rewielded */
     } else if (obj == uquiver) {
-        setuqwep((struct obj *) 0);
+        setuqwep(NULL);
         if (uquiver) return 0;     /* unwielded, died, rewielded */
     }
 
@@ -1661,7 +1638,7 @@ static int in_container (struct obj *obj) {
         else
             panic("in_container:  bag not found.");
 
-        losehp(d(6,6),"magical explosion", KILLED_BY_AN);
+        losehp(d(6,6), killed_by_const(KM_MAGICAL_EXPLOSION));
         current_container = 0;  /* baggone = true; */
     }
 
@@ -1684,7 +1661,7 @@ static int in_container (struct obj *obj) {
     return(current_container ? 1 : -1);
 }
 
-static int ck_bag (struct obj *obj) {
+static int ck_bag (const struct obj *obj) {
     return current_container && obj != current_container;
 }
 
@@ -1803,11 +1780,12 @@ static void observe_quantum_cat (struct obj *box) {
     if (livecat) {
         livecat->mpeaceful = 1;
         set_malign(livecat);
-        if (!canspotmon(livecat))
+        if (!canspotmon(livecat)) {
             You("think %s brushed your %s.", something, body_part(FOOT));
-        else
-            pline("%s inside the box is still alive!", Monnam(livecat));
-        (void) christen_monst(livecat, sc);
+        } else {
+            message_monster(MSG_M_INSIDE_BOX_IS_ALIVE, livecat);
+        }
+        christen_monst(livecat, sc);
     } else {
         deadcat = mk_named_object(CORPSE, &mons[PM_HOUSECAT],
                 box->ox, box->oy, sc);
@@ -1820,6 +1798,114 @@ static void observe_quantum_cat (struct obj *box) {
     }
     box->owt = weight(box);
     return;
+}
+
+static int in_or_out_menu (const char *prompt, struct obj *obj, bool outokay, bool inokay) {
+    winid win;
+    anything any;
+    menu_item *pick_list;
+    char buf[BUFSZ];
+    int n;
+    const char *menuselector = iflags.lootabc ? "abc" : "oib";
+
+    any.a_void = 0;
+    win = create_nhwindow(NHW_MENU);
+    start_menu(win);
+    if (outokay) {
+        any.a_int = 1;
+        sprintf(buf,"Take %s out of %s", something, the(xname(obj)));
+        add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE,
+                buf, MENU_UNSELECTED);
+    }
+    menuselector++;
+    if (inokay) {
+        any.a_int = 2;
+        sprintf(buf,"Put %s into %s", something, the(xname(obj)));
+        add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE, buf, MENU_UNSELECTED);
+    }
+    menuselector++;
+    if (outokay && inokay) {
+        any.a_int = 3;
+        add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE,
+                "Both of the above", MENU_UNSELECTED);
+    }
+    end_menu(win, prompt);
+    n = select_menu(win, PICK_ONE, &pick_list);
+    destroy_nhwindow(win);
+    if (n > 0) {
+        n = pick_list[0].item.a_int;
+        free((void *) pick_list);
+    }
+    return n;
+}
+
+/* Loot a container (take things out, put things in), using a menu. */
+static int menu_loot (int retry, struct obj *container, bool put_in) {
+    int n, i, n_looted = 0;
+    bool all_categories = true, loot_everything = false;
+    char buf[BUFSZ];
+    const char *takeout = "Take out", *putin = "Put in";
+    struct obj *otmp, *otmp2;
+    menu_item *pick_list;
+    int mflags, res;
+    long count;
+
+    if (retry) {
+        all_categories = (retry == -2);
+    } else if (flags.menu_style == MENU_FULL) {
+        all_categories = false;
+        sprintf(buf,"%s what type of objects?", put_in ? putin : takeout);
+        mflags = put_in ? ALL_TYPES | BUC_ALLBKNOWN | BUC_UNKNOWN :
+            ALL_TYPES | CHOOSE_ALL | BUC_ALLBKNOWN | BUC_UNKNOWN;
+        n = query_category(buf, put_in ? invent : container->cobj,
+                mflags, &pick_list, PICK_ANY);
+        if (!n) return 0;
+        for (i = 0; i < n; i++) {
+            if (pick_list[i].item.a_int == 'A')
+                loot_everything = true;
+            else if (pick_list[i].item.a_int == ALL_TYPES_SELECTED)
+                all_categories = true;
+            else
+                add_valid_menu_class(pick_list[i].item.a_int);
+        }
+        free((void *) pick_list);
+    }
+
+    if (loot_everything) {
+        for (otmp = container->cobj; otmp; otmp = otmp2) {
+            otmp2 = otmp->nobj;
+            res = out_container(otmp);
+            if (res < 0) break;
+        }
+    } else {
+        mflags = INVORDER_SORT;
+        if (put_in && flags.invlet_constant) mflags |= USE_INVLET;
+        sprintf(buf,"%s what?", put_in ? putin : takeout);
+        n = query_objlist(buf, put_in ? invent : container->cobj,
+                mflags, &pick_list, PICK_ANY,
+                all_categories ? allow_all : allow_category);
+        if (n) {
+            n_looted = n;
+            for (i = 0; i < n; i++) {
+                otmp = pick_list[i].item.a_obj;
+                count = pick_list[i].count;
+                if (count > 0 && count < otmp->quan) {
+                    otmp = splitobj(otmp, count);
+                    /* special split case also handled by askchain() */
+                }
+                res = put_in ? in_container(otmp) : out_container(otmp);
+                if (res < 0) {
+                    if (otmp != pick_list[i].item.a_obj) {
+                        /* split occurred, merge again */
+                        (void) merged(&pick_list[i].item.a_obj, &otmp);
+                    }
+                    break;
+                }
+            }
+            free((void *)pick_list);
+        }
+    }
+    return n_looted;
 }
 
 int use_container (struct obj *obj, int held) {
@@ -1842,8 +1928,9 @@ int use_container (struct obj *obj, int held) {
         return 0;
     }
     if (obj->olocked) {
-        pline("%s to be locked.", Tobjnam(obj, "seem"));
-        if (held) You("must put it down to unlock.");
+        message_object(MSG_O_SEEMS_TO_BE_LOCKED, obj);
+        if (held)
+            You("must put it down to unlock.");
         return 0;
     } else if (obj->otrapped) {
         if (held) You("open %s...", the(xname(obj)));
@@ -1930,9 +2017,9 @@ ask_again2:
                                 false,
                                 &menu_on_request)) {
                         if (askchain((struct obj **)&current_container->cobj,
-                                    (one_by_one ? (char *)0 : select),
+                                    (one_by_one ? NULL : select),
                                     allflag, out_container,
-                                    (int (*)(struct obj *))0,
+                                    NULL,
                                     0, "nodot"))
                             used = 1;
                     } else if (menu_on_request < 0) {
@@ -2005,11 +2092,10 @@ ask_again2:
             /* traditional code */
             menu_on_request = 0;
             if (query_classes(select, &one_by_one, &allflag, "put in",
-                        invent, false,
-                        (u.ugold != 0L),
-                        &menu_on_request)) {
-                (void) askchain((struct obj **)&invent,
-                        (one_by_one ? (char *)0 : select), allflag,
+                        invent, false, (u.ugold != 0L), &menu_on_request))
+            {
+                askchain((struct obj **)&invent,
+                        (one_by_one ? NULL : select), allflag,
                         in_container, ck_bag, 0, "nodot");
                 used = 1;
             } else if (menu_on_request < 0) {
@@ -2029,110 +2115,4 @@ ask_again2:
     return used;
 }
 
-/* Loot a container (take things out, put things in), using a menu. */
-static int menu_loot (int retry, struct obj *container, bool put_in) {
-    int n, i, n_looted = 0;
-    bool all_categories = true, loot_everything = false;
-    char buf[BUFSZ];
-    const char *takeout = "Take out", *putin = "Put in";
-    struct obj *otmp, *otmp2;
-    menu_item *pick_list;
-    int mflags, res;
-    long count;
 
-    if (retry) {
-        all_categories = (retry == -2);
-    } else if (flags.menu_style == MENU_FULL) {
-        all_categories = false;
-        sprintf(buf,"%s what type of objects?", put_in ? putin : takeout);
-        mflags = put_in ? ALL_TYPES | BUC_ALLBKNOWN | BUC_UNKNOWN :
-            ALL_TYPES | CHOOSE_ALL | BUC_ALLBKNOWN | BUC_UNKNOWN;
-        n = query_category(buf, put_in ? invent : container->cobj,
-                mflags, &pick_list, PICK_ANY);
-        if (!n) return 0;
-        for (i = 0; i < n; i++) {
-            if (pick_list[i].item.a_int == 'A')
-                loot_everything = true;
-            else if (pick_list[i].item.a_int == ALL_TYPES_SELECTED)
-                all_categories = true;
-            else
-                add_valid_menu_class(pick_list[i].item.a_int);
-        }
-        free((void *) pick_list);
-    }
-
-    if (loot_everything) {
-        for (otmp = container->cobj; otmp; otmp = otmp2) {
-            otmp2 = otmp->nobj;
-            res = out_container(otmp);
-            if (res < 0) break;
-        }
-    } else {
-        mflags = INVORDER_SORT;
-        if (put_in && flags.invlet_constant) mflags |= USE_INVLET;
-        sprintf(buf,"%s what?", put_in ? putin : takeout);
-        n = query_objlist(buf, put_in ? invent : container->cobj,
-                mflags, &pick_list, PICK_ANY,
-                all_categories ? allow_all : allow_category);
-        if (n) {
-            n_looted = n;
-            for (i = 0; i < n; i++) {
-                otmp = pick_list[i].item.a_obj;
-                count = pick_list[i].count;
-                if (count > 0 && count < otmp->quan) {
-                    otmp = splitobj(otmp, count);
-                    /* special split case also handled by askchain() */
-                }
-                res = put_in ? in_container(otmp) : out_container(otmp);
-                if (res < 0) {
-                    if (otmp != pick_list[i].item.a_obj) {
-                        /* split occurred, merge again */
-                        (void) merged(&pick_list[i].item.a_obj, &otmp);
-                    }
-                    break;
-                }
-            }
-            free((void *)pick_list);
-        }
-    }
-    return n_looted;
-}
-
-static int in_or_out_menu (const char *prompt, struct obj *obj, bool outokay, bool inokay) {
-    winid win;
-    anything any;
-    menu_item *pick_list;
-    char buf[BUFSZ];
-    int n;
-    const char *menuselector = iflags.lootabc ? "abc" : "oib";
-
-    any.a_void = 0;
-    win = create_nhwindow(NHW_MENU);
-    start_menu(win);
-    if (outokay) {
-        any.a_int = 1;
-        sprintf(buf,"Take %s out of %s", something, the(xname(obj)));
-        add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE,
-                buf, MENU_UNSELECTED);
-    }
-    menuselector++;
-    if (inokay) {
-        any.a_int = 2;
-        sprintf(buf,"Put %s into %s", something, the(xname(obj)));
-        add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE, buf, MENU_UNSELECTED);
-    }
-    menuselector++;
-    if (outokay && inokay) {
-        any.a_int = 3;
-        add_menu(win, NO_GLYPH, &any, *menuselector, 0, ATR_NONE,
-                "Both of the above", MENU_UNSELECTED);
-    }
-    end_menu(win, prompt);
-    n = select_menu(win, PICK_ONE, &pick_list);
-    destroy_nhwindow(win);
-    if (n > 0) {
-        n = pick_list[0].item.a_int;
-        free((void *) pick_list);
-    }
-    return n;
-}

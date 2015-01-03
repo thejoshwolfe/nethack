@@ -8,8 +8,21 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                    You_cant("loot anything %sthere with %s in the way.",
+                            prev_inquiry ? "else " : "", mon_nam(mtmp));
+                    message_monster(MSG_YOU_CANT_LOOT_WITH_M_IN_THE_WAY, mtmp);
+
+        message_object(MSG_O_SEEMS_TO_BE_LOCKED, obj);
+        pline("%s to be locked.", Tobjnam(obj, "seem"));
+
             message_const(MSG_YOUR_LEASH_FALLS_SLACK);
             Your("leash falls slack.");
+
+            message_monster(MSG_M_INSIDE_BOX_IS_ALIVE, livecat);
+            pline("%s inside the box is still alive!", Monnam(livecat));
+
+        pline("%s attached to your pet.", Tobjnam(obj, "are"));
+        message_const(MSG_O_ARE_ATTACHED_TO_PET, obj);
 
             You_hear("%s stop moving.",something);
             message_const(MSG_SOMETHING_STOP_MOVING);
@@ -347,7 +360,7 @@ size_t nh_strlcpy(char *dest, const char *source, size_t dest_size) {
     return s - source - 1;
 }
 
-size_t nh_vslprintf(char *dest, size_t dest_size, char *format, va_list ap) {
+size_t nh_vslprintf(char *dest, size_t dest_size, const char *format, va_list ap) {
     size_t n = (dest_size >= 1) ? (dest_size - 1) : 0;
     int ret = vsnprintf(dest, n, format, ap);
     assert(ret >= 0);
@@ -355,7 +368,7 @@ size_t nh_vslprintf(char *dest, size_t dest_size, char *format, va_list ap) {
     return ret;
 }
 
-size_t nh_slprintf(char *dest, size_t dest_size, char *format, ...) {
+size_t nh_slprintf(char *dest, size_t dest_size, const char *format, ...) {
     va_list ap;  
     va_start(ap, format);
     int ret = nh_vslprintf(dest, dest_size, format, ap);

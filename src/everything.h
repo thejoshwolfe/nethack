@@ -69,3 +69,6 @@
 #include "objnam.h"
 #include "music.h"
 #include "invent.h"
+#include "dbridge.h"
+#include "shk.h"
+#include "do_name.h"

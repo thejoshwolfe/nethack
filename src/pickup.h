@@ -1,6 +1,8 @@
 #ifndef PICKUP_H
 #define PICKUP_H
 
+#include "obj.h"
+
 #include <stdbool.h>
 
 int collect_obj_classes(char *,struct obj *,bool,bool,bool (*)(const struct obj *), int *);
