@@ -1,6 +1,11 @@
 #ifndef MKMAZE_H
 #define MKMAZE_H
 
+#include "coord.h"
+#include "dungeon.h"
+
+#include <stdbool.h>
+
 void wallification(int,int,int,int);
 void walkfrom(int,int);
 void makemaz(const char *);

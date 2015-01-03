@@ -6,6 +6,17 @@
 #include "lev.h"        /* save & restore info */
 #include "dbridge.h"
 #include "display.h"
+#include "end.h"
+#include "mklev.h"
+#include "pline.h"
+#include "teleport.h"
+#include "detect.h"
+#include "mkobj.h"
+#include "mon.h"
+#include "makemon.h"
+#include "ball.h"
+#include "save.h"
+#include "restore.h"
 
 /* from sp_lev.c, for fixup_special() */
 extern char *lev_message;

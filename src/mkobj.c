@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "mkobj.h"
 #include "hack.h"
 #include "prop.h"
 #include "pm_props.h"
@@ -14,13 +15,7 @@
 #include "artifact_names.h"
 #include "flag.h"
 #include "mondata.h"
-
-static void mkbox_cnts(struct obj *);
-static void obj_timer_checks(struct obj *, signed char, signed char, int);
-static void container_weight(struct obj *);
-static struct obj *save_mtraits(struct obj *, struct monst *);
-static const char *where_name(int);
-static void check_contained(struct obj *,const char *);
+#include "everything.h"
 
 extern struct obj *thrownobj;           /* defined in dothrow.c */
 
@@ -827,6 +822,28 @@ mkgold (long amount, int x, int y)
     return (gold);
 }
 
+static struct obj * save_mtraits (struct obj *obj, struct monst *mtmp) {
+        struct obj *otmp;
+        int lth, namelth;
+
+        lth = sizeof(struct monst) + mtmp->mxlth + mtmp->mnamelth;
+        namelth = obj->onamelth ? strlen(ONAME(obj)) + 1 : 0;
+        otmp = realloc_obj(obj, lth, (void *) mtmp, namelth, ONAME(obj));
+        if (otmp && otmp->oxlth) {
+                struct monst *mtmp2 = (struct monst *)otmp->oextra;
+                if (mtmp->data) mtmp2->mnum = monsndx(mtmp->data);
+                /* invalidate pointers */
+                /* m_id is needed to know if this is a revived quest leader */
+                /* but m_id must be cleared when loading bones */
+                mtmp2->nmon     = (struct monst *)0;
+                mtmp2->data     = (struct permonst *)0;
+                mtmp2->minvent  = (struct obj *)0;
+                otmp->oattached = OATTACHED_MONST;      /* mark it */
+        }
+        return otmp;
+}
+
+
 /*
  * OEXTRA note: Passing mtmp causes mtraits to be saved
  * even if ptr passed as well, but ptr is always used for
@@ -907,29 +924,6 @@ obj_attach_mid (struct obj *obj, unsigned mid)
     return otmp;
 }
 
-static struct obj *
-save_mtraits (struct obj *obj, struct monst *mtmp)
-{
-        struct obj *otmp;
-        int lth, namelth;
-
-        lth = sizeof(struct monst) + mtmp->mxlth + mtmp->mnamelth;
-        namelth = obj->onamelth ? strlen(ONAME(obj)) + 1 : 0;
-        otmp = realloc_obj(obj, lth, (void *) mtmp, namelth, ONAME(obj));
-        if (otmp && otmp->oxlth) {
-                struct monst *mtmp2 = (struct monst *)otmp->oextra;
-                if (mtmp->data) mtmp2->mnum = monsndx(mtmp->data);
-                /* invalidate pointers */
-                /* m_id is needed to know if this is a revived quest leader */
-                /* but m_id must be cleared when loading bones */
-                mtmp2->nmon     = (struct monst *)0;
-                mtmp2->data     = (struct permonst *)0;
-                mtmp2->minvent  = (struct obj *)0;
-                otmp->oattached = OATTACHED_MONST;      /* mark it */
-        }
-        return otmp;
-}
-
 /* returns a pointer to a new monst structure based on
  * the one contained within the obj.
  */
@@ -1008,6 +1002,62 @@ is_rottable (struct obj *otmp)
                         objects[otyp].oc_material != LIQUID));
 }
 
+/* 0 = no force so do checks, <0 = force off, >0 force on */
+static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int force) {
+    long tleft = 0L;
+    short action = ROT_CORPSE;
+    bool restart_timer = false;
+    bool on_floor = (otmp->where == OBJ_FLOOR);
+    bool buried = (otmp->where == OBJ_BURIED);
+
+    /* Check for corpses just placed on or in ice */
+    if (otmp->otyp == CORPSE && (on_floor || buried) && is_ice(x,y)) {
+        tleft = stop_timer(action, (void *)otmp);
+        if (tleft == 0L) {
+                action = REVIVE_MON;
+                tleft = stop_timer(action, (void *)otmp);
+        }
+        if (tleft != 0L) {
+            long age;
+
+            tleft = tleft - monstermoves;
+            /* mark the corpse as being on ice */
+            otmp->recharged = 1;
+            /* Adjust the time remaining */
+            tleft *= ROT_ICE_ADJUSTMENT;
+            restart_timer = true;
+            /* Adjust the age; must be same as in obj_ice_age() */
+            age = monstermoves - otmp->age;
+            otmp->age = monstermoves - (age * ROT_ICE_ADJUSTMENT);
+        }
+    }
+    /* Check for corpses coming off ice */
+    else if ((force < 0) ||
+             (otmp->otyp == CORPSE && otmp->recharged &&
+             ((on_floor && !is_ice(x,y)) || !on_floor))) {
+        tleft = stop_timer(action, (void *)otmp);
+        if (tleft == 0L) {
+                action = REVIVE_MON;
+                tleft = stop_timer(action, (void *)otmp);
+        }
+        if (tleft != 0L) {
+                long age;
+
+                tleft = tleft - monstermoves;
+                otmp->recharged = 0;
+                /* Adjust the remaining time */
+                tleft /= ROT_ICE_ADJUSTMENT;
+                restart_timer = true;
+                /* Adjust the age */
+                age = monstermoves - otmp->age;
+                otmp->age = otmp->age + (age / ROT_ICE_ADJUSTMENT);
+        }
+    }
+    /* now re-start the timer with the appropriate modifications */
+    if (restart_timer)
+        (void) start_timer(tleft, TIMER_OBJECT, action, (void *)otmp);
+}
+
 
 /*
  * These routines maintain the single-linked lists headed in level.objects[][]
@@ -1083,62 +1133,6 @@ long peek_at_iced_corpse_age (struct obj *otmp) {
     return retval;
 }
 
-/* 0 = no force so do checks, <0 = force off, >0 force on */
-static void obj_timer_checks(struct obj *otmp, signed char x, signed char y, int force) {
-    long tleft = 0L;
-    short action = ROT_CORPSE;
-    bool restart_timer = false;
-    bool on_floor = (otmp->where == OBJ_FLOOR);
-    bool buried = (otmp->where == OBJ_BURIED);
-
-    /* Check for corpses just placed on or in ice */
-    if (otmp->otyp == CORPSE && (on_floor || buried) && is_ice(x,y)) {
-        tleft = stop_timer(action, (void *)otmp);
-        if (tleft == 0L) {
-                action = REVIVE_MON;
-                tleft = stop_timer(action, (void *)otmp);
-        }
-        if (tleft != 0L) {
-            long age;
-
-            tleft = tleft - monstermoves;
-            /* mark the corpse as being on ice */
-            otmp->recharged = 1;
-            /* Adjust the time remaining */
-            tleft *= ROT_ICE_ADJUSTMENT;
-            restart_timer = true;
-            /* Adjust the age; must be same as in obj_ice_age() */
-            age = monstermoves - otmp->age;
-            otmp->age = monstermoves - (age * ROT_ICE_ADJUSTMENT);
-        }
-    }
-    /* Check for corpses coming off ice */
-    else if ((force < 0) ||
-             (otmp->otyp == CORPSE && otmp->recharged &&
-             ((on_floor && !is_ice(x,y)) || !on_floor))) {
-        tleft = stop_timer(action, (void *)otmp);
-        if (tleft == 0L) {
-                action = REVIVE_MON;
-                tleft = stop_timer(action, (void *)otmp);
-        }
-        if (tleft != 0L) {
-                long age;
-
-                tleft = tleft - monstermoves;
-                otmp->recharged = 0;
-                /* Adjust the remaining time */
-                tleft /= ROT_ICE_ADJUSTMENT;
-                restart_timer = true;
-                /* Adjust the age */
-                age = monstermoves - otmp->age;
-                otmp->age = otmp->age + (age / ROT_ICE_ADJUSTMENT);
-        }
-    }
-    /* now re-start the timer with the appropriate modifications */
-    if (restart_timer)
-        (void) start_timer(tleft, TIMER_OBJECT, action, (void *)otmp);
-}
-
 void remove_object (struct obj *otmp) {
     signed char x = otmp->ox;
     signed char y = otmp->oy;
@@ -1160,6 +1154,14 @@ void discard_minvent (struct monst *mtmp) {
         obfree(otmp, (struct obj *)0);  /* dealloc_obj() isn't sufficient */
     }
 }
+
+/* Recalculate the weight of this container and all of _its_ containers. */
+static void container_weight (struct obj *container) {
+    container->owt = weight(container);
+    if (container->where == OBJ_CONTAINED)
+        container_weight(container->ocontainer);
+}
+
 
 /*
  * Free obj from whatever list it is on in preperation of deleting it or
@@ -1316,13 +1318,6 @@ void add_to_buried (struct obj *obj) {
     level.buriedobjlist = obj;
 }
 
-/* Recalculate the weight of this container and all of _its_ containers. */
-static void container_weight (struct obj *container) {
-    container->owt = weight(container);
-    if (container->where == OBJ_CONTAINED)
-        container_weight(container->ocontainer);
-}
-
 /*
  * Deallocate the object.  _All_ objects should be run through here for
  * them to be deallocated.
@@ -1349,6 +1344,19 @@ void dealloc_obj (struct obj *obj) {
     if (obj == thrownobj) thrownobj = (struct obj*)0;
 
     free((void *) obj);
+}
+
+/* obj sanity check: check objs contained by container */
+static void check_contained (struct obj *container, const char *mesg) {
+    struct obj *obj;
+
+    for (obj = container->cobj; obj; obj = obj->nobj) {
+        if (obj->where != OBJ_CONTAINED)
+            pline("contained %s obj %p: %s\n", mesg, obj,
+                where_name(obj->where));
+        else if (obj->ocontainer != container)
+            pline("%s obj %p not in container %p\n", mesg, obj, container);
+    }
 }
 
 /* Check all object lists for consistency. */
@@ -1435,15 +1443,3 @@ void obj_sanity_check (void) {
         }
 }
 
-/* obj sanity check: check objs contained by container */
-static void check_contained (struct obj *container, const char *mesg) {
-    struct obj *obj;
-
-    for (obj = container->cobj; obj; obj = obj->nobj) {
-        if (obj->where != OBJ_CONTAINED)
-            pline("contained %s obj %p: %s\n", mesg, obj,
-                where_name(obj->where));
-        else if (obj->ocontainer != container)
-            pline("%s obj %p not in container %p\n", mesg, obj, container);
-    }
-}
