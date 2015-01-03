@@ -1,6 +1,9 @@
 /* See LICENSE in the root of this project for change info */
+
+#include "rect.h"
 #include "hack.h"
 #include "flag.h"
+#include "pline.h"
 
 int get_rect_ind(NhRect *);
 
