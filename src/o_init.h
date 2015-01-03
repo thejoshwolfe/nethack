@@ -1,6 +1,8 @@
 #ifndef O_INIT_H
 #define O_INIT_H
 
+#include <stdbool.h>
+
 void init_objects(void);
 int find_skates(void);
 void oinit(void);

@@ -8,11 +8,7 @@
 #include "onames.h"
 #include "artifact_names.h"
 #include "flag.h"
-
-static void setgemprobs(d_level*);
-static void shuffle(int,int,bool);
-static void shuffle_all(void);
-static bool interesting_to_discover(int);
+#include "everything.h"
 
 static short disco[NUM_OBJECTS] = DUMMY;
 
@@ -86,6 +82,54 @@ static void shuffle (int o_low, int o_high, bool domaterial) {
     }
 }
 
+static void shuffle_all (void) {
+    int first, last, oclass;
+
+    for (oclass = 1; oclass < MAXOCLASSES; oclass++) {
+        first = bases[oclass];
+        last = first+1;
+        while (last < NUM_OBJECTS && objects[last].oc_class == oclass)
+            last++;
+
+        if (OBJ_DESCR(objects[first]) != (char *)0 &&
+                oclass != TOOL_CLASS &&
+                oclass != WEAPON_CLASS &&
+                oclass != ARMOR_CLASS &&
+                oclass != GEM_CLASS) {
+            int j = last-1;
+
+            if (oclass == POTION_CLASS)
+                j -= 1;  /* only water has a fixed description */
+            else if (oclass == AMULET_CLASS ||
+                    oclass == SCROLL_CLASS ||
+                    oclass == SPBOOK_CLASS) {
+                while (!objects[j].oc_magic || objects[j].oc_unique)
+                    j--;
+            }
+
+            /* non-magical amulets, scrolls, and spellbooks
+             * (ex. imitation Amulets, blank, scrolls of mail)
+             * and one-of-a-kind magical artifacts at the end of
+             * their class in objects[] have fixed descriptions.
+             */
+            shuffle(first, j, true);
+        }
+    }
+
+    /* shuffle the helmets */
+    shuffle(HELMET, HELM_OF_TELEPATHY, false);
+
+    /* shuffle the gloves */
+    shuffle(LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY, false);
+
+    /* shuffle the cloaks */
+    shuffle(CLOAK_OF_PROTECTION, CLOAK_OF_DISPLACEMENT, false);
+
+    /* shuffle the boots [if they change, update find_skates() below] */
+    shuffle(SPEED_BOOTS, LEVITATION_BOOTS, false);
+}
+
+
 void init_objects(void) {
     int i, first, last, sum;
     char oclass;
@@ -138,58 +182,11 @@ check:
             goto check;
         }
         if(sum != 1000)
-            error("init-prob error for class %d (%d%%)", oclass, sum);
+            fprintf(stderr, "init-prob error for class %d (%d%%)", oclass, sum);
         first = last;
     }
     /* shuffle descriptions */
     shuffle_all();
-}
-
-static void shuffle_all (void) {
-    int first, last, oclass;
-
-    for (oclass = 1; oclass < MAXOCLASSES; oclass++) {
-        first = bases[oclass];
-        last = first+1;
-        while (last < NUM_OBJECTS && objects[last].oc_class == oclass)
-            last++;
-
-        if (OBJ_DESCR(objects[first]) != (char *)0 &&
-                oclass != TOOL_CLASS &&
-                oclass != WEAPON_CLASS &&
-                oclass != ARMOR_CLASS &&
-                oclass != GEM_CLASS) {
-            int j = last-1;
-
-            if (oclass == POTION_CLASS)
-                j -= 1;  /* only water has a fixed description */
-            else if (oclass == AMULET_CLASS ||
-                    oclass == SCROLL_CLASS ||
-                    oclass == SPBOOK_CLASS) {
-                while (!objects[j].oc_magic || objects[j].oc_unique)
-                    j--;
-            }
-
-            /* non-magical amulets, scrolls, and spellbooks
-             * (ex. imitation Amulets, blank, scrolls of mail)
-             * and one-of-a-kind magical artifacts at the end of
-             * their class in objects[] have fixed descriptions.
-             */
-            shuffle(first, j, true);
-        }
-    }
-
-    /* shuffle the helmets */
-    shuffle(HELMET, HELM_OF_TELEPATHY, false);
-
-    /* shuffle the gloves */
-    shuffle(LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY, false);
-
-    /* shuffle the cloaks */
-    shuffle(CLOAK_OF_PROTECTION, CLOAK_OF_DISPLACEMENT, false);
-
-    /* shuffle the boots [if they change, update find_skates() below] */
-    shuffle(SPEED_BOOTS, LEVITATION_BOOTS, false);
 }
 
 /* find the object index for snow boots; used [once] by slippery ice code */
@@ -323,7 +320,7 @@ int dodiscovered (void) {
             ++ct;
         }
     /* display any known artifacts as another pseudo-class */
-    ct += disp_artifact_discoveries(tmpwin);
+    fprintf(stderr, "TODO: display artifact discoveries\n");
 
     /* several classes are omitted from packorder; one is of interest here */
     strcpy(classes, flags.inv_order);
