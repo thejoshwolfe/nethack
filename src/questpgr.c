@@ -5,9 +5,14 @@
 #include "dlb.h"
 #include "qtext.h"
 #include "pm_props.h"
-#include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"
+#include "end.h"
+#include "pline.h"
+#include "objnam.h"
+#include "artifact.h"
+#include "pray.h"
+#include "makemon.h"
 
 #define QTEXT_FILE      "quest.dat"
 
@@ -288,7 +293,7 @@ convert_line (void)
 
                                         /* append possessive suffix */
                                 case 'S': cvt_buf[0] = highc(cvt_buf[0]);
-                                case 's': strcpy(cvt_buf, s_suffix(cvt_buf));
+                                case 's': strcpy(cvt_buf, "TODO: s_suffix(cvt_buf)");
                                     break;
 
                                         /* strip any "the" prefix */
@@ -363,38 +368,21 @@ com_pager (int msgnum)
         return;
 }
 
-void
-qt_pager (int msgnum)
-{
-        struct qtmsg *qt_msg;
-
-        if (!(qt_msg = msg_in(qt_list.chrole, msgnum))) {
-                impossible("qt_pager: message %d not found.", msgnum);
-                return;
-        }
-
-        (void) dlb_fseek(msg_file, qt_msg->offset, SEEK_SET);
-        if (qt_msg->delivery == 'p' && strcmp(windowprocs.name, "X11"))
-                deliver_by_pline(qt_msg);
-        else    deliver_by_window(qt_msg, NHW_TEXT);
-        return;
+void qt_pager (int msgnum) {
+    fprintf(stderr, "TODO: qt_pager()\n");
 }
 
-struct permonst *
-qt_montype (void)
-{
-        int qpm;
+struct permonst * qt_montype (void) {
+    int qpm;
 
-        if (rn2(5)) {
-            qpm = urole.enemy1num;
-            if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD))
-                return (&mons[qpm]);
-            return (mkclass(urole.enemy1sym, 0));
-        }
-        qpm = urole.enemy2num;
+    if (rn2(5)) {
+        qpm = urole.enemy1num;
         if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD))
             return (&mons[qpm]);
-        return (mkclass(urole.enemy2sym, 0));
+        return (mkclass(urole.enemy1sym, 0));
+    }
+    qpm = urole.enemy2num;
+    if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD))
+        return (&mons[qpm]);
+    return (mkclass(urole.enemy2sym, 0));
 }
-
-/*questpgr.c*/
