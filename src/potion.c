@@ -4,7 +4,7 @@
 #include "hack.h"
 #include "pm_props.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 bool notonhead = false;
 
@@ -420,7 +420,7 @@ int peffects (struct obj *otmp) {
                             you_unwere(false);
                         u.ulycn = NON_PM;   /* cure lycanthropy */
                     }
-                    losehp(d(2,6), "potion of holy water", KILLED_BY_AN);
+                    losehp(d(2,6), killed_by_const(KM_POTION_HOLY_WATER));
                 } else if(otmp->cursed) {
                     You_feel("quite proud of yourself.");
                     healup(d(2,6),0,0,0);
@@ -439,10 +439,10 @@ int peffects (struct obj *otmp) {
                 } else {
                     if(u.ualign.type == A_LAWFUL) {
                         pline("This burns like acid!");
-                        losehp(d(2,6), "potion of unholy water",
-                                KILLED_BY_AN);
-                    } else
+                        losehp(d(2,6), killed_by_const(KM_POTION_UNHOLY_WATER));
+                    } else {
                         You_feel("full of dread.");
+                    }
                     if (u.ulycn >= LOW_PM && !Upolyd) you_were();
                     exercise(A_CON, false);
                 }
@@ -607,17 +607,14 @@ int peffects (struct obj *otmp) {
         case POT_SICKNESS:
             pline("Yecch!  This stuff tastes like poison.");
             if (otmp->blessed) {
-                pline("(But in fact it was mildly stale %s.)",
-                        fruitname(true));
+                pline("(But in fact it was mildly stale %s.)", fruitname(true));
                 if (!Role_if(PM_HEALER)) {
                     /* NB: blessed otmp->fromsink is not possible */
-                    losehp(1, "mildly contaminated potion", KILLED_BY_AN);
+                    losehp(1, killed_by_const(KM_MILDLY_CONTAMINATED_POTION));
                 }
             } else {
                 if(Poison_resistance)
-                    pline(
-                            "(But in fact it was biologically contaminated %s.)",
-                            fruitname(true));
+                    pline( "(But in fact it was biologically contaminated %s.)", fruitname(true));
                 if (Role_if(PM_HEALER))
                     pline("Fortunately, you have been immunized.");
                 else {
@@ -630,12 +627,13 @@ int peffects (struct obj *otmp) {
                                 true);
                     }
                     if(!Poison_resistance) {
-                        if (otmp->fromsink)
+                        if (otmp->fromsink) {
                             losehp(rnd(10)+5*!!(otmp->cursed),
-                                    "contaminated tap water", KILLED_BY);
-                        else
+                                    killed_by_const(KM_CONTAMINATED_TAP_WATER));
+                        } else {
                             losehp(rnd(10)+5*!!(otmp->cursed),
-                                    "contaminated potion", KILLED_BY_AN);
+                                    killed_by_const(KM_CONTAMINATED_POTION));
+                        }
                     }
                     exercise(A_CON, false);
                 }
@@ -780,9 +778,7 @@ int peffects (struct obj *otmp) {
                         You("hit your %s on the %s.",
                                 body_part(HEAD),
                                 ceiling(u.ux,u.uy));
-                        losehp(uarmh ? 1 : rnd(10),
-                                "colliding with the ceiling",
-                                KILLED_BY);
+                        losehp(uarmh ? 1 : rnd(10), killed_by_const(KM_COLLIDING_WITH_CEILING));
                     } else (void) doup();
                 }
             } else
@@ -819,12 +815,13 @@ int peffects (struct obj *otmp) {
                     } else {
                         You("burn your %s.", body_part(FACE));
                         losehp(d(Fire_resistance ? 1 : 3, 4),
-                                "burning potion of oil", KILLED_BY_AN);
+                                killed_by_const(KM_BURNING_POTION_OF_OIL));
                     }
-                } else if(otmp->cursed)
+                } else if(otmp->cursed) {
                     pline("This tastes like castor oil.");
-                else
+                } else {
                     pline("That was smooth!");
+                }
                 exercise(A_WIS, good_for_you);
             }
             break;
@@ -836,7 +833,7 @@ int peffects (struct obj *otmp) {
                 pline("This burns%s!", otmp->blessed ? " a little" :
                         otmp->cursed ? " a lot" : " like acid");
                 losehp(d(otmp->cursed ? 2 : 1, otmp->blessed ? 4 : 8),
-                        "potion of acid", KILLED_BY_AN);
+                        killed_by_const(KM_POTION_OF_ACID));
                 exercise(A_CON, false);
             }
             if (Stoned) fix_petrification();
@@ -896,25 +893,23 @@ void potionhit (struct monst *mon, struct obj *obj, bool your_fault) {
 
     if(isyou) {
         distance = 0;
-        pline_The("%s crashes on your %s and breaks into shards.",
-                botlnam, body_part(HEAD));
-        losehp(rnd(2), "thrown potion", KILLED_BY_AN);
+        pline_The("%s crashes on your %s and breaks into shards.", botlnam, body_part(HEAD));
+        losehp(rnd(2), killed_by_const(KM_THROWN_POTION));
     } else {
         distance = distu(mon->mx,mon->my);
-        if (!cansee(mon->mx,mon->my)) pline("Crash!");
-        else {
-            char *mnam = mon_nam(mon);
+        if (!cansee(mon->mx,mon->my)) {
+            pline("Crash!");
+        } else {
             char buf[BUFSZ];
 
             if(has_head(mon->data)) {
-                sprintf(buf, "%s %s",
-                        s_suffix(mnam),
-                        (notonhead ? "body" : "head"));
+                char pname[BUFSZ];
+                monster_possessive(pname, BUFSZ, mon);
+                nh_slprintf(buf, BUFSZ, "%s %s", pname, (notonhead ? "body" : "head"));
             } else {
-                strcpy(buf, mnam);
+                mon_nam(buf, BUFSZ, mon);
             }
-            pline_The("%s crashes on %s and breaks into shards.",
-                    botlnam, buf);
+            pline_The("%s crashes on %s and breaks into shards.", botlnam, buf);
         }
         if(rn2(5) && mon->mhp > 1)
             mon->mhp--;
@@ -922,7 +917,7 @@ void potionhit (struct monst *mon, struct obj *obj, bool your_fault) {
 
     /* oil doesn't instantly evaporate */
     if (obj->otyp != POT_OIL && cansee(mon->mx,mon->my))
-        pline("%s.", Tobjnam(obj, "evaporate"));
+        message_object(MSG_O_EVAPORATES, obj);
 
     if (isyou) {
         switch (obj->otyp) {
@@ -939,7 +934,7 @@ void potionhit (struct monst *mon, struct obj *obj, bool your_fault) {
                     pline("This burns%s!", obj->blessed ? " a little" :
                             obj->cursed ? " a lot" : "");
                     losehp(d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8),
-                            "potion of acid", KILLED_BY_AN);
+                            killed_by_const(KM_POTION_OF_ACID));
                 }
                 break;
         }
@@ -959,8 +954,9 @@ do_healing:
                 angermon = false;
                 if(mon->mhp < mon->mhpmax) {
                     mon->mhp = mon->mhpmax;
-                    if (canseemon(mon))
-                        pline("%s looks sound and hale again.", Monnam(mon));
+                    if (canseemon(mon)) {
+                        message_monster(MSG_M_LOOKS_SOUND_AND_HALE, mon);
+                    }
                 }
                 break;
             case POT_SICKNESS:
@@ -968,8 +964,9 @@ do_healing:
                 if (dmgtype(mon->data, AD_DISE) ||
                         dmgtype(mon->data, AD_PEST) || /* won't happen, see prior goto */
                         resists_poison(mon)) {
-                    if (canseemon(mon))
-                        pline("%s looks unharmed.", Monnam(mon));
+                    if (canseemon(mon)) {
+                        message_monster(MSG_M_LOOKS_UNHARMED, mon);
+                    }
                     break;
                 }
 do_illness:
@@ -978,8 +975,9 @@ do_illness:
                 if((mon->mhp > 2) && !resist(mon, POTION_CLASS, 0, NOTELL))
                     mon->mhp /= 2;
                 if (mon->mhp > mon->mhpmax) mon->mhp = mon->mhpmax;
-                if (canseemon(mon))
-                    pline("%s looks rather ill.", Monnam(mon));
+                if (canseemon(mon)) {
+                    message_monster(MSG_M_LOOKS_RATHER_ILL, mon);
+                }
                 break;
             case POT_CONFUSION:
             case POT_BOOZE:
@@ -992,7 +990,7 @@ do_illness:
             case POT_SLEEPING:
                 /* wakeup() doesn't rouse victims of temporary sleep */
                 if (sleep_monst(mon, rnd(12), POTION_CLASS)) {
-                    pline("%s falls asleep.", Monnam(mon));
+                    message_monster(MSG_M_FALLS_ASLEEP, mon);
                     slept_monst(mon);
                 }
                 break;
@@ -1022,8 +1020,7 @@ do_illness:
                 if (is_undead(mon->data) || is_demon(mon->data) ||
                         is_were(mon->data)) {
                     if (obj->blessed) {
-                        pline("%s %s in pain!", Monnam(mon),
-                                is_silent(mon->data) ? "writhes" : "shrieks");
+                        message_monster(MSG_M_SHRIEKS_IN_PAIN, mon);
                         mon->mhp -= d(2,6);
                         /* should only be by you */
                         if (mon->mhp < 1) killed(mon);
@@ -1032,19 +1029,21 @@ do_illness:
                     } else if (obj->cursed) {
                         angermon = false;
                         if (canseemon(mon))
-                            pline("%s looks healthier.", Monnam(mon));
+                            message_monster(MSG_M_LOOKS_HEALTHIER, mon);
                         mon->mhp += d(2,6);
                         if (mon->mhp > mon->mhpmax) mon->mhp = mon->mhpmax;
                         if (is_were(mon->data) && is_human(mon->data) &&
                                 !Protection_from_shape_changers)
+                        {
                             new_were(mon);      /* transform into beast */
+                        }
                     }
                 } else if(mon->data == &mons[PM_GREMLIN]) {
                     angermon = false;
-                    (void)split_mon(mon, (struct monst *)0);
+                    split_mon(mon, NULL);
                 } else if(mon->data == &mons[PM_IRON_GOLEM]) {
                     if (canseemon(mon))
-                        pline("%s rusts.", Monnam(mon));
+                        message_monster(MSG_M_RUSTS, mon);
                     mon->mhp -= d(1,6);
                     /* should only be by you */
                     if (mon->mhp < 1) killed(mon);
@@ -1056,8 +1055,7 @@ do_illness:
                 break;
             case POT_ACID:
                 if (!resists_acid(mon) && !resist(mon, POTION_CLASS, 0, NOTELL)) {
-                    pline("%s %s in pain!", Monnam(mon),
-                            is_silent(mon->data) ? "writhes" : "shrieks");
+                    message_monster(MSG_M_SHRIEKS_IN_PAIN, mon);
                     mon->mhp -= d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8);
                     if (mon->mhp < 1) {
                         if (your_fault)
@@ -1358,7 +1356,7 @@ bool get_wet (struct obj *obj) {
             if (obj->otyp == POT_ACID) {
                 pline("It boils vigorously!");
                 You("are caught in the explosion!");
-                losehp(rnd(10), "elementary chemistry", KILLED_BY);
+                losehp(rnd(10), killed_by_const(KM_ELEMENTARY_CHEMISTRY));
                 makeknown(obj->otyp);
                 update_inventory();
                 return (true);
@@ -1584,7 +1582,7 @@ poof:
                 potionbreathe(obj);
             useup(obj);
             useup(potion);
-            losehp(rnd(10), "alchemic blast", KILLED_BY_AN);
+            losehp(rnd(10), killed_by_const(KM_ALCHEMIC_BLAST));
             return(1);
         }
 
@@ -1831,12 +1829,10 @@ void djinni_from_bottle (struct obj *obj) {
         return;
     }
 
-    if (!Blind) {
-        pline("In a cloud of smoke, %s emerges!", a_monnam(mtmp));
-        pline("%s speaks.", Monnam(mtmp));
+    if (Blind) {
+        message_const(MSG_DJINNI_EMERGES_BLIND);
     } else {
-        You("smell acrid fumes.");
-        pline("%s speaks.", Something);
+        message_monster(MSG_DJINNI_EMERGES, mtmp);
     }
 
     chance = rn2(5);
@@ -1857,7 +1853,7 @@ void djinni_from_bottle (struct obj *obj) {
                  set_malign(mtmp);
                  break;
         case 3 : verbalize("It is about time!");
-                 pline("%s vanishes.", Monnam(mtmp));
+                 message_monster(MSG_M_VANISHES, mtmp);
                  mongone(mtmp);
                  break;
         default: verbalize("You disturbed me, fool!");
@@ -1874,9 +1870,11 @@ struct monst * split_mon ( struct monst *mon, struct monst *mtmp) {
     char reason[BUFSZ];
 
     reason[0] = '\0';
-    if (mtmp) sprintf(reason, " from %s heat",
-            (mtmp == &youmonst) ? (const char *)"your" :
-            (const char *)s_suffix(mon_nam(mtmp)));
+    if (mtmp) {
+        char pname[BUFSZ];
+        monster_possessive(pname, BUFSZ, mtmp);
+        sprintf(reason, " from %s heat", (mtmp == &youmonst) ? "your" : pname);
+    }
 
     if (mon == &youmonst) {
         mtmp2 = cloneu();
@@ -1892,7 +1890,7 @@ struct monst * split_mon ( struct monst *mon, struct monst *mtmp) {
             mtmp2->mhpmax = mon->mhpmax / 2;
             mon->mhpmax -= mtmp2->mhpmax;
             if (canspotmon(mon))
-                pline("%s multiplies%s!", Monnam(mon), reason);
+                message_monster(MSG_M_MULTIPLIES, mon);
         }
     }
     return mtmp2;

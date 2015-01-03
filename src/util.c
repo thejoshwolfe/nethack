@@ -8,6 +8,49 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                pline("%s multiplies%s!", Monnam(mon), reason);
+                message_monster(MSG_M_MULTIPLIES, mon);
+
+                 message_monster(MSG_M_VANISHES, mtmp);
+                 pline("%s vanishes.", Monnam(mtmp));
+
+        message_const(MSG_DJINNI_EMERGES_BLIND);
+        You("smell acrid fumes.");
+        pline("%s speaks.", Something);
+
+        message_monster(MSG_DJINNI_EMERGES, mtmp);
+        pline("In a cloud of smoke, %s emerges!", a_monnam(mtmp));
+        pline("%s speaks.", Monnam(mtmp));
+
+                    pline("%s %s in pain!", Monnam(mon),
+                            is_silent(mon->data) ? "writhes" : "shrieks");
+                    message_monster(MSG_M_SHRIEKS_IN_PAIN, mon);
+
+                        pline("%s rusts.", Monnam(mon));
+                        message_monster(MSG_M_RUSTS, mon);
+
+                            pline("%s looks healthier.", Monnam(mon));
+                            message_monster(MSG_M_LOOKS_HEALTHIER, mon);
+
+                        pline("%s %s in pain!", Monnam(mon),
+                                is_silent(mon->data) ? "writhes" : "shrieks");
+                        message_monster(MSG_M_SHRIEKS_IN_PAIN, mon);
+
+                    message_monster(MSG_M_FALLS_ASLEEP, mon);
+                    pline("%s falls asleep.", Monnam(mon));
+
+                    pline("%s looks rather ill.", Monnam(mon));
+                    message_monster(MSG_M_LOOKS_RATHER_ILL, mon);
+
+                        pline("%s looks unharmed.", Monnam(mon));
+                        message_monster(MSG_M_LOOKS_UNHARMED, mon);
+
+                        message_monster(MSG_M_LOOKS_SOUND_AND_HALE, mon);
+                        pline("%s looks sound and hale again.", Monnam(mon));
+
+        pline("%s.", Tobjnam(obj, "evaporate"));
+        message_object(MSG_O_EVAPORATES, obj);
+
     pline("%s is no longer in your clutches.", Monnam(u.ustuck));
     message_monster(MSG_M_NO_LONGER_IN_YOUR_CLUTCHES, u.ustuck);
 
