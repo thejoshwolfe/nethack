@@ -13,6 +13,8 @@
 #include "do_name.h"
 #include "dbridge.h"
 #include "display.h"
+#include "mkobj.h"
+#include "everything.h"
 
 #include <ctype.h>
 
@@ -1364,7 +1366,7 @@ bool corpse_chance ( struct monst *mon, struct monst *magr, bool was_swallowed) 
             }
 
             sprintf(killer_buf, "%s%s explosion", mdat->mname, possessive_suffix(mdat->mname));
-            killer = {KM_EXPLOSION, mon};
+            killer = killed_by_monster(KM_EXPLOSION, mon);
             explode(mon->mx, mon->my, -1, tmp, MON_EXPLODE, EXPL_NOXIOUS);
             return false;
         }
@@ -1785,7 +1787,7 @@ void poisontell (int typ) {
 }
 
 void poisoned (const char *string, int typ, const char *pname, int fatal) {
-    int i, plural, kprefix = KILLED_BY_AN;
+    int i, plural;
     bool thrown_weapon = (fatal < 0);
 
     if (thrown_weapon) fatal = -fatal;
@@ -1805,13 +1807,11 @@ void poisoned (const char *string, int typ, const char *pname, int fatal) {
     }
     /* suppress killer prefix if it already has one */
     if ((i = name_to_mon(pname)) >= LOW_PM && mons[i].geno & G_UNIQ) {
-        kprefix = KILLED_BY;
         if (!type_is_pname(&mons[i])) pname = the(pname);
     } else if (!strncmpi(pname, "the ", 4) ||
             !strncmpi(pname, "an ", 3) ||
             !strncmpi(pname, "a ", 2)) {
         /*[ does this need a plural check too? ]*/
-        kprefix = KILLED_BY;
     }
     i = rn2(fatal + 20*thrown_weapon);
     if(i == 0 && typ != A_CHA) {
@@ -1824,11 +1824,11 @@ void poisoned (const char *string, int typ, const char *pname, int fatal) {
     } else {
         i = thrown_weapon ? rnd(6) : rn1(10,6);
         if(Half_physical_damage) i = (i+1) / 2;
-        losehp(i, pname, kprefix);
+        fprintf(stderr, "TODO: losehp to %s\n", pname);
+        losehp(i, killed_by_const(KM_TODO));
     }
     if(u.uhp < 1) {
-        killer_format = kprefix;
-        killer = pname;
+        fprintf(stderr, "TODO: killer = %s\n", pname);
         /* "Poisoned by a poisoned ___" is redundant */
         done(strstri(pname, "poison") ? DIED : POISONING);
     }
