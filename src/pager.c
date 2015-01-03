@@ -7,14 +7,10 @@
 #include "hack.h"
 #include "dlb.h"
 #include "display.h"
-#include "winprocs.h"
-
-static bool is_swallow_sym(int);
-static int append_str(char *, const char *);
-static struct permonst * lookat(int, int, char *, char *);
-static void checkfile(char *,struct permonst *,bool,bool);
-static int do_look(bool);
-static bool help_menu(int *);
+#include "pline.h"
+#include "objnam.h"
+#include "do_name.h"
+#include "invent.h"
 
 /* getpos() return values */
 enum {
@@ -74,231 +70,8 @@ static int append_str (char *buf, const char *new_str) {
  * If not hallucinating and the glyph is a monster, also monster data.
  */
 static struct permonst * lookat (int x, int y, char *buf, char *monbuf) {
-    struct monst *mtmp = (struct monst *) 0;
-    struct permonst *pm = (struct permonst *) 0;
-    int glyph;
-
-    buf[0] = monbuf[0] = 0;
-    glyph = glyph_at(x,y);
-    if (u.ux == x && u.uy == y && senseself()) {
-        char race[QBUFSZ];
-
-        /* if not polymorphed, show both the role and the race */
-        race[0] = 0;
-        if (!Upolyd) {
-            sprintf(race, "%s ", urace.adj);
-        }
-
-        sprintf(buf, "%s%s%s called %s",
-                Invis ? "invisible " : "",
-                race,
-                mons[u.umonnum].mname,
-                plname);
-        /* file lookup can't distinguish between "gnomish wizard" monster
-           and correspondingly named player character, always picking the
-           former; force it to find the general "wizard" entry instead */
-        if (Role_if(PM_WIZARD) && Race_if(PM_GNOME) && !Upolyd)
-            pm = &mons[PM_WIZARD];
-
-        if (u.usteed) {
-            char steedbuf[BUFSZ];
-
-            sprintf(steedbuf, ", mounted on %s", y_monnam(u.usteed));
-            /* assert((sizeof buf >= strlen(buf)+strlen(steedbuf)+1); */
-            strcat(buf, steedbuf);
-        }
-        /* When you see yourself normally, no explanation is appended
-           (even if you could also see yourself via other means).
-           Sensing self while blind or swallowed is treated as if it
-           were by normal vision (cf canseeself()). */
-        if ((Invisible || u.uundetected) && !Blind && !u.uswallow) {
-            unsigned how = 0;
-
-            if (Infravision)     how |= 1;
-            if (Unblind_telepat) how |= 2;
-            if (Detect_monsters) how |= 4;
-
-            if (how)
-                sprintf(eos(buf), " [seen: %s%s%s%s%s]",
-                        (how & 1) ? "infravision" : "",
-                        /* add comma if telep and infrav */
-                        ((how & 3) > 2) ? ", " : "",
-                        (how & 2) ? "telepathy" : "",
-                        /* add comma if detect and (infrav or telep or both) */
-                        ((how & 7) > 4) ? ", " : "",
-                        (how & 4) ? "monster detection" : "");
-        }
-    } else if (u.uswallow) {
-        /* all locations when swallowed other than the hero are the monster */
-        sprintf(buf, "interior of %s",
-                                    Blind ? "a monster" : a_monnam(u.ustuck));
-        pm = u.ustuck->data;
-    } else if (glyph_is_monster(glyph)) {
-        bhitpos.x = x;
-        bhitpos.y = y;
-        mtmp = m_at(x,y);
-        if (mtmp != (struct monst *) 0) {
-            char *name, monnambuf[BUFSZ];
-            bool accurate = !Hallucination();
-
-            if (mtmp->data == &mons[PM_COYOTE] && accurate)
-                name = coyotename(mtmp, monnambuf);
-            else
-                name = distant_monnam(mtmp, ARTICLE_NONE, monnambuf);
-
-            pm = mtmp->data;
-            sprintf(buf, "%s%s%s",
-                    (mtmp->mx != x || mtmp->my != y) ?
-                        ((mtmp->isshk && accurate)
-                                ? "tail of " : "tail of a ") : "",
-                    (mtmp->mtame && accurate) ? "tame " :
-                    (mtmp->mpeaceful && accurate) ? "peaceful " : "",
-                    name);
-            if (u.ustuck == mtmp)
-                strcat(buf, (Upolyd && sticks(youmonst.data)) ?
-                        ", being held" : ", holding you");
-            if (mtmp->mleashed)
-                strcat(buf, ", leashed to you");
-
-            if (mtmp->mtrapped && cansee(mtmp->mx, mtmp->my)) {
-                struct trap *t = t_at(mtmp->mx, mtmp->my);
-                int tt = t ? t->ttyp : NO_TRAP;
-
-                /* newsym lets you know of the trap, so mention it here */
-                if (tt == BEAR_TRAP || tt == PIT ||
-                        tt == SPIKED_PIT || tt == WEB)
-                    sprintf(eos(buf), ", trapped in %s",
-                            an(defsyms[trap_to_defsym(tt)].explanation));
-            }
-
-            {
-                int ways_seen = 0, normal = 0, xraydist;
-                bool useemon = (bool) canseemon(mtmp);
-
-                xraydist = (u.xray_range<0) ? -1 : u.xray_range * u.xray_range;
-                /* normal vision */
-                if ((mtmp->wormno ? worm_known(mtmp) : cansee(mtmp->mx, mtmp->my)) &&
-                        mon_visible(mtmp) && !mtmp->minvis) {
-                    ways_seen++;
-                    normal++;
-                }
-                /* see invisible */
-                if (useemon && mtmp->minvis)
-                    ways_seen++;
-                /* infravision */
-                if ((!mtmp->minvis || See_invisible) && see_with_infrared(mtmp))
-                    ways_seen++;
-                /* telepathy */
-                if (tp_sensemon(mtmp))
-                    ways_seen++;
-                /* xray */
-                if (useemon && xraydist > 0 &&
-                        distu(mtmp->mx, mtmp->my) <= xraydist)
-                    ways_seen++;
-                if (Detect_monsters)
-                    ways_seen++;
-                if (MATCH_WARN_OF_MON(mtmp))
-                    ways_seen++;
-
-                if (ways_seen > 1 || !normal) {
-                    if (normal) {
-                        strcat(monbuf, "normal vision");
-                        /* can't actually be 1 yet here */
-                        if (ways_seen-- > 1) strcat(monbuf, ", ");
-                    }
-                    if (useemon && mtmp->minvis) {
-                        strcat(monbuf, "see invisible");
-                        if (ways_seen-- > 1) strcat(monbuf, ", ");
-                    }
-                    if ((!mtmp->minvis || See_invisible) &&
-                            see_with_infrared(mtmp)) {
-                        strcat(monbuf, "infravision");
-                        if (ways_seen-- > 1) strcat(monbuf, ", ");
-                    }
-                    if (tp_sensemon(mtmp)) {
-                        strcat(monbuf, "telepathy");
-                        if (ways_seen-- > 1) strcat(monbuf, ", ");
-                    }
-                    if (useemon && xraydist > 0 &&
-                            distu(mtmp->mx, mtmp->my) <= xraydist) {
-                        /* Eyes of the Overworld */
-                        strcat(monbuf, "astral vision");
-                        if (ways_seen-- > 1) strcat(monbuf, ", ");
-                    }
-                    if (Detect_monsters) {
-                        strcat(monbuf, "monster detection");
-                        if (ways_seen-- > 1) strcat(monbuf, ", ");
-                    }
-                    if (MATCH_WARN_OF_MON(mtmp)) {
-                        char wbuf[BUFSZ];
-                        if (Hallucination())
-                                strcat(monbuf, "paranoid delusion");
-                        else {
-                                sprintf(wbuf, "warned of %s",
-                                        makeplural(mtmp->data->mname));
-                                strcat(monbuf, wbuf);
-                        }
-                        if (ways_seen-- > 1) strcat(monbuf, ", ");
-                    }
-                }
-            }
-        }
-    }
-    else if (glyph_is_object(glyph)) {
-        struct obj *otmp = vobj_at(x,y);
-
-        if (!otmp || otmp->otyp != glyph_to_obj(glyph)) {
-            if (glyph_to_obj(glyph) != STRANGE_OBJECT) {
-                otmp = mksobj(glyph_to_obj(glyph), false, false);
-                if (otmp->oclass == COIN_CLASS)
-                    otmp->quan = 2L; /* to force pluralization */
-                else if (otmp->otyp == SLIME_MOLD)
-                    otmp->spe = current_fruit;  /* give the fruit a type */
-                strcpy(buf, distant_name(otmp, xname));
-                dealloc_obj(otmp);
-            }
-        } else
-            strcpy(buf, distant_name(otmp, xname));
-
-        if (levl[x][y].typ == STONE || levl[x][y].typ == SCORR)
-            strcat(buf, " embedded in stone");
-        else if (IS_WALL(levl[x][y].typ) || levl[x][y].typ == SDOOR)
-            strcat(buf, " embedded in a wall");
-        else if (closed_door(x,y))
-            strcat(buf, " embedded in a door");
-        else if (is_pool(x,y))
-            strcat(buf, " in water");
-        else if (is_lava(x,y))
-            strcat(buf, " in molten lava");     /* [can this ever happen?] */
-    } else if (glyph_is_trap(glyph)) {
-        int tnum = what_trap(glyph_to_trap(glyph));
-        strcpy(buf, defsyms[trap_to_defsym(tnum)].explanation);
-    } else if(!glyph_is_cmap(glyph)) {
-        strcpy(buf,"dark part of a room");
-    } else switch(glyph_to_cmap(glyph)) {
-    case S_altar:
-        if(!In_endgame(&u.uz))
-            sprintf(buf, "%s altar",
-                align_str(Amask2align(levl[x][y].altarmask & ~AM_SHRINE)));
-        else sprintf(buf, "aligned altar");
-        break;
-    case S_ndoor:
-        if (is_drawbridge_wall(x, y) >= 0)
-            strcpy(buf,"open drawbridge portcullis");
-        else if ((levl[x][y].doormask & ~D_TRAPPED) == D_BROKEN)
-            strcpy(buf,"broken door");
-        else
-            strcpy(buf,"doorway");
-        break;
-    case S_cloud:
-        strcpy(buf, Is_airlevel(&u.uz) ? "cloudy area" : "fog/vapor cloud");
-        break;
-    default:
-        strcpy(buf,defsyms[glyph_to_cmap(glyph)].explanation);
-        break;
-    }
-
-    return ((pm && !Hallucination()) ? pm : (struct permonst *) 0);
+    fprintf(stderr, "TODO: permonst * lookat()\n");
+    return NULL;
 }
 
 /*
@@ -826,9 +599,7 @@ int dowhatdoes(void) {
         char bufr[BUFSZ];
         char q, *reslt;
 
-        introff();
         q = yn_function("What command?", (char *)0, '\0');
-        intron();
         reslt = dowhatdoes_core(q, bufr);
         if (reslt)
                 pline("%s", reslt);
@@ -865,27 +636,11 @@ static bool help_menu (int *sel) {
 }
 
 int dohelp(void) {
-        int sel = 0;
-
-        if (help_menu(&sel)) {
-                switch (sel) {
-                        case  0:  display_file(HELP, true);  break;
-                        case  1:  display_file(SHELP, true);  break;
-                        case  2:  (void) dohistory();  break;
-                        case  3:  (void) dowhatis();  break;
-                        case  4:  (void) dowhatdoes();  break;
-                        case  5:  option_help();  break;
-                        case  6:  display_file(OPTIONFILE, true);  break;
-                        case  7:  (void) doextlist();  break;
-                        case  8:  display_file(LICENSE, true);  break;
-                        /* handle slot 9 or 10 */
-                        default: display_file("wizhelp", true);  break;
-                }
-        }
-        return 0;
+    fprintf(stderr, "TODO: dohelp\n");
+    return 0;
 }
 
 int dohistory(void) {
-    display_file(HISTORY, true);
+    fprintf(stderr, "TODO: dohistory\n");
     return 0;
 }
