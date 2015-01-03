@@ -448,7 +448,12 @@ decurse:
             otmp = which_armor(u.usteed, W_SADDLE);
             uncurse(otmp);
             if (!Blind) {
-                message_monster_object(MSG_M_O_SOFTLY_GLOWS_AMBER, u.usteed, otmp);
+                if (Hallucination()) {
+                    message_monster_object_int(MSG_M_O_SOFTLY_GLOWS_COLOR, u.usteed, otmp,
+                            halluc_color_int());
+                } else {
+                    message_monster_object(MSG_M_O_SOFTLY_GLOWS_AMBER, u.usteed, otmp);
+                }
                 otmp->bknown = true;
             }
             break;

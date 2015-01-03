@@ -20,6 +20,29 @@ void update_inventory(void);
 void getlin(const char *, char *);
 
 enum MessageId {
+    MSG_O_GOES_OUT,
+    MSG_M_GLISTENS,
+    MSG_M_SHINES_BRIEFLY,
+    MSG_M_STOMACH_IS_LIT,
+    MSG_ONLY_LIGHT_LEFT_COMES_FROM_O,
+    MSG_YOUR_O_VIBRATES_VIOLENTLY_AND_EXPLODES,
+    M_YOUR_O_DOES_NOT_PROTECT_YOU,
+    MSG_M_O_DOES_NOT_PROTECT_HIM,
+    MSG_M_WEARING_HARD_HELMET,
+    MSG_M_IS_HIT_BY_O,
+    MSG_YOUR_O_VIBRATES,
+    MSG_YOUR_O_SUDDENLY_VIBRATES_UNEXPECTEDLY,
+    MSG_O_MERGES_AND_HARDENS,
+    MSG_O_LOOK_AS_GOOD_AS_NEW,
+    MSG_O_ARE_COVERED_BY_BLACK_GLOW,
+    MSG_O_ARE_COVERED_BY_GOLDEN_GLOW,
+    MSG_YOUR_O_FEEL_WARM_MOMENT,
+    MSG_O_SPINS_COUNTER_CLOCKWISE,
+    MSG_O_SPINS_CLOCKWISE,
+    MSG_O_PULSATES_THEN_EXPLODES,
+    MSG_YOUR_O_VIBRATES_FOR_MOMENT,
+    MSG_YOUR_O_GLOWS_BRIEFLY,
+    MSG_YOUR_O_VIBRATES_BRIEFLY,
     MSG_M_SPEAKS,
     MSG_YOUR_DISPLACED_IMAGE_DOESNT_FOOL_M,
     MSG_M_ASKS_FOR_CONTRIBUTION_TEMPLE,
@@ -35,6 +58,7 @@ enum MessageId {
     MSG_M_SEEMS_UNAFFECTED,
     MSG_M_FRIES_TO_CRISP,
     MSG_IT_STRIKES_M,
+    MSG_M_O_SOFTLY_GLOWS_COLOR,
     MSG_M_O_SOFTLY_GLOWS_AMBER,
     MSG_M_LOOKS_RATHER_NAUSEATED,
     MSG_M_MULTIPLIES,
@@ -205,6 +229,7 @@ void message_int(enum MessageId id, int i);
 void message_monster_string(enum MessageId id, const struct monst *m, const char *s);
 void message_string(enum MessageId id, const char *s);
 void message_monster_object(enum MessageId id, const struct monst * mtmp, struct obj * obj);
+void message_monster_object_int(enum MessageId id, const struct monst * mtmp, struct obj * obj, int);
 
 // stuff to make it just friggin compile
 // creep forward and delete all this junk

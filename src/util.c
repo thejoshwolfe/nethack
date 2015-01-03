@@ -8,6 +8,84 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                            pline("%s out!", Tobjnam(obj, "go"));
+                            message_object(MSG_O_GOES_OUT, obj);
+
+                    pline("%s glistens.", Monnam(u.ustuck));
+                    message_monster(MSG_M_GLISTENS, u.ustuck);
+
+                    pline("%s shines briefly.", Monnam(u.ustuck));
+                    message_monster(MSG_M_SHINES_BRIEFLY, u.ustuck);
+
+                pline("%s %s is lit.", s_suffix(Monnam(u.ustuck)), mbodypart(u.ustuck, STOMACH));
+                message_monster(MSG_M_STOMACH_IS_LIT, u.ustuck);
+
+                pline("Suddenly, the only light left comes from %s!", the(xname(uwep)));
+                message_object(MSG_ONLY_LIGHT_LEFT_COMES_FROM_O, uwep);
+
+    Your("%s vibrates violently, and explodes!",xname(obj));
+    message_object(MSG_YOUR_O_VIBRATES_VIOLENTLY_AND_EXPLODES, obj);
+
+                                Your("%s does not protect you.", xname(uarmh));
+                                message_const(M_YOUR_O_DOES_NOT_PROTECT_YOU, uarmh);
+
+                                            pline("%s's %s does not protect %s.",
+                                                    Monnam(mtmp), xname(helmet), mhim(mtmp));
+                                            message_monster_object(MSG_M_O_DOES_NOT_PROTECT_HIM,
+                                                    mtmp, helmet);
+
+                            pline("Fortunately, %s is wearing a hard helmet.", mon_nam(mtmp));
+                            message_monster(MSG_M_WEARING_HARD_HELMET, mtmp);
+
+                                    pline("%s is hit by %s!", Monnam(mtmp), doname(otmp2));
+                                    message_monster_object(MSG_M_IS_HIT_BY_O, mtmp, otmp2);
+
+                    Your("%s %s.", xname(otmp), otense(otmp, "vibrate"));
+                    message_object(MSG_YOUR_O_VIBRATES, otmp);
+
+                    Your("%s suddenly %s %s.",
+                            xname(otmp), otense(otmp, "vibrate"),
+                            Blind ? "again" : "unexpectedly");
+                    message_object(MSG_YOUR_O_SUDDENLY_VIBRATES_UNEXPECTEDLY, otmp);
+
+                    Your("%s merges and hardens!", xname(otmp));
+                    message_object(MSG_O_MERGES_AND_HARDENS, otmp);
+
+                            Your("%s %s as good as new!",
+                                 xname(otmp),
+                                 otense(otmp, Blind ? "feel" : "look"));
+                            message_object(MSG_O_LOOK_AS_GOOD_AS_NEW, otmp);
+
+                            Your("%s %s covered by a %s %s %s!",
+                                xname(otmp), otense(otmp, "are"),
+                                sobj->cursed ? "mottled" : "shimmering",
+                                 hcolor(sobj->cursed ? NH_BLACK : NH_GOLDEN),
+                                sobj->cursed ? "glow" :
+                                  (is_shield(otmp) ? "layer" : "shield"));
+                            message_object(sobj->cursed ?  MSG_O_ARE_COVERED_BY_BLACK_GLOW :
+                                    MSG_O_ARE_COVERED_BY_GOLDEN_GLOW, otmp);
+
+                            Your("%s %s warm for a moment.", xname(otmp), otense(otmp, "feel"));
+                            message_object(MSG_YOUR_O_FEEL_WARM_MOMENT, otmp);
+
+                Your("%s spins %sclockwise for a moment.", xname(obj), s < 0 ? "counter" : "");
+                message_object((s < 0) ? MSG_O_SPINS_COUNTER_CLOCKWISE : MSG_O_SPINS_CLOCKWISE, obj);
+
+                Your("%s %s momentarily, then %s!",
+                     xname(obj), otense(obj,"pulsate"), otense(obj,"explode"));
+                message_object(MSG_O_PULSATES_THEN_EXPLODES, obj);
+
+        Your("%s %s for a moment.",
+                xname(otmp),
+                otense(otmp, "vibrate"))
+        message_object(MSG_YOUR_O_VIBRATES_FOR_MOMENT, otmp);
+
+    Your("%s %s briefly.", xname(otmp), otense(otmp, Blind ? "vibrate" : "glow"));
+    message_object(Blind ? MSG_YOUR_O_VIBRATES_BRIEFLY : MSG_YOUR_O_GLOWS_BRIEFLY, otmp);
+
+            Your("%s %s briefly.",xname(obj), otense(obj, "vibrate"));
+            message_object(MSG_YOUR_O_VIBRATES_BRIEFLY, obj);
+
             pline("%s speaks:", Monnam(mtmp));
             message_monster(MSG_M_SPEAKS, mtmp);
 
@@ -62,7 +140,8 @@ MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
                         s_suffix(upstart(y_monnam(u.usteed))),
                         aobjnam(otmp, "softly glow"),
                         hcolor(NH_AMBER));
-                message_monster_object(MSG_M_O_SOFTLY_GLOWS_AMBER, u.usteed, otmp);
+                MSG_M_O_SOFTLY_GLOWS_COLOR
+                MSG_M_O_SOFTLY_GLOWS_AMBER
 
             pline("%s looks rather %s.", Monnam(mtmp),
                     is_animal(mtmp->data) ? "nauseated" : "shook up");

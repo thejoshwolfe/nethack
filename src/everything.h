@@ -74,3 +74,4 @@
 #include "do_name.h"
 #include "mhitm.h"
 #include "priest.h"
+#include "mail.h"
