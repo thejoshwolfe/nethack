@@ -8,6 +8,32 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                Your("displaced image doesn't fool %s!", mon_nam(priest));
+                message_monster(MSG_YOUR_DISPLACED_IMAGE_DOESNT_FOOL_M, priest);
+
+            pline("%s asks you for a contribution for the temple.", Monnam(priest));
+            message_monster(MSG_M_ASKS_FOR_CONTRIBUTION_TEMPLE, priest);
+
+                pline("%s is not interested.", Monnam(priest));
+                message_monster(MSG_M_IS_NOT_INTERESTED, priest);
+
+                    pline("%s preaches the virtues of poverty.", Monnam(priest));
+                    message_monster(MSG_M_PREACHES_VIRTUES_POVERTY, priest);
+
+                    pline("%s gives you %s for an ale.", Monnam(priest),
+                        (priest->mgold == 1L) ? "one bit" : "two bits");
+                    message_monster((priest->mgold == 1L) ?
+                            MSG_M_GIVES_YOU_ONE_ALE : MSG_M_GIVES_YOU_TWO_ALE, priest);
+
+                pline("%s breaks out of %s reverie!", Monnam(priest), mhis(priest));
+                message_monster(MSG_M_BREAKS_OUT_OF_HIS_REVERIE, priest);
+
+            pline("%s doesn't want anything to do with you!", Monnam(priest));
+            message_monster(MSG_M_WANTS_NOTHING_TO_DO_WITH_YOU, priest);
+
+                        pline("%s intones:", Monnam(priest));
+                        message_monster(MSG_M_INTONES, priest);
+
                     You("have summoned %s!", a_monnam(dmon));
                     message_monster(MSG_YOU_HAVE_SUMMONED_M, dmon);
 

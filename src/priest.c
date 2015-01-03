@@ -7,6 +7,7 @@
 #include "epri.h"
 #include "emin.h"
 #include "display.h"
+#include "everything.h"
 
 /* this matches the categorizations shown by enlightenment */
 #define ALGN_SINNED     (-4)    /* worse than strayed */
@@ -93,9 +94,9 @@ pick_move:
                 if (mtmp->isshk && !in_his_shop && inhishop(mtmp))
                     check_special_room(false);
                 if(ib) {
-                        if (cansee(mtmp->mx,mtmp->my))
-                            pline("%s picks up %s.", Monnam(mtmp),
-                                distant_name(ib,doname));
+                        if (cansee(mtmp->mx,mtmp->my)) {
+                            pline("%s picks up %s.", "TODO: Monnam(mtmp)", "TODO: distant_name(ib,doname)");
+                        }
                         obj_extract_self(ib);
                         (void) mpickobj(mtmp, ib);
                 }
@@ -122,42 +123,41 @@ static bool histemple_at(struct monst *priest, signed char x, signed char y) {
  * pri_move: return 1: moved  0: didn't  -1: let m_move do it  -2: died
  */
 int pri_move (struct monst *priest) {
-        signed char gx,gy,omx,omy;
-        signed char temple;
-        bool avoid = true;
+    signed char gx,gy,omx,omy;
+    signed char temple;
+    bool avoid = true;
 
-        omx = priest->mx;
-        omy = priest->my;
+    omx = priest->mx;
+    omy = priest->my;
 
-        if(!histemple_at(priest, omx, omy)) return(-1);
+    if(!histemple_at(priest, omx, omy)) return(-1);
 
-        temple = EPRI(priest)->shroom;
+    temple = EPRI(priest)->shroom;
 
-        gx = EPRI(priest)->shrpos.x;
-        gy = EPRI(priest)->shrpos.y;
+    gx = EPRI(priest)->shrpos.x;
+    gy = EPRI(priest)->shrpos.y;
 
-        gx += rn1(3,-1);        /* mill around the altar */
-        gy += rn1(3,-1);
+    gx += rn1(3,-1);        /* mill around the altar */
+    gy += rn1(3,-1);
 
-        if(!priest->mpeaceful ||
-           (Conflict && !resist(priest, RING_CLASS, 0, 0))) {
-                if(monnear(priest, u.ux, u.uy)) {
-                        if(Displaced)
-                                Your("displaced image doesn't fool %s!",
-                                        mon_nam(priest));
-                        (void) mattacku(priest);
-                        return(0);
-                } else if(index(u.urooms, temple)) {
-                        /* chase player if inside temple & can see him */
-                        if(priest->mcansee && m_canseeu(priest)) {
-                                gx = u.ux;
-                                gy = u.uy;
-                        }
-                        avoid = false;
-                }
-        } else if(Invis) avoid = false;
+    if(!priest->mpeaceful ||
+            (Conflict && !resist(priest, RING_CLASS, 0, 0))) {
+        if(monnear(priest, u.ux, u.uy)) {
+            if (Displaced)
+                message_monster(MSG_YOUR_DISPLACED_IMAGE_DOESNT_FOOL_M, priest);
+            mattacku(priest);
+            return(0);
+        } else if(index(u.urooms, temple)) {
+            /* chase player if inside temple & can see him */
+            if(priest->mcansee && m_canseeu(priest)) {
+                gx = u.ux;
+                gy = u.uy;
+            }
+            avoid = false;
+        }
+    } else if(Invis) avoid = false;
 
-        return(move_special(priest,false,true,false,avoid,omx,omy,gx,gy));
+    return(move_special(priest,false,true,false,avoid,omx,omy,gx,gy));
 }
 
 /* exclusively for mktemple() */
@@ -260,7 +260,7 @@ size_t priestname(char *out_buf, size_t buf_size, const struct monst *mon,
         const char *god_name = block_invis_and_halluc ?
             align_gname(alignment) : halu_gname(alignment);
         return nh_slprintf(out_buf, buf_size, "the %s%s%s%s%s%s%sof %s", invisible, guardian,
-                what_subject, what_subject_space, renegade, high, generic_subject god_name);
+                what_subject, what_subject_space, renegade, high, generic_subject, god_name);
     } else {
         // use emin instead of epri
         aligntyp alignment = EMIN(mon)->min_align;
@@ -322,8 +322,11 @@ intemple (int roomno)
                        the endgame; for the Sanctum, the next message names
                        Moloch so suppress the "of Moloch" for him here too */
                     if (sanctum && !Hallucination()) priest->ispriest = 0;
-                    pline("%s intones:",
-                        canseemon(priest) ? Monnam(priest) : "A nearby voice");
+                    if (canseemon(priest)) {
+                        message_monster(MSG_M_INTONES, priest);
+                    } else {
+                        pline("A nearby voice intones:");
+                    }
                     priest->ispriest = save_priest;
                 }
                 msg2 = 0;
@@ -378,110 +381,110 @@ intemple (int roomno)
        }
 }
 
-void
-priest_talk (struct monst *priest)
-{
-        bool coaligned = p_coaligned(priest);
-        bool strayed = (u.ualign.record < 0);
+void priest_talk (struct monst *priest) {
+    bool coaligned = p_coaligned(priest);
+    bool strayed = (u.ualign.record < 0);
 
-        /* KMH, conduct */
-        u.uconduct.gnostic++;
+    /* KMH, conduct */
+    u.uconduct.gnostic++;
 
-        if(priest->mflee || (!priest->ispriest && coaligned && strayed)) {
-            pline("%s doesn't want anything to do with you!",
-                                Monnam(priest));
-            priest->mpeaceful = 0;
-            return;
+    if(priest->mflee || (!priest->ispriest && coaligned && strayed)) {
+        message_monster(MSG_M_WANTS_NOTHING_TO_DO_WITH_YOU, priest);
+        priest->mpeaceful = 0;
+        return;
+    }
+
+    /* priests don't chat unless peaceful and in their own temple */
+    if(!histemple_at(priest,priest->mx,priest->my) ||
+            !priest->mpeaceful || !priest->mcanmove || priest->msleeping) {
+        static const char *cranky_msg[3] = {
+            "Thou wouldst have words, eh?  I'll give thee a word or two!",
+            "Talk?  Here is what I have to say!",
+            "Pilgrim, I would speak no longer with thee."
+        };
+
+        if(!priest->mcanmove || priest->msleeping) {
+            message_monster(MSG_M_BREAKS_OUT_OF_HIS_REVERIE, priest);
+            priest->mfrozen = priest->msleeping = 0;
+            priest->mcanmove = 1;
         }
+        priest->mpeaceful = 0;
+        verbalize("%s", cranky_msg[rn2(3)]);
+        return;
+    }
 
-        /* priests don't chat unless peaceful and in their own temple */
-        if(!histemple_at(priest,priest->mx,priest->my) ||
-                 !priest->mpeaceful || !priest->mcanmove || priest->msleeping) {
-            static const char *cranky_msg[3] = {
-                "Thou wouldst have words, eh?  I'll give thee a word or two!",
-                "Talk?  Here is what I have to say!",
-                "Pilgrim, I would speak no longer with thee."
-            };
-
-            if(!priest->mcanmove || priest->msleeping) {
-                pline("%s breaks out of %s reverie!",
-                      Monnam(priest), mhis(priest));
-                priest->mfrozen = priest->msleeping = 0;
-                priest->mcanmove = 1;
-            }
-            priest->mpeaceful = 0;
-            verbalize("%s", cranky_msg[rn2(3)]);
-            return;
-        }
-
-        /* you desecrated the temple and now you want to chat? */
-        if(priest->mpeaceful && *in_rooms(priest->mx, priest->my, TEMPLE) &&
-                  !has_shrine(priest)) {
-            verbalize("Begone!  Thou desecratest this holy place with thy presence.");
-            priest->mpeaceful = 0;
-            return;
-        }
-        if(!u.ugold) {
-            if(coaligned && !strayed) {
-                if (priest->mgold > 0L) {
-                    /* Note: two bits is actually 25 cents.  Hmm. */
-                    pline("%s gives you %s for an ale.", Monnam(priest),
-                        (priest->mgold == 1L) ? "one bit" : "two bits");
-                    if (priest->mgold > 1L)
-                        u.ugold = 2L;
-                    else
-                        u.ugold = 1L;
-                    priest->mgold -= u.ugold;
-                    flags.botl = 1;
-                } else
-                    pline("%s preaches the virtues of poverty.", Monnam(priest));
-                exercise(A_WIS, true);
-            } else
-                pline("%s is not interested.", Monnam(priest));
-            return;
-        } else {
-            long offer;
-
-            pline("%s asks you for a contribution for the temple.",
-                        Monnam(priest));
-            if((offer = bribe(priest)) == 0) {
-                verbalize("Thou shalt regret thine action!");
-                if(coaligned) adjalign(-1);
-            } else if(offer < (u.ulevel * 200)) {
-                if(u.ugold > (offer * 2L)) verbalize("Cheapskate.");
-                else {
-                    verbalize("I thank thee for thy contribution.");
-                    /*  give player some token  */
-                    exercise(A_WIS, true);
-                }
-            } else if(offer < (u.ulevel * 400)) {
-                verbalize("Thou art indeed a pious individual.");
-                if(u.ugold < (offer * 2L)) {
-                    if (coaligned && u.ualign.record <= ALGN_SINNED)
-                        adjalign(1);
-                    verbalize("I bestow upon thee a blessing.");
-                    incr_itimeout(&HClairvoyant, rn1(500,500));
-                }
-            } else if(offer < (u.ulevel * 600) &&
-                      u.ublessed < 20 &&
-                      (u.ublessed < 9 || !rn2(u.ublessed))) {
-                verbalize("Thy devotion has been rewarded.");
-                if (!(HProtection & INTRINSIC))  {
-                        HProtection |= FROMOUTSIDE;
-                        if (!u.ublessed)  u.ublessed = rn1(3, 2);
-                } else u.ublessed++;
+    /* you desecrated the temple and now you want to chat? */
+    if(priest->mpeaceful && *in_rooms(priest->mx, priest->my, TEMPLE) &&
+            !has_shrine(priest)) {
+        verbalize("Begone!  Thou desecratest this holy place with thy presence.");
+        priest->mpeaceful = 0;
+        return;
+    }
+    if(!u.ugold) {
+        if(coaligned && !strayed) {
+            if (priest->mgold > 0L) {
+                /* Note: two bits is actually 25 cents.  Hmm. */
+                message_monster((priest->mgold == 1L) ?
+                        MSG_M_GIVES_YOU_ONE_ALE : MSG_M_GIVES_YOU_TWO_ALE, priest);
+                if (priest->mgold > 1L)
+                    u.ugold = 2L;
+                else
+                    u.ugold = 1L;
+                priest->mgold -= u.ugold;
+                flags.botl = 1;
             } else {
-                verbalize("Thy selfless generosity is deeply appreciated.");
-                if(u.ugold < (offer * 2L) && coaligned) {
-                    if(strayed && (moves - u.ucleansed) > 5000L) {
-                        u.ualign.record = 0; /* cleanse thee */
-                        u.ucleansed = moves;
-                    } else {
-                        adjalign(2);
-                    }
+                message_monster(MSG_M_PREACHES_VIRTUES_POVERTY, priest);
+            }
+            exercise(A_WIS, true);
+        } else {
+            message_monster(MSG_M_IS_NOT_INTERESTED, priest);
+        }
+        return;
+    } else {
+        long offer;
+
+        message_monster(MSG_M_ASKS_FOR_CONTRIBUTION_TEMPLE, priest);
+        if((offer = bribe(priest)) == 0) {
+            verbalize("Thou shalt regret thine action!");
+            if(coaligned) adjalign(-1);
+        } else if(offer < (u.ulevel * 200)) {
+            if(u.ugold > (offer * 2L)) verbalize("Cheapskate.");
+            else {
+                verbalize("I thank thee for thy contribution.");
+                /*  give player some token  */
+                exercise(A_WIS, true);
+            }
+        } else if(offer < (u.ulevel * 400)) {
+            verbalize("Thou art indeed a pious individual.");
+            if(u.ugold < (offer * 2L)) {
+                if (coaligned && u.ualign.record <= ALGN_SINNED)
+                    adjalign(1);
+                verbalize("I bestow upon thee a blessing.");
+                incr_itimeout(&HClairvoyant, rn1(500,500));
+            }
+        } else if(offer < (u.ulevel * 600) &&
+                u.ublessed < 20 &&
+                (u.ublessed < 9 || !rn2(u.ublessed))) {
+            verbalize("Thy devotion has been rewarded.");
+            if (!(HProtection & INTRINSIC)) {
+                HProtection |= FROMOUTSIDE;
+                if (!u.ublessed)
+                    u.ublessed = rn1(3, 2);
+            } else {
+                u.ublessed++;
+            }
+        } else {
+            verbalize("Thy selfless generosity is deeply appreciated.");
+            if(u.ugold < (offer * 2L) && coaligned) {
+                if(strayed && (moves - u.ucleansed) > 5000L) {
+                    u.ualign.record = 0; /* cleanse thee */
+                    u.ucleansed = moves;
+                } else {
+                    adjalign(2);
                 }
             }
         }
+    }
 }
 
 struct monst *
@@ -601,7 +604,7 @@ ghod_hitsu (      /* when attacking "priest" in his temple */
             break;
         case 1:
             pline("%s voice booms:  \"How darest thou harm my servant!\"",
-                        s_suffix(a_gname_at(ax, ay)));
+                        "TODO: s_suffix(a_gname_at(ax, ay))");
             break;
         default:
             pline("%s roars:  \"Thou dost profane my shrine!\"",
