@@ -37,11 +37,12 @@ char *ysimple_name(const struct obj *);
 char *Ysimple_name2(const struct obj *);
 char *makeplural(const char *);
 char *makesingular(const char *);
-const struct obj *readobjnam(char *,const struct obj *,bool);
+struct obj *readobjnam(char *,const struct obj *,bool);
 int rnd_class(int,int);
 const char *cloak_simple_name(const struct obj *);
 const char *mimic_obj_name(const struct monst *);
 const char * rank_of(int lev, short monnum, bool female);
 int title_to_mon (const char *str, int *rank_indx, int *title_length);
+int xlev_to_rank (int xlev);
 
 #endif // OBJNAM_H

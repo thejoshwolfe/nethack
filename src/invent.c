@@ -335,40 +335,40 @@ Add obj to the hero's inventory.  Make sure the object is "free".
 Adjust hero attributes as necessary.
 */
 struct obj * addinv (struct obj *obj) {
-        struct obj *otmp, *prev;
+    struct obj *otmp, *prev;
 
-        if (obj->where != OBJ_FREE)
-            panic("addinv: obj not free");
-        obj->no_charge = 0;     /* not meaningful for invent */
+    if (obj->where != OBJ_FREE)
+        panic("addinv: obj not free");
+    obj->no_charge = 0;     /* not meaningful for invent */
 
-        addinv_core1(obj);
-        /* if handed gold, we're done */
-        if (obj->oclass == COIN_CLASS)
-            return obj;
+    addinv_core1(obj);
+    /* if handed gold, we're done */
+    if (obj->oclass == COIN_CLASS)
+        return obj;
 
-        /* merge if possible; find end of chain in the process */
-        for (prev = 0, otmp = invent; otmp; prev = otmp, otmp = otmp->nobj)
-            if (merged(&otmp, &obj)) {
-                obj = otmp;
-                goto added;
-            }
-        /* didn't merge, so insert into chain */
-        if (flags.invlet_constant || !prev) {
-            if (flags.invlet_constant) assigninvlet(obj);
-            obj->nobj = invent;         /* insert at beginning */
-            invent = obj;
-            if (flags.invlet_constant) reorder_invent();
-        } else {
-            prev->nobj = obj;           /* insert at end */
-            obj->nobj = 0;
+    /* merge if possible; find end of chain in the process */
+    for (prev = 0, otmp = invent; otmp; prev = otmp, otmp = otmp->nobj)
+        if (merged(&otmp, &obj)) {
+            obj = otmp;
+            goto added;
         }
-        obj->where = OBJ_INVENT;
+    /* didn't merge, so insert into chain */
+    if (flags.invlet_constant || !prev) {
+        if (flags.invlet_constant) assigninvlet(obj);
+        obj->nobj = invent;         /* insert at beginning */
+        invent = obj;
+        if (flags.invlet_constant) reorder_invent();
+    } else {
+        prev->nobj = obj;           /* insert at end */
+        obj->nobj = 0;
+    }
+    obj->where = OBJ_INVENT;
 
 added:
-        addinv_core2(obj);
-        carry_obj_effects(obj);         /* carrying affects the obj */
-        update_inventory();
-        return(obj);
+    addinv_core2(obj);
+    carry_obj_effects(obj);         /* carrying affects the obj */
+    update_inventory();
+    return(obj);
 }
 
 /*

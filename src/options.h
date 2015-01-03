@@ -1,13 +1,15 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include <stdbool.h>
+
 bool match_optname(const char *,const char *,int,bool);
 void initoptions(void);
 void parseoptions(char *,bool,bool);
 int doset(void);
 int dotogglepickup(void);
 void option_help(void);
-void next_opt(winid,const char *);
+void next_opt(int,const char *);
 int fruitadd(char *);
 int choose_classes_menu(const char *,int,bool,char *,char *);
 void add_menu_cmd_alias(char, char);

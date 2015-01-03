@@ -799,7 +799,7 @@ void read_wizkit (void) {
             else *ep = '\0';                /* remove newline */
 
             if (buf[0]) {
-                otmp = readobjnam(buf, (struct obj *)0, false);
+                otmp = readobjnam(buf, NULL, false);
                 if (otmp) {
                     if (otmp != &zeroobj)
                         otmp = addinv(otmp);
