@@ -15,6 +15,9 @@
 #include "pm_props.h"
 #include "onames.h"
 #include "artifact_names.h"
+#include "drawing.h"
+#include "permonst.h"
+#include "pline.h"
 
 #include <fcntl.h>
 #include <sys/file.h>
@@ -53,10 +56,6 @@ void store_part(void);
 void store_room(void);
 bool write_level_file(char *,splev *,specialmaze *);
 void free_rooms(splev *);
-
-extern void monst_init(void);
-extern void objects_init(void);
-extern void decl_init(void);
 
 static bool write_common_data(int,int,lev_init *,long);
 static bool write_monsters(int,char *,monster ***);
@@ -176,9 +175,6 @@ main (int argc, char **argv)
         /* Note:  these initializers don't do anything except guarantee that
                 we're linked properly.
         */
-        monst_init();
-        objects_init();
-        decl_init();
         /* this one does something... */
         init_obj_classes();
 
@@ -1009,8 +1005,9 @@ write_level_file (char *filename, splev *room_level, specialmaze *maze_level)
         } else if (maze_level) {
             if (!write_maze(fout, maze_level))
                 return false;
-        } else
-            panic("write_level_file");
+        } else {
+            impossible("write_level_file");
+        }
 
         (void) close(fout);
         return true;
