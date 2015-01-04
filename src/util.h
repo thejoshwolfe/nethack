@@ -19,7 +19,58 @@ size_t nh_slprintf(char *dest, size_t dest_size, const char *format, ...) __attr
 void update_inventory(void);
 void getlin(const char *, char *);
 
+enum MessageFlag {
+    MSG_FLAG_SHOPKEEPER_ANGRY = 0x1,
+    MSG_FLAG_QUANTITY_MULTI   = 0x2,
+
+    MSG_FLAG_WAKES_UP         = 0x1,
+    MSG_FLAG_SHAKES_HEAD      = 0x2,
+    MSG_FLAG_IN_SHOP          = 0x4,
+
+    MSG_FLAG_NAPPING          = 0x1,
+
+    MSG_FLAG_IN_THE_REST      = 0x1,
+
+    MSG_FLAG_REACHES_OVER     = 0x1,
+
+    MSG_FLAG_STILL            = 0x1,
+    MSG_FLAG_THEM             = 0x2,
+};
+
 enum MessageId {
+    MSG_YOU_OWE_M_X_GOLD,
+    MSG_YOU_OWE_M_X_GOLD_FOR_THEM,
+    MSG_M_ASKS_WHETHER_YOUVE_SEEN_UNTENDED_SHOPS,
+    MSG_M_DOESNT_LIKE_CUSTOMERS_WHO_DONT_PAY,
+    MSG_M_NIMBLY_CATCHES_O,
+    MSG_M_CANNOT_PAY_YOU_AT_PRESENT,
+    MSG_M_SEEMS_UNINTERESTED,
+    MSG_M_DOES_NOT_NOTICE,
+    MSG_THANK_YOU_FOR_SHOPPING_IN_M_S,
+    MSG_PAY_FOR_THE_OTHER_O_BEFORE_BUYING_THIS,
+    MSG_M_SEEMS_TO_BE_NAPPING,
+    MSG_M_TOO_FAR_TO_RECEIVE_PAYMENT,
+    MSG_M_NOT_INTERESTED_IN_YOUR_PAYMENT,
+    MSG_M_NOT_NEAR_ENOUGH_FOR_PAYMENT,
+    MSG_M_GETS_ANGRY,
+    MSG_M_HAS_NO_INTEREST_IN_O,
+    MSG_M_LOOKS_AT_YOUR_CORPSE_AND_DISAPPEARS,
+    MSG_BUT_M_IS_AS_ANGRY_AS_EVER,
+    MSG_YOU_TRY_APPEASE_M_BY_GIVING_1000_GOLD_PIECES,
+    MSG_M_AFTER_YOUR_HIDE_NOT_YOUR_MONEY,
+    MSG_YOU_PARTIALLY_COMPENSATE_M_FOR_HIS_LOSSES,
+    MSG_YOU_COMPENSATE_M_FOR_HIS_LOSSES,
+    MSG_M_IS_AFTER_BLOOD_NOT_MONEY,
+    MSG_M_CALMS_DOWN,
+    MSG_UNFORTUNATELY_M_DOESNT_LOOK_SATISFIED,
+    MSG_YOU_GIVE_M_ALL_YOUR_GOLD,
+    MSG_YOU_GIVE_M_THE_X_GOLD_PIECES,
+    MSG_YOU_DO_NOT_OWE_M_ANYTHING,
+    MSG_YOU_HAVE_X_CREDIT_AT_M_S,
+    MSG_PLEASE_LEAVE_M_OUTSIDE,
+    MSG_LEAVE_M_OUTSIDE,
+    MSG_M_WAKES_UP,
+    MSG_M_CAN_MOVE_AGAIN,
     MSG_M_NO_MOOD_FOR_CONSULTATIONS,
     MSG_O_GOES_OUT,
     MSG_M_GLISTENS,
@@ -27,7 +78,7 @@ enum MessageId {
     MSG_M_STOMACH_IS_LIT,
     MSG_ONLY_LIGHT_LEFT_COMES_FROM_O,
     MSG_YOUR_O_VIBRATES_VIOLENTLY_AND_EXPLODES,
-    M_YOUR_O_DOES_NOT_PROTECT_YOU,
+    MSG_YOUR_O_DOES_NOT_PROTECT_YOU,
     MSG_M_O_DOES_NOT_PROTECT_HIM,
     MSG_M_WEARING_HARD_HELMET,
     MSG_M_IS_HIT_BY_O,
@@ -233,6 +284,7 @@ struct Message {
     const struct obj *object2;
     const struct obj *object3;
     int int1;
+    unsigned char flags;
 };
 
 void message_const(enum MessageId id);
@@ -246,6 +298,16 @@ void message_monster_string(enum MessageId id, const struct monst *m, const char
 void message_string(enum MessageId id, const char *s);
 void message_monster_object(enum MessageId id, const struct monst * mtmp, struct obj * obj);
 void message_monster_object_int(enum MessageId id, const struct monst * mtmp, struct obj * obj, int);
+void message_monster_object_flag(enum MessageId id, const struct monst *, struct obj *, unsigned char);
+
+void message_monster_int_string(enum MessageId id, const struct monst *, int, const char *);
+void message_monster_int(enum MessageId id, const struct monst *, int);
+void message_monster_flag(enum MessageId id, const struct monst *, unsigned char);
+void message_monster_int_flag(enum MessageId id, const struct monst *, int, unsigned char);
+
+void audio_message_monster(enum MessageId id, const struct monst *m);
+void audio_message_object_flag(enum MessageId id, const struct obj *, unsigned char);
+void audio_message_monster_string(enum MessageId id, const struct monst *, const char *);
 
 // stuff to make it just friggin compile
 // creep forward and delete all this junk

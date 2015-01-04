@@ -8,6 +8,150 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                Your("displaced image doesn't fool %s!", mon_nam(shkp));
+                message_monster(MSG_YOUR_DISPLACED_IMAGE_DOESNT_FOOL_M, shkp);
+
+            unsigned char still_flag = credit_use ? MSG_FLAG_STILL : 0;
+            if(obj->oclass == COIN_CLASS) {
+                You("%sowe %s %ld %s!", still, mon_nam(shkp), value, currency(value));
+                message_monster_int_flag(MSG_YOU_OWE_M_X_GOLD, shkp, value, still_flag);
+            } else {
+                You("%sowe %s %ld %s for %s!", still, mon_nam(shkp), value, currency(value),
+                        obj->quan > 1L ? "them" : "it");
+                unsigned char them_flag = MSG_FLAG_THEM;
+                message_monster_int_flag(MSG_YOU_OWE_M_X_GOLD_FOR_THEM, shkp,
+                        value, still_flag|them_flag);
+            }
+
+        pline("%s asks whether you've seen any untended shops recently.", Monnam(shkp));
+        message_monster(MSG_M_ASKS_WHETHER_YOUVE_SEEN_UNTENDED_SHOPS, shkp);
+
+                    pline("%s doesn't like customers who don't pay.", Monnam(shkp));
+                    message_monster(MSG_M_DOESNT_LIKE_CUSTOMERS_WHO_DONT_PAY, shkp);
+
+            pline("%s nimbly%s catches %s.",
+                    Monnam(shkp),
+                     ? "" : " reaches over and",
+                    the(xname(obj)));
+            unsigned char reaches_over_flag = (x == shkp->mx && y == shkp->my) ?
+                0 : MSG_FLAG_REACHES_OVER;
+            message_monster_object_flag(MSG_M_NIMBLY_CATCHES_O, shkp, reaches_over_flag, obj);
+
+            pline("%s cannot pay you at present.", Monnam(shkp));
+            message_monster(MSG_M_CANNOT_PAY_YOU_AT_PRESENT, shkp);
+
+        pline("%s seems uninterested%s.", Monnam(shkp), cgold ? " in the rest" : "");
+        unsigned char in_the_rest_flag = cgold ? MSG_FLAG_IN_THE_REST : 0;
+        message_monster_flag(MSG_M_SEEMS_UNINTERESTED, shkp, in_the_rest_flag);
+
+            pline("%s seems uninterested.", Monnam(shkp));
+            monster_message(MSG_M_SEEMS_UNINTERESTED, shkp);
+
+            pline("%s does not notice.", Monnam(shkp));
+            monster_message(MSG_M_DOES_NOT_NOTICE, shkp);
+
+        verbalize("Thank you for shopping in %s %s!",
+                s_suffix(shkname(shkp)),
+                shtypes[eshkp->shoptype - SHOPBASE].name);
+        audio_message_monster_string(MSG_THANK_YOU_FOR_SHOPPING_IN_M_S, shkp,
+                shtypes[eshkp->shoptype - SHOPBASE].name);
+
+        pline("%s %s.", Monnam(shkp), rn2(2) ? "seems to be napping" : "doesn't respond");
+        unsigned char nap_flag = rn2(2) ? MSG_FLAG_NAPPING : 0;
+        message_monster_flag(MSG_M_SEEMS_TO_BE_NAPPING, shkp, nap_flag);
+
+            pline("%s is too far to receive your payment.", Monnam(mtmp));
+            message_monster(MSG_M_TOO_FAR_TO_RECEIVE_PAYMENT, mtmp);
+
+            pline("%s is not interested in your payment.", Monnam(mtmp));
+            message_monster(MSG_M_NOT_INTERESTED_IN_YOUR_PAYMENT, mtmp);
+
+            pline("%s is not near enough to receive your payment.", Monnam(shkp));
+            message_monster(MSG_M_NOT_NEAR_ENOUGH_FOR_PAYMENT, shkp);
+
+    pline("%s %s!", Monnam(shkp), !ANGRY(shkp) ? "gets angry" : "is furious");
+    unsigned char angry_flag = ANGRY(shkp) ? MSG_FLAG_SHOPKEEPER_ANGRY : 0;
+    message_monster_flag(MSG_M_GETS_ANGRY, angry_flag);
+
+            pline("%s has no interest in %s.", Monnam(shkp), the(xname(obj)));
+            message_monster_object(MSG_M_HAS_NO_INTEREST_IN_O, shkp, obj);
+
+            pline("%s %slooks at your corpse%s and %s.",
+                    Monnam(shkp),
+                    (!shkp->mcanmove || shkp->msleeping) ? "wakes up, " : "",
+                    !rn2(2) ? (shkp->female ? ", shakes her head," :
+                        ", shakes his head,") : "",
+                    !inhishop(shkp) ? "disappears" : "sighs");
+            unsigned char wakes_up_flag = (!shkp->mcanmove || shkp->msleeping) ?
+                MSG_FLAG_WAKES_UP : 0;
+            unsigned char shakes_head_flag = (!rn2(2)) ? MSG_FLAG_SHAKES_HEAD : 0;
+            unsigned char in_shop_flag = inhishop(shkp) ? MSG_FLAG_IN_SHOP : 0;
+            message_monster_flag(MSG_M_LOOKS_AT_YOUR_CORPSE_AND_DISAPPEARS, shkp,
+                    wakes_up_flag|shakes_head_flag|in_shop_flag);
+
+            verbalize("%s for the other %s before buying %s.",
+                    ANGRY(shkp) ? "Pay" : "Please pay", xname(obj),
+                    save_quan > 1L ? "these" : "this one");
+            unsigned char angry_flag = ANGRY(shkp) ? MSG_FLAG_SHOPKEEPER_ANGRY : 0;
+            unsigned char quantity_flag = (save_quan > 1L) ? MSG_FLAG_QUANTITY_MULTI : 0;
+            audio_message_object_flag(MSG_PAY_FOR_THE_OTHER_O_BEFORE_BUYING_THIS,
+                    obj, angry_flag|quantity_flag);
+
+                pline("But %s is as angry as ever.", mon_nam(shkp));
+                message_monster(MSG_BUT_M_IS_AS_ANGRY_AS_EVER, shkp);
+
+            You("try to appease %s by giving %s 1000 gold pieces.",
+                    x_monnam(shkp, ARTICLE_THE, "angry", 0, false),
+                    mhim(shkp));
+            message_monster(MSG_YOU_TRY_APPEASE_M_BY_GIVING_1000_GOLD_PIECES, shkp);
+
+            pline("%s is after your hide, not your money!", Monnam(shkp));
+            message_monster(MSG_M_AFTER_YOUR_HIDE_NOT_YOUR_MONEY, shkp);
+
+            pline("But since %s shop has been robbed recently,", mhis(shkp));
+            if (u.ugold < ltmp) {
+                message_const(MSG_YOU_PARTIALLY_COMPENSATE_M_FOR_HIS_LOSSES, shkp);
+            } else {
+                message_const(MSG_YOU_COMPENSATE_M_FOR_HIS_LOSSES, shkp);
+            }
+            pline("you %scompensate %s for %s losses.",
+                    (u.ugold < ltmp) ?  "partially " : "", mon_nam(shkp), mhis(shkp));
+
+            pline("%s is after blood, not money!", Monnam(shkp));
+            message_monster(MSG_M_IS_AFTER_BLOOD_NOT_MONEY, shkp);
+
+        pline("%s calms down.", Monnam(shkp));
+        message_monster(MSG_M_CALMS_DOWN, shkp);
+
+                pline("Unfortunately, %s doesn't look satisfied.", mhe(shkp));
+                message_monster(MSG_UNFORTUNATELY_M_DOESNT_LOOK_SATISFIED, shkp);
+
+                You("give %s all your%s gold.", mon_nam(shkp), stashed_gold ? " openly kept" : "");
+                message_monster(MSG_YOU_GIVE_M_ALL_YOUR_GOLD, shkp);
+                if (stashed_gold) pline("But you have hidden gold!");
+
+                You("give %s the %ld gold piece%s %s asked for.",
+                        mon_nam(shkp), ltmp, plur(ltmp), mhe(shkp));
+                message_monster_int(MSG_YOU_GIVE_M_THE_X_GOLD_PIECES, shkp, ltmp);
+
+            You("do not owe %s anything.", mon_nam(shkp));
+            message_monster(MSG_YOU_DO_NOT_OWE_M_ANYTHING, shkp);
+
+                You("have %ld %s credit at %s %s.",
+                        amt, currency(amt), s_suffix(shkname(shkp)),
+                        shtypes[eshkp->shoptype - SHOPBASE].name);
+                message_monster_int_string(MSG_YOU_HAVE_X_CREDIT_AT_M_S, shkp,
+                        amt, shtypes[eshkp->shoptype - SHOPBASE].name);
+
+            verbalize(NOTANGRY(shkp) ?
+                    "Will you please leave %s outside?" :
+                    "Leave %s outside.", y_monnam(u.usteed));
+            audio_message_monster(NOTANGRY(shkp) ?
+                    MSG_PLEASE_LEAVE_M_OUTSIDE : MSG_LEAVE_M_OUTSIDE, u.usteed);
+
+            pline("%s %s.", Monnam(shkp), shkp->msleeping ? "wakes up" : "can move again");
+            message_monster(shkp->msleeping ? MSG_M_WAKES_UP : MSG_M_CAN_MOVE_AGAIN, shkp);
+
         pline("%s is in no mood for consultations.", Monnam(oracl));
         message_monster(MSG_M_NO_MOOD_FOR_CONSULTATIONS, oracl);
 

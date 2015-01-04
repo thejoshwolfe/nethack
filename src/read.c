@@ -1336,7 +1336,7 @@ id:
                                 pline("Fortunately, you are wearing a hard helmet.");
                                 if (dmg > 2) dmg = 2;
                             } else if (flags.verbose) {
-                                message_object(M_YOUR_O_DOES_NOT_PROTECT_YOU, uarmh);
+                                message_object(MSG_YOUR_O_DOES_NOT_PROTECT_YOU, uarmh);
                             }
                         }
                     } else

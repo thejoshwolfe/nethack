@@ -133,28 +133,28 @@ void There (const char * line, ...) {
 
 void You_hear (const char * line, ...) {
     va_list the_args;
-        char *tmp;
-        va_start(the_args, line);
-        if (Underwater)
-                YouPrefix(tmp, "You barely hear ", line);
-        else if (u.usleep)
-                YouPrefix(tmp, "You dream that you hear ", line);
-        else
-                YouPrefix(tmp, "You hear ", line);
-        vpline(strcat(tmp, line), the_args);
+    char *tmp;
+    va_start(the_args, line);
+    if (Underwater)
+        YouPrefix(tmp, "You barely hear ", line);
+    else if (u.usleep)
+        YouPrefix(tmp, "You dream that you hear ", line);
+    else
+        YouPrefix(tmp, "You hear ", line);
+    vpline(strcat(tmp, line), the_args);
     va_end(the_args);
 }
 
 void verbalize (const char *line, ...) {
     va_list the_args;
-        char *tmp;
-        if (!flags.soundok) return;
-        va_start(the_args, line);
-        tmp = You_buf((int)strlen(line) + sizeof "\"\"");
-        strcpy(tmp, "\"");
-        strcat(tmp, line);
-        strcat(tmp, "\"");
-        vpline(tmp, the_args);
+    char *tmp;
+    if (!flags.soundok) return;
+    va_start(the_args, line);
+    tmp = You_buf((int)strlen(line) + sizeof "\"\"");
+    strcpy(tmp, "\"");
+    strcat(tmp, line);
+    strcat(tmp, "\"");
+    vpline(tmp, the_args);
     va_end(the_args);
 }
 
