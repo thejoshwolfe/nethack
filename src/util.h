@@ -525,7 +525,6 @@ int create_nhwindow(int);
 void destroy_nhwindow(int);
 void display_nhwindow(int, bool);
 void clear_nhwindow(int);
-void my_delay_output(void);
 void print_glyph(int, signed char x, signed char y, int glyph);
 int query_category ( const char *qstr, struct obj *olist, int qflags, menu_item **pick_list, int how);
 int query_objlist(const char *qstr, struct obj *olist, int qflags,

@@ -265,7 +265,6 @@ static bool md_rush ( struct monst *md, int tx, int ty) {
         place_monster(md,fx,fy);        /* put md down */
         newsym(fx,fy);                  /* see it */
         flush_screen(0);                /* make sure md shows up */
-        my_delay_output();                 /* wait a little bit */
 
         /* Remove md from the dungeon.  Restore original mon, if necessary. */
         if (mon) {
@@ -299,7 +298,6 @@ static bool md_rush ( struct monst *md, int tx, int ty) {
     place_monster(md, fx, fy);  /* place at final spot */
     newsym(fx, fy);
     flush_screen(0);
-    my_delay_output();                     /* wait a little bit */
 
     return true;
 }

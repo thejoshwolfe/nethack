@@ -464,10 +464,8 @@ m_throw (
                     break;
                 }
                 tmp_at(bhitpos.x, bhitpos.y);
-                my_delay_output();
         }
         tmp_at(bhitpos.x, bhitpos.y);
-        my_delay_output();
         tmp_at(DISP_END, 0);
 
         if (blindinc) {

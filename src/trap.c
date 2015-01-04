@@ -1496,8 +1496,6 @@ int launch_obj(short otyp, int x1, int y1, int x2, int y2, int style) {
     bool used_up = false;
     bool otherside = false;
     int dist;
-    int tmp;
-    int delaycnt = 0;
 
     otmp = sobj_at(otyp, x1, y1);
     /* Try the other side too, for rolling boulder traps */
@@ -1551,11 +1549,8 @@ int launch_obj(short otyp, int x1, int y1, int x2, int y2, int style) {
             style &= ~LAUNCH_KNOWN;
             /* fall through */
             roll: case ROLL:
-            delaycnt = 2;
             /* fall through */
         default:
-            if (!delaycnt)
-                delaycnt = 1;
             if (!cansee(bhitpos.x, bhitpos.y))
                 curs_on_u();
             tmp_at(DISP_FLASH, obj_to_glyph(singleobj));
@@ -1566,12 +1561,6 @@ int launch_obj(short otyp, int x1, int y1, int x2, int y2, int style) {
     while (dist-- > 0 && !used_up) {
         struct trap *t;
         tmp_at(bhitpos.x, bhitpos.y);
-        tmp = delaycnt;
-
-        /* dstage@u.washington.edu -- Delay only if hero sees it */
-        if (cansee(bhitpos.x, bhitpos.y))
-            while (tmp-- > 0)
-                my_delay_output();
 
         bhitpos.x += dx;
         bhitpos.y += dy;

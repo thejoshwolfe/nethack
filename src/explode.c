@@ -221,7 +221,6 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                                 cmap_to_glyph(shield_static[k]));
                 }
                 curs_on_u();    /* will flush screen and output */
-                my_delay_output();
             }
 
             /* Cover last shield glyph with blast symbol. */
@@ -231,9 +230,6 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                             explosion_to_glyph(expltype, expl[i][j]));
             }
 
-        } else {                /* delay a little bit. */
-            my_delay_output();
-            my_delay_output();
         }
 
         tmp_at(DISP_END, 0); /* clear the explosion */

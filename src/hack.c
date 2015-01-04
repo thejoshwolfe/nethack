@@ -1504,13 +1504,6 @@ pull_free:
         if (iflags.runmode != RUN_LEAP || !(moves % 7L)) {
             if (flags.time) flags.botl = 1;
             curs_on_u();
-            my_delay_output();
-            if (iflags.runmode == RUN_CRAWL) {
-                my_delay_output();
-                my_delay_output();
-                my_delay_output();
-                my_delay_output();
-            }
         }
     }
 }

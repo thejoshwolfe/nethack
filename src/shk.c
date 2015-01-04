@@ -2516,7 +2516,6 @@ struct monst * shkcatch (struct obj *obj, signed char x, signed char y) {
             message_monster_object_flag(MSG_M_NIMBLY_CATCHES_O, shkp, obj, reaches_over_flag);
             if (!canspotmon(shkp))
                 map_invisible(x, y);
-            my_delay_output();
             mark_synch();
         }
         subfrombill(obj, shkp);

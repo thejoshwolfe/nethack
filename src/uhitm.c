@@ -386,8 +386,6 @@ static void start_engulf(struct monst *mdef) {
         tmp_at(mdef->mx, mdef->my);
     }
     message_monster(MSG_YOU_ENGULF_M, mdef);
-    my_delay_output();
-    my_delay_output();
 }
 
 static void end_engulf(void) {
