@@ -1054,13 +1054,19 @@ static bool m_slips_free(struct monst *mdef, struct attack *mattk) {
     /* if your cloak/armor is greased, monster slips off; this
      protection might fail (33% chance) when the armor is cursed */
     if (obj && (obj->greased || obj->otyp == OILSKIN_CLOAK) && (!obj->cursed || rn2(3))) {
-        You("%s %s %s %s!", mattk->adtyp == AD_WRAP ? "slip off of" : "grab, but cannot hold onto", s_suffix(mon_nam(mdef)), obj->greased ? "greased" : "slippery",
-                /* avoid "slippery slippery cloak"
-         for undiscovered oilskin cloak */
-                (obj->greased || objects[obj->otyp].oc_name_known) ? xname(obj) : cloak_simple_name(obj));
-
+        if (mattk->adtyp == AD_WRAP) {
+            if (obj->greased)
+                message_monster_object(MSG_YOU_SLIP_OFF_M_GREASED_O, mdef, obj);
+            else
+                message_monster_object(MSG_YOU_SLIP_OFF_M_SLIPPERY_O, mdef, obj);
+        } else {
+            if (obj->greased)
+                message_monster_object(MSG_YOU_GRAB_BUT_CANNOT_HOLD_ONTO_M_GREASED_O, mdef, obj);
+            else
+                message_monster_object(MSG_YOU_GRAB_BUT_CANNOT_HOLD_ONTO_M_SLIPPERY_O, mdef, obj);
+        }
         if (obj->greased && !rn2(2)) {
-            pline_The("grease wears off.");
+            message_const(MSG_THE_GREASE_WEARS_OFF);
             obj->greased = 0;
         }
         return true;
@@ -1155,9 +1161,9 @@ static void steal_it(struct monst *mdef, struct attack *mattk) {
 
     if (stealoid) { /* we will be taking everything */
         if (gender(mdef) == (int)u.mfemale && youmonst.data->mlet == S_NYMPH)
-            You("charm %s.  She gladly hands over her possessions.", mon_nam(mdef));
+            message_monster(MSG_YOU_CHARM_HER_AND_STEAL_EVERYTHING, mdef);
         else
-            You("seduce %s and %s starts to take off %s clothes.", mon_nam(mdef), mhe(mdef), mhis(mdef));
+            message_monster_string(MSG_YOU_SEDUCE_M_AND_HE_GETS_NAKED, mdef, mhe(mdef));
     }
 
     while ((otmp = mdef->minvent) != 0) {
@@ -1175,7 +1181,7 @@ static void steal_it(struct monst *mdef, struct attack *mattk) {
             update_mon_intrinsics(mdef, otmp, false, false);
 
             if (otmp == stealoid) /* special message for final item */
-                pline("%s finishes taking off %s suit.", Monnam(mdef), mhis(mdef));
+                message_monster_string(MSG_HE_FINISHES_TAKING_OFF_HIS_SUIT, mdef, mhis(mdef));
         }
         /* give the object to the character */
         otmp = hold_another_object(otmp, "You snatched but dropped %s.", doname(otmp), "You steal: ");

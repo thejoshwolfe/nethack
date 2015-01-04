@@ -829,5 +829,12 @@ MSG_THE_SILVER_SEARS_M_FLESH, "The silver sears %s flesh!" s_suffix(mon_name());
 MSG_THE_POISON_DOESNT_SEEM_TO_AFFECT_M, pline_The("poison doesn't seem to affect %s.", mon_nam(mon));
 MSG_THE_POISON_WAS_DEADLY, pline_The("poison was deadly...");
 MSG_M_APPEARS_CONFUSED, pline("%s appears confused.", Monnam(mon));
-
+MSG_THE_GREASE_WEARS_OFF, pline_The("grease wears off.");
+MSG_YOU_SLIP_OFF_M_GREASED_O, You("slip off of %s greased %s!", s_suffix(mon_nam(mdef)), xname(obj));
+MSG_YOU_SLIP_OFF_M_SLIPPERY_O You("slip off of %s slippery %s!", s_suffix(mon_nam(mdef)), xname(obj).replace(/^slippery /, ""));
+MSG_YOU_GRAB_BUT_CANNOT_HOLD_ONTO_M_GREASED_O, You("grab, but cannot hold onto %s greased %s!", s_suffix(mon_nam(mdef)), xname(obj));
+MSG_YOU_GRAB_BUT_CANNOT_HOLD_ONTO_M_SLIPPERY_O You("grab, but cannot hold onto %s slippery %s!", s_suffix(mon_nam(mdef)), xname(obj).replace(/^slippery /, ""));
+MSG_YOU_CHARM_HER_AND_STEAL_EVERYTHING, You("charm %s.  She gladly hands over her possessions.", mon_nam(mdef));
+MSG_YOU_SEDUCE_M_AND_HE_GETS_NAKED, You("seduce %s and %s starts to take off %s clothes.", mon_nam(mdef), mhe(mdef), mhis(mdef));
+MSG_HE_FINISHES_TAKING_OFF_HIS_SUIT, pline("%s finishes taking off %s suit.", Monnam(mdef), mhis(mdef));
 */
