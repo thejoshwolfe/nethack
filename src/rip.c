@@ -1,7 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "decl.h"
+#include "global.h"
 #include "rip.h"
 #include "hack.h"
+
+#include <string.h>
 
 extern const char * const killed_by_prefix[];   /* from topten.c */
 
@@ -44,78 +48,5 @@ static void center (int line, char *text) {
 
 
 void genl_outrip(winid tmpwin, int how) {
-    char **dp;
-    char *dpx;
-    char buf[BUFSZ];
-    int x;
-    int line;
-
-    rip = dp = (char **) malloc(sizeof(rip_txt));
-    for (x = 0; rip_txt[x]; x++) {
-        dp[x] = (char *) malloc((unsigned int)(strlen(rip_txt[x]) + 1));
-        strcpy(dp[x], rip_txt[x]);
-    }
-    dp[x] = (char *)0;
-
-    /* Put name on stone */
-    sprintf(buf, "%s", plname);
-    buf[STONE_LINE_LEN] = 0;
-    center(NAME_LINE, buf);
-
-    /* Put $ on stone */
-    sprintf(buf, "%ld Au", u.ugold);
-    buf[STONE_LINE_LEN] = 0; /* It could be a *lot* of gold :-) */
-    center(GOLD_LINE, buf);
-
-    /* Put together death description */
-    switch (killer_format) {
-        default: impossible("bad killer format?");
-        case KILLED_BY_AN:
-                 strcpy(buf, killed_by_prefix[how]);
-                 strcat(buf, an(killer));
-                 break;
-        case KILLED_BY:
-                 strcpy(buf, killed_by_prefix[how]);
-                 strcat(buf, killer);
-                 break;
-        case NO_KILLER_PREFIX:
-                 strcpy(buf, killer);
-                 break;
-    }
-
-    /* Put death type on stone */
-    for (line=DEATH_LINE, dpx = buf; line<YEAR_LINE; line++) {
-        int i,i0;
-        char tmpchar;
-
-        if ( (i0=strlen(dpx)) > STONE_LINE_LEN) {
-            for(i = STONE_LINE_LEN; ((i0 > STONE_LINE_LEN) && i); i--)
-                if(dpx[i] == ' ') i0 = i;
-            if(!i) i0 = STONE_LINE_LEN;
-        }
-        tmpchar = dpx[i0];
-        dpx[i0] = 0;
-        center(line, dpx);
-        if (tmpchar != ' ') {
-            dpx[i0] = tmpchar;
-            dpx= &dpx[i0];
-        } else  dpx= &dpx[i0+1];
-    }
-
-    /* Put year on stone */
-    sprintf(buf, "%4d", getyear());
-    center(YEAR_LINE, buf);
-
-    putstr(tmpwin, 0, "");
-    for(; *dp; dp++)
-        putstr(tmpwin, 0, *dp);
-
-    putstr(tmpwin, 0, "");
-    putstr(tmpwin, 0, "");
-
-    for (x = 0; rip_txt[x]; x++) {
-        free((void *)rip[x]);
-    }
-    free((void *)rip);
-    rip = 0;
+    fprintf(stderr, "TODO: genl_outrip\n");
 }
