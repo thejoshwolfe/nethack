@@ -41,6 +41,7 @@ enum MessageFlag {
     MSG_FLAG_MADE_BY_YOU      = 0x1,
 };
 
+// when editing this struct, also edit message_id_str
 enum MessageId {
     MSG_A_BLIND_M_CANNOT_DEFEND_ITSELF,
     MSG_YOU_MISS_M,
