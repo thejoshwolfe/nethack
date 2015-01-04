@@ -38,6 +38,14 @@ enum MessageFlag {
 };
 
 enum MessageId {
+    MSG_O_GO_OUT,
+    MSG_M_DROPS_X_GOLD_PIECES,
+    MSG_M_DROPS_O,
+    MSG_M_STOLE_O,
+    MSG_M_TRIES_TO_STEAL_YOUR_O_BUT_GIVES_UP,
+    MSG_M_TRIES_TO_ROB_BUT_YOURE_NAKED,
+    MSG_M_STEALS_O,
+    MSG_M_QUICKLY_SNATCHES_GOLD_FROM_BEETWEEN_YOUR_LEGS,
     MSG_M_IS_EAT_NOISILY,
     MSG_M_SEEMS_NOT_TO_NOTICE_YOU,
     MSG_M_BOASTS_ABOUT_GEM_COLLECTION,
@@ -338,6 +346,8 @@ void message_string(enum MessageId id, const char *s);
 void message_monster_object(enum MessageId id, const struct monst * mtmp, struct obj * obj);
 void message_monster_object_int(enum MessageId id, const struct monst * mtmp, struct obj * obj, int);
 void message_monster_object_flag(enum MessageId id, const struct monst *, struct obj *, unsigned char);
+void message_monster_object_string(enum MessageId id, const struct monst * mtmp, struct obj * obj,
+        const char *);
 
 void message_monster_int_string(enum MessageId id, const struct monst *, int, const char *);
 void message_monster_int(enum MessageId id, const struct monst *, int);

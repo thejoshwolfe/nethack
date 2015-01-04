@@ -8,6 +8,37 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                pline("%s out.", Tobjnam(otmp, "go"));
+                message_object(MSG_O_GO_OUT, otmp);
+
+            pline("%s drops %ld gold piece%s.", Monnam(mtmp), g, plur(g));
+            message_monster_int(MSG_M_DROPS_X_GOLD_PIECES, mtmp, g);
+
+        pline("%s drops %s.", Monnam(mon), distant_name(obj, doname));
+        message_monster_object(MSG_M_DROPS_O, mon, obj);
+
+        pline("%s stole %s!", Monnam(mtmp), doname(otmp));
+        message_monster_object(MSG_M_STOLE_O, mtmp, otmp);
+
+    pline("%s stole %s.", named ? "She" : Monnam(mtmp), doname(otmp));
+    message_monster_object(MSG_M_STOLE_O, mtmp, otmp)
+
+            pline("%s tries to %s your %s but gives up.",
+                    Monnam(mtmp), how[rn2(SIZE(how))],
+                    (otmp->owornmask & W_ARMOR) ? equipname(otmp) :
+                    cxname(otmp));
+            message_monster_object_string(MSG_M_TRIES_TO_STEAL_YOUR_O_BUT_GIVES_UP, mtmp, otmp, how);
+
+            pline("%s tries to rob you, but there is nothing to steal!", Monnam(mtmp));
+            message_monster(MSG_M_TRIES_TO_ROB_BUT_YOURE_NAKED, mtmp);
+
+                    pline("%s steals %s!", Monnam(mtmp), doname(otmp));
+                    message_monster_object(MSG_M_STEALS_O, mtmp, otmp);
+
+        pline("%s quickly snatches some gold from between your %s!",
+                Monnam(mtmp), makeplural(body_part(FOOT)));
+        message_monster(MSG_M_QUICKLY_SNATCHES_GOLD_FROM_BEETWEEN_YOUR_LEGS, mtmp);
+
         pline("%s is eating noisily.", Monnam(mtmp));
         message_monster(MSG_M_IS_EAT_NOISILY, mtmp);
 
