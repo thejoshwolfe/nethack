@@ -1,7 +1,8 @@
 /* See LICENSE in the root of this project for change info */
+
 #include "hack.h"
 #include "display.h"
-#include "winprocs.h"
+#include "everything.h"
 
 static signed char delay;               /* moves left for this spell */
 static struct obj *book;        /* last/current book being xscribed */
@@ -18,20 +19,6 @@ static struct obj *book;        /* last/current book being xscribed */
 #define spellname(spell)        OBJ_NAME(objects[spellid(spell)])
 #define spellet(spell)  \
         ((char)((spell < 26) ? ('a' + spell) : ('A' + spell - 26)))
-
-static int spell_let_to_idx(char);
-static bool cursed_book(struct obj *bp);
-static bool confused_book(struct obj *);
-static void deadbook(struct obj *);
-static int learn(void);
-static bool getspell(int *);
-static bool dospellmenu(const char *,int,int *);
-static int percent_success(int);
-static int throwspell(void);
-static void cast_protection(void);
-static void spell_backfire(int);
-static const char *spelltypemnemonic(int);
-static int isqrt(int);
 
 /* The roles[] table lists the role-specific values for tuning
  * percent_success().
@@ -151,7 +138,7 @@ cursed_book (struct obj *bp)
                 bp->in_use = false;
                 losestr(Poison_resistance ? rn1(2,1) : rn1(4,3));
                 losehp(rnd(Poison_resistance ? 6 : 10),
-                       "contact-poisoned spellbook", KILLED_BY_AN);
+                        killed_by_const(KM_CONTACT_POISONED_SPELLBOOK));
                 bp->in_use = true;
                 break;
         case 6:
@@ -161,7 +148,7 @@ cursed_book (struct obj *bp)
                 } else {
                     pline("As you read the book, it %s in your %s!",
                           explodes, body_part(FACE));
-                    losehp(2*rnd(10)+5, "exploding rune", KILLED_BY_AN);
+                    losehp(2*rnd(10)+5, killed_by_const(KM_EXPLODING_RUNE));
                 }
                 return true;
         default:
@@ -522,6 +509,216 @@ age_spells (void)
         return;
 }
 
+static const char * spelltypemnemonic (int skill) {
+    switch (skill) {
+        case P_ATTACK_SPELL:
+            return "attack";
+        case P_HEALING_SPELL:
+            return "healing";
+        case P_DIVINATION_SPELL:
+            return "divination";
+        case P_ENCHANTMENT_SPELL:
+            return "enchantment";
+        case P_CLERIC_SPELL:
+            return "clerical";
+        case P_ESCAPE_SPELL:
+            return "escape";
+        case P_MATTER_SPELL:
+            return "matter";
+        default:
+            impossible("Unknown spell skill, %d;", skill);
+            return "";
+    }
+}
+
+/* Integer square root function without using floating point. */
+static int isqrt (int val) {
+    int rt = 0;
+    int odd = 1;
+    while(val >= odd) {
+        val = val-odd;
+        odd = odd+2;
+        rt = rt + 1;
+    }
+    return rt;
+}
+
+static int percent_success (int spell) {
+    /* Intrinsic and learned ability are combined to calculate
+     * the probability of player's success at cast a given spell.
+     */
+    int chance, splcaster, special, statused;
+    int difficulty;
+    int skill;
+
+    /* Calculate intrinsic ability (splcaster) */
+
+    splcaster = urole.spelbase;
+    special = urole.spelheal;
+    statused = ACURR(urole.spelstat);
+
+    if (uarm && is_metallic(uarm))
+        splcaster += (uarmc && uarmc->otyp == ROBE) ?
+            urole.spelarmr/2 : urole.spelarmr;
+    else if (uarmc && uarmc->otyp == ROBE)
+        splcaster -= urole.spelarmr;
+    if (uarms) splcaster += urole.spelshld;
+
+    if (uarmh && is_metallic(uarmh) && uarmh->otyp != HELM_OF_BRILLIANCE)
+        splcaster += uarmhbon;
+    if (uarmg && is_metallic(uarmg)) splcaster += uarmgbon;
+    if (uarmf && is_metallic(uarmf)) splcaster += uarmfbon;
+
+    if (spellid(spell) == urole.spelspec)
+        splcaster += urole.spelsbon;
+
+
+    /* `healing spell' bonus */
+    if (spellid(spell) == SPE_HEALING ||
+            spellid(spell) == SPE_EXTRA_HEALING ||
+            spellid(spell) == SPE_CURE_BLINDNESS ||
+            spellid(spell) == SPE_CURE_SICKNESS ||
+            spellid(spell) == SPE_RESTORE_ABILITY ||
+            spellid(spell) == SPE_REMOVE_CURSE) splcaster += special;
+
+    if (splcaster > 20) splcaster = 20;
+
+    /* Calculate learned ability */
+
+    /* Players basic likelihood of being able to cast any spell
+     * is based of their `magic' statistic. (Int or Wis)
+     */
+    chance = 11 * statused / 2;
+
+    /*
+     * High level spells are harder.  Easier for higher level casters.
+     * The difficulty is based on the hero's level and their skill level
+     * in that spell type.
+     */
+    skill = P_SKILL(spell_skilltype(spellid(spell)));
+    skill = max(skill,P_UNSKILLED) - 1;     /* unskilled => 0 */
+    difficulty= (spellev(spell)-1) * 4 - ((skill * 6) + (u.ulevel/3) + 1);
+
+    if (difficulty > 0) {
+        /* Player is too low level or unskilled. */
+        chance -= isqrt(900 * difficulty + 2000);
+    } else {
+        /* Player is above level.  Learning continues, but the
+         * law of diminishing returns sets in quickly for
+         * low-level spells.  That is, a player quickly gains
+         * no advantage for raising level.
+         */
+        int learning = 15 * -difficulty / spellev(spell);
+        chance += learning > 20 ? 20 : learning;
+    }
+
+    /* Clamp the chance: >18 stat and advanced learning only help
+     * to a limit, while chances below "hopeless" only raise the
+     * specter of overflowing 16-bit ints (and permit wearing a
+     * shield to raise the chances :-).
+     */
+    if (chance < 0) chance = 0;
+    if (chance > 120) chance = 120;
+
+    /* Wearing anything but a light shield makes it very awkward
+     * to cast a spell.  The penalty is not quite so bad for the
+     * player's role-specific spell.
+     */
+    if (uarms && weight(uarms) > (int) objects[SMALL_SHIELD].oc_weight) {
+        if (spellid(spell) == urole.spelspec) {
+            chance /= 2;
+        } else {
+            chance /= 4;
+        }
+    }
+
+    /* Finally, chance (based on player intell/wisdom and level) is
+     * combined with ability (based on player intrinsics and
+     * encumbrances).  No matter how intelligent/wise and advanced
+     * a player is, intrinsics and encumbrance can prevent casting;
+     * and no matter how able, learning is always required.
+     */
+    chance = chance * (20-splcaster) / 15 - splcaster;
+
+    /* Clamp to percentile */
+    if (chance > 100) chance = 100;
+    if (chance < 0) chance = 0;
+
+    return chance;
+}
+
+
+static bool 
+dospellmenu (
+    const char *prompt,
+    int splaction,  /* SPELLMENU_CAST, SPELLMENU_VIEW, or spl_book[] index */
+    int *spell_no
+)
+{
+        winid tmpwin;
+        int i, n, how;
+        char buf[BUFSZ];
+        menu_item *selected;
+        anything any;
+
+        tmpwin = create_nhwindow(NHW_MENU);
+        start_menu(tmpwin);
+        any.a_void = 0;         /* zero out all bits */
+
+        /*
+         * The correct spacing of the columns depends on the
+         * following that (1) the font is monospaced and (2)
+         * that selection letters are pre-pended to the given
+         * string and are of the form "a - ".
+         *
+         * To do it right would require that we implement columns
+         * in the window-ports (say via a tab character).
+         */
+        if (!iflags.menu_tab_sep)
+                sprintf(buf, "%-20s     Level  %-12s Fail", "    Name", "Category");
+        else
+                sprintf(buf, "Name\tLevel\tCategory\tFail");
+        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_BOLD, buf, MENU_UNSELECTED);
+        for (i = 0; i < MAXSPELL && spellid(i) != NO_SPELL; i++) {
+                sprintf(buf, iflags.menu_tab_sep ?
+                        "%s\t%-d%s\t%s\t%-d%%" : "%-20s  %2d%s   %-12s %3d%%",
+                        spellname(i), spellev(i),
+                        spellknow(i) ? " " : "*",
+                        spelltypemnemonic(spell_skilltype(spellid(i))),
+                        100 - percent_success(i));
+
+                any.a_int = i+1;        /* must be non-zero */
+                add_menu(tmpwin, NO_GLYPH, &any,
+                         spellet(i), 0, ATR_NONE, buf,
+                         (i == splaction) ? MENU_SELECTED : MENU_UNSELECTED);
+              }
+        end_menu(tmpwin, prompt);
+
+        how = PICK_ONE;
+        if (splaction == SPELLMENU_VIEW && spellid(1) == NO_SPELL)
+            how = PICK_NONE;    /* only one spell => nothing to swap with */
+        n = select_menu(tmpwin, how, &selected);
+        destroy_nhwindow(tmpwin);
+        if (n > 0) {
+                *spell_no = selected[0].item.a_int - 1;
+                /* menu selection for `PICK_ONE' does not
+                   de-select any preselected entry */
+                if (n > 1 && *spell_no == splaction)
+                    *spell_no = selected[1].item.a_int - 1;
+                free((void *)selected);
+                /* default selection of preselected spell means that
+                   user chose not to swap it with anything */
+                if (*spell_no == splaction) return false;
+                return true;
+        } else if (splaction >= 0) {
+            /* explicit de-selection of preselected spell means that
+               user is still swapping but not for the current spell */
+            *spell_no = splaction;
+            return true;
+        }
+        return false;
+}
+
 /*
  * Return true if a spell was picked, with the spell index in the return
  * parameter.  Otherwise return false.
@@ -576,30 +773,6 @@ docast (void)
         if (getspell(&spell_no))
             return spelleffects(spell_no, false);
         return 0;
-}
-
-static const char *
-spelltypemnemonic (int skill)
-{
-        switch (skill) {
-            case P_ATTACK_SPELL:
-                return "attack";
-            case P_HEALING_SPELL:
-                return "healing";
-            case P_DIVINATION_SPELL:
-                return "divination";
-            case P_ENCHANTMENT_SPELL:
-                return "enchantment";
-            case P_CLERIC_SPELL:
-                return "clerical";
-            case P_ESCAPE_SPELL:
-                return "escape";
-            case P_MATTER_SPELL:
-                return "matter";
-            default:
-                impossible("Unknown spell skill, %d;", skill);
-                return "";
-        }
 }
 
 int
@@ -696,6 +869,42 @@ spell_backfire (int spell)
     }
     return;
 }
+
+/* Choose location where spell takes effect. */
+static int throwspell (void) {
+    coord cc;
+
+    if (u.uinwater) {
+        pline("You're joking! In this weather?"); return 0;
+    } else if (Is_waterlevel(&u.uz)) {
+        You("had better wait for the sun to come out."); return 0;
+    }
+
+    pline("Where do you want to cast the spell?");
+    cc.x = u.ux;
+    cc.y = u.uy;
+    if (getpos(&cc, true, "the desired position") < 0)
+        return 0;   /* user pressed ESC */
+    /* The number of moves from hero to where the spell drops.*/
+    if (distmin(u.ux, u.uy, cc.x, cc.y) > 10) {
+        pline_The("spell dissipates over the distance!");
+        return 0;
+    } else if (u.uswallow) {
+        pline_The("spell is cut short!");
+        exercise(A_WIS, false); /* What were you THINKING! */
+        u.dx = 0;
+        u.dy = 0;
+        return 1;
+    } else if (!cansee(cc.x, cc.y) || IS_STWALL(levl[cc.x][cc.y].typ)) {
+        Your("mind fails to lock onto that location!");
+        return 0;
+    } else {
+        u.dx=cc.x;
+        u.dy=cc.y;
+        return 1;
+    }
+}
+
 
 int 
 spelleffects (int spell, bool atme)
@@ -819,9 +1028,7 @@ spelleffects (int spell, bool atme)
                     while(n--) {
                         if(!u.dx && !u.dy && !u.dz) {
                             if ((damage = zapyourself(pseudo, true)) != 0) {
-                                char buf[BUFSZ];
-                                sprintf(buf, "zapped %sself with a spell", uhim());
-                                losehp(damage, buf, NO_KILLER_PREFIX);
+                                losehp(damage, killed_by_const(KM_ZAPPED_SELF_WITH_SPELL));
                             }
                         } else {
                             explode(u.dx, u.dy,
@@ -869,9 +1076,7 @@ spelleffects (int spell, bool atme)
                         }
                         if(!u.dx && !u.dy && !u.dz) {
                             if ((damage = zapyourself(pseudo, true)) != 0) {
-                                char buf[BUFSZ];
-                                sprintf(buf, "zapped %sself with a spell", uhim());
-                                losehp(damage, buf, NO_KILLER_PREFIX);
+                                losehp(damage, killed_by_const(KM_ZAPPED_SELF_WITH_SPELL));
                             }
                         } else weffects(pseudo);
                 } else weffects(pseudo);
@@ -949,43 +1154,6 @@ spelleffects (int spell, bool atme)
         return(1);
 }
 
-/* Choose location where spell takes effect. */
-static int
-throwspell (void)
-{
-        coord cc;
-
-        if (u.uinwater) {
-            pline("You're joking! In this weather?"); return 0;
-        } else if (Is_waterlevel(&u.uz)) {
-            You("had better wait for the sun to come out."); return 0;
-        }
-
-        pline("Where do you want to cast the spell?");
-        cc.x = u.ux;
-        cc.y = u.uy;
-        if (getpos(&cc, true, "the desired position") < 0)
-            return 0;   /* user pressed ESC */
-        /* The number of moves from hero to where the spell drops.*/
-        if (distmin(u.ux, u.uy, cc.x, cc.y) > 10) {
-            pline_The("spell dissipates over the distance!");
-            return 0;
-        } else if (u.uswallow) {
-            pline_The("spell is cut short!");
-            exercise(A_WIS, false); /* What were you THINKING! */
-            u.dx = 0;
-            u.dy = 0;
-            return 1;
-        } else if (!cansee(cc.x, cc.y) || IS_STWALL(levl[cc.x][cc.y].typ)) {
-            Your("mind fails to lock onto that location!");
-            return 0;
-        } else {
-            u.dx=cc.x;
-            u.dy=cc.y;
-            return 1;
-        }
-}
-
 void losespells (void) {
     bool confused = (Confusion != 0);
     int  n, nzap, i;
@@ -1029,77 +1197,6 @@ int dovspell (void) {
         return 0;
 }
 
-static bool 
-dospellmenu (
-    const char *prompt,
-    int splaction,  /* SPELLMENU_CAST, SPELLMENU_VIEW, or spl_book[] index */
-    int *spell_no
-)
-{
-        winid tmpwin;
-        int i, n, how;
-        char buf[BUFSZ];
-        menu_item *selected;
-        anything any;
-
-        tmpwin = create_nhwindow(NHW_MENU);
-        start_menu(tmpwin);
-        any.a_void = 0;         /* zero out all bits */
-
-        /*
-         * The correct spacing of the columns depends on the
-         * following that (1) the font is monospaced and (2)
-         * that selection letters are pre-pended to the given
-         * string and are of the form "a - ".
-         *
-         * To do it right would require that we implement columns
-         * in the window-ports (say via a tab character).
-         */
-        if (!iflags.menu_tab_sep)
-                sprintf(buf, "%-20s     Level  %-12s Fail", "    Name", "Category");
-        else
-                sprintf(buf, "Name\tLevel\tCategory\tFail");
-        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_BOLD, buf, MENU_UNSELECTED);
-        for (i = 0; i < MAXSPELL && spellid(i) != NO_SPELL; i++) {
-                sprintf(buf, iflags.menu_tab_sep ?
-                        "%s\t%-d%s\t%s\t%-d%%" : "%-20s  %2d%s   %-12s %3d%%",
-                        spellname(i), spellev(i),
-                        spellknow(i) ? " " : "*",
-                        spelltypemnemonic(spell_skilltype(spellid(i))),
-                        100 - percent_success(i));
-
-                any.a_int = i+1;        /* must be non-zero */
-                add_menu(tmpwin, NO_GLYPH, &any,
-                         spellet(i), 0, ATR_NONE, buf,
-                         (i == splaction) ? MENU_SELECTED : MENU_UNSELECTED);
-              }
-        end_menu(tmpwin, prompt);
-
-        how = PICK_ONE;
-        if (splaction == SPELLMENU_VIEW && spellid(1) == NO_SPELL)
-            how = PICK_NONE;    /* only one spell => nothing to swap with */
-        n = select_menu(tmpwin, how, &selected);
-        destroy_nhwindow(tmpwin);
-        if (n > 0) {
-                *spell_no = selected[0].item.a_int - 1;
-                /* menu selection for `PICK_ONE' does not
-                   de-select any preselected entry */
-                if (n > 1 && *spell_no == splaction)
-                    *spell_no = selected[1].item.a_int - 1;
-                free((void *)selected);
-                /* default selection of preselected spell means that
-                   user chose not to swap it with anything */
-                if (*spell_no == splaction) return false;
-                return true;
-        } else if (splaction >= 0) {
-            /* explicit de-selection of preselected spell means that
-               user is still swapping but not for the current spell */
-            *spell_no = splaction;
-            return true;
-        }
-        return false;
-}
-
 void
 dump_spells (void)
 {
@@ -1126,127 +1223,6 @@ dump_spells (void)
         dump("","");
 
 } /* dump_spells */
-
-/* Integer square root function without using floating point. */
-static int
-isqrt (int val)
-{
-    int rt = 0;
-    int odd = 1;
-    while(val >= odd) {
-        val = val-odd;
-        odd = odd+2;
-        rt = rt + 1;
-    }
-    return rt;
-}
-
-static int
-percent_success (int spell)
-{
-        /* Intrinsic and learned ability are combined to calculate
-         * the probability of player's success at cast a given spell.
-         */
-        int chance, splcaster, special, statused;
-        int difficulty;
-        int skill;
-
-        /* Calculate intrinsic ability (splcaster) */
-
-        splcaster = urole.spelbase;
-        special = urole.spelheal;
-        statused = ACURR(urole.spelstat);
-
-        if (uarm && is_metallic(uarm))
-            splcaster += (uarmc && uarmc->otyp == ROBE) ?
-                urole.spelarmr/2 : urole.spelarmr;
-        else if (uarmc && uarmc->otyp == ROBE)
-            splcaster -= urole.spelarmr;
-        if (uarms) splcaster += urole.spelshld;
-
-        if (uarmh && is_metallic(uarmh) && uarmh->otyp != HELM_OF_BRILLIANCE)
-                splcaster += uarmhbon;
-        if (uarmg && is_metallic(uarmg)) splcaster += uarmgbon;
-        if (uarmf && is_metallic(uarmf)) splcaster += uarmfbon;
-
-        if (spellid(spell) == urole.spelspec)
-                splcaster += urole.spelsbon;
-
-
-        /* `healing spell' bonus */
-        if (spellid(spell) == SPE_HEALING ||
-            spellid(spell) == SPE_EXTRA_HEALING ||
-            spellid(spell) == SPE_CURE_BLINDNESS ||
-            spellid(spell) == SPE_CURE_SICKNESS ||
-            spellid(spell) == SPE_RESTORE_ABILITY ||
-            spellid(spell) == SPE_REMOVE_CURSE) splcaster += special;
-
-        if (splcaster > 20) splcaster = 20;
-
-        /* Calculate learned ability */
-
-        /* Players basic likelihood of being able to cast any spell
-         * is based of their `magic' statistic. (Int or Wis)
-         */
-        chance = 11 * statused / 2;
-
-        /*
-         * High level spells are harder.  Easier for higher level casters.
-         * The difficulty is based on the hero's level and their skill level
-         * in that spell type.
-         */
-        skill = P_SKILL(spell_skilltype(spellid(spell)));
-        skill = max(skill,P_UNSKILLED) - 1;     /* unskilled => 0 */
-        difficulty= (spellev(spell)-1) * 4 - ((skill * 6) + (u.ulevel/3) + 1);
-
-        if (difficulty > 0) {
-                /* Player is too low level or unskilled. */
-                chance -= isqrt(900 * difficulty + 2000);
-        } else {
-                /* Player is above level.  Learning continues, but the
-                 * law of diminishing returns sets in quickly for
-                 * low-level spells.  That is, a player quickly gains
-                 * no advantage for raising level.
-                 */
-                int learning = 15 * -difficulty / spellev(spell);
-                chance += learning > 20 ? 20 : learning;
-        }
-
-        /* Clamp the chance: >18 stat and advanced learning only help
-         * to a limit, while chances below "hopeless" only raise the
-         * specter of overflowing 16-bit ints (and permit wearing a
-         * shield to raise the chances :-).
-         */
-        if (chance < 0) chance = 0;
-        if (chance > 120) chance = 120;
-
-        /* Wearing anything but a light shield makes it very awkward
-         * to cast a spell.  The penalty is not quite so bad for the
-         * player's role-specific spell.
-         */
-        if (uarms && weight(uarms) > (int) objects[SMALL_SHIELD].oc_weight) {
-                if (spellid(spell) == urole.spelspec) {
-                        chance /= 2;
-                } else {
-                        chance /= 4;
-                }
-        }
-
-        /* Finally, chance (based on player intell/wisdom and level) is
-         * combined with ability (based on player intrinsics and
-         * encumbrances).  No matter how intelligent/wise and advanced
-         * a player is, intrinsics and encumbrance can prevent casting;
-         * and no matter how able, learning is always required.
-         */
-        chance = chance * (20-splcaster) / 15 - splcaster;
-
-        /* Clamp to percentile */
-        if (chance > 100) chance = 100;
-        if (chance < 0) chance = 0;
-
-        return chance;
-}
-
 
 /* Learn a spell during creation of the initial inventory */
 void

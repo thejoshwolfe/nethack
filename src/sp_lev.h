@@ -1,9 +1,11 @@
 /* See LICENSE in the root of this project for change info */
+
 #ifndef SP_LEV_H
 #define SP_LEV_H
 
 #include "global.h"
 #include "align.h"
+#include "coord.h"
 
     /* wall directions */
 enum {

@@ -1,4 +1,5 @@
 /* See LICENSE in the root of this project for change info */
+
 /*
  * This file contains the various functions that are related to the special
  * levels.
@@ -9,31 +10,13 @@
 #include "sp_lev.h"
 #include "hack.h"
 #include "dlb.h"
-
 #include "rect.h"
 #include "pm_props.h"
 #include "youprop.h"
+#include "everything.h"
+#include "mkmap.h"
 
 extern void mkmap(lev_init *);
-
-static void get_room_loc(signed char *, signed char *, struct mkroom *);
-static void get_free_room_loc(signed char *, signed char *, struct mkroom *);
-static void create_trap(trap *, struct mkroom *);
-static int noncoalignment(aligntyp);
-static void create_monster(monster *, struct mkroom *);
-static void create_object(object *, struct mkroom *);
-static void create_engraving(engraving *,struct mkroom *);
-static void create_stairs(stair *, struct mkroom *);
-static void create_altar(altar *, struct mkroom *);
-static void create_gold(gold *, struct mkroom *);
-static void create_feature(int,int,struct mkroom *,int);
-static bool search_door(struct mkroom *, signed char *, signed char *,
-                                        signed char, int);
-static void fix_stair_rooms(void);
-static void create_corridor(corridor *);
-
-static bool create_subroom(struct mkroom *, signed char, signed char,
-                                        signed char, signed char, signed char, signed char);
 
 #define LEFT    1
 #define H_LEFT  2
