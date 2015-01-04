@@ -665,5 +665,25 @@ MSG_OBJECT_GLOWS_BRILLIANTLY, pline("%s to glow brilliantly!", Tobjnam(wep, "beg
 MSG_MONSTER_HIDING_UNDER_OBJECT, pline("Wait!  There's %s hiding under %s!", an(l_monnam(mtmp)), doname(obj));
 MSG_YOUR_OBJECT_IS_NO_LONGER_POISONED, Your("%s %s no longer poisoned.", xname(obj), otense(obj, "are"));
 MSG_STEED_STOPS_GALLOPING, pline("%s stops galloping.", Monnam(u.usteed));
+MSG_YOUR_ATTACK_PASSES_HARMLESSLY_THROUGH_MONSTER, "Your attack passes harmlessly through %s." mon_nam(mon)
+MSG_YOUR_WEAPON_PASSES_HARMLESSLY_THROUGH_MONSTER, Your("%s %s harmlessly through %s.", cxname(obj), vtense(cxname(obj), "pass"), mon_nam(mon));
+MSG_YOU_JOUST_IT, You("joust %s%s", mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
+MSG_YOUR_LANCE_SHATTERS, Your("%s shatters on impact!", xname(obj));
+MSG_M_STAGGERS_FROM_YOUR_POWERFUL_STRIKE, pline("%s %s from your powerful strike!", Monnam(mon), makeplural(stagger(mon->data, "stagger")));
+MSG_M_DIVIDES_AS_YOU_HIT_IT, pline("%s divides as you hit it!", Monnam(mon));
+MSG_YOU_HIT_M, You("%s %s%s", Role_if(PM_BARBARIAN) ? "smite" : "hit", mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
+MSG_YOUR_SILVER_RING_SEARS_M_FLESH:
+        char *whom = mon_nam(mon);
+        if (!noncorporeal(mdat))
+            whom = strcat(s_suffix(whom), " flesh");
+        "Your silver ring sears %s!";
+        "Your silver rings sear %s!";
+MSG_IT_IS_SEARED, "It is seared!"
+MSG_ITS_FLESH_IS_SEARED, "Its flesh is seared!"
+MSG_THE_SILVER_SEARS_M, "The silver sears %s!" mon_name();
+MSG_THE_SILVER_SEARS_M_FLESH, "The silver sears %s flesh!" s_suffix(mon_name());
+MSG_THE_POISON_DOESNT_SEEM_TO_AFFECT_M, pline_The("poison doesn't seem to affect %s.", mon_nam(mon));
+MSG_THE_POISON_WAS_DEADLY, pline_The("poison was deadly...");
+MSG_M_APPEARS_CONFUSED, pline("%s appears confused.", Monnam(mon));
 
 */

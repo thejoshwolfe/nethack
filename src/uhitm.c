@@ -1,5 +1,7 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "everything.h"
+#include "dog.h"
 #include "timeout.h"
 #include "muse.h"
 #include "potion.h"
@@ -499,10 +501,9 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
     int wtype;
     struct obj *monwep;
     char yourbuf[BUFSZ];
-    char unconventional[BUFSZ]; /* substituted for word "attack" in msg */
+    struct obj * unconventional = NULL;
     char saved_oname[BUFSZ];
 
-    unconventional[0] = '\0';
     saved_oname[0] = '\0';
 
     wakeup(mon);
@@ -646,8 +647,8 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
             tmp = (mdat == &mons[PM_SHADE]) ? 0 : 1;
         } else {
             if (mdat == &mons[PM_SHADE] && !shade_aware(obj)) {
+                unconventional = obj;
                 tmp = 0;
-                strcpy(unconventional, cxname(obj));
             } else {
                 switch (obj->otyp) {
                     case BOULDER: /* 1d20 */
@@ -886,8 +887,10 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
         tmp = 0;
         if (mdat == &mons[PM_SHADE]) {
             if (!hittxt) {
-                const char *what = unconventional[0] ? unconventional : "attack";
-                Your("%s %s harmlessly through %s.", what, vtense(what, "pass"), mon_nam(mon));
+                if (unconventional == NULL)
+                    message_monster(MSG_YOUR_ATTACK_PASSES_HARMLESSLY_THROUGH_MONSTER, mon);
+                else
+                    message_monster_object(MSG_YOUR_WEAPON_PASSES_HARMLESSLY_THROUGH_MONSTER, mon, unconventional);
                 hittxt = true;
             }
         } else {
@@ -898,9 +901,9 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
 
     if (jousting) {
         tmp += d(2, (obj == uwep) ? 10 : 2); /* [was in dmgval()] */
-        You("joust %s%s", mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
+        message_monster_string(MSG_YOU_JOUST_IT, mon, canseemon(mon) ? exclam(tmp) : ".");
         if (jousting < 0) {
-            Your("%s shatters on impact!", xname(obj));
+            message_object(MSG_YOUR_LANCE_SHATTERS, obj);
             /* (must be either primary or secondary weapon to get here) */
             u.twoweap = false; /* untwoweapon() is too verbose here */
             if (obj == uwep)
@@ -923,7 +926,7 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
         if (unarmed && tmp > 1 && !thrown && !obj && !Upolyd) {
             if (rnd(100) < P_SKILL(P_BARE_HANDED_COMBAT) && !bigmonst(mdat) && !thick_skinned(mdat)) {
                 if (canspotmon(mon))
-                    pline("%s %s from your powerful strike!", Monnam(mon), makeplural(stagger(mon->data, "stagger")));
+                    message_monster(MSG_M_STAGGERS_FROM_YOUR_POWERFUL_STRIKE, mon);
                 /* avoid migrating a dead monster */
                 if (mon->mhp > tmp) {
                     mhurtle(mon, u.dx, u.dy, 1);
@@ -950,7 +953,7 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
     if ((mdat == &mons[PM_BLACK_PUDDING] || mdat == &mons[PM_BROWN_PUDDING]) && obj && obj == uwep && objects[obj->otyp].oc_material == IRON && mon->mhp > 1 && !thrown && !mon->mcan
     /* && !destroyed  -- guaranteed by mhp > 1 */) {
         if (clone_mon(mon, 0, 0)) {
-            pline("%s divides as you hit it!", Monnam(mon));
+            message_monster(MSG_M_DIVIDES_AS_YOU_HIT_IT, mon);
             hittxt = true;
         }
     }
@@ -962,38 +965,39 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
         else if (!flags.verbose)
             You("hit it.");
         else
-            You("%s %s%s", Role_if(PM_BARBARIAN) ? "smite" : "hit", mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
+            message_monster_string(MSG_YOU_HIT_M, mon, canseemon(mon) ? exclam(tmp) : ".");
     }
 
     if (silvermsg) {
-        const char *fmt;
-        char *whom = mon_nam(mon);
-        char silverobjbuf[BUFSZ];
-
         if (canspotmon(mon)) {
-            if (barehand_silver_rings == 1)
-                fmt = "Your silver ring sears %s!";
-            else if (barehand_silver_rings == 2)
-                fmt = "Your silver rings sear %s!";
-            else if (silverobj && saved_oname[0]) {
-                sprintf(silverobjbuf, "Your %s%s %s %%s!", strstri(saved_oname, "silver") ? "" : "silver ", saved_oname, vtense(saved_oname, "sear"));
-                fmt = silverobjbuf;
-            } else
-                fmt = "The silver sears %s!";
+            if (barehand_silver_rings == 1 || barehand_silver_rings == 2) {
+                message_monster(MSG_YOUR_SILVER_RING_SEARS_M_FLESH, mon);
+            } else if (silverobj && saved_oname[0]) {
+                char silverobjbuf[BUFSZ];
+                sprintf(silverobjbuf, "Your %s%s %s %%s!", strstri(saved_oname, "silver") ? "" : "silver ", saved_oname, "TODO: vtense(saved_oname, \"sear\")");
+                char *whom = "TODO: mon_nam(mon)";
+                // TODO:
+                // if (!noncorporeal(mdat))
+                //     whom = strcat(s_suffix(whom), " flesh");
+                pline(silverobjbuf, whom);
+            } else {
+                if (noncorporeal(mdat))
+                    message_monster(MSG_THE_SILVER_SEARS_M, mon);
+                else
+                    message_monster(MSG_THE_SILVER_SEARS_M_FLESH, mon);
+            }
         } else {
-            *whom = highc(*whom); /* "it" -> "It" */
-            fmt = "%s is seared!";
+            if (noncorporeal(mdat))
+                message_const(MSG_IT_IS_SEARED);
+            else
+                message_const(MSG_ITS_FLESH_IS_SEARED);
         }
-        /* note: s_suffix returns a modifiable buffer */
-        if (!noncorporeal(mdat))
-            whom = strcat(s_suffix(whom), " flesh");
-        pline(fmt, whom);
     }
 
     if (needpoismsg)
-        pline_The("poison doesn't seem to affect %s.", mon_nam(mon));
+        message_monster(MSG_THE_POISON_DOESNT_SEEM_TO_AFFECT_M, mon);
     if (poiskilled) {
-        pline_The("poison was deadly...");
+        message_const(MSG_THE_POISON_WAS_DEADLY);
         if (!already_killed)
             xkilled(mon, 0);
         return false;
@@ -1005,7 +1009,7 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
         if (!mon->mconf && !resist(mon, SPBOOK_CLASS, 0, NOTELL)) {
             mon->mconf = 1;
             if (!mon->mstun && mon->mcanmove && !mon->msleeping && canseemon(mon))
-                pline("%s appears confused.", Monnam(mon));
+                message_monster(MSG_M_APPEARS_CONFUSED, mon);
         }
     }
 
