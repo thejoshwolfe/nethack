@@ -9,6 +9,7 @@
 #include "rnd.h"
 #include "cmd.h"
 
+// to edit this struct you must also edit killer_method_enum_str
 enum KillerMethod {
     // This first section is based on a bunch of #defines from original game
     KM_DIED,
@@ -153,6 +154,7 @@ enum KillerMethod {
     KM_SELF_WITH_WAND, // "zapped %sself with a wand", uhim()
     KM_SELF_WITH_DEATH_RAY, // "shot %sself with a death ray", uhim()
     KM_FALLING_ROCK, //  "falling rock"
+    KM_FLASH_TYPE,
 };
 struct Killer {
     enum KillerMethod method;
@@ -168,14 +170,7 @@ struct Killer killed_by_monster(enum KillerMethod method, const struct monst *);
 struct Killer killed_by_object(enum KillerMethod method, const struct obj *);
 struct Killer killed_by_string(enum KillerMethod method, const char *);
 struct Killer killed_by_int(enum KillerMethod method, int);
-
-// see flash_types
-struct Killer killed_by_flash_text(const char * fltxt);
 struct Killer killed_by_artifact(enum KillerMethod method, const struct artifact *art);
-
-// const char * how = destroy_strings[dindx * 3 + 2];
-// bool one = (cnt == 1L);
-struct Killer killed_by_destroy_string(const char * how, bool one);
 
 bool revive_nasty(int,int,const char*);
 void movobj(struct obj *,signed char,signed char);

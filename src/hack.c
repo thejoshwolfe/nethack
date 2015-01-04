@@ -12,14 +12,150 @@
 #include "display.h"
 #include "everything.h"
 
-static void maybe_wail(void);
-static int moverock(void);
-static int still_chewing(signed char,signed char);
-static void dosinkfall(void);
-static bool findtravelpath(bool);
-static bool monstinroom(struct permonst *,int);
-
-static void move_update(bool);
+static const char *killer_method_enum_str[] = {
+    "DIED",
+    "CHOKING",
+    "POISONING",
+    "STARVING",
+    "DROWNING",
+    "BURNING",
+    "DISSOLVED",
+    "CRUSHING",
+    "STONING",
+    "TURNED_SLIME",
+    "GENOCIDED",
+    "PANICKED",
+    "TRICKED",
+    "QUIT",
+    "ESCAPED",
+    "ASCENDED",
+    "ELECTRIC_SHOCK",
+    "TOWER_OF_FLAME",
+    "BOILING_WATER",
+    "DANGEROUS_WINDS",
+    "LAND_MINE",
+    "FELL_INTO_PIT",
+    "FELL_INTO_PIT_OF_IRON_SPIKES",
+    "RUSTING_AWAY",
+    "SUFFOCATION",
+    "STRANGULATION",
+    "TURNED_INTO_GREEN_SLIME",
+    "PETRIFICATION",
+    "TELEPORTED_OUT_OF_THE_DUNGEON_AND_FELL_TO_DEATH",
+    "WENT_TO_HEAVEN_PREMATURELY",
+    "COMMITTED_SUICIDE",
+    "SLIPPED_WHILE_MOUNTING_M",
+    "ZAPPED_SELF_WITH_SPELL",
+    "EXPLODING_RUNE",
+    "CONTACT_POISONED_SPELLBOOK",
+    "ELECTRIC_CHAIR",
+    "CURSED_THRONE",
+    "SITTING_ON_LAVA",
+    "SITTING_IN_LAVA",
+    "SITTING_ON_IRON_SPIKE",
+    "GAS_CLOUD",
+    "IMPERIOUS_ORDER",
+    "GENOCIDAL_CONFUSION",
+    "SCROLL_OF_GENOCIDE",
+    "SCROLL_OF_FIRE",
+    "EXPLODING_RING",
+    "RESIDUAL_UNDEAD_TURNING",
+    "ALCHEMIC_BLAST",
+    "ELEMENTARY_CHEMISTRY",
+    "THROWN_POTION",
+    "POTION_OF_ACID",
+    "BURNING_POTION_OF_OIL",
+    "COLLIDING_WITH_CEILING",
+    "CONTAMINATED_POTION",
+    "CONTAMINATED_TAP_WATER",
+    "MILDLY_CONTAMINATED_POTION",
+    "POTION_UNHOLY_WATER",
+    "POTION_HOLY_WATER",
+    "DELIBERATELY_MEETING_MEDUSA_GAZE",
+    "WHILE_STUCK_IN_CREATURE_FORM",
+    "SYSTEM_SHOCK",
+    "UNSUCCESSFUL_POLYMORPH",
+    "SELF_GENOCIDE",
+    "MAGICAL_EXPLOSION",
+    "CARNIVOROUS_BAG",
+    "USING_MAGIC_HORN_ON_SELF",
+    "FELL_INTO_CHASM",
+    "SCROLL_OF_EARTH",
+    "WAND",
+    "PSYCHIC_BLAST",
+    "TODO",
+    "BRAINLESSNESS",
+    "TOUCH_OF_DEATH",
+    "FELL_ON_SINK",
+    "SIP_BOILING_WATER",
+    "CONTAMINATED_WATER",
+    "UNREFRIGERATED_JUICE",
+    "MONSTER",
+    "EXHAUSTION",
+    "CADAVER",
+    "POISONOUS_CORPSE",
+    "ACIDIC_CORPSE",
+    "ATE_HORSEMAN",
+    "TASTING_O_MEAT",
+    "O_EGG",
+    "ROTTEN_ROYAL_JELLY",
+    "CHOKE_QUICK_SNACK",
+    "CHOKE_ON_FOOD",
+    "O",
+    "FALLING_OBJECT",
+    "ELEMENTARY_PHYSICS",
+    "WEDGING_INTO_NARROW_CREVICE",
+    "TOUCH_EDGE_UNIVERSE",
+    "BUMP_INTO_BOULDER",
+    "CRASH_INTO_IRON_BARS",
+    "BUMP_INTO_TREE",
+    "BUMP_INTO_WALL",
+    "BUMP_INTO_DOOR",
+    "O_CORPSE",
+    "KICKING_O",
+    "KICKING_DOOR",
+    "KICKING_TREE",
+    "KICKING_WALL",
+    "KICKING_ROCK",
+    "KICKING_THRONE",
+    "KICKING_FOUNTAIN",
+    "KICKING_HEADSTONE",
+    "KICKING_SINK",
+    "KICKING_ALTAR",
+    "KICKING_DRAWBRIDGE",
+    "KICKING_STAIRS",
+    "KICKING_LADDER",
+    "KICKING_IRON_BAR",
+    "KICKING_SOMETHING_WEIRD",
+    "KICKING_O_WITHOUT_BOOTS",
+    "FALLING_DOWNSTAIRS",
+    "SQUISHED_UNDER_BOULDER",
+    "AXING_HARD_OBJECT",
+    "YOUR_OWN_O",
+    "EXPLODING_CRYSTAL_BALL",
+    "FALLING_DRAWBRIDGE",
+    "CLOSING_DRAWBRIDGE",
+    "FELL_FROM_DRAWBRIDGE",
+    "EXPLODING_DRAWBRIDGE",
+    "COLLAPSING_DRAWBRIDGE",
+    "RIDING_ACCIDENT",
+    "IRON_BALL_COLLISON",
+    "DRAGGED_DOWNSTAIRS_IRON_BALL",
+    "LEG_DAMAGE_PULLED_BEAR_TRAP",
+    "CRUNCHED_IN_HEAD_BY_IRON_BALL",
+    "TOUCH_ARTIFACT",
+    "KILLED_SELF_BREAK_WAND",
+    "GRAPPLING_HOOK_SELF",
+    "HIT_SELF_BULLWHIP",
+    "JUMP_BEAR_TRAP",
+    "EXPLOSION",
+    "MOLTEN_LAVA",
+    "EXPLODING_WAND",
+    "SELF_WITH_WAND",
+    "SELF_WITH_DEATH_RAY",
+    "FALLING_ROCK",
+    "FLASH_TYPE",
+};
 
 #define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
 
@@ -2158,3 +2294,27 @@ int inv_cnt (void) {
     return(ct);
 }
 
+struct Killer killed_by_const(enum KillerMethod method) {
+    printf("killed_by_const %s\n", killer_method_enum_str[method]);
+    return (struct Killer){method, NULL, NULL, NULL, NULL, 0};
+}
+struct Killer killed_by_monster(enum KillerMethod method, const struct monst *m) {
+    printf("killed_by_monster %s\n", killer_method_enum_str[method]);
+    return (struct Killer){method, m, NULL, NULL, NULL, 0};
+}
+struct Killer killed_by_object(enum KillerMethod method, const struct obj *o) {
+    printf("killed_by_object %s\n", killer_method_enum_str[method]);
+    return (struct Killer){method, NULL, o, NULL, NULL, 0};
+}
+struct Killer killed_by_string(enum KillerMethod method, const char *string) {
+    printf("killed_by_string %s\n", killer_method_enum_str[method]);
+    return (struct Killer){method, NULL, NULL, NULL, string, 0};
+}
+struct Killer killed_by_int(enum KillerMethod method, int i) {
+    printf("killed_by_int %s\n", killer_method_enum_str[method]);
+    return (struct Killer){method, NULL, NULL, NULL, NULL, i};
+}
+struct Killer killed_by_artifact(enum KillerMethod method, const struct artifact *art) {
+    printf("killed_by_artifact %s\n", killer_method_enum_str[method]);
+    return (struct Killer){method, NULL, NULL, art, NULL, 0};
+}

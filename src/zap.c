@@ -2946,7 +2946,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
                 You("aren't affected.");
                 break;
             }
-            killer = killed_by_flash_text(fltxt);
+            killer = killed_by_string(KM_FLASH_TYPE, fltxt);
             /* when killed by disintegration breath, don't leave corpse */
             u.ugrave_arise = (type == -ZT_BREATH(ZT_DEATH)) ? -3 : NON_PM;
             done(DIED);
@@ -2988,7 +2988,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
 
     if (Half_spell_damage && dam && type < 0 && (type > -20 || type < -29)) /* !Breath */
         dam = (dam + 1) / 2;
-    losehp(dam, killed_by_flash_text(fltxt));
+    losehp(dam, killed_by_string(KM_FLASH_TYPE, fltxt));
     return;
 }
 
@@ -3713,7 +3713,8 @@ void destroy_item(int osym, int dmgtyp) {
                 } else {
                     const char * how = destroy_strings[dindx * 3 + 2];
                     bool one = (cnt == 1L);
-                    losehp(dmg, killed_by_destroy_string(how, one));
+                    fprintf(stderr, "TODO: killer = %s\n", one ? how : (const char *)makeplural(how));
+                    losehp(dmg, killed_by_const(KM_TODO));
                     exercise(A_STR, false);
                 }
             }
