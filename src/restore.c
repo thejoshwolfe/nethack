@@ -10,19 +10,32 @@
 #include "objnam.h"
 #include "shk.h"
 #include "priest.h"
-
-static void find_lev_obj(void);
-static void restlevchn(int);
-static void restdamage(int,bool);
-static struct obj *restobjchn(int,bool,bool);
-static struct monst *restmonchn(int,bool);
-static struct fruit *loadfruitchn(int);
-static void freefruitchn(struct fruit *);
-static void ghostfruit(struct obj *);
-static bool restgamestate(int, unsigned int *, unsigned int *);
-static void restlevelstate(unsigned int, unsigned int);
-static int restlevelfile(int,signed char);
-static void reset_oattached_mids(bool);
+#include "mkobj.h"
+#include "pline.h"
+#include "light.h"
+#include "files.h"
+#include "end.h"
+#include "save.h"
+#include "questpgr.h"
+#include "invent.h"
+#include "options.h"
+#include "mondata.h"
+#include "makemon.h"
+#include "role.h"
+#include "polyself.h"
+#include "worn.h"
+#include "wield.h"
+#include "artifact.h"
+#include "rumors.h"
+#include "trap.h"
+#include "mkmaze.h"
+#include "vision.h"
+#include "display.h"
+#include "dog.h"
+#include "region.h"
+#include "mon.h"
+#include "engrave.h"
+#include "steed.h"
 
 /*
  * Save a mapping of IDs from ghost levels to the current level.  This
@@ -36,9 +49,6 @@ struct bucket {
         unsigned nid;   /* new ID */
     } map[N_PER_BUCKET];
 };
-
-static void clear_id_mapping(void);
-static void add_id_mapping(unsigned, unsigned);
 
 static int n_ids_mapped = 0;
 static struct bucket *id_map = 0;
@@ -171,6 +181,35 @@ restdamage (int fd, bool ghostly)
         }
         free((void *)tmp_dam);
 }
+
+/* Add a mapping to the ID map. */
+static void add_id_mapping (unsigned gid, unsigned nid) {
+    int idx;
+
+    idx = n_ids_mapped % N_PER_BUCKET;
+    /* idx is zero on first time through, as well as when a new bucket is */
+    /* needed */
+    if (idx == 0) {
+        struct bucket *gnu = (struct bucket *) malloc(sizeof(struct bucket));
+        gnu->next = id_map;
+        id_map = gnu;
+    }
+
+    id_map->map[idx].gid = gid;
+    id_map->map[idx].nid = nid;
+    n_ids_mapped++;
+}
+
+static void ghostfruit (struct obj *otmp) {
+    struct fruit *oldf;
+
+    for (oldf = oldfruit; oldf; oldf = oldf->nextf)
+        if (oldf->fid == otmp->spe) break;
+
+    if (!oldf) impossible("no old fruit?");
+    else otmp->spe = fruitadd(oldf->fname);
+}
+
 
 static struct obj *
 restobjchn (int fd, bool ghostly, bool frozen)
@@ -313,18 +352,6 @@ freefruitchn (struct fruit *flist)
             dealloc_fruit(flist);
             flist = fnext;
         }
-}
-
-static void
-ghostfruit (struct obj *otmp)
-{
-        struct fruit *oldf;
-
-        for (oldf = oldfruit; oldf; oldf = oldf->nextf)
-                if (oldf->fid == otmp->spe) break;
-
-        if (!oldf) impossible("no old fruit?");
-        else otmp->spe = fruitadd(oldf->fname);
 }
 
 static bool 
@@ -507,7 +534,6 @@ dorecover (int fd)
         if (!wizard && !discover)
                 (void) delete_savefile();
         restlevelstate(stuckid, steedid);
-        max_rank_sz(); /* to recompute mrank_sz (botl.c) */
         /* take care of iron ball & chain */
         for(otmp = fobj; otmp; otmp = otmp->nobj)
                 if(otmp->owornmask)
@@ -537,15 +563,47 @@ dorecover (int fd)
         return 1;
 }
 
-void
-trickery (char *reason)
-{
-        pline("Strange, this map is not as I remember it.");
-        pline("Somebody is trying some trickery here...");
-        pline("This game is void.");
-        killer = reason;
-        done(TRICKED);
+void trickery (char *reason) {
+    pline("Strange, this map is not as I remember it.");
+    pline("Somebody is trying some trickery here...");
+    pline("This game is void.");
+    fprintf(stderr, "TODO: killer = %s\n", reason);
+    done(TRICKED);
 }
+
+static void reset_oattached_mids (bool ghostly) {
+    struct obj *otmp;
+    unsigned oldid, nid;
+    for (otmp = fobj; otmp; otmp = otmp->nobj) {
+        if (ghostly && otmp->oattached == OATTACHED_MONST && otmp->oxlth) {
+            struct monst *mtmp = (struct monst *)otmp->oextra;
+
+            mtmp->m_id = 0;
+            mtmp->mpeaceful = mtmp->mtame = 0;  /* pet's owner died! */
+        }
+        if (ghostly && otmp->oattached == OATTACHED_M_ID) {
+            (void) memcpy((void *)&oldid, (void *)otmp->oextra,
+                    sizeof(oldid));
+            if (lookup_id_mapping(oldid, &nid))
+                (void) memcpy((void *)otmp->oextra, (void *)&nid,
+                        sizeof(nid));
+            else
+                otmp->oattached = OATTACHED_NOTHING;
+        }
+    }
+}
+
+/* Clear all structures for object and monster ID mapping. */
+static void clear_id_mapping (void) {
+    struct bucket *curr;
+
+    while ((curr = id_map) != 0) {
+        id_map = curr->next;
+        free((void *) curr);
+    }
+    n_ids_mapped = 0;
+}
+
 
 void 
 getlev (int fd, int pid, signed char lev, bool ghostly)
@@ -715,39 +773,6 @@ getlev (int fd, int pid, signed char lev, bool ghostly)
 }
 
 
-/* Clear all structures for object and monster ID mapping. */
-static void
-clear_id_mapping (void)
-{
-    struct bucket *curr;
-
-    while ((curr = id_map) != 0) {
-        id_map = curr->next;
-        free((void *) curr);
-    }
-    n_ids_mapped = 0;
-}
-
-/* Add a mapping to the ID map. */
-static void
-add_id_mapping (unsigned gid, unsigned nid)
-{
-    int idx;
-
-    idx = n_ids_mapped % N_PER_BUCKET;
-    /* idx is zero on first time through, as well as when a new bucket is */
-    /* needed */
-    if (idx == 0) {
-        struct bucket *gnu = (struct bucket *) malloc(sizeof(struct bucket));
-        gnu->next = id_map;
-        id_map = gnu;
-    }
-
-    id_map->map[idx].gid = gid;
-    id_map->map[idx].nid = nid;
-    n_ids_mapped++;
-}
-
 /*
  * Global routine to look up a mapping.  If found, return true and fill
  * in the new ID value.  Otherwise, return false and return -1 in the new
@@ -778,30 +803,6 @@ lookup_id_mapping (unsigned gid, unsigned *nidp)
     return false;
 }
 
-static void 
-reset_oattached_mids (bool ghostly)
-{
-    struct obj *otmp;
-    unsigned oldid, nid;
-    for (otmp = fobj; otmp; otmp = otmp->nobj) {
-        if (ghostly && otmp->oattached == OATTACHED_MONST && otmp->oxlth) {
-            struct monst *mtmp = (struct monst *)otmp->oextra;
-
-            mtmp->m_id = 0;
-            mtmp->mpeaceful = mtmp->mtame = 0;  /* pet's owner died! */
-        }
-        if (ghostly && otmp->oattached == OATTACHED_M_ID) {
-            (void) memcpy((void *)&oldid, (void *)otmp->oextra,
-                                                                sizeof(oldid));
-            if (lookup_id_mapping(oldid, &nid))
-                (void) memcpy((void *)otmp->oextra, (void *)&nid,
-                                                                sizeof(nid));
-            else
-                otmp->oattached = OATTACHED_NOTHING;
-        }
-    }
-}
-
 
 
 void minit(void) {
@@ -817,7 +818,7 @@ void mread(int fd, void *buf, unsigned int len) {
                 if(restoring) {
                         (void) close(fd);
                         (void) delete_savefile();
-                        error("Error restoring old game.");
+                        fprintf(stderr, "Error restoring old game.\n");
                 }
                 panic("Error reading level file.");
         }
