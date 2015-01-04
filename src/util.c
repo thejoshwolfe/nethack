@@ -1702,12 +1702,29 @@ void audio_message_monster_string(enum MessageId id, const struct monst *m, cons
 }
 
 void getlin(const char *query, char *out_buf) {
-    fprintf(stderr, "TODO: getlin(\"%s\")", query);
+    fprintf(stderr, "TODO: getlin(\"%s\")\n", query);
     nh_strlcpy(out_buf, "LOL", 32);
 };
 
 void putstr(int winid, int always_zero, const char *str) {
-    fprintf(stderr, "TODO: putstr(\"%s\")", str);
+    fprintf(stderr, "TODO: putstr(\"%s\")\n", str);
+}
+
+int create_nhwindow(int id) {
+    fprintf(stderr, "TODO: create_nhwindow(%d)\n", id);
+    return 0;
+}
+
+void destroy_nhwindow(int id) {
+    fprintf(stderr, "TODO: destroy_nhwindow(%d)\n", id);
+}
+
+void display_nhwindow(int id, bool blocking) {
+    fprintf(stderr, "TODO: display_nhwindow(%d)\n", id);
+}
+
+void clear_nhwindow(int id) {
+    fprintf(stderr, "TODO: clear_nhwindow(%d)\n", id);
 }
 
 size_t nh_strlcpy(char *dest, const char *source, size_t dest_size) {
