@@ -1727,6 +1727,18 @@ void clear_nhwindow(int id) {
     fprintf(stderr, "TODO: clear_nhwindow(%d)\n", id);
 }
 
+void start_menu(int id) {
+    fprintf(stderr, "TODO: start_menu(%d)\n", id);
+}
+
+void add_menu(int id, int flags, const void *a, char b, char c, int d, const char *e, bool f) {
+    fprintf(stderr, "TODO: add_menu(%d)\n", id);
+}
+
+void end_menu(int id, const char *blah) {
+    fprintf(stderr, "TODO: end_menu(%d)\n", id);
+}
+
 size_t nh_strlcpy(char *dest, const char *source, size_t dest_size) {
     char *d = dest;
     const char *s = source;
