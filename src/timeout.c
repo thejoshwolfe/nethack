@@ -13,16 +13,7 @@
 #include "lev.h"        /* for checking save modes */
 #include "pm_props.h"
 #include "display.h"
-
-static void stoned_dialogue(void);
-static void vomiting_dialogue(void);
-static void choke_dialogue(void);
-static void slime_dialogue(void);
-static void slip_or_trip(void);
-static void see_lamp_flicker(struct obj *, const char *);
-static void lantern_message(struct obj *);
-static void cleanup_burn(void *,long);
-
+#include "everything.h"
 
 /* He is being petrified - dialogue by inmet!tower */
 static const char * const stoned_texts[] = {
@@ -152,6 +143,78 @@ void burn_away_slime(void) {
 }
 
 
+/* give a fumble message */
+static void slip_or_trip(void) {
+    struct obj *otmp = vobj_at(u.ux, u.uy);
+    const char *what, *pronoun;
+    char buf[BUFSZ];
+    bool on_foot = true;
+    if (u.usteed)
+        on_foot = false;
+
+    if (otmp && on_foot && !u.uinwater && is_pool(u.ux, u.uy))
+        otmp = 0;
+
+    if (otmp && on_foot) { /* trip over something in particular */
+        /*
+         If there is only one item, it will have just been named
+         during the move, so refer to by via pronoun; otherwise,
+         if the top item has been or can be seen, refer to it by
+         name; if not, look for rocks to trip over; trip over
+         anonymous "something" if there aren't any rocks.
+         */
+        pronoun = otmp->quan == 1L ? "it" : Hallucination() ? "they" : "them";
+        what = !otmp->nexthere ? pronoun : (otmp->dknown || !Blind) ? doname(otmp) : ((otmp = sobj_at(ROCK, u.ux, u.uy)) == 0 ? something : (otmp->quan == 1L ? "a rock" : "some rocks"));
+        if (Hallucination()) {
+            what = strcpy(buf, what);
+            buf[0] = highc(buf[0]);
+            pline("Egads!  %s bite%s your %s!", what, (!otmp || otmp->quan == 1L) ? "s" : "", body_part(FOOT));
+        } else {
+            You("trip over %s.", what);
+        }
+    } else if (rn2(3) && is_ice(u.ux, u.uy)) {
+        const char *slip = rn2(2) ? "slip" : "slide";
+        if (u.usteed) {
+            message_monster_string(MSG_M_SLIPS_ON_THE_ICE, u.usteed, slip);
+        } else {
+            message_string(MSG_YOU_SLIP_ON_THE_ICE, slip);
+        }
+    } else {
+        if (on_foot) {
+            switch (rn2(4)) {
+                case 1:
+                    You("trip over your own %s.", Hallucination() ? "elbow" : makeplural(body_part(FOOT)));
+                    break;
+                case 2:
+                    You("slip %s.", Hallucination() ? "on a banana peel" : "and nearly fall");
+                    break;
+                case 3:
+                    You("flounder.");
+                    break;
+                default:
+                    You("stumble.");
+                    break;
+            }
+        } else {
+            switch (rn2(4)) {
+                case 1:
+                    Your("%s slip out of the stirrups.", makeplural(body_part(FOOT)));
+                    break;
+                case 2:
+                    You("let go of the reins.");
+                    break;
+                case 3:
+                    You("bang into the saddle-horn.");
+                    break;
+                default:
+                    You("slide to one side of the saddle.");
+                    break;
+            }
+            dismount_steed(DISMOUNT_FELL);
+        }
+    }
+}
+
 
 void nh_timeout(void) {
     struct prop *upp;
@@ -211,26 +274,24 @@ void nh_timeout(void) {
         if ((upp->intrinsic & TIMEOUT) && !(--upp->intrinsic & TIMEOUT)) {
             switch (upp - u.uprops) {
                 case STONED:
-                    if (delayed_killer && !killer) {
+                    if (delayed_killer.method != KM_DIED && killer.method != KM_DIED) {
                         killer = delayed_killer;
-                        delayed_killer = 0;
+                        delayed_killer.method = KM_DIED;
                     }
-                    if (!killer) {
+                    if (killer.method != KM_DIED) {
                         /* leaving killer_format would make it
                          "petrified by petrification" */
-                        killer_format = NO_KILLER_PREFIX;
-                        killer = "killed by petrification";
+                        killer = killed_by_const(KM_PETRIFICATION);
                     }
                     done(STONING);
                     break;
                 case SLIMED:
-                    if (delayed_killer && !killer) {
+                    if (delayed_killer.method != KM_DIED && killer.method == KM_DIED) {
                         killer = delayed_killer;
-                        delayed_killer = 0;
+                        delayed_killer.method = KM_DIED;
                     }
-                    if (!killer) {
-                        killer_format = NO_KILLER_PREFIX;
-                        killer = "turned into green slime";
+                    if (killer.method == KM_DIED) {
+                        killer = killed_by_const(KM_TURNED_INTO_GREEN_SLIME);
                     }
                     done(TURNED_SLIME);
                     break;
@@ -239,17 +300,17 @@ void nh_timeout(void) {
                     break;
                 case SICK:
                     You("die from your illness.");
-                    killer_format = KILLED_BY_AN;
-                    killer = u.usick_cause;
+                    fprintf(stderr, "TODO: killer = %s\n", u.usick_cause);
+                    fprintf(stderr, "TODO: WTF is this logic down here?\n");
+                    /*
                     if ((m_idx = name_to_mon(killer)) >= LOW_PM) {
                         if (type_is_pname(&mons[m_idx])) {
-                            killer_format = KILLED_BY;
                         } else if (mons[m_idx].geno & G_UNIQ) {
                             killer = the(killer);
                             strcpy(u.usick_cause, killer);
-                            killer_format = KILLED_BY;
                         }
                     }
+                    */
                     u.usick_type = 0;
                     done(POISONING);
                     break;
@@ -311,8 +372,8 @@ void nh_timeout(void) {
                     (void) float_down(I_SPECIAL|TIMEOUT, 0L);
                     break;
                 case STRANGLED:
-                    killer_format = KILLED_BY;
-                    killer = (u.uburied) ? "suffocation" : "strangulation";
+                    killer = (u.uburied) ?
+                        killed_by_const(KM_SUFFOCATION) : killed_by_const(KM_STRANGULATION);
                     done(DIED);
                     break;
                 case FUMBLING:
@@ -445,7 +506,10 @@ void hatch_egg(void *arg, long timeout) {
         bool siblings = (hatchcount > 1), redraw = false;
 
         if (cansee_hatchspot) {
-            sprintf(monnambuf, "%s%s", siblings ? "some " : "", siblings ? makeplural(m_monnam(mon)) : an(m_monnam(mon)));
+            char name[BUFSZ];
+            m_monnam(name, BUFSZ, mon);
+            sprintf(monnambuf, "%s%s", siblings ? "some " : "",
+                    siblings ? makeplural(name) : an(name));
             /* we don't learn the egg type here because learning
              an egg type requires either seeing the egg hatch
              or being familiar with the egg already,
@@ -479,12 +543,15 @@ void hatch_egg(void *arg, long timeout) {
                 if (cansee_hatchspot) {
                     /* egg carring monster might be invisible */
                     if (canseemon(egg->ocarry)) {
-                        sprintf(carriedby, "%s pack", s_suffix(a_monnam(egg->ocarry)));
+                        char pname[BUFSZ];
+                        monster_possessive(pname, BUFSZ, egg->ocarry);
+                        sprintf(carriedby, "%s pack", pname);
                         knows_egg = true;
-                    } else if (is_pool(mon->mx, mon->my))
+                    } else if (is_pool(mon->mx, mon->my)) {
                         strcpy(carriedby, "empty water");
-                    else
+                    } else {
                         strcpy(carriedby, "thin air");
+                    }
                     You("see %s %s out of %s!", monnambuf, locomotion(mon->data, "drop"), carriedby);
                 }
                 break;
@@ -540,73 +607,6 @@ void attach_fig_transform_timeout(struct obj *figurine) {
     (void)start_timer((long)i, TIMER_OBJECT, FIG_TRANSFORM, (void *)figurine);
 }
 
-/* give a fumble message */
-static void slip_or_trip(void) {
-    struct obj *otmp = vobj_at(u.ux, u.uy);
-    const char *what, *pronoun;
-    char buf[BUFSZ];
-    bool on_foot = true;
-    if (u.usteed)
-        on_foot = false;
-
-    if (otmp && on_foot && !u.uinwater && is_pool(u.ux, u.uy))
-        otmp = 0;
-
-    if (otmp && on_foot) { /* trip over something in particular */
-        /*
-         If there is only one item, it will have just been named
-         during the move, so refer to by via pronoun; otherwise,
-         if the top item has been or can be seen, refer to it by
-         name; if not, look for rocks to trip over; trip over
-         anonymous "something" if there aren't any rocks.
-         */
-        pronoun = otmp->quan == 1L ? "it" : Hallucination() ? "they" : "them";
-        what = !otmp->nexthere ? pronoun : (otmp->dknown || !Blind) ? doname(otmp) : ((otmp = sobj_at(ROCK, u.ux, u.uy)) == 0 ? something : (otmp->quan == 1L ? "a rock" : "some rocks"));
-        if (Hallucination()) {
-            what = strcpy(buf, what);
-            buf[0] = highc(buf[0]);
-            pline("Egads!  %s bite%s your %s!", what, (!otmp || otmp->quan == 1L) ? "s" : "", body_part(FOOT));
-        } else {
-            You("trip over %s.", what);
-        }
-    } else if (rn2(3) && is_ice(u.ux, u.uy)) {
-        pline("%s %s%s on the ice.", u.usteed ? upstart(x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, (char *)0, SUPPRESS_SADDLE, false)) : "You", rn2(2) ? "slip" : "slide", on_foot ? "" : "s");
-    } else {
-        if (on_foot) {
-            switch (rn2(4)) {
-                case 1:
-                    You("trip over your own %s.", Hallucination() ? "elbow" : makeplural(body_part(FOOT)));
-                    break;
-                case 2:
-                    You("slip %s.", Hallucination() ? "on a banana peel" : "and nearly fall");
-                    break;
-                case 3:
-                    You("flounder.");
-                    break;
-                default:
-                    You("stumble.");
-                    break;
-            }
-        } else {
-            switch (rn2(4)) {
-                case 1:
-                    Your("%s slip out of the stirrups.", makeplural(body_part(FOOT)));
-                    break;
-                case 2:
-                    You("let go of the reins.");
-                    break;
-                case 3:
-                    You("bang into the saddle-horn.");
-                    break;
-                default:
-                    You("slide to one side of the saddle.");
-                    break;
-            }
-            dismount_steed(DISMOUNT_FELL);
-        }
-    }
-}
-
 /* Print a lamp flicker message with tailer. */
 static void see_lamp_flicker(struct obj *obj, const char *tailer) {
     switch (obj->where) {
@@ -633,7 +633,7 @@ static void lantern_message(struct obj *obj) {
             You("see a lantern getting dim.");
             break;
         case OBJ_MINVENT:
-            pline("%s lantern is getting dim.", s_suffix(Monnam(obj->ocarry)));
+            message_monster(MSG_M_LANTERN_GETTING_DIM, obj->ocarry);
             break;
     }
 }

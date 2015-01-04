@@ -8,6 +8,17 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+            pline("%s lantern is getting dim.", s_suffix(Monnam(obj->ocarry)));
+            message_monster(MSG_M_LANTERN_GETTING_DIM, obj->ocarry);
+
+        pline("%s %s%s on the ice.",
+                u.usteed ? upstart(x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, (char *)0, SUPPRESS_SADDLE, false)) : "You", rn2(2) ? "slip" : "slide", on_foot ? "" : "s");
+        const char *slip = rn2(2) ? "slip" : "slide";
+        if (u.usteed) {
+            message_monster_string(MSG_M_SLIPS_ON_THE_ICE, u.usteed, slip);
+        } else {
+            message_string(MSG_YOU_SLIP_ON_THE_ICE, slip);
+
                 You("are no longer inside %s!", mon_nam(mtmp));
                 message_monster(MSG_YOU_ARE_NO_LONGER_INSIDE_M, mtmp);
 
