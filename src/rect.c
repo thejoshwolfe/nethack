@@ -12,9 +12,11 @@ static bool intersect(NhRect *,NhRect *,NhRect *);
      * need for room generation.
      */
 
-#define MAXRECT 50
-#define XLIM    4
-#define YLIM    3
+enum {
+    MAXRECT = 50,
+    XLIM = 4,
+    YLIM = 3,
+};
 
 static NhRect rect[MAXRECT+1];
 static int rect_cnt;
