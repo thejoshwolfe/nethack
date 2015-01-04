@@ -901,5 +901,9 @@ MSG_M_SUDDENLY_SEEMS_WEAKER, pline("%s suddenly seems weaker!", Monnam(mdef));
 MSG_M_FALLS_TO_PIECES, pline("%s falls to pieces!", Monnam(mdef));
 MSG_M_DIES, pline("%s dies!", Monnam(mdef));
 MSG_M_DOESNT_SEEM_HARMED, pline("%s doesn't seem harmed.", Monnam(mdef));
+MSG_M_HELMET_BLOCKS_YOUR_ATTACK_TO_HIS_HEAD, pline("%s helmet blocks your attack to %s head.", s_suffix(Monnam(mdef)), mhis(mdef));
+MSG_YOU_EAT_M_BRAIN, You("eat %s brain!", s_suffix(mon_nam(mdef)));
+MSG_M_DOESN_NOTICE, pline("%s doesn't notice.", Monnam(mdef));
+MSG_YOU_SWING_YOURSELF_AROUND_M, You("swing yourself around %s!", mon_nam(mdef));
 
 */

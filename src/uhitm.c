@@ -1441,11 +1441,11 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 break;
 
             if ((mdef->misc_worn_check & W_ARMH) && rn2(8)) {
-                pline("%s helmet blocks your attack to %s head.", s_suffix(Monnam(mdef)), mhis(mdef));
+                message_monster_string(MSG_M_HELMET_BLOCKS_YOUR_ATTACK_TO_HIS_HEAD, mdef, mhis(mdef));
                 break;
             }
 
-            You("eat %s brain!", s_suffix(mon_nam(mdef)));
+            message_monster(MSG_YOU_EAT_M_BRAIN, mdef);
             u.uconduct.food++;
             if (touch_petrifies(mdef->data) && !Stone_resistance && !Stoned) {
                 Stoned = 5;
@@ -1457,7 +1457,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             if (!vegetarian(mdef->data))
                 violated_vegetarian();
             if (mindless(mdef->data)) {
-                pline("%s doesn't notice.", Monnam(mdef));
+                message_monster(MSG_M_DOESN_NOTICE, mdef);
                 break;
             }
             tmp += rnd(10);
@@ -1480,18 +1480,17 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                     if (m_slips_free(mdef, mattk)) {
                         tmp = 0;
                     } else {
-                        You("swing yourself around %s!",
-                                mon_nam(mdef));
+                        message_monster(MSG_YOU_SWING_YOURSELF_AROUND_M, mdef);
                         u.ustuck = mdef;
                     }
                 } else if(u.ustuck == mdef) {
                     /* Monsters don't wear amulets of magical breathing */
-                    if (is_pool(u.ux,u.uy) && !is_swimmer(mdef->data) &&
-                            !amphibious(mdef->data)) {
+                    if (is_pool(u.ux, u.uy) && !is_swimmer(mdef->data) && !amphibious(mdef->data)) {
                         You("drown %s...", mon_nam(mdef));
                         tmp = mdef->mhp;
-                    } else if(mattk->aatyp == AT_HUGS)
+                    } else if(mattk->aatyp == AT_HUGS) {
                         pline("%s is being crushed.", Monnam(mdef));
+                    }
                 } else {
                     tmp = 0;
                     if (flags.verbose)
