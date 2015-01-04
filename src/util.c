@@ -8,6 +8,9 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+        pline("%s is in no mood for consultations.", Monnam(oracl));
+        message_monster(MSG_M_NO_MOOD_FOR_CONSULTATIONS, oracl);
+
                             pline("%s out!", Tobjnam(obj, "go"));
                             message_object(MSG_O_GOES_OUT, obj);
 

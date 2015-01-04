@@ -4,9 +4,9 @@
 #include "hack.h"
 #include "lev.h"
 #include "dlb.h"
-#include "winprocs.h"
 #include "youprop.h"
 #include "flag.h"
+#include "everything.h"
 
 /*      [note: this comment is fairly old, but still accurate for 3.1]
  * Rumors have been entirely rewritten to speed up the access.  This is
@@ -30,18 +30,13 @@
  * and placed there by 'makedefs'.
  */
 
-static void init_rumors(dlb *);
-static void init_oracles(dlb *);
-
 static long true_rumor_start,  true_rumor_size,  true_rumor_end,
             false_rumor_start, false_rumor_size, false_rumor_end;
 static int oracle_flg = 0;  /* -1=>don't use, 0=>need init, 1=>init done */
 static unsigned oracle_cnt = 0;
 static long *oracle_loc = 0;
 
-static void
-init_rumors (dlb *fp)
-{
+static void init_rumors (dlb *fp) {
         char line[BUFSZ];
 
         (void) dlb_fgets(line, sizeof line, fp); /* skip "don't edit" comment */
@@ -281,73 +276,71 @@ outoracle (bool special, bool delphi)
         }
 }
 
-int
-doconsult (struct monst *oracl)
-{
-        int u_pay, minor_cost = 50, major_cost = 500 + 50 * u.ulevel;
-        int add_xpts;
-        char qbuf[QBUFSZ];
+int doconsult (struct monst *oracl) {
+    int u_pay, minor_cost = 50, major_cost = 500 + 50 * u.ulevel;
+    int add_xpts;
+    char qbuf[QBUFSZ];
 
-        multi = 0;
+    multi = 0;
 
-        if (!oracl) {
-                There("is no one here to consult.");
-                return 0;
-        } else if (!oracl->mpeaceful) {
-                pline("%s is in no mood for consultations.", Monnam(oracl));
-                return 0;
-        } else if (!u.ugold) {
-                You("have no money.");
-                return 0;
-        }
+    if (!oracl) {
+        There("is no one here to consult.");
+        return 0;
+    } else if (!oracl->mpeaceful) {
+        message_monster(MSG_M_NO_MOOD_FOR_CONSULTATIONS, oracl);
+        return 0;
+    } else if (!u.ugold) {
+        You("have no money.");
+        return 0;
+    }
 
-        sprintf(qbuf,
-                "\"Wilt thou settle for a minor consultation?\" (%d %s)",
-                minor_cost, currency((long)minor_cost));
-        switch (ynq(qbuf)) {
-            default:
-            case 'q':
+    sprintf(qbuf,
+            "\"Wilt thou settle for a minor consultation?\" (%d %s)",
+            minor_cost, currency((long)minor_cost));
+    switch (ynq(qbuf)) {
+        default:
+        case 'q':
+            return 0;
+        case 'y':
+            if (u.ugold < (long)minor_cost) {
+                You("don't even have enough money for that!");
                 return 0;
-            case 'y':
-                if (u.ugold < (long)minor_cost) {
-                    You("don't even have enough money for that!");
-                    return 0;
-                }
-                u_pay = minor_cost;
-                break;
-            case 'n':
-                if (u.ugold <= (long)minor_cost ||      /* don't even ask */
+            }
+            u_pay = minor_cost;
+            break;
+        case 'n':
+            if (u.ugold <= (long)minor_cost ||      /* don't even ask */
                     (oracle_cnt == 1 || oracle_flg < 0)) return 0;
-                sprintf(qbuf,
-                        "\"Then dost thou desire a major one?\" (%d %s)",
-                        major_cost, currency((long)major_cost));
-                if (yn(qbuf) != 'y') return 0;
-                u_pay = (u.ugold < (long)major_cost ? (int)u.ugold
-                                                    : major_cost);
-                break;
-        }
-        u.ugold -= (long)u_pay;
-        oracl->mgold += (long)u_pay;
-        flags.botl = 1;
-        add_xpts = 0;   /* first oracle of each type gives experience points */
-        if (u_pay == minor_cost) {
-                outrumor(1, BY_ORACLE);
-                if (!u.uevent.minor_oracle)
-                    add_xpts = u_pay / (u.uevent.major_oracle ? 25 : 10);
-                    /* 5 pts if very 1st, or 2 pts if major already done */
-                u.uevent.minor_oracle = true;
-        } else {
-                bool cheapskate = u_pay < major_cost;
-                outoracle(cheapskate, true);
-                if (!cheapskate && !u.uevent.major_oracle)
-                    add_xpts = u_pay / (u.uevent.minor_oracle ? 25 : 10);
-                    /* ~100 pts if very 1st, ~40 pts if minor already done */
-                u.uevent.major_oracle = true;
-                exercise(A_WIS, !cheapskate);
-        }
-        if (add_xpts) {
-                more_experienced(add_xpts, u_pay/50);
-                newexplevel();
-        }
-        return 1;
+            sprintf(qbuf,
+                    "\"Then dost thou desire a major one?\" (%d %s)",
+                    major_cost, currency((long)major_cost));
+            if (yn(qbuf) != 'y') return 0;
+            u_pay = (u.ugold < (long)major_cost ? (int)u.ugold
+                    : major_cost);
+            break;
+    }
+    u.ugold -= (long)u_pay;
+    oracl->mgold += (long)u_pay;
+    flags.botl = 1;
+    add_xpts = 0;   /* first oracle of each type gives experience points */
+    if (u_pay == minor_cost) {
+        outrumor(1, BY_ORACLE);
+        if (!u.uevent.minor_oracle)
+            add_xpts = u_pay / (u.uevent.major_oracle ? 25 : 10);
+        /* 5 pts if very 1st, or 2 pts if major already done */
+        u.uevent.minor_oracle = true;
+    } else {
+        bool cheapskate = u_pay < major_cost;
+        outoracle(cheapskate, true);
+        if (!cheapskate && !u.uevent.major_oracle)
+            add_xpts = u_pay / (u.uevent.minor_oracle ? 25 : 10);
+        /* ~100 pts if very 1st, ~40 pts if minor already done */
+        u.uevent.major_oracle = true;
+        exercise(A_WIS, !cheapskate);
+    }
+    if (add_xpts) {
+        more_experienced(add_xpts, u_pay/50);
+        newexplevel();
+    }
+    return 1;
 }

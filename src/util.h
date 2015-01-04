@@ -20,6 +20,7 @@ void update_inventory(void);
 void getlin(const char *, char *);
 
 enum MessageId {
+    MSG_M_NO_MOOD_FOR_CONSULTATIONS,
     MSG_O_GOES_OUT,
     MSG_M_GLISTENS,
     MSG_M_SHINES_BRIEFLY,
