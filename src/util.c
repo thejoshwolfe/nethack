@@ -8,6 +8,79 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                    pline("%s is pulled into the lava!", Monnam(mtmp));
+                    message_monster(MSG_M_IS_PULLED_INTO_THE_LAVA, mtmp);
+
+                        pline("%s falls into the %s!", Monnam(mtmp), surface(u.ux, u.uy));
+                        message_monster_string(MSG_M_FALLS_INTO_THE_S, mtmp, surface(u.ux, u.uy));
+
+                You("dismount %s.", mon_nam(mtmp));
+                message_monster(MSG_YOU_DISMOUNT_M, mtmp);
+
+            You("can no longer ride %s.", mon_nam(u.usteed));
+            message_monster(MSG_YOU_CAN_NO_LONGER_RIDE_M, u.usteed);
+
+            You("%s off of %s!", verb, mon_nam(mtmp));
+            message_monster_string(MSG_YOU_FALL_OFF_OF_M, mtmp, verb);
+
+    pline("%s gallops!", Monnam(u.usteed));
+    message_monster(MSG_M_GALLOPS, u.usteed);
+
+        You("mount %s.", mon_nam(mtmp));
+        message_monster(MSG_YOU_MOUNT_M, mtmp);
+
+            pline("%s magically floats up!", Monnam(mtmp));
+            message_monster(MSG_M_MAGICALLY_FLOATS_UP, mtmp);
+
+        You("slip while trying to get on %s.", mon_nam(mtmp));
+        message_monster(MSG_YOU_SLIP_WHILE_TRYING_TO_GET_ON_M, mtmp);
+
+            pline("%s slips away from you.", Monnam(mtmp));
+            message_monster(MSG_M_SLIPS_AWAY_FROM_YOU, mtmp);
+
+        Your("%s armor is too stiff to be able to mount %s.",
+                uarm->oeroded ? "rusty" : "corroded", mon_nam(mtmp));
+        message_monster_string(MSG_YOUR_RUSTY_ARMOR_TOO_STIFF_TO_MOUNT_M, mtmp,
+            uarm->oeroded ? "rusty" : "corroded");
+
+        You("cannot reach %s.", mon_nam(mtmp));
+        message_monster(MSG_YOU_CANNOT_REACH_M, mtmp);
+
+        pline("%s resists%s!", Monnam(mtmp),
+                mtmp->mleashed ? " and its leash comes off" : "");
+        unsigned char leash_flag = mtmp->mleashed ? MSG_FLAG_LEASH_OFF : 0;
+        message_monster_flag(MSG_M_RESISTS, mtmp, leash_flag);
+
+        You_cant("mount %s while %s's trapped in %s.",
+                mon_nam(mtmp), mhe(mtmp),
+                an(defsyms[trap_to_defsym(t->ttyp)].explanation));
+        message_monster_string(MSG_YOU_CANT_MOUNT_M_WHILE_HES_TRAPPED_IN_S, mtmp,
+                defsyms[trap_to_defsym(t->ttyp)].explanation);
+
+        pline("%s is not saddled.", Monnam(mtmp));
+        message_monster(MSG_M_IS_NOT_SADDLED, mtmp);
+
+        You("are already riding %s.", mon_nam(u.usteed));
+        message_monster(MSG_YOU_ARE_ALREADY_RIDING_M, u.usteed);
+
+        pline("%s resists!", Monnam(mtmp));
+        message_monster(MSG_M_RESISTS, mtmp);
+
+        You("put the saddle on %s.", mon_nam(mtmp));
+        message_monster(MSG_YOU_PUT_SADDLE_ON_M, mtmp);
+
+        pline("I think %s would mind.", mon_nam(mtmp));
+        message_monster(MSG_I_THINK_M_WOULD_MIND, mtmp);
+
+        You("touch %s.", mon_nam(mtmp));
+        message_monster(MSG_YOU_TOUCH_M, mtmp);
+
+        pline("%s doesn't need another one.", Monnam(mtmp));
+        message_monster(MSG_M_DOES_NOT_NEED_ANOTHER_ONE, mtmp);
+
+    You("aren't skilled enough to reach from %s.", y_monnam(u.usteed));
+    message_monster(MSG_YOU_ARE_NOT_SKILLED_ENOUGH_TO_REACH_FROM_M, u.usteed);
+
                 pline("%s out.", Tobjnam(otmp, "go"));
                 message_object(MSG_O_GO_OUT, otmp);
 
