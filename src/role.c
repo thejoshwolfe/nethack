@@ -3,10 +3,10 @@
 #include "role.h"
 #include "hack.h"
 #include "pm_props.h"
-#include "winprocs.h"
 #include "onames.h"
 #include "artifact_names.h"
 #include "flag.h"
+#include "everything.h"
 
 
 /*** Table of all roles ***/
@@ -1157,7 +1157,7 @@ char * build_plselection_prompt (char *buf, int buflen, int rolenum,
 
         (void)  root_plselection_prompt(eos(tmpbuf), buflen - strlen(tmpbuf),
                                         rolenum, racenum, gendnum, alignnum);
-        sprintf(buf, "%s", s_suffix(tmpbuf));
+        sprintf(buf, "%s", "TODO: s_suffix(tmpbuf)");
 
         /* buf should now be:
          * < your lawful female gnomish cavewoman's> || <your lawful female gnome's>
@@ -1213,7 +1213,7 @@ void plnamesuffix (void) {
                 flags.initalign = i;
         }
         if(!plname[0]) {
-            askname();
+            fprintf(stderr, "TODO: askname()\n");
             plnamesuffix();
         }
 
@@ -1241,104 +1241,104 @@ void plnamesuffix (void) {
  * This code also replaces quest_init().
  */
 void role_init (void) {
-        int alignmnt;
+    int alignmnt;
 
-        /* Strip the role letter out of the player name.
-         * This is included for backwards compatibility.
+    /* Strip the role letter out of the player name.
+     * This is included for backwards compatibility.
+     */
+    plnamesuffix();
+
+    /* Check for a valid role.  Try flags.initrole first. */
+    if (!validrole(flags.initrole)) {
+        /* Try the player letter second */
+        if ((flags.initrole = str2role(pl_character)) < 0)
+            /* None specified; pick a random role */
+            flags.initrole = randrole();
+    }
+
+    /* We now have a valid role index.  Copy the role name back. */
+    /* This should become OBSOLETE */
+    strcpy(pl_character, roles[flags.initrole].name.m);
+    pl_character[PL_CSIZ-1] = '\0';
+
+    /* Check for a valid race */
+    if (!validrace(flags.initrole, flags.initrace))
+        flags.initrace = randrace(flags.initrole);
+
+    /* Check for a valid gender.  If new game, check both initgend
+     * and female.  On restore, assume flags.female is correct. */
+    if (flags.pantheon == -1) {     /* new game */
+        if (!validgend(flags.initrole, flags.initrace, flags.female))
+            flags.female = !flags.female;
+    }
+    if (!validgend(flags.initrole, flags.initrace, flags.initgend))
+        /* Note that there is no way to check for an unspecified gender. */
+        flags.initgend = flags.female;
+
+    /* Check for a valid alignment */
+    if (!validalign(flags.initrole, flags.initrace, flags.initalign))
+        /* Pick a random alignment */
+        flags.initalign = randalign(flags.initrole, flags.initrace);
+    alignmnt = aligns[flags.initalign].value;
+
+    /* Initialize urole and urace */
+    urole = roles[flags.initrole];
+    urace = races[flags.initrace];
+
+    /* Fix up the quest leader */
+    if (urole.ldrnum != NON_PM) {
+        mons[urole.ldrnum].msound = MS_LEADER;
+        mons[urole.ldrnum].mflags2 |= (M2_PEACEFUL);
+        mons[urole.ldrnum].mflags3 |= M3_CLOSE;
+        mons[urole.ldrnum].maligntyp = alignmnt * 3;
+    }
+
+    /* Fix up the quest guardians */
+    if (urole.guardnum != NON_PM) {
+        mons[urole.guardnum].mflags2 |= (M2_PEACEFUL);
+        mons[urole.guardnum].maligntyp = alignmnt * 3;
+    }
+
+    /* Fix up the quest nemesis */
+    if (urole.neminum != NON_PM) {
+        mons[urole.neminum].msound = MS_NEMESIS;
+        mons[urole.neminum].mflags2 &= ~(M2_PEACEFUL);
+        mons[urole.neminum].mflags2 |= (M2_NASTY|M2_STALK|M2_HOSTILE);
+        mons[urole.neminum].mflags3 |= M3_WANTSARTI | M3_WAITFORU;
+    }
+
+    /* Fix up the god names */
+    if (flags.pantheon == -1) {             /* new game */
+        flags.pantheon = flags.initrole;    /* use own gods */
+        while (!roles[flags.pantheon].lgod) /* unless they're missing */
+            flags.pantheon = randrole();
+    }
+    if (!urole.lgod) {
+        urole.lgod = roles[flags.pantheon].lgod;
+        urole.ngod = roles[flags.pantheon].ngod;
+        urole.cgod = roles[flags.pantheon].cgod;
+    }
+
+    /* Fix up infravision */
+    if (mons[urace.malenum].mflags3 & M3_INFRAVISION) {
+        /* although an infravision intrinsic is possible, infravision
+         * is purely a property of the physical race.  This means that we
+         * must put the infravision flag in the player's current race
+         * (either that or have separate permonst entries for
+         * elven/non-elven members of each class).  The side effect is that
+         * all NPCs of that class will have (probably bogus) infravision,
+         * but since infravision has no effect for NPCs anyway we can
+         * ignore this.
          */
-        plnamesuffix();
+        mons[urole.malenum].mflags3 |= M3_INFRAVISION;
+        if (urole.femalenum != NON_PM)
+            mons[urole.femalenum].mflags3 |= M3_INFRAVISION;
+    }
 
-        /* Check for a valid role.  Try flags.initrole first. */
-        if (!validrole(flags.initrole)) {
-            /* Try the player letter second */
-            if ((flags.initrole = str2role(pl_character)) < 0)
-                /* None specified; pick a random role */
-                flags.initrole = randrole();
-        }
+    /* Artifacts are fixed in hack_artifacts() */
 
-        /* We now have a valid role index.  Copy the role name back. */
-        /* This should become OBSOLETE */
-        strcpy(pl_character, roles[flags.initrole].name.m);
-        pl_character[PL_CSIZ-1] = '\0';
-
-        /* Check for a valid race */
-        if (!validrace(flags.initrole, flags.initrace))
-            flags.initrace = randrace(flags.initrole);
-
-        /* Check for a valid gender.  If new game, check both initgend
-         * and female.  On restore, assume flags.female is correct. */
-        if (flags.pantheon == -1) {     /* new game */
-            if (!validgend(flags.initrole, flags.initrace, flags.female))
-                flags.female = !flags.female;
-        }
-        if (!validgend(flags.initrole, flags.initrace, flags.initgend))
-            /* Note that there is no way to check for an unspecified gender. */
-            flags.initgend = flags.female;
-
-        /* Check for a valid alignment */
-        if (!validalign(flags.initrole, flags.initrace, flags.initalign))
-            /* Pick a random alignment */
-            flags.initalign = randalign(flags.initrole, flags.initrace);
-        alignmnt = aligns[flags.initalign].value;
-
-        /* Initialize urole and urace */
-        urole = roles[flags.initrole];
-        urace = races[flags.initrace];
-
-        /* Fix up the quest leader */
-        if (urole.ldrnum != NON_PM) {
-            mons[urole.ldrnum].msound = MS_LEADER;
-            mons[urole.ldrnum].mflags2 |= (M2_PEACEFUL);
-            mons[urole.ldrnum].mflags3 |= M3_CLOSE;
-            mons[urole.ldrnum].maligntyp = alignmnt * 3;
-        }
-
-        /* Fix up the quest guardians */
-        if (urole.guardnum != NON_PM) {
-            mons[urole.guardnum].mflags2 |= (M2_PEACEFUL);
-            mons[urole.guardnum].maligntyp = alignmnt * 3;
-        }
-
-        /* Fix up the quest nemesis */
-        if (urole.neminum != NON_PM) {
-            mons[urole.neminum].msound = MS_NEMESIS;
-            mons[urole.neminum].mflags2 &= ~(M2_PEACEFUL);
-            mons[urole.neminum].mflags2 |= (M2_NASTY|M2_STALK|M2_HOSTILE);
-            mons[urole.neminum].mflags3 |= M3_WANTSARTI | M3_WAITFORU;
-        }
-
-        /* Fix up the god names */
-        if (flags.pantheon == -1) {             /* new game */
-            flags.pantheon = flags.initrole;    /* use own gods */
-            while (!roles[flags.pantheon].lgod) /* unless they're missing */
-                flags.pantheon = randrole();
-        }
-        if (!urole.lgod) {
-            urole.lgod = roles[flags.pantheon].lgod;
-            urole.ngod = roles[flags.pantheon].ngod;
-            urole.cgod = roles[flags.pantheon].cgod;
-        }
-
-        /* Fix up infravision */
-        if (mons[urace.malenum].mflags3 & M3_INFRAVISION) {
-            /* although an infravision intrinsic is possible, infravision
-             * is purely a property of the physical race.  This means that we
-             * must put the infravision flag in the player's current race
-             * (either that or have separate permonst entries for
-             * elven/non-elven members of each class).  The side effect is that
-             * all NPCs of that class will have (probably bogus) infravision,
-             * but since infravision has no effect for NPCs anyway we can
-             * ignore this.
-             */
-            mons[urole.malenum].mflags3 |= M3_INFRAVISION;
-            if (urole.femalenum != NON_PM)
-                mons[urole.femalenum].mflags3 |= M3_INFRAVISION;
-        }
-
-        /* Artifacts are fixed in hack_artifacts() */
-
-        /* Success! */
-        return;
+    /* Success! */
+    return;
 }
 
 const char * Hello (struct monst *mtmp) {

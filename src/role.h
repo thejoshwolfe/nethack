@@ -1,6 +1,10 @@
 #ifndef ROLE_H
 #define ROLE_H
 
+#include "monst.h"
+
+#include <stdbool.h>
+
 bool validrole(int);
 bool validrace(int, int);
 bool validgend(int, int, int);
