@@ -2,6 +2,7 @@
 #define SHKNAM_H
 
 #include "monst.h"
+#include "mkroom.h"
 
 void stock_room(int,struct mkroom *);
 bool saleable(struct monst *,struct obj *);
