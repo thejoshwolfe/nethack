@@ -4,9 +4,11 @@
 #ifndef MAIL_H
 #define MAIL_H
 
-#define MSG_OTHER 0     /* catch-all; none of the below... */
-#define MSG_MAIL  1     /* unimportant, uninteresting mail message */
-#define MSG_CALL  2     /* annoying phone/talk/chat-type interruption */
+enum {
+    MSG_OTHER, /* catch-all; none of the below... */
+    MSG_MAIL, /* unimportant, uninteresting mail message */
+    MSG_CALL, /* annoying phone/talk/chat-type interruption */
+};
 
 struct mail_info {
         int      message_typ;           /* MSG_foo value */
