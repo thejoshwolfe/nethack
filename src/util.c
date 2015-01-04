@@ -8,6 +8,147 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                        pline("%s cannot defend itself.", Adjmonnam(mon,"blind"));
+                        message_monster(MSG_A_BLIND_M_CANNOT_DEFEND_ITSELF, mon);
+
+                pline("%s is blinded by the flash!", Monnam(mtmp));
+                message_monster(MSG_M_IS_BLINDED_BY_THE_FLASH, mtmp);
+
+                    pline("%s looks confused.", Monnam(mdef));
+                    message_monster(MSG_M_LOOKS_CONFUSED, mdef);
+
+                    pline("%s slows down.", Monnam(mdef));
+                    message_monster(MSG_M_SLOWS_DOWN, mdef);
+
+                    pline("%s is put to sleep by you!", Monnam(mdef));
+                    message_monster(MSG_M_IS_PUT_TO_SLEEP_BY_YOU, mdef);
+
+                    pline("%s is frozen by you!", Monnam(mdef));
+                    message_monster(MSG_M_IS_FROZEN_BY_YOU, mdef);
+
+                        pline("%s is being crushed.", Monnam(mdef));
+                        message_monster(MSG_M_IS_BEING_CRUSHED, mdef);
+
+                            pline("%s is burning to a crisp!",Monnam(mdef));
+                            message_monster(MSG_M_IS_BURNING_TO_A_CRISP, mdef);
+
+                            pline("%s seems mildly hot.", Monnam(mdef));
+                            message_monster(MSG_M_SEEMS_MIDLY_HOT, mdef);
+
+                            pline("%s is freezing to death!",Monnam(mdef));
+                            message_monster(MSG_M_IS_FREEZING_TO_DEATH, mdef);
+
+                            pline("%s seems mildly chilly.", Monnam(mdef));
+                            message_monster(MSG_M_SEEMS_MILDLY_CHILLY, mdef);
+
+                            pline("%s seems unhurt.", Monnam(mdef));
+                            message_monster(MSG_M_SEEMS_UNHURT, mdef);
+
+                            pline("%s can't see in there!", Monnam(mdef));
+                            message_monster(MSG_M_CANT_SEE_IN_THERE, mdef);
+
+                    pline("%s is covered with your goo!", Monnam(mdef));
+                    message_monster(MSG_M_IS_COVERED_WITH_YOUR_GOO, mdef);
+
+                        pline("%s is pummeled with your debris!", Monnam(mdef));
+                        message_monster(MSG_M_IS_PUMMELED_WITH_YOUR_DEBRIS, mdef);
+
+                            pline("%s seems unharmed.", Monnam(mdef));
+                            message_monster(MSG_M_SEEMS_UNHARMED, mdef);
+
+                        pline("%s is laden with your moisture.", Monnam(mdef));
+                        message_monster(MSG_M_IS_LADEN_WITH_YOUR_MOISTURE, mdef);
+
+                pline("%s gets blasted!", Monnam(mdef));
+                message_monster(MSG_M_GETS_BLASTED, mdef);
+
+                pline("%s is affected by your flash of light!", Monnam(mdef));
+                message_monster(MSG_M_IS_AFFECTED_BY_YOUR_FLASH_OF_LIGHT, mdef);
+
+                pline("%s is blinded by your flash of light!", Monnam(mdef));
+                message_monster(MSG_M_IS_BLINDED_BY_YOUR_FLASH_OF_LIGHT, mdef);
+
+            pline_The("flash awakens %s.", mon_nam(mtmp));
+            message_monster(MSG_THE_FLAG_AWAKENS_M, mtmp);
+
+                    You("are frozen by %s!", mon_nam(mon));
+                    message_monster(MSG_YOU_ARE_FROZEN_BY_M, mon);
+
+                            You("are frozen by %s gaze!", s_suffix(mon_nam(mon)));
+                            message_monster(MSG_YOU_ARE_FROZEN_BY_M_GAZE, mon);
+
+                            You("momentarily stiffen under %s gaze!", s_suffix(mon_nam(mon)));
+                            message_monster(MSG_YOU_MOMENTARILY_STIFFEN_UNDER_M_GAZE, mon);
+
+                    You("are splashed by %s acid!", s_suffix(mon_nam(mon)));
+                    message_monster(MSG_YOU_ARE_SPLASHED_BY_M_ACID, mon);
+
+        You("pretend to be friendly to %s.", mon_nam(mdef));
+        message_monster(MSG_YOU_PRETEND_TO_BE_FRIENDLY_TO_M, mdef);
+
+            You("bite into %s.", mon_nam(mdef));
+            message_monster(MSG_YOU_BITE_INTO_M, mdef);
+
+                pline("Obviously, you didn't like %s taste.", s_suffix(mon_nam(mdef)));
+                message_monster(MSG_YOU_DID_NOT_LIKE_M_TASTE, mdef);
+
+                        pline_The("air around %s crackles with electricity.", mon_nam(mdef));
+                        message_monster(MSG_THE_AIR_AROUND_M_CRACKLES_WITH_ELECTRICITY, mdef);
+
+                        pline("It seems harmless to %s.", mon_nam(mdef));
+                        message_monster(MSG_IT_SEEMS_HARMLESS_TO_M, mdef);
+
+                            You("digest %s.", mon_nam(mdef));
+                            message_monster(MSG_YOU_DIGEST_M, mdef);
+
+    You("engulf %s!", mon_nam(mdef));
+    message_monster(MSG_YOU_ENGULF_M, mdef);
+
+                    pline_The("blast doesn't seem to affect %s.", mon_nam(mdef));
+                    message_monster(MSG_THE_BLAST_DOESNT_SEEM_TO_AFFECT_M, mdef);
+
+                You("turn %s into slime.", mon_nam(mdef));
+                message_monster(MSG_YOU_TURN_M_INTO_SLIME, mdef);
+
+                        You("brush against %s %s.", s_suffix(mon_nam(mdef)), mbodypart(mdef, LEG));
+                        message_monster(MSG_YOU_BRUSH_AGAINST_M_LEG, mdef);
+
+                        You("drown %s...", mon_nam(mdef));
+                        message_monster(MSG_YOU_DROWN_M, mdef);
+
+                        Your("attempt to surround %s is harmless.", mon_nam(mon));
+                        message_monster(MSG_YOUR_ATTEMPT_TO_SURROUND_M_IS_HARMLESS, mon);
+
+                        You("grab %s!", mon_nam(mon));
+                        message_monster(MSG_YOU_GRAB_M, mon);
+
+                    Your("hug passes harmlessly through %s.", mon_nam(mon));
+                    message_monster(MSG_YOUR_HUG_PASSES_HARMLESSLY_THROUGH_M, mon);
+
+                        You("hit %s.", mon_nam(mon));
+                        message_monster(MSG_YOU_HIT_M, mon);
+
+                        Your("tentacles suck %s.", mon_nam(mon));
+                        message_monster(MSG_YOUR_TENTACLES_SUCK_M, mon);
+
+                        You("touch %s.", mon_nam(mon));
+                        message_monster(MSG_YOU_TOUCH_M, mon);
+
+                        You("butt %s.", mon_nam(mon));
+                        message_monster(MSG_YOU_BUTT_M, mon);
+
+                        You("sting %s.", mon_nam(mon));
+                        message_monster(MSG_YOU_STING_M, mon);
+
+                        You("bite %s.", mon_nam(mon));
+                        message_monster(MSG_YOU_BITE_M, mon);
+
+                        You("kick %s.", mon_nam(mon));
+                        message_monster(MSG_YOU_KICK_M, mon);
+
+                        Your("attack passes harmlessly through %s.", mon_nam(mon));
+                        message_monster(MSG_YOUR_ATTACK_PASSES_HARMLESSLY_THROUGH_M, mon);
+
                 pline("%s!", Tobjnam(obj, "explode"));
                 message_object(MSG_O_EXPLODES, obj);
 
