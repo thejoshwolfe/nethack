@@ -47,28 +47,13 @@
 #include "monmove.h"
 #include "read.h"
 #include "timeout.h"
+#include "apply.h"
+#include "weapon.h"
+#include "steed.h"
+#include "ball.h"
+#include "pickup.h"
 
 extern const char * const destroy_strings[]; /* from zap.c */
-
-static void dofiretrap(struct obj *);
-static void domagictrap(void);
-static bool emergency_disrobe(bool *);
-static int untrap_prob(struct trap *ttmp);
-static void cnv_trap_obj(int, int, struct trap *);
-static void move_into_trap(struct trap *);
-static int try_disarm(struct trap *, bool);
-static void reward_untrap(struct trap *, struct monst *);
-static int disarm_holdingtrap(struct trap *);
-static int disarm_landmine(struct trap *);
-static int disarm_squeaky_board(struct trap *);
-static int disarm_shooting_trap(struct trap *, int);
-static int try_lift(struct monst *, struct trap *, int, bool);
-static int help_monster_out(struct monst *, struct trap *);
-static bool thitm(int, struct monst *, struct obj *, int, bool);
-static int mkroll_launch(struct trap *, signed char, signed char, short, long);
-static bool isclearpath(coord *, int, signed char, signed char);
-static int steedintrap(struct trap *, struct obj *);
-static bool keep_saddle_with_steedcorpse(unsigned, struct obj *, struct obj *);
 
 static const char * const a_your[2] = { "a", "your" };
 static const char * const A_Your[2] = { "A", "Your" };
@@ -107,7 +92,7 @@ bool burnarmor(struct monst *victim) {
                 }
                 item = (victim == &youmonst) ? uarm : which_armor(victim, W_ARM);
                 if (item) {
-                    burn_dmg(item, xname(item), victim);
+                    burn_dmg(item, "TODO: xname(item)", victim);
                     return true;
                 }
                 item = (victim == &youmonst) ? uarmu : which_armor(victim, W_ARMU);
@@ -176,10 +161,12 @@ bool rust_dmg(struct obj *otmp, const char *ostr, int type, bool print, struct m
 
     if (!vulnerable) {
         if (flags.verbose) {
-            if (victim == &youmonst)
-                Your("%s %s not affected.", ostr, vtense(ostr, "are"));
-            else if (vismon)
-                pline("%s's %s %s not affected.", Monnam(victim), ostr, vtense(ostr, "are"));
+            if (victim == &youmonst) {
+                Your("%s %s not affected.", ostr, "TODO:vtense(ostr, \"are\")");
+            } else if (vismon) {
+                pline("%s's %s %s not affected.", "TODO:Monnam(victim)", ostr,
+                        "TODO:vtense(ostr, \"are\")");
+            }
         }
     } else if (erosion < MAX_ERODE) {
         if (grprot && otmp->greased) {
@@ -187,15 +174,16 @@ bool rust_dmg(struct obj *otmp, const char *ostr, int type, bool print, struct m
         } else if (otmp->oerodeproof || (otmp->blessed && !rnl(4))) {
             if (flags.verbose) {
                 if (victim == &youmonst)
-                    pline("Somehow, your %s %s not affected.", ostr, vtense(ostr, "are"));
+                    pline("Somehow, your %s %s not affected.", ostr, "TODO:vtense(ostr, \"are\")");
                 else if (vismon)
-                    pline("Somehow, %s's %s %s not affected.", mon_nam(victim), ostr, vtense(ostr, "are"));
+                    pline("Somehow, %s's %s %s not affected.", "TODO:mon_nam(victim)", ostr,
+                           "TODO: vtense(ostr, \"are\")");
             }
         } else {
             if (victim == &youmonst)
-                Your("%s %s%s!", ostr, vtense(ostr, action[type]), erosion + 1 == MAX_ERODE ? " completely" : erosion ? " further" : "");
+                Your("%s %s%s!", ostr, "TODO:vtense(ostr, action[type])", erosion + 1 == MAX_ERODE ? " completely" : erosion ? " further" : "");
             else if (vismon)
-                pline("%s's %s %s%s!", Monnam(victim), ostr, vtense(ostr, action[type]), erosion + 1 == MAX_ERODE ? " completely" : erosion ? " further" : "");
+                pline("%s's %s %s%s!", "TODO:Monnam(victim)", ostr, "TODO:vtense(ostr, action[type])", erosion + 1 == MAX_ERODE ? " completely" : erosion ? " further" : "");
             if (is_primary)
                 otmp->oeroded++;
             else
@@ -205,9 +193,11 @@ bool rust_dmg(struct obj *otmp, const char *ostr, int type, bool print, struct m
     } else {
         if (flags.verbose) {
             if (victim == &youmonst)
-                Your("%s %s completely %s.", ostr, vtense(ostr, Blind ? "feel" : "look"), msg[type]);
+                Your("%s %s completely %s.", ostr, "TODO:vtense(ostr, Blind ? \"feel\" : \"look\")",
+                        msg[type]);
             else if (vismon)
-                pline("%s's %s %s completely %s.", Monnam(victim), ostr, vtense(ostr, "look"), msg[type]);
+                pline("%s's %s %s completely %s.", "TODO:Monnam(victim)", ostr,
+                        "TODO:vtense(ostr, \"look\")", msg[type]);
         }
     }
     return (true);
@@ -219,14 +209,15 @@ void grease_protect(struct obj *otmp, const char *ostr, struct monst *victim) {
 
     if (ostr) {
         if (victim == &youmonst)
-            Your("%s %s %s", ostr, vtense(ostr, "are"), txt);
+            Your("%s %s %s", ostr, "TODO:vtense(ostr, \"are\")", txt);
         else if (vismon)
-            pline("%s's %s %s %s", Monnam(victim), ostr, vtense(ostr, "are"), txt);
+            pline("%s's %s %s %s", "TODO:Monnam(victim)", ostr, "TODO:vtense(ostr, \"are\")", txt);
     } else {
-        if (victim == &youmonst)
-            Your("%s %s", aobjnam(otmp, "are"), txt);
-        else if (vismon)
-            pline("%s's %s %s", Monnam(victim), aobjnam(otmp, "are"), txt);
+        if (victim == &youmonst) {
+            message_object(MSG_YOUR_O_ARE_PROTECTED_BY_GREASE, otmp);
+        } else if (vismon) {
+            message_monster_object(MSG_M_O_ARE_PROTECTED_BY_GREASE, victim, otmp);
+        }
     }
     if (!rn2(2)) {
         otmp->greased = 0;
@@ -235,6 +226,86 @@ void grease_protect(struct obj *otmp, const char *ostr, struct monst *victim) {
             update_inventory();
         }
     }
+}
+
+static bool isclearpath(coord *cc, int distance, signed char dx, signed char dy) {
+    unsigned char typ;
+    signed char x, y;
+
+    x = cc->x;
+    y = cc->y;
+    while (distance-- > 0) {
+        x += dx;
+        y += dy;
+        typ = levl[x][y].typ;
+        if (!isok(x, y) || !ZAP_POS(typ) || closed_door(x, y))
+            return false;
+    }
+    cc->x = x;
+    cc->y = y;
+    return true;
+}
+
+static int mkroll_launch(struct trap *ttmp, signed char x, signed char y, short otyp, long ocount) {
+    struct obj *otmp;
+    int tmp;
+    signed char dx, dy;
+    int distance;
+    coord cc;
+    coord bcc;
+    int trycount = 0;
+    bool success = false;
+    int mindist = 4;
+
+    if (ttmp->ttyp == ROLLING_BOULDER_TRAP)
+        mindist = 2;
+    distance = rn1(5, 4); /* 4..8 away */
+    tmp = rn2(8); /* randomly pick a direction to try first */
+    while (distance >= mindist) {
+        dx = xdir[tmp];
+        dy = ydir[tmp];
+        cc.x = x;
+        cc.y = y;
+        /* Prevent boulder from being placed on water */
+        if (ttmp->ttyp == ROLLING_BOULDER_TRAP && is_pool(x + distance * dx, y + distance * dy))
+            success = false;
+        else
+            success = isclearpath(&cc, distance, dx, dy);
+        if (ttmp->ttyp == ROLLING_BOULDER_TRAP) {
+            bool success_otherway;
+            bcc.x = x;
+            bcc.y = y;
+            success_otherway = isclearpath(&bcc, distance, -(dx), -(dy));
+            if (!success_otherway)
+                success = false;
+        }
+        if (success)
+            break;
+        if (++tmp > 7)
+            tmp = 0;
+        if ((++trycount % 8) == 0)
+            --distance;
+    }
+    if (!success) {
+        /* create the trap without any ammo, launch pt at trap location */
+        cc.x = bcc.x = x;
+        cc.y = bcc.y = y;
+    } else {
+        otmp = mksobj(otyp, true, false);
+        otmp->quan = ocount;
+        otmp->owt = weight(otmp);
+        place_object(otmp, cc.x, cc.y);
+        stackobj(otmp);
+    }
+    ttmp->launch.x = cc.x;
+    ttmp->launch.y = cc.y;
+    if (ttmp->ttyp == ROLLING_BOULDER_TRAP) {
+        ttmp->launch2.x = bcc.x;
+        ttmp->launch2.y = bcc.y;
+    } else
+        ttmp->launch_otyp = otyp;
+    newsym(ttmp->launch.x, ttmp->launch.y);
+    return 1;
 }
 
 struct trap *
@@ -279,7 +350,7 @@ maketrap(int x, int y, int typ) {
             break;
         }
         case ROLLING_BOULDER_TRAP: /* boulder will roll towards trigger */
-            (void)mkroll_launch(ttmp, x, y, BOULDER, 1L);
+            mkroll_launch(ttmp, x, y, BOULDER, 1L);
             break;
         case HOLE:
         case PIT:
@@ -492,12 +563,15 @@ animate_statue(struct obj *statue, signed char x, signed char y, int cause, int 
             You_feel("guilty that the historic statue is now gone.");
             adjalign(-1);
         }
-    } else if (cause == ANIMATE_SHATTER)
+    } else if (cause == ANIMATE_SHATTER) {
         pline("Instead of shattering, the statue suddenly %s!",
         canspotmon(mon) ? "comes to life" : "disappears");
-    else { /* cause == ANIMATE_NORMAL */
-        You("find %s posing as a statue.",
-        canspotmon(mon) ? a_monnam(mon) : something);
+    } else { /* cause == ANIMATE_NORMAL */
+        if (canspotmon(mon)) {
+            message_monster(MSG_YOU_FIND_M_POSING_AS_STATUE, mon);
+        } else {
+            message_const(MSG_YOU_FIND_SOMETHING_POSING_AS_STATUE);
+        }
         stop_occupation();
     }
     /* avoid hiding under nothing */
@@ -566,6 +640,300 @@ static bool keep_saddle_with_steedcorpse(unsigned steed_mid, struct obj *objchn,
         objchn = objchn->nobj;
     }
     return false;
+}
+
+/* Monster is hit by trap. */
+/* Note: doesn't work if both obj and d_override are null */
+static bool thitm(int tlev, struct monst *mon, struct obj *obj, int d_override, bool nocorpse) {
+    int strike;
+    bool trapkilled = false;
+
+    if (d_override)
+        strike = 1;
+    else if (obj)
+        strike = (find_mac(mon) + tlev + obj->spe <= rnd(20));
+    else
+        strike = (find_mac(mon) + tlev <= rnd(20));
+
+    /* Actually more accurate than thitu, which doesn't take
+     * obj->spe into account.
+     */
+    if (!strike) {
+        if (obj && cansee(mon->mx, mon->my)) {
+            message_monster_object(MSG_M_IS_ALMOST_HIT_BY_O, mon, obj);
+        }
+    } else {
+        int dam = 1;
+
+        if (obj && cansee(mon->mx, mon->my)) {
+            message_monster_object(MSG_M_IS_HIT_BY_O, mon, obj);
+        }
+        if (d_override)
+            dam = d_override;
+        else if (obj) {
+            dam = dmgval(obj, mon);
+            if (dam < 1)
+                dam = 1;
+        }
+        if ((mon->mhp -= dam) <= 0) {
+            int xx = mon->mx;
+            int yy = mon->my;
+
+            monkilled(mon, "", nocorpse ? -AD_RBRE : AD_PHYS);
+            if (mon->mhp <= 0) {
+                newsym(xx, yy);
+                trapkilled = true;
+            }
+        }
+    }
+    if (obj && (!strike || d_override)) {
+        place_object(obj, mon->mx, mon->my);
+        stackobj(obj);
+    } else if (obj)
+        dealloc_obj(obj);
+
+    return trapkilled;
+}
+
+static int steedintrap(struct trap *trap, struct obj *otmp) {
+    struct monst *mtmp = u.usteed;
+    struct permonst *mptr;
+    int tt;
+    bool in_sight;
+    bool trapkilled = false;
+    bool steedhit = false;
+
+    if (!u.usteed || !trap)
+        return 0;
+    mptr = mtmp->data;
+    tt = trap->ttyp;
+    mtmp->mx = u.ux;
+    mtmp->my = u.uy;
+
+    in_sight = !Blind;
+    switch (tt) {
+        case ARROW_TRAP:
+            if (!otmp) {
+                impossible("steed hit by non-existant arrow?");
+                return 0;
+            }
+            if (thitm(8, mtmp, otmp, 0, false))
+                trapkilled = true;
+            steedhit = true;
+            break;
+        case DART_TRAP:
+            if (!otmp) {
+                impossible("steed hit by non-existant dart?");
+                return 0;
+            }
+            if (thitm(7, mtmp, otmp, 0, false))
+                trapkilled = true;
+            steedhit = true;
+            break;
+        case SLP_GAS_TRAP:
+            if (!resists_sleep(mtmp) && !breathless(mptr) && !mtmp->msleeping && mtmp->mcanmove) {
+                mtmp->mcanmove = 0;
+                mtmp->mfrozen = rnd(25);
+                if (in_sight) {
+                    message_monster(MSG_M_SUDDENLY_FALLS_ASLEEP, mtmp);
+                }
+            }
+            steedhit = true;
+            break;
+        case LANDMINE:
+            if (thitm(0, mtmp, (struct obj *)0, rnd(16), false))
+                trapkilled = true;
+            steedhit = true;
+            break;
+        case PIT:
+        case SPIKED_PIT:
+            if (mtmp->mhp <= 0 || thitm(0, mtmp, (struct obj *)0, rnd((tt == PIT) ? 6 : 10), false))
+                trapkilled = true;
+            steedhit = true;
+            break;
+        case POLY_TRAP:
+            if (!resists_magm(mtmp)) {
+                if (!resist(mtmp, WAND_CLASS, 0, NOTELL)) {
+                    (void)newcham(mtmp, (struct permonst *)0,
+                    false, false);
+                    if (!can_saddle(mtmp) || !can_ride(mtmp)) {
+                        dismount_steed(DISMOUNT_POLY);
+                    } else {
+                        message_monster(MSG_YOU_HAVE_TO_ADJUST_YOURSELF_IN_THE_SADDLE_ON_M, mtmp);
+                    }
+
+                }
+                steedhit = true;
+                break;
+                default:
+                return 0;
+            }
+    }
+    if (trapkilled) {
+        dismount_steed(DISMOUNT_POLY);
+        return 2;
+    } else if (steedhit)
+        return 1;
+    else
+        return 0;
+}
+
+/* box: null for floor trap */
+static void dofiretrap(struct obj *box) {
+    bool see_it = !Blind;
+    int num, alt;
+
+    /* Bug: for box case, the equivalent of burn_floor_paper() ought
+     * to be done upon its contents.
+     */
+
+    if ((box && !carried(box)) ? is_pool(box->ox, box->oy) : Underwater) {
+        pline("A cascade of steamy bubbles erupts from %s!", the(box ? xname(box) : surface(u.ux, u.uy)));
+        if (Fire_resistance)
+            You("are uninjured.");
+        else
+            losehp(rnd(3), killed_by_const(KM_BOILING_WATER));
+        return;
+    }
+    pline("A %s %s from %s!", tower_of_flame, box ? "bursts" : "erupts", the(box ? xname(box) : surface(u.ux, u.uy)));
+    if (Fire_resistance) {
+        shieldeff(u.ux, u.uy);
+        num = rn2(2);
+    } else if (Upolyd) {
+        num = d(2, 4);
+        switch (u.umonnum) {
+            case PM_PAPER_GOLEM:
+                alt = u.mhmax;
+                break;
+            case PM_STRAW_GOLEM:
+                alt = u.mhmax / 2;
+                break;
+            case PM_WOOD_GOLEM:
+                alt = u.mhmax / 4;
+                break;
+            case PM_LEATHER_GOLEM:
+                alt = u.mhmax / 8;
+                break;
+            default:
+                alt = 0;
+                break;
+        }
+        if (alt > num)
+            num = alt;
+        if (u.mhmax > mons[u.umonnum].mlevel)
+            u.mhmax -= rn2(min(u.mhmax, num + 1)), flags.botl = 1;
+    } else {
+        num = d(2, 4);
+        if (u.uhpmax > u.ulevel)
+            u.uhpmax -= rn2(min(u.uhpmax, num + 1)), flags.botl = 1;
+    }
+    if (!num)
+        You("are uninjured.");
+    else
+        losehp(num, killed_by_const(KM_TOWER_OF_FLAME));
+    burn_away_slime();
+
+    if (burnarmor(&youmonst) || rn2(3)) {
+        destroy_item(SCROLL_CLASS, AD_FIRE);
+        destroy_item(SPBOOK_CLASS, AD_FIRE);
+        destroy_item(POTION_CLASS, AD_FIRE);
+    }
+    if (!box && burn_floor_paper(u.ux, u.uy, see_it, true) && !see_it)
+        You("smell paper burning.");
+    if (is_ice(u.ux, u.uy))
+        melt_ice(u.ux, u.uy);
+}
+
+static void domagictrap(void) {
+    int fate = rnd(20);
+
+    /* What happened to the poor sucker? */
+
+    if (fate < 10) {
+        /* Most of the time, it creates some monsters. */
+        int cnt = rnd(4);
+
+        if (!resists_blnd(&youmonst)) {
+            You("are momentarily blinded by a flash of light!");
+            make_blinded((long)rn1(5, 10), false);
+            if (!Blind)
+                Your("%s", vision_clears);
+        } else if (!Blind) {
+            You("see a flash of light!");
+        } else
+            You_hear("a deafening roar!");
+        while (cnt--)
+            (void)makemon((struct permonst *)0, u.ux, u.uy, NO_MM_FLAGS);
+    } else
+        switch (fate) {
+
+            case 10:
+            case 11:
+                /* sometimes nothing happens */
+                break;
+            case 12: /* a flash of fire */
+                dofiretrap((struct obj *)0);
+                break;
+
+                /* odd feelings */
+            case 13:
+                pline("A shiver runs up and down your %s!", body_part(SPINE));
+                break;
+            case 14:
+                You_hear(Hallucination() ? "the moon howling at you." : "distant howling.");
+                break;
+            case 15:
+                if (on_level(&u.uz, &qstart_level))
+                    You_feel("%slike the prodigal son.", (flags.female || (Upolyd && is_neuter(youmonst.data))) ? "oddly " : "");
+                else
+                    You("suddenly yearn for %s.", Hallucination() ? "Cleveland" : (In_quest(&u.uz) || at_dgn_entrance("The Quest")) ? "your nearby homeland" : "your distant homeland");
+                break;
+            case 16:
+                Your("pack shakes violently!");
+                break;
+            case 17:
+                You(Hallucination() ? "smell hamburgers." : "smell charred flesh.");
+                break;
+            case 18:
+                You_feel("tired.");
+                break;
+
+                /* very occasionally something nice happens. */
+
+            case 19:
+                /* tame nearby monsters */
+            {
+                int i, j;
+                struct monst *mtmp;
+
+                (void)adjattrib(A_CHA, 1, false);
+                for (i = -1; i <= 1; i++)
+                    for (j = -1; j <= 1; j++) {
+                        if (!isok(u.ux + i, u.uy + j))
+                            continue;
+                        mtmp = m_at(u.ux + i, u.uy + j);
+                        if (mtmp)
+                            (void)tamedog(mtmp, (struct obj *)0);
+                    }
+                break;
+            }
+
+            case 20:
+                /* uncurse stuff */
+            {
+                struct obj pseudo;
+                long save_conf = HConfusion;
+
+                pseudo = zeroobj; /* neither cursed nor blessed */
+                pseudo.otyp = SCR_REMOVE_CURSE;
+                HConfusion= 0L;
+                (void)seffects(&pseudo);
+                HConfusion= save_conf;
+                break;
+            }
+            default:
+                break;
+        }
 }
 
 void dotrap(struct trap *trap, unsigned trflags) {
@@ -671,14 +1039,15 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 otmp->quan = 1L;
                 otmp->owt = weight(otmp);
 
-                pline("A trap door in %s opens and %s falls on your %s!", the(ceiling(u.ux, u.uy)), an(xname(otmp)), body_part(HEAD));
+                message_object_string(MSG_TRAP_DOOR_IN_CEILING_OPENS_AND_O_FALLS_ON_YOUR_HEAD,
+                        otmp, ceiling(u.ux, u.uy));
 
                 if (uarmh) {
                     if (is_metallic(uarmh)) {
                         pline("Fortunately, you are wearing a hard helmet.");
                         dmg = 2;
                     } else if (flags.verbose) {
-                        Your("%s does not protect you.", xname(uarmh));
+                        message_object(MSG_YOU_RO_DOES_NOT_PROTECT_YOU, uarmh);
                     }
                 }
 
@@ -687,7 +1056,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 stackobj(otmp);
                 newsym(u.ux, u.uy); /* map the rock */
 
-                losehp(dmg, "falling rock", KILLED_BY_AN);
+                losehp(dmg, killed_by_const(KM_FALLING_ROCK));
                 exercise(A_STR, false);
             }
             break;
@@ -722,10 +1091,11 @@ void dotrap(struct trap *trap, unsigned trflags) {
             }
             u.utrap = rn1(4, 4);
             u.utraptype = TT_BEARTRAP;
+            unsigned char made_by_you_flag = trap->madeby_u ? MSG_FLAG_MADE_BY_YOU : 0;
             if (u.usteed) {
-                pline("%s bear trap closes on %s %s!", A_Your[trap->madeby_u], s_suffix(mon_nam(u.usteed)), mbodypart(u.usteed, FOOT));
+                message_monster_flag(MSG_BEAR_TRAP_CLOSES_ON_M_FOOT, u.usteed, made_by_you_flag);
             } else {
-                pline("%s bear trap closes on your %s!", A_Your[trap->madeby_u], body_part(FOOT));
+                message_flag(MSG_BEAR_TRAP_CLOSES_ON_YOUR_FOOT, made_by_you_flag);
                 if (u.umonnum == PM_OWLBEAR || u.umonnum == PM_BUGBEAR)
                     You("howl in anger!");
             }
@@ -752,7 +1122,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 You("are covered with rust!");
                 if (Half_physical_damage)
                     dam = (dam + 1) / 2;
-                losehp(dam, "rusting away", KILLED_BY);
+                losehp(dam, killed_by_const(KM_RUSTING_AWAY));
                 break;
             } else if (u.umonnum == PM_GREMLIN && rn2(3)) {
                 pline("%s you!", A_gush_of_water_hits);
@@ -801,7 +1171,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
 
         case FIRE_TRAP:
             seetrap(trap);
-            dofiretrap((struct obj *)0);
+            dofiretrap(NULL);
             break;
 
         case PIT:
@@ -822,12 +1192,22 @@ void dotrap(struct trap *trap, unsigned trflags) {
             if (!In_sokoban(&u.uz)) {
                 char verbbuf[BUFSZ];
                 if (u.usteed) {
-                    if ((trflags & RECURSIVETRAP) != 0)
-                        sprintf(verbbuf, "and %s fall", x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, (char *)0, SUPPRESS_SADDLE, false));
-                    else
-                        sprintf(verbbuf, "lead %s", x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, "poor", SUPPRESS_SADDLE, false));
-                } else
+                    if ((trflags & RECURSIVETRAP) != 0) {
+                        char name[BUFSZ];
+                        x_monnam(name, BUFSZ, u.usteed,
+                                    u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE,
+                                    NULL, SUPPRESS_SADDLE, false);
+                        sprintf(verbbuf, "and %s fall", name);
+                    } else {
+                        char name[BUFSZ];
+                        x_monnam(name, BUFSZ, u.usteed,
+                                    u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE,
+                                    "poor", SUPPRESS_SADDLE, false);
+                        sprintf(verbbuf, "lead %s", name);
+                    }
+                } else {
                     strcpy(verbbuf, "fall");
+                }
                 You("%s into %s pit!", verbbuf, a_your[trap->madeby_u]);
             }
             /* wumpus reference */
@@ -837,22 +1217,22 @@ void dotrap(struct trap *trap, unsigned trflags) {
             } else if (u.umonnum == PM_PIT_VIPER || u.umonnum == PM_PIT_FIEND)
                 pline("How pitiful.  Isn't that the pits?");
             if (ttype == SPIKED_PIT) {
-                const char *predicament = "on a set of sharp iron spikes";
                 if (u.usteed) {
-                    pline("%s lands %s!", upstart(x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, "poor", SUPPRESS_SADDLE, false)), predicament);
-                } else
-                    You("land %s!", predicament);
+                    message_monster(MSG_M_LANDS_ON_SHARP_IRON_SPIKES, u.usteed);
+                } else {
+                    message_const(MSG_YOU_LAND_ON_SHARP_IRON_SPIKES);
+                }
             }
             if (!Passes_walls)
                 u.utrap = rn1(6, 2);
             u.utraptype = TT_PIT;
             if (!steedintrap(trap, (struct obj *)0)) {
                 if (ttype == SPIKED_PIT) {
-                    losehp(rnd(10), "fell into a pit of iron spikes", NO_KILLER_PREFIX);
+                    losehp(rnd(10), killed_by_const(KM_FELL_INTO_PIT_OF_IRON_SPIKES));
                     if (!rn2(6))
                         poisoned("spikes", A_STR, "fall onto poison spikes", 8);
                 } else
-                    losehp(rnd(6), "fell into a pit", NO_KILLER_PREFIX);
+                    losehp(rnd(6), killed_by_const(KM_FELL_INTO_PIT));
                 if (Punished && !carried(uball)) {
                     unplacebc();
                     ballfall();
@@ -905,11 +1285,14 @@ void dotrap(struct trap *trap, unsigned trflags) {
             if (webmsgok) {
                 char verbbuf[BUFSZ];
                 verbbuf[0] = '\0';
-                if (u.usteed)
-                    sprintf(verbbuf, "lead %s", x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, "poor", SUPPRESS_SADDLE, false));
-                else
-
-                    sprintf(verbbuf, "%s", Levitation ? (const char *)"float" : locomotion(youmonst.data, "stumble"));
+                if (u.usteed) {
+                    char name[BUFSZ];
+                    x_monnam(name, BUFSZ, u.usteed, u.usteed->mnamelth ?
+                            ARTICLE_NONE : ARTICLE_THE, "poor", SUPPRESS_SADDLE, false);
+                    sprintf(verbbuf, "lead %s", name);
+                } else {
+                    sprintf(verbbuf, "%s", Levitation ? "float" : locomotion(youmonst.data, "stumble"));
+                }
                 You("%s into %s spider web!", verbbuf, a_your[trap->madeby_u]);
             }
             u.utraptype = TT_WEB;
@@ -977,7 +1360,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 deltrap(trap);
                 newsym(u.ux, u.uy); /* update position */
                 You("are caught in a magical explosion!");
-                losehp(rnd(10), "magical explosion", KILLED_BY_AN);
+                losehp(rnd(10), killed_by_const(KM_MAGICAL_EXPLOSION));
                 Your("body absorbs some of the magical energy!");
                 u.uen = (u.uenmax += 2);
             } else
@@ -997,11 +1380,15 @@ void dotrap(struct trap *trap, unsigned trflags) {
         case POLY_TRAP: {
             char verbbuf[BUFSZ];
             seetrap(trap);
-            if (u.usteed)
-                sprintf(verbbuf, "lead %s", x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, (char *)0, SUPPRESS_SADDLE, false));
-            else
+            if (u.usteed) {
+                char name[BUFSZ];
+                x_monnam(name, BUFSZ, u.usteed, u.usteed->mnamelth ?
+                        ARTICLE_NONE : ARTICLE_THE, (char *)0, SUPPRESS_SADDLE, false);
+                sprintf(verbbuf, "lead %s", name);
+            } else {
                 sprintf(verbbuf, "%s",
-                Levitation ? (const char *)"float" : locomotion(youmonst.data, "step"));
+                Levitation ? "float" : locomotion(youmonst.data, "step"));
+            }
             You("%s onto a polymorph trap!", verbbuf);
             if (Antimagic || Unchanging) {
                 shieldeff(u.ux, u.uy);
@@ -1052,7 +1439,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
             if (steed_mid && saddle && !u.usteed)
                 (void)keep_saddle_with_steedcorpse(steed_mid, fobj, saddle);
             newsym(u.ux, u.uy); /* update trap symbol */
-            losehp(rnd(16), "land mine", KILLED_BY_AN);
+            losehp(rnd(16), killed_by_const(KM_LAND_MINE));
             /* fall recursively into the pit... */
             if ((trap = t_at(u.ux, u.uy)) != 0)
                 dotrap(trap, RECURSIVETRAP);
@@ -1080,89 +1467,6 @@ void dotrap(struct trap *trap, unsigned trflags) {
             seetrap(trap);
             impossible("You hit a trap of type %u", trap->ttyp);
     }
-}
-
-static int steedintrap(struct trap *trap, struct obj *otmp) {
-    struct monst *mtmp = u.usteed;
-    struct permonst *mptr;
-    int tt;
-    bool in_sight;
-    bool trapkilled = false;
-    bool steedhit = false;
-
-    if (!u.usteed || !trap)
-        return 0;
-    mptr = mtmp->data;
-    tt = trap->ttyp;
-    mtmp->mx = u.ux;
-    mtmp->my = u.uy;
-
-    in_sight = !Blind;
-    switch (tt) {
-        case ARROW_TRAP:
-            if (!otmp) {
-                impossible("steed hit by non-existant arrow?");
-                return 0;
-            }
-            if (thitm(8, mtmp, otmp, 0, false))
-                trapkilled = true;
-            steedhit = true;
-            break;
-        case DART_TRAP:
-            if (!otmp) {
-                impossible("steed hit by non-existant dart?");
-                return 0;
-            }
-            if (thitm(7, mtmp, otmp, 0, false))
-                trapkilled = true;
-            steedhit = true;
-            break;
-        case SLP_GAS_TRAP:
-            if (!resists_sleep(mtmp) && !breathless(mptr) && !mtmp->msleeping && mtmp->mcanmove) {
-                mtmp->mcanmove = 0;
-                mtmp->mfrozen = rnd(25);
-                if (in_sight) {
-                    pline("%s suddenly falls asleep!", Monnam(mtmp));
-                }
-            }
-            steedhit = true;
-            break;
-        case LANDMINE:
-            if (thitm(0, mtmp, (struct obj *)0, rnd(16), false))
-                trapkilled = true;
-            steedhit = true;
-            break;
-        case PIT:
-        case SPIKED_PIT:
-            if (mtmp->mhp <= 0 || thitm(0, mtmp, (struct obj *)0, rnd((tt == PIT) ? 6 : 10), false))
-                trapkilled = true;
-            steedhit = true;
-            break;
-        case POLY_TRAP:
-            if (!resists_magm(mtmp)) {
-                if (!resist(mtmp, WAND_CLASS, 0, NOTELL)) {
-                    (void)newcham(mtmp, (struct permonst *)0,
-                    false, false);
-                    if (!can_saddle(mtmp) || !can_ride(mtmp)) {
-                        dismount_steed(DISMOUNT_POLY);
-                    } else {
-                        You("have to adjust yourself in the saddle on %s.", x_monnam(mtmp, mtmp->mnamelth ? ARTICLE_NONE : ARTICLE_A, (char *)0, SUPPRESS_SADDLE, false));
-                    }
-
-                }
-                steedhit = true;
-                break;
-                default:
-                return 0;
-            }
-    }
-    if (trapkilled) {
-        dismount_steed(DISMOUNT_POLY);
-        return 2;
-    } else if (steedhit)
-        return 1;
-    else
-        return 0;
 }
 
 /* some actions common to both player and monsters for triggered landmine */
@@ -1279,7 +1583,7 @@ int launch_obj(short otyp, int x1, int y1, int x2, int y2, int style) {
         if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
             if (otyp == BOULDER && throws_rocks(mtmp->data)) {
                 if (rn2(3)) {
-                    pline("%s snatches the boulder.", Monnam(mtmp));
+                    message_monster(MSG_M_SNATCHES_THE_BOULDER, mtmp);
                     singleobj->otrapped = 0;
                     (void)mpickobj(mtmp, singleobj);
                     used_up = true;
@@ -1418,86 +1722,6 @@ void seetrap(struct trap *trap) {
     }
 }
 
-static int mkroll_launch(struct trap *ttmp, signed char x, signed char y, short otyp, long ocount) {
-    struct obj *otmp;
-    int tmp;
-    signed char dx, dy;
-    int distance;
-    coord cc;
-    coord bcc;
-    int trycount = 0;
-    bool success = false;
-    int mindist = 4;
-
-    if (ttmp->ttyp == ROLLING_BOULDER_TRAP)
-        mindist = 2;
-    distance = rn1(5, 4); /* 4..8 away */
-    tmp = rn2(8); /* randomly pick a direction to try first */
-    while (distance >= mindist) {
-        dx = xdir[tmp];
-        dy = ydir[tmp];
-        cc.x = x;
-        cc.y = y;
-        /* Prevent boulder from being placed on water */
-        if (ttmp->ttyp == ROLLING_BOULDER_TRAP && is_pool(x + distance * dx, y + distance * dy))
-            success = false;
-        else
-            success = isclearpath(&cc, distance, dx, dy);
-        if (ttmp->ttyp == ROLLING_BOULDER_TRAP) {
-            bool success_otherway;
-            bcc.x = x;
-            bcc.y = y;
-            success_otherway = isclearpath(&bcc, distance, -(dx), -(dy));
-            if (!success_otherway)
-                success = false;
-        }
-        if (success)
-            break;
-        if (++tmp > 7)
-            tmp = 0;
-        if ((++trycount % 8) == 0)
-            --distance;
-    }
-    if (!success) {
-        /* create the trap without any ammo, launch pt at trap location */
-        cc.x = bcc.x = x;
-        cc.y = bcc.y = y;
-    } else {
-        otmp = mksobj(otyp, true, false);
-        otmp->quan = ocount;
-        otmp->owt = weight(otmp);
-        place_object(otmp, cc.x, cc.y);
-        stackobj(otmp);
-    }
-    ttmp->launch.x = cc.x;
-    ttmp->launch.y = cc.y;
-    if (ttmp->ttyp == ROLLING_BOULDER_TRAP) {
-        ttmp->launch2.x = bcc.x;
-        ttmp->launch2.y = bcc.y;
-    } else
-        ttmp->launch_otyp = otyp;
-    newsym(ttmp->launch.x, ttmp->launch.y);
-    return 1;
-}
-
-static bool isclearpath(coord *cc, int distance, signed char dx, signed char dy) {
-    unsigned char typ;
-    signed char x, y;
-
-    x = cc->x;
-    y = cc->y;
-    while (distance-- > 0) {
-        x += dx;
-        y += dy;
-        typ = levl[x][y].typ;
-        if (!isok(x, y) || !ZAP_POS(typ) || closed_door(x, y))
-            return false;
-    }
-    cc->x = x;
-    cc->y = y;
-    return true;
-}
-
 int mintrap(struct monst *mtmp) {
     struct trap *trap = t_at(mtmp->mx, mtmp->my);
     bool trapkilled = false;
@@ -1518,8 +1742,9 @@ int mintrap(struct monst *mtmp) {
             if (sobj_at(BOULDER, mtmp->mx, mtmp->my) && (trap->ttyp == PIT || trap->ttyp == SPIKED_PIT)) {
                 if (!rn2(2)) {
                     mtmp->mtrapped = 0;
-                    if (canseemon(mtmp))
-                        pline("%s pulls free...", Monnam(mtmp));
+                    if (canseemon(mtmp)) {
+                        message_monster(MSG_M_PULLS_FREE, mtmp);
+                    }
                     fill_pit(mtmp->mx, mtmp->my);
                 }
             } else {
@@ -1527,14 +1752,16 @@ int mintrap(struct monst *mtmp) {
             }
         } else if (metallivorous(mptr)) {
             if (trap->ttyp == BEAR_TRAP) {
-                if (canseemon(mtmp))
-                    pline("%s eats a bear trap!", Monnam(mtmp));
+                if (canseemon(mtmp)) {
+                    message_monster(MSG_M_EATS_A_BEAR_TRAP, mtmp);
+                }
                 deltrap(trap);
                 mtmp->meating = 5;
                 mtmp->mtrapped = 0;
             } else if (trap->ttyp == SPIKED_PIT) {
-                if (canseemon(mtmp))
-                    pline("%s munches on some spikes!", Monnam(mtmp));
+                if (canseemon(mtmp)) {
+                    message_monster(MSG_M_MUNCHES_ON_SOME_SPIKES, mtmp);
+                }
                 trap->ttyp = PIT;
                 mtmp->meating = 5;
             }
@@ -1568,8 +1795,9 @@ int mintrap(struct monst *mtmp) {
         switch (tt) {
             case ARROW_TRAP:
                 if (trap->once && trap->tseen && !rn2(15)) {
-                    if (in_sight && see_it)
-                        pline("%s triggers a trap but nothing happens.", Monnam(mtmp));
+                    if (in_sight && see_it) {
+                        message_monster(MSG_M_TRIGGERS_TRAP_BUT_NOTHING_HAPPENS, mtmp);
+                    }
                     deltrap(trap);
                     newsym(mtmp->mx, mtmp->my);
                     break;
@@ -1586,8 +1814,9 @@ int mintrap(struct monst *mtmp) {
                 break;
             case DART_TRAP:
                 if (trap->once && trap->tseen && !rn2(15)) {
-                    if (in_sight && see_it)
-                        pline("%s triggers a trap but nothing happens.", Monnam(mtmp));
+                    if (in_sight && see_it) {
+                        message_monster(MSG_M_TRIGGERS_TRAP_BUT_NOTHING_HAPPENS, mtmp);
+                    }
                     deltrap(trap);
                     newsym(mtmp->mx, mtmp->my);
                     break;
@@ -1605,8 +1834,9 @@ int mintrap(struct monst *mtmp) {
                 break;
             case ROCKTRAP:
                 if (trap->once && trap->tseen && !rn2(15)) {
-                    if (in_sight && see_it)
-                        pline("A trap door above %s opens, but nothing falls out!", mon_nam(mtmp));
+                    if (in_sight && see_it) {
+                        message_monster(MSG_TRAP_DOOR_ABOVE_M_OPENS_NOTHING_FALLS_OUT, mtmp);
+                    }
                     deltrap(trap);
                     newsym(mtmp->mx, mtmp->my);
                     break;
@@ -1626,7 +1856,7 @@ int mintrap(struct monst *mtmp) {
                     break;
                 /* stepped on a squeaky board */
                 if (in_sight) {
-                    pline("A board beneath %s squeaks loudly.", mon_nam(mtmp));
+                    message_monster(MSG_BOARD_BENEATH_M_SQEAKS_LOUDLY, mtmp);
                     seetrap(trap);
                 } else
                     You_hear("a distant squeak.");
@@ -1638,7 +1868,8 @@ int mintrap(struct monst *mtmp) {
                 if (mptr->msize > MZ_SMALL && !amorphous(mptr) && !is_flyer(mptr) && !is_whirly(mptr) && !unsolid(mptr)) {
                     mtmp->mtrapped = 1;
                     if (in_sight) {
-                        pline("%s is caught in %s bear trap!", Monnam(mtmp), a_your[trap->madeby_u]);
+                        unsigned char made_by_you_flag = trap->madeby_u ? MSG_FLAG_MADE_BY_YOU : 0;
+                        message_monster_flag(MSG_M_CAUGHT_IN_BEAR_TRAP, mtmp, made_by_you_flag);
                         seetrap(trap);
                     } else {
                         if ((mptr == &mons[PM_OWLBEAR] || mptr == &mons[PM_BUGBEAR]) && flags.soundok)
@@ -1652,7 +1883,7 @@ int mintrap(struct monst *mtmp) {
                     mtmp->mcanmove = 0;
                     mtmp->mfrozen = rnd(25);
                     if (in_sight) {
-                        pline("%s suddenly falls asleep!", Monnam(mtmp));
+                        message_monster(MSG_M_SUDDENLY_FALLS_ASLEEP, mtmp);
                         seetrap(trap);
                     }
                 }
@@ -1665,14 +1896,16 @@ int mintrap(struct monst *mtmp) {
                     seetrap(trap);
                 switch (rn2(5)) {
                     case 0:
-                        if (in_sight)
-                            pline("%s %s on the %s!", A_gush_of_water_hits, mon_nam(mtmp), mbodypart(mtmp, HEAD));
+                        if (in_sight) {
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M_HEAD, mtmp);
+                        }
                         target = which_armor(mtmp, W_ARMH);
                         (void)rust_dmg(target, "helmet", 1, true, mtmp);
                         break;
                     case 1:
-                        if (in_sight)
-                            pline("%s %s's left %s!", A_gush_of_water_hits, mon_nam(mtmp), mbodypart(mtmp, ARM));
+                        if (in_sight) {
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M_LEFT_ARM, mtmp);
+                        }
                         target = which_armor(mtmp, W_ARMS);
                         if (rust_dmg(target, "shield", 1, true, mtmp))
                             break;
@@ -1683,13 +1916,15 @@ int mintrap(struct monst *mtmp) {
                         (void)rust_dmg(target, "gauntlets", 1, true, mtmp);
                         break;
                     case 2:
-                        if (in_sight)
-                            pline("%s %s's right %s!", A_gush_of_water_hits, mon_nam(mtmp), mbodypart(mtmp, ARM));
+                        if (in_sight) {
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M_RIGHT_ARM, mtmp);
+                        }
                         erode_obj(MON_WEP(mtmp), false, true);
                         goto glovecheck;
                     default:
-                        if (in_sight)
-                            pline("%s %s!", A_gush_of_water_hits, mon_nam(mtmp));
+                        if (in_sight) {
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M, mtmp);
+                        }
                         for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
                             (void)snuff_lit(otmp);
                         target = which_armor(mtmp, W_ARMC);
@@ -1706,10 +1941,11 @@ int mintrap(struct monst *mtmp) {
                         }
                 }
                 if (mptr == &mons[PM_IRON_GOLEM]) {
-                    if (in_sight)
-                        pline("%s falls to pieces!", Monnam(mtmp));
-                    else if (mtmp->mtame)
-                        pline("May %s rust in peace.", mon_nam(mtmp));
+                    if (in_sight) {
+                        message_monster(MSG_M_FALLS_TO_PIECES, mtmp);
+                    } else if (mtmp->mtame) {
+                        message_monster(MSG_MAY_M_RUST_IN_PEACE, mtmp);
+                    }
                     mondied(mtmp);
                     if (mtmp->mhp <= 0)
                         trapkilled = true;
@@ -1719,15 +1955,20 @@ int mintrap(struct monst *mtmp) {
                 break;
             }
             case FIRE_TRAP:
-                mfiretrap: if (in_sight)
-                    pline("A %s erupts from the %s under %s!", tower_of_flame, surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
-                else if (see_it) /* evidently `mtmp' is invisible */
-                    You("see a %s erupt from the %s!", tower_of_flame, surface(mtmp->mx, mtmp->my));
+                mfiretrap:
+                            if (in_sight) {
+                                message_monster_string(MSG_TOWER_OF_FLAME_ERUPTS_FROM_S_UNDER_M,
+                                        mtmp, surface(mtmp->mx, mtmp->my));
+                            } else if (see_it) {
+                                /* evidently `mtmp' is invisible */
+                                message_string(MSG_YOU_SEE_TOWER_OF_FLAME_ERUPT_FROM_S,
+                                    surface(mtmp->mx, mtmp->my));
+                            }
 
                 if (resists_fire(mtmp)) {
                     if (in_sight) {
                         shieldeff(mtmp->mx, mtmp->my);
-                        pline("%s is uninjured.", Monnam(mtmp));
+                        message_monster(MSG_M_IS_UNINJURED, mtmp);
                     }
                 } else {
                     int num = d(2, 4), alt;
@@ -1787,7 +2028,7 @@ int mintrap(struct monst *mtmp) {
                 if (!passes_walls(mptr))
                     mtmp->mtrapped = 1;
                 if (in_sight) {
-                    pline("%s %s into %s pit!", Monnam(mtmp), fallverb, a_your[trap->madeby_u]);
+                    pline("%s %s into %s pit!", "TODO:Monnam(mtmp)", fallverb, a_your[trap->madeby_u]);
                     if (mptr == &mons[PM_PIT_VIPER] || mptr == &mons[PM_PIT_FIEND])
                         pline("How pitiful.  Isn't that the pits?");
                     seetrap(trap);
@@ -1805,7 +2046,7 @@ int mintrap(struct monst *mtmp) {
                 if (is_flyer(mptr) || is_floater(mptr) || mptr == &mons[PM_WUMPUS] || (mtmp->wormno && count_wsegs(mtmp) > 5) || mptr->msize >= MZ_HUGE) {
                     if (inescapable) { /* sokoban hole */
                         if (in_sight) {
-                            pline("%s seems to be yanked down!", Monnam(mtmp));
+                            message_monster(MSG_M_SEEMS_TO_BE_YANKED_DOWN, mtmp);
                             /* suppress message in mlevel_tele_trap() */
                             in_sight = false;
                             seetrap(trap);
@@ -1833,14 +2074,15 @@ int mintrap(struct monst *mtmp) {
                     break;
                 if (amorphous(mptr) || is_whirly(mptr) || unsolid(mptr)) {
                     if (acidic(mptr) || mptr == &mons[PM_GELATINOUS_CUBE] || mptr == &mons[PM_FIRE_ELEMENTAL]) {
-                        if (in_sight)
-                            pline("%s %s %s spider web!", Monnam(mtmp), (mptr == &mons[PM_FIRE_ELEMENTAL]) ? "burns" : "dissolves", a_your[trap->madeby_u]);
+                        if (in_sight) {
+                            pline("%s %s %s spider web!", "TODO:Monnam(mtmp)", (mptr == &mons[PM_FIRE_ELEMENTAL]) ? "burns" : "dissolves", a_your[trap->madeby_u]);
+                        }
                         deltrap(trap);
                         newsym(mtmp->mx, mtmp->my);
                         break;
                     }
                     if (in_sight) {
-                        pline("%s flows through %s spider web.", Monnam(mtmp), a_your[trap->madeby_u]);
+                        pline("%s flows through %s spider web.", "TODO:Monnam(mtmp)", a_your[trap->madeby_u]);
                         seetrap(trap);
                     }
                     break;
@@ -1860,7 +2102,7 @@ int mintrap(struct monst *mtmp) {
                         (mtmp->wormno && count_wsegs(mtmp) > 5)) {
                             tear_web = true;
                         } else if (in_sight) {
-                            pline("%s is caught in %s spider web.", Monnam(mtmp), a_your[trap->madeby_u]);
+                            pline("%s is caught in %s spider web.", "TODO:Monnam(mtmp)", a_your[trap->madeby_u]);
                             seetrap(trap);
                         }
                         mtmp->mtrapped = tear_web ? 0 : 1;
@@ -1880,7 +2122,7 @@ int mintrap(struct monst *mtmp) {
                 }
                 if (tear_web) {
                     if (in_sight)
-                        pline("%s tears through %s spider web!", Monnam(mtmp), a_your[trap->madeby_u]);
+                        pline("%s tears through %s spider web!", "TODO:Monnam(mtmp)", a_your[trap->madeby_u]);
                     deltrap(trap);
                     newsym(mtmp->mx, mtmp->my);
                 }
@@ -1903,7 +2145,7 @@ int mintrap(struct monst *mtmp) {
                 if (is_flyer(mptr)) {
                     bool already_seen = trap->tseen;
                     if (in_sight && !already_seen) {
-                        pline("A trigger appears in a pile of soil below %s.", mon_nam(mtmp));
+                        message_monster(MSG_TRIGGER_APPEARS_IN_SOIL_BELOW_M, mtmp);
                         seetrap(trap);
                     }
                     if (rn2(3))
@@ -1914,7 +2156,7 @@ int mintrap(struct monst *mtmp) {
                     }
                 } else if (in_sight) {
                     newsym(mtmp->mx, mtmp->my);
-                    pline("KAABLAMM!!!  %s triggers %s land mine!", Monnam(mtmp), a_your[trap->madeby_u]);
+                    pline("KAABLAMM!!!  %s triggers %s land mine!", "TODO:Monnam(mtmp)", a_your[trap->madeby_u]);
                 }
                 if (!in_sight)
                     pline("Kaablamm!  You hear an explosion in the distance!");
@@ -1953,7 +2195,7 @@ int mintrap(struct monst *mtmp) {
 
                     newsym(mtmp->mx, mtmp->my);
                     if (in_sight)
-                        pline("Click! %s triggers %s.", Monnam(mtmp), trap->tseen ? "a rolling boulder trap" : something);
+                        pline("Click! %s triggers %s.", "TODO:Monnam(mtmp)", trap->tseen ? "a rolling boulder trap" : something);
                     if (launch_obj(BOULDER, trap->launch.x, trap->launch.y, trap->launch2.x, trap->launch2.y, style)) {
                         if (in_sight)
                             trap->tseen = true;
@@ -1982,8 +2224,7 @@ void instapetrify(const char *str) {
     if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
         return;
     You("turn to stone...");
-    killer_format = KILLED_BY;
-    killer = str;
+    fprintf(stderr, "TODO: killer = %s\n", str);
     done(STONING);
 }
 
@@ -1999,8 +2240,9 @@ void minstapetrify(struct monst *mon, bool byplayer) {
      intrinsic speed (comparable to similar effect on the hero) */
     mon_adjust_speed(mon, -3, (struct obj *)0);
 
-    if (cansee(mon->mx, mon->my))
-        pline("%s turns to stone.", Monnam(mon));
+    if (cansee(mon->mx, mon->my)) {
+        message_monster(MSG_M_TURNS_TO_STONE, mon);
+    }
     if (byplayer) {
         stoned = true;
         xkilled(mon, 0);
@@ -2029,7 +2271,9 @@ void mselftouch(struct monst *mon, const char *arg, bool byplayer) {
 
     if (mwep && mwep->otyp == CORPSE && touch_petrifies(&mons[mwep->corpsenm])) {
         if (cansee(mon->mx, mon->my)) {
-            pline("%s%s touches the %s corpse.", arg ? arg : "", arg ? mon_nam(mon) : Monnam(mon), mons[mwep->corpsenm].mname);
+            pline("%s%s touches the %s corpse.", arg ? arg : "",
+                    arg ? "TODO:mon_nam(mon)" : "TODO:Monnam(mon)",
+                    mons[mwep->corpsenm].mname);
         }
         minstapetrify(mon, byplayer);
     }
@@ -2052,7 +2296,8 @@ void float_up(void) {
     else if (u.uinwater)
         spoteffects(true);
     else if (u.uswallow)
-        You(is_animal(u.ustuck->data) ? "float away from the %s." : "spiral up into %s.", is_animal(u.ustuck->data) ? surface(u.ux, u.uy) : mon_nam(u.ustuck));
+        You(is_animal(u.ustuck->data) ? "float away from the %s." : "spiral up into %s.",
+                is_animal(u.ustuck->data) ? surface(u.ux, u.uy) : "TODO:mon_nam(u.ustuck)");
     else if (Hallucination())
         pline("Up, up, and awaaaay!  You're walking on air!");
     else if (Is_airlevel(&u.uz))
@@ -2060,10 +2305,10 @@ void float_up(void) {
     else
         You("start to float in the air!");
     if (u.usteed && !is_floater(u.usteed->data) && !is_flyer(u.usteed->data)) {
-        if (Lev_at_will)
-            pline("%s magically floats up!", Monnam(u.usteed));
-        else {
-            You("cannot stay on %s.", mon_nam(u.usteed));
+        if (Lev_at_will) {
+            message_monster(MSG_M_MAGICALLY_FLOATS_UP, u.usteed);
+        } else {
+            message_monster(MSG_YOU_CANNOT_STAY_ON_M, u.usteed);
             dismount_steed(DISMOUNT_GENERIC);
         }
     }
@@ -2107,10 +2352,11 @@ int float_down(long hmask, long emask) {
     /* check for falling into pool - added by GAN 10/20/86 */
     if (!Flying) {
         if (!u.uswallow && u.ustuck) {
-            if (sticks(youmonst.data))
-                You("aren't able to maintain your hold on %s.", mon_nam(u.ustuck));
-            else
-                pline("Startled, %s can no longer hold you!", mon_nam(u.ustuck));
+            if (sticks(youmonst.data)) {
+                message_monster(MSG_YOU_ARE_NOT_ABLE_TO_HOLD, u.ustuck);
+            } else {
+                message_monster(MSG_M_CAN_NO_LONGER_HOLD_YOU, u.ustuck);
+            }
             u.ustuck = 0;
         }
         /* kludge alert:
@@ -2153,7 +2399,7 @@ int float_down(long hmask, long emask) {
                          * ceases knocks you off your feet.
                          */
                         You("fall over.");
-                        losehp(rnd(2), "dangerous winds", KILLED_BY);
+                        losehp(rnd(2), killed_by_const(KM_DANGEROUS_WINDS));
                         if (u.usteed)
                             dismount_steed(DISMOUNT_FELL);
                         selftouch("As you fall, you");
@@ -2187,164 +2433,6 @@ int float_down(long hmask, long emask) {
     on_level(&u.uz, &current_dungeon_level))
         (void)pickup(1);
     return 1;
-}
-
-/* box: null for floor trap */
-static void dofiretrap(struct obj *box) {
-    bool see_it = !Blind;
-    int num, alt;
-
-    /* Bug: for box case, the equivalent of burn_floor_paper() ought
-     * to be done upon its contents.
-     */
-
-    if ((box && !carried(box)) ? is_pool(box->ox, box->oy) : Underwater) {
-        pline("A cascade of steamy bubbles erupts from %s!", the(box ? xname(box) : surface(u.ux, u.uy)));
-        if (Fire_resistance)
-            You("are uninjured.");
-        else
-            losehp(rnd(3), "boiling water", KILLED_BY);
-        return;
-    }
-    pline("A %s %s from %s!", tower_of_flame, box ? "bursts" : "erupts", the(box ? xname(box) : surface(u.ux, u.uy)));
-    if (Fire_resistance) {
-        shieldeff(u.ux, u.uy);
-        num = rn2(2);
-    } else if (Upolyd) {
-        num = d(2, 4);
-        switch (u.umonnum) {
-            case PM_PAPER_GOLEM:
-                alt = u.mhmax;
-                break;
-            case PM_STRAW_GOLEM:
-                alt = u.mhmax / 2;
-                break;
-            case PM_WOOD_GOLEM:
-                alt = u.mhmax / 4;
-                break;
-            case PM_LEATHER_GOLEM:
-                alt = u.mhmax / 8;
-                break;
-            default:
-                alt = 0;
-                break;
-        }
-        if (alt > num)
-            num = alt;
-        if (u.mhmax > mons[u.umonnum].mlevel)
-            u.mhmax -= rn2(min(u.mhmax, num + 1)), flags.botl = 1;
-    } else {
-        num = d(2, 4);
-        if (u.uhpmax > u.ulevel)
-            u.uhpmax -= rn2(min(u.uhpmax, num + 1)), flags.botl = 1;
-    }
-    if (!num)
-        You("are uninjured.");
-    else
-        losehp(num, tower_of_flame, KILLED_BY_AN);
-    burn_away_slime();
-
-    if (burnarmor(&youmonst) || rn2(3)) {
-        destroy_item(SCROLL_CLASS, AD_FIRE);
-        destroy_item(SPBOOK_CLASS, AD_FIRE);
-        destroy_item(POTION_CLASS, AD_FIRE);
-    }
-    if (!box && burn_floor_paper(u.ux, u.uy, see_it, true) && !see_it)
-        You("smell paper burning.");
-    if (is_ice(u.ux, u.uy))
-        melt_ice(u.ux, u.uy);
-}
-
-static void domagictrap(void) {
-    int fate = rnd(20);
-
-    /* What happened to the poor sucker? */
-
-    if (fate < 10) {
-        /* Most of the time, it creates some monsters. */
-        int cnt = rnd(4);
-
-        if (!resists_blnd(&youmonst)) {
-            You("are momentarily blinded by a flash of light!");
-            make_blinded((long)rn1(5, 10), false);
-            if (!Blind)
-                Your("%s", vision_clears);
-        } else if (!Blind) {
-            You("see a flash of light!");
-        } else
-            You_hear("a deafening roar!");
-        while (cnt--)
-            (void)makemon((struct permonst *)0, u.ux, u.uy, NO_MM_FLAGS);
-    } else
-        switch (fate) {
-
-            case 10:
-            case 11:
-                /* sometimes nothing happens */
-                break;
-            case 12: /* a flash of fire */
-                dofiretrap((struct obj *)0);
-                break;
-
-                /* odd feelings */
-            case 13:
-                pline("A shiver runs up and down your %s!", body_part(SPINE));
-                break;
-            case 14:
-                You_hear(Hallucination() ? "the moon howling at you." : "distant howling.");
-                break;
-            case 15:
-                if (on_level(&u.uz, &qstart_level))
-                    You_feel("%slike the prodigal son.", (flags.female || (Upolyd && is_neuter(youmonst.data))) ? "oddly " : "");
-                else
-                    You("suddenly yearn for %s.", Hallucination() ? "Cleveland" : (In_quest(&u.uz) || at_dgn_entrance("The Quest")) ? "your nearby homeland" : "your distant homeland");
-                break;
-            case 16:
-                Your("pack shakes violently!");
-                break;
-            case 17:
-                You(Hallucination() ? "smell hamburgers." : "smell charred flesh.");
-                break;
-            case 18:
-                You_feel("tired.");
-                break;
-
-                /* very occasionally something nice happens. */
-
-            case 19:
-                /* tame nearby monsters */
-            {
-                int i, j;
-                struct monst *mtmp;
-
-                (void)adjattrib(A_CHA, 1, false);
-                for (i = -1; i <= 1; i++)
-                    for (j = -1; j <= 1; j++) {
-                        if (!isok(u.ux + i, u.uy + j))
-                            continue;
-                        mtmp = m_at(u.ux + i, u.uy + j);
-                        if (mtmp)
-                            (void)tamedog(mtmp, (struct obj *)0);
-                    }
-                break;
-            }
-
-            case 20:
-                /* uncurse stuff */
-            {
-                struct obj pseudo;
-                long save_conf = HConfusion;
-
-                pseudo = zeroobj; /* neither cursed nor blessed */
-                pseudo.otyp = SCR_REMOVE_CURSE;
-                HConfusion= 0L;
-                (void)seffects(&pseudo);
-                HConfusion= save_conf;
-                break;
-            }
-            default:
-                break;
-        }
 }
 
 /*
@@ -2429,7 +2517,10 @@ int fire_damage(struct obj *chain, bool force, bool here, signed char x, signed 
             retval++;
         } else if (is_flammable(obj) && obj->oeroded < MAX_ERODE && !(obj->oerodeproof || (obj->blessed && !rnl(4)))) {
             if (in_sight) {
-                pline("%s %s%s.", Yname2(obj), otense(obj, "burn"), obj->oeroded + 1 == MAX_ERODE ? " completely" : obj->oeroded ? " further" : "");
+                pline("%s %s%s.", Yname2(obj),
+                        "TODO:otense(obj, \"burn\")",
+                        obj->oeroded + 1 == MAX_ERODE ? " completely" :
+                            obj->oeroded ? " further" : "");
             }
             obj->oeroded++;
         }
@@ -2590,7 +2681,7 @@ bool drown(void) {
         i = d(2, 6);
         if (u.mhmax > i)
             u.mhmax -= i;
-        losehp(i, "rusting away", KILLED_BY);
+        losehp(i, killed_by_const(KM_RUSTING_AWAY));
     }
     if (inpool_ok)
         return (false);
@@ -2679,8 +2770,7 @@ bool drown(void) {
     }
     u.uinwater = 1;
     You("drown.");
-    killer_format = KILLED_BY_AN;
-    killer = (levl[u.ux][u.uy].typ == POOL || Is_medusa_level(&u.uz)) ? "pool of water" : "moat";
+    fprintf(stderr, "TODO: killer = %s\n", (levl[u.ux][u.uy].typ == POOL || Is_medusa_level(&u.uz)) ? "pool of water" : "moat");
     done(DROWNING);
     /* oops, we're still alive.  better get out of the water. */
     while (!safe_teleds(true)) {
@@ -2718,7 +2808,7 @@ int dountrap(void) /* disarm a trap */
         pline("And just how do you expect to do that?");
         return 0;
     } else if (u.ustuck && sticks(youmonst.data)) {
-        pline("You'll have to let go of %s first.", mon_nam(u.ustuck));
+        message_monster(MSG_YOU_MUST_LET_GO_OF_M_FIRST, u.ustuck);
         return 0;
     }
     if (u.ustuck || (welded(uwep) && bimanual(uwep))) {
@@ -2806,7 +2896,7 @@ static int try_disarm(struct trap *ttmp, bool force_failure) {
 
     /* Test for monster first, monsters are displayed instead of trap. */
     if (mtmp && (!mtmp->mtrapped || !holdingtrap)) {
-        pline("%s is in the way.", Monnam(mtmp));
+        message_monster(MSG_M_IS_IN_THE_WAY, mtmp);
         return 0;
     }
     /* We might be forced to move onto the trap's location. */
@@ -2824,10 +2914,11 @@ static int try_disarm(struct trap *ttmp, bool force_failure) {
     }
     /* untrappable traps are located on the ground. */
     if (!can_reach_floor()) {
-        if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
-            You("aren't skilled enough to reach from %s.", mon_nam(u.usteed));
-        else
+        if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
+            message_monster(MSG_YOU_ARE_NOT_SKILLED_ENOUGH_TO_REACH_FROM_M, u.usteed);
+        } else {
             You("are unable to reach the %s!", defsyms[trap_to_defsym(ttype)].explanation);
+        }
         return 0;
     }
 
@@ -2852,8 +2943,9 @@ static int try_disarm(struct trap *ttmp, bool force_failure) {
                                 dismount_steed(DISMOUNT_FELL);
                             }
                         }
-                    } else
-                        pline("%s remains entangled.", Monnam(mtmp));
+                    } else {
+                        message_monster(MSG_M_REMAINS_ENTANGLED, mtmp);
+                    }
                 }
             } else if (under_u) {
                 dotrap(ttmp, 0);
@@ -2870,10 +2962,12 @@ static int try_disarm(struct trap *ttmp, bool force_failure) {
 
 static void reward_untrap(struct trap *ttmp, struct monst *mtmp) {
     if (!ttmp->madeby_u) {
-        if (rnl(10) < 8 && !mtmp->mpeaceful && !mtmp->msleeping && !mtmp->mfrozen && !mindless(mtmp->data) && mtmp->data->mlet != S_HUMAN) {
+        if (rnl(10) < 8 && !mtmp->mpeaceful && !mtmp->msleeping && !mtmp->mfrozen &&
+                !mindless(mtmp->data) && mtmp->data->mlet != S_HUMAN)
+        {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */
-            pline("%s is grateful.", Monnam(mtmp));
+            message_monster(MSG_M_IS_GRATEFUL, mtmp);
         }
         /* Helping someone out of a trap is a nice thing to do,
          * A lawful may be rewarded, but not too often.  */
@@ -2898,7 +2992,9 @@ struct trap *ttmp) {
      There's no need for a cockatrice test, only the trap is touched */
     if ((mtmp = m_at(ttmp->tx, ttmp->ty)) != 0) {
         mtmp->mtrapped = 0;
-        You("remove %s %s from %s.", the_your[ttmp->madeby_u], (ttmp->ttyp == BEAR_TRAP) ? "bear trap" : "webbing", mon_nam(mtmp));
+        You("remove %s %s from %s.",
+                the_your[ttmp->madeby_u],
+                (ttmp->ttyp == BEAR_TRAP) ? "bear trap" : "webbing", "TODO:mon_nam(mtmp)");
         reward_untrap(ttmp, mtmp);
     } else {
         if (ttmp->ttyp == BEAR_TRAP) {
@@ -2975,11 +3071,13 @@ static int try_lift(struct monst *mtmp, struct trap *ttmp, int wt, bool stuff) {
     int wc = weight_cap();
 
     if (((wt * 2) / wc) >= HVY_ENCUMBER) {
-        pline("%s is %s for you to lift.", Monnam(mtmp), stuff ? "carrying too much" : "too heavy");
-        if (!ttmp->madeby_u && !mtmp->mpeaceful && mtmp->mcanmove && !mindless(mtmp->data) && mtmp->data->mlet != S_HUMAN && rnl(10) < 3) {
+        pline("%s is %s for you to lift.", "TODO:Monnam(mtmp)", stuff ? "carrying too much" : "too heavy");
+        if (!ttmp->madeby_u && !mtmp->mpeaceful && mtmp->mcanmove &&
+                !mindless(mtmp->data) && mtmp->data->mlet != S_HUMAN && rnl(10) < 3)
+        {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */
-            pline("%s thinks it was nice of you to try.", Monnam(mtmp));
+            message_monster(MSG_M_THINKS_IT_WAS_NICE_OF_YOU_TO_TRY, mtmp);
         }
         return 0;
     }
@@ -3002,7 +3100,7 @@ static int help_monster_out(struct monst *mtmp, struct trap *ttmp) {
      * Test the monster first - monsters are displayed before traps.
      */
     if (!mtmp->mtrapped) {
-        pline("%s isn't trapped.", Monnam(mtmp));
+        message_monster(MSG_M_IS_NOT_TRAPPED, mtmp);
         return 0;
     }
     /* Do you have the necessary capacity to lift anything? */
@@ -3011,7 +3109,9 @@ static int help_monster_out(struct monst *mtmp, struct trap *ttmp) {
 
     /* Will our hero succeed? */
     if ((uprob = untrap_prob(ttmp)) && !mtmp->msleeping && mtmp->mcanmove) {
-        You("try to reach out your %s, but %s backs away skeptically.", makeplural(body_part(ARM)), mon_nam(mtmp));
+        You("try to reach out your %s, but %s backs away skeptically.",
+                makeplural(body_part(ARM)),
+                "TODO:mon_nam(mtmp)");
         return 1;
     }
 
@@ -3031,24 +3131,24 @@ static int help_monster_out(struct monst *mtmp, struct trap *ttmp) {
     }
     /* need to do cockatrice check first if sleeping or paralyzed */
     if (uprob) {
-        You("try to grab %s, but cannot get a firm grasp.", mon_nam(mtmp));
+        message_monster(MSG_YOU_TRY_TO_GRAB_M_BUT_CANNOT_GET_A_GRASP, mtmp);
         if (mtmp->msleeping) {
             mtmp->msleeping = 0;
-            pline("%s awakens.", Monnam(mtmp));
+            message_monster(MSG_M_AWAKENS, mtmp);
         }
         return 1;
     }
 
-    You("reach out your %s and grab %s.", makeplural(body_part(ARM)), mon_nam(mtmp));
+    message_monster(MSG_YOU_REACH_OUT_YOUR_ARM_AND_GRAB_M, mtmp);
 
     if (mtmp->msleeping) {
         mtmp->msleeping = 0;
-        pline("%s awakens.", Monnam(mtmp));
+        message_monster(MSG_M_AWAKENS, mtmp);
     } else if (mtmp->mfrozen && !rn2(mtmp->mfrozen)) {
         /* After such manhandling, perhaps the effect wears off */
         mtmp->mcanmove = 1;
         mtmp->mfrozen = 0;
-        pline("%s stirs.", Monnam(mtmp));
+        message_monster(MSG_M_STIRS, mtmp);
     }
 
     /* is the monster too heavy? */
@@ -3062,7 +3162,7 @@ static int help_monster_out(struct monst *mtmp, struct trap *ttmp) {
     if (!try_lift(mtmp, ttmp, wt, true))
         return 1;
 
-    You("pull %s out of the pit.", mon_nam(mtmp));
+    message_monster(MSG_YOU_PULL_M_OUT_OF_THE_PIT, mtmp);
     mtmp->mtrapped = 0;
     fill_pit(mtmp->mx, mtmp->my);
     reward_untrap(ttmp, mtmp);
@@ -3162,7 +3262,7 @@ int untrap(bool force) {
                         continue;
                 }
                 if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
-                    You("aren't skilled enough to reach from %s.", mon_nam(u.usteed));
+                    message_monster(MSG_YOU_ARE_NOT_SKILLED_ENOUGH_TO_REACH_FROM_M, u.usteed);
                     return (0);
                 }
                 if ((otmp->otrapped && (force || (!confused && rn2(MAXULEV + 1 - u.ulevel) < 10))) || (!force && confused && !rn2(3))) {
@@ -3321,7 +3421,7 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                 costly = (costly_spot(ox, oy) && (shkp = shop_keeper(*in_rooms(ox, oy, SHOPBASE))) != (struct monst *)0);
                 insider = (*u.ushops && inside_shop(u.ux, u.uy) && *in_rooms(ox, oy, SHOPBASE) == *u.ushops);
 
-                pline("%s!", Tobjnam(obj, "explode"));
+                message_object(MSG_O_EXPLODES, obj);
                 sprintf(buf, "exploding %s", xname(obj));
 
                 if (costly)
@@ -3345,7 +3445,8 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                     delobj(otmp);
                 }
                 wake_nearby();
-                losehp(d(6, 6), buf, KILLED_BY_AN);
+                fprintf(stderr, "losehp killed by %s\n", buf);
+                losehp(d(6, 6), killed_by_const(KM_TODO));
                 exercise(A_STR, false);
                 if (costly && loss) {
                     if (insider)
@@ -3394,7 +3495,7 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                 destroy_item(RING_CLASS, AD_ELEC);
                 destroy_item(WAND_CLASS, AD_ELEC);
                 if (dmg)
-                    losehp(dmg, "electric shock", KILLED_BY_AN);
+                    losehp(dmg, killed_by_const(KM_ELECTRIC_SHOCK));
                 break;
             }
             case 5:
@@ -3484,62 +3585,11 @@ void b_trapped(const char *item, int bodypart) {
 
     pline("KABOOM!!  %s was booby-trapped!", The(item));
     wake_nearby();
-    losehp(dmg, "explosion", KILLED_BY_AN);
+    losehp(dmg, killed_by_const(KM_EXPLOSION));
     exercise(A_STR, false);
     if (bodypart)
         exercise(A_CON, false);
     make_stunned(HStun+ dmg, true);
-}
-
-/* Monster is hit by trap. */
-/* Note: doesn't work if both obj and d_override are null */
-static bool thitm(int tlev, struct monst *mon, struct obj *obj, int d_override, bool nocorpse) {
-    int strike;
-    bool trapkilled = false;
-
-    if (d_override)
-        strike = 1;
-    else if (obj)
-        strike = (find_mac(mon) + tlev + obj->spe <= rnd(20));
-    else
-        strike = (find_mac(mon) + tlev <= rnd(20));
-
-    /* Actually more accurate than thitu, which doesn't take
-     * obj->spe into account.
-     */
-    if (!strike) {
-        if (obj && cansee(mon->mx, mon->my))
-            pline("%s is almost hit by %s!", Monnam(mon), doname(obj));
-    } else {
-        int dam = 1;
-
-        if (obj && cansee(mon->mx, mon->my))
-            pline("%s is hit by %s!", Monnam(mon), doname(obj));
-        if (d_override)
-            dam = d_override;
-        else if (obj) {
-            dam = dmgval(obj, mon);
-            if (dam < 1)
-                dam = 1;
-        }
-        if ((mon->mhp -= dam) <= 0) {
-            int xx = mon->mx;
-            int yy = mon->my;
-
-            monkilled(mon, "", nocorpse ? -AD_RBRE : AD_PHYS);
-            if (mon->mhp <= 0) {
-                newsym(xx, yy);
-                trapkilled = true;
-            }
-        }
-    }
-    if (obj && (!strike || d_override)) {
-        place_object(obj, mon->mx, mon->my);
-        stackobj(obj);
-    } else if (obj)
-        dealloc_obj(obj);
-
-    return trapkilled;
 }
 
 bool unconscious(void) {
@@ -3562,7 +3612,7 @@ bool lava_effects(void) {
             dmg = d(6, 6);
             pline_The("lava here burns you!");
             if (dmg < u.uhp) {
-                losehp(dmg, lava_killer, KILLED_BY);
+                losehp(dmg, killed_by_const(KM_MOLTEN_LAVA));
                 goto burn_stuff;
             }
         } else
@@ -3613,8 +3663,7 @@ bool lava_effects(void) {
 
         /* s/he died... */
         u.uhp = -1;
-        killer_format = KILLED_BY;
-        killer = lava_killer;
+        killer = killed_by_const(KM_MOLTEN_LAVA);
         You("burn to a crisp...");
         done(BURNING);
         while (!safe_teleds(true)) {
@@ -3630,7 +3679,7 @@ bool lava_effects(void) {
         u.utraptype = TT_LAVA;
         You("sink into the lava, but it only burns slightly!");
         if (u.uhp > 1)
-            losehp(1, lava_killer, KILLED_BY);
+            losehp(1, killed_by_const(KM_MOLTEN_LAVA));
     }
     /* just want to burn boots, not all armor; destroy_item doesn't work on
      armor anyway */

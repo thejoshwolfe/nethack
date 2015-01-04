@@ -37,9 +37,58 @@ enum MessageFlag {
     MSG_FLAG_THEM             = 0x2,
 
     MSG_FLAG_LEASH_OFF        = 0x1,
+
+    MSG_FLAG_MADE_BY_YOU      = 0x1,
 };
 
 enum MessageId {
+    MSG_O_EXPLODES,
+    MSG_M_STIRS,
+    MSG_M_AWAKENS,
+    MSG_M_IS_NOT_TRAPPED,
+    MSG_M_THINKS_IT_WAS_NICE_OF_YOU_TO_TRY,
+    MSG_M_IS_GRATEFUL,
+    MSG_M_REMAINS_ENTANGLED,
+    MSG_YOU_PULL_M_OUT_OF_THE_PIT,
+    MSG_YOU_REACH_OUT_YOUR_ARM_AND_GRAB_M,
+    MSG_YOU_TRY_TO_GRAB_M_BUT_CANNOT_GET_A_GRASP,
+    MSG_M_IS_IN_THE_WAY,
+    MSG_YOU_MUST_LET_GO_OF_M_FIRST,
+    MSG_M_CAN_NO_LONGER_HOLD_YOU,
+    MSG_YOU_ARE_NOT_ABLE_TO_HOLD,
+    MSG_YOU_CANNOT_STAY_ON_M,
+    MSG_M_TURNS_TO_STONE,
+    MSG_TRIGGER_APPEARS_IN_SOIL_BELOW_M,
+    MSG_M_SEEMS_TO_BE_YANKED_DOWN,
+    MSG_M_IS_UNINJURED,
+    MSG_YOU_SEE_TOWER_OF_FLAME_ERUPT_FROM_S,
+    MSG_TOWER_OF_FLAME_ERUPTS_FROM_S_UNDER_M,
+    MSG_MAY_M_RUST_IN_PEACE,
+    MSG_GUSH_OF_WATER_HITS_M,
+    MSG_GUSH_OF_WATER_HITS_M_RIGHT_ARM,
+    MSG_GUSH_OF_WATER_HITS_M_LEFT_ARM,
+    MSG_GUSH_OF_WATER_HITS_M_HEAD,
+    MSG_M_CAUGHT_IN_BEAR_TRAP,
+    MSG_BOARD_BENEATH_M_SQEAKS_LOUDLY,
+    MSG_TRAP_DOOR_ABOVE_M_OPENS_NOTHING_FALLS_OUT,
+    MSG_M_TRIGGERS_TRAP_BUT_NOTHING_HAPPENS,
+    MSG_M_MUNCHES_ON_SOME_SPIKES,
+    MSG_M_EATS_A_BEAR_TRAP,
+    MSG_M_PULLS_FREE,
+    MSG_M_SNATCHES_THE_BOULDER,
+    MSG_YOU_HAVE_TO_ADJUST_YOURSELF_IN_THE_SADDLE_ON_M,
+    MSG_M_SUDDENLY_FALLS_ASLEEP,
+    MSG_M_IS_ALMOST_HIT_BY_O,
+    MSG_YOU_LAND_ON_SHARP_IRON_SPIKES,
+    MSG_M_LANDS_ON_SHARP_IRON_SPIKES,
+    MSG_BEAR_TRAP_CLOSES_ON_YOUR_FOOT,
+    MSG_BEAR_TRAP_CLOSES_ON_M_FOOT,
+    MSG_YOU_RO_DOES_NOT_PROTECT_YOU,
+    MSG_TRAP_DOOR_IN_CEILING_OPENS_AND_O_FALLS_ON_YOUR_HEAD,
+    MSG_YOU_FIND_M_POSING_AS_STATUE,
+    MSG_YOU_FIND_SOMETHING_POSING_AS_STATUE,
+    MSG_YOUR_O_ARE_PROTECTED_BY_GREASE,
+    MSG_M_O_ARE_PROTECTED_BY_GREASE,
     MSG_M_LANTERN_GETTING_DIM,
     MSG_M_SLIPS_ON_THE_ICE,
     MSG_YOU_SLIP_ON_THE_ICE,
@@ -369,6 +418,7 @@ struct Message {
 };
 
 void message_const(enum MessageId id);
+void message_flag(enum MessageId id, unsigned char);
 void message_monster(enum MessageId id, const struct monst *m);
 void message_monster_force_visible(enum MessageId id, const struct monst *m);
 void message_object(enum MessageId id, const struct obj *o);
@@ -382,6 +432,7 @@ void message_monster_object_int(enum MessageId id, const struct monst * mtmp, st
 void message_monster_object_flag(enum MessageId id, const struct monst *, struct obj *, unsigned char);
 void message_monster_object_string(enum MessageId id, const struct monst * mtmp, struct obj * obj,
         const char *);
+void message_object_string(enum MessageId id, const struct obj *, const char *);
 
 void message_monster_int_string(enum MessageId id, const struct monst *, int, const char *);
 void message_monster_int(enum MessageId id, const struct monst *, int);

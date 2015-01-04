@@ -8,6 +8,170 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                pline("%s!", Tobjnam(obj, "explode"));
+                message_object(MSG_O_EXPLODES, obj);
+
+        pline("%s stirs.", Monnam(mtmp));
+        message_monster(MSG_M_STIRS, mtmp);
+
+            pline("%s awakens.", Monnam(mtmp));
+            message_monster(MSG_M_AWAKENS, mtmp);
+
+        pline("%s isn't trapped.", Monnam(mtmp));
+        message_monster(MSG_M_IS_NOT_TRAPPED, mtmp);
+
+            pline("%s thinks it was nice of you to try.", Monnam(mtmp));
+            message_monster(MSG_M_THINKS_IT_WAS_NICE_OF_YOU_TO_TRY, mtmp);
+
+            pline("%s is grateful.", Monnam(mtmp));
+            message_monster(MSG_M_IS_GRATEFUL, mtmp);
+
+                        pline("%s remains entangled.", Monnam(mtmp));
+                        message_monster(MSG_M_REMAINS_ENTANGLED, mtmp);
+
+    You("pull %s out of the pit.", mon_nam(mtmp));
+    message_monster(MSG_YOU_PULL_M_OUT_OF_THE_PIT, mtmp);
+
+    You("reach out your %s and grab %s.", makeplural(body_part(ARM)), mon_nam(mtmp));
+    message_monster(MSG_YOU_REACH_OUT_YOUR_ARM_AND_GRAB_M);
+
+        You("try to grab %s, but cannot get a firm grasp.", mon_nam(mtmp));
+        message_monster(MSG_YOU_TRY_TO_GRAB_M_BUT_CANNOT_GET_A_GRASP, mtmp);
+
+            You("aren't skilled enough to reach from %s.", mon_nam(u.usteed));
+            message_monster(MSG_YOU_ARE_NOT_SKILLED_ENOUGH_TO_REACH_FROM_M, u.usteed);
+
+        pline("%s is in the way.", Monnam(mtmp));
+        message_monster(MSG_M_IS_IN_THE_wAY, mtmp);
+
+        pline("You'll have to let go of %s first.", mon_nam(u.ustuck));
+        message_monster(MSG_YOU_MUST_LET_GO_OF_M_FIRST, u.ustuck);
+
+                pline("Startled, %s can no longer hold you!", mon_nam(u.ustuck));
+                message_monster(MSG_M_CAN_NO_LONGER_HOLD_YOU, u.ustuck);
+
+                You("aren't able to maintain your hold on %s.", mon_nam(u.ustuck));
+                message_monster(MSG_YOU_ARE_NOT_ABLE_TO_HOLD, u.ustuck);
+
+            You("cannot stay on %s.", mon_nam(u.usteed));
+            message_monster(MSG_YOU_CANNOT_STAY_ON_M, u.usteed);
+
+            pline("%s magically floats up!", Monnam(u.usteed));
+            message_monster(MSG_M_MAGICALLY_FLOATS_UP, u.usteed);
+
+        pline("%s turns to stone.", Monnam(mon));
+        message_monster(MSG_M_TURNS_TO_STONE, mon);
+
+                        pline("A trigger appears in a pile of soil below %s.", mon_nam(mtmp));
+                        message_monster(MSG_TRIGGER_APPEARS_IN_SOIL_BELOW_M, mtmp);
+
+                            pline("%s seems to be yanked down!", Monnam(mtmp));
+                            message_monster(MSG_M_SEEMS_TO_BE_YANKED_DOWN, mtmp);
+
+                        pline("%s is uninjured.", Monnam(mtmp));
+                        message_monster(MSG_M_IS_UNINJURED, mtmp);
+
+                                You("see a %s erupt from the %s!", tower_of_flame, surface(mtmp->mx, mtmp->my));
+                                message_monster_string(MSG_YOU_SEE_TOWER_OF_FLAME_ERUPT_FROM_S,
+                                    surface(mtmp->mx, mtmp->my));
+
+                                pline("A %s erupts from the %s under %s!", tower_of_flame, surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
+                                message_monster_string(MSG_TOWER_OF_FLAME_ERUPTS_FROM_S_UNDER_M,
+                                        mtmp, surface(mtmp->mx, mtmp->my));
+
+                        pline("May %s rust in peace.", mon_nam(mtmp));
+                        message_monste(MSG_MAY_M_RUST_IN_PEACE, mtmp);
+
+                        pline("%s falls to pieces!", Monnam(mtmp));
+                        message_monster(MSG_M_FALLS_TO_PIECES, mtmp);
+
+                            pline("%s %s!", A_gush_of_water_hits, mon_nam(mtmp));
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M, mtmp);
+
+                            pline("%s %s's right %s!", A_gush_of_water_hits, mon_nam(mtmp), mbodypart(mtmp, ARM));
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M_RIGHT_ARM, mtmp);
+
+                            pline("%s %s's left %s!", A_gush_of_water_hits, mon_nam(mtmp), mbodypart(mtmp, ARM));
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M_LEFT_ARM, mtmp);
+
+                            pline("%s %s on the %s!", A_gush_of_water_hits, mon_nam(mtmp), mbodypart(mtmp, HEAD));
+                            message_monster(MSG_GUSH_OF_WATER_HITS_M_HEAD, mtmp);
+
+                        pline("%s is caught in %s bear trap!", Monnam(mtmp), a_your[trap->madeby_u]);
+                        unsigned char made_by_you_flag = trap->madeby_u ? MSG_FLAG_MADE_BY_YOU : 0;
+                        message_monster_flag(MSG_M_CAUGHT_IN_BEAR_TRAP, made_by_you_flag);
+
+                    pline("A board beneath %s squeaks loudly.", mon_nam(mtmp));
+                    message_monster(MSG_BOARD_BENEATH_M_SQEAKS_LOUDLY, mtmp);
+
+                        pline("A trap door above %s opens, but nothing falls out!", mon_nam(mtmp));
+                        message_monster(MSG_TRAP_DOOR_ABOVE_M_OPENS_NOTHING_FALLS_OUT, mtmp);
+
+                        pline("%s triggers a trap but nothing happens.", Monnam(mtmp));
+                        message_monster(MSG_M_TRIGGERS_TRAP_BUT_NOTHING_HAPPENS, mtmp);
+
+                    pline("%s munches on some spikes!", Monnam(mtmp));
+                    message_monster(MSG_M_MUNCHES_ON_SOME_SPIKES, mtmp);
+
+                    pline("%s eats a bear trap!", Monnam(mtmp));
+                    message_monster(MSG_M_EATS_A_BEAR_TRAP, mtmp);
+
+                        pline("%s pulls free...", Monnam(mtmp));
+                        message_monster(MSG_M_PULLS_FREE, mtmp);
+
+                    pline("%s snatches the boulder.", Monnam(mtmp));
+                    message_monster(MSG_M_SNATCHES_THE_BOULDER, mtmp);
+
+                        You("have to adjust yourself in the saddle on %s.", x_monnam(mtmp, mtmp->mnamelth ? ARTICLE_NONE : ARTICLE_A, (char *)0, SUPPRESS_SADDLE, false));
+                        message_monster(MSG_YOU_HAVE_TO_ADJUST_YOURSELF_IN_THE_SADDLE_ON_M, mtmp);
+
+                    pline("%s suddenly falls asleep!", Monnam(mtmp));
+                    message_monster(MSG_M_SUDDENLY_FALLS_ASLEEP, mtmp);
+
+            pline("%s is hit by %s!", Monnam(mon), doname(obj));
+            message_monster_object(MSG_M_IS_HIT_BY_O, mon, obj);
+
+            pline("%s is almost hit by %s!", Monnam(mon), doname(obj));
+            message_monster_object(MSG_M_IS_ALMOST_HIT_BY_O, mon, obj);
+
+                const char *predicament = "on a set of sharp iron spikes";
+                    message_const(MSG_YOU_LAND_ON_SHARP_IRON_SPIKES);
+                if (u.usteed) {
+                    message_monster(MSG_M_LANDS_ON_SHARP_IRON_SPIKES, u.usteed);
+                } else {
+                    You("land %s!", predicament);
+                    pline("%s lands %s!", upstart(x_monnam(u.usteed, u.usteed->mnamelth ? ARTICLE_NONE : ARTICLE_THE, "poor", SUPPRESS_SADDLE, false)), predicament);
+                    message_monster(MSG_M_LANDS_ON_SHARP_IRON_SPIKES, u.usteed);
+
+                pline("%s bear trap closes on your %s!", A_Your[trap->madeby_u], body_part(FOOT));
+                message_flag(MSG_BEAR_TRAP_CLOSES_ON_YOUR_FOOT, made_by_you_flag);
+
+                pline("%s bear trap closes on %s %s!",
+                        A_Your[trap->madeby_u], s_suffix(mon_nam(u.usteed)), mbodypart(u.usteed, FOOT));
+                unsigned char made_by_you_flag = trap->madeby_u ? MSG_FLAG_MADE_BY_YOU : 0;
+                message_monster_flag(MSG_BEAR_TRAP_CLOSES_ON_M_FOOT, u.usteed, made_by_you_flag);
+
+                        Your("%s does not protect you.", xname(uarmh));
+                        message_object(MSG_YOU_RO_DOES_NOT_PROTECT_YOU, uarmh);
+
+                pline("A trap door in %s opens and %s falls on your %s!",
+                        the(ceiling(u.ux, u.uy)), an(xname(otmp)), body_part(HEAD));
+                message_object_string(MSG_TRAP_DOOR_IN_CEILING_OPENS_AND_O_FALLS_ON_YOUR_HEAD,
+                        otmp, ceiling(u.ux, u.uy));
+
+        You("find %s posing as a statue.", canspotmon(mon) ? a_monnam(mon) : something);
+        if (canspotmon(mon)) {
+            message_monster(MSG_YOU_FIND_M_POSING_AS_STATUE, mon);
+        } else {
+            message_const(MSG_YOU_FIND_SOMETHING_POSING_AS_STATUE);
+        }
+
+            Your("%s %s", aobjnam(otmp, "are"), txt);
+            message_object(MSG_YOUR_O_ARE_PROTECTED_BY_GREASE, otmp);
+
+            pline("%s's %s %s", Monnam(victim), aobjnam(otmp, "are"), txt);
+            message_monster_object(MSG_M_O_ARE_PROTECTED_BY_GREASE, victim, otmp);
+
             pline("%s lantern is getting dim.", s_suffix(Monnam(obj->ocarry)));
             message_monster(MSG_M_LANTERN_GETTING_DIM, obj->ocarry);
 
