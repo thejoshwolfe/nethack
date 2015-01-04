@@ -10,7 +10,6 @@ void pushch(char);
 void savech(char);
 void add_debug_extended_commands(void);
 void rhack(char *);
-int doextlist(void);
 int extcmd_via_menu(void);
 void enlightenment(int);
 void show_conduct(int);

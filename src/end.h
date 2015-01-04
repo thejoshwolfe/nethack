@@ -18,7 +18,5 @@ void do_containerconts(struct obj *,bool,bool,bool);
 void terminate(int);
 int num_genocides(void);
 
-const char *render_killer_no_prefix(const struct Killer *);
-
 
 #endif // END_H

@@ -1739,6 +1739,16 @@ void end_menu(int id, const char *blah) {
     fprintf(stderr, "TODO: end_menu(%d)\n", id);
 }
 
+char message_menu(char let, int how, const char *mesg) {
+    fprintf(stderr, "TODO: message_menu(%c, %d, \"%s\")\n", let, how, mesg);
+    return 0;
+}
+
+int select_menu(int winid, int how, menu_item **item) {
+    fprintf(stderr, "TODO: select_menu\n");
+    return 0;
+}
+
 size_t nh_strlcpy(char *dest, const char *source, size_t dest_size) {
     char *d = dest;
     const char *s = source;

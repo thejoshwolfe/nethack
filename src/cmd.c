@@ -823,7 +823,6 @@ static const struct func_tab cmdlist[] = {
     {'/', true, dowhatis},
     {'&', true, dowhatdoes},
     {'?', true, dohelp},
-    {M('?'), true, doextlist},
     {'.', true, donull, "waiting"},
     {' ', true, donull, "waiting"},
     {',', false, dopickup},
@@ -871,7 +870,6 @@ struct ext_func_tab extcmdlist[] = {
     {"version", "list compile time options for this version of NetHack",
         doextversion, true},
     {"wipe", "wipe off your face", dowipe, false},
-    {"?", "get this list of extended commands", doextlist, true},
     /*
      * There must be a blank entry here for every entry in the table
      * below.

@@ -29,6 +29,11 @@ struct scatter_chain {
 };
 
 
+const char *render_killer_no_prefix(const struct Killer *k) {
+    fprintf(stderr, "TODO: render_killer_no_prefix\n");
+    return "TODO: render_killer_no_prefix";
+}
+
 /* Note: I had to choose one of three possible kinds of "type" when writing
  * this function: a wand type (like in zap.c), an adtyp, or an object type.
  * Wand types get complex because they must be converted to adtyps for
