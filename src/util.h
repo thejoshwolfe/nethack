@@ -16,7 +16,7 @@ size_t nh_slprintf(char *dest, size_t dest_size, const char *format, ...) __attr
 
 
 
-void getlin(const char *, char *);
+void getlin(const char *query, char *out_buf);
 
 enum MessageFlag {
     MSG_FLAG_SHOPKEEPER_ANGRY = 0x1,

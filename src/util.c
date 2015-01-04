@@ -1701,6 +1701,11 @@ void audio_message_monster_string(enum MessageId id, const struct monst *m, cons
     printf("audio_message_monster_string %s\n", message_id_str[id]);
 }
 
+void getlin(const char *query, char *out_buf) {
+    fprintf(stderr, "TODO: getlin(\"%s\")", query);
+    nh_strlcpy(out_buf, "LOL", 32);
+};
+
 size_t nh_strlcpy(char *dest, const char *source, size_t dest_size) {
     char *d = dest;
     const char *s = source;
