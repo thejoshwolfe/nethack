@@ -8,6 +8,31 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+                You("are no longer inside %s!", mon_nam(mtmp));
+                message_monster(MSG_YOU_ARE_NO_LONGER_INSIDE_M, mtmp);
+
+                pline("%s resists your magic!", Monnam(mtmp));
+                message_monster(MSG_M_RESISTS_YOUR_MAGIC, mtmp);
+
+                pline("Suddenly, %s disappears out of sight.", mon_nam(mtmp));
+                message_monster(MSG_SUDDENDLY_M_DISAPPEARS_OUT_OF_SIGHT, mtmp);
+
+                        pline("%s shudders for a moment.", Monnam(mtmp));
+                        message_monster(MSG_M_SHUDDERS_FOR_A_MOMENT, mtmp);
+
+                        pline("%s seems very disoriented for a moment.", Monnam(mtmp));
+                        message_monster(MSG_M_SEEMS_DISORIENTED_FOR_A_MOMENT, mtmp);
+
+                        pline("%s seems to shimmer for a moment.", Monnam(mtmp));
+                        message_monster(MSG_M_SEEMS_TO_SHIMMER_FOR_A_MOMENT, mtmp);
+
+                        pline("%s avoids the %s.", Monnam(mtmp), (tt == HOLE) ? "hole" : "trap");
+                        message_monster_string(MSG_M_AVOIDS_THE_TRAP, mtmp,
+                                (tt == HOLE) ? "hole" : "trap");
+
+                    pline("A mysterious force prevents %s from teleporting!", mon_nam(mon));
+                    message_monster(MSG_MYSTERIOUS_FORCE_PREVENTS_M_FROM_TELEPORTING, mon);
+
                     pline("%s is pulled into the lava!", Monnam(mtmp));
                     message_monster(MSG_M_IS_PULLED_INTO_THE_LAVA, mtmp);
 

@@ -3,13 +3,7 @@
 #include "teleport.h"
 #include "hack.h"
 #include "display.h"
-#include "winprocs.h"
-
-static bool tele_jump_ok(int,int,int,int);
-static bool teleok(int,int,bool);
-static void vault_tele(void);
-static bool rloc_pos_ok(int,int,struct monst *);
-static void mvault_tele(struct monst *);
+#include "everything.h"
 
 static const int MAX_GOOD = 15;
 
@@ -337,7 +331,7 @@ bool teleport_pet (struct monst *mtmp, bool force_it) {
         if (mtmp->mleashed) {
             otmp = get_mleash(mtmp);
             if (!otmp) {
-                impossible("%s is leashed, without a leash.", Monnam(mtmp));
+                impossible("monster is leashed, without a leash.");
                 goto release_it;
             }
             if (otmp->cursed && !force_it) {
@@ -378,10 +372,12 @@ void tele (void) {
                 pline("Being unconscious, you cannot control your teleport.");
             } else {
                     char buf[BUFSZ];
-                    if (u.usteed) sprintf(buf," and %s", mon_nam(u.usteed));
-                    pline("To what position do you%s want to be teleported?",
-                                u.usteed ? buf :
-                           "");
+                    if (u.usteed) {
+                        char name[BUFSZ];
+                        mon_nam(name, BUFSZ, u.usteed);
+                        sprintf(buf," and %s", name);
+                    }
+                    pline("To what position do you%s want to be teleported?", u.usteed ? buf : "");
                     cc.x = u.ux;
                     cc.y = u.uy;
                     if (getpos(&cc, true, "the desired position") < 0)
@@ -572,8 +568,7 @@ void level_tele (void) {
                 You("cease to exist.");
                 if (invent) Your("possessions land on the %s with a thud.",
                                 surface(u.ux, u.uy));
-                killer_format = NO_KILLER_PREFIX;
-                killer = "committed suicide";
+                killer = killed_by_const(KM_COMMITTED_SUICIDE);
                 done(DIED);
                 pline("An energized cloud of dust begins to coalesce.");
                 Your("body rematerializes%s.", invent ?
@@ -624,7 +619,7 @@ void level_tele (void) {
             return;
         }
 
-        killer = 0;             /* still alive, so far... */
+        killer.method = KM_DIED;             /* still alive, so far... */
 
         if (newlev < 0 && !force_dest) {
                 if (*u.ushops0) {
@@ -638,8 +633,7 @@ void level_tele (void) {
                 if (newlev <= -10) {
                         You("arrive in heaven.");
                         verbalize("Thou art early, but we'll admit thee.");
-                        killer_format = NO_KILLER_PREFIX;
-                        killer = "went to heaven prematurely";
+                        killer = killed_by_const(KM_WENT_TO_HEAVEN_PREMATURELY);
                 } else if (newlev == -9) {
                         You_feel("deliriously happy. ");
                         pline("(In fact, you're on Cloud 9!) ");
@@ -647,7 +641,7 @@ void level_tele (void) {
                 } else
                         You("are now high above the clouds...");
 
-                if (killer) {
+                if (killer.method == KM_DIED) {
                     ;           /* arrival in heaven is pending */
                 } else if (Levitation) {
                     escape_by_flying = "float gently down to earth";
@@ -659,12 +653,11 @@ void level_tele (void) {
                     sprintf(buf,
                           "teleported out of the dungeon and fell to %s death",
                             uhis());
-                    killer = buf;
-                    killer_format = NO_KILLER_PREFIX;
+                    killer = killed_by_const(KM_TELEPORTED_OUT_OF_THE_DUNGEON_AND_FELL_TO_DEATH);
                 }
         }
 
-        if (killer) {   /* the chosen destination was not survivable */
+        if (killer.method == KM_DIED) {   /* the chosen destination was not survivable */
             d_level lsav;
 
             /* set specific death location; this also suppresses bones */
@@ -937,8 +930,7 @@ static void mvault_tele (struct monst *mtmp) {
 bool tele_restrict (struct monst *mon) {
         if (level.flags.noteleport) {
                 if (canseemon(mon))
-                    pline("A mysterious force prevents %s from teleporting!",
-                        mon_nam(mon));
+                    message_monster(MSG_MYSTERIOUS_FORCE_PREVENTS_M_FROM_TELEPORTING, mon);
                 return true;
         }
         return false;
@@ -950,14 +942,17 @@ void mtele_trap (struct monst *mtmp, struct trap *trap, int in_sight) {
         if (tele_restrict(mtmp)) return;
         if (teleport_pet(mtmp, false)) {
             /* save name with pre-movement visibility */
-            monname = Monnam(mtmp);
+            char monname[BUFSZ];
+            Monnam(monname, BUFSZ, mtmp);
 
             /* Note: don't remove the trap if a vault.  Other-
              * wise the monster will be stuck there, since
              * the guard isn't going to come for it...
              */
-            if (trap->once) mvault_tele(mtmp);
-            else (void) rloc(mtmp, false);
+            if (trap->once)
+                mvault_tele(mtmp);
+            else
+                rloc(mtmp, false);
 
             if (in_sight) {
                 if (canseemon(mtmp))
@@ -984,9 +979,10 @@ int mlevel_tele_trap (struct monst *mtmp, struct trap *trap, bool force_it, int 
                 if (Is_stronghold(&u.uz)) {
                     assign_level(&tolevel, &valley_level);
                 } else if (Is_botlevel(&u.uz)) {
-                    if (in_sight && trap->tseen)
-                        pline("%s avoids the %s.", Monnam(mtmp),
-                        (tt == HOLE) ? "hole" : "trap");
+                    if (in_sight && trap->tseen) {
+                        message_monster_string(MSG_M_AVOIDS_THE_TRAP, mtmp,
+                                (tt == HOLE) ? "hole" : "trap");
+                    }
                     return 0;
                 } else {
                     get_level(&tolevel, depth(&u.uz) + 1);
@@ -995,8 +991,7 @@ int mlevel_tele_trap (struct monst *mtmp, struct trap *trap, bool force_it, int 
                 if (In_endgame(&u.uz) &&
                     (mon_has_amulet(mtmp) || is_home_elemental(mptr))) {
                     if (in_sight && mptr->mlet != S_ELEMENTAL) {
-                        pline("%s seems to shimmer for a moment.",
-                                                        Monnam(mtmp));
+                        message_monster(MSG_M_SEEMS_TO_SHIMMER_FOR_A_MOMENT, mtmp);
                         seetrap(trap);
                     }
                     return 0;
@@ -1008,26 +1003,26 @@ int mlevel_tele_trap (struct monst *mtmp, struct trap *trap, bool force_it, int 
                 int nlev;
 
                 if (mon_has_amulet(mtmp) || In_endgame(&u.uz)) {
-                    if (in_sight)
-                        pline("%s seems very disoriented for a moment.",
-                                Monnam(mtmp));
+                    if (in_sight) {
+                        message_monster(MSG_M_SEEMS_DISORIENTED_FOR_A_MOMENT, mtmp);
+                    }
                     return 0;
                 }
                 nlev = random_teleport_level();
                 if (nlev == depth(&u.uz)) {
-                    if (in_sight)
-                        pline("%s shudders for a moment.", Monnam(mtmp));
+                    if (in_sight) {
+                        message_monster(MSG_M_SHUDDERS_FOR_A_MOMENT, mtmp);
+                    }
                     return 0;
                 }
                 get_level(&tolevel, nlev);
             }
 
             if (in_sight) {
-                pline("Suddenly, %s disappears out of sight.", mon_nam(mtmp));
+                message_monster(MSG_SUDDENDLY_M_DISAPPEARS_OUT_OF_SIGHT, mtmp);
                 seetrap(trap);
             }
-            migrate_to_level(mtmp, ledger_no(&tolevel),
-                             migrate_typ, (coord *)0);
+            migrate_to_level(mtmp, ledger_no(&tolevel), migrate_typ, (coord *)0);
             return 3;   /* no longer on this level */
         }
         return 0;
@@ -1139,17 +1134,19 @@ bool u_teleport_mon (struct monst *mtmp, bool give_feedback) {
 
         if (mtmp->ispriest && *in_rooms(mtmp->mx, mtmp->my, TEMPLE)) {
             if (give_feedback)
-                pline("%s resists your magic!", Monnam(mtmp));
+                message_monster(MSG_M_RESISTS_YOUR_MAGIC, mtmp);
             return false;
         } else if (level.flags.noteleport && u.uswallow && mtmp == u.ustuck) {
             if (give_feedback)
-                You("are no longer inside %s!", mon_nam(mtmp));
+                message_monster(MSG_YOU_ARE_NO_LONGER_INSIDE_M, mtmp);
             unstuck(mtmp);
-            (void) rloc(mtmp, false);
+            rloc(mtmp, false);
         } else if (is_rider(mtmp->data) && rn2(13) &&
                    enexto(&cc, u.ux, u.uy, mtmp->data))
+        {
             rloc_to(mtmp, cc.x, cc.y);
-        else
-            (void) rloc(mtmp, false);
+        } else {
+            rloc(mtmp, false);
+        }
         return true;
 }
