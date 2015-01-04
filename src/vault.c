@@ -18,6 +18,7 @@
 #include "do_name.h"
 #include "invent.h"
 #include "shk.h"
+#include "timeout.h"
 
 static struct monst *findgd(void);
 
