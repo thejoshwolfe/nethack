@@ -2001,7 +2001,6 @@ void newuhs ( bool incr) {
             if(u.uhunger < -(int)(200 + 20*ACURR(A_CON))) {
                 u.uhs = STARVED;
                 flags.botl = 1;
-                bot();
                 You("die from starvation.");
                 killer = killed_by_const(KM_STARVING);
                 done(KM_STARVING);
@@ -2051,7 +2050,6 @@ void newuhs ( bool incr) {
         }
         u.uhs = newhs;
         flags.botl = 1;
-        bot();
         if ((Upolyd ? u.mh : u.uhp) < 1) {
             You("die from hunger and exhaustion.");
             killer = killed_by_const(KM_EXHAUSTION);

@@ -1652,11 +1652,6 @@ static int in_container (struct obj *obj) {
         (void) add_to_container(current_container, obj);
         current_container->owt = weight(current_container);
     }
-    /* gold needs this, and freeinv() many lines above may cause
-     * the encumbrance to disappear from the status, so just always
-     * update status immediately.
-     */
-    bot();
 
     return(current_container ? 1 : -1);
 }
@@ -1734,7 +1729,6 @@ static int out_container (struct obj *obj) {
 
     if (is_gold) {
         dealloc_obj(obj);
-        bot();  /* update character's gold piece count immediately */
     }
     return 1;
 }

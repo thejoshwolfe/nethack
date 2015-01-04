@@ -1406,13 +1406,11 @@ proceed:
                             continue;       /*break*/
                         case PAY_SOME:
                             paid = true;
-                            if (itemize) bot();
                             continue;       /*break*/
                         case PAY_BUY:
                             paid = true;
                             break;
                     }
-                    if (itemize) bot();
                     *bp = eshkp->bill_p[--eshkp->billct];
                 }
             }

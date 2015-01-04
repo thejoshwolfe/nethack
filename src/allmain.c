@@ -346,7 +346,6 @@ void moveloop(void) {
 
             if (vision_full_recalc) vision_recalc(0);   /* vision! */
         }
-        // if(flags.botl || flags.botlx) bot();
 
         flags.move = 1;
 

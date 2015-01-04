@@ -2574,20 +2574,16 @@ wanexpl:
                 if (obj->otyp == WAN_TELEPORTATION &&
                         affects_objects && level.objects[x][y]) {
                     (void) bhitpile(obj, bhito, x, y);
-                    // if (flags.botl) bot();              /* potion effects */
                 }
                 damage = zapyourself(obj, false);
                 if (damage) {
                     losehp(damage, killed_by_const(KM_KILLED_SELF_BREAK_WAND));
                 }
-                // if (flags.botl) bot();          /* blindness */
             } else if ((mon = m_at(x, y)) != 0) {
                 (void) bhitm(mon, obj);
-                /* if (flags.botl) bot(); */
             }
             if (affects_objects && level.objects[x][y]) {
                 (void) bhitpile(obj, bhito, x, y);
-                // if (flags.botl) bot();          /* potion effects */
             }
         }
     }

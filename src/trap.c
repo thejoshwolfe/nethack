@@ -3516,7 +3516,6 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                 default: impossible("bad chest trap");
                 break;
             }
-            bot(); /* to get immediate botl re-display */
         }
 
     return false;
