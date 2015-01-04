@@ -1220,7 +1220,7 @@ int get_adjacent_loc (const char *prompt, const char *emsg, signed char x, signe
 }
 
 char yn_function(const char *prompt, const char *options, char default_option) {
-    fprintf(stderr, "TODO: yn_function(\"%s\", \"%s\", '%c')", prompt, options, default_option);
+    fprintf(stderr, "TODO: yn_function(\"%s\", \"%s\", '%c')\n", prompt, options, default_option);
     return default_option;
 }
 
