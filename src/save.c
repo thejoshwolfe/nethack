@@ -5,19 +5,27 @@
 #include "lev.h"
 #include "quest.h"
 #include "display.h"
-#include "winprocs.h"
 #include "timeout.h"
 #include "color.h"
+#include "pline.h"
+#include "files.h"
+#include "light.h"
+#include "eat.h"
+#include "mkobj.h"
+#include "artifact.h"
+#include "rumors.h"
+#include "mkmaze.h"
+#include "end.h"
+#include "restore.h"
+#include "mon.h"
+#include "mkroom.h"
+#include "engrave.h"
+#include "region.h"
+#include "questpgr.h"
+#include "invent.h"
 
 #include <signal.h>
 #include <fcntl.h>
-
-static void savelevchn(int,int);
-static void savedamage(int,int);
-static void saveobjchn(int,struct obj *,int);
-static void savemonchn(int,struct monst *,int);
-static void savetrapchn(int,struct trap *,int);
-static void savegamestate(int,int);
 
 /* need to preserve these during save to avoid accessing freed memory */
 static unsigned ustuck_id = 0, usteed_id = 0;
@@ -40,8 +48,7 @@ int dosave (void) {
             u.uhp = -1;             /* universal game's over indicator */
             /* make sure they see the Saving message */
             display_nhwindow(WIN_MESSAGE, true);
-            exit_nhwindows("Be seeing you...");
-            terminate(EXIT_SUCCESS);
+            exit(0);
         } else (void)doredraw();
     }
     return 0;
@@ -54,11 +61,129 @@ void hangup(int sig_unused) {
         if (program_state.something_worth_saving)
             (void) dosave0();
         {
-            clearlocks();
-            terminate(EXIT_FAILURE);
+            exit(1);
         }
     }
     return;
+}
+
+static void saveobjchn (int fd, struct obj *otmp, int mode) {
+    struct obj *otmp2;
+    unsigned int xl;
+    int minusone = -1;
+
+    while(otmp) {
+        otmp2 = otmp->nobj;
+        if (perform_bwrite(mode)) {
+            xl = otmp->oxlth + otmp->onamelth;
+            bwrite(fd, (void *) &xl, sizeof(int));
+            bwrite(fd, (void *) otmp, xl + sizeof(struct obj));
+        }
+        if (Has_contents(otmp))
+            saveobjchn(fd,otmp->cobj,mode);
+        if (release_data(mode)) {
+            if (otmp->oclass == FOOD_CLASS) food_disappears(otmp);
+            if (otmp->oclass == SPBOOK_CLASS) book_disappears(otmp);
+            otmp->where = OBJ_FREE; /* set to free so dealloc will work */
+            otmp->timed = 0;        /* not timed any more */
+            otmp->lamplit = 0;      /* caller handled lights */
+            dealloc_obj(otmp);
+        }
+        otmp = otmp2;
+    }
+    if (perform_bwrite(mode))
+        bwrite(fd, (void *) &minusone, sizeof(int));
+}
+
+static void savemonchn (int fd, struct monst *mtmp, int mode) {
+    struct monst *mtmp2;
+    unsigned int xl;
+    int minusone = -1;
+    struct permonst *monbegin = &mons[0];
+
+    if (perform_bwrite(mode))
+        bwrite(fd, (void *) &monbegin, sizeof(monbegin));
+
+    while (mtmp) {
+        mtmp2 = mtmp->nmon;
+        if (perform_bwrite(mode)) {
+            xl = mtmp->mxlth + mtmp->mnamelth;
+            bwrite(fd, (void *) &xl, sizeof(int));
+            bwrite(fd, (void *) mtmp, xl + sizeof(struct monst));
+        }
+        if (mtmp->minvent)
+            saveobjchn(fd,mtmp->minvent,mode);
+        if (release_data(mode))
+            dealloc_monst(mtmp);
+        mtmp = mtmp2;
+    }
+    if (perform_bwrite(mode))
+        bwrite(fd, (void *) &minusone, sizeof(int));
+}
+
+static void savelevchn (int fd, int mode) {
+    s_level *tmplev, *tmplev2;
+    int cnt = 0;
+
+    for (tmplev = sp_levchn; tmplev; tmplev = tmplev->next) cnt++;
+    if (perform_bwrite(mode))
+        bwrite(fd, (void *) &cnt, sizeof(int));
+
+    for (tmplev = sp_levchn; tmplev; tmplev = tmplev2) {
+        tmplev2 = tmplev->next;
+        if (perform_bwrite(mode))
+            bwrite(fd, (void *) tmplev, sizeof(s_level));
+        if (release_data(mode))
+            free((void *) tmplev);
+    }
+    if (release_data(mode))
+        sp_levchn = 0;
+}
+
+
+static void savegamestate (int fd, int mode) {
+    int uid;
+
+    uid = getuid();
+    bwrite(fd, (void *) &uid, sizeof uid);
+    bwrite(fd, (void *) &flags, sizeof(struct flag));
+    bwrite(fd, (void *) &u, sizeof(struct you));
+
+    /* must come before migrating_objs and migrating_mons are freed */
+    save_timers(fd, mode, RANGE_GLOBAL);
+    save_light_sources(fd, mode, RANGE_GLOBAL);
+
+    saveobjchn(fd, invent, mode);
+    saveobjchn(fd, migrating_objs, mode);
+    savemonchn(fd, migrating_mons, mode);
+    if (release_data(mode)) {
+        invent = 0;
+        migrating_objs = 0;
+        migrating_mons = 0;
+    }
+    bwrite(fd, (void *) mvitals, sizeof(mvitals));
+
+    save_dungeon(fd, (bool)!!perform_bwrite(mode),
+            (bool)!!release_data(mode));
+    savelevchn(fd, mode);
+    bwrite(fd, (void *) &moves, sizeof moves);
+    bwrite(fd, (void *) &monstermoves, sizeof monstermoves);
+    bwrite(fd, (void *) &quest_status, sizeof(struct q_score));
+    bwrite(fd, (void *) spl_book,
+            sizeof(struct spell) * (MAXSPELL + 1));
+    save_artifacts(fd);
+    save_oracles(fd, mode);
+    if(ustuck_id)
+        bwrite(fd, (void *) &ustuck_id, sizeof ustuck_id);
+    if(usteed_id)
+        bwrite(fd, (void *) &usteed_id, sizeof usteed_id);
+    bwrite(fd, (void *) pl_character, sizeof pl_character);
+    bwrite(fd, (void *) pl_fruit, sizeof pl_fruit);
+    bwrite(fd, (void *) &current_fruit, sizeof current_fruit);
+    savefruitchn(fd, mode);
+    savenames(fd, mode);
+    save_waterlevel(fd, mode);
+    bflush(fd);
 }
 
 /* returns 1 if save successful */
@@ -139,7 +264,7 @@ int dosave0(void) {
             (void) close(fd);
             (void) delete_savefile();
             if (!program_state.done_hup) {
-                killer = whynot;
+                fprintf(stderr, "TODO: killer = %s\n", whynot);
                 done(TRICKED);
             }
             return(0);
@@ -159,51 +284,6 @@ int dosave0(void) {
     delete_levelfile(ledger_no(&u.uz));
     delete_levelfile(0);
     return(1);
-}
-
-static void savegamestate (int fd, int mode) {
-    int uid;
-
-    uid = getuid();
-    bwrite(fd, (void *) &uid, sizeof uid);
-    bwrite(fd, (void *) &flags, sizeof(struct flag));
-    bwrite(fd, (void *) &u, sizeof(struct you));
-
-    /* must come before migrating_objs and migrating_mons are freed */
-    save_timers(fd, mode, RANGE_GLOBAL);
-    save_light_sources(fd, mode, RANGE_GLOBAL);
-
-    saveobjchn(fd, invent, mode);
-    saveobjchn(fd, migrating_objs, mode);
-    savemonchn(fd, migrating_mons, mode);
-    if (release_data(mode)) {
-        invent = 0;
-        migrating_objs = 0;
-        migrating_mons = 0;
-    }
-    bwrite(fd, (void *) mvitals, sizeof(mvitals));
-
-    save_dungeon(fd, (bool)!!perform_bwrite(mode),
-            (bool)!!release_data(mode));
-    savelevchn(fd, mode);
-    bwrite(fd, (void *) &moves, sizeof moves);
-    bwrite(fd, (void *) &monstermoves, sizeof monstermoves);
-    bwrite(fd, (void *) &quest_status, sizeof(struct q_score));
-    bwrite(fd, (void *) spl_book,
-            sizeof(struct spell) * (MAXSPELL + 1));
-    save_artifacts(fd);
-    save_oracles(fd, mode);
-    if(ustuck_id)
-        bwrite(fd, (void *) &ustuck_id, sizeof ustuck_id);
-    if(usteed_id)
-        bwrite(fd, (void *) &usteed_id, sizeof usteed_id);
-    bwrite(fd, (void *) pl_character, sizeof pl_character);
-    bwrite(fd, (void *) pl_fruit, sizeof pl_fruit);
-    bwrite(fd, (void *) &current_fruit, sizeof current_fruit);
-    savefruitchn(fd, mode);
-    savenames(fd, mode);
-    save_waterlevel(fd, mode);
-    bflush(fd);
 }
 
 void savestateinlock (void) {
@@ -233,7 +313,7 @@ void savestateinlock (void) {
         if (fd < 0) {
             pline("%s", whynot);
             pline("Probably someone removed it.");
-            killer = whynot;
+            fprintf(stderr, "TODO: killer = %s\n", whynot);
             done(TRICKED);
             return;
         }
@@ -244,7 +324,7 @@ void savestateinlock (void) {
                     "Level #0 pid (%d) doesn't match ours (%d)!",
                     hpid, hackpid);
             pline("%s", whynot);
-            killer = whynot;
+            fprintf(stderr, "TODO: killer = %s\n", whynot);
             done(TRICKED);
         }
         (void) close(fd);
@@ -252,7 +332,7 @@ void savestateinlock (void) {
         fd = create_levelfile(0, whynot);
         if (fd < 0) {
             pline("%s", whynot);
-            killer = whynot;
+            fprintf(stderr, "TODO: killer = %s\n", whynot);
             done(TRICKED);
             return;
         }
@@ -271,6 +351,44 @@ void savestateinlock (void) {
     }
     havestate = flags.ins_chkpt;
 }
+
+static void savetrapchn (int fd, struct trap *trap, int mode) {
+    struct trap *trap2;
+
+    while (trap) {
+        trap2 = trap->ntrap;
+        if (perform_bwrite(mode))
+            bwrite(fd, (void *) trap, sizeof(struct trap));
+        if (release_data(mode))
+            dealloc_trap(trap);
+        trap = trap2;
+    }
+    if (perform_bwrite(mode))
+        bwrite(fd, (void *)nul, sizeof(struct trap));
+}
+
+static void savedamage (int fd, int mode) {
+    struct damage *damageptr, *tmp_dam;
+    unsigned int xl = 0;
+
+    damageptr = level.damagelist;
+    for (tmp_dam = damageptr; tmp_dam; tmp_dam = tmp_dam->next)
+        xl++;
+    if (perform_bwrite(mode))
+        bwrite(fd, (void *) &xl, sizeof(xl));
+
+    while (xl--) {
+        if (perform_bwrite(mode))
+            bwrite(fd, (void *) damageptr, sizeof(*damageptr));
+        tmp_dam = damageptr;
+        damageptr = damageptr->next;
+        if (release_data(mode))
+            free((void *)tmp_dam);
+    }
+    if (release_data(mode))
+        level.damagelist = 0;
+}
+
 
 void savelev(int fd, signed char lev, int mode) {
     /* if we're tearing down the current level without saving anything
@@ -380,116 +498,6 @@ void bclose(int fd) {
     } else
         (void) close(fd);
     return;
-}
-
-static void savelevchn (int fd, int mode) {
-    s_level *tmplev, *tmplev2;
-    int cnt = 0;
-
-    for (tmplev = sp_levchn; tmplev; tmplev = tmplev->next) cnt++;
-    if (perform_bwrite(mode))
-        bwrite(fd, (void *) &cnt, sizeof(int));
-
-    for (tmplev = sp_levchn; tmplev; tmplev = tmplev2) {
-        tmplev2 = tmplev->next;
-        if (perform_bwrite(mode))
-            bwrite(fd, (void *) tmplev, sizeof(s_level));
-        if (release_data(mode))
-            free((void *) tmplev);
-    }
-    if (release_data(mode))
-        sp_levchn = 0;
-}
-
-static void savedamage (int fd, int mode) {
-    struct damage *damageptr, *tmp_dam;
-    unsigned int xl = 0;
-
-    damageptr = level.damagelist;
-    for (tmp_dam = damageptr; tmp_dam; tmp_dam = tmp_dam->next)
-        xl++;
-    if (perform_bwrite(mode))
-        bwrite(fd, (void *) &xl, sizeof(xl));
-
-    while (xl--) {
-        if (perform_bwrite(mode))
-            bwrite(fd, (void *) damageptr, sizeof(*damageptr));
-        tmp_dam = damageptr;
-        damageptr = damageptr->next;
-        if (release_data(mode))
-            free((void *)tmp_dam);
-    }
-    if (release_data(mode))
-        level.damagelist = 0;
-}
-
-static void saveobjchn (int fd, struct obj *otmp, int mode) {
-    struct obj *otmp2;
-    unsigned int xl;
-    int minusone = -1;
-
-    while(otmp) {
-        otmp2 = otmp->nobj;
-        if (perform_bwrite(mode)) {
-            xl = otmp->oxlth + otmp->onamelth;
-            bwrite(fd, (void *) &xl, sizeof(int));
-            bwrite(fd, (void *) otmp, xl + sizeof(struct obj));
-        }
-        if (Has_contents(otmp))
-            saveobjchn(fd,otmp->cobj,mode);
-        if (release_data(mode)) {
-            if (otmp->oclass == FOOD_CLASS) food_disappears(otmp);
-            if (otmp->oclass == SPBOOK_CLASS) book_disappears(otmp);
-            otmp->where = OBJ_FREE; /* set to free so dealloc will work */
-            otmp->timed = 0;        /* not timed any more */
-            otmp->lamplit = 0;      /* caller handled lights */
-            dealloc_obj(otmp);
-        }
-        otmp = otmp2;
-    }
-    if (perform_bwrite(mode))
-        bwrite(fd, (void *) &minusone, sizeof(int));
-}
-
-static void savemonchn (int fd, struct monst *mtmp, int mode) {
-    struct monst *mtmp2;
-    unsigned int xl;
-    int minusone = -1;
-    struct permonst *monbegin = &mons[0];
-
-    if (perform_bwrite(mode))
-        bwrite(fd, (void *) &monbegin, sizeof(monbegin));
-
-    while (mtmp) {
-        mtmp2 = mtmp->nmon;
-        if (perform_bwrite(mode)) {
-            xl = mtmp->mxlth + mtmp->mnamelth;
-            bwrite(fd, (void *) &xl, sizeof(int));
-            bwrite(fd, (void *) mtmp, xl + sizeof(struct monst));
-        }
-        if (mtmp->minvent)
-            saveobjchn(fd,mtmp->minvent,mode);
-        if (release_data(mode))
-            dealloc_monst(mtmp);
-        mtmp = mtmp2;
-    }
-    if (perform_bwrite(mode))
-        bwrite(fd, (void *) &minusone, sizeof(int));
-}
-
-static void savetrapchn (int fd, struct trap *trap, int mode) {
-    struct trap *trap2;
-
-    while (trap) {
-        trap2 = trap->ntrap;
-        if (perform_bwrite(mode))
-            bwrite(fd, (void *) trap, sizeof(struct trap));
-        if (release_data(mode))
-            dealloc_trap(trap);
-        trap = trap2;
-    }
-    if (perform_bwrite(mode))
-        bwrite(fd, (void *)nul, sizeof(struct trap));
 }
 
 /* save all the fruit names and ID's; this is used only in saving whole games
