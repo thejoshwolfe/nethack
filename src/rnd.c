@@ -2,6 +2,8 @@
 
 #include "rnd.h"
 #include "hack.h"
+#include "you.h"
+#include "decl.h"
 
 #define RND(x)  (int)(random() % (long)(x))
 
