@@ -2546,7 +2546,7 @@ static int passiveum (struct permonst *olduasmon, struct monst *mtmp, struct att
 
 assess_dmg:
     if((mtmp->mhp -= tmp) <= 0) {
-        pline("%s dies!", name_cap);
+        message_monster(MSG_M_DIES, mtmp);
         xkilled(mtmp,0);
         if (mtmp->mhp > 0) return 1;
         return 2;

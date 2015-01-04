@@ -1225,7 +1225,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
     switch (mattk->adtyp) {
         case AD_STUN:
             if (!Blind)
-                pline("%s %s for a moment.", Monnam(mdef), makeplural(stagger(mdef->data, "stagger")));
+                message_monster(MSG_M_STAGGERS_FOR_A_MOMENT, mdef);
             mdef->mstun = 1;
             goto physical;
         case AD_LEGS:
@@ -1258,10 +1258,10 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 break;
             }
             if (!Blind)
-                pline("%s is %s!", Monnam(mdef), on_fire(mdef->data, mattk));
+                message_monster_string(MSG_M_IS_ON_FIRE, mdef, on_fire(mdef->data, mattk));
             if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
                 if (!Blind)
-                    pline("%s burns completely!", Monnam(mdef));
+                    message_monster(MSG_M_BURNS_COMPLETELY, mdef);
                 xkilled(mdef, 2);
                 tmp = 0;
                 break;
@@ -1271,7 +1271,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             tmp += destroy_mitem(mdef, SPBOOK_CLASS, AD_FIRE);
             if (resists_fire(mdef)) {
                 if (!Blind)
-                    pline_The("fire doesn't heat %s!", mon_nam(mdef));
+                    message_monster(MSG_THE_FIRE_DOESNT_HEAT_M, mdef);
                 golemeffects(mdef, AD_FIRE, tmp);
                 shieldeff(mdef->mx, mdef->my);
                 tmp = 0;
@@ -1285,11 +1285,11 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 break;
             }
             if (!Blind)
-                pline("%s is covered in frost!", Monnam(mdef));
+                message_monster(MSG_M_IS_COVERED_IN_FROST, mdef);
             if (resists_cold(mdef)) {
                 shieldeff(mdef->mx, mdef->my);
                 if (!Blind)
-                    pline_The("frost doesn't chill %s!", mon_nam(mdef));
+                    message_monster(MSG_THE_FROST_DOESNT_CHILL_M, mdef);
                 golemeffects(mdef, AD_COLD, tmp);
                 tmp = 0;
             }
@@ -1301,11 +1301,11 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 break;
             }
             if (!Blind)
-                pline("%s is zapped!", Monnam(mdef));
+                message_monster(MSG_M_IS_ZAPPED, mdef);
             tmp += destroy_mitem(mdef, WAND_CLASS, AD_ELEC);
             if (resists_elec(mdef)) {
                 if (!Blind)
-                    pline_The("zap doesn't shock %s!", mon_nam(mdef));
+                    message_monster(MSG_THE_ZAP_DOESNT_SHOCK_M, mdef);
                 golemeffects(mdef, AD_ELEC, tmp);
                 shieldeff(mdef->mx, mdef->my);
                 tmp = 0;
@@ -1344,7 +1344,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 char nambuf[BUFSZ];
                 bool u_saw_mon = canseemon(mdef) || (u.uswallow && u.ustuck == mdef);
                 /* record the name before losing sight of monster */
-                strcpy(nambuf, Monnam(mdef));
+                strcpy(nambuf, "TODO: Monnam(mdef)");
                 if (u_teleport_mon(mdef, false) && u_saw_mon && !canseemon(mdef))
                     pline("%s suddenly disappears!", nambuf);
             }
@@ -1352,7 +1352,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
         case AD_BLND:
             if (can_blnd(&youmonst, mdef, mattk->aatyp, (struct obj*)0)) {
                 if (!Blind && mdef->mcansee)
-                    pline("%s is blinded.", Monnam(mdef));
+                    message_monster(MSG_M_IS_BLINDED, mdef);
                 mdef->mcansee = 0;
                 tmp += mdef->mblinded;
                 if (tmp > 127)
@@ -1365,7 +1365,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             if (night() && !rn2(10) && !mdef->mcan) {
                 if (mdef->data == &mons[PM_CLAY_GOLEM]) {
                     if (!Blind)
-                        pline("Some writing vanishes from %s head!", s_suffix(mon_nam(mdef)));
+                        message_monster(MSG_WRITING_VANISHES_FROM_M_HEAD, mdef);
                     xkilled(mdef, 0);
                     /* Don't return yet; keep hp<1 and tmp=0 for pet msg */
                 } else {
@@ -1378,10 +1378,10 @@ int damageum(struct monst *mdef, struct attack *mattk) {
         case AD_DRLI:
             if (!negated && !rn2(3) && !resists_drli(mdef)) {
                 int xtmp = d(2, 6);
-                pline("%s suddenly seems weaker!", Monnam(mdef));
+                message_monster(MSG_M_SUDDENLY_SEEMS_WEAKER, mdef);
                 mdef->mhpmax -= xtmp;
                 if ((mdef->mhp -= xtmp) <= 0 || !mdef->m_lev) {
-                    pline("%s dies!", Monnam(mdef));
+                    message_monster(MSG_M_DIES, mdef);
                     xkilled(mdef, 0);
                 } else
                     mdef->m_lev--;
@@ -1390,7 +1390,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             break;
         case AD_RUST:
             if (pd == &mons[PM_IRON_GOLEM]) {
-                pline("%s falls to pieces!", Monnam(mdef));
+                message_monster(MSG_M_FALLS_TO_PIECES, mdef);
                 xkilled(mdef, 0);
             }
             hurtmarmor(mdef, AD_RUST);
@@ -1402,7 +1402,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             break;
         case AD_DCAY:
             if (pd == &mons[PM_WOOD_GOLEM] || pd == &mons[PM_LEATHER_GOLEM]) {
-                pline("%s falls to pieces!", Monnam(mdef));
+                message_monster(MSG_M_FALLS_TO_PIECES, mdef);
                 xkilled(mdef, 0);
             }
             hurtmarmor(mdef, AD_DCAY);
@@ -1413,20 +1413,21 @@ int damageum(struct monst *mdef, struct attack *mattk) {
         case AD_DRCO:
             if (!negated && !rn2(8)) {
                 Your("%s was poisoned!", mpoisons_subj(&youmonst, mattk));
-                if (resists_poison(mdef))
-                    pline_The("poison doesn't seem to affect %s.", mon_nam(mdef));
-                else {
+                if (resists_poison(mdef)) {
+                    message_monster(MSG_THE_POISON_DOESNT_SEEM_TO_AFFECT_M, mdef);
+                } else {
                     if (!rn2(10)) {
                         Your("poison was deadly...");
                         tmp = mdef->mhp;
-                    } else
+                    } else {
                         tmp += rn1(10, 6);
+                    }
                 }
             }
             break;
         case AD_DRIN:
             if (notonhead || !has_head(mdef->data)) {
-                pline("%s doesn't seem harmed.", Monnam(mdef));
+                message_monster(MSG_M_DOESNT_SEEM_HARMED, mdef);
                 tmp = 0;
                 if (!Unchanging && mdef->data == &mons[PM_GREEN_SLIME]) {
                     if (!Slimed) {

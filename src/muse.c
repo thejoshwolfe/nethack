@@ -748,7 +748,7 @@ static void mon_consume_unstone(struct monst *mon, struct obj *obj, bool by_you,
         pline("%s has a very bad case of stomach acid.", name);
     }
     if (mon->mhp <= 0) {
-        pline("%s dies!", name);
+        message_monster(MSG_M_DIES, mon);
         if (by_you)
             xkilled(mon, 0);
         else
