@@ -4,16 +4,13 @@
 #include "hack.h"
 #include "edog.h"
 #include "display.h"
+#include "everything.h"
 
 static const char * const h_sounds[] = {
     "beep", "boing", "sing", "belche", "creak", "cough", "rattle",
     "ululate", "pop", "jingle", "sniffle", "tinkle", "eep"
 };
 
-
-static int domonnoise(struct monst *);
-static int dochat(void);
-static int mon_in_room(struct monst *,int);
 
 /* this easily could be a macro, but it might overtax dumb compilers */
 static int mon_in_room (struct monst *mon, int rmtyp) {
@@ -281,11 +278,10 @@ void growl (struct monst *mtmp) {
         growl_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
         growl_verb = growl_sound(mtmp);
-    if (growl_verb) {
-        pline("%s %s!", Monnam(mtmp), vtense((char *)0, growl_verb));
-        if(flags.run) nomul(0);
-        wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 18);
-    }
+
+    message_monster_string(MSG_M_GROWLS, mtmp, growl_verb);
+    if(flags.run) nomul(0);
+    wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 18);
 }
 
 /* the sounds of mistreated pets */
@@ -320,7 +316,7 @@ void yelp (struct monst *mtmp) {
             break;
     }
     if (yelp_verb) {
-        pline("%s %s!", Monnam(mtmp), vtense((char *)0, yelp_verb));
+        message_monster_string(MSG_M_YELPS, mtmp, yelp_verb);
         if(flags.run) nomul(0);
         wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 12);
     }
@@ -349,25 +345,9 @@ void whimper (struct monst *mtmp) {
             break;
     }
     if (whimper_verb) {
-        pline("%s %s.", Monnam(mtmp), vtense((char *)0, whimper_verb));
+        message_monster_string(MSG_M_WHIMPERS, mtmp, whimper_verb);
         if(flags.run) nomul(0);
         wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 6);
-    }
-}
-
-/* pet makes "I'm hungry" noises */
-void beg (struct monst *mtmp) {
-    if (mtmp->msleeping || !mtmp->mcanmove ||
-            !(carnivorous(mtmp->data) || herbivorous(mtmp->data)))
-        return;
-
-    /* presumably nearness and soundok checks have already been made */
-    if (!is_silent(mtmp->data) && mtmp->data->msound <= MS_ANIMAL)
-        (void) domonnoise(mtmp);
-    else if (mtmp->data->msound >= MS_HUMANOID) {
-        if (!canspotmon(mtmp))
-            map_invisible(mtmp->mx, mtmp->my);
-        verbalize("I'm hungry.");
     }
 }
 
@@ -481,13 +461,12 @@ static int domonnoise (struct monst *mtmp) {
             break;
         case MS_WERE:
             if (flags.moonphase == FULL_MOON && (night() ^ !rn2(13))) {
-                pline("%s throws back %s head and lets out a blood curdling %s!",
-                        Monnam(mtmp), mhis(mtmp),
+                message_monster_string(MSG_M_THROWS_BACK_HEAD_LETS_OUT_HOWL, mtmp,
                         ptr == &mons[PM_HUMAN_WERERAT] ? "shriek" : "howl");
+
                 wake_nearto(mtmp->mx, mtmp->my, 11*11);
             } else
-                pline_msg =
-                    "whispers inaudibly.  All you can make out is \"moon\".";
+                pline_msg = "whispers inaudibly.  All you can make out is \"moon\".";
             break;
         case MS_BARK:
             if (flags.moonphase == FULL_MOON && night()) {
@@ -571,7 +550,7 @@ static int domonnoise (struct monst *mtmp) {
             pline_msg = "imitates you.";
             break;
         case MS_BONES:
-            pline("%s rattles noisily.", Monnam(mtmp));
+            message_monster(MSG_M_RATTLES_NOISILY, mtmp);
             You("freeze for a moment.");
             nomul(-2);
             break;
@@ -599,14 +578,16 @@ static int domonnoise (struct monst *mtmp) {
         case MS_BOAST:  /* giants */
             if (!mtmp->mpeaceful) {
                 switch (rn2(4)) {
-                    case 0: pline("%s boasts about %s gem collection.",
-                                    Monnam(mtmp), mhis(mtmp));
-                            break;
-                    case 1: pline_msg = "complains about a diet of mutton.";
-                            break;
-                    default: pline_msg = "shouts \"Fee Fie Foe Foo!\" and guffaws.";
-                             wake_nearto(mtmp->mx, mtmp->my, 7*7);
-                             break;
+                    case 0:
+                        message_monster(MSG_M_BOASTS_ABOUT_GEM_COLLECTION, mtmp);
+                        break;
+                    case 1:
+                        pline_msg = "complains about a diet of mutton.";
+                        break;
+                    default:
+                        pline_msg = "shouts \"Fee Fie Foe Foo!\" and guffaws.";
+                        wake_nearto(mtmp->mx, mtmp->my, 7*7);
+                        break;
                 }
                 break;
             }
@@ -747,18 +728,30 @@ static int domonnoise (struct monst *mtmp) {
             break;
     }
 
-    if (pline_msg) pline("%s %s", Monnam(mtmp), pline_msg);
-    else if (verbl_msg) verbalize("%s", verbl_msg);
-    return(1);
+    if (pline_msg) {
+        char name[BUFSZ];
+        Monnam(name, BUFSZ, mtmp);
+        pline("%s %s", name, pline_msg);
+    } else if (verbl_msg) {
+        verbalize("%s", verbl_msg);
+    }
+    return 1;
 }
 
-int dotalk (void) {
-    int result;
-    bool save_soundok = flags.soundok;
-    flags.soundok = 1;  /* always allow sounds while chatting */
-    result = dochat();
-    flags.soundok = save_soundok;
-    return result;
+/* pet makes "I'm hungry" noises */
+void beg (struct monst *mtmp) {
+    if (mtmp->msleeping || !mtmp->mcanmove ||
+            !(carnivorous(mtmp->data) || herbivorous(mtmp->data)))
+        return;
+
+    /* presumably nearness and soundok checks have already been made */
+    if (!is_silent(mtmp->data) && mtmp->data->msound <= MS_ANIMAL)
+        domonnoise(mtmp);
+    else if (mtmp->data->msound >= MS_HUMANOID) {
+        if (!canspotmon(mtmp))
+            map_invisible(mtmp->mx, mtmp->my);
+        verbalize("I'm hungry.");
+    }
 }
 
 static int dochat (void) {
@@ -834,8 +827,8 @@ static int dochat (void) {
         /* If it is unseen, the player can't tell the difference between
            not noticing him and just not existing, so skip the message. */
         if (canspotmon(mtmp))
-            pline("%s seems not to notice you.", Monnam(mtmp));
-        return(0);
+            message_monster(MSG_M_SEEMS_NOT_TO_NOTICE_YOU, mtmp);
+        return 0;
     }
 
     /* if this monster is waiting for something, prod it into action */
@@ -844,9 +837,19 @@ static int dochat (void) {
     if (mtmp->mtame && mtmp->meating) {
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
-        pline("%s is eating noisily.", Monnam(mtmp));
-        return (0);
+        message_monster(MSG_M_IS_EAT_NOISILY, mtmp);
+        return 0;
     }
 
     return domonnoise(mtmp);
 }
+
+int dotalk (void) {
+    int result;
+    bool save_soundok = flags.soundok;
+    flags.soundok = 1;  /* always allow sounds while chatting */
+    result = dochat();
+    flags.soundok = save_soundok;
+    return result;
+}
+

@@ -8,6 +8,38 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+        pline("%s is eating noisily.", Monnam(mtmp));
+        message_monster(MSG_M_IS_EAT_NOISILY, mtmp);
+
+            pline("%s seems not to notice you.", Monnam(mtmp));
+            message_monster(MSG_M_SEEMS_NOT_TO_NOTICE_YOU, mtmp);
+
+                        pline("%s boasts about %s gem collection.", Monnam(mtmp), mhis(mtmp));
+                        message_monster(MSG_M_BOASTS_ABOUT_GEM_COLLECTION, mtmp);
+
+            pline("%s rattles noisily.", Monnam(mtmp));
+            message_monster(MSG_M_RATTLES_NOISILY, mtmp);
+
+                pline("%s throws back %s head and lets out a blood curdling %s!",
+                        Monnam(mtmp), mhis(mtmp),
+                        ptr == &mons[PM_HUMAN_WERERAT] ? "shriek" : "howl");
+                message_monster_string(MSG_M_THROWS_BACK_HEAD_LETS_OUT_HOWL, mtmp,
+                        ptr == &mons[PM_HUMAN_WERERAT] ? "shriek" : "howl");
+
+        pline("%s %s.", Monnam(mtmp), vtense((char *)0, whimper_verb));
+        message_monster_string(MSG_M_WHIMPERS, mtmp, whimper_verb);
+
+        pline("%s %s!", Monnam(mtmp), vtense((char *)0, yelp_verb));
+        message_monster_string(MSG_M_YELPS, mtmp, yelp_verb);
+
+    if (Hallucination())
+        growl_verb = h_sounds[rn2(SIZE(h_sounds))];
+    else
+        growl_verb = growl_sound(mtmp);
+
+    pline("%s %s!", Monnam(mtmp), vtense((char *)0, growl_verb));
+    message_monster_string(MSG_M_GROWLS, mtmp, growl_verb);
+
             pline("%s %s %s.",
                     s_suffix(upstart(y_monnam(u.usteed))),
                     aobjnam(otmp, "glow"),
