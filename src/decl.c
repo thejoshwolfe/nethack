@@ -39,6 +39,7 @@ int doorindex = 0;
 
 char *save_cm = 0;
 struct Killer killer;
+struct Killer delayed_killer;
 
 const char *nomovemsg = 0;
 const char nul[40] = DUMMY;                     /* contains zeros */

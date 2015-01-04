@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "decl.h"
 #include "eat.h"
 #include "hack.h"
 #include "pm_props.h"
