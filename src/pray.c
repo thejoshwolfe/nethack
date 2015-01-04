@@ -404,7 +404,6 @@ decurse:
                         hcolor(NH_AMBER));
                 otmp->bknown = true;
             }
-            update_inventory();
             break;
         case TROUBLE_POISONED:
             if (Hallucination())
@@ -771,7 +770,6 @@ gcrownu (void)
         /* opportunity knocked, but there was nobody home... */
         You_feel("unworthy.");
     }
-    update_inventory();
     return;
 }
 
@@ -880,7 +878,6 @@ pleased (aligntyp g_align)
                         Your("%s as good as new!",
                              aobjnam(uwep, Blind ? "feel" : "look"));
                 }
-                update_inventory();
             }
             break;
         case 3:
@@ -941,7 +938,6 @@ pleased (aligntyp g_align)
                     }
                 }
             }
-            if (any) update_inventory();
             break;
         }
         case 5: {

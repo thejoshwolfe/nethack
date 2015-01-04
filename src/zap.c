@@ -943,8 +943,6 @@ bool drain_item(struct obj *obj) {
             flags.botl = 1;
             break;
     }
-    if (carried(obj))
-        update_inventory();
     return (true);
 }
 
@@ -1761,7 +1759,6 @@ int dozap(void) {
         pline("%s to dust.", it_turns);
         useup(obj);
     }
-    update_inventory(); /* maybe used a charge */
     return (1);
 }
 

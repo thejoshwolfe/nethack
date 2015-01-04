@@ -18,14 +18,6 @@
 
 static bool did_dig_msg;
 
-static bool rm_waslit(void);
-static void mkcavepos(signed char,signed char,int,bool,bool);
-static void mkcavearea(bool);
-static int dig_typ(struct obj *,signed char,signed char);
-static int dig(void);
-static signed char fillholetyp(int, int);
-static void dig_up_grave(void);
-
 /* Indices returned by dig_typ() */
 enum {
     DIGTYP_UNDIGGABLE = 0,
@@ -35,6 +27,10 @@ enum {
     DIGTYP_DOOR       = 4,
     DIGTYP_TREE       = 5,
 };
+
+#define BY_YOU          (&youmonst)
+#define BY_OBJECT       ((struct monst *)0)
+
 
 static bool rm_waslit (void) {
     signed char x, y;
@@ -143,18 +139,6 @@ dig_typ (struct obj *otmp, signed char x, signed char y)
                         (!level.flags.arboreal || IS_WALL(levl[x][y].typ)) ?
                         DIGTYP_ROCK : DIGTYP_UNDIGGABLE);
 }
-
-bool 
-is_digging (void)
-{
-        if (occupation == dig) {
-            return true;
-        }
-        return false;
-}
-
-#define BY_YOU          (&youmonst)
-#define BY_OBJECT       ((struct monst *)0)
 
 bool dig_check(struct monst *madeby, bool verbose, int x, int y) {
         struct trap *ttmp = t_at(x, y);
@@ -422,6 +406,13 @@ cleanup:
     return(1);
 }
 
+bool is_digging (void) {
+    if (occupation == dig) {
+        return true;
+    }
+    return false;
+}
+
 /* When will hole be finished? Very rough indication used by shopkeeper. */
 int holetime (void) {
     if(occupation != dig || !*u.ushops) return(-1);
@@ -633,6 +624,50 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
         }
 }
 
+static void dig_up_grave (void) {
+    struct obj *otmp;
+
+    /* Grave-robbing is frowned upon... */
+    exercise(A_WIS, false);
+    if (Role_if(PM_ARCHEOLOGIST)) {
+        adjalign(-sgn(u.ualign.type)*3);
+        You_feel("like a despicable grave-robber!");
+    } else if (Role_if(PM_SAMURAI)) {
+        adjalign(-sgn(u.ualign.type));
+        You("disturb the honorable dead!");
+    } else if ((u.ualign.type == A_LAWFUL) && (u.ualign.record > -10)) {
+        adjalign(-sgn(u.ualign.type));
+        You("have violated the sanctity of this grave!");
+    }
+
+    switch (rn2(5)) {
+        case 0:
+        case 1:
+            You("unearth a corpse.");
+            if (!!(otmp = mk_tt_object(CORPSE, u.ux, u.uy)))
+                otmp->age -= 100;               /* this is an *OLD* corpse */;
+            break;
+        case 2:
+            if (!Blind) pline(Hallucination() ? "Dude!  The living dead!" :
+                    "The grave's owner is very upset!");
+            (void) makemon(mkclass(S_ZOMBIE,0), u.ux, u.uy, NO_MM_FLAGS);
+            break;
+        case 3:
+            if (!Blind) pline(Hallucination() ? "I want my mummy!" :
+                    "You've disturbed a tomb!");
+            (void) makemon(mkclass(S_MUMMY,0), u.ux, u.uy, NO_MM_FLAGS);
+            break;
+        default:
+            /* No corpse */
+            pline_The("grave seems unused.  Strange....");
+            break;
+    }
+    levl[u.ux][u.uy].typ = ROOM;
+    del_engr_at(u.ux, u.uy);
+    newsym(u.ux,u.uy);
+    return;
+}
+
 /* return true if digging succeeded, false otherwise */
 bool dighole(bool pit_only) {
         struct trap *ttmp = t_at(u.ux, u.uy);
@@ -745,52 +780,6 @@ bool dighole(bool pit_only) {
         }
 
         return false;
-}
-
-static void
-dig_up_grave (void)
-{
-        struct obj *otmp;
-
-        /* Grave-robbing is frowned upon... */
-        exercise(A_WIS, false);
-        if (Role_if(PM_ARCHEOLOGIST)) {
-            adjalign(-sgn(u.ualign.type)*3);
-            You_feel("like a despicable grave-robber!");
-        } else if (Role_if(PM_SAMURAI)) {
-            adjalign(-sgn(u.ualign.type));
-            You("disturb the honorable dead!");
-        } else if ((u.ualign.type == A_LAWFUL) && (u.ualign.record > -10)) {
-            adjalign(-sgn(u.ualign.type));
-            You("have violated the sanctity of this grave!");
-        }
-
-        switch (rn2(5)) {
-        case 0:
-        case 1:
-            You("unearth a corpse.");
-            if (!!(otmp = mk_tt_object(CORPSE, u.ux, u.uy)))
-                otmp->age -= 100;               /* this is an *OLD* corpse */;
-            break;
-        case 2:
-            if (!Blind) pline(Hallucination() ? "Dude!  The living dead!" :
-                        "The grave's owner is very upset!");
-            (void) makemon(mkclass(S_ZOMBIE,0), u.ux, u.uy, NO_MM_FLAGS);
-            break;
-        case 3:
-            if (!Blind) pline(Hallucination() ? "I want my mummy!" :
-                        "You've disturbed a tomb!");
-            (void) makemon(mkclass(S_MUMMY,0), u.ux, u.uy, NO_MM_FLAGS);
-            break;
-        default:
-            /* No corpse */
-            pline_The("grave seems unused.  Strange....");
-            break;
-        }
-        levl[u.ux][u.uy].typ = ROOM;
-        del_engr_at(u.ux, u.uy);
-        newsym(u.ux,u.uy);
-        return;
 }
 
 int
@@ -1397,7 +1386,4 @@ void rot_corpse ( void *arg, long timeout) {
     }
     rot_organic(arg, timeout);
     if (on_floor) newsym(x, y);
-    else if (in_invent) update_inventory();
 }
-
-

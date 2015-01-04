@@ -1120,8 +1120,7 @@ static int dopayobj(struct monst *shkp, struct bill_x *bp, struct obj **obj_p,
             dealloc_obj(obj);
             *obj_p = 0;     /* destroy pointer to freed object */
         }
-    } else if (itemize)
-        update_inventory(); /* Done just once in dopay() if !itemize. */
+    }
     return buy;
 }
 
@@ -1418,9 +1417,7 @@ proceed:
                 }
             }
         }
-thanks:
-        if (!itemize)
-            update_inventory(); /* Done in dopayobj() if itemize. */
+thanks: ;
     }
     if(!ANGRY(shkp) && paid) {
         audio_message_monster_string(MSG_THANK_YOU_FOR_SHOPPING_IN_M_S, shkp,

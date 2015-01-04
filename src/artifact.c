@@ -1184,7 +1184,6 @@ static int arti_invoke (struct obj *obj) {
                                  b_effect = obj->blessed &&
                                      (Role_switch == oart->role || !oart->role);
                                  recharge(otmp, b_effect ? 1 : obj->cursed ? -1 : 0);
-                                 update_inventory();
                                  break;
                              }
             case LEV_TELE:

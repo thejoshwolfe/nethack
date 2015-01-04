@@ -2263,8 +2263,6 @@ void passive_obj(struct monst *mon, struct obj *obj, struct attack *mattk) {
             break;
     }
 
-    if (carried(obj))
-        update_inventory();
 }
 
 /* Note: caller must ascertain mtmp is mimicking... */

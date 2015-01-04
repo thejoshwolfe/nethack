@@ -178,7 +178,6 @@ int dowrite(struct obj *pen) {
         /* scrolls disappear, spellbooks don't */
         if (paper->oclass == SPBOOK_CLASS) {
             message_const(MSG_SPELLBOOK_IS_UNFINISHED);
-            update_inventory(); /* pen charges */
         } else {
             message_const(MSG_SCROLL_IS_NOW_USELESS);
             useup(paper);
@@ -194,7 +193,6 @@ int dowrite(struct obj *pen) {
         /* scrolls disappear, spellbooks don't */
         if (paper->oclass == SPBOOK_CLASS) {
             You("write in your best handwriting:  \"My Diary\", but it quickly fades.");
-            update_inventory(); /* pen charges */
         } else {
             if (by_descr) {
                 strcpy(namebuf, OBJ_DESCR(objects[new_obj->otyp]));

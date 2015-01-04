@@ -588,8 +588,6 @@ void learn_egg_type(int mnum) {
     /* baby monsters hatch from grown-up eggs */
     mnum = little_to_big(mnum);
     mvitals[mnum].mvflags |= MV_KNOWS_EGG;
-    /* we might have just learned about other eggs being carried */
-    update_inventory();
 }
 
 /* Attach a fig_transform timeout to the given figurine. */
@@ -967,14 +965,9 @@ void begin_burn(struct obj *obj, bool already_lit) {
         if (start_timer(turns, TIMER_OBJECT, BURN_OBJECT, (void *)obj)) {
             obj->lamplit = 1;
             obj->age -= turns;
-            if (carried(obj) && !already_lit)
-                update_inventory();
         } else {
             obj->lamplit = 0;
         }
-    } else {
-        if (carried(obj) && !already_lit)
-            update_inventory();
     }
 
     if (obj->lamplit && !already_lit) {
@@ -1004,8 +997,6 @@ void end_burn(struct obj *obj, bool timer_attached) {
         /* [DS] Cleanup explicitly, since timer cleanup won't happen */
         del_light_source(LS_OBJECT, (void *)obj);
         obj->lamplit = 0;
-        if (obj->where == OBJ_INVENT)
-            update_inventory();
     } else if (!stop_timer(BURN_OBJECT, (void *)obj))
         impossible("end_burn: obj %s not timed!", xname(obj));
 }
@@ -1027,9 +1018,6 @@ static void cleanup_burn(void *arg, long expire_time) {
     obj->age += expire_time - monstermoves;
 
     obj->lamplit = 0;
-
-    if (obj->where == OBJ_INVENT)
-        update_inventory();
 }
 
 

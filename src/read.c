@@ -682,7 +682,6 @@ static void do_class_genocide (void) {
                     mvitals[i].mvflags |= (G_GENOD|G_NOCORPSE);
                     reset_rndmonst(i);
                     kill_genocided_monsters();
-                    update_inventory();         /* eggs & tins */
                     pline("Wiped out all %s.", nam);
                     if (Upolyd && i == u.umonnum) {
                         u.mh = -1;
@@ -1032,7 +1031,6 @@ int seffects (struct obj *sobj) {
                     }
                 }
                 if(Punished && !confused) unpunish();
-                update_inventory();
                 break;
             }
         case SCR_CREATE_MONSTER:
@@ -1601,7 +1599,6 @@ do_genocide (int how)
             }
             reset_rndmonst(mndx);
             kill_genocided_monsters();
-            update_inventory(); /* in case identified eggs were affected */
         } else {
             int cnt = 0;
 

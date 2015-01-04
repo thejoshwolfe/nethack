@@ -16,7 +16,6 @@ size_t nh_slprintf(char *dest, size_t dest_size, const char *format, ...) __attr
 
 
 
-void update_inventory(void);
 void getlin(const char *, char *);
 
 enum MessageFlag {

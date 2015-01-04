@@ -1080,7 +1080,6 @@ spelleffects (int spell, bool atme)
                             }
                         } else weffects(pseudo);
                 } else weffects(pseudo);
-                update_inventory();     /* spell may modify inventory */
                 break;
 
         /* these are all duplicates of scroll effects */

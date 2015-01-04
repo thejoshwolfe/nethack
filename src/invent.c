@@ -367,7 +367,6 @@ struct obj * addinv (struct obj *obj) {
 added:
     addinv_core2(obj);
     carry_obj_effects(obj);         /* carrying affects the obj */
-    update_inventory();
     return(obj);
 }
 
@@ -477,7 +476,6 @@ void useup (struct obj *obj) {
                 obj->in_use = false;    /* no longer in use */
                 obj->quan--;
                 obj->owt = weight(obj);
-                update_inventory();
         } else {
                 useupall(obj);
         }
@@ -488,7 +486,6 @@ void useup (struct obj *obj) {
 void consume_obj_charge ( struct obj *obj, bool maybe_unpaid) {
         if (maybe_unpaid) check_unpaid(obj);
         obj->spe -= 1;
-        if (obj->known) update_inventory();
 }
 
 
@@ -540,7 +537,6 @@ void freeinv_core (struct obj *obj) {
 void freeinv (struct obj *obj) {
         extract_nobj(obj, &invent);
         freeinv_core(obj);
-        update_inventory();
 }
 
 void delallobj (int x, int y) {
@@ -1521,7 +1517,6 @@ void identify_pack (int id_limit) {
         if (n == 0 || n < -1)
             menu_identify(id_limit);
     }
-    update_inventory();
 }
 
 
@@ -2347,7 +2342,6 @@ int doorganize (void) {
         reorder_invent();
 
         prinv(adj_type, obj, 0L);
-        update_inventory();
         return(0);
 }
 

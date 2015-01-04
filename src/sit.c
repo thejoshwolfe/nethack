@@ -323,7 +323,6 @@ void rndcurse (void) {
             else
                 curse(otmp);
         }
-        update_inventory();
     }
 
     /* treat steed's saddle as extended part of hero's inventory */

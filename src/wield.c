@@ -114,7 +114,6 @@ void setuwep(struct obj *obj) {
                                                    !is_weptool(obj);
     } else
         unweapon = true; /* for "bare hands" message */
-    update_inventory();
 }
 
 static int ready_weapon(struct obj *wep) {
@@ -183,12 +182,10 @@ static int ready_weapon(struct obj *wep) {
 
 void setuqwep(struct obj *obj) {
     setworn(obj, W_QUIVER);
-    update_inventory();
 }
 
 void setuswapwep(struct obj *obj) {
     setworn(obj, W_SWAPWEP);
-    update_inventory();
 }
 
 /*** Commands to change particular slot(s) ***/
@@ -467,7 +464,6 @@ int dotwoweapon(void) {
     if (u.twoweap) {
         You("switch to your primary weapon.");
         u.twoweap = 0;
-        update_inventory();
         return (0);
     }
 
@@ -476,7 +472,6 @@ int dotwoweapon(void) {
         /* Success! */
         You("begin two-weapon combat.");
         u.twoweap = 1;
-        update_inventory();
         return (rnd(20) > ACURR(A_DEX));
     }
     return (0);
@@ -497,21 +492,18 @@ void uwepgone(void) {
         }
         setworn((struct obj *)0, W_WEP);
         unweapon = true;
-        update_inventory();
     }
 }
 
 void uswapwepgone(void) {
     if (uswapwep) {
         setworn((struct obj *)0, W_SWAPWEP);
-        update_inventory();
     }
 }
 
 void uqwepgone(void) {
     if (uquiver) {
         setworn((struct obj *)0, W_QUIVER);
-        update_inventory();
     }
 }
 
@@ -519,7 +511,6 @@ void untwoweapon(void) {
     if (u.twoweap) {
         You("can no longer use two weapons at once.");
         u.twoweap = false;
-        update_inventory();
     }
     return;
 }

@@ -188,7 +188,6 @@ bool rust_dmg(struct obj *otmp, const char *ostr, int type, bool print, struct m
                 otmp->oeroded++;
             else
                 otmp->oeroded2++;
-            update_inventory();
         }
     } else {
         if (flags.verbose) {
@@ -223,7 +222,6 @@ void grease_protect(struct obj *otmp, const char *ostr, struct monst *victim) {
         otmp->greased = 0;
         if (carried(otmp)) {
             pline_The("grease dissolves.");
-            update_inventory();
         }
     }
 }
@@ -1166,7 +1164,6 @@ void dotrap(struct trap *trap, unsigned trflags) {
                     else if (uarmu)
                         (void)rust_dmg(uarmu, "shirt", 1, true, &youmonst);
             }
-            update_inventory();
             break;
 
         case FIRE_TRAP:

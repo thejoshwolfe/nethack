@@ -256,10 +256,6 @@ bool make_hallucinated ( long xtime, bool talk, long mask) {
             see_traps();
         }
 
-        /* for perm_inv and anything similar
-           (eg. Qt windowport's equipped items display) */
-        update_inventory();
-
         flags.botl = 1;
         if (talk) pline(message, verb);
     }
@@ -1358,7 +1354,6 @@ bool get_wet (struct obj *obj) {
                 You("are caught in the explosion!");
                 losehp(rnd(10), killed_by_const(KM_ELEMENTARY_CHEMISTRY));
                 makeknown(obj->otyp);
-                update_inventory();
                 return (true);
             }
             pline("%s %s%s.", Your_buf, aobjnam(obj,"dilute"),
@@ -1372,7 +1367,6 @@ bool get_wet (struct obj *obj) {
                 obj->blessed = obj->cursed = false;
                 obj->otyp = POT_WATER;
             } else obj->odiluted++;
-            update_inventory();
             return true;
         case SCROLL_CLASS:
             if (obj->otyp != SCR_BLANK_PAPER
@@ -1390,7 +1384,6 @@ bool get_wet (struct obj *obj) {
                 }
                 obj->otyp = SCR_BLANK_PAPER;
                 obj->spe = 0;
-                update_inventory();
                 return true;
             } else break;
         case SPBOOK_CLASS:
@@ -1411,7 +1404,6 @@ bool get_wet (struct obj *obj) {
                         bill_dummy_object(obj);
                     }
                     obj->otyp = SPE_BLANK_PAPER;
-                    update_inventory();
                 }
                 return true;
             }
@@ -1426,7 +1418,6 @@ bool get_wet (struct obj *obj) {
                         Your_buf, aobjnam(obj, "rust"),
                         obj->oeroded ? " more" : "what");
                 obj->oeroded++;
-                update_inventory();
                 return true;
             } else break;
     }
@@ -1751,7 +1742,6 @@ more_dips:
         }
         makeknown(POT_OIL);
         obj->spe = 1;
-        update_inventory();
         return 1;
     }
 
@@ -1812,7 +1802,6 @@ more_dips:
         singlepotion = hold_another_object(singlepotion,
                 "You juggle and drop %s!",
                 doname(singlepotion), (const char *)0);
-        update_inventory();
         return(1);
     }
 

@@ -265,7 +265,6 @@ void discover_object (int oindx, bool mark_as_known, bool credit_hero) {
             objects[oindx].oc_name_known = 1;
             if (credit_hero) exercise(A_WIS, true);
         }
-        if (moves > 1L) update_inventory();
     }
 }
 
@@ -287,7 +286,6 @@ void undiscover_object (int oindx) {
         /* clear last slot */
         if (found) disco[dindx-1] = 0;
         else impossible("named object not in disco");
-        update_inventory();
     }
 }
 

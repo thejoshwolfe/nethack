@@ -104,7 +104,6 @@ setworn (struct obj *obj, long mask)
                 }
             }
         }
-        update_inventory();
 }
 
 /* called e.g. when obj is destroyed */
@@ -128,7 +127,6 @@ setnotworn (struct obj *obj)
                 if ((p = w_blocks(obj,wp->w_mask)) != 0)
                     u.uprops[p].blocked &= ~wp->w_mask;
             }
-        update_inventory();
 }
 
 void

@@ -672,7 +672,6 @@ menu_drop (int retry)
         invent = u_gold->nobj;
         u_gold->in_use = false;
         dealloc_obj(u_gold);
-        update_inventory();
     }
     return n_dropped;
 }

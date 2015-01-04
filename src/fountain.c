@@ -380,7 +380,6 @@ dipfountain (struct obj *obj)
                         obj->oerodeproof = true;
                         exercise(A_WIS, true);
                 }
-                update_inventory();
                 levl[u.ux][u.uy].typ = ROOM;
                 levl[u.ux][u.uy].looted = 0;
                 newsym(u.ux, u.uy);
@@ -463,7 +462,6 @@ dipfountain (struct obj *obj)
                     newsym(u.ux,u.uy);
                     break;
         }
-        update_inventory();
         dryup(u.ux, u.uy, true);
 }
 

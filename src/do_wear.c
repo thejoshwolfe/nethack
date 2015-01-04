@@ -684,7 +684,6 @@ void Ring_on (struct obj *obj) {
                     flags.botl = 1;
                     makeknown(obj->otyp);
                     obj->known = 1;
-                    update_inventory();
                 }
                 break;
         case RIN_INCREASE_ACCURACY:     /* KMH */
@@ -701,7 +700,6 @@ void Ring_on (struct obj *obj) {
                     flags.botl = 1;
                     makeknown(RIN_PROTECTION);
                     obj->known = 1;
-                    update_inventory();
                 }
                 break;
     }
@@ -780,7 +778,6 @@ static void Ring_off_or_gone(struct obj *obj, bool gone) {
                     flags.botl = 1;
                     makeknown(obj->otyp);
                     obj->known = 1;
-                    update_inventory();
                 }
                 break;
         case RIN_INCREASE_ACCURACY:     /* KMH */
@@ -795,7 +792,6 @@ static void Ring_off_or_gone(struct obj *obj, bool gone) {
                     flags.botl = 1;
                     makeknown(RIN_PROTECTION);
                     obj->known = 1;
-                    update_inventory();
                 }
         case RIN_PROTECTION_FROM_SHAPE_CHAN:
                 /* If you're no longer protected, let the chameleons
@@ -1543,7 +1539,6 @@ void erode_armor(struct monst *victim, bool acid_dmg) {
 
     if (otmph && (otmph != uarmf)) {
         erode_obj(otmph, acid_dmg, false);
-        if (carried(otmph)) update_inventory();
     }
 }
 

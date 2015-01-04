@@ -156,7 +156,6 @@ void finish_quest ( struct obj *obj) {
         /* behave as if leader imparts sufficient info about the
            quest artifact */
         fully_identify_obj(obj);
-        update_inventory();
     }
 }
 

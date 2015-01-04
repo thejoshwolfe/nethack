@@ -344,7 +344,6 @@ struct obj * oname (struct obj *obj, const char *name) {
             /* activate warning if you've just named your weapon "Sting" */
             if (obj == uwep) set_artifact_intrinsic(obj, true, W_WEP);
         }
-        if (carried(obj)) update_inventory();
         return obj;
 }
 

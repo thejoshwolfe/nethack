@@ -1283,7 +1283,6 @@ int dorub (void) {
             uwep->spe = 0; /* for safety */
             uwep->age = rn1(500,1000);
             if (uwep->lamplit) begin_burn(uwep, true);
-            update_inventory();
         } else if (rn2(2) && !Blind) {
             You("see a puff of smoke.");
         } else {
@@ -1867,7 +1866,6 @@ static void use_grease (struct obj *obj) {
             pline("%s to be empty.", seem_clause);
         }
     }
-    update_inventory();
 }
 
 void reset_trapset (void) {
