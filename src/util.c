@@ -8,6 +8,24 @@
 
 MSG_NO_ELBOW_ROOM:  "You don't have enough elbow-room to maneuver.";
 
+            pline("%s %s %s.",
+                    s_suffix(upstart(y_monnam(u.usteed))),
+                    aobjnam(otmp, "glow"),
+                    hcolor(otmp->cursed ? NH_BLACK : "brown"));
+            if (Hallucination()) {
+                message_monster_object_int(MSG_M_O_GLOWS_COLOR, u.usteed, otmp, halluc_color_int());
+            } else if (otmp->cursed) {
+                message_monster_object(MSG_M_O_GLOWS_BLACK, u.usteed, otmp);
+            } else {
+                message_monster_object(MSG_M_O_GLOWS_BROWN, u.usteed, otmp);
+            }
+
+                pline("%s!", Tobjnam(otmp, "resist"));
+                message_object(MSG_O_RESISTS, otmp);
+
+        You("are already sitting on %s.", mon_nam(u.usteed));
+        message_monster(MSG_YOU_ARE_ALEADY_SITTING_ON_M, u.usteed);
+
                 Your("displaced image doesn't fool %s!", mon_nam(shkp));
                 message_monster(MSG_YOUR_DISPLACED_IMAGE_DOESNT_FOOL_M, shkp);
 
