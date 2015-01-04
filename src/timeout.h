@@ -71,6 +71,6 @@ void restore_timers(int,int,bool,long);
 void relink_timers(bool);
 int wiz_timeout_queue(void);
 void timer_sanity_check(void);
-
+void stop_occupation(void);
 
 #endif /* TIMEOUT_H */

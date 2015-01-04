@@ -1006,7 +1006,8 @@ write_level_file (char *filename, splev *room_level, specialmaze *maze_level)
             if (!write_maze(fout, maze_level))
                 return false;
         } else {
-            impossible("write_level_file");
+            fprintf(stderr, "write_level_file\n");
+            exit(1);
         }
 
         (void) close(fout);

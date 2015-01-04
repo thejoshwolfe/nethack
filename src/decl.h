@@ -299,6 +299,4 @@ extern const char * const monexplain[], invisexplain[], * const objexplain[], * 
 extern char *fqn_prefix[PREFIX_COUNT];
 extern char *fqn_prefix_names[PREFIX_COUNT];
 
-void stop_occupation(void);
-
 #endif /* DECL_H */

@@ -230,16 +230,3 @@ char *fqn_prefix_names[PREFIX_COUNT] = { "hackdir", "leveldir", "savedir",
                                         "bonesdir", "datadir", "scoredir",
                                         "lockdir", "configdir", "troubledir" };
 
-void stop_occupation (void) {
-    if(occupation) {
-        if (!maybe_finished_meal(true))
-            You("stop %s.", occtxt);
-        occupation = 0;
-        flags.botl = 1; /* in case u.uhs changed */
-        /* fainting stops your occupation, there's no reason to sync.
-           sync_hunger();
-           */
-        nomul(0);
-        pushch(0);
-    }
-}
