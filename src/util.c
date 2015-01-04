@@ -1706,6 +1706,10 @@ void getlin(const char *query, char *out_buf) {
     nh_strlcpy(out_buf, "LOL", 32);
 };
 
+void putstr(int winid, int always_zero, const char *str) {
+    fprintf(stderr, "TODO: putstr(\"%s\")", str);
+}
+
 size_t nh_strlcpy(char *dest, const char *source, size_t dest_size) {
     char *d = dest;
     const char *s = source;

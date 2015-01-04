@@ -536,6 +536,6 @@ void add_menu(int, int, const void *, char, char, int, const char *, bool);
 void end_menu(int, const char *);
 int select_menu(int, int, menu_item **);
 
-void putstr(int, int, const char *);
+void putstr(int winid, int always_zero, const char *str);
 
 #endif // UTIL_H
