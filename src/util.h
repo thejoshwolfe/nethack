@@ -529,8 +529,6 @@ void print_glyph(int, signed char x, signed char y, int glyph);
 int query_category ( const char *qstr, struct obj *olist, int qflags, menu_item **pick_list, int how);
 int query_objlist(const char *qstr, struct obj *olist, int qflags,
         menu_item **pick_list, int how, bool (*allow)(const struct obj *));
-void mark_synch(void);
-void wait_synch(void);
 void bot(void);
 char message_menu(char, int, const char *);
 void start_menu(int);

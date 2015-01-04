@@ -1474,7 +1474,6 @@ static void menu_identify (int id_limit) {
             for (i = 0; i < n; i++, id_limit--)
                 (void) identify(pick_list[i].item.a_obj);
             free((void *) pick_list);
-            mark_synch(); /* Before we loop to pop open another menu */
         } else {
             if (n < 0) pline("That was all.");
             id_limit = 0; /* Stop now */

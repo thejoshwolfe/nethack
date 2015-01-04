@@ -126,7 +126,6 @@ void done1 (int sig_unused) {
         signal(SIGINT, done1);
         clear_nhwindow(WIN_MESSAGE);
         curs_on_u();
-        wait_synch();
         if(multi > 0) nomul(0);
     } else {
         done2();
@@ -140,7 +139,6 @@ int done2 (void) {
         (void) signal(SIGINT, done1);
         clear_nhwindow(WIN_MESSAGE);
         curs_on_u();
-        wait_synch();
         if(multi > 0) nomul(0);
         if(multi == 0) {
             u.uinvulnerable = false;    /* avoid ctrl-C bug -dlc */
@@ -181,7 +179,6 @@ void done_in_by (struct monst *mtmp) {
     bool distorted = (bool)(Hallucination() && canspotmon(mtmp));
 
     You("die...");
-    mark_synch();   /* flush buffered screen output */
     buf[0] = '\0';
     /* "killed by the high priest of Crom" is okay, "killed by the high
        priest" alone isn't */
@@ -243,7 +240,6 @@ void panic (const char * str, ...) {
 
     if (iflags.window_inited) {
         fprintf(stderr, "Oops...\n");
-        wait_synch();       /* make sure all pending output gets flushed */
         iflags.window_inited = 0; /* they're gone; force raw_print()ing */
     }
 
@@ -542,11 +538,6 @@ die:
     if (moves <= 1 && how < PANICKED)       /* You die... --More-- */
         pline("Do not pass go.  Do not collect 200 %s.", currency(200L));
 
-    if (have_windows) wait_synch(); /* flush screen output */
-    (void) signal(SIGINT, done_intr);
-    (void) signal(SIGQUIT, done_intr);
-    (void) signal(SIGHUP, done_hangup);
-
     bones_ok = (how < GENOCIDED) && can_make_bones();
 
     if (how == TURNED_SLIME)
@@ -637,7 +628,6 @@ die:
 
     /* clean up unneeded windows */
     if (have_windows) {
-        wait_synch();
         display_nhwindow(WIN_MESSAGE, true);
         destroy_nhwindow(WIN_MAP);
         destroy_nhwindow(WIN_STATUS);

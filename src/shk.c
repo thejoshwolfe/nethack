@@ -2516,7 +2516,6 @@ struct monst * shkcatch (struct obj *obj, signed char x, signed char y) {
             message_monster_object_flag(MSG_M_NIMBLY_CATCHES_O, shkp, obj, reaches_over_flag);
             if (!canspotmon(shkp))
                 map_invisible(x, y);
-            mark_synch();
         }
         subfrombill(obj, shkp);
         mpickobj(shkp, obj);
@@ -2969,7 +2968,6 @@ void pay_for_damage(const char *dmgstr, bool cant_mollify) {
             if(flags.soundok) {
                 You_hear("an angry voice:");
                 verbalize("Out of my way, scum!");
-                wait_synch();
                 sleep(1);
             }
         }

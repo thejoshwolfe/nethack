@@ -477,7 +477,6 @@ static FILE * fopen_config_file(const char *filename) {
              */
             raw_printf("Access to %s denied (%d).",
                     filename, errno);
-            wait_synch();
             /* fall through to standard names */
         } else
             if ((fp = fopen(filename, "r")) != (FILE *)0) {
@@ -487,7 +486,6 @@ static FILE * fopen_config_file(const char *filename) {
                 /* access() above probably caught most problems for UNIX */
                 raw_printf("Couldn't open requested config file %s (%d).",
                         filename, errno);
-                wait_synch();
                 /* fall through to standard names */
             }
     }
@@ -510,7 +508,6 @@ static FILE * fopen_config_file(const char *filename) {
             details = "";
         raw_printf("Couldn't open default config file %s %s(%d).",
                 tmp_config, details, errno);
-        wait_synch();
     }
     return (FILE *)0;
 
@@ -571,7 +568,6 @@ static int get_uchars ( FILE *fp, char *buf, char *bufp, unsigned char *list,
             default:
 gi_error:
                 raw_printf("Syntax error in %s", name);
-                wait_synch();
                 return count;
         }
     }
@@ -725,7 +721,6 @@ void read_config_file (const char *filename) {
     while (fgets(buf, 4*BUFSZ, fp)) {
         if (!parse_config_line(fp, buf, NULL, NULL)) {
             raw_printf("Bad option line:  \"%.50s\"", buf);
-            wait_synch();
         }
     }
     (void) fclose(fp);
@@ -754,7 +749,6 @@ static FILE * fopen_wizkit_file (void) {
          */
         raw_printf("Access to %s denied (%d).",
                 wizkit, errno);
-        wait_synch();
         /* fall through to standard names */
     } else
         if ((fp = fopen(wizkit, "r")) != (FILE *)0) {
@@ -763,7 +757,6 @@ static FILE * fopen_wizkit_file (void) {
             /* access() above probably caught most problems for UNIX */
             raw_printf("Couldn't open requested config file %s (%d).",
                     wizkit, errno);
-            wait_synch();
         }
 
     envp = nh_getenv("HOME");
@@ -777,7 +770,6 @@ static FILE * fopen_wizkit_file (void) {
          * directory restricted to user */
         raw_printf("Couldn't open default wizkit file %s (%d).",
                 tmp_wizkit, errno);
-        wait_synch();
     }
     return (FILE *)0;
 }
@@ -811,9 +803,7 @@ void read_wizkit (void) {
             }
         }
     }
-    if (bad_items)
-        wait_synch();
-    (void) fclose(fp);
+    fclose(fp);
     return;
 }
 
@@ -835,7 +825,6 @@ void check_recordfile(const char *dir) {
         (void) close(fd);   /* RECORD newly created */
     } else {
         raw_printf("Warning: cannot write scoreboard file %s: %s", fq_record, strerror(errno));
-        wait_synch();
     }
 }
 

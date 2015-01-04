@@ -213,7 +213,6 @@ int dosave0(void) {
             }
         }
 
-        mark_synch();       /* flush any buffered screen output */
     }
 
 

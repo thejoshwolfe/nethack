@@ -521,7 +521,6 @@ int main (int argc, char *argv[]) {
         const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
 
         pline("Restoring save file...");
-        // mark_synch();
         if(!dorecover(fd))
             goto not_recovered;
         if(!wizard && remember_wiz_mode) wizard = true;

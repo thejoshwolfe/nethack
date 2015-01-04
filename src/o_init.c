@@ -42,7 +42,6 @@ static void setgemprobs (d_level *dlev) {
             OBJ_NAME(objects[first]) == (char *)0) {
         raw_printf("Not enough gems? - first=%d j=%d LAST_GEM=%d",
                 first, j, LAST_GEM);
-        wait_synch();
     }
     for (j = first; j <= LAST_GEM; j++)
         objects[j].oc_prob = (171+j-first)/(LAST_GEM+1-first);

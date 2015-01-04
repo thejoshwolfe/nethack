@@ -570,7 +570,6 @@ static void badoption (const char *opts) {
     else
         raw_printf("Bad syntax in NETHACKOPTIONS: %s.", opts);
 
-    wait_synch();
 }
 
 static char * string_for_opt(char *opts, bool val_optional) {
@@ -746,7 +745,6 @@ static void duplicate_opt_detection (const char *opts, int bool_or_comp) {
                     raw_printf(
                             "\nWarning - Boolean option specified multiple times: %s.\n",
                             opts);
-                    wait_synch();
                 }
                 *optptr += 1;
                 break; /* don't match multiple options */
@@ -760,7 +758,6 @@ static void duplicate_opt_detection (const char *opts, int bool_or_comp) {
                     raw_printf(
                             "\nWarning - compound option specified multiple times: %s.\n",
                             compopt[i].name);
-                    wait_synch();
                 }
                 *optptr += 1;
                 break; /* don't match multiple options */
