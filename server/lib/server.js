@@ -16,16 +16,13 @@ var dbFilePath = process.env.NETHACK_DB_PATH || 'nethack.db';
 
 var USERS_KEY_PREFIX = "Users.Username.";
 
+var NETHACK_DIR = path.join(__dirname, '../../');
+
 var validateUsernameRegex = /^[a-zA-Z0-9_~]*$/;
 var MIN_USERNAME_LENGTH = 1;
 var MAX_USERNAME_LENGTH = 32;
 var MIN_PASSWORD_LENGTH = 1;
 var MAX_PASSWORD_LENGTH = 1024;
-
-var messageHandlers = {
-  register: register,
-  login: login,
-};
 
 var db = leveldown(dbFilePath);
 var httpServer;
@@ -34,24 +31,106 @@ var users = {};
 
 boot();
 
+function Session(ws) {
+  this.ws = ws;
+  this.user = null;
+  this.netHackProcess = null;
+}
+
+Session.prototype.end = function() {
+  this.killChildProcess();
+};
+
+Session.prototype.send = function(name, args) {
+  this.ws.sendText(JSON.stringify({name: name, args: args}));
+};
+
+Session.prototype.login = function(args) {
+  var username = args.username;
+  var password = args.password;
+
+  var id = usernameToId(username);
+  var existingUser = users[id];
+  if (!existingUser) {
+    this.send('loginResult', {err: 'invalid username'});
+    return;
+  }
+  if (existingUser.password !== password) {
+    this.send('loginResult', {err: 'invalid password'});
+    return;
+  }
+  this.user = existingUser;
+  this.send('loginResult', {username: this.user.username});
+};
+
+Session.prototype.register = function(args) {
+  var username = args.username;
+  var password = args.password;
+  if (username.length > MAX_USERNAME_LENGTH || username.length < MIN_USERNAME_LENGTH) {
+    this.send('registerResult', {err: 'username length must be between ' +
+      MIN_USERNAME_LENGTH + ' and ' + MAX_USERNAME_LENGTH});
+    return;
+  }
+  if (!validateUsernameRegex.test(username)) {
+    this.send('registerResult', {err: 'invalid characters in username'});
+    return;
+  }
+  if (password.length > MAX_PASSWORD_LENGTH || password.length < MIN_PASSWORD_LENGTH) {
+    this.send('registerResult', {err: 'password length must be between ' +
+      MIN_PASSWORD_LENGTH + ' and ' + MAX_PASSWORD_LENGTH});
+    return;
+  }
+  var id = usernameToId(username);
+  var existingUser = users[id];
+  if (existingUser) {
+    this.send('registerResult', {err: 'username already exists'});
+    return;
+  }
+  this.user = createNewUser(username, password);
+  this.send('registerResult', {username: this.user.username});
+};
+
+Session.prototype.play = function(args) {
+  if (!this.user) return;
+  this.killChildProcess();
+  this.netHackProcess = spawnNethack();
+  this.netHackProcess.on('error', function(err) {
+    this.send('playError', {err: 'Unable to spawn nethack process'});
+    console.error("Unable to spawn nethack process:", err.stack);
+    this.killChildProcess();
+  }.bind(this));
+  this.closeHook = function(returnCode) {
+    this.send('playError', {err: 'NetHack process crashed without warning'});
+    console.error(new Error("NetHack process crashed without warning").stack);
+    this.netHackProcess = null;
+  }.bind(this);
+  this.netHackProcess.on('close', this.closeHook);
+  this.netHackProcess.stdout.pipe(process.stdout);
+};
+
+Session.prototype.killChildProcess = function() {
+  if (this.netHackProcess) {
+    this.netHackProcess.removeListener('close', this.closeHook);
+    this.netHackProcess.kill();
+    this.netHackProcess = null;
+    this.closeHook = null;
+  }
+};
+
+var messageHandlers = {
+  register: Session.prototype.register,
+  login: Session.prototype.login,
+  play: Session.prototype.play,
+};
+
 function spawnNethack(cb) {
-  var pend = new Pend();
-  mkdirp('run/dumps', pend.hold());
-  mkdirp('run/save', pend.hold());
-  pend.wait(function(err) {
-    if (err) return cb(err);
-    fs.writeFile('run/perm', "", pend.hold());
-    fs.writeFile('run/logfile', "", pend.hold());
-    fs.writeFile('run/record', "", pend.hold());
-    pend.wait(function(err) {
-      if (err) return cb(err);
-      var options = {
-        stdio: ['pipe', 'pipe', process.stderr],
-      };
-      var child = spawn('build/nethack', [], options);
-      cb(null, child);
-    });
-  });
+  var options = {
+    stdio: ['pipe', 'pipe', process.stderr],
+    cwd: NETHACK_DIR,
+  };
+  var exePath = path.join(NETHACK_DIR, 'nethack');
+  var child = spawn(exePath, [], options);
+  return child;
 }
 
 function boot() {
@@ -64,7 +143,6 @@ function boot() {
       if (err) throw err;
       httpServer.listen(httpPort, httpHost, function() {
         console.info("HTTP server listening at http://" + httpHost + ":" + httpPort + "/");
-        console.log("users", users);
       });
     });
   });
@@ -109,7 +187,8 @@ function createHttpServer(cb) {
       console.error("web socket server error:", err.stack);
     });
     wss.on('connection', function(ws) {
-      console.info("ws client connected");
+      var session = new Session(ws);
+      var pingInterval = setInterval(sendPing, 1000);
       ws.on('textMessage', function(msg) {
         var json;
         try {
@@ -124,14 +203,18 @@ function createHttpServer(cb) {
           console.error("Invalid message name: " + json.name);
           return;
         }
-        handler(ws, json.args);
+        handler.call(session, json.args);
       });
       ws.on('error', function(err) {
         console.error("web socket client error:", err.stack);
       });
       ws.on('close', function() {
-        console.info("ws client closed");
+        clearInterval(pingInterval);
+        session.end();
       });
+      function sendPing() {
+        ws.sendPingText("");
+      }
     });
     cb();
 
@@ -147,40 +230,6 @@ function createHttpServer(cb) {
       });
     }
   });
-}
-
-/*
-spawnNethack(function(err, child) {
-  if (err) throw err;
-  child.stdout.pipe(process.stdout);
-});
-*/
-
-function register(ws, msg) {
-  var username = msg.username;
-  var password = msg.password;
-  if (username.length > MAX_USERNAME_LENGTH || username.length < MIN_USERNAME_LENGTH) {
-    send(ws, 'registerResult', {err: 'username length must be between ' +
-      MIN_USERNAME_LENGTH + ' and ' + MAX_USERNAME_LENGTH});
-    return;
-  }
-  if (!validateUsernameRegex.test(username)) {
-    send(ws, 'registerResult', {err: 'invalid characters in username'});
-    return;
-  }
-  if (password.length > MAX_PASSWORD_LENGTH || password.length < MIN_PASSWORD_LENGTH) {
-    send(ws, 'registerResult', {err: 'password length must be between ' +
-      MIN_PASSWORD_LENGTH + ' and ' + MAX_PASSWORD_LENGTH});
-    return;
-  }
-  var id = usernameToId(username);
-  var existingUser = users[id];
-  if (existingUser) {
-    send(ws, 'registerResult', {err: 'username already exists'});
-    return;
-  }
-  createNewUser(username, password);
-  send(ws, 'registerResult', {});
 }
 
 function serializeUser(user) {
@@ -200,10 +249,7 @@ function createNewUser(username, password) {
   var id = usernameToId(username);
   users[id] = user;
   saveUser(user);
-}
-
-function send(ws, name, args) {
-  ws.sendText(JSON.stringify({name: name, args: args}));
+  return user;
 }
 
 function usernameToId(username) {
@@ -214,21 +260,4 @@ function logIfDbError(err) {
   if (err) {
     console.error("DB Error:", err.stack);
   }
-}
-
-function login(ws, msg) {
-  var username = msg.username;
-  var password = msg.password;
-
-  var id = usernameToId(username);
-  var existingUser = users[id];
-  if (!existingUser) {
-    send(ws, 'loginResult', {err: 'invalid username'});
-    return;
-  }
-  if (existingUser.password !== password) {
-    send(ws, 'loginResult', {err: 'invalid password'});
-    return;
-  }
-  send(ws, 'loginResult', {username: existingUser.username});
 }

@@ -1,5 +1,7 @@
 var Socket = require('./socket');
 
+var caseCorrectUsername;
+
 var loadingDiv = document.getElementById('loading');
 var loginDiv = document.getElementById('login');
 var loginOkBtn = document.getElementById('login-ok');
@@ -16,7 +18,13 @@ var registerPassword = document.getElementById('register-password');
 var registerErrDom = document.getElementById('register-err');
 
 var mainMenuDiv = document.getElementById('main-menu');
+var mainMenuUsername = document.getElementById('main-menu-username');
 var logOutBtn = document.getElementById('main-menu-logout');
+var playBtn = document.getElementById('main-menu-play');
+
+var playDiv = document.getElementById('play');
+var canvas = document.getElementById('canvas');
+var playErrDom = document.getElementById('play-err');
 
 loginOkBtn.addEventListener('click', loginOk);
 loginRegisterBtn.addEventListener('click', showRegisterForm);
@@ -29,19 +37,24 @@ registerUsername.addEventListener('keydown', registerFormKeyDown);
 registerPassword.addEventListener('keydown', registerFormKeyDown);
 
 logOutBtn.addEventListener('click', logOut);
+playBtn.addEventListener('click', playNetHack);
 
 var socket = new Socket();
 socket.on('registerResult', onRegisterResult);
 socket.on('loginResult', onLoginResult);
-
+socket.on('playError', onPlayError);
 
 socket.on('connect', function() {
-  showOnly(loginDiv);
   tryToLoginWithSavedCredentials();
 });
 socket.on('disconnect', function() {
   showOnly(loadingDiv);
+  resetState();
 });
+
+function resetState() {
+  caseCorrectUsername = null;
+}
 
 function showRegisterForm() {
   showOnly(registerDiv);
@@ -69,6 +82,7 @@ function hideAllForms() {
   registerDiv.style.display = "none";
   loginDiv.style.display = "none";
   mainMenuDiv.style.display = "none";
+  playDiv.style.display = "none";
 }
 
 function tryToLoginWithSavedCredentials() {
@@ -115,7 +129,13 @@ function onRegisterResult(msg) {
     registerUsername.select();
     return;
   }
+  caseCorrectUsername = msg.username;
+  showMainMenu();
+}
+
+function showMainMenu() {
   showOnly(mainMenuDiv);
+  mainMenuUsername.textContent = caseCorrectUsername;
 }
 
 function showRegisterErr(errText) {
@@ -151,7 +171,8 @@ function onLoginResult(msg) {
     loginUsername.select();
     return;
   }
-  showOnly(mainMenuDiv);
+  caseCorrectUsername = msg.username;
+  showMainMenu();
 }
 
 function showLoginErr(errText) {
@@ -175,9 +196,26 @@ function saveCredentials(username, password) {
 
 function logOut() {
   clearSavedCredentials();
-  refreshPage();
+  resetState();
+  showLoginForm();
 }
 
-function refreshPage() {
-  location.href = location.protocol + "//" + location.host + "/";
+function playNetHack() {
+  showOnly(playDiv);
+  canvas.width = 400;
+  canvas.height = 100;
+  socket.send('play');
+}
+
+function showPlayErr(errText) {
+  if (!errText) {
+    playErrDom.style.display = "none";
+    return;
+  }
+  playErrDom.style.display = "";
+  playErrDom.textContent = errText;
+}
+
+function onPlayError(msg) {
+  showPlayErr(msg.err);
 }
