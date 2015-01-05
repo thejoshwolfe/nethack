@@ -2087,35 +2087,31 @@ static bool special_handling(const char *optname, bool setinitial, bool setfromf
 
 /* This is ugly. We have all the option names in the compopt[] array,
    but we need to look at each option individually to get the value. */
-static const char * get_compopt_value (const char *optname, char *buf) {
-    char ocl[MAXOCLASSES+1];
-    static const char none[] = "(none)", randomrole[] = "random",
-                 to_be_done[] = "(to be done)",
-                 defopt[] = "default",
-                 defbrief[] = "def";
+static const char * get_compopt_value(const char *optname, char *buf) {
+    char ocl[MAXOCLASSES + 1];
+    static const char none[] = "(none)", randomrole[] = "random", to_be_done[] = "(to be done)", defopt[] = "default", defbrief[] = "def";
     int i;
 
     buf[0] = '\0';
     if (!strcmp(optname, "boulder"))
-        sprintf(buf, "%c", iflags.bouldersym ?
-                iflags.bouldersym : oc_syms[(int)objects[BOULDER].oc_class]);
+        sprintf(buf, "%c", iflags.bouldersym ? iflags.bouldersym : oc_syms[(int)objects[BOULDER].oc_class]);
     else if (!strcmp(optname, "catname"))
-        sprintf(buf, "%s", catname[0] ? catname : none );
+        sprintf(buf, "%s", catname[0] ? catname : none);
     else if (!strcmp(optname, "disclose")) {
         for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++) {
             char topt[2];
-            if (i) strcat(buf," ");
+            if (i)
+                strcat(buf, " ");
             topt[1] = '\0';
             topt[0] = flags.end_disclose[i];
             strcat(buf, topt);
             topt[0] = disclosure_options[i];
             strcat(buf, topt);
         }
-    }
-    else if (!strcmp(optname, "dogname"))
-        sprintf(buf, "%s", dogname[0] ? dogname : none );
+    } else if (!strcmp(optname, "dogname"))
+        sprintf(buf, "%s", dogname[0] ? dogname : none);
     else if (!strcmp(optname, "dumpfile"))
-        sprintf(buf, "%s", dump_fn[0] ? dump_fn: none );
+        sprintf(buf, "%s", dump_fn[0] ? dump_fn : none);
     else if (!strcmp(optname, "dungeon"))
         sprintf(buf, "%s", to_be_done);
     else if (!strcmp(optname, "effects"))
@@ -2131,34 +2127,38 @@ static const char * get_compopt_value (const char *optname, char *buf) {
     else if (!strcmp(optname, "font_text"))
         sprintf(buf, "%s", iflags.wc_font_text ? iflags.wc_font_text : defopt);
     else if (!strcmp(optname, "font_size_map")) {
-        if (iflags.wc_fontsiz_map) sprintf(buf, "%d", iflags.wc_fontsiz_map);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "font_size_message")) {
-        if (iflags.wc_fontsiz_message) sprintf(buf, "%d",
-                iflags.wc_fontsiz_message);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "font_size_status")) {
-        if (iflags.wc_fontsiz_status) sprintf(buf, "%d", iflags.wc_fontsiz_status);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "font_size_menu")) {
-        if (iflags.wc_fontsiz_menu) sprintf(buf, "%d", iflags.wc_fontsiz_menu);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "font_size_text")) {
-        if (iflags.wc_fontsiz_text) sprintf(buf, "%d",iflags.wc_fontsiz_text);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "fruit"))
+        if (iflags.wc_fontsiz_map)
+            sprintf(buf, "%d", iflags.wc_fontsiz_map);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "font_size_message")) {
+        if (iflags.wc_fontsiz_message)
+            sprintf(buf, "%d", iflags.wc_fontsiz_message);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "font_size_status")) {
+        if (iflags.wc_fontsiz_status)
+            sprintf(buf, "%d", iflags.wc_fontsiz_status);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "font_size_menu")) {
+        if (iflags.wc_fontsiz_menu)
+            sprintf(buf, "%d", iflags.wc_fontsiz_menu);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "font_size_text")) {
+        if (iflags.wc_fontsiz_text)
+            sprintf(buf, "%d", iflags.wc_fontsiz_text);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "fruit"))
         sprintf(buf, "%s", pl_fruit);
     else if (!strcmp(optname, "gender"))
         sprintf(buf, "%s", rolestring(flags.initgend, genders, adj));
     else if (!strcmp(optname, "horsename"))
         sprintf(buf, "%s", horsename[0] ? horsename : none);
     else if (!strcmp(optname, "menustyle"))
-        sprintf(buf, "%s", menutype[(int)flags.menu_style] );
+        sprintf(buf, "%s", menutype[(int)flags.menu_style]);
     else if (!strcmp(optname, "menu_deselect_all"))
         sprintf(buf, "%s", to_be_done);
     else if (!strcmp(optname, "menu_deselect_page"))
@@ -2168,12 +2168,8 @@ static const char * get_compopt_value (const char *optname, char *buf) {
     else if (!strcmp(optname, "menu_invert_all"))
         sprintf(buf, "%s", to_be_done);
     else if (!strcmp(optname, "menu_headings")) {
-        sprintf(buf, "%s", (iflags.menu_headings == ATR_BOLD) ?
-                "bold" :   (iflags.menu_headings == ATR_INVERSE) ?
-                "inverse" :   (iflags.menu_headings == ATR_ULINE) ?
-                "underline" : "unknown");
-    }
-    else if (!strcmp(optname, "menu_invert_page"))
+        sprintf(buf, "%s", (iflags.menu_headings == ATR_BOLD) ? "bold" : (iflags.menu_headings == ATR_INVERSE) ? "inverse" : (iflags.menu_headings == ATR_ULINE) ? "underline" : "unknown");
+    } else if (!strcmp(optname, "menu_invert_page"))
         sprintf(buf, "%s", to_be_done);
     else if (!strcmp(optname, "menu_last_page"))
         sprintf(buf, "%s", to_be_done);
@@ -2192,27 +2188,20 @@ static const char * get_compopt_value (const char *optname, char *buf) {
     else if (!strcmp(optname, "msghistory"))
         sprintf(buf, "%u", iflags.msg_history);
     else if (!strcmp(optname, "msg_window"))
-        sprintf(buf, "%s", (iflags.prevmsg_window=='s') ? "single" :
-                (iflags.prevmsg_window=='c') ? "combination" :
-                (iflags.prevmsg_window=='f') ? "full" : "reversed");
+        sprintf(buf, "%s", (iflags.prevmsg_window == 's') ? "single" : (iflags.prevmsg_window == 'c') ? "combination" : (iflags.prevmsg_window == 'f') ? "full" : "reversed");
     else if (!strcmp(optname, "name"))
         sprintf(buf, "%s", plname);
     else if (!strcmp(optname, "number_pad"))
-        sprintf(buf, "%s",
-                (!iflags.num_pad) ? "0=off" :
-                (iflags.num_pad_mode) ? "2=on, DOS compatible" : "1=on");
+        sprintf(buf, "%s", (!iflags.num_pad) ? "0=off" : (iflags.num_pad_mode) ? "2=on, DOS compatible" : "1=on");
     else if (!strcmp(optname, "objects"))
         sprintf(buf, "%s", to_be_done);
     else if (!strcmp(optname, "packorder")) {
         oc_to_str(flags.inv_order, ocl);
         sprintf(buf, "%s", ocl);
-    }
-    else if (!strcmp(optname, "pettype"))
-        sprintf(buf, "%s", (preferred_pet == 'c') ? "cat" :
-                (preferred_pet == 'd') ? "dog" :
-                (preferred_pet == 'n') ? "none" : "random");
+    } else if (!strcmp(optname, "pettype"))
+        sprintf(buf, "%s", (preferred_pet == 'c') ? "cat" : (preferred_pet == 'd') ? "dog" : (preferred_pet == 'n') ? "none" : "random");
     else if (!strcmp(optname, "pickup_burden"))
-        sprintf(buf, "%s", burdentype[flags.pickup_burden] );
+        sprintf(buf, "%s", burdentype[flags.pickup_burden]);
     else if (!strcmp(optname, "race"))
         sprintf(buf, "%s", rolestring(flags.initrace, races, noun));
     else if (!strcmp(optname, "role"))
@@ -2220,69 +2209,70 @@ static const char * get_compopt_value (const char *optname, char *buf) {
     else if (!strcmp(optname, "runmode"))
         sprintf(buf, "%s", runmodes[iflags.runmode]);
     else if (!strcmp(optname, "scores")) {
-        sprintf(buf, "%d top/%d around%s", flags.end_top,
-                flags.end_around, flags.end_own ? "/own" : "");
-    }
-    else if (!strcmp(optname, "scroll_amount")) {
-        if (iflags.wc_scroll_amount) sprintf(buf, "%d",iflags.wc_scroll_amount);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "scroll_margin")) {
-        if (iflags.wc_scroll_margin) sprintf(buf, "%d",iflags.wc_scroll_margin);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "sortloot")) {
+        sprintf(buf, "%d top/%d around%s", flags.end_top, flags.end_around, flags.end_own ? "/own" : "");
+    } else if (!strcmp(optname, "scroll_amount")) {
+        if (iflags.wc_scroll_amount)
+            sprintf(buf, "%d", iflags.wc_scroll_amount);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "scroll_margin")) {
+        if (iflags.wc_scroll_margin)
+            sprintf(buf, "%d", iflags.wc_scroll_margin);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "sortloot")) {
         char *sortname = (char *)NULL;
-        for (i=0; i < SIZE(sortltype) && sortname==(char *)NULL; i++) {
+        for (i = 0; i < SIZE(sortltype) && sortname == (char *)NULL; i++) {
             if (iflags.sortloot == sortltype[i][0])
                 sortname = (char *)sortltype[i];
         }
         if (sortname != (char *)NULL)
             sprintf(buf, "%s", sortname);
-    }
-    else if (!strcmp(optname, "player_selection"))
+    } else if (!strcmp(optname, "player_selection"))
         sprintf(buf, "%s", iflags.wc_player_selection ? "prompts" : "dialog");
     else if (!strcmp(optname, "suppress_alert")) {
         if (flags.suppress_alert == 0L)
             strcpy(buf, none);
         else
             sprintf(buf, "%lu.%lu.%lu",
-                    FEATURE_NOTICE_VER_MAJ,
-                    FEATURE_NOTICE_VER_MIN,
-                    FEATURE_NOTICE_VER_PATCH);
-    }
-    else if (!strcmp(optname, "term_cols")) {
-        if (iflags.wc2_term_cols) sprintf(buf, "%d",iflags.wc2_term_cols);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "term_rows")) {
-        if (iflags.wc2_term_rows) sprintf(buf, "%d",iflags.wc2_term_rows);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "tile_file"))
+            FEATURE_NOTICE_VER_MAJ,
+            FEATURE_NOTICE_VER_MIN,
+            FEATURE_NOTICE_VER_PATCH);
+    } else if (!strcmp(optname, "term_cols")) {
+        if (iflags.wc2_term_cols)
+            sprintf(buf, "%d", iflags.wc2_term_cols);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "term_rows")) {
+        if (iflags.wc2_term_rows)
+            sprintf(buf, "%d", iflags.wc2_term_rows);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "tile_file"))
         sprintf(buf, "%s", iflags.wc_tile_file ? iflags.wc_tile_file : defopt);
     else if (!strcmp(optname, "tile_height")) {
-        if (iflags.wc_tile_height) sprintf(buf, "%d",iflags.wc_tile_height);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "tile_width")) {
-        if (iflags.wc_tile_width) sprintf(buf, "%d",iflags.wc_tile_width);
-        else strcpy(buf, defopt);
-    }
-    else if (!strcmp(optname, "traps"))
+        if (iflags.wc_tile_height)
+            sprintf(buf, "%d", iflags.wc_tile_height);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "tile_width")) {
+        if (iflags.wc_tile_width)
+            sprintf(buf, "%d", iflags.wc_tile_width);
+        else
+            strcpy(buf, defopt);
+    } else if (!strcmp(optname, "traps")) {
         sprintf(buf, "%s", to_be_done);
-    else if (!strcmp(optname, "vary_msgcount")) {
-        if (iflags.wc_vary_msgcount) sprintf(buf, "%d",iflags.wc_vary_msgcount);
-        else strcpy(buf, defopt);
-    }
-    else {
-        for (i = 0; i < PREFIX_COUNT; ++i)
-            if (!strcmp(optname, fqn_prefix_names[i]) && fqn_prefix[i])
-                sprintf(buf, "%s", fqn_prefix[i]);
+    } else if (!strcmp(optname, "vary_msgcount")) {
+        if (iflags.wc_vary_msgcount)
+            sprintf(buf, "%d", iflags.wc_vary_msgcount);
+        else
+            strcpy(buf, defopt);
     }
 
-    if (buf[0]) return buf;
-    else return "unknown";
+    if (buf[0])
+        return buf;
+    else
+        return "unknown";
 }
 
 int dotogglepickup(void) {

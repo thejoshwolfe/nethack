@@ -20,7 +20,7 @@ int create_bonesfile(d_level*,char **, char *);
 void commit_bonesfile(d_level *);
 int open_bonesfile(d_level*,char **);
 int delete_bonesfile(d_level*);
-void set_savefile_name(void);
+void init_savefile_name(void);
 void save_savefile_name(int);
 void set_error_savefile(void);
 int create_savefile(void);
@@ -31,7 +31,6 @@ void read_config_file(const char *);
 void check_recordfile(const char *);
 void read_wizkit(void);
 void paniclog(const char *, const char *);
-int validate_prefix_locations(char *);
 char** get_saved_games(void);
 void free_saved_games(char**);
 

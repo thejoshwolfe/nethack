@@ -29,12 +29,9 @@ bool check_version(struct version_info *version_data, const char *filename, bool
     return true;
 }
 
-/* this used to be based on file date and somewhat OS-dependant,
- but now examines the initial part of the file's contents */
 bool uptodate(int fd, const char *name) {
     return true;
 }
-
 void store_version(int fd) {
     // i'll get right on that
 }

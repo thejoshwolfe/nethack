@@ -472,7 +472,7 @@ static void newgame(void) {
     return;
 }
 
-int main (int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     /*
      * Change directories before we initialize the window system so
      * we can find the tile file.
@@ -483,25 +483,25 @@ int main (int argc, char *argv[]) {
     /*
      * It seems you really want to play.
      */
-    u.uhp = 1;      /* prevent RIP on early quits */
+    u.uhp = 1; /* prevent RIP on early quits */
 
-    process_options(argc, argv);    /* command line options */
+    process_options(argc, argv); /* command line options */
 
     strcpy(plname, "derpface");
-    plnamesuffix();         /* strip suffix from name; calls askname() */
+    plnamesuffix(); /* strip suffix from name; calls askname() */
     /* again if suffix was whole name */
     /* accepts any suffix */
 
-    dlb_init();     /* must be before newgame() */
+    dlb_init(); /* must be before newgame() */
 
     /*
      * Initialization of the boundaries of the mazes
      * Both boundaries have to be even.
      */
-    x_maze_max = COLNO-1;
+    x_maze_max = COLNO - 1;
     if (x_maze_max % 2)
         x_maze_max--;
-    y_maze_max = ROWNO-1;
+    y_maze_max = ROWNO - 1;
     if (y_maze_max % 2)
         y_maze_max--;
 
@@ -517,38 +517,37 @@ int main (int argc, char *argv[]) {
          * overwrite it.
          */
         bool remember_wiz_mode = wizard;
-        const char *fq_save = fqname(SAVEF, SAVEPREFIX, 1);
-
         pline("Restoring save file...");
-        if(!dorecover(fd))
+        if (!dorecover(fd))
             goto not_recovered;
-        if(!wizard && remember_wiz_mode) wizard = true;
+        if (!wizard && remember_wiz_mode)
+            wizard = true;
         check_special_room(false);
         wd_message();
 
         if (discover || wizard) {
-            if(yn("Do you want to keep the save file?") == 'n')
-                (void) delete_savefile();
+            if (yn("Do you want to keep the save file?") == 'n')
+                (void)delete_savefile();
             else {
-                (void) chmod(fq_save,0660); /* back to readable */
+                (void)chmod(SAVEF, 0660); /* back to readable */
             }
         }
         flags.move = 0;
     } else {
-not_recovered:
+        not_recovered:
         // player_selection();
         newgame();
         wd_message();
 
         flags.move = 0;
         set_wear();
-        (void) pickup(1);
+        (void)pickup(1);
     }
 
     moveloop();
     exit(EXIT_SUCCESS);
     /*NOTREACHED*/
-    return(0);
+    return 0;
 }
 
 static void process_options (int argc, char *argv[]) {

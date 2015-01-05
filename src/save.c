@@ -195,10 +195,9 @@ int dosave0(void) {
 
     if (!SAVEF[0])
         return 0;
-    fqname(SAVEF, SAVEPREFIX, 1); /* level files take 0 */
 
-    (void) signal(SIGHUP, SIG_IGN);
-    (void) signal(SIGINT, SIG_IGN);
+    signal(SIGHUP, SIG_IGN);
+    signal(SIGINT, SIG_IGN);
 
     if (!program_state.done_hup) {
         if (iflags.window_inited) {
@@ -212,7 +211,6 @@ int dosave0(void) {
                 }
             }
         }
-
     }
 
 
@@ -268,7 +266,6 @@ int dosave0(void) {
             }
             return(0);
         }
-        minit();        /* ZEROCOMP */
         getlev(ofd, hackpid, ltmp, false);
         (void) close(ofd);
         bwrite(fd, (void *) &ltmp, sizeof ltmp); /* level number*/

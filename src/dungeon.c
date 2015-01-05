@@ -550,8 +550,6 @@ void init_dungeons(void) {
         sprintf(tbuf, "Cannot open dungeon description - \"%s", DUNGEON_FILE);
         strcat(tbuf, "\" from ");
         strcat(tbuf, "\n\"");
-        if (fqn_prefix[DATAPREFIX])
-            strcat(tbuf, fqn_prefix[DATAPREFIX]);
         strcat(tbuf, DLBFILE);
         strcat(tbuf, "\" file!");
         panic("%s", tbuf);

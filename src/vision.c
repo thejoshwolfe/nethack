@@ -131,10 +131,6 @@ vision_init (void)
 
     vision_full_recalc = 0;
     (void) memset((void *) could_see, 0, sizeof(could_see));
-
-    /* Initialize the vision algorithm (currently C or D). */
-    view_init();
-
 }
 
 /*
@@ -1159,11 +1155,6 @@ clear_path (int col1, int row1, int col2, int row2)
 static void right_side(int,int,int,char*);
 static void left_side(int,int,int,char*);
 
-/* Initialize algorithm C (nothing). */
-static void
-view_init (void)
-{
-}
 
 /*
  * Mark positions as visible on one quadrant of the right side.  The

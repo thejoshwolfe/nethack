@@ -486,81 +486,80 @@ static int restlevelfile(int fd, signed char ltmp) {
         return(2);
 }
 
-int
-dorecover (int fd)
-{
-        unsigned int stuckid = 0, steedid = 0;  /* not a */
-        signed char ltmp;
-        int rtmp;
-        struct obj *otmp;
+int dorecover(int fd) {
+    unsigned int stuckid = 0, steedid = 0;
+    signed char ltmp;
+    int rtmp;
+    struct obj * otmp;
 
-
-        restoring = true;
-        getlev(fd, 0, (signed char)0, false);
-        if (!restgamestate(fd, &stuckid, &steedid)) {
-                display_nhwindow(WIN_MESSAGE, true);
-                savelev(-1, 0, FREE_SAVE);      /* discard current level */
-                (void) close(fd);
-                (void) delete_savefile();
-                restoring = false;
-                return(0);
-        }
-        restlevelstate(stuckid, steedid);
-        savestateinlock();
-        rtmp = restlevelfile(fd, ledger_no(&u.uz));
-        if (rtmp < 2) return(rtmp);  /* dorecover called recursively */
-
-        /* these pointers won't be valid while we're processing the
-         * other levels, but they'll be reset again by restlevelstate()
-         * afterwards, and in the meantime at least u.usteed may mislead
-         * place_monster() on other levels
-         */
-        u.ustuck = (struct monst *)0;
-        u.usteed = (struct monst *)0;
-
-        while(1) {
-                if(read(fd, (void *) &ltmp, sizeof ltmp) != sizeof ltmp)
-                        break;
-                getlev(fd, 0, ltmp, false);
-                rtmp = restlevelfile(fd, ltmp);
-                if (rtmp < 2) return(rtmp);  /* dorecover called recursively */
-        }
-
-        (void) lseek(fd, (off_t)0, 0);
-        (void) uptodate(fd, (char *)0);         /* skip version info */
-        getlev(fd, 0, (signed char)0, false);
-        (void) close(fd);
-
-        if (!wizard && !discover)
-                (void) delete_savefile();
-        restlevelstate(stuckid, steedid);
-        /* take care of iron ball & chain */
-        for(otmp = fobj; otmp; otmp = otmp->nobj)
-                if(otmp->owornmask)
-                        setworn(otmp, otmp->owornmask);
-
-        /* in_use processing must be after:
-         *    + The inventory has been read so that freeinv() works.
-         *    + The current level has been restored so billing information
-         *      is available.
-         */
-        inven_inuse(false);
-
-        load_qtlist();  /* re-load the quest text info */
-        reset_attribute_clock();
-        /* Set up the vision internals, after levl[] data is loaded */
-        /* but before docrt().                                      */
-        vision_reset();
-        vision_full_recalc = 1; /* recompute vision (not saved) */
-
-        run_timers();   /* expire all timers that have gone off while away */
-        docrt();
+    restoring = true;
+    getlev(fd, 0, (signed char)0, false);
+    if (!restgamestate(fd, &stuckid, &steedid)) {
+        display_nhwindow(WIN_MESSAGE, true);
+        savelev(-1, 0, FREE_SAVE); /* discard current level */
+        close(fd);
+        delete_savefile();
         restoring = false;
-        clear_nhwindow(WIN_MESSAGE);
-        program_state.something_worth_saving++; /* useful data now exists */
+        return (0);
+    }
+    restlevelstate(stuckid, steedid);
+    savestateinlock();
+    rtmp = restlevelfile(fd, ledger_no(&u.uz));
+    if (rtmp < 2)
+        return (rtmp); /* dorecover called recursively */
 
-        /* Success! */
-        return 1;
+    /* these pointers won't be valid while we're processing the
+     * other levels, but they'll be reset again by restlevelstate()
+     * afterwards, and in the meantime at least u.usteed may mislead
+     * place_monster() on other levels
+     */
+    u.ustuck = (struct monst *)0;
+    u.usteed = (struct monst *)0;
+
+    while (1) {
+        if (read(fd, (void *)&ltmp, sizeof ltmp) != sizeof ltmp)
+            break;
+        getlev(fd, 0, ltmp, false);
+        rtmp = restlevelfile(fd, ltmp);
+        if (rtmp < 2)
+            return (rtmp); /* dorecover called recursively */
+    }
+
+    lseek(fd, (off_t)0, 0);
+    uptodate(fd, (char *)0); /* skip version info */
+    getlev(fd, 0, (signed char)0, false);
+    close(fd);
+
+    if (!wizard && !discover)
+        delete_savefile();
+    restlevelstate(stuckid, steedid);
+    /* take care of iron ball & chain */
+    for (otmp = fobj; otmp; otmp = otmp->nobj)
+        if (otmp->owornmask)
+            setworn(otmp, otmp->owornmask);
+
+    /* in_use processing must be after:
+     *    + The inventory has been read so that freeinv() works.
+     *    + The current level has been restored so billing information
+     *      is available.
+     */
+    inven_inuse(false);
+
+    load_qtlist(); /* re-load the quest text info */
+    reset_attribute_clock();
+    /* Set up the vision internals, after levl[] data is loaded */
+    /* but before docrt().                                      */
+    vision_reset();
+    vision_full_recalc = 1; /* recompute vision (not saved) */
+
+    run_timers(); /* expire all timers that have gone off while away */
+    docrt();
+    restoring = false;
+    clear_nhwindow(WIN_MESSAGE);
+    program_state.something_worth_saving++; /* useful data now exists */
+
+    /* Success! */
+    return 1;
 }
 
 void trickery (char *reason) {
@@ -582,10 +581,10 @@ static void reset_oattached_mids (bool ghostly) {
             mtmp->mpeaceful = mtmp->mtame = 0;  /* pet's owner died! */
         }
         if (ghostly && otmp->oattached == OATTACHED_M_ID) {
-            (void) memcpy((void *)&oldid, (void *)otmp->oextra,
+             memcpy((void *)&oldid, (void *)otmp->oextra,
                     sizeof(oldid));
             if (lookup_id_mapping(oldid, &nid))
-                (void) memcpy((void *)otmp->oextra, (void *)&nid,
+                 memcpy((void *)otmp->oextra, (void *)&nid,
                         sizeof(nid));
             else
                 otmp->oattached = OATTACHED_NOTHING;
@@ -605,171 +604,169 @@ static void clear_id_mapping (void) {
 }
 
 
-void 
-getlev (int fd, int pid, signed char lev, bool ghostly)
-{
-        struct trap *trap;
-        struct monst *mtmp;
-        branch *br;
-        int hpid;
-        signed char dlvl;
-        int x, y;
+void getlev(int fd, int pid, signed char lev, bool ghostly) {
+    struct trap * trap;
+    struct monst * mtmp;
+    branch * br;
+    int hpid;
+    signed char dlvl;
+    int x, y;
 
-        if (ghostly)
-            clear_id_mapping();
+    if (ghostly)
+        clear_id_mapping();
 
-        /* Load the old fruit info.  We have to do it first, so the
-         * information is available when restoring the objects.
-         */
-        if (ghostly) oldfruit = loadfruitchn(fd);
+    /* Load the old fruit info.  We have to do it first, so the
+     * information is available when restoring the objects.
+     */
+    if (ghostly)
+        oldfruit = loadfruitchn(fd);
 
-        /* First some sanity checks */
-        mread(fd, (void *) &hpid, sizeof(hpid));
-/* CHECK:  This may prevent restoration */
-        mread(fd, (void *) &dlvl, sizeof(dlvl));
-        if ((pid && pid != hpid) || (lev && dlvl != lev)) {
-            char trickbuf[BUFSZ];
+    /* First some sanity checks */
+    mread(fd, (void *)&hpid, sizeof(hpid));
+    /* CHECK:  This may prevent restoration */
+    mread(fd, (void *)&dlvl, sizeof(dlvl));
+    if ((pid && pid != hpid) || (lev && dlvl != lev)) {
+        char trickbuf[BUFSZ];
 
-            if (pid && pid != hpid)
-                sprintf(trickbuf, "PID (%d) doesn't match saved PID (%d)!",
-                        hpid, pid);
-            else
-                sprintf(trickbuf, "This is level %d, not %d!", dlvl, lev);
-            if (wizard) plines(trickbuf);
-            trickery(trickbuf);
-        }
-
-        mread(fd, (void *) levl, sizeof(levl));
-
-        mread(fd, (void *)&omoves, sizeof(omoves));
-        mread(fd, (void *)&upstair, sizeof(stairway));
-        mread(fd, (void *)&dnstair, sizeof(stairway));
-        mread(fd, (void *)&upladder, sizeof(stairway));
-        mread(fd, (void *)&dnladder, sizeof(stairway));
-        mread(fd, (void *)&sstairs, sizeof(stairway));
-        mread(fd, (void *)&updest, sizeof(dest_area));
-        mread(fd, (void *)&dndest, sizeof(dest_area));
-        mread(fd, (void *)&level.flags, sizeof(level.flags));
-        mread(fd, (void *)doors, sizeof(doors));
-        rest_rooms(fd);         /* No joke :-) */
-        if (nroom)
-            doorindex = rooms[nroom - 1].fdoor + rooms[nroom - 1].doorct;
+        if (pid && pid != hpid)
+            sprintf(trickbuf, "PID (%d) doesn't match saved PID (%d)!", hpid, pid);
         else
-            doorindex = 0;
+            sprintf(trickbuf, "This is level %d, not %d!", dlvl, lev);
+        if (wizard)
+            plines(trickbuf);
+        trickery(trickbuf);
+    }
 
-        restore_timers(fd, RANGE_LEVEL, ghostly, monstermoves - omoves);
-        restore_light_sources(fd);
-        fmon = restmonchn(fd, ghostly);
+    mread(fd, (void *) levl, sizeof(levl));
 
-        /* regenerate animals while on another level */
-        if (u.uz.dlevel) {
-            struct monst *mtmp2;
+    mread(fd, (void *)&omoves, sizeof(omoves));
+    mread(fd, (void *)&upstair, sizeof(stairway));
+    mread(fd, (void *)&dnstair, sizeof(stairway));
+    mread(fd, (void *)&upladder, sizeof(stairway));
+    mread(fd, (void *)&dnladder, sizeof(stairway));
+    mread(fd, (void *)&sstairs, sizeof(stairway));
+    mread(fd, (void *)&updest, sizeof(dest_area));
+    mread(fd, (void *)&dndest, sizeof(dest_area));
+    mread(fd, (void *)&level.flags, sizeof(level.flags));
+    mread(fd, (void *)doors, sizeof(doors));
+    rest_rooms(fd); /* No joke :-) */
+    if (nroom)
+        doorindex = rooms[nroom - 1].fdoor + rooms[nroom - 1].doorct;
+    else
+        doorindex = 0;
 
-            for (mtmp = fmon; mtmp; mtmp = mtmp2) {
-                mtmp2 = mtmp->nmon;
-                if (ghostly) {
-                        /* reset peaceful/malign relative to new character */
-                        if(!mtmp->isshk)
-                                /* shopkeepers will reset based on name */
-                                mtmp->mpeaceful = peace_minded(mtmp->data);
-                        set_malign(mtmp);
-                } else if (monstermoves > omoves)
-                        mon_catchup_elapsed_time(mtmp, monstermoves - omoves);
+    restore_timers(fd, RANGE_LEVEL, ghostly, monstermoves - omoves);
+    restore_light_sources(fd);
+    fmon = restmonchn(fd, ghostly);
 
-                /* update shape-changers in case protection against
-                   them is different now than when the level was saved */
-                restore_cham(mtmp);
-            }
+    /* regenerate animals while on another level */
+    if (u.uz.dlevel) {
+        struct monst *mtmp2;
+
+        for (mtmp = fmon; mtmp; mtmp = mtmp2) {
+            mtmp2 = mtmp->nmon;
+            if (ghostly) {
+                /* reset peaceful/malign relative to new character */
+                if (!mtmp->isshk)
+                    /* shopkeepers will reset based on name */
+                    mtmp->mpeaceful = peace_minded(mtmp->data);
+                set_malign(mtmp);
+            } else if (monstermoves > omoves)
+                mon_catchup_elapsed_time(mtmp, monstermoves - omoves);
+
+            /* update shape-changers in case protection against
+             them is different now than when the level was saved */
+            restore_cham(mtmp);
+        }
+    }
+
+    rest_worm(fd); /* restore worm information */
+    ftrap = 0;
+    while (trap = newtrap(), mread(fd, (void *)trap, sizeof(struct trap)), trap->tx != 0) { /* need "!= 0" to work around DICE 3.0 bug */
+        trap->ntrap = ftrap;
+        ftrap = trap;
+    }
+    dealloc_trap(trap);
+    fobj = restobjchn(fd, ghostly, false);
+    find_lev_obj();
+    /* restobjchn()'s `frozen' argument probably ought to be a callback
+     routine so that we can check for objects being buried under ice */
+    level.buriedobjlist = restobjchn(fd, ghostly, false);
+    billobjs = restobjchn(fd, ghostly, false);
+    rest_engravings(fd);
+
+    /* reset level.monsters for new level */
+    for (x = 0; x < COLNO; x++)
+        for (y = 0; y < ROWNO; y++)
+            level.monsters[x][y] = (struct monst *)0;
+    for (mtmp = level.monlist; mtmp; mtmp = mtmp->nmon) {
+        if (mtmp->isshk)
+            set_residency(mtmp, false);
+        place_monster(mtmp, mtmp->mx, mtmp->my);
+        if (mtmp->wormno)
+            place_wsegs(mtmp);
+    }
+    restdamage(fd, ghostly);
+
+    rest_regions(fd, ghostly);
+    if (ghostly) {
+        /* Now get rid of all the temp fruits... */
+        freefruitchn(oldfruit), oldfruit = 0;
+
+        if (lev > ledger_no(&medusa_level) && lev < ledger_no(&stronghold_level) && xdnstair == 0) {
+            coord cc;
+
+            mazexy(&cc);
+            xdnstair = cc.x;
+            ydnstair = cc.y;
+            levl[cc.x][cc.y].typ = STAIRS;
         }
 
-        rest_worm(fd);  /* restore worm information */
-        ftrap = 0;
-        while (trap = newtrap(),
-               mread(fd, (void *)trap, sizeof(struct trap)),
-               trap->tx != 0) { /* need "!= 0" to work around DICE 3.0 bug */
-                trap->ntrap = ftrap;
-                ftrap = trap;
-        }
-        dealloc_trap(trap);
-        fobj = restobjchn(fd, ghostly, false);
-        find_lev_obj();
-        /* restobjchn()'s `frozen' argument probably ought to be a callback
-           routine so that we can check for objects being buried under ice */
-        level.buriedobjlist = restobjchn(fd, ghostly, false);
-        billobjs = restobjchn(fd, ghostly, false);
-        rest_engravings(fd);
+        br = Is_branchlev(&u.uz);
+        if (br && u.uz.dlevel == 1) {
+            d_level ltmp;
 
-        /* reset level.monsters for new level */
-        for (x = 0; x < COLNO; x++)
-            for (y = 0; y < ROWNO; y++)
-                level.monsters[x][y] = (struct monst *) 0;
-        for (mtmp = level.monlist; mtmp; mtmp = mtmp->nmon) {
-            if (mtmp->isshk)
-                set_residency(mtmp, false);
-            place_monster(mtmp, mtmp->mx, mtmp->my);
-            if (mtmp->wormno) place_wsegs(mtmp);
-        }
-        restdamage(fd, ghostly);
+            if (on_level(&u.uz, &br->end1))
+                assign_level(&ltmp, &br->end2);
+            else
+                assign_level(&ltmp, &br->end1);
 
-        rest_regions(fd, ghostly);
-        if (ghostly) {
-            /* Now get rid of all the temp fruits... */
-            freefruitchn(oldfruit),  oldfruit = 0;
-
-            if (lev > ledger_no(&medusa_level) &&
-                        lev < ledger_no(&stronghold_level) && xdnstair == 0) {
-                coord cc;
-
-                mazexy(&cc);
-                xdnstair = cc.x;
-                ydnstair = cc.y;
-                levl[cc.x][cc.y].typ = STAIRS;
-            }
-
-            br = Is_branchlev(&u.uz);
-            if (br && u.uz.dlevel == 1) {
-                d_level ltmp;
-
-                if (on_level(&u.uz, &br->end1))
-                    assign_level(&ltmp, &br->end2);
-                else
-                    assign_level(&ltmp, &br->end1);
-
-                switch(br->type) {
+            switch (br->type) {
                 case BR_STAIR:
                 case BR_NO_END1:
                 case BR_NO_END2: /* OK to assign to sstairs if it's not used */
                     assign_level(&sstairs.tolev, &ltmp);
                     break;
                 case BR_PORTAL: /* max of 1 portal per level */
-                    {
-                        struct trap *ttmp;
-                        for(ttmp = ftrap; ttmp; ttmp = ttmp->ntrap)
-                            if (ttmp->ttyp == MAGIC_PORTAL)
-                                break;
-                        if (!ttmp) panic("getlev: need portal but none found");
-                        assign_level(&ttmp->dst, &ltmp);
-                    }
-                    break;
+                {
+                    struct trap *ttmp;
+                    for (ttmp = ftrap; ttmp; ttmp = ttmp->ntrap)
+                        if (ttmp->ttyp == MAGIC_PORTAL)
+                            break;
+                    if (!ttmp)
+                        panic("getlev: need portal but none found");
+                    assign_level(&ttmp->dst, &ltmp);
                 }
-            } else if (!br) {
-                /* Remove any dangling portals. */
-                struct trap *ttmp;
-                for (ttmp = ftrap; ttmp; ttmp = ttmp->ntrap)
-                    if (ttmp->ttyp == MAGIC_PORTAL) {
-                        deltrap(ttmp);
-                        break; /* max of 1 portal/level */
-                    }
+                    break;
             }
+        } else if (!br) {
+            /* Remove any dangling portals. */
+            struct trap *ttmp;
+            for (ttmp = ftrap; ttmp; ttmp = ttmp->ntrap)
+                if (ttmp->ttyp == MAGIC_PORTAL) {
+                    deltrap(ttmp);
+                    break; /* max of 1 portal/level */
+                }
         }
+    }
 
-        /* must come after all mons & objs are restored */
-        relink_timers(ghostly);
-        relink_light_sources(ghostly);
-        reset_oattached_mids(ghostly);
+    /* must come after all mons & objs are restored */
+    relink_timers(ghostly);
+    relink_light_sources(ghostly);
+    reset_oattached_mids(ghostly);
 
-        if (ghostly)
-            clear_id_mapping();
+    if (ghostly)
+        clear_id_mapping();
 }
 
 
@@ -803,12 +800,6 @@ lookup_id_mapping (unsigned gid, unsigned *nidp)
     return false;
 }
 
-
-
-void minit(void) {
-    return;
-}
-
 void mread(int fd, void *buf, unsigned int len) {
         int rlen;
 
@@ -816,8 +807,8 @@ void mread(int fd, void *buf, unsigned int len) {
         if((unsigned)rlen != len){
                 pline("Read %d instead of %u bytes.", rlen, len);
                 if(restoring) {
-                        (void) close(fd);
-                        (void) delete_savefile();
+                         close(fd);
+                         delete_savefile();
                         fprintf(stderr, "Error restoring old game.\n");
                 }
                 panic("Error reading level file.");

@@ -296,7 +296,6 @@ extern const char * const monexplain[], invisexplain[], * const objexplain[], * 
 #define TROUBLEPREFIX   8
 #define PREFIX_COUNT    9
 
-extern char *fqn_prefix[PREFIX_COUNT];
 extern char *fqn_prefix_names[PREFIX_COUNT];
 
 #endif /* DECL_H */

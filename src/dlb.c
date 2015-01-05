@@ -183,18 +183,16 @@ find_file (const char *name, library **lib, long *startp, long *sizep)
  * structure.  Return true if successful, false otherwise.
  */
 bool open_library(const char *lib_name, library *lp) {
-    bool status = false;
-
     lp->fdata = fopen_datafile(lib_name, "r", DATAPREFIX);
     if (lp->fdata) {
         if (readlibdir(lp)) {
-            status = true;
+            return true;
         } else {
             (void) fclose(lp->fdata);
             lp->fdata = (FILE *) 0;
         }
     }
-    return status;
+    return false;
 }
 
 void

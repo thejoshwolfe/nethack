@@ -995,7 +995,6 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
                         /* we'll reach here if running in wizard mode */
                         fprintf(stderr, "Cannot continue this game.\n");
                 }
-                minit();        /* ZEROCOMP */
                 getlev(fd, hackpid, new_ledger, false);
                 (void) close(fd);
         }
