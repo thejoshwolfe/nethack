@@ -6,7 +6,27 @@
   <link rel="stylesheet" href="app.css">
   <link rel="shortcut icon" href="/favicon.png">
 <body>
-  NetHack
+  <div id="loading">
+    <progress>Loading...</progress>
+  </div>
+  <div id="login" style="display: none">
+    <h1>Login</h1>
+    <input type="text" id="login-username" placeholder="username"><br>
+    <input type="password" id="login-password" placeholder="password"><br>
+    <input type="button" id="login-ok" value="Login">
+    <input type="button" id="login-register" value="Create New Account">
+  </div>
+  <div id="register" style="display: none">
+    <h1>Create New Account</h1>
+    <p id="register-err" style="display: none"></p>
+    <input type="text" id="register-username" placeholder="username"><br>
+    <input type="password" id="register-password" placeholder="password"><br>
+    <input type="button" id="register-ok" value="Create">
+    <input type="button" id="register-cancel" value="Cancel">
+  </div>
+  <div id="main-menu" style="display: none">
+    main menu
+  </diV>
   <script src="app.js"></script>
 </body>
 </html>
