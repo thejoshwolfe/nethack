@@ -189,24 +189,24 @@ add_subroom (struct mkroom *proom, int lowx, int lowy, int hix, int hiy, bool li
         nsubroom++;
 }
 
-static void makerooms (void) {
+static void makerooms(void) {
     bool tried_vault = false;
 
     /* make rooms until satisfied */
     /* rnd_rect() will returns 0 if no more rects are available... */
-    while(nroom < MAXNROFROOMS && rnd_rect()) {
-        if(nroom >= (MAXNROFROOMS/6) && rn2(2) && !tried_vault) {
+    while (nroom < MAXNROFROOMS && rnd_rect()) {
+        if (nroom >= (MAXNROFROOMS / 6) && rn2(2) && !tried_vault) {
             tried_vault = true;
             if (create_vault()) {
                 vault_x = rooms[nroom].lx;
                 vault_y = rooms[nroom].ly;
                 rooms[nroom].hx = -1;
             }
-        } else
+        } else {
             if (!create_room(-1, -1, -1, -1, -1, -1, OROOM, -1))
                 return;
+        }
     }
-    return;
 }
 
 static void 
@@ -484,59 +484,56 @@ makevtele (void)
  * special) but it's easier to put it all in one place than make sure
  * each type initializes what it needs to separately.
  */
-static void
-clear_level_structures (void)
-{
-        static struct rm zerorm = { cmap_to_glyph(S_stone),
-                                                0, 0, 0, 0, 0, 0, 0, 0 };
-        int x,y;
-        struct rm *lev;
+static void clear_level_structures(void) {
+    static struct rm zerorm = { cmap_to_glyph(S_stone), 0, 0, 0, 0, 0, 0, 0, 0 };
+    int x, y;
+    struct rm *lev;
 
-        for(x=0; x<COLNO; x++) {
-            lev = &levl[x][0];
-            for(y=0; y<ROWNO; y++) {
-                *lev++ = zerorm;
-            }
+    for (x = 0; x < COLNO; x++) {
+        lev = &levl[x][0];
+        for (y = 0; y < ROWNO; y++) {
+            *lev++ = zerorm;
         }
-        memset((void *)level.objects, 0, sizeof(level.objects));
-        memset((void *)level.monsters, 0, sizeof(level.monsters));
-        level.objlist = (struct obj *)0;
-        level.buriedobjlist = (struct obj *)0;
-        level.monlist = (struct monst *)0;
-        level.damagelist = (struct damage *)0;
+    }
+    memset((void *)level.objects, 0, sizeof(level.objects));
+    memset((void *)level.monsters, 0, sizeof(level.monsters));
+    level.objlist = (struct obj *)0;
+    level.buriedobjlist = (struct obj *)0;
+    level.monlist = (struct monst *)0;
+    level.damagelist = (struct damage *)0;
 
-        level.flags.nfountains = 0;
-        level.flags.nsinks = 0;
-        level.flags.has_shop = 0;
-        level.flags.has_vault = 0;
-        level.flags.has_zoo = 0;
-        level.flags.has_court = 0;
-        level.flags.has_morgue = level.flags.graveyard = 0;
-        level.flags.has_beehive = 0;
-        level.flags.has_barracks = 0;
-        level.flags.has_temple = 0;
-        level.flags.has_swamp = 0;
-        level.flags.noteleport = 0;
-        level.flags.hardfloor = 0;
-        level.flags.nommap = 0;
-        level.flags.hero_memory = 1;
-        level.flags.shortsighted = 0;
-        level.flags.arboreal = 0;
-        level.flags.is_maze_lev = 0;
-        level.flags.is_cavernous_lev = 0;
+    level.flags.nfountains = 0;
+    level.flags.nsinks = 0;
+    level.flags.has_shop = 0;
+    level.flags.has_vault = 0;
+    level.flags.has_zoo = 0;
+    level.flags.has_court = 0;
+    level.flags.has_morgue = level.flags.graveyard = 0;
+    level.flags.has_beehive = 0;
+    level.flags.has_barracks = 0;
+    level.flags.has_temple = 0;
+    level.flags.has_swamp = 0;
+    level.flags.noteleport = 0;
+    level.flags.hardfloor = 0;
+    level.flags.nommap = 0;
+    level.flags.hero_memory = 1;
+    level.flags.shortsighted = 0;
+    level.flags.arboreal = 0;
+    level.flags.is_maze_lev = 0;
+    level.flags.is_cavernous_lev = 0;
 
-        nroom = 0;
-        rooms[0].hx = -1;
-        nsubroom = 0;
-        subrooms[0].hx = -1;
-        doorindex = 0;
-        init_rect();
-        init_vault();
-        xdnstair = ydnstair = xupstair = yupstair = 0;
-        sstairs.sx = sstairs.sy = 0;
-        xdnladder = ydnladder = xupladder = yupladder = 0;
-        made_branch = false;
-        clear_regions();
+    nroom = 0;
+    rooms[0].hx = -1;
+    nsubroom = 0;
+    subrooms[0].hx = -1;
+    doorindex = 0;
+    init_rect();
+    init_vault();
+    xdnstair = ydnstair = xupstair = yupstair = 0;
+    sstairs.sx = sstairs.sy = 0;
+    xdnladder = ydnladder = xupladder = yupladder = 0;
+    made_branch = false;
+    clear_regions();
 }
 
 static void makelevel(void) {

@@ -47,20 +47,23 @@ static void setgemprobs (d_level * dlev) {
 }
 
 /* shuffle descriptions on objects o_low to o_high */
-static void shuffle (int o_low, int o_high, bool domaterial) {
+static void shuffle(int o_low, int o_high, bool domaterial) {
     int i, j, num_to_shuffle;
     short sw;
     int color;
 
-    for (num_to_shuffle = 0, j=o_low; j <= o_high; j++)
-        if (!objects[j].oc_name_known) num_to_shuffle++;
-    if (num_to_shuffle < 2) return;
+    for (num_to_shuffle = 0, j = o_low; j <= o_high; j++)
+        if (!objects[j].oc_name_known)
+            num_to_shuffle++;
+    if (num_to_shuffle < 2)
+        return;
 
-    for (j=o_low; j <= o_high; j++) {
-        if (objects[j].oc_name_known) continue;
-        do
-            i = j + rn2(o_high-j+1);
-        while (objects[i].oc_name_known);
+    for (j = o_low; j <= o_high; j++) {
+        if (objects[j].oc_name_known)
+            continue;
+        do {
+            i = j + rn2(o_high - j + 1);
+        } while (objects[i].oc_name_known);
         sw = objects[j].oc_descr_idx;
         objects[j].oc_descr_idx = objects[i].oc_descr_idx;
         objects[i].oc_descr_idx = sw;

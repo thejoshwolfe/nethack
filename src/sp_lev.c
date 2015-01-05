@@ -73,53 +73,54 @@ lev_init init_lev;
  * Make walls of the area (x1, y1, x2, y2) non diggable/non passwall-able
  */
 
-static void
-set_wall_property (signed char x1, signed char y1, signed char x2, signed char y2, int prop)
-{
-        signed char x, y;
+static void set_wall_property(signed char x1, signed char y1, signed char x2, signed char y2, int prop) {
+    signed char x, y;
 
-        for(y = y1; y <= y2; y++)
-            for(x = x1; x <= x2; x++)
-                if(IS_STWALL(levl[x][y].typ))
-                    levl[x][y].wall_info |= prop;
+    for (y = y1; y <= y2; y++)
+        for (x = x1; x <= x2; x++)
+            if (IS_STWALL(levl[x][y].typ))
+                levl[x][y].wall_info |= prop;
 }
 
 /*
  * Choose randomly the state (nodoor, open, closed or locked) for a door
  */
-static int
-rnddoor (void)
-{
-        int i = 1 << rn2(5);
-        i >>= 1;
-        return i;
+static int rnddoor(void) {
+    int i = 1 << rn2(5);
+    i >>= 1;
+    return i;
 }
 
 /*
  * Select a random trap
  */
-static int
-rndtrap (void)
-{
-        int rtrap;
+static int rndtrap(void) {
+    int rtrap;
 
-        do {
-            rtrap = rnd(TRAPNUM-1);
-            switch (rtrap) {
-             case HOLE:         /* no random holes on special levels */
-             case MAGIC_PORTAL: rtrap = NO_TRAP;
-                                break;
-             case TRAPDOOR:     if (!Can_dig_down(&u.uz)) rtrap = NO_TRAP;
-                                break;
-             case LEVEL_TELEP:
-             case TELEP_TRAP:   if (level.flags.noteleport) rtrap = NO_TRAP;
-                                break;
-             case ROLLING_BOULDER_TRAP:
-             case ROCKTRAP:     if (In_endgame(&u.uz)) rtrap = NO_TRAP;
-                                break;
-            }
-        } while (rtrap == NO_TRAP);
-        return rtrap;
+    do {
+        rtrap = rnd(TRAPNUM - 1);
+        switch (rtrap) {
+            case HOLE: /* no random holes on special levels */
+            case MAGIC_PORTAL:
+                rtrap = NO_TRAP;
+                break;
+            case TRAPDOOR:
+                if (!Can_dig_down(&u.uz))
+                    rtrap = NO_TRAP;
+                break;
+            case LEVEL_TELEP:
+            case TELEP_TRAP:
+                if (level.flags.noteleport)
+                    rtrap = NO_TRAP;
+                break;
+            case ROLLING_BOULDER_TRAP:
+            case ROCKTRAP:
+                if (In_endgame(&u.uz))
+                    rtrap = NO_TRAP;
+                break;
+        }
+    } while (rtrap == NO_TRAP);
+    return rtrap;
 }
 
 /*
@@ -139,81 +140,81 @@ rndtrap (void)
 static bool is_ok_location(signed char, signed char, int);
 
 static void get_location(signed char *x, signed char *y, int humidity) {
-        int cpt = 0;
+    int cpt = 0;
 
-        if (*x >= 0) {                  /* normal locations */
-                *x += xstart;
-                *y += ystart;
-        } else if (*x > -11) {          /* special locations */
-                *y = ystart + rloc_y[ - *y - 1];
-                *x = xstart + rloc_x[ - *x - 1];
-        } else {                        /* random location */
-            do {
-                *x = xstart + rn2((int)xsize);
-                *y = ystart + rn2((int)ysize);
-                if (is_ok_location(*x,*y,humidity)) break;
-            } while (++cpt < 100);
-            if (cpt >= 100) {
-                int xx, yy;
-                /* last try */
-                for (xx = 0; xx < xsize; xx++)
-                    for (yy = 0; yy < ysize; yy++) {
-                        *x = xstart + xx;
-                        *y = ystart + yy;
-                        if (is_ok_location(*x,*y,humidity)) goto found_it;
-                    }
-                panic("get_location:  can't find a place!");
-            }
+    if (*x >= 0) { /* normal locations */
+        *x += xstart;
+        *y += ystart;
+    } else if (*x > -11) { /* special locations */
+        *y = ystart + rloc_y[-*y - 1];
+        *x = xstart + rloc_x[-*x - 1];
+    } else { /* random location */
+        do {
+            *x = xstart + rn2((int)xsize);
+            *y = ystart + rn2((int)ysize);
+            if (is_ok_location(*x, *y, humidity))
+                break;
+        } while (++cpt < 100);
+        if (cpt >= 100) {
+            int xx, yy;
+            /* last try */
+            for (xx = 0; xx < xsize; xx++)
+                for (yy = 0; yy < ysize; yy++) {
+                    *x = xstart + xx;
+                    *y = ystart + yy;
+                    if (is_ok_location(*x, *y, humidity))
+                        goto found_it;
+                }
+            panic("get_location:  can't find a place!");
         }
-found_it:;
+    }
+    found_it: ;
 
-        if (!isok(*x,*y)) {
-            impossible("get_location:  (%d,%d) out of bounds", *x, *y);
-            *x = x_maze_max; *y = y_maze_max;
-        }
+    if (!isok(*x, *y)) {
+        impossible("get_location:  (%d,%d) out of bounds", *x, *y);
+        *x = x_maze_max;
+        *y = y_maze_max;
+    }
 }
 
-static bool 
-is_ok_location (signed char x, signed char y, int humidity)
-{
-        int typ;
+static bool is_ok_location(signed char x, signed char y, int humidity) {
+    int typ;
 
-        if (Is_waterlevel(&u.uz)) return true;  /* accept any spot */
+    if (Is_waterlevel(&u.uz))
+        return true; /* accept any spot */
 
-        if (humidity & DRY) {
-            typ = levl[x][y].typ;
-            if (typ == ROOM || typ == AIR ||
-                    typ == CLOUD || typ == ICE || typ == CORR)
-                return true;
-        }
-        if (humidity & WET) {
-            if (is_pool(x,y) || is_lava(x,y))
-                return true;
-        }
-        return false;
+    if (humidity & DRY) {
+        typ = levl[x][y].typ;
+        if (typ == ROOM || typ == AIR || typ == CLOUD || typ == ICE || typ == CORR)
+            return true;
+    }
+    if (humidity & WET) {
+        if (is_pool(x, y) || is_lava(x, y))
+            return true;
+    }
+    return false;
 }
 
 /*
  * Shuffle the registers for locations, objects or monsters
  */
 
-static void
-sp_lev_shuffle (char list1[], char list2[], int n)
-{
-        int i, j;
-        char k;
+static void sp_lev_shuffle(char list1[], char list2[], int n) {
+    int i, j;
+    char k;
 
-        for (i = n - 1; i > 0; i--) {
-                if ((j = rn2(i + 1)) == i) continue;
-                k = list1[j];
-                list1[j] = list1[i];
-                list1[i] = k;
-                if (list2) {
-                        k = list2[j];
-                        list2[j] = list2[i];
-                        list2[i] = k;
-                }
+    for (i = n - 1; i > 0; i--) {
+        if ((j = rn2(i + 1)) == i)
+            continue;
+        k = list1[j];
+        list1[j] = list1[i];
+        list1[i] = k;
+        if (list2) {
+            k = list2[j];
+            list2[j] = list2[i];
+            list2[i] = k;
         }
+    }
 }
 
 /*
@@ -221,25 +222,23 @@ sp_lev_shuffle (char list1[], char list2[], int n)
  * negative values for x or y means RANDOM!
  */
 
-static void
-get_room_loc (signed char *x, signed char *y, struct mkroom *croom)
-{
-        coord c;
+static void get_room_loc(signed char *x, signed char *y, struct mkroom *croom) {
+    coord c;
 
-        if (*x <0 && *y <0) {
-                if (somexy(croom, &c)) {
-                        *x = c.x;
-                        *y = c.y;
-                } else
-                    panic("get_room_loc : can't find a place!");
-        } else {
-                if (*x < 0)
-                    *x = rn2(croom->hx - croom->lx + 1);
-                if (*y < 0)
-                    *y = rn2(croom->hy - croom->ly + 1);
-                *x += croom->lx;
-                *y += croom->ly;
-        }
+    if (*x < 0 && *y < 0) {
+        if (somexy(croom, &c)) {
+            *x = c.x;
+            *y = c.y;
+        } else
+            panic("get_room_loc : can't find a place!");
+    } else {
+        if (*x < 0)
+            *x = rn2(croom->hx - croom->lx + 1);
+        if (*y < 0)
+            *y = rn2(croom->hy - croom->ly + 1);
+        *x += croom->lx;
+        *y += croom->ly;
+    }
 }
 
 /*
@@ -247,64 +246,69 @@ get_room_loc (signed char *x, signed char *y, struct mkroom *croom)
  * negative values for x or y means RANDOM!
  */
 
-static void
-get_free_room_loc (signed char *x, signed char *y, struct mkroom *croom)
-{
-        signed char try_x, try_y;
-        int trycnt = 0;
+static void get_free_room_loc(signed char *x, signed char *y, struct mkroom *croom) {
+    signed char try_x, try_y;
+    int trycnt = 0;
 
-        do {
-            try_x = *x,  try_y = *y;
-            get_room_loc(&try_x, &try_y, croom);
-        } while (levl[try_x][try_y].typ != ROOM && ++trycnt <= 100);
+    do {
+        try_x = *x, try_y = *y;
+        get_room_loc(&try_x, &try_y, croom);
+    } while (levl[try_x][try_y].typ != ROOM && ++trycnt <= 100);
 
-        if (trycnt > 100)
-            panic("get_free_room_loc:  can't find a place!");
-        *x = try_x,  *y = try_y;
+    if (trycnt > 100)
+        panic("get_free_room_loc:  can't find a place!");
+    *x = try_x, *y = try_y;
 }
 
-bool 
-check_room (signed char *lowx, signed char *ddx, signed char *lowy, signed char *ddy, bool vault)
-{
-        int x,y,hix = *lowx + *ddx, hiy = *lowy + *ddy;
-        struct rm *lev;
-        int xlim, ylim, ymax;
+bool check_room(signed char *lowx, signed char *ddx, signed char *lowy, signed char *ddy, bool vault) {
+    int x, y, hix = *lowx + *ddx, hiy = *lowy + *ddy;
+    struct rm *lev;
+    int xlim, ylim, ymax;
 
-        xlim = XLIM + (vault ? 1 : 0);
-        ylim = YLIM + (vault ? 1 : 0);
+    xlim = XLIM + (vault ? 1 : 0);
+    ylim = YLIM + (vault ? 1 : 0);
 
-        if (*lowx < 3)          *lowx = 3;
-        if (*lowy < 2)          *lowy = 2;
-        if (hix > COLNO-3)      hix = COLNO-3;
-        if (hiy > ROWNO-3)      hiy = ROWNO-3;
-chk:
-        if (hix <= *lowx || hiy <= *lowy)       return false;
+    if (*lowx < 3)
+        *lowx = 3;
+    if (*lowy < 2)
+        *lowy = 2;
+    if (hix > COLNO - 3)
+        hix = COLNO - 3;
+    if (hiy > ROWNO - 3)
+        hiy = ROWNO - 3;
+    chk: if (hix <= *lowx || hiy <= *lowy)
+        return false;
 
-        /* check area around room (and make room smaller if necessary) */
-        for (x = *lowx - xlim; x<= hix + xlim; x++) {
-                if(x <= 0 || x >= COLNO) continue;
-                y = *lowy - ylim;       ymax = hiy + ylim;
-                if(y < 0) y = 0;
-                if(ymax >= ROWNO) ymax = (ROWNO-1);
-                lev = &levl[x][y];
-                for (; y <= ymax; y++) {
-                        if (lev++->typ) {
-                                if (!rn2(3))    return false;
-                                if (x < *lowx)
-                                    *lowx = x + xlim + 1;
-                                else
-                                    hix = x - xlim - 1;
-                                if (y < *lowy)
-                                    *lowy = y + ylim + 1;
-                                else
-                                    hiy = y - ylim - 1;
-                                goto chk;
-                        }
-                }
+    /* check area around room (and make room smaller if necessary) */
+    for (x = *lowx - xlim; x <= hix + xlim; x++) {
+        if (x <= 0 || x >= COLNO)
+            continue;
+        y = *lowy - ylim;
+        ymax = hiy + ylim;
+        if (y < 0)
+            y = 0;
+        if (ymax >= ROWNO)
+            ymax = (ROWNO - 1);
+        lev = &levl[x][y];
+        for (; y <= ymax; y++) {
+            if (lev++->typ) {
+                if (!rn2(3))
+                    return false;
+                if (x < *lowx)
+                    *lowx = x + xlim + 1;
+                else
+                    hix = x - xlim - 1;
+                if (y < *lowy)
+                    *lowy = y + ylim + 1;
+                else
+                    hiy = y - ylim - 1;
+                goto chk;
+            }
         }
-        *ddx = hix - *lowx;
-        *ddy = hiy - *lowy;
-        return true;
+    }
+    *ddx = hix - *lowx;
+    *ddy = hiy - *lowy;
+    return true;
 }
 
 /*
@@ -312,162 +316,160 @@ chk:
  * This is still very incomplete...
  */
 
-bool 
-create_room (signed char x, signed char y, signed char w, signed char h, signed char xal, signed char yal, signed char rtype, signed char rlit)
-{
-        signed char     xabs, yabs;
-        int     wtmp, htmp, xaltmp, yaltmp, xtmp, ytmp;
-        NhRect  *r1 = 0, r2;
-        int     trycnt = 0;
-        bool vault = false;
-        int     xlim = XLIM, ylim = YLIM;
+bool create_room(signed char x, signed char y, signed char w, signed char h, signed char xal, signed char yal, signed char rtype, signed char rlit) {
+    signed char xabs, yabs;
+    int wtmp, htmp, xaltmp, yaltmp, xtmp, ytmp;
+    NhRect *r1 = 0, r2;
+    int trycnt = 0;
+    bool vault = false;
+    int xlim = XLIM, ylim = YLIM;
 
-        if (rtype == -1)        /* Is the type random ? */
-            rtype = OROOM;
+    if (rtype == -1) /* Is the type random ? */
+        rtype = OROOM;
 
-        if (rtype == VAULT) {
-                vault = true;
-                xlim++;
-                ylim++;
-        }
+    if (rtype == VAULT) {
+        vault = true;
+        xlim++;
+        ylim++;
+    }
 
-        /* on low levels the room is lit (usually) */
-        /* some other rooms may require lighting */
+    /* on low levels the room is lit (usually) */
+    /* some other rooms may require lighting */
 
-        /* is light state random ? */
-        if (rlit == -1)
-            rlit = (rnd(1+abs(depth(&u.uz))) < 11 && rn2(77)) ? true : false;
+    /* is light state random ? */
+    if (rlit == -1)
+        rlit = (rnd(1 + abs(depth(&u.uz))) < 11 && rn2(77)) ? true : false;
 
-        /*
-         * Here we will try to create a room. If some parameters are
-         * random we are willing to make several try before we give
-         * it up.
-         */
-        do {
-                signed char xborder, yborder;
-                wtmp = w; htmp = h;
-                xtmp = x; ytmp = y;
-                xaltmp = xal; yaltmp = yal;
+    /*
+     * Here we will try to create a room. If some parameters are
+     * random we are willing to make several try before we give
+     * it up.
+     */
+    do {
+        signed char xborder, yborder;
+        wtmp = w;
+        htmp = h;
+        xtmp = x;
+        ytmp = y;
+        xaltmp = xal;
+        yaltmp = yal;
 
-                /* First case : a totaly random room */
+        /* First case : a totaly random room */
 
-                if((xtmp < 0 && ytmp <0 && wtmp < 0 && xaltmp < 0 &&
-                   yaltmp < 0) || vault) {
-                        signed char hx, hy, lx, ly, dx, dy;
-                        r1 = rnd_rect(); /* Get a random rectangle */
+        if ((xtmp < 0 && ytmp < 0 && wtmp < 0 && xaltmp < 0 && yaltmp < 0) || vault) {
+            signed char hx, hy, lx, ly, dx, dy;
+            r1 = rnd_rect(); /* Get a random rectangle */
 
-                        if (!r1) { /* No more free rectangles ! */
-                                return false;
-                        }
-                        hx = r1->hx;
-                        hy = r1->hy;
-                        lx = r1->lx;
-                        ly = r1->ly;
-                        if (vault)
-                            dx = dy = 1;
-                        else {
-                                dx = 2 + rn2((hx-lx > 28) ? 12 : 8);
-                                dy = 2 + rn2(4);
-                                if(dx*dy > 50)
-                                    dy = 50/dx;
-                        }
-                        xborder = (lx > 0 && hx < COLNO -1) ? 2*xlim : xlim+1;
-                        yborder = (ly > 0 && hy < ROWNO -1) ? 2*ylim : ylim+1;
-                        if(hx-lx < dx + 3 + xborder ||
-                           hy-ly < dy + 3 + yborder) {
-                                r1 = 0;
-                                continue;
-                        }
-                        xabs = lx + (lx > 0 ? xlim : 3)
-                            + rn2(hx - (lx>0?lx : 3) - dx - xborder + 1);
-                        yabs = ly + (ly > 0 ? ylim : 2)
-                            + rn2(hy - (ly>0?ly : 2) - dy - yborder + 1);
-                        if (ly == 0 && hy >= (ROWNO-1) &&
-                            (!nroom || !rn2(nroom)) && (yabs+dy > ROWNO/2)) {
-                            yabs = rn1(3, 2);
-                            if(nroom < 4 && dy>1) dy--;
-                        }
-                        if (!check_room(&xabs, &dx, &yabs, &dy, vault)) {
-                                r1 = 0;
-                                continue;
-                        }
-                        wtmp = dx+1;
-                        htmp = dy+1;
-                        r2.lx = xabs-1; r2.ly = yabs-1;
-                        r2.hx = xabs + wtmp;
-                        r2.hy = yabs + htmp;
-                } else {        /* Only some parameters are random */
-                        int rndpos = 0;
-                        if (xtmp < 0 && ytmp < 0) { /* Position is RANDOM */
-                                xtmp = rnd(5);
-                                ytmp = rnd(5);
-                                rndpos = 1;
-                        }
-                        if (wtmp < 0 || htmp < 0) { /* Size is RANDOM */
-                                wtmp = rn1(15, 3);
-                                htmp = rn1(8, 2);
-                        }
-                        if (xaltmp == -1) /* Horizontal alignment is RANDOM */
-                            xaltmp = rnd(3);
-                        if (yaltmp == -1) /* Vertical alignment is RANDOM */
-                            yaltmp = rnd(3);
-
-                        /* Try to generate real (absolute) coordinates here! */
-
-                        xabs = (((xtmp-1) * COLNO) / 5) + 1;
-                        yabs = (((ytmp-1) * ROWNO) / 5) + 1;
-                        switch (xaltmp) {
-                              case LEFT:
-                                break;
-                              case RIGHT:
-                                xabs += (COLNO / 5) - wtmp;
-                                break;
-                              case CENTER:
-                                xabs += ((COLNO / 5) - wtmp) / 2;
-                                break;
-                        }
-                        switch (yaltmp) {
-                              case TOP:
-                                break;
-                              case BOTTOM:
-                                yabs += (ROWNO / 5) - htmp;
-                                break;
-                              case CENTER:
-                                yabs += ((ROWNO / 5) - htmp) / 2;
-                                break;
-                        }
-
-                        if (xabs + wtmp - 1 > COLNO - 2)
-                            xabs = COLNO - wtmp - 3;
-                        if (xabs < 2)
-                            xabs = 2;
-                        if (yabs + htmp - 1> ROWNO - 2)
-                            yabs = ROWNO - htmp - 3;
-                        if (yabs < 2)
-                            yabs = 2;
-
-                        /* Try to find a rectangle that fit our room ! */
-
-                        r2.lx = xabs-1; r2.ly = yabs-1;
-                        r2.hx = xabs + wtmp + rndpos;
-                        r2.hy = yabs + htmp + rndpos;
-                        r1 = get_rect(&r2);
-                }
-        } while (++trycnt <= 100 && !r1);
-        if (!r1) {      /* creation of room failed ? */
+            if (!r1) { /* No more free rectangles ! */
                 return false;
-        }
-        split_rects(r1, &r2);
+            }
+            hx = r1->hx;
+            hy = r1->hy;
+            lx = r1->lx;
+            ly = r1->ly;
+            if (vault)
+                dx = dy = 1;
+            else {
+                dx = 2 + rn2((hx - lx > 28) ? 12 : 8);
+                dy = 2 + rn2(4);
+                if (dx * dy > 50)
+                    dy = 50 / dx;
+            }
+            xborder = (lx > 0 && hx < COLNO - 1) ? 2 * xlim : xlim + 1;
+            yborder = (ly > 0 && hy < ROWNO - 1) ? 2 * ylim : ylim + 1;
+            if (hx - lx < dx + 3 + xborder || hy - ly < dy + 3 + yborder) {
+                r1 = 0;
+                continue;
+            }
+            xabs = lx + (lx > 0 ? xlim : 3) + rn2(hx - (lx > 0 ? lx : 3) - dx - xborder + 1);
+            yabs = ly + (ly > 0 ? ylim : 2) + rn2(hy - (ly > 0 ? ly : 2) - dy - yborder + 1);
+            if (ly == 0 && hy >= (ROWNO - 1) && (!nroom || !rn2(nroom)) && (yabs + dy > ROWNO / 2)) {
+                yabs = rn1(3, 2);
+                if (nroom < 4 && dy > 1)
+                    dy--;
+            }
+            if (!check_room(&xabs, &dx, &yabs, &dy, vault)) {
+                r1 = 0;
+                continue;
+            }
+            wtmp = dx + 1;
+            htmp = dy + 1;
+            r2.lx = xabs - 1;
+            r2.ly = yabs - 1;
+            r2.hx = xabs + wtmp;
+            r2.hy = yabs + htmp;
+        } else { /* Only some parameters are random */
+            int rndpos = 0;
+            if (xtmp < 0 && ytmp < 0) { /* Position is RANDOM */
+                xtmp = rnd(5);
+                ytmp = rnd(5);
+                rndpos = 1;
+            }
+            if (wtmp < 0 || htmp < 0) { /* Size is RANDOM */
+                wtmp = rn1(15, 3);
+                htmp = rn1(8, 2);
+            }
+            if (xaltmp == -1) /* Horizontal alignment is RANDOM */
+                xaltmp = rnd(3);
+            if (yaltmp == -1) /* Vertical alignment is RANDOM */
+                yaltmp = rnd(3);
 
-        if (!vault) {
-                smeq[nroom] = nroom;
-                add_room(xabs, yabs, xabs+wtmp-1, yabs+htmp-1,
-                         rlit, rtype, false);
-        } else {
-                rooms[nroom].lx = xabs;
-                rooms[nroom].ly = yabs;
+            /* Try to generate real (absolute) coordinates here! */
+
+            xabs = (((xtmp - 1) * COLNO) / 5) + 1;
+            yabs = (((ytmp - 1) * ROWNO) / 5) + 1;
+            switch (xaltmp) {
+                case LEFT:
+                    break;
+                case RIGHT:
+                    xabs += (COLNO / 5) - wtmp;
+                    break;
+                case CENTER:
+                    xabs += ((COLNO / 5) - wtmp) / 2;
+                    break;
+            }
+            switch (yaltmp) {
+                case TOP:
+                    break;
+                case BOTTOM:
+                    yabs += (ROWNO / 5) - htmp;
+                    break;
+                case CENTER:
+                    yabs += ((ROWNO / 5) - htmp) / 2;
+                    break;
+            }
+
+            if (xabs + wtmp - 1 > COLNO - 2)
+                xabs = COLNO - wtmp - 3;
+            if (xabs < 2)
+                xabs = 2;
+            if (yabs + htmp - 1 > ROWNO - 2)
+                yabs = ROWNO - htmp - 3;
+            if (yabs < 2)
+                yabs = 2;
+
+            /* Try to find a rectangle that fit our room ! */
+
+            r2.lx = xabs - 1;
+            r2.ly = yabs - 1;
+            r2.hx = xabs + wtmp + rndpos;
+            r2.hy = yabs + htmp + rndpos;
+            r1 = get_rect(&r2);
         }
-        return true;
+    } while (++trycnt <= 100 && !r1);
+    if (!r1) { /* creation of room failed ? */
+        return false;
+    }
+    split_rects(r1, &r2);
+
+    if (!vault) {
+        smeq[nroom] = nroom;
+        add_room(xabs, yabs, xabs + wtmp - 1, yabs + htmp - 1, rlit, rtype, false);
+    } else {
+        rooms[nroom].lx = xabs;
+        rooms[nroom].ly = yabs;
+    }
+    return true;
 }
 
 /*
@@ -475,44 +477,40 @@ create_room (signed char x, signed char y, signed char w, signed char h, signed 
  * x & y are relative to the parent room.
  */
 
-static bool create_subroom(struct mkroom *proom, signed char x, signed char y,
-        signed char w,  signed char h, signed char rtype, signed char rlit)
-{
-        signed char width, height;
+static bool create_subroom(struct mkroom *proom, signed char x, signed char y, signed char w, signed char h, signed char rtype, signed char rlit) {
+    signed char width, height;
 
-        width = proom->hx - proom->lx + 1;
-        height = proom->hy - proom->ly + 1;
+    width = proom->hx - proom->lx + 1;
+    height = proom->hy - proom->ly + 1;
 
-        /* There is a minimum size for the parent room */
-        if (width < 4 || height < 4)
-            return false;
+    /* There is a minimum size for the parent room */
+    if (width < 4 || height < 4)
+        return false;
 
-        /* Check for random position, size, etc... */
+    /* Check for random position, size, etc... */
 
-        if (w == -1)
-            w = rnd(width - 3);
-        if (h == -1)
-            h = rnd(height - 3);
-        if (x == -1)
-            x = rnd(width - w - 1) - 1;
-        if (y == -1)
-            y = rnd(height - h - 1) - 1;
-        if (x == 1)
-            x = 0;
-        if (y == 1)
-            y = 0;
-        if ((x + w + 1) == width)
-            x++;
-        if ((y + h + 1) == height)
-            y++;
-        if (rtype == -1)
-            rtype = OROOM;
-        if (rlit == -1)
-            rlit = (rnd(1+abs(depth(&u.uz))) < 11 && rn2(77)) ? true : false;
-        add_subroom(proom, proom->lx + x, proom->ly + y,
-                    proom->lx + x + w - 1, proom->ly + y + h - 1,
-                    rlit, rtype, false);
-        return true;
+    if (w == -1)
+        w = rnd(width - 3);
+    if (h == -1)
+        h = rnd(height - 3);
+    if (x == -1)
+        x = rnd(width - w - 1) - 1;
+    if (y == -1)
+        y = rnd(height - h - 1) - 1;
+    if (x == 1)
+        x = 0;
+    if (y == 1)
+        y = 0;
+    if ((x + w + 1) == width)
+        x++;
+    if ((y + h + 1) == height)
+        y++;
+    if (rtype == -1)
+        rtype = OROOM;
+    if (rlit == -1)
+        rlit = (rnd(1 + abs(depth(&u.uz))) < 11 && rn2(77)) ? true : false;
+    add_subroom(proom, proom->lx + x, proom->ly + y, proom->lx + x + w - 1, proom->ly + y + h - 1, rlit, rtype, false);
+    return true;
 }
 
 /*
@@ -520,120 +518,124 @@ static bool create_subroom(struct mkroom *proom, signed char x, signed char y,
  * It's placed on a wall (north, south, east or west).
  */
 
-static void
-create_door (room_door *dd, struct mkroom *broom)
-{
-        int     x, y;
-        int     trycnt = 0;
+static void create_door(room_door *dd, struct mkroom *broom) {
+    int x, y;
+    int trycnt = 0;
 
-        if (dd->secret == -1)
-            dd->secret = rn2(2);
+    if (dd->secret == -1)
+        dd->secret = rn2(2);
 
-        if (dd->mask == -1) {
-                /* is it a locked door, closed, or a doorway? */
-                if (!dd->secret) {
-                        if(!rn2(3)) {
-                                if(!rn2(5))
-                                    dd->mask = D_ISOPEN;
-                                else if(!rn2(6))
-                                    dd->mask = D_LOCKED;
-                                else
-                                    dd->mask = D_CLOSED;
-                                if (dd->mask != D_ISOPEN && !rn2(25))
-                                    dd->mask |= D_TRAPPED;
-                        } else
-                            dd->mask = D_NODOOR;
-                } else {
-                        if(!rn2(5))     dd->mask = D_LOCKED;
-                        else            dd->mask = D_CLOSED;
+    if (dd->mask == -1) {
+        /* is it a locked door, closed, or a doorway? */
+        if (!dd->secret) {
+            if (!rn2(3)) {
+                if (!rn2(5))
+                    dd->mask = D_ISOPEN;
+                else if (!rn2(6))
+                    dd->mask = D_LOCKED;
+                else
+                    dd->mask = D_CLOSED;
+                if (dd->mask != D_ISOPEN && !rn2(25))
+                    dd->mask |= D_TRAPPED;
+            } else
+                dd->mask = D_NODOOR;
+        } else {
+            if (!rn2(5))
+                dd->mask = D_LOCKED;
+            else
+                dd->mask = D_CLOSED;
 
-                        if(!rn2(20)) dd->mask |= D_TRAPPED;
-                }
+            if (!rn2(20))
+                dd->mask |= D_TRAPPED;
         }
+    }
 
-        do {
-                int dwall, dpos;
+    do {
+        int dwall, dpos;
 
-                dwall = dd->wall;
-                if (dwall == -1)        /* The wall is RANDOM */
-                    dwall = 1 << rn2(4);
+        dwall = dd->wall;
+        if (dwall == -1) /* The wall is RANDOM */
+            dwall = 1 << rn2(4);
 
-                dpos = dd->pos;
-                if (dpos == -1) /* The position is RANDOM */
-                    dpos = rn2((dwall == W_WEST || dwall == W_EAST) ?
-                            (broom->hy - broom->ly) : (broom->hx - broom->lx));
+        dpos = dd->pos;
+        if (dpos == -1) /* The position is RANDOM */
+            dpos = rn2((dwall == W_WEST || dwall == W_EAST) ? (broom->hy - broom->ly) : (broom->hx - broom->lx));
 
-                /* Convert wall and pos into an absolute coordinate! */
+        /* Convert wall and pos into an absolute coordinate! */
 
-                switch (dwall) {
-                      case W_NORTH:
-                        y = broom->ly - 1;
-                        x = broom->lx + dpos;
-                        break;
-                      case W_SOUTH:
-                        y = broom->hy + 1;
-                        x = broom->lx + dpos;
-                        break;
-                      case W_WEST:
-                        x = broom->lx - 1;
-                        y = broom->ly + dpos;
-                        break;
-                      case W_EAST:
-                        x = broom->hx + 1;
-                        y = broom->ly + dpos;
-                        break;
-                      default:
-                        x = y = 0;
-                        panic("create_door: No wall for door!");
-                        break;
-                }
-                if (okdoor(x,y))
-                    break;
-        } while (++trycnt <= 100);
-        if (trycnt > 100) {
-                impossible("create_door: Can't find a proper place!");
-                return;
+        switch (dwall) {
+            case W_NORTH:
+                y = broom->ly - 1;
+                x = broom->lx + dpos;
+                break;
+            case W_SOUTH:
+                y = broom->hy + 1;
+                x = broom->lx + dpos;
+                break;
+            case W_WEST:
+                x = broom->lx - 1;
+                y = broom->ly + dpos;
+                break;
+            case W_EAST:
+                x = broom->hx + 1;
+                y = broom->ly + dpos;
+                break;
+            default:
+                x = y = 0;
+                panic("create_door: No wall for door!");
+                break;
         }
-        add_door(x,y,broom);
-        levl[x][y].typ = (dd->secret ? SDOOR : DOOR);
-        levl[x][y].doormask = dd->mask;
+        if (okdoor(x, y))
+            break;
+    } while (++trycnt <= 100);
+    if (trycnt > 100) {
+        impossible("create_door: Can't find a proper place!");
+        return;
+    }
+    add_door(x, y, broom);
+    levl[x][y].typ = (dd->secret ? SDOOR : DOOR);
+    levl[x][y].doormask = dd->mask;
 }
 
 /*
  * Create a secret door in croom on any one of the specified walls.
  */
-void
-create_secret_door (
-    struct mkroom *croom,
-    signed char walls /* any of W_NORTH | W_SOUTH | W_EAST | W_WEST (or W_ANY) */
-)
-{
+/* walls: any of W_NORTH | W_SOUTH | W_EAST | W_WEST (or W_ANY) */
+void create_secret_door(struct mkroom *croom, signed char walls) {
     signed char sx, sy; /* location of the secret door */
     int count;
 
-    for(count = 0; count < 100; count++) {
+    for (count = 0; count < 100; count++) {
         sx = rn1(croom->hx - croom->lx + 1, croom->lx);
         sy = rn1(croom->hy - croom->ly + 1, croom->ly);
 
-        switch(rn2(4)) {
-        case 0:  /* top */
-            if(!(walls & W_NORTH)) continue;
-            sy = croom->ly-1; break;
-        case 1: /* bottom */
-            if(!(walls & W_SOUTH)) continue;
-            sy = croom->hy+1; break;
-        case 2: /* left */
-            if(!(walls & W_EAST)) continue;
-            sx = croom->lx-1; break;
-        case 3: /* right */
-            if(!(walls & W_WEST)) continue;
-            sx = croom->hx+1; break;
+        switch (rn2(4)) {
+            case 0: /* top */
+                if (!(walls & W_NORTH))
+                    continue;
+                sy = croom->ly - 1;
+                break;
+            case 1: /* bottom */
+                if (!(walls & W_SOUTH))
+                    continue;
+                sy = croom->hy + 1;
+                break;
+            case 2: /* left */
+                if (!(walls & W_EAST))
+                    continue;
+                sx = croom->lx - 1;
+                break;
+            case 3: /* right */
+                if (!(walls & W_WEST))
+                    continue;
+                sx = croom->hx + 1;
+                break;
         }
 
-        if(okdoor(sx,sy)) {
+        if (okdoor(sx, sy)) {
             levl[sx][sy].typ = SDOOR;
             levl[sx][sy].doormask = D_CLOSED;
-            add_door(sx,sy,croom);
+            add_door(sx, sy, croom);
             return;
         }
     }
@@ -645,11 +647,9 @@ create_secret_door (
  * Create a trap in a room.
  */
 
-static void
-create_trap (trap *t, struct mkroom *croom)
-{
-    signed char x,y;
-    coord       tm;
+static void create_trap(trap *t, struct mkroom *croom) {
+    signed char x, y;
+    coord tm;
 
     if (rn2(100) < t->chance) {
         x = t->x;
@@ -662,7 +662,7 @@ create_trap (trap *t, struct mkroom *croom)
         tm.x = x;
         tm.y = y;
 
-        mktrap(t->type, 1, (struct mkroom*) 0, &tm);
+        mktrap(t->type, 1, (struct mkroom*)0, &tm);
     }
 }
 
@@ -670,20 +670,16 @@ create_trap (trap *t, struct mkroom *croom)
  * Create a monster in a room.
  */
 
-static int
-noncoalignment (aligntyp alignment)
-{
-        int k;
+static int noncoalignment(aligntyp alignment) {
+    int k;
 
-        k = rn2(2);
-        if (!alignment)
-                return(k ? -1 : 1);
-        return(k ? -alignment : 0);
+    k = rn2(2);
+    if (!alignment)
+        return (k ? -1 : 1);
+    return (k ? -alignment : 0);
 }
 
-static void
-create_monster (monster *m, struct mkroom *croom)
-{
+static void create_monster(monster *m, struct mkroom *croom) {
     struct monst *mtmp;
     signed char x, y;
     char class;
@@ -695,39 +691,33 @@ create_monster (monster *m, struct mkroom *croom)
     if (rn2(100) < m->chance) {
 
         if (m->class >= 0)
-            class = (char) def_char_to_monclass((char)m->class);
+            class = (char)def_char_to_monclass((char)m->class);
         else if (m->class > -11)
-            class = (char) def_char_to_monclass(rmonst[- m->class - 1]);
+            class = (char)def_char_to_monclass(rmonst[-m->class - 1]);
         else
             class = 0;
 
         if (class == MAXMCLASSES)
             panic("create_monster: unknown monster class '%c'", m->class);
 
-        amask = (m->align == AM_SPLEV_CO) ?
-                        Align2amask(u.ualignbase[A_ORIGINAL]) :
-                (m->align == AM_SPLEV_NONCO) ?
-                        Align2amask(noncoalignment(u.ualignbase[A_ORIGINAL])) :
-                (m->align <= -11) ? induced_align(80) :
-                (m->align < 0 ? ralign[-m->align-1] : m->align);
+        amask = (m->align == AM_SPLEV_CO) ? Align2amask(u.ualignbase[A_ORIGINAL]) : (m->align == AM_SPLEV_NONCO) ? Align2amask(noncoalignment(u.ualignbase[A_ORIGINAL])) : (m->align <= -11) ? induced_align(80) : (m->align < 0 ? ralign[-m->align - 1] : m->align);
 
         if (!class)
-            pm = (struct permonst *) 0;
+            pm = (struct permonst *)0;
         else if (m->id != NON_PM) {
             pm = &mons[m->id];
-            g_mvflags = (unsigned) mvitals[monsndx(pm)].mvflags;
+            g_mvflags = (unsigned)mvitals[monsndx(pm)].mvflags;
             if ((pm->geno & G_UNIQ) && (g_mvflags & G_EXTINCT))
                 goto m_done;
-            else if (g_mvflags & G_GONE)        /* genocided or extinct */
-                pm = (struct permonst *) 0;     /* make random monster */
+            else if (g_mvflags & G_GONE) /* genocided or extinct */
+                pm = (struct permonst *)0; /* make random monster */
         } else {
-            pm = mkclass(class,G_NOGEN);
+            pm = mkclass(class, G_NOGEN);
             /* if we can't get a specific monster type (pm == 0) then the
-               class has been genocided, so settle for a random monster */
+             class has been genocided, so settle for a random monster */
         }
-        if (In_mines(&u.uz) && pm && your_race(pm) &&
-                        (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3))
-            pm = (struct permonst *) 0;
+        if (In_mines(&u.uz) && pm && your_race(pm) && (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3))
+            pm = (struct permonst *)0;
 
         x = m->x;
         y = m->y;
@@ -739,21 +729,23 @@ create_monster (monster *m, struct mkroom *croom)
             else if (pm->mlet == S_EEL)
                 get_location(&x, &y, WET);
             else
-                get_location(&x, &y, DRY|WET);
+                get_location(&x, &y, DRY | WET);
         }
         /* try to find a close place if someone else is already there */
         if (MON_AT(x,y) && enexto(&cc, x, y, pm))
-            x = cc.x,  y = cc.y;
+            x = cc.x, y = cc.y;
 
-        if(m->align != -12)
+        if (m->align != -12)
             mtmp = mk_roamer(pm, Amask2align(amask), x, y, m->peaceful);
-        else if(PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
-                 mtmp = mk_mplayer(pm, x, y, false);
-        else mtmp = makemon(pm, x, y, NO_MM_FLAGS);
+        else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
+            mtmp = mk_mplayer(pm, x, y, false);
+        else
+            mtmp = makemon(pm, x, y, NO_MM_FLAGS);
 
         if (mtmp) {
             /* handle specific attributes for some special monsters */
-            if (m->name.str) mtmp = christen_monst(mtmp, m->name.str);
+            if (m->name.str)
+                mtmp = christen_monst(mtmp, m->name.str);
 
             /*
              * This is currently hardwired for mimics only.  It should
@@ -764,20 +756,15 @@ create_monster (monster *m, struct mkroom *croom)
 
                 switch (m->appear) {
                     case M_AP_NOTHING:
-                        impossible(
-                "create_monster: mon has an appearance, \"%s\", but no type",
-                                m->appear_as.str);
+                        impossible("create_monster: mon has an appearance, \"%s\", but no type", m->appear_as.str);
                         break;
 
                     case M_AP_FURNITURE:
                         for (i = 0; i < MAXPCHARS; i++)
-                            if (!strcmp(defsyms[i].explanation,
-                                        m->appear_as.str))
+                            if (!strcmp(defsyms[i].explanation, m->appear_as.str))
                                 break;
                         if (i == MAXPCHARS) {
-                            impossible(
-                                "create_monster: can't find feature \"%s\"",
-                                m->appear_as.str);
+                            impossible("create_monster: can't find feature \"%s\"", m->appear_as.str);
                         } else {
                             mtmp->m_ap_type = M_AP_FURNITURE;
                             mtmp->mappearance = i;
@@ -786,13 +773,10 @@ create_monster (monster *m, struct mkroom *croom)
 
                     case M_AP_OBJECT:
                         for (i = 0; i < NUM_OBJECTS; i++)
-                            if (OBJ_NAME(objects[i]) &&
-                                !strcmp(OBJ_NAME(objects[i]),m->appear_as.str))
+                            if (OBJ_NAME(objects[i]) && !strcmp(OBJ_NAME(objects[i]), m->appear_as.str))
                                 break;
                         if (i == NUM_OBJECTS) {
-                            impossible(
-                                "create_monster: can't find object \"%s\"",
-                                m->appear_as.str);
+                            impossible("create_monster: can't find object \"%s\"", m->appear_as.str);
                         } else {
                             mtmp->m_ap_type = M_AP_OBJECT;
                             mtmp->mappearance = i;
@@ -803,9 +787,7 @@ create_monster (monster *m, struct mkroom *croom)
                         /* note: mimics don't appear as monsters! */
                         /*       (but chameleons can :-)          */
                     default:
-                        impossible(
-                "create_monster: unimplemented mon appear type [%d,\"%s\"]",
-                                m->appear, m->appear_as.str);
+                        impossible("create_monster: unimplemented mon appear type [%d,\"%s\"]", m->appear, m->appear_as.str);
                         break;
                 }
                 if (does_block(x, y, &levl[x][y]))
@@ -822,8 +804,8 @@ create_monster (monster *m, struct mkroom *croom)
             }
         }
 
-    }           /* if (rn2(100) < m->chance) */
- m_done:
+    } /* if (rn2(100) < m->chance) */
+    m_done:
     Free(m->name.str);
     Free(m->appear_as.str);
 }
@@ -832,18 +814,17 @@ create_monster (monster *m, struct mkroom *croom)
  * Create an object in a room.
  */
 
-static void
-create_object (object *o, struct mkroom *croom)
-{
+static void create_object(object *o, struct mkroom *croom) {
     struct obj *otmp;
     signed char x, y;
     char c;
-    bool named;      /* has a name been supplied in level description? */
+    bool named; /* has a name been supplied in level description? */
 
     if (rn2(100) < o->chance) {
         named = o->name.str ? true : false;
 
-        x = o->x; y = o->y;
+        x = o->x;
+        y = o->y;
         if (croom)
             get_room_loc(&x, &y, croom);
         else
@@ -852,7 +833,7 @@ create_object (object *o, struct mkroom *croom)
         if (o->class >= 0)
             c = o->class;
         else if (o->class > -11)
-            c = robjects[ -(o->class+1)];
+            c = robjects[-(o->class + 1)];
         else
             c = 0;
 
@@ -865,10 +846,10 @@ create_object (object *o, struct mkroom *croom)
              * The special levels are compiled with the default "text" object
              * class characters.  We must convert them to the internal format.
              */
-            char oclass = (char) def_char_to_objclass(c);
+            char oclass = (char)def_char_to_objclass(c);
 
             if (oclass == MAXOCLASSES)
-                panic("create_object:  unexpected object class '%c'",c);
+                panic("create_object:  unexpected object class '%c'", c);
 
             /* KMH -- Create piles of gold properly */
             if (oclass == COIN_CLASS)
@@ -877,23 +858,33 @@ create_object (object *o, struct mkroom *croom)
                 otmp = mkobj_at(oclass, x, y, !named);
         }
 
-        if (o->spe != -127)     /* That means NOT RANDOM! */
+        if (o->spe != -127) /* That means NOT RANDOM! */
             otmp->spe = (signed char)o->spe;
 
         switch (o->curse_state) {
-              case 1:   bless(otmp); break; /* BLESSED */
-              case 2:   unbless(otmp); uncurse(otmp); break; /* uncursed */
-              case 3:   curse(otmp); break; /* CURSED */
-              default:  break;  /* Otherwise it's random and we're happy
-                                 * with what mkobj gave us! */
+            case 1:
+                bless(otmp);
+                break; /* BLESSED */
+            case 2:
+                unbless(otmp);
+                uncurse(otmp);
+                break; /* uncursed */
+            case 3:
+                curse(otmp);
+                break; /* CURSED */
+            default:
+                break; /* Otherwise it's random and we're happy
+                 * with what mkobj gave us! */
         }
 
         /*      corpsenm is "empty" if -1, random if -2, otherwise specific */
-        if (o->corpsenm == NON_PM - 1) otmp->corpsenm = rndmonnum();
-        else if (o->corpsenm != NON_PM) otmp->corpsenm = o->corpsenm;
+        if (o->corpsenm == NON_PM - 1)
+            otmp->corpsenm = rndmonnum();
+        else if (o->corpsenm != NON_PM)
+            otmp->corpsenm = o->corpsenm;
 
         /* assume we wouldn't be given an egg corpsenm unless it was
-           hatchable */
+         hatchable */
         if (otmp->otyp == EGG && otmp->corpsenm != NON_PM) {
             if (dead_species(otmp->otyp, true))
                 kill_egg(otmp); /* make sure nothing hatches */
@@ -904,35 +895,37 @@ create_object (object *o, struct mkroom *croom)
         if (named)
             otmp = oname(otmp, o->name.str);
 
-        switch(o->containment) {
+        switch (o->containment) {
             static struct obj *container = 0;
 
             /* contents */
-            case 1:
-                if (!container) {
-                    impossible("create_object: no container");
-                    break;
-                }
-                remove_object(otmp);
-                (void) add_to_container(container, otmp);
-                goto o_done;            /* don't stack, but do other cleanup */
-            /* container */
-            case 2:
-                delete_contents(otmp);
-                container = otmp;
+        case 1:
+            if (!container) {
+                impossible("create_object: no container");
                 break;
+            }
+            remove_object(otmp);
+            (void)add_to_container(container, otmp);
+            goto o_done;
+            /* don't stack, but do other cleanup */
+            /* container */
+        case 2:
+            delete_contents(otmp);
+            container = otmp;
+            break;
             /* nothing */
-            case 0: break;
+        case 0:
+            break;
 
-            default: impossible("containment type %d?", (int) o->containment);
+        default:
+            impossible("containment type %d?", (int)o->containment);
         }
 
         /* Medusa level special case: statues are petrified monsters, so they
          * are not stone-resistant and have monster inventory.  They also lack
          * other contents, but that can be specified as an empty container.
          */
-        if (o->id == STATUE && Is_medusa_level(&u.uz) &&
-                    o->corpsenm == NON_PM) {
+        if (o->id == STATUE && Is_medusa_level(&u.uz) && o->corpsenm == NON_PM) {
             struct monst *was;
             struct obj *obj;
             int wastyp;
@@ -941,18 +934,19 @@ create_object (object *o, struct mkroom *croom)
              * resistant (if they were, we'd have to reset the name as well as
              * setting corpsenm).
              */
-            for (wastyp = otmp->corpsenm; ; wastyp = rndmonnum()) {
+            for (wastyp = otmp->corpsenm;; wastyp = rndmonnum()) {
                 /* makemon without rndmonst() might create a group */
                 was = makemon(&mons[wastyp], 0, 0, NO_MM_FLAGS);
-                if (!resists_ston(was)) break;
+                if (!resists_ston(was))
+                    break;
                 mongone(was);
             }
             otmp->corpsenm = wastyp;
-            while(was->minvent) {
+            while (was->minvent) {
                 obj = was->minvent;
                 obj->owornmask = 0;
                 obj_extract_self(obj);
-                (void) add_to_container(otmp, obj);
+                (void)add_to_container(otmp, obj);
             }
             otmp->owt = weight(otmp);
             mongone(was);
@@ -960,27 +954,25 @@ create_object (object *o, struct mkroom *croom)
 
         stackobj(otmp);
 
-    }           /* if (rn2(100) < o->chance) */
- o_done:
+    } /* if (rn2(100) < o->chance) */
+    o_done:
     Free(o->name.str);
 }
 
 /*
  * Randomly place a specific engraving, then release its memory.
  */
-static void
-create_engraving (engraving *e, struct mkroom *croom)
-{
-        signed char x, y;
+static void create_engraving(engraving *e, struct mkroom *croom) {
+    signed char x, y;
 
-        x = e->x,  y = e->y;
-        if (croom)
-            get_room_loc(&x, &y, croom);
-        else
-            get_location(&x, &y, DRY);
+    x = e->x, y = e->y;
+    if (croom)
+        get_room_loc(&x, &y, croom);
+    else
+        get_location(&x, &y, DRY);
 
-        make_engr_at(x, y, e->engr.str, 0L, e->etype);
-        free((void *) e->engr.str);
+    make_engr_at(x, y, e->engr.str, 0L, e->etype);
+    free((void *)e->engr.str);
 }
 
 /*
@@ -988,14 +980,13 @@ create_engraving (engraving *e, struct mkroom *croom)
  *
  */
 
-static void
-create_stairs (stair *s, struct mkroom *croom)
-{
-        signed char             x,y;
+static void create_stairs(stair *s, struct mkroom *croom) {
+    signed char x, y;
 
-        x = s->x; y = s->y;
-        get_free_room_loc(&x, &y, croom);
-        mkstairs(x,y,(char)s->up, croom);
+    x = s->x;
+    y = s->y;
+    get_free_room_loc(&x, &y, croom);
+    mkstairs(x, y, (char)s->up, croom);
 }
 
 /*
