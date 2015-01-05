@@ -276,9 +276,9 @@ void commit_bonesfile(d_level *lev) {
         pline("couldn't rename %s to %s.", tempname, bones);
 }
 
-int open_bonesfile (d_level *lev, char **bonesid) {
+int open_bonesfile(d_level *lev, char **bonesid) {
     *bonesid = set_bonesfile_name(bones, lev);
-    return open(bones, O_RDONLY , 0);
+    return open(bones, O_RDONLY, 0);
 }
 
 int delete_bonesfile (d_level *lev) {

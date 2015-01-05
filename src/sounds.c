@@ -806,7 +806,7 @@ static int dochat (void) {
          * 2 helmets, 2 amulets, 3 pairs of gloves or 6 rings as a marilith,
          * etc...  --KAA
          if (u.umonnum == PM_ETTIN) {
-         You("discover that your other head makes boring conversation.");
+         You("flags.explore that your other head makes boring conversation.");
          return(1);
          }
          */

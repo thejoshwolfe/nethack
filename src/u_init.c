@@ -736,7 +736,7 @@ void u_init(void) {
             break;
     }
 
-    if (discover)
+    if (flags.explore)
         ini_inv(Wishing);
 
     if (wizard)

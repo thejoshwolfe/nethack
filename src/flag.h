@@ -26,8 +26,7 @@ struct flag {
         bool  debug;         /* in debugging mode */
 #define wizard   flags.debug
         bool  end_own;       /* list all own scores */
-        bool  explore;       /* in exploration mode */
-#define discover flags.explore
+        bool  explore;       /* in exploration mode TODO: remove explore mode */
         bool  female;
         bool  forcefight;
         bool  friday13;      /* it's Friday the 13th */

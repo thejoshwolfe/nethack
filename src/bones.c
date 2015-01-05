@@ -18,19 +18,24 @@ static void resetobjs(struct obj *,bool);
 static void drop_upon_death(struct monst *, struct obj *);
 
 static bool no_bones_level(d_level *lev) {
-        extern d_level save_dlevel;             /* in do.c */
-        s_level *sptr;
+    extern d_level save_dlevel; /* in do.c */
+    s_level *sptr;
 
-        if (ledger_no(&save_dlevel)) assign_level(lev, &save_dlevel);
+    if (ledger_no(&save_dlevel))
+        assign_level(lev, &save_dlevel);
 
-        return (bool)(((sptr = Is_special(lev)) != 0 && !sptr->boneid)
-                || !dungeons[lev->dnum].boneid
-                   /* no bones on the last or multiway branch levels */
-                   /* in any dungeon (level 1 isn't multiway).       */
-                || Is_botlevel(lev) || (Is_branchlev(lev) && lev->dlevel > 1)
-                   /* no bones in the invocation level               */
-                || (In_hell(lev) && lev->dlevel == dunlevs_in_dungeon(lev) - 1)
-                );
+    if ((sptr = Is_special(lev)) != 0 && !sptr->boneid)
+        return true;
+    if (!dungeons[lev->dnum].boneid)
+        return true;
+    /* no bones on the last or multiway branch levels */
+    /* in any dungeon (level 1 isn't multiway).       */
+    if (Is_botlevel(lev) || (Is_branchlev(lev) && lev->dlevel > 1))
+        return true;
+    /* no bones in the invocation level               */
+    if (In_hell(lev) && lev->dlevel == dunlevs_in_dungeon(lev) - 1)
+        return true;
+    return false;
 }
 
 /* Call this function for each fruit object saved in the bones level: it marks
@@ -164,7 +169,7 @@ bool can_make_bones(void) {
                 )) return false;
         /* don't let multiple restarts generate multiple copies of objects
          * in bones files */
-        if (discover) return false;
+        if (flags.explore) return false;
         return true;
 }
 
@@ -308,82 +313,79 @@ void savebones (struct obj *corpse) {
 }
 
 int getbones(void) {
-        int fd;
-        int ok;
-        char c, *bonesid, oldbonesid[10];
+    int fd;
+    int ok;
+    char c, *bonesid, oldbonesid[10];
 
-        if(discover)            /* save bones files for real games */
-                return(0);
+    /* wizard check added by GAN 02/05/87 */
+    /* only once in three times do we find bones */
+    if (rn2(3) && !wizard)
+        return 0;
+    if (no_bones_level(&u.uz))
+        return 0;
+    fd = open_bonesfile(&u.uz, &bonesid);
+    if (fd < 0)
+        return 0;
 
-        /* wizard check added by GAN 02/05/87 */
-        if(rn2(3)       /* only once in three times do we find bones */
-                && !wizard
-                ) return(0);
-        if(no_bones_level(&u.uz)) return(0);
-        fd = open_bonesfile(&u.uz, &bonesid);
-        if (fd < 0) return(0);
+    if ((ok = uptodate(fd, bones)) == 0) {
+        if (!wizard)
+            pline("Discarding unuseable bones; no need to panic...");
+    } else {
+        if (wizard) {
+            if (yn("Get bones?") == 'n') {
+                close(fd);
+                return (0);
+            }
+        }
+        mread(fd, (void *)&c, sizeof c); /* length incl. '\0' */
+        mread(fd, (void *)oldbonesid, (unsigned)c); /* DD.nnn */
+        if (strcmp(bonesid, oldbonesid) != 0) {
+            char errbuf[BUFSZ];
 
-        if ((ok = uptodate(fd, bones)) == 0) {
-            if (!wizard)
-                pline("Discarding unuseable bones; no need to panic...");
+            sprintf(errbuf, "This is bones level '%s', not '%s'!", oldbonesid, bonesid);
+            if (wizard) {
+                pline("%s", errbuf);
+                ok = false; /* won't die of trickery */
+            }
+            trickery(errbuf);
         } else {
-                if(wizard)  {
-                        if(yn("Get bones?") == 'n') {
-                                (void) close(fd);
-                                return(0);
-                        }
-                }
-                mread(fd, (void *) &c, sizeof c);       /* length incl. '\0' */
-                mread(fd, (void *) oldbonesid, (unsigned) c); /* DD.nnn */
-                if (strcmp(bonesid, oldbonesid) != 0) {
-                        char errbuf[BUFSZ];
+            struct monst *mtmp;
 
-                        sprintf(errbuf, "This is bones level '%s', not '%s'!",
-                                oldbonesid, bonesid);
-                        if (wizard) {
-                                pline("%s", errbuf);
-                                ok = false;     /* won't die of trickery */
-                        }
-                        trickery(errbuf);
-                } else {
-                        struct monst *mtmp;
+            getlev(fd, 0, 0, true);
 
-                        getlev(fd, 0, 0, true);
-
-                        /* Note that getlev() now keeps tabs on unique
-                         * monsters such as demon lords, and tracks the
-                         * birth counts of all species just as makemon()
-                         * does.  If a bones monster is extinct or has been
-                         * subject to genocide, their mhpmax will be
-                         * set to the magic DEFUNCT_MONSTER cookie value.
-                         */
-                        for(mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-                            if (mtmp->mhpmax == DEFUNCT_MONSTER) {
-                                mongone(mtmp);
-                            } else
-                                /* to correctly reset named artifacts on the level */
-                                resetobjs(mtmp->minvent,true);
-                        }
-                        resetobjs(fobj,true);
-                        resetobjs(level.buriedobjlist,true);
-                }
+            /* Note that getlev() now keeps tabs on unique
+             * monsters such as demon lords, and tracks the
+             * birth counts of all species just as makemon()
+             * does.  If a bones monster is extinct or has been
+             * subject to genocide, their mhpmax will be
+             * set to the magic DEFUNCT_MONSTER cookie value.
+             */
+            for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
+                if (mtmp->mhpmax == DEFUNCT_MONSTER) {
+                    mongone(mtmp);
+                } else
+                    /* to correctly reset named artifacts on the level */
+                    resetobjs(mtmp->minvent, true);
+            }
+            resetobjs(fobj, true);
+            resetobjs(level.buriedobjlist, true);
         }
-        (void) close(fd);
+    }
+    close(fd);
 
-        if(wizard) {
-                if(yn("Unlink bones?") == 'n') {
-                        return(ok);
-                }
+    if (wizard) {
+        if (yn("Unlink bones?") == 'n') {
+            return ok;
         }
-        if (!delete_bonesfile(&u.uz)) {
-                /* When N games try to simultaneously restore the same
-                 * bones file, N-1 of them will fail to delete it
-                 * (the first N-1 under AmigaDOS, the last N-1 under UNIX).
-                 * So no point in a mysterious message for a normal event
-                 * -- just generate a new level for those N-1 games.
-                 */
-                /* pline("Cannot unlink bones."); */
-                return(0);
-        }
-        return(ok);
+    }
+    if (!delete_bonesfile(&u.uz)) {
+        /* When N games try to simultaneously restore the same
+         * bones file, N-1 of them will fail to delete it
+         * (the first N-1 under AmigaDOS, the last N-1 under UNIX).
+         * So no point in a mysterious message for a normal event
+         * -- just generate a new level for those N-1 games.
+         */
+        return 0;
+    }
+    return ok;
 }

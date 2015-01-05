@@ -823,27 +823,26 @@ mineralize (void)
             }
 }
 
-void
-mklev (void)
-{
-        struct mkroom *croom;
+void mklev(void) {
+    struct mkroom *croom;
 
-        if(getbones()) return;
-        in_mklev = true;
-        makelevel();
-        bound_digging();
-        mineralize();
-        in_mklev = false;
-        /* has_morgue gets cleared once morgue is entered; graveyard stays
-           set (graveyard might already be set even when has_morgue is clear
-           [see fixup_special()], so don't update it unconditionally) */
-        if (level.flags.has_morgue)
-            level.flags.graveyard = 1;
-        if (!level.flags.is_maze_lev) {
-            for (croom = &rooms[0]; croom != &rooms[nroom]; croom++)
-                topologize(croom);
-        }
-        set_wall_state();
+    if (getbones())
+        return;
+    in_mklev = true;
+    makelevel();
+    bound_digging();
+    mineralize();
+    in_mklev = false;
+    /* has_morgue gets cleared once morgue is entered; graveyard stays
+     set (graveyard might already be set even when has_morgue is clear
+     [see fixup_special()], so don't update it unconditionally) */
+    if (level.flags.has_morgue)
+        level.flags.graveyard = 1;
+    if (!level.flags.is_maze_lev) {
+        for (croom = &rooms[0]; croom != &rooms[nroom]; croom++)
+            topologize(croom);
+    }
+    set_wall_state();
 }
 
 void topologize (struct mkroom *croom) {

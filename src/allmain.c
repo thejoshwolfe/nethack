@@ -525,7 +525,7 @@ int main(int argc, char *argv[]) {
         check_special_room(false);
         wd_message();
 
-        if (discover || wizard) {
+        if (flags.explore || wizard) {
             if (yn("Do you want to keep the save file?") == 'n')
                 (void)delete_savefile();
             else {
@@ -565,7 +565,7 @@ static void process_options (int argc, char *argv[]) {
                 wizard = true;
                 break;
             case 'X':
-                discover = true;
+                flags.explore = true;
                 break;
             case 'n':
                 iflags.news = false;
@@ -644,6 +644,6 @@ static bool whoami(void) {
 }
 
 static void wd_message (void) {
-    if (discover)
+    if (flags.explore)
         You("are in non-scoring discovery mode.");
 }

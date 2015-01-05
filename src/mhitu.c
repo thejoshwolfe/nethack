@@ -1065,7 +1065,7 @@ dopois:
 
                     while(1) {
                         /* avoid looping on "die(y/n)?" */
-                        if (lifesaved && (discover || wizard)) {
+                        if (lifesaved && (flags.explore || wizard)) {
                             if (wore_amulet && !uamul) {
                                 /* used up AMULET_OF_LIFE_SAVING; still
                                    subject to dying from brainlessness */

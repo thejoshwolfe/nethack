@@ -819,10 +819,8 @@ deepest_lev_reached ( /* return the lowest level explored in the game*/
 
 /* return a bookkeeping level number for purpose of comparisons and
  * save/restore */
-signed char
-ledger_no (d_level *lev)
-{
-    return((signed char)(lev->dlevel + dungeons[lev->dnum].ledger_start));
+signed char ledger_no(d_level *lev) {
+    return ((signed char)(lev->dlevel + dungeons[lev->dnum].ledger_start));
 }
 
 /*
@@ -873,26 +871,19 @@ signed char depth(d_level *lev) {
     return((signed char)( dungeons[lev->dnum].depth_start + lev->dlevel - 1));
 }
 
-bool 
-on_level (    /* are "lev1" and "lev2" actually the same? */
-    d_level *lev1,
-    d_level *lev2
-)
-{
-    return((bool)((lev1->dnum == lev2->dnum) && (lev1->dlevel == lev2->dlevel)));
+/* are "lev1" and "lev2" actually the same? */
+bool on_level(d_level *lev1, d_level *lev2) {
+    return ((bool)((lev1->dnum == lev2->dnum) && (lev1->dlevel == lev2->dlevel)));
 }
 
 
 /* is this level referenced in the special level chain? */
-s_level *
-Is_special (d_level *lev)
-{
+s_level * Is_special(d_level *lev) {
     s_level *levtmp;
-
     for (levtmp = sp_levchn; levtmp; levtmp = levtmp->next)
-        if (on_level(lev, &levtmp->dlevel)) return(levtmp);
-
-    return((s_level *)0);
+        if (on_level(lev, &levtmp->dlevel))
+            return (levtmp);
+    return NULL;
 }
 
 /*
@@ -1233,12 +1224,8 @@ goto_hell (    /* go directly to hell... */
     goto_level(&lev, at_stairs, falling, false);
 }
 
-void
-assign_level (        /* equivalent to dest = source */
-    d_level *dest,
-    d_level *src
-)
-{
+/* equivalent to dest = source */
+void assign_level(d_level *dest, d_level *src) {
     dest->dnum = src->dnum;
     dest->dlevel = src->dlevel;
 }

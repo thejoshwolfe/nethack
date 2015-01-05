@@ -361,8 +361,8 @@ restgamestate (
     unsigned int *steedid        /* STEED */
 )
 {
-        /* discover is actually flags.explore */
-        bool remember_discover = discover;
+        /* flags.explore is actually flags.explore */
+        bool remember_discover = flags.explore;
         struct obj *otmp;
         int uid;
 
@@ -377,7 +377,7 @@ restgamestate (
 
         mread(fd, (void *) &flags, sizeof(struct flag));
         flags.bypasses = 0;     /* never use the saved value of bypasses */
-        if (remember_discover) discover = remember_discover;
+        if (remember_discover) flags.explore = remember_discover;
 
         role_init();    /* Reset the initial role, race, gender, and alignment */
         mread(fd, (void *) &u, sizeof(struct you));
@@ -530,7 +530,7 @@ int dorecover(int fd) {
     getlev(fd, 0, (signed char)0, false);
     close(fd);
 
-    if (!wizard && !discover)
+    if (!wizard && !flags.explore)
         delete_savefile();
     restlevelstate(stuckid, steedid);
     /* take care of iron ball & chain */
