@@ -14,7 +14,7 @@ var httpPort = process.env.NETHACK_HTTP_PORT || 21119;
 var httpHost = process.env.NETHACK_HTTP_HOST || '0.0.0.0';
 var dbFilePath = process.env.NETHACK_DB_PATH || 'nethack.db';
 
-var USERS_KEY_PREFIX = "Users.";
+var USERS_KEY_PREFIX = "Users.Username.";
 
 var validateUsernameRegex = /^[a-zA-Z0-9_~]*$/;
 var MIN_USERNAME_LENGTH = 1;
@@ -24,6 +24,7 @@ var MAX_PASSWORD_LENGTH = 1024;
 
 var messageHandlers = {
   register: register,
+  login: login,
 };
 
 var db = leveldown(dbFilePath);
@@ -63,7 +64,7 @@ function boot() {
       if (err) throw err;
       httpServer.listen(httpPort, httpHost, function() {
         console.info("HTTP server listening at http://" + httpHost + ":" + httpPort + "/");
-        console.info("TODO: users", users);
+        console.log("users", users);
       });
     });
   });
@@ -76,7 +77,7 @@ function cacheAllDb(cb) {
   });
   function processOne(key, value) {
     var user = deserializeUser(value);
-    users[user.id] = user;
+    users[usernameToId(user.username)] = user;
   }
 }
 
@@ -91,7 +92,7 @@ function saveUser(user) {
 }
 
 function userKey(user) {
-  return USERS_KEY_PREFIX + user.id;
+  return USERS_KEY_PREFIX + usernameToId(user.username);
 }
 
 function createHttpServer(cb) {
@@ -213,4 +214,21 @@ function logIfDbError(err) {
   if (err) {
     console.error("DB Error:", err.stack);
   }
+}
+
+function login(ws, msg) {
+  var username = msg.username;
+  var password = msg.password;
+
+  var id = usernameToId(username);
+  var existingUser = users[id];
+  if (!existingUser) {
+    send(ws, 'loginResult', {err: 'invalid username'});
+    return;
+  }
+  if (existingUser.password !== password) {
+    send(ws, 'loginResult', {err: 'invalid password'});
+    return;
+  }
+  send(ws, 'loginResult', {username: existingUser.username});
 }
