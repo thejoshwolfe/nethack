@@ -418,6 +418,9 @@ void moveloop(void) {
                 (multi && (!flags.travel ? !(multi % 7) : !(moves % 7L)))) {
             if (flags.time && flags.run) flags.botl = 1;
         }
+
+        fprintf(stderr, "TODO: main loop\n");
+        exit(1);
     }
 }
 

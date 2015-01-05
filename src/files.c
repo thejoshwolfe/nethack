@@ -14,7 +14,7 @@
 #include <errno.h>
 
 char bones[] = "bonesnn.xxx";
-char lock[PL_NSIZ+14] = "1lock"; /* long enough for uid+name+.99 */
+char lock[PL_NSIZ+14] = "run/1lock"; /* long enough for uid+name+.99 */
 
 #define SAVESIZE        (PL_NSIZ + 13)  /* save/99999player.e */
 

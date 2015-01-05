@@ -33,6 +33,7 @@ static unsigned ustuck_id = 0, usteed_id = 0;
 static int bw_fd = -1;
 static FILE *bw_FILE = 0;
 static bool buffering = false;
+static bool savestateinlock_havestate = true;
 
 int dosave (void) {
     clear_nhwindow(WIN_MESSAGE);
@@ -283,8 +284,6 @@ int dosave0(void) {
 }
 
 void savestateinlock (void) {
-    int fd, hpid;
-    static bool havestate = true;
     char whynot[BUFSZ];
 
     /* When checkpointing is on, the full state needs to be written
@@ -298,34 +297,14 @@ void savestateinlock (void) {
      * noop pid rewriting will take place on the first "checkpoint" after
      * the game is started or restored, if checkpointing is off.
      */
-    if (flags.ins_chkpt || havestate) {
+    if (flags.ins_chkpt || savestateinlock_havestate) {
         /* save the rest of the current game state in the lock file,
          * following the original int pid, the current level number,
          * and the current savefile name, which should not be subject
          * to any internal compression schemes since they must be
          * readable by an external utility
          */
-        fd = open_levelfile(0, whynot);
-        if (fd < 0) {
-            pline("%s", whynot);
-            pline("Probably someone removed it.");
-            fprintf(stderr, "TODO: killer = %s\n", whynot);
-            done(TRICKED);
-            return;
-        }
-
-        (void) read(fd, (void *) &hpid, sizeof(hpid));
-        if (hackpid != hpid) {
-            sprintf(whynot,
-                    "Level #0 pid (%d) doesn't match ours (%d)!",
-                    hpid, hackpid);
-            pline("%s", whynot);
-            fprintf(stderr, "TODO: killer = %s\n", whynot);
-            done(TRICKED);
-        }
-        (void) close(fd);
-
-        fd = create_levelfile(0, whynot);
+        int fd = create_levelfile(0, whynot);
         if (fd < 0) {
             pline("%s", whynot);
             fprintf(stderr, "TODO: killer = %s\n", whynot);
@@ -345,7 +324,7 @@ void savestateinlock (void) {
         }
         bclose(fd);
     }
-    havestate = flags.ins_chkpt;
+    savestateinlock_havestate = flags.ins_chkpt;
 }
 
 static void savetrapchn (int fd, struct trap *trap, int mode) {
