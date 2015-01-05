@@ -217,7 +217,7 @@ void mstatusline (struct monst *mtmp) {
 
     info[0] = 0;
     if (mtmp->mtame) {        strcat(info, ", tame");
-        if (wizard) {
+        if (flags.debug) {
             sprintf(eos(info), " (%d", mtmp->mtame);
             if (!mtmp->isminion)
                 sprintf(eos(info), "; hungry %ld; apport %d",

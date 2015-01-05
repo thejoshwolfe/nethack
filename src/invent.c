@@ -17,11 +17,11 @@
 
 static int lastinvnr = 51;      /* 0 ... 51 (never saved&restored) */
 
-/* wizards can wish for venom, which will become an invisible inventory
+/* debuggers can wish for venom, which will become an invisible inventory
  * item without this.  putting it in inv_order would mean venom would
  * suddenly become a choice for all the inventory-class commands, which
  * would probably cause mass confusion.  the test for inventory venom
- * is only WIZARD and not wizard because the wizard can leave venom lying
+ * is only WIZARD and not flags.debug because the flags.debug can leave venom lying
  * around on a bones level for normal players to find.
  */
 static char venom_inv[] = { VENOM_CLASS, 0 };   /* (constant) */

@@ -401,7 +401,7 @@ static void init_level (int dgn, int proto_index, struct proto_dungeon *pd) {
     struct tmplevel *tlevel = &pd->tmplevel[proto_index];
 
     pd->final_lev[proto_index] = (s_level *) 0; /* no "real" level */
-    if (!wizard)
+    if (!flags.debug)
         if (tlevel->chance <= rn2(100)) return;
 
     pd->final_lev[proto_index] = new_level =
@@ -577,7 +577,7 @@ void init_dungeons(void) {
     for (i = 0; i < n_dgns; i++) {
         Fread((void *)&pd.tmpdungeon[i],
                     sizeof(struct tmpdungeon), 1, dgn_file);
-        if(!wizard)
+        if(!flags.debug)
           if(pd.tmpdungeon[i].chance && (pd.tmpdungeon[i].chance <= rn2(100))) {
         int j;
 
@@ -1258,8 +1258,8 @@ signed char lev_by_name(const char *nam) {
         idx = ledger_no(&dlev);
         if ((dlev.dnum == u.uz.dnum ||
                 /* within same branch, or else main dungeon <-> gehennom */
-                (u.uz.dnum == valley_level.dnum && dlev.dnum == medusa_level.dnum) || (u.uz.dnum == medusa_level.dnum && dlev.dnum == valley_level.dnum)) && ( /* either wizard mode or else seen and not forgotten */
-                        wizard || (level_info[idx].flags & (FORGOTTEN | VISITED)) == VISITED)) {
+                (u.uz.dnum == valley_level.dnum && dlev.dnum == medusa_level.dnum) || (u.uz.dnum == medusa_level.dnum && dlev.dnum == valley_level.dnum)) && ( /* either flags.debug mode or else seen and not forgotten */
+                        flags.debug || (level_info[idx].flags & (FORGOTTEN | VISITED)) == VISITED)) {
             lev = depth(&slev->dlevel);
         }
     } else { /* not a specific level; try branch names */
@@ -1271,8 +1271,8 @@ signed char lev_by_name(const char *nam) {
         if (idx >= 0) {
             idxtoo = (idx >> 8) & 0x00FF;
             idx &= 0x00FF;
-            if ( /* either wizard mode, or else _both_ sides of branch seen */
-            wizard || ((level_info[idx].flags & (FORGOTTEN | VISITED)) == VISITED && (level_info[idxtoo].flags & (FORGOTTEN | VISITED)) == VISITED)) {
+            if ( /* either flags.debug mode, or else _both_ sides of branch seen */
+            flags.debug || ((level_info[idx].flags & (FORGOTTEN | VISITED)) == VISITED && (level_info[idxtoo].flags & (FORGOTTEN | VISITED)) == VISITED)) {
                 if (ledger_to_dnum(idxtoo) == u.uz.dnum)
                     idx = idxtoo;
                 dlev.dnum = ledger_to_dnum(idx);

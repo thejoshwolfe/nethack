@@ -1010,7 +1010,7 @@ create_critters (
         int x, y;
         struct monst *mon;
         bool known = false;
-        bool ask = wizard;
+        bool ask = flags.debug;
 
         while (cnt--) {
             if (ask) {

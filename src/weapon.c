@@ -784,7 +784,7 @@ static int slots_required(int skill) {
 /* return true if this skill can be advanced */
 /*ARGSUSED*/
 static bool can_advance(int skill, bool speedy) {
-    return !P_RESTRICTED(skill) && P_SKILL(skill) < P_MAX_SKILL(skill) && ((wizard && speedy) || (P_ADVANCE(skill) >= (unsigned)practice_needed_to_advance(P_SKILL(skill)) && u.skills_advanced < P_SKILL_LIMIT && u.weapon_slots >= slots_required(skill)));
+    return !P_RESTRICTED(skill) && P_SKILL(skill) < P_MAX_SKILL(skill) && ((flags.debug && speedy) || (P_ADVANCE(skill) >= (unsigned)practice_needed_to_advance(P_SKILL(skill)) && u.skills_advanced < P_SKILL_LIMIT && u.weapon_slots >= slots_required(skill)));
 }
 
 /* return true if this skill could be advanced if more slots were available */
@@ -848,7 +848,7 @@ int enhance_skill(bool want_dump) {
     bool logged = false;
 
     if (!want_dump)
-        if (wizard && yn("Advance skills without practice?") == 'y')
+        if (flags.debug && yn("Advance skills without practice?") == 'y')
             speedy = true;
 
     do {
@@ -898,7 +898,7 @@ int enhance_skill(bool want_dump) {
         }
 
         strcpy(buf, (to_advance > 0) ? "Pick a skill to advance:" : "Current skills:");
-        if (wizard && !speedy)
+        if (flags.debug && !speedy)
             sprintf(eos(buf), "  (%d slot%s available)", u.weapon_slots, plur(u.weapon_slots));
         if (want_dump) {
             dump("", "");

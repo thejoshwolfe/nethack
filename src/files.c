@@ -272,7 +272,7 @@ void commit_bonesfile(d_level *lev) {
     tempname = set_bonestemp_name();
 
     ret = rename(tempname, bones);
-    if (wizard && ret != 0)
+    if (flags.debug && ret != 0)
         pline("couldn't rename %s to %s.", tempname, bones);
 }
 
@@ -645,7 +645,7 @@ void read_wizkit (void) {
     struct obj *otmp;
     bool bad_items = false, skip = false;
 
-    if (!wizard || !(fp = fopen_wizkit_file())) return;
+    if (!flags.debug || !(fp = fopen_wizkit_file())) return;
 
     while (fgets(buf, (int)(sizeof buf), fp)) {
         ep = index(buf, '\n');

@@ -1497,7 +1497,7 @@ static bool wishymatch ( const char *u_str, const char *o_str, bool retry_invert
      * and the trap is "bear trap", so to let wizards wish for both we
      * must not fuzzymatch.
      */
-    if (wizard && !strcmp(o_str, "beartrap"))
+    if (flags.debug && !strcmp(o_str, "beartrap"))
         return !strncmpi(o_str, u_str, 8);
 
     /* ignore spaces & hyphens and upper/lower case when comparing */

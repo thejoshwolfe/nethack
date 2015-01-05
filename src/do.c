@@ -992,7 +992,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
                         pline("Probably someone removed it.");
                         killer.method = KM_TRICKED;
                         done(KM_TRICKED);
-                        /* we'll reach here if running in wizard mode */
+                        /* we'll reach here if running in flags.debug mode */
                         fprintf(stderr, "Cannot continue this game.\n");
                 }
                 getlev(fd, hackpid, new_ledger, false);

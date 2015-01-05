@@ -3604,7 +3604,7 @@ bool lava_effects(void) {
             You("fall into the lava!");
 
         usurvive = Lifesaved|| flags.explore;
-        if (wizard)
+        if (flags.debug)
             usurvive = true;
         for (obj = invent; obj; obj = obj2) {
             obj2 = obj->nobj;

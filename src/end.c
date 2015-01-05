@@ -146,7 +146,7 @@ int done2 (void) {
         }
         return 0;
     }
-    if(wizard) {
+    if(flags.debug) {
         int c;
         const char *tmp = "Dump core?";
         if ((c = ynq(tmp)) == 'y') {
@@ -253,7 +253,7 @@ void panic (const char * str, ...) {
         dosave0();
     }
     vfprintf(stderr, str, the_args);
-    if (wizard)
+    if (flags.debug)
         NH_abort(); /* generate core dump */
     va_end(the_args);
     done(PANICKED);
@@ -458,8 +458,8 @@ void done (int how) {
 
     if (how == TRICKED) {
         killer.method = KM_DIED;
-        if (wizard) {
-            You("are a very tricky wizard, it seems.");
+        if (flags.debug) {
+            You("are a very tricky flags.debug, it seems.");
             return;
         }
     }
@@ -494,7 +494,7 @@ void done (int how) {
             return;
         }
     }
-    if (( wizard || flags.explore) && (how <= GENOCIDED)) {
+    if (( flags.debug || flags.explore) && (how <= GENOCIDED)) {
         if(yn("Die?") == 'y') goto die;
         pline("OK, so you don't %s.", (how == CHOKING) ? "choke" : "die");
         if(u.uhpmax <= 0) u.uhpmax = u.ulevel * 8;      /* arbitrary */
@@ -615,7 +615,7 @@ die:
     }
 
     if (bones_ok) {
-        if (!wizard || yn("Save bones?") == 'y')
+        if (!flags.debug || yn("Save bones?") == 'y')
             savebones(corpse);
         /* corpse may be invalid pointer now so
            ensure that it isn't used again */

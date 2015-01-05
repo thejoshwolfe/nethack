@@ -36,7 +36,7 @@ static const char *help_menu_items[] = {
 /* 6*/  "Longer explanation of game options.",
 /* 7*/  "List of extended commands.",
 /* 8*/  "The NetHack license.",
-        "List of wizard-mode commands.",
+        "List of debug-mode commands.",
         "",
         NULL,
 };
@@ -616,7 +616,7 @@ static bool help_menu (int *sel) {
 
         any.a_void = 0;         /* zero all bits */
         start_menu(tmpwin);
-        if (!wizard) help_menu_items[WIZHLP_SLOT] = "",
+        if (!flags.debug) help_menu_items[WIZHLP_SLOT] = "",
                      help_menu_items[WIZHLP_SLOT+1] = NULL;
         for (i = 0; help_menu_items[i]; i++)
             {

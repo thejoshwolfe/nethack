@@ -75,7 +75,7 @@ mkshop (void)
         char *ep = (char *)0;   /* (init == lint suppression) */
 
         /* first determine shoptype */
-        if(wizard){
+        if(flags.debug){
                 ep = nh_getenv("SHOPTYPE");
                 if(ep){
                         if(*ep == 'z' || *ep == 'Z'){
@@ -138,7 +138,7 @@ gottype:
                 if(has_dnstairs(sroom) || has_upstairs(sroom))
                         continue;
                 if(
-                   (wizard && ep && sroom->doorct != 0) ||
+                   (flags.debug && ep && sroom->doorct != 0) ||
                         sroom->doorct == 1) break;
         }
         if (!sroom->rlit) {
@@ -191,7 +191,7 @@ pick_room (bool strict)
                 } else if(has_upstairs(sroom) || has_dnstairs(sroom))
                         continue;
                 if(sroom->doorct == 1 || !rn2(5)
-                                                || wizard
+                                                || flags.debug
                                                         )
                         return sroom;
         }

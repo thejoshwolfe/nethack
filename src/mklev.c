@@ -636,7 +636,7 @@ static void makelevel(void) {
     {
         int u_depth = depth(&u.uz);
 
-        if (wizard && nh_getenv("SHOPTYPE"))
+        if (flags.debug && nh_getenv("SHOPTYPE"))
             mkroom(SHOPBASE);
         else if (u_depth > 1 && u_depth < depth(&medusa_level) && nroom >= room_threshold && rn2(u_depth) < 3)
             mkroom(SHOPBASE);
@@ -1396,7 +1396,7 @@ static void mk_knox_portal(signed char x, signed char y) {
     }
 
     /* Already set or 2/3 chance of deferring until a later level. */
-    if (source->dnum < n_dgns || (rn2(3) && !wizard))
+    if (source->dnum < n_dgns || (rn2(3) && !flags.debug))
         return;
 
     if (!(u.uz.dnum == oracle_level.dnum /* in main dungeon */

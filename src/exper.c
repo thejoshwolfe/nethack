@@ -109,7 +109,7 @@ void losexp ( const char *drainer ) {
     int num;
 
     /* override life-drain resistance when handling an explicit
-       wizard mode request to reduce level; never fatal though */
+       flags.debug mode request to reduce level; never fatal though */
     if (drainer && !strcmp(drainer, "#levelchange"))
         drainer = 0;
     else

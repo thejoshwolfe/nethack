@@ -172,7 +172,7 @@ void dryup (signed char x, signed char y, bool isyou) {
             if(!mtmp) pline_The("flow reduces to a trickle.");
             return;
         }
-        if (isyou && wizard) {
+        if (isyou && flags.debug) {
             if (yn("Dry up fountain?") == 'n')
                 return;
         }

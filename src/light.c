@@ -529,7 +529,7 @@ candle_light_range (struct obj *obj)
     } else if (Is_candle(obj)) {
         /*
          *      Range is incremented by powers of 7 so that it will take
-         *      wizard mode quantities of candles to get more light than
+         *      flags.debug mode quantities of candles to get more light than
          *      from a lamp, without imposing an arbitrary limit.
          *       1..6   candles, range 2;
          *       7..48  candles, range 3;

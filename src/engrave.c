@@ -788,7 +788,7 @@ int doengrave (void) {
             break;
 
         case VENOM_CLASS:
-            if (wizard) {
+            if (flags.debug) {
                 pline("Writing a poison pen letter??");
                 break;
             }

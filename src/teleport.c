@@ -155,7 +155,7 @@ full:
 
 /*
  * Check for restricted areas present in some special levels.  (This might
- * need to be augmented to allow deliberate passage in wizard mode, but
+ * need to be augmented to allow deliberate passage in flags.debug mode, but
  * only for explicitly chosen destinations.)
  */
 static bool tele_jump_ok (int x1, int y1, int x2, int y2) {
@@ -352,7 +352,7 @@ void tele (void) {
 
         /* Disable teleportation in stronghold && Vlad's Tower */
         if (level.flags.noteleport) {
-                if (!wizard) {
+                if (!flags.debug) {
                     pline("A mysterious force prevents you from teleporting!");
                     return;
                 }
@@ -366,7 +366,7 @@ void tele (void) {
             return;
         }
         if ((Teleport_control && !Stunned)
-                            || wizard
+                            || flags.debug
                                         ) {
             if (unconscious()) {
                 pline("Being unconscious, you cannot control your teleport.");
@@ -429,7 +429,7 @@ int dotele (void) {
                                 castit = true;
                                 break;
                         }
-                if (!wizard) {
+                if (!flags.debug) {
                     if (!castit) {
                         if (!Teleportation)
                             You("don't know that spell.");
@@ -440,7 +440,7 @@ int dotele (void) {
             }
 
             if (u.uhunger <= 100 || ACURR(A_STR) < 6) {
-                if (!wizard) {
+                if (!flags.debug) {
                         You("lack the strength %s.",
                             castit ? "for a teleport spell" : "to teleport");
                         return 1;
@@ -449,7 +449,7 @@ int dotele (void) {
 
             energy = objects[SPE_TELEPORT_AWAY].oc_oc2 * 7 / 2 - 2;
             if (u.uen <= energy) {
-                if (wizard)
+                if (flags.debug)
                         energy = u.uen;
                 else
                 {
@@ -468,7 +468,7 @@ int dotele (void) {
                 if (spelleffects(sp_no, true))
                         return(1);
                 else
-                    if (!wizard)
+                    if (!flags.debug)
                         return(0);
             } else {
                 u.uen -= energy;
@@ -496,13 +496,13 @@ void level_tele (void) {
         bool force_dest = false;
 
         if ((u.uhave.amulet || In_endgame(&u.uz) || In_sokoban(&u.uz))
-                                                && !wizard
+                                                && !flags.debug
                                                         ) {
             You_feel("very disoriented for a moment.");
             return;
         }
         if ((Teleport_control && !Stunned)
-           || wizard
+           || flags.debug
                 ) {
             char qbuf[BUFSZ];
             int trycnt = 0;
@@ -510,7 +510,7 @@ void level_tele (void) {
             strcpy(qbuf, "To what level do you want to teleport?");
             do {
                 if (++trycnt == 2) {
-                        if (wizard) strcat(qbuf, " [type a number or ? for a menu]");
+                        if (flags.debug) strcat(qbuf, " [type a number or ? for a menu]");
                         else
                         strcat(qbuf, " [type a number]");
                 }
@@ -527,7 +527,7 @@ void level_tele (void) {
                     pline("Oops...");
                     goto random_levtport;
                 }
-                if (wizard && !strcmp(buf,"?")) {
+                if (flags.debug && !strcmp(buf,"?")) {
                     signed char destlev = 0;
                     signed char destdnum = 0;
 
@@ -682,13 +682,13 @@ void level_tele (void) {
         } else if (u.uz.dnum == medusa_level.dnum &&
             newlev >= dungeons[u.uz.dnum].depth_start +
                                                 dunlevs_in_dungeon(&u.uz)) {
-            if (!(wizard && force_dest))
+            if (!(flags.debug && force_dest))
             find_hell(&newlevel);
         } else {
             /* if invocation did not yet occur, teleporting into
              * the last level of Gehennom is forbidden.
              */
-                if (!wizard)
+                if (!flags.debug)
             if (Inhell && !u.uevent.invoked &&
                         newlev >= (dungeons[u.uz.dnum].depth_start +
                                         dunlevs_in_dungeon(&u.uz) - 1)) {
@@ -703,7 +703,7 @@ void level_tele (void) {
              * we must translate newlev to a number relative to the
              * current dungeon.
              */
-            if (!(wizard && force_dest))
+            if (!(flags.debug && force_dest))
             get_level(&newlevel, newlev);
         }
         schedule_goto(&newlevel, false, false, 0, (char *)0, (char *)0);

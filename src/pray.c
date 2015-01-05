@@ -1546,7 +1546,7 @@ dopray (void)
     /* set up p_type and p_alignment */
     if (!can_pray(true)) return 0;
 
-    if (wizard && p_type >= 0) {
+    if (flags.debug && p_type >= 0) {
         if (yn("Force the gods to be pleased?") == 'y') {
             u.ublesscnt = 0;
             if (u.uluck < 0) u.uluck = 0;

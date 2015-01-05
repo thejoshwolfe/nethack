@@ -165,7 +165,7 @@ bool can_make_bones(void) {
 
         if(depth(&u.uz) <= 0 ||         /* bulletproofing for endgame */
            (!rn2(1 + (depth(&u.uz)>>2)) /* fewer ghosts on low levels */
-                && !wizard
+                && !flags.debug
                 )) return false;
         /* don't let multiple restarts generate multiple copies of objects
          * in bones files */
@@ -189,7 +189,7 @@ void savebones (struct obj *corpse) {
         fd = open_bonesfile(&u.uz, &bonesid);
         if (fd >= 0) {
                 (void) close(fd);
-                if (wizard) {
+                if (flags.debug) {
                     if (yn("Bones file already exists.  Replace it?") == 'y') {
                         if (delete_bonesfile(&u.uz)) goto make_bones;
                         else pline("Cannot unlink old bones.");
@@ -292,7 +292,7 @@ void savebones (struct obj *corpse) {
 
         fd = create_bonesfile(&u.uz, &bonesid, whynot);
         if(fd < 0) {
-                if(wizard)
+                if(flags.debug)
                         pline("%s", whynot);
                 /* bones file creation problems are silent to the player.
                  * Keep it that way, but place a clue into the paniclog.
@@ -317,9 +317,9 @@ int getbones(void) {
     int ok;
     char c, *bonesid, oldbonesid[10];
 
-    /* wizard check added by GAN 02/05/87 */
+    /* flags.debug check added by GAN 02/05/87 */
     /* only once in three times do we find bones */
-    if (rn2(3) && !wizard)
+    if (rn2(3) && !flags.debug)
         return 0;
     if (no_bones_level(&u.uz))
         return 0;
@@ -328,10 +328,10 @@ int getbones(void) {
         return 0;
 
     if ((ok = uptodate(fd, bones)) == 0) {
-        if (!wizard)
+        if (!flags.debug)
             pline("Discarding unuseable bones; no need to panic...");
     } else {
-        if (wizard) {
+        if (flags.debug) {
             if (yn("Get bones?") == 'n') {
                 close(fd);
                 return (0);
@@ -343,7 +343,7 @@ int getbones(void) {
             char errbuf[BUFSZ];
 
             sprintf(errbuf, "This is bones level '%s', not '%s'!", oldbonesid, bonesid);
-            if (wizard) {
+            if (flags.debug) {
                 pline("%s", errbuf);
                 ok = false; /* won't die of trickery */
             }
@@ -373,7 +373,7 @@ int getbones(void) {
     }
     close(fd);
 
-    if (wizard) {
+    if (flags.debug) {
         if (yn("Unlink bones?") == 'n') {
             return ok;
         }

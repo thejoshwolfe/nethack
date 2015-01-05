@@ -1753,8 +1753,8 @@ int doset (void) {
                     ((boolopt[i].optflags == DISP_IN_GAME && pass == 0) ||
                      (boolopt[i].optflags == SET_IN_GAME && pass == 1))) {
                 if (bool_p == &flags.female) continue;  /* obsolete */
-                if (bool_p == &iflags.sanity_check && !wizard) continue;
-                if (bool_p == &iflags.menu_tab_sep && !wizard) continue;
+                if (bool_p == &iflags.sanity_check && !flags.debug) continue;
+                if (bool_p == &iflags.menu_tab_sep && !flags.debug) continue;
                 if (is_wc_option(boolopt[i].name) &&
                         !wc_supported(boolopt[i].name)) continue;
                 if (is_wc2_option(boolopt[i].name) &&
@@ -2293,8 +2293,8 @@ void option_help (void) {
     /* Boolean options */
     for (i = 0; boolopt[i].name; i++) {
         if (boolopt[i].addr) {
-            if (boolopt[i].addr == &iflags.sanity_check && !wizard) continue;
-            if (boolopt[i].addr == &iflags.menu_tab_sep && !wizard) continue;
+            if (boolopt[i].addr == &iflags.sanity_check && !flags.debug) continue;
+            if (boolopt[i].addr == &iflags.menu_tab_sep && !flags.debug) continue;
             next_opt(datawin, boolopt[i].name);
         }
     }

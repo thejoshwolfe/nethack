@@ -88,7 +88,7 @@ void remove_rect(NhRect *r) {
  */
 void add_rect(NhRect *r) {
     if (rect_cnt >= MAXRECT) {
-        if (wizard)
+        if (flags.debug)
             pline("MAXRECT may be too small.");
         return;
     }

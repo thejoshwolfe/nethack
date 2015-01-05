@@ -2092,7 +2092,7 @@ static int select_newcham_form (struct monst *mon) {
             break;
     }
     /* For debugging only: allow control of polymorphed monster; not saved */
-    if (wizard && iflags.mon_polycontrol) {
+    if (flags.debug && iflags.mon_polycontrol) {
         char pprompt[BUFSZ], buf[BUFSZ];
         int tries = 0;
         do {

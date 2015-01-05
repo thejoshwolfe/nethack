@@ -88,7 +88,7 @@ void moveloop(void) {
        we're linked properly.
        */
 
-    if (wizard) add_debug_extended_commands();
+    if (flags.debug) add_debug_extended_commands();
 
     encumber_msg(); /* in case they auto-picked up something */
 
@@ -516,19 +516,17 @@ int main(int argc, char *argv[]) {
 
     int fd;
     if ((fd = restore_saved_game()) >= 0) {
-        /* Since wizard is actually flags.debug, restoring might
-         * overwrite it.
-         */
-        bool remember_wiz_mode = wizard;
+        /* restoring might overwrite flags.debug. */
+        bool remember_wiz_mode = flags.debug;
         pline("Restoring save file...");
         if (!dorecover(fd))
             goto not_recovered;
-        if (!wizard && remember_wiz_mode)
-            wizard = true;
+        if (!flags.debug && remember_wiz_mode)
+            flags.debug = true;
         check_special_room(false);
         wd_message();
 
-        if (flags.explore || wizard) {
+        if (flags.explore || flags.debug) {
             if (yn("Do you want to keep the save file?") == 'n')
                 (void)delete_savefile();
             else {
@@ -565,7 +563,7 @@ static void process_options (int argc, char *argv[]) {
         argc--;
         switch(argv[0][1]){
             case 'D':
-                wizard = true;
+                flags.debug = true;
                 break;
             case 'X':
                 flags.explore = true;

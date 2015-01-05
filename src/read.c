@@ -648,7 +648,7 @@ static void do_class_genocide (void) {
                     (buf[0] == DEF_INVISIBLE && buf[1] == '\0'))
                 You("aren't permitted to genocide such monsters.");
             else
-                if (wizard && buf[0] == '*') {
+                if (flags.debug && buf[0] == '*') {
                     struct monst *mtmp, *mtmp2;
 
                     gonecnt = 0;

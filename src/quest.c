@@ -68,7 +68,7 @@ static int is_pure (bool talk) {
     int purity;
     aligntyp original_alignment = u.ualignbase[A_ORIGINAL];
 
-    if (wizard && talk) {
+    if (flags.debug && talk) {
         if (u.ualign.type != original_alignment) {
             You("are currently %s instead of %s.",
                     align_str(u.ualign.type), align_str(original_alignment));

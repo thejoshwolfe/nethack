@@ -739,7 +739,7 @@ void u_init(void) {
     if (flags.explore)
         ini_inv(Wishing);
 
-    if (wizard)
+    if (flags.debug)
         read_wizkit();
 
     u.ugold0 += hidden_gold(); /* in case sack has gold in it */
@@ -882,7 +882,7 @@ ini_inv (struct trobj *trop)
                                 /* Monks don't use weapons */
                                 || (otyp == SCR_ENCHANT_WEAPON &&
                                     Role_if(PM_MONK))
-                                /* wizard patch -- they already have one */
+                                /* flags.debug patch -- they already have one */
                                 || (otyp == SPE_FORCE_BOLT &&
                                     Role_if(PM_WIZARD))
                                 /* powerful spells are either useless to

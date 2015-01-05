@@ -368,10 +368,10 @@ restgamestate (
 
         mread(fd, (void *) &uid, sizeof uid);
         if (uid != getuid()) {          /* strange ... */
-            /* for wizard mode, issue a reminder; for others, treat it
+            /* for flags.debug mode, issue a reminder; for others, treat it
                as an attempt to cheat and refuse to restore this file */
             pline("Saved game was not yours.");
-            if (!wizard)
+            if (!flags.debug)
                 return false;
         }
 
@@ -530,7 +530,7 @@ int dorecover(int fd) {
     getlev(fd, 0, (signed char)0, false);
     close(fd);
 
-    if (!wizard && !flags.explore)
+    if (!flags.debug && !flags.explore)
         delete_savefile();
     restlevelstate(stuckid, steedid);
     /* take care of iron ball & chain */
@@ -632,7 +632,7 @@ void getlev(int fd, int pid, signed char lev, bool ghostly) {
             sprintf(trickbuf, "PID (%d) doesn't match saved PID (%d)!", hpid, pid);
         else
             sprintf(trickbuf, "This is level %d, not %d!", dlvl, lev);
-        if (wizard)
+        if (flags.debug)
             plines(trickbuf);
         trickery(trickbuf);
     }

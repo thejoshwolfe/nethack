@@ -24,7 +24,6 @@ struct flag {
         bool  botlx;         /* print an entirely new bottom line */
         bool  confirm;       /* confirm before hitting tame monsters */
         bool  debug;         /* in debugging mode */
-#define wizard   flags.debug
         bool  end_own;       /* list all own scores */
         bool  explore;       /* in exploration mode TODO: remove explore mode */
         bool  female;

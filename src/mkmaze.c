@@ -514,7 +514,7 @@ makemaz (const char *s)
         } else strcpy(protofile, "");
 
         /* SPLEVTYPE format is "level-choice,level-choice"... */
-        if (wizard && *protofile && sp && sp->rndlevs) {
+        if (flags.debug && *protofile && sp && sp->rndlevs) {
             char *ep = getenv("SPLEVTYPE");     /* not nh_getenv */
             if (ep) {
                 /* rindex always succeeds due to code in prior block */

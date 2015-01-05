@@ -184,7 +184,7 @@ static int domonability (void) {
 }
 
 static int enter_explore_mode (void) {
-    if(!flags.explore && !wizard) {
+    if(!flags.explore && !flags.debug) {
         pline("Beware!  From explore mode there will be no return to normal game.");
         if (yn("Do you want to enter explore mode?") == 'y') {
             // clear_nhwindow(WIN_MESSAGE);
@@ -203,7 +203,7 @@ static int enter_explore_mode (void) {
 /* ^W command - wish for something */
 /* Unlimited wishes for debug mode by Paul Polderman */
 static int wiz_wish (void) {
-    if (wizard) {
+    if (flags.debug) {
         bool save_verbose = flags.verbose;
 
         flags.verbose = false;
@@ -217,14 +217,14 @@ static int wiz_wish (void) {
 
 /* ^I command - identify hero's inventory */
 static int wiz_identify (void) {
-    if (wizard)     identify_pack(0);
+    if (flags.debug)     identify_pack(0);
     else            pline("Unavailable command '^I'.");
     return 0;
 }
 
 /* ^F command - reveal the level map and any traps on it */
 static int wiz_map (void) {
-    if (wizard) {
+    if (flags.debug) {
         struct trap *t;
         long save_Hconf = HConfusion,
              save_Hhallu = u.uprops[HALLUC].intrinsic;
@@ -244,7 +244,7 @@ static int wiz_map (void) {
 
 /* ^G command - generate monster(s); a count prefix will be honored */
 static int wiz_genesis (void) {
-    if (wizard)
+    if (flags.debug)
         create_particular();
     else
         pline("Unavailable command '^G'.");
@@ -253,21 +253,21 @@ static int wiz_genesis (void) {
 
 /* ^O command - display dungeon layout */
 static int wiz_where (void) {
-    if (wizard) (void) print_dungeon(false, (signed char *)0, (signed char *)0);
+    if (flags.debug) (void) print_dungeon(false, (signed char *)0, (signed char *)0);
     else        pline("Unavailable command '^O'.");
     return 0;
 }
 
 /* ^E command - detect unseen (secret doors, traps, hidden monsters) */
 static int wiz_detect (void) {
-    if(wizard)  (void) findit();
+    if(flags.debug)  (void) findit();
     else        pline("Unavailable command '^E'.");
     return 0;
 }
 
 /* ^V command - level teleport */
 static int wiz_level_tele (void) {
-    if (wizard)
+    if (flags.debug)
         level_tele();
     else
         pline("Unavailable command '^V'.");
@@ -339,7 +339,7 @@ static char * enlght_combatinc (const char *inctyp, int incamt, int final, char 
     const char *modif, *bonus;
 
     if (final
-            || wizard
+            || flags.debug
        ) {
         sprintf(numbuf, "%s%d",
                 (incamt > 0) ? "+" : "", incamt);
@@ -406,7 +406,7 @@ void dump_enlightenment (int final) {
     else if (u.ualign.record >= -3) dump(youhave, "strayed");
     else if (u.ualign.record >= -8) dump(youhave, "sinned");
     else dump("  You have ", "transgressed");
-    if (wizard) {
+    if (flags.debug) {
         sprintf(buf, " %d", u.ualign.record);
         dump("  Your alignment was ", buf);
     }
@@ -528,7 +528,7 @@ void dump_enlightenment (int final) {
         /*
         char name[BUFSZ];
         a_monnam(name, BUFSZ, u.ustuck);
-        if (wizard) {
+        if (flags.debug) {
             nh_slprintf(buf, BUFSZ, "swallowed by %s (%u)", name, u.uswldtim);
         } else {
             nh_slprintf(buf, BUFSZ, "swallowed by %s", name);
@@ -577,7 +577,7 @@ void dump_enlightenment (int final) {
         if (u.umonnum == u.ulycn) strcpy(buf, "in beast form");
         else sprintf(buf, "polymorphed into %s",
                 an(youmonst.data->mname));
-        if (wizard) sprintf(eos(buf), " (%d)", u.mtimedone);
+        if (flags.debug) sprintf(eos(buf), " (%d)", u.mtimedone);
         dump(youwere, buf);
     }
     if (Unchanging)
@@ -598,7 +598,7 @@ void dump_enlightenment (int final) {
                 Luck < 0 ? "un" : "", Luck);
         dump(youwere, buf);
     }
-    else if (wizard) dump("  ", "Your luck was zero");
+    else if (flags.debug) dump("  ", "Your luck was zero");
     if (u.moreluck > 0) dump(youhad, "extra luck");
     else if (u.moreluck < 0) dump(youhad, "reduced luck");
     if (carrying(LUCKSTONE) || stone_luck(true)) {
@@ -612,7 +612,7 @@ void dump_enlightenment (int final) {
     if (u.ugangr) {
         sprintf(buf, " %sangry with you",
                 u.ugangr > 6 ? "extremely " : u.ugangr > 3 ? "very " : "");
-        if (wizard) sprintf(eos(buf), " (%d)", u.ugangr);
+        if (flags.debug) sprintf(eos(buf), " (%d)", u.ugangr);
         sprintf(buf2, "%s was %s", u_gname(), buf);
         dump("  ", buf2);
     }
@@ -663,7 +663,7 @@ static bool minimal_enlightenment (void) {
 static int doattributes (void) {
     if (!minimal_enlightenment())
         return 0;
-    if (wizard || flags.explore)
+    if (flags.debug || flags.explore)
         enlightenment(0);
     return 0;
 }
@@ -959,7 +959,7 @@ void sanity_check (void) {
 #define unctrl(c)       ((c) <= C('z') ? (0x60 | (c)) : (c))
 #define unmeta(c)       (0x7f & (c))
 
-static char *parse(void) {
+static char * parse(void) {
     return "#TODO";
 }
 
