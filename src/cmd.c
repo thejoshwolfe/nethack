@@ -15,9 +15,6 @@
 #include "vision.h"
 #include "everything.h"
 
-// ^A, the "redo" key
-static const char DOAGAIN = '\001';
-
 /*
  * Some systems may have getchar() return EOF for various reasons, and
  * we should not quit before seeing at least NR_OF_EOFS consecutive EOFs.
@@ -26,32 +23,9 @@ static const int NR_OF_EOFS = 20;
 
 #define CMD_TRAVEL (char)0x90
 
-
 static int (*timed_occ_fn)(void);
 
-
 static const char* readchar_queue="";
-
-/* -enlightenment and conduct- */
-static winid en_win;
-static const char
-You_[] = "You ",
-    are[]  = "are ",  were[]  = "were ",
-    have[] = "have ", had[]   = "had ",
-    can[]  = "can ",  could[] = "could ";
-static const char
-have_been[]  = "have been ",
-    have_never[] = "have never ", never[] = "never ";
-
-#define enl_msg(prefix,present,past,suffix) \
-    enlght_line(prefix, final ? past : present, suffix)
-#define you_are(attr)   enl_msg(You_,are,were,attr)
-#define you_have(attr)  enl_msg(You_,have,had,attr)
-#define you_can(attr)   enl_msg(You_,can,could,attr)
-#define you_have_been(goodthing) enl_msg(You_,have_been,were,goodthing)
-#define you_have_never(badthing) enl_msg(You_,have_never,never,badthing)
-#define you_have_X(something)   enl_msg(You_,have,(const char *)"",something)
-
 
 /* Provide a means to redo the last command.  The flag `in_doagain' is set
  * to true while redoing the command.  This flag is tested in commands that
@@ -928,10 +902,6 @@ void add_debug_extended_commands (void) {
 }
 
 
-static const char template[] = "%-18s %4ld  %6ld";
-static const char count_str[] = "                   count  bytes";
-static const char separator[] = "------------------ -----  ------";
-
 static void count_obj(struct obj *chain, long *total_count, long *total_size,
         bool top, bool recurse)
 {
@@ -967,9 +937,8 @@ static bool help_dir(char sym, const char *msg) {
     return true;
 }
 
-void rhack (char *cmd) {
-    bool do_walk, do_rush, prefix_seen, bad_command,
-            firsttime = (cmd == 0);
+void rhack(char *cmd) {
+    bool do_walk, do_rush, prefix_seen, bad_command, firsttime = (cmd == 0);
 
     iflags.menu_requested = false;
     if (firsttime) {
@@ -981,10 +950,10 @@ void rhack (char *cmd) {
         return;
     }
     /* Special case of *cmd == ' ' handled better below */
-    if(!*cmd || *cmd == (char)0377) {
+    if (!*cmd || *cmd == (char)0377) {
         //nhbell();
         flags.move = false;
-        return;         /* probably we just had an interrupt */
+        return; /* probably we just had an interrupt */
     }
     if (iflags.num_pad && iflags.num_pad_mode == 1) {
         /* This handles very old inconsistent DOS/Windows behaviour
@@ -993,82 +962,101 @@ void rhack (char *cmd) {
          * number pad. Now do not map them until here.
          */
         switch (*cmd) {
-            case '5':       *cmd = 'g'; break;
-            case M('5'):    *cmd = 'G'; break;
-            case M('0'):    *cmd = 'I'; break;
+            case '5':
+                *cmd = 'g';
+                break;
+            case M('5'):
+                *cmd = 'G';
+                break;
+            case M('0'):
+                *cmd = 'I';
+                break;
         }
     }
     /* handle most movement commands */
     do_walk = do_rush = prefix_seen = false;
     flags.travel = iflags.travel1 = 0;
     switch (*cmd) {
-        case 'g':  if (movecmd(cmd[1])) {
-                       flags.run = 2;
-                       do_rush = true;
-                   } else
-                       prefix_seen = true;
-                   break;
-        case '5':  if (!iflags.num_pad) break; /* else FALLTHRU */
-        case 'G':  if (movecmd(lowc(cmd[1]))) {
-                       flags.run = 3;
-                       do_rush = true;
-                   } else
-                       prefix_seen = true;
-                   break;
-        case '-':  if (!iflags.num_pad) break; /* else FALLTHRU */
-                       /* Effects of movement commands and invisible monsters:
-                        * m: always move onto space (even if 'I' remembered)
-                        * F: always attack space (even if 'I' not remembered)
-                        * normal movement: attack if 'I', move otherwise
-                        */
-        case 'F':  if (movecmd(cmd[1])) {
-                       flags.forcefight = 1;
-                       do_walk = true;
-                   } else
-                       prefix_seen = true;
-                   break;
-        case 'm':  if (movecmd(cmd[1]) || u.dz) {
-                       flags.run = 0;
-                       flags.nopick = 1;
-                       if (!u.dz) do_walk = true;
-                       else cmd[0] = cmd[1];   /* "m<" or "m>" */
-                   } else
-                       prefix_seen = true;
-                   break;
-        case 'M':  if (movecmd(lowc(cmd[1]))) {
-                       flags.run = 1;
-                       flags.nopick = 1;
-                       do_rush = true;
-                   } else
-                       prefix_seen = true;
-                   break;
-        case '0':  if (!iflags.num_pad) break;
-                       (void)ddoinv(); /* a convenience borrowed from the PC */
-                   flags.move = false;
-                   multi = 0;
-                   return;
-        case CMD_TRAVEL:
-                   if (iflags.travelcmd) {
-                       flags.travel = 1;
-                       iflags.travel1 = 1;
-                       flags.run = 8;
-                       flags.nopick = 1;
-                       do_rush = true;
-                       break;
-                   }
-                   /*FALLTHRU*/
-        default:   if (movecmd(*cmd)) {        /* ordinary movement */
-                       flags.run = 0;  /* only matters here if it was 8 */
-                       do_walk = true;
-                   } else if (movecmd(iflags.num_pad ?
-                               unmeta(*cmd) : lowc(*cmd))) {
-                       flags.run = 1;
-                       do_rush = true;
-                   } else if (movecmd(unctrl(*cmd))) {
-                       flags.run = 3;
-                       do_rush = true;
-                   }
-                   break;
+        case 'g':
+            if (movecmd(cmd[1])) {
+                flags.run = 2;
+                do_rush = true;
+            } else
+                prefix_seen = true;
+            break;
+        case '5':
+            if (!iflags.num_pad)
+                break; /* else FALLTHRU */
+        case 'G':
+            if (movecmd(lowc(cmd[1]))) {
+                flags.run = 3;
+                do_rush = true;
+            } else
+                prefix_seen = true;
+            break;
+        case '-':
+            if (!iflags.num_pad)
+                break; /* else FALLTHRU */
+            /* Effects of movement commands and invisible monsters:
+             * m: always move onto space (even if 'I' remembered)
+             * F: always attack space (even if 'I' not remembered)
+             * normal movement: attack if 'I', move otherwise
+             */
+        case 'F':
+            if (movecmd(cmd[1])) {
+                flags.forcefight = 1;
+                do_walk = true;
+            } else
+                prefix_seen = true;
+            break;
+        case 'm':
+            if (movecmd(cmd[1]) || u.dz) {
+                flags.run = 0;
+                flags.nopick = 1;
+                if (!u.dz)
+                    do_walk = true;
+                else
+                    cmd[0] = cmd[1]; /* "m<" or "m>" */
+            } else
+                prefix_seen = true;
+            break;
+        case 'M':
+            if (movecmd(lowc(cmd[1]))) {
+                flags.run = 1;
+                flags.nopick = 1;
+                do_rush = true;
+            } else
+                prefix_seen = true;
+            break;
+        case '0':
+            if (!iflags.num_pad)
+                break;
+            (void)ddoinv(); /* a convenience borrowed from the PC */
+            flags.move = false;
+            multi = 0;
+            return;
+        case CMD_TRAVEL :
+            if (iflags.travelcmd) {
+                flags.travel = 1;
+                iflags.travel1 = 1;
+                flags.run = 8;
+                flags.nopick = 1;
+                do_rush = true;
+                break;
+            }
+            /*FALLTHRU*/
+        default:
+            if (movecmd(*cmd)) { /* ordinary movement */
+                flags.run = 0; /* only matters here if it was 8 */
+                do_walk = true;
+            } else if (movecmd(iflags.num_pad ? unmeta(*cmd) : lowc(*cmd))) {
+                flags.run = 1;
+                do_rush = true;
+            } else if (movecmd(unctrl(*cmd))) {
+                flags.run = 3;
+                do_rush = true;
+            }
+            break;
     }
 
     /* some special prefix handling */
@@ -1079,23 +1067,25 @@ void rhack (char *cmd) {
     }
 
     if (do_walk) {
-        if (multi) flags.mv = true;
+        if (multi)
+            flags.mv = true;
         domove();
         flags.forcefight = 0;
         return;
     } else if (do_rush) {
         if (firsttime) {
-            if (!multi) multi = max(COLNO,ROWNO);
+            if (!multi)
+                multi = max(COLNO, ROWNO);
             u.last_str_turn = 0;
         }
         flags.mv = true;
         domove();
         return;
-    } else if (prefix_seen && cmd[1] == '\033') {   /* <prefix><escape> */
+    } else if (prefix_seen && cmd[1] == '\033') { /* <prefix><escape> */
         /* don't report "unknown command" for change of heart... */
         bad_command = false;
     } else if (*cmd == ' ' && !flags.rest_on_space) {
-        bad_command = true;         /* skip cmdlist[] loop */
+        bad_command = true; /* skip cmdlist[] loop */
 
         /* handle all other commands */
     } else {
@@ -1103,18 +1093,19 @@ void rhack (char *cmd) {
         int res, (*func)(void);
 
         for (tlist = cmdlist; tlist->f_char; tlist++) {
-            if ((*cmd & 0xff) != (tlist->f_char & 0xff)) continue;
+            if ((*cmd & 0xff) != (tlist->f_char & 0xff))
+                continue;
 
             if (u.uburied && !tlist->can_if_buried) {
                 You_cant("do that while you are buried!");
                 res = 0;
             } else {
                 /* we discard 'const' because some compilers seem to have
-                   trouble with the pointer passed to set_occupation() */
+                 trouble with the pointer passed to set_occupation() */
                 func = ((struct func_tab *)tlist)->f_funct;
                 if (tlist->f_text && !occupation && multi)
                     set_occupation(func, tlist->f_text, multi);
-                res = (*func)();            /* perform the command */
+                res = (*func)(); /* perform the command */
             }
             if (!res) {
                 flags.move = false;
@@ -1149,41 +1140,38 @@ void rhack (char *cmd) {
     /* didn't move */
     flags.move = false;
     multi = 0;
-    return;
 }
 
-int
-xytod ( /* convert an x,y pair into a direction code */
-        signed char x,
-        signed char y
-      )
-{
+/* convert an x,y pair into a direction code */
+int xytod(signed char x, signed char y) {
     int dd;
-
-    for(dd = 0; dd < 8; dd++)
-        if(x == xdir[dd] && y == ydir[dd]) return dd;
-
+    for (dd = 0; dd < 8; dd++)
+        if (x == xdir[dd] && y == ydir[dd])
+            return dd;
     return -1;
 }
 
 /* convert a direction code into an x,y pair */
-void dtoxy ( coord *cc, int dd) {
+void dtoxy(coord * cc, int dd) {
     cc->x = xdir[dd];
     cc->y = ydir[dd];
-    return;
 }
 
 /* also sets u.dz, but returns false for <> */
-int movecmd (char sym) {
+int movecmd(char sym) {
     const char *dp;
     const char *sdp;
-    if(iflags.num_pad) sdp = ndir; else sdp = sdir; /* DICE workaround */
+    if (iflags.num_pad)
+        sdp = ndir;
+    else
+        sdp = sdir; /* DICE workaround */
 
     u.dz = 0;
-    if(!(dp = index(sdp, sym))) return 0;
-    u.dx = xdir[dp-sdp];
-    u.dy = ydir[dp-sdp];
-    u.dz = zdir[dp-sdp];
+    if (!(dp = index(sdp, sym)))
+        return 0;
+    u.dx = xdir[dp - sdp];
+    u.dy = ydir[dp - sdp];
+    u.dz = zdir[dp - sdp];
     if (u.dx && u.dy && u.umonnum == PM_GRID_BUG) {
         u.dx = u.dy = 0;
         return 0;
@@ -1201,7 +1189,7 @@ int movecmd (char sym) {
  *
  * Returns non-zero if coordinates in cc are valid.
  */
-int get_adjacent_loc (const char *prompt, const char *emsg, signed char x, signed char y, coord *cc) {
+int get_adjacent_loc(const char *prompt, const char *emsg, signed char x, signed char y, coord *cc) {
     signed char new_x, new_y;
     if (!getdir(prompt)) {
         plines(Never_mind);
@@ -1209,11 +1197,12 @@ int get_adjacent_loc (const char *prompt, const char *emsg, signed char x, signe
     }
     new_x = x + u.dx;
     new_y = y + u.dy;
-    if (cc && isok(new_x,new_y)) {
+    if (cc && isok(new_x, new_y)) {
         cc->x = new_x;
         cc->y = new_y;
     } else {
-        if (emsg) plines(emsg);
+        if (emsg)
+            plines(emsg);
         return 0;
     }
     return 1;
@@ -1224,28 +1213,28 @@ char yn_function(const char *prompt, const char *options, char default_option) {
     return default_option;
 }
 
-int getdir (const char *s) {
+int getdir(const char *s) {
     char dirsym;
 
-    if(*readchar_queue)
+    if (*readchar_queue)
         dirsym = readchar();
     else
-        dirsym = yn_function ((s && *s != '^') ? s : "In what direction?", (char *)0, '\0');
+        dirsym = yn_function((s && *s != '^') ? s : "In what direction?", (char *)0, '\0');
     savech(dirsym);
-    if(dirsym == '.' || dirsym == 's')
+    if (dirsym == '.' || dirsym == 's') {
         u.dx = u.dy = u.dz = 0;
-    else if(!movecmd(dirsym) && !u.dz) {
+    } else if (!movecmd(dirsym) && !u.dz) {
         bool did_help = false;
-        if(!index(quitchars, dirsym)) {
+        if (!index(quitchars, dirsym)) {
             if (iflags.cmdassist) {
-                did_help = help_dir((s && *s == '^') ? dirsym : 0,
-                        "Invalid direction key!");
+                did_help = help_dir((s && *s == '^') ? dirsym : 0, "Invalid direction key!");
             }
-            if (!did_help) pline("What a strange direction!");
+            if (!did_help)
+                pline("What a strange direction!");
         }
         return 0;
     }
-    if(!u.dz && (Stunned || (Confusion && !rn2(5)))) confdir();
+    if (!u.dz && (Stunned || (Confusion&& !rn2(5)))) confdir();
     return 1;
 }
 
@@ -1253,7 +1242,6 @@ void confdir (void) {
     int x = (u.umonnum == PM_GRID_BUG) ? 2*rn2(4) : rn2(8);
     u.dx = xdir[x];
     u.dy = ydir[x];
-    return;
 }
 
 
@@ -1261,110 +1249,6 @@ int isok (int x, int y) {
     /* x corresponds to curx, so x==1 is the first column. Ach. %% */
     return x >= 1 && x <= COLNO-1 && y >= 0 && y <= ROWNO-1;
 }
-
-static int last_multi;
-
-/*
- * convert a MAP window position into a movecmd
- */
-const char * click_to_cmd (int x, int y, int mod) {
-    int dir;
-    static char cmd[4];
-    cmd[1]=0;
-
-    x -= u.ux;
-    y -= u.uy;
-
-    if (iflags.travelcmd) {
-        if (abs(x) <= 1 && abs(y) <= 1 ) {
-            x = sgn(x), y = sgn(y);
-        } else {
-            u.tx = u.ux+x;
-            u.ty = u.uy+y;
-            cmd[0] = CMD_TRAVEL;
-            return cmd;
-        }
-
-        if(x == 0 && y == 0) {
-            /* here */
-            if(IS_FOUNTAIN(levl[u.ux][u.uy].typ) || IS_SINK(levl[u.ux][u.uy].typ)) {
-                cmd[0]=mod == CLICK_1 ? 'q' : M('d');
-                return cmd;
-            } else if(IS_THRONE(levl[u.ux][u.uy].typ)) {
-                cmd[0]=M('s');
-                return cmd;
-            } else if((u.ux == xupstair && u.uy == yupstair)
-                    || (u.ux == sstairs.sx && u.uy == sstairs.sy && sstairs.up)
-                    || (u.ux == xupladder && u.uy == yupladder)) {
-                return "<";
-            } else if((u.ux == xdnstair && u.uy == ydnstair)
-                    || (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up)
-                    || (u.ux == xdnladder && u.uy == ydnladder)) {
-                return ">";
-            } else if(OBJ_AT(u.ux, u.uy)) {
-                cmd[0] = Is_container(level.objects[u.ux][u.uy]) ? M('l') : ',';
-                return cmd;
-            } else {
-                return "."; /* just rest */
-            }
-        }
-
-        /* directional commands */
-
-        dir = xytod(x, y);
-
-        if (!m_at(u.ux+x, u.uy+y) && !test_move(u.ux, u.uy, x, y, TEST_MOVE)) {
-            cmd[1] = (iflags.num_pad ? ndir[dir] : sdir[dir]);
-            cmd[2] = 0;
-            if (IS_DOOR(levl[u.ux+x][u.uy+y].typ)) {
-                /* slight assistance to the player: choose kick/open for them */
-                if (levl[u.ux+x][u.uy+y].doormask & D_LOCKED) {
-                    cmd[0] = C('d');
-                    return cmd;
-                }
-                if (levl[u.ux+x][u.uy+y].doormask & D_CLOSED) {
-                    cmd[0] = 'o';
-                    return cmd;
-                }
-            }
-            if (levl[u.ux+x][u.uy+y].typ <= SCORR) {
-                cmd[0] = 's';
-                cmd[1] = 0;
-                return cmd;
-            }
-        }
-    } else {
-        /* convert without using floating point, allowing sloppy clicking */
-        if(x > 2*abs(y))
-            x = 1, y = 0;
-        else if(y > 2*abs(x))
-            x = 0, y = 1;
-        else if(x < -2*abs(y))
-            x = -1, y = 0;
-        else if(y < -2*abs(x))
-            x = 0, y = -1;
-        else
-            x = sgn(x), y = sgn(y);
-
-        if(x == 0 && y == 0)    /* map click on player to "rest" command */
-            return ".";
-
-        dir = xytod(x, y);
-    }
-
-    /* move, attack, etc. */
-    cmd[1] = 0;
-    if(mod == CLICK_1) {
-        cmd[0] = (iflags.num_pad ? ndir[dir] : sdir[dir]);
-    } else {
-        cmd[0] = (iflags.num_pad ? M(ndir[dir]) :
-                (sdir[dir] - 'a' + 'A')); /* run command */
-    }
-
-    return cmd;
-}
-
-
 
 static void end_of_input (void) {
     if (!program_state.done_hup++ && program_state.something_worth_saving)
@@ -1375,11 +1259,11 @@ static void end_of_input (void) {
 }
 
 
-char readchar (void) {
+char readchar(void) {
     int sym;
     int x = u.ux, y = u.uy, mod = 0;
 
-    if ( *readchar_queue )
+    if (*readchar_queue)
         sym = *readchar_queue++;
     else
         sym = getchar();
@@ -1392,17 +1276,12 @@ char readchar (void) {
          * and we must see several before we quit.
          */
         do {
-            clearerr(stdin);        /* omit if clearerr is undefined */
+            clearerr(stdin); /* omit if clearerr is undefined */
             sym = pgetchar();
         } while (--cnt && sym == EOF);
     }
     if (sym == EOF)
         end_of_input();
 
-    if(sym == 0) {
-        /* click event */
-        readchar_queue = click_to_cmd(x, y, mod);
-        sym = *readchar_queue++;
-    }
-    return((char) sym);
+    return (char)sym;
 }
