@@ -48,7 +48,7 @@ const struct innate {
                      {   0, 0, 0, 0 } },
 
         mon_abil[] = { {   1, &(HFast), "", "" },
-                     {   1, &(HSleep_resistance), "", "" },
+                     {   1, &(u.uprops[SLEEP_RES].intrinsic), "", "" },
                      {   1, &(HSee_invisible), "", "" },
                      {   3, &(HPoison_resistance), "healthy", "" },
                      {   5, &(HStealth), "stealthy", "" },
@@ -91,7 +91,7 @@ const struct innate {
                      {   0, 0, 0, 0 } },
 
         /* Intrinsics conferred by race */
-        elf_abil[] = { {        4, &(HSleep_resistance), "awake", "tired" },
+        elf_abil[] = { {        4, &(u.uprops[SLEEP_RES].intrinsic), "awake", "tired" },
                      {   0, 0, 0, 0 } },
 
         orc_abil[] = { {        1, &(HPoison_resistance), "", "" },

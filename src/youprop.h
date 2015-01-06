@@ -49,10 +49,18 @@ static bool Cold_resistance() {
     return (get_HCold_resistance() || ECold_resistance() || resists_cold(&youmonst));
 }
 
-#define HSleep_resistance       u.uprops[SLEEP_RES].intrinsic
-#define ESleep_resistance       u.uprops[SLEEP_RES].extrinsic
-#define Sleep_resistance        (HSleep_resistance || ESleep_resistance || \
-                                 resists_sleep(&youmonst))
+static long get_HSleep_resistance() {
+    return u.uprops[SLEEP_RES].intrinsic;
+}
+static void set_HSleep_resistance(long hSleepRes) {
+    u.uprops[SLEEP_RES].intrinsic = hSleepRes;
+}
+static long ESleep_resistance() {
+    return u.uprops[SLEEP_RES].extrinsic;
+}
+static bool Sleep_resistance() {
+    return (get_HSleep_resistance() || ESleep_resistance || resists_sleep(&youmonst));
+}
 
 #define HDisint_resistance      u.uprops[DISINT_RES].intrinsic
 #define EDisint_resistance      u.uprops[DISINT_RES].extrinsic

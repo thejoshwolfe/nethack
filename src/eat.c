@@ -418,9 +418,9 @@ static void givit (int type, struct permonst *ptr) {
                 }
                 break;
             case SLEEP_RES:
-                if(!(HSleep_resistance & FROMOUTSIDE)) {
+                if(!(get_HSleep_resistance() & FROMOUTSIDE)) {
                         You_feel("wide awake.");
-                        HSleep_resistance |= FROMOUTSIDE;
+                        set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
                 }
                 break;
             case COLD_RES:
@@ -1391,11 +1391,11 @@ static void eataccessory (struct obj *otmp) {
                 break;
             case RIN_FREE_ACTION:
                 /* Give sleep resistance instead */
-                if (!(HSleep_resistance & FROMOUTSIDE))
+                if (!(get_HSleep_resistance() & FROMOUTSIDE))
                     accessory_has_effect(otmp);
                 if (!Sleep_resistance)
                     You_feel("wide awake.");
-                HSleep_resistance |= FROMOUTSIDE;
+                set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
                 break;
             case AMULET_OF_CHANGE:
                 accessory_has_effect(otmp);
