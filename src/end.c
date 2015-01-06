@@ -523,7 +523,6 @@ die:
         dump("", pbuf);
         /* D: Add a line for clearance from the screen dump */
         dump("", "");
-        dump_screen();
     }
     /* render vision subsystem inoperative */
     iflags.vision_inited = 0;

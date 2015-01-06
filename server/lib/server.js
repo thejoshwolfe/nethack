@@ -9,6 +9,8 @@ var yawl = require('yawl');
 var leveldown = require('leveldown');
 var dbIterate = require('./db_iterate');
 var uuid = require('./uuid');
+var WritableStream = require('stream').Writable;
+var constants = require('../../build/constants');
 
 var httpPort = process.env.NETHACK_HTTP_PORT || 21119;
 var httpHost = process.env.NETHACK_HTTP_HOST || '0.0.0.0';
@@ -91,21 +93,37 @@ Session.prototype.register = function(args) {
 };
 
 Session.prototype.play = function(args) {
-  if (!this.user) return;
-  this.killChildProcess();
-  this.netHackProcess = spawnNethack();
-  this.netHackProcess.on('error', function(err) {
-    this.send('playError', {err: 'Unable to spawn nethack process'});
+  var self = this;
+  if (!self.user) return;
+  self.killChildProcess();
+  self.netHackProcess = spawnNethack();
+  self.netHackProcess.on('error', function(err) {
+    self.send('playError', {err: 'Unable to spawn nethack process'});
     console.error("Unable to spawn nethack process:", err.stack);
-    this.killChildProcess();
-  }.bind(this));
-  this.closeHook = function(returnCode) {
-    this.send('playError', {err: 'NetHack process crashed without warning'});
+    self.killChildProcess();
+  });
+  self.closeHook = function(returnCode) {
+    self.send('playError', {err: 'NetHack process crashed without warning'});
     console.error(new Error("NetHack process crashed without warning").stack);
-    this.netHackProcess = null;
-  }.bind(this);
-  this.netHackProcess.on('close', this.closeHook);
-  this.netHackProcess.stdout.pipe(process.stdout);
+    self.netHackProcess = null;
+  };
+  self.netHackProcess.on('close', self.closeHook);
+  var st = new WritableStream();
+  var buf = new Buffer(0);
+  st._write = function(buffer, encoding, callback) {
+    buf = Buffer.concat([buf, buffer]);
+    for (;;) {
+      if (buf.length < 8) break;
+      var msgType = buf.readUInt32LE(0);
+      var msgSize = buf.readUInt32LE(4);
+      if (buf.length - 8 < msgSize) break;
+      var slice = buf.slice(8, 8 + msgSize);
+      buf = buf.slice(8 + msgSize);
+      self.handleNetHackMsg(msgType, slice);
+    }
+    callback();
+  };
+  self.netHackProcess.stdout.pipe(st);
 };
 
 Session.prototype.killChildProcess = function() {
@@ -114,6 +132,33 @@ Session.prototype.killChildProcess = function() {
     this.netHackProcess.kill();
     this.netHackProcess = null;
     this.closeHook = null;
+  }
+};
+
+var NETHACK_MSG_TYPE_COUNT = 0;
+var NETHACK_MSG_TYPE_VISION = NETHACK_MSG_TYPE_COUNT++;
+
+var NETHACK_COLNO = constants.COLNO;
+var NETHACK_ROWNO = constants.ROWNO;
+
+Session.prototype.handleNetHackMsg = function(msgType, buffer) {
+  switch(msgType) {
+    case NETHACK_MSG_TYPE_VISION:
+      var rows = [];
+      var pos = 0;
+      for (var y = 0; y < NETHACK_ROWNO; y += 1) {
+        var cols = [];
+        rows.push(cols);
+        for (var x = 0; x < NETHACK_COLNO; x += 1) {
+          var i = buffer.readInt32LE(pos);
+          cols.push(i);
+          pos += 4;
+        }
+      }
+      this.send('vision', rows);
+      break;
+    default:
+      console.error("Unrecognized message from nethack binary: " + msgType);
   }
 };
 

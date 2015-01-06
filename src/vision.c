@@ -402,7 +402,7 @@ vision_recalc (int control)
              */
             has_night_vision = 0;
 
-            for (row = u.uy-1; row <= u.uy+1; row++)
+            for (row = u.uy-1; row <= u.uy+1; row++) {
                 for (col = u.ux-1; col <= u.ux+1; col++) {
                     if (!isok(col,row) || !is_pool(col,row)) continue;
 
@@ -410,6 +410,7 @@ vision_recalc (int control)
                     next_rmax[row] = max(next_rmax[row], col);
                     next_array[row][col] = IN_SIGHT | COULD_SEE;
                 }
+            }
         }
 
         /* if in a pit, just update for immediate locations */

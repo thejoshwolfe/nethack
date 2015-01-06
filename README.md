@@ -11,7 +11,7 @@ Not cool yet.
 ### Dependencies (Ubuntu)
 
 ```
-sudo apt-get install libncurses5-dev bison flex
+sudo apt-get install bison flex
 ```
 
 ### Build

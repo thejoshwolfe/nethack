@@ -1,6 +1,12 @@
 var Socket = require('./socket');
 
 var caseCorrectUsername;
+var vision;
+var tileWidth;
+var tileHeight;
+
+var roomFeatures = require('./room').roomFeatures;
+var constants = require('../../build/constants');
 
 var loadingDiv = document.getElementById('loading');
 var loginDiv = document.getElementById('login');
@@ -26,6 +32,8 @@ var playDiv = document.getElementById('play');
 var canvas = document.getElementById('canvas');
 var playErrDom = document.getElementById('play-err');
 
+var context = canvas.getContext('2d');
+
 loginOkBtn.addEventListener('click', loginOk);
 loginRegisterBtn.addEventListener('click', showRegisterForm);
 loginUsername.addEventListener('keydown', loginFormKeyDown);
@@ -43,6 +51,7 @@ var socket = new Socket();
 socket.on('registerResult', onRegisterResult);
 socket.on('loginResult', onLoginResult);
 socket.on('playError', onPlayError);
+socket.on('vision', onVision);
 
 socket.on('connect', function() {
   tryToLoginWithSavedCredentials();
@@ -54,6 +63,9 @@ socket.on('disconnect', function() {
 
 function resetState() {
   caseCorrectUsername = null;
+  vision = null;
+  tileWidth = null;
+  tileHeight = null;
 }
 
 function showRegisterForm() {
@@ -202,9 +214,15 @@ function logOut() {
 
 function playNetHack() {
   showOnly(playDiv);
-  canvas.width = 400;
-  canvas.height = 100;
   socket.send('play');
+
+  canvas.width = 1067;
+  canvas.height = 600;
+  tileWidth = Math.floor(canvas.width / constants.COLNO);
+  tileHeight = Math.floor(canvas.height / constants.ROWNO);
+  // make them even
+  tileWidth -= tileWidth % 2;
+  tileHeight -= tileHeight % 2;
 }
 
 function showPlayErr(errText) {
@@ -218,4 +236,35 @@ function showPlayErr(errText) {
 
 function onPlayError(msg) {
   showPlayErr(msg.err);
+}
+
+function onVision(msg) {
+  vision = msg;
+  renderVision();
+}
+
+function renderVision() {
+  // clear canvas to black
+  context.fillStyle = '#000000'
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  context.fillStyle = '#ffffff';
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  context.font = '12px sans-serif';
+  for (var y = 0; y < constants.ROWNO; y += 1) {
+    for (var x = 0; x < constants.COLNO; x += 1) {
+      var glyph = vision[y][x];
+      var c = glyphToChar(glyph);
+      context.fillText(c,
+          x * tileWidth + tileWidth / 2,
+          y * tileHeight + tileHeight / 2);
+    }
+  }
+}
+
+function glyphToChar(glyph) {
+  var index = glyph - constants.GLYPH_CMAP_OFF;
+  var c = roomFeatures[index];
+  return c || '?';
 }

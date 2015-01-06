@@ -1281,10 +1281,6 @@ static unsigned char get_glyph_char (int glyph) {
 
 extern const char * compress_str(const char *);
 
-/* Take a screen dump */
-void dump_screen (void) {
-}
-
 /*
  * back_to_glyph()
  *

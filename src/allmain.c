@@ -55,6 +55,26 @@
 #include <signal.h>
 #include <pwd.h>
 #include <fcntl.h>
+#include <stdint.h>
+
+enum {
+    OUT_MSG_VISION,
+};
+
+static void dump_vision_to_stdout(void) {
+    int32_t buf[ROWNO][COLNO];
+    for (int y = 0; y < ROWNO; y += 1) {
+        for (int x = 0; x < COLNO; x += 1) {
+            struct rm *r = &level.locations[y][x];
+            buf[y][x] = r->glyph;
+        }
+    }
+    uint32_t id = OUT_MSG_VISION;
+    uint32_t size = ROWNO * COLNO * sizeof(uint32_t);
+    fwrite(&id, sizeof(uint32_t), 1, stdout);
+    fwrite(&size, sizeof(uint32_t), 1, stdout);
+    fwrite(buf, sizeof(int32_t), ROWNO * COLNO, stdout);
+}
 
 void moveloop(void) {
     int moveamt = 0, wtcap = 0, change = 0;
@@ -340,8 +360,8 @@ void moveloop(void) {
             } else if (Warning || Warn_of_mon)
                 see_monsters();
 
-            if (vision_full_recalc)
-                vision_recalc(0); /* vision! */
+            vision_recalc(0);
+            dump_vision_to_stdout();
         }
 
         flags.move = 1;
@@ -411,8 +431,8 @@ void moveloop(void) {
             flags.botl = 1;
         }
 
-        if (vision_full_recalc)
-            vision_recalc(0); /* vision! */
+        vision_recalc(0);
+        dump_vision_to_stdout();
         /* when running in non-tport mode, this gets done through domove() */
         if ((!flags.run || iflags.runmode == RUN_TPORT) && (multi && (!flags.travel ? !(multi % 7) : !(moves % 7L)))) {
             if (flags.time && flags.run)

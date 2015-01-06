@@ -408,7 +408,6 @@ void clear_glyph_buffer(void);
 void row_refresh(int,int,int);
 void cls(void);
 void flush_screen(int);
-void dump_screen(void);
 int back_to_glyph(signed char,signed char);
 int zapdir_to_glyph(int,int,int);
 int glyph_at(signed char,signed char);

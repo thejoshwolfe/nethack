@@ -23,12 +23,14 @@ MAKEDEFS_OBJS = build/makedefs.o build/monst.o build/objects.o
 MAKE_ONAMES_OBJS = build/make_onames.o build/objects.o
 MAKE_ARTIFACT_NAMES_OBJS = build/make_artifact_names.o
 MAKE_PM_OBJS = build/make_pm.o build/monst.o
+JS_CONSTANTS_OBJS = build/js_constants.o
 DLB_OBJS = build/dlb_main.o build/dlb.o build/panic.o
 DGN_COMP_OBJS = build/dgn_yacc.o build/dgn_lex.o build/dgn_main.o build/panic.o
 LEV_COMP_OBJS = build/lev_yacc.o build/lev_lex.o build/lev_main.o build/panic.o build/drawing.o build/decl.o build/monst.o build/objects.o
 RECOVER_OBJS = build/recover.o
 BUILD_DIR_CHILDREN += $(MAKEDEFS_OBJS) $(MAKE_ONAMES_OBJS) $(MAKE_ARTIFACT_NAMES_OBJS) \
-					  $(MAKE_PM_OBJS) $(DLB_OBJS) $(DGN_COMP_OBJS) $(LEV_COMP_OBJS) $(RECOVER_OBJS)
+					  $(MAKE_PM_OBJS) $(DLB_OBJS) $(DGN_COMP_OBJS) $(LEV_COMP_OBJS) $(RECOVER_OBJS) \
+					  $(JS_CONSTANTS_OBJS)
 
 CC = clang
 C_FLAGS += -Ibuild -Isrc -g -Wimplicit-function-declaration -Werror
@@ -61,7 +63,7 @@ NORMAL_ASS_O_FILES = build/allmain.o build/apply.o build/artifact.o build/attrib
 NETHACK_OBJS = $(MAKEDEFS_NEEDS_THESE) $(NORMAL_ASS_O_FILES)
 BUILD_DIR_CHILDREN += $(NETHACK_OBJS)
 
-all: build/nethack build/recover build/nhdat
+all: build/nethack build/recover build/nhdat build/constants.js
 
 # make is incapable of tracking the explosion of .lev files from lev_comp,
 # so bundle the entire operation here atomicly culminating in the complete archive.
@@ -78,7 +80,12 @@ build/make_onames: $(MAKE_ONAMES_OBJS)
 build/make_artifact_names: $(MAKE_ARTIFACT_NAMES_OBJS)
 	$(CC) -o $@ $(MAKE_ARTIFACT_NAMES_OBJS)
 
+build/js_constants: $(JS_CONSTANTS_OBJS)
+	$(CC) -o $@ $(JS_CONSTANTS_OBJS)
+
 build/make_artifact_names.o: build/onames.h build/pm.h
+
+build/js_constants.o: build/onames.h build/pm.h
 
 build/makedefs.o: build/onames.h build/pm.h
 
@@ -160,10 +167,13 @@ build/artifact_names.h: build/make_artifact_names
 build/pm.h: build/make_pm
 	./build/make_pm $@
 
+build/constants.js: build/js_constants
+	./build/js_constants $@
+
 $(NORMAL_ASS_O_FILES): $(HACK_H)
 
 build/nethack: $(NETHACK_OBJS)
-	$(CC) -o $@ $(NETHACK_OBJS) -lncurses
+	$(CC) -o $@ $(NETHACK_OBJS)
 
 build/monstr.c: build/makedefs
 	$(MAKEDEFS) -m
