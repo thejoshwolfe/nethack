@@ -1,11 +1,17 @@
 var Socket = require('./socket');
+var resource_loader = require('./resource_loader');
 
 var caseCorrectUsername;
 var vision;
 var tileWidth;
 var tileHeight;
+var tilesImageTileXCount;
+var tilesImageTileYCount;
 
-var roomFeatures = require('./room').roomFeatures;
+var tilesImage = resource_loader.fetchImage("tiles.png");
+var tilesImageTileWidth = 128;
+var tilesImageTileHeight = 128;
+
 var constants = require('../../build/constants');
 
 var loadingDiv = document.getElementById('loading');
@@ -66,6 +72,8 @@ function resetState() {
   vision = null;
   tileWidth = null;
   tileHeight = null;
+  tilesImageTileXCount = null;
+  tilesImageTileYCount = null;
 }
 
 function showRegisterForm() {
@@ -213,16 +221,22 @@ function logOut() {
 }
 
 function playNetHack() {
-  showOnly(playDiv);
-  socket.send('play');
+  showOnly(loadingDiv);
+  resource_loader.wait(function() {
+    showOnly(playDiv);
+    socket.send('play');
 
-  canvas.width = 1067;
-  canvas.height = 600;
-  tileWidth = Math.floor(canvas.width / constants.COLNO);
-  tileHeight = Math.floor(canvas.height / constants.ROWNO);
-  // make them even
-  tileWidth -= tileWidth % 2;
-  tileHeight -= tileHeight % 2;
+    canvas.width = 1800;
+    canvas.height = 600;
+    tileWidth = Math.floor(canvas.width / constants.COLNO);
+    tileHeight = Math.floor(canvas.height / constants.ROWNO);
+    // make them even
+    tileWidth -= tileWidth % 2;
+    tileHeight -= tileHeight % 2;
+
+    tilesImageTileXCount = Math.floor(tilesImage.width / tilesImageTileWidth);
+    tilesImageTileYCount = Math.floor(tilesImage.height / tilesImageTileHeight);
+  });
 }
 
 function showPlayErr(errText) {
@@ -248,23 +262,18 @@ function renderVision() {
   context.fillStyle = '#000000'
   context.fillRect(0, 0, canvas.width, canvas.height);
 
-  context.fillStyle = '#ffffff';
-  context.textAlign = 'center';
-  context.textBaseline = 'middle';
-  context.font = '12px sans-serif';
   for (var y = 0; y < constants.ROWNO; y += 1) {
     for (var x = 0; x < constants.COLNO; x += 1) {
-      var glyph = vision[y][x];
-      var c = glyphToChar(glyph);
-      context.fillText(c,
-          x * tileWidth + tileWidth / 2,
-          y * tileHeight + tileHeight / 2);
+      // not sure where this magic number is coming from
+      var glyph = vision[y][x] - 1515;
+
+      var tileRow = Math.floor(glyph / tilesImageTileXCount);
+      var tileCol = glyph % tilesImageTileXCount;
+
+      context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
+          tilesImageTileWidth, tilesImageTileHeight,
+          x * tileWidth, y * tileHeight,
+          tileWidth, tileHeight);
     }
   }
-}
-
-function glyphToChar(glyph) {
-  var index = glyph - constants.GLYPH_CMAP_OFF;
-  var c = roomFeatures[index];
-  return c || '?';
 }

@@ -62,10 +62,11 @@ enum {
 };
 
 static void dump_vision_to_stdout(void) {
+    // nethack uses col-major order; we're using row-major order
     int32_t buf[ROWNO][COLNO];
     for (int y = 0; y < ROWNO; y += 1) {
         for (int x = 0; x < COLNO; x += 1) {
-            struct rm *r = &level.locations[y][x];
+            struct rm *r = &level.locations[x][y];
             buf[y][x] = r->glyph;
         }
     }
