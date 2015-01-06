@@ -1987,7 +1987,7 @@ void newuhs ( bool incr) {
     if(newhs == FAINTING) {
         if(is_fainted()) newhs = FAINTED;
         if(u.uhs <= WEAK || rn2(20-u.uhunger/10) >= 19) {
-            if(!is_fainted() && multi >= 0 /* %% */) {
+            if(!is_fainted() && multi >= 0) {
                 /* stop what you're doing, then faint */
                 stop_occupation();
                 You("faint from lack of food.");
@@ -1997,7 +1997,7 @@ void newuhs ( bool incr) {
                 afternmv = unfaint;
                 newhs = FAINTED;
             }
-        } else
+        } else {
             if(u.uhunger < -(int)(200 + 20*ACURR(A_CON))) {
                 u.uhs = STARVED;
                 flags.botl = 1;
@@ -2007,6 +2007,7 @@ void newuhs ( bool incr) {
                 /* if we return, we lifesaved, and that calls newuhs */
                 return;
             }
+        }
     }
 
     if(newhs != u.uhs) {
