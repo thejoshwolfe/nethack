@@ -5,6 +5,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <time.h>
 
 bool digit(char);
 bool letter(char);
