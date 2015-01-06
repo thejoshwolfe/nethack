@@ -372,8 +372,8 @@ void attrcurse (void) {
                      Your("senses fail!");
                      break;
                  }
-        case 5 : if (HCold_resistance & INTRINSIC) {
-                     HCold_resistance &= ~INTRINSIC;
+        case 5 : if (get_HCold_resistance() & INTRINSIC) {
+                     set_HCold_resistance(get_HCold_resistance() & ~INTRINSIC);
                      You_feel("cooler.");
                      break;
                  }

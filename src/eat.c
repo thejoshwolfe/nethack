@@ -424,9 +424,9 @@ static void givit (int type, struct permonst *ptr) {
                 }
                 break;
             case COLD_RES:
-                if(!(HCold_resistance & FROMOUTSIDE)) {
+                if(!(get_HCold_resistance() & FROMOUTSIDE)) {
                         You_feel("full of hot air.");
-                        HCold_resistance |= FROMOUTSIDE;
+                        set_HCold_resistance(get_HCold_resistance() | FROMOUTSIDE);
                 }
                 break;
             case DISINT_RES:

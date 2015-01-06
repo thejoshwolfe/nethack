@@ -973,7 +973,7 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
             hitmsg(mtmp, mattk);
             if (uncancelled) {
                 pline("You're covered in frost!");
-                if (Cold_resistance) {
+                if (Cold_resistance()) {
                     pline_The("frost doesn't seem cold!");
                     dmg = 0;
                 }
@@ -1764,7 +1764,7 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
             break;
         case AD_COLD:
             if(!mtmp->mcan && rn2(2)) {
-                if (Cold_resistance) {
+                if (Cold_resistance()) {
                     shieldeff(u.ux, u.uy);
                     You_feel("mildly chilly.");
                     ugolemeffects(AD_COLD,tmp);
@@ -1835,7 +1835,7 @@ static int explmu ( struct monst *mtmp, struct attack *mattk, bool ufound) {
 
         switch (mattk->adtyp) {
             case AD_COLD:
-                not_affected |= Cold_resistance;
+                not_affected |= Cold_resistance();
                 goto common;
             case AD_FIRE:
                 not_affected |= Fire_resistance();

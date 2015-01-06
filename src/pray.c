@@ -637,7 +637,7 @@ gcrownu (void)
 
     HSee_invisible |= FROMOUTSIDE;
     set_HFire_resistance(get_HFire_resistance() | FROMOUTSIDE);
-    HCold_resistance |= FROMOUTSIDE;
+    set_HCold_resistance(get_HCold_resistance() | FROMOUTSIDE);
     HShock_resistance |= FROMOUTSIDE;
     HSleep_resistance |= FROMOUTSIDE;
     HPoison_resistance |= FROMOUTSIDE;

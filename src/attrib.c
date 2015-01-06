@@ -55,7 +55,7 @@ const struct innate {
                      {   7, &(HWarning), "sensitive", "" },
                      {   9, &(HSearching), "perceptive", "unaware" },
                      {  11, &(u.uprops[FIRE_RES].extrinsic), "cool", "warmer" },
-                     {  13, &(HCold_resistance), "warm", "cooler" },
+                     {  13, &(u.uprops[COLD_RES].intrinsic), "warm", "cooler" },
                      {  15, &(HShock_resistance), "insulated", "conductive" },
                      {  17, &(HTeleport_control), "controlled","uncontrolled" },
                      {   0, 0, 0, 0 } },
@@ -81,7 +81,7 @@ const struct innate {
                      {  20, &(HPoison_resistance), "hardy", "" },
                      {   0, 0, 0, 0 } },
 
-        val_abil[] = { {         1, &(HCold_resistance), "", "" },
+        val_abil[] = { {         1, &(u.uprops[COLD_RES].intrinsic), "", "" },
                      {   1, &(HStealth), "", "" },
                      {   7, &(HFast), "quick", "slow" },
                      {   0, 0, 0, 0 } },
