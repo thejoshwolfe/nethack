@@ -411,30 +411,30 @@ static void givit (int type, struct permonst *ptr) {
 
         switch (type) {
             case FIRE_RES:
-                if(!(HFire_resistance & FROMOUTSIDE)) {
+                if(!(get_HFire_resistance() & FROMOUTSIDE)) {
                         You(Hallucination ? "be chillin'." :
                             "feel a momentary chill.");
-                        HFire_resistance |= FROMOUTSIDE;
+                        set_HFire_resistance(get_HFire_resistance() | FROMOUTSIDE);
                 }
                 break;
             case SLEEP_RES:
-                if(!(HSleep_resistance & FROMOUTSIDE)) {
+                if(!(get_HSleep_resistance() & FROMOUTSIDE)) {
                         You_feel("wide awake.");
-                        HSleep_resistance |= FROMOUTSIDE;
+                        set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
                 }
                 break;
             case COLD_RES:
-                if(!(HCold_resistance & FROMOUTSIDE)) {
+                if(!(get_HCold_resistance() & FROMOUTSIDE)) {
                         You_feel("full of hot air.");
-                        HCold_resistance |= FROMOUTSIDE;
+                        set_HCold_resistance(get_HCold_resistance() | FROMOUTSIDE);
                 }
                 break;
             case DISINT_RES:
-                if(!(HDisint_resistance & FROMOUTSIDE)) {
+                if(!(get_HDisint_resistance() & FROMOUTSIDE)) {
                         You_feel(Hallucination ?
                             "totally together, man." :
                             "very firm.");
-                        HDisint_resistance |= FROMOUTSIDE;
+                        set_HDisint_resistance(get_HDisint_resistance() | FROMOUTSIDE);
                 }
                 break;
             case SHOCK_RES:     /* shock (electricity) resistance */
@@ -1391,11 +1391,11 @@ static void eataccessory (struct obj *otmp) {
                 break;
             case RIN_FREE_ACTION:
                 /* Give sleep resistance instead */
-                if (!(HSleep_resistance & FROMOUTSIDE))
+                if (!(get_HSleep_resistance() & FROMOUTSIDE))
                     accessory_has_effect(otmp);
                 if (!Sleep_resistance)
                     You_feel("wide awake.");
-                HSleep_resistance |= FROMOUTSIDE;
+                set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
                 break;
             case AMULET_OF_CHANGE:
                 accessory_has_effect(otmp);

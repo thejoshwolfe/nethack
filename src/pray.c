@@ -509,15 +509,15 @@ static void god_zaps_you (aligntyp resp_god) {
         /* disintegrate shield and body armor before disintegrating
          * the impudent mortal, like black dragon breath -3.
          */
-        if (uarms && !(EReflecting & W_ARMS) && !(EDisint_resistance & W_ARMS))
+        if (uarms && !(EReflecting & W_ARMS) && !(EDisint_resistance() & W_ARMS))
             destroy_arm(uarms);
-        if (uarmc && !(EReflecting & W_ARMC) && !(EDisint_resistance & W_ARMC))
+        if (uarmc && !(EReflecting & W_ARMC) && !(EDisint_resistance() & W_ARMC))
             destroy_arm(uarmc);
-        if (uarm && !(EReflecting & W_ARM) && !(EDisint_resistance & W_ARM) && !uarmc)
+        if (uarm && !(EReflecting & W_ARM) && !(EDisint_resistance() & W_ARM) && !uarmc)
             destroy_arm(uarm);
         if (uarmu && !uarm && !uarmc)
             destroy_arm(uarmu);
-        if (!Disint_resistance) {
+        if (!Disint_resistance()) {
             fry_by_god(resp_god);
         } else {
             You("bask in its %s glow for a minute...", NH_BLACK);
@@ -636,10 +636,10 @@ gcrownu (void)
 #define ok_wep(o) ((o) && ((o)->oclass == WEAPON_CLASS || is_weptool(o)))
 
     HSee_invisible |= FROMOUTSIDE;
-    HFire_resistance |= FROMOUTSIDE;
-    HCold_resistance |= FROMOUTSIDE;
+    set_HFire_resistance(get_HFire_resistance() | FROMOUTSIDE);
+    set_HCold_resistance(get_HCold_resistance() | FROMOUTSIDE);
     HShock_resistance |= FROMOUTSIDE;
-    HSleep_resistance |= FROMOUTSIDE;
+    set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
     HPoison_resistance |= FROMOUTSIDE;
     godvoice(u.ualign.type, (char *)0);
 

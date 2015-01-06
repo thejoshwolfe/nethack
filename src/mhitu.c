@@ -956,7 +956,7 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
                     /* KMH -- this is okay with unchanging */
                     rehumanize();
                     break;
-                } else if (Fire_resistance) {
+                } else if (Fire_resistance()) {
                     pline_The("fire doesn't feel hot!");
                     dmg = 0;
                 }
@@ -973,7 +973,7 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
             hitmsg(mtmp, mattk);
             if (uncancelled) {
                 pline("You're covered in frost!");
-                if (Cold_resistance) {
+                if (Cold_resistance()) {
                     pline_The("frost doesn't seem cold!");
                     dmg = 0;
                 }
@@ -1764,7 +1764,7 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
             break;
         case AD_COLD:
             if(!mtmp->mcan && rn2(2)) {
-                if (Cold_resistance) {
+                if (Cold_resistance()) {
                     shieldeff(u.ux, u.uy);
                     You_feel("mildly chilly.");
                     ugolemeffects(AD_COLD,tmp);
@@ -1774,7 +1774,7 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
             break;
         case AD_FIRE:
             if(!mtmp->mcan && rn2(2)) {
-                if (Fire_resistance) {
+                if (Fire_resistance()) {
                     shieldeff(u.ux, u.uy);
                     You_feel("mildly hot.");
                     ugolemeffects(AD_FIRE,tmp);
@@ -1835,10 +1835,10 @@ static int explmu ( struct monst *mtmp, struct attack *mattk, bool ufound) {
 
         switch (mattk->adtyp) {
             case AD_COLD:
-                not_affected |= Cold_resistance;
+                not_affected |= Cold_resistance();
                 goto common;
             case AD_FIRE:
-                not_affected |= Fire_resistance;
+                not_affected |= Fire_resistance();
                 goto common;
             case AD_ELEC:
                 not_affected |= Shock_resistance;
@@ -2019,7 +2019,7 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
                 Monnam(name, BUFSZ, mtmp);
                 pline("%s attacks you with a fiery gaze!", name);
                 stop_occupation();
-                if (Fire_resistance) {
+                if (Fire_resistance()) {
                     pline_The("fire doesn't feel hot!");
                     dmg = 0;
                 }

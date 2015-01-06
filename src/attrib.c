@@ -48,20 +48,20 @@ const struct innate {
                      {   0, 0, 0, 0 } },
 
         mon_abil[] = { {   1, &(HFast), "", "" },
-                     {   1, &(HSleep_resistance), "", "" },
+                     {   1, &(u.uprops[SLEEP_RES].intrinsic), "", "" },
                      {   1, &(HSee_invisible), "", "" },
                      {   3, &(HPoison_resistance), "healthy", "" },
                      {   5, &(HStealth), "stealthy", "" },
                      {   7, &(HWarning), "sensitive", "" },
                      {   9, &(HSearching), "perceptive", "unaware" },
-                     {  11, &(HFire_resistance), "cool", "warmer" },
-                     {  13, &(HCold_resistance), "warm", "cooler" },
+                     {  11, &(u.uprops[FIRE_RES].intrinsic), "cool", "warmer" },
+                     {  13, &(u.uprops[COLD_RES].intrinsic), "warm", "cooler" },
                      {  15, &(HShock_resistance), "insulated", "conductive" },
                      {  17, &(HTeleport_control), "controlled","uncontrolled" },
                      {   0, 0, 0, 0 } },
 
         pri_abil[] = { {        15, &(HWarning), "sensitive", "" },
-                     {  20, &(HFire_resistance), "cool", "warmer" },
+                     {  20, &(u.uprops[FIRE_RES].intrinsic), "cool", "warmer" },
                      {   0, 0, 0, 0 } },
 
         ran_abil[] = { {   1, &(HSearching), "", "" },
@@ -81,7 +81,7 @@ const struct innate {
                      {  20, &(HPoison_resistance), "hardy", "" },
                      {   0, 0, 0, 0 } },
 
-        val_abil[] = { {         1, &(HCold_resistance), "", "" },
+        val_abil[] = { {         1, &(u.uprops[COLD_RES].intrinsic), "", "" },
                      {   1, &(HStealth), "", "" },
                      {   7, &(HFast), "quick", "slow" },
                      {   0, 0, 0, 0 } },
@@ -91,7 +91,7 @@ const struct innate {
                      {   0, 0, 0, 0 } },
 
         /* Intrinsics conferred by race */
-        elf_abil[] = { {        4, &(HSleep_resistance), "awake", "tired" },
+        elf_abil[] = { {        4, &(u.uprops[SLEEP_RES].intrinsic), "awake", "tired" },
                      {   0, 0, 0, 0 } },
 
         orc_abil[] = { {        1, &(HPoison_resistance), "", "" },

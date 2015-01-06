@@ -331,15 +331,15 @@ void set_artifact_intrinsic(struct obj *otmp, bool on, long wp_mask) {
     dtyp = (wp_mask != W_ART) ? oart->defn.adtyp : oart->cary.adtyp;
 
     if (dtyp == AD_FIRE)
-        mask = &EFire_resistance;
+        mask = &u.uprops[FIRE_RES].extrinsic;
     else if (dtyp == AD_COLD)
-        mask = &ECold_resistance;
+        mask = &u.uprops[COLD_RES].extrinsic;
     else if (dtyp == AD_ELEC)
         mask = &EShock_resistance;
     else if (dtyp == AD_MAGM)
         mask = &EAntimagic;
     else if (dtyp == AD_DISN)
-        mask = &EDisint_resistance;
+        mask = &u.uprops[DISINT_RES].intrinsic;
     else if (dtyp == AD_DRST)
         mask = &EPoison_resistance;
 
@@ -552,9 +552,9 @@ static int spec_applies (const struct artifact *weap, struct monst *mtmp) {
             return false;
         switch(weap->attk.adtyp) {
             case AD_FIRE:
-                return !(yours ? Fire_resistance : resists_fire(mtmp));
+                return !(yours ? Fire_resistance() : resists_fire(mtmp));
             case AD_COLD:
-                return !(yours ? Cold_resistance : resists_cold(mtmp));
+                return !(yours ? Cold_resistance() : resists_cold(mtmp));
             case AD_ELEC:
                 return !(yours ? Shock_resistance : resists_elec(mtmp));
             case AD_MAGM:

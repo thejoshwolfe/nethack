@@ -3,6 +3,7 @@
 #ifndef YOUPROP_H
 #define YOUPROP_H
 
+#include <stdbool.h>
 #include "prop.h"
 #include "permonst.h"
 #include "mondata.h"
@@ -22,25 +23,57 @@
 
 /*** Resistances to troubles ***/
 /* With intrinsics and extrinsics */
-#define HFire_resistance        u.uprops[FIRE_RES].intrinsic
-#define EFire_resistance        u.uprops[FIRE_RES].extrinsic
-#define Fire_resistance         (HFire_resistance || EFire_resistance || \
-                                 resists_fire(&youmonst))
+static long get_HFire_resistance() {
+    return u.uprops[FIRE_RES].intrinsic;
+}
+static void set_HFire_resistance(hFireRes) {
+    u.uprops[FIRE_RES].intrinsic = hFireRes;
+}
+static long EFire_resistance() {
+    return u.uprops[FIRE_RES].extrinsic;
+}
+static bool Fire_resistance() {
+    return (get_HFire_resistance() || EFire_resistance() || resists_fire(&youmonst));
+}
 
-#define HCold_resistance        u.uprops[COLD_RES].intrinsic
-#define ECold_resistance        u.uprops[COLD_RES].extrinsic
-#define Cold_resistance         (HCold_resistance || ECold_resistance || \
-                                 resists_cold(&youmonst))
+static long get_HCold_resistance() {
+    return u.uprops[COLD_RES].intrinsic;
+}
+static void set_HCold_resistance(long hColdRes) {
+    u.uprops[COLD_RES].intrinsic = hColdRes;
+}
+static long ECold_resistance() {
+    return u.uprops[COLD_RES].extrinsic;
+}
+static bool Cold_resistance() {
+    return (get_HCold_resistance() || ECold_resistance() || resists_cold(&youmonst));
+}
 
-#define HSleep_resistance       u.uprops[SLEEP_RES].intrinsic
-#define ESleep_resistance       u.uprops[SLEEP_RES].extrinsic
-#define Sleep_resistance        (HSleep_resistance || ESleep_resistance || \
-                                 resists_sleep(&youmonst))
+static long get_HSleep_resistance() {
+    return u.uprops[SLEEP_RES].intrinsic;
+}
+static void set_HSleep_resistance(long hSleepRes) {
+    u.uprops[SLEEP_RES].intrinsic = hSleepRes;
+}
+static long ESleep_resistance() {
+    return u.uprops[SLEEP_RES].extrinsic;
+}
+static bool Sleep_resistance() {
+    return (get_HSleep_resistance() || ESleep_resistance || resists_sleep(&youmonst));
+}
 
-#define HDisint_resistance      u.uprops[DISINT_RES].intrinsic
-#define EDisint_resistance      u.uprops[DISINT_RES].extrinsic
-#define Disint_resistance       (HDisint_resistance || EDisint_resistance || \
-                                 resists_disint(&youmonst))
+static long get_HDisint_resistance() {
+    return u.uprops[DISINT_RES].intrinsic;
+}
+static void set_HDisint_resistance(long hDisintRes) {
+    u.uprops[DISINT_RES].intrinsic = hDisintRes;
+}
+static long EDisint_resistance() {
+    return u.uprops[DISINT_RES].extrinsic;
+}
+static bool Disint_resistance() {
+    return (get_HDisint_resistance() || EDisint_resistance || resists_disint(&youmonst));
+}
 
 #define HShock_resistance       u.uprops[SHOCK_RES].intrinsic
 #define EShock_resistance       u.uprops[SHOCK_RES].extrinsic
