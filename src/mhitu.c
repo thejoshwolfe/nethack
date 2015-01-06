@@ -956,7 +956,7 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
                     /* KMH -- this is okay with unchanging */
                     rehumanize();
                     break;
-                } else if (Fire_resistance) {
+                } else if (Fire_resistance()) {
                     pline_The("fire doesn't feel hot!");
                     dmg = 0;
                 }
@@ -1774,7 +1774,7 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
             break;
         case AD_FIRE:
             if(!mtmp->mcan && rn2(2)) {
-                if (Fire_resistance) {
+                if (Fire_resistance()) {
                     shieldeff(u.ux, u.uy);
                     You_feel("mildly hot.");
                     ugolemeffects(AD_FIRE,tmp);
@@ -1838,7 +1838,7 @@ static int explmu ( struct monst *mtmp, struct attack *mattk, bool ufound) {
                 not_affected |= Cold_resistance;
                 goto common;
             case AD_FIRE:
-                not_affected |= Fire_resistance;
+                not_affected |= Fire_resistance();
                 goto common;
             case AD_ELEC:
                 not_affected |= Shock_resistance;
@@ -2019,7 +2019,7 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
                 Monnam(name, BUFSZ, mtmp);
                 pline("%s attacks you with a fiery gaze!", name);
                 stop_occupation();
-                if (Fire_resistance) {
+                if (Fire_resistance()) {
                     pline_The("fire doesn't feel hot!");
                     dmg = 0;
                 }

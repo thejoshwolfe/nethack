@@ -54,14 +54,14 @@ const struct innate {
                      {   5, &(HStealth), "stealthy", "" },
                      {   7, &(HWarning), "sensitive", "" },
                      {   9, &(HSearching), "perceptive", "unaware" },
-                     {  11, &(HFire_resistance), "cool", "warmer" },
+                     {  11, &(u.uprops[FIRE_RES].extrinsic), "cool", "warmer" },
                      {  13, &(HCold_resistance), "warm", "cooler" },
                      {  15, &(HShock_resistance), "insulated", "conductive" },
                      {  17, &(HTeleport_control), "controlled","uncontrolled" },
                      {   0, 0, 0, 0 } },
 
         pri_abil[] = { {        15, &(HWarning), "sensitive", "" },
-                     {  20, &(HFire_resistance), "cool", "warmer" },
+                     {  20, &(u.uprops[FIRE_RES].extrinsic), "cool", "warmer" },
                      {   0, 0, 0, 0 } },
 
         ran_abil[] = { {   1, &(HSearching), "", "" },

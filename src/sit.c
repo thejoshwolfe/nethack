@@ -350,8 +350,8 @@ void rndcurse (void) {
 /* remove a random INTRINSIC ability */
 void attrcurse (void) {
     switch(rnd(11)) {
-        case 1 : if (HFire_resistance & INTRINSIC) {
-                     HFire_resistance &= ~INTRINSIC;
+        case 1 : if (get_HFire_resistance() & INTRINSIC) {
+                     set_HFire_resistance(get_HFire_resistance() & ~INTRINSIC);
                      You_feel("warmer.");
                      break;
                  }

@@ -3,6 +3,7 @@
 #ifndef YOUPROP_H
 #define YOUPROP_H
 
+#include <stdbool.h>
 #include "prop.h"
 #include "permonst.h"
 #include "mondata.h"
@@ -22,10 +23,18 @@
 
 /*** Resistances to troubles ***/
 /* With intrinsics and extrinsics */
-#define HFire_resistance        u.uprops[FIRE_RES].intrinsic
-#define EFire_resistance        u.uprops[FIRE_RES].extrinsic
-#define Fire_resistance         (HFire_resistance || EFire_resistance || \
-                                 resists_fire(&youmonst))
+static long get_HFire_resistance() {
+    return u.uprops[FIRE_RES].intrinsic;
+}
+static void set_HFire_resistance(hFireRes) {
+    u.uprops[FIRE_RES].intrinsic = hFireRes;
+}
+static long EFire_resistance() {
+    return u.uprops[FIRE_RES].extrinsic;
+}
+static bool Fire_resistance() {
+    return (get_HFire_resistance() || EFire_resistance() || resists_fire(&youmonst));
+}
 
 #define HCold_resistance        u.uprops[COLD_RES].intrinsic
 #define ECold_resistance        u.uprops[COLD_RES].extrinsic

@@ -411,10 +411,10 @@ static void givit (int type, struct permonst *ptr) {
 
         switch (type) {
             case FIRE_RES:
-                if(!(HFire_resistance & FROMOUTSIDE)) {
+                if(!(get_HFire_resistance() & FROMOUTSIDE)) {
                         You(Hallucination ? "be chillin'." :
                             "feel a momentary chill.");
-                        HFire_resistance |= FROMOUTSIDE;
+                        set_HFire_resistance(get_HFire_resistance() | FROMOUTSIDE);
                 }
                 break;
             case SLEEP_RES:
