@@ -62,10 +62,18 @@ static bool Sleep_resistance() {
     return (get_HSleep_resistance() || ESleep_resistance || resists_sleep(&youmonst));
 }
 
-#define HDisint_resistance      u.uprops[DISINT_RES].intrinsic
-#define EDisint_resistance      u.uprops[DISINT_RES].extrinsic
-#define Disint_resistance       (HDisint_resistance || EDisint_resistance || \
-                                 resists_disint(&youmonst))
+static long get_HDisint_resistance() {
+    return u.uprops[DISINT_RES].intrinsic;
+}
+static void set_HDisint_resistance(long hDisintRes) {
+    u.uprops[DISINT_RES].intrinsic = hDisintRes;
+}
+static long EDisint_resistance() {
+    return u.uprops[DISINT_RES].extrinsic;
+}
+static bool Disint_resistance() {
+    return (get_HDisint_resistance() || EDisint_resistance || resists_disint(&youmonst));
+}
 
 #define HShock_resistance       u.uprops[SHOCK_RES].intrinsic
 #define EShock_resistance       u.uprops[SHOCK_RES].extrinsic

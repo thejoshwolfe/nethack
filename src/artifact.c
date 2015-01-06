@@ -339,7 +339,7 @@ void set_artifact_intrinsic(struct obj *otmp, bool on, long wp_mask) {
     else if (dtyp == AD_MAGM)
         mask = &EAntimagic;
     else if (dtyp == AD_DISN)
-        mask = &EDisint_resistance;
+        mask = &u.uprops[DISINT_RES].intrinsic;
     else if (dtyp == AD_DRST)
         mask = &EPoison_resistance;
 

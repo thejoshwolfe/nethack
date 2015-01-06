@@ -509,15 +509,15 @@ static void god_zaps_you (aligntyp resp_god) {
         /* disintegrate shield and body armor before disintegrating
          * the impudent mortal, like black dragon breath -3.
          */
-        if (uarms && !(EReflecting & W_ARMS) && !(EDisint_resistance & W_ARMS))
+        if (uarms && !(EReflecting & W_ARMS) && !(EDisint_resistance() & W_ARMS))
             destroy_arm(uarms);
-        if (uarmc && !(EReflecting & W_ARMC) && !(EDisint_resistance & W_ARMC))
+        if (uarmc && !(EReflecting & W_ARMC) && !(EDisint_resistance() & W_ARMC))
             destroy_arm(uarmc);
-        if (uarm && !(EReflecting & W_ARM) && !(EDisint_resistance & W_ARM) && !uarmc)
+        if (uarm && !(EReflecting & W_ARM) && !(EDisint_resistance() & W_ARM) && !uarmc)
             destroy_arm(uarm);
         if (uarmu && !uarm && !uarmc)
             destroy_arm(uarmu);
-        if (!Disint_resistance) {
+        if (!Disint_resistance()) {
             fry_by_god(resp_god);
         } else {
             You("bask in its %s glow for a minute...", NH_BLACK);

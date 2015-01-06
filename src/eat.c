@@ -430,11 +430,11 @@ static void givit (int type, struct permonst *ptr) {
                 }
                 break;
             case DISINT_RES:
-                if(!(HDisint_resistance & FROMOUTSIDE)) {
+                if(!(get_HDisint_resistance() & FROMOUTSIDE)) {
                         You_feel(Hallucination ?
                             "totally together, man." :
                             "very firm.");
-                        HDisint_resistance |= FROMOUTSIDE;
+                        set_HDisint_resistance(get_HDisint_resistance() | FROMOUTSIDE);
                 }
                 break;
             case SHOCK_RES:     /* shock (electricity) resistance */
