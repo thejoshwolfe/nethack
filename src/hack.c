@@ -1812,7 +1812,7 @@ int dopickup(void) {
     int count;
     struct trap *traphere = t_at(u.ux, u.uy);
     /* awful kludge to work around parse()'s pre-decrement */
-    count = (multi || (save_cm && *save_cm == ',')) ? multi + 1 : 0;
+    count = multi ? multi + 1 : 0;
     multi = 0; /* always reset */
     if (u.uswallow) {
         if (!u.ustuck->minvent) {

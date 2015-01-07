@@ -37,7 +37,6 @@ struct q_score  quest_status = DUMMY;
 int smeq[MAXNROFROOMS+1] = DUMMY;
 int doorindex = 0;
 
-char *save_cm = 0;
 struct Killer killer;
 struct Killer delayed_killer;
 
