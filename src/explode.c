@@ -358,7 +358,6 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                 u.mh  -= damu;
             else
                 u.uhp -= damu;
-            flags.botl = 1;
         }
 
         if (u.uhp <= 0 || (Upolyd && u.mh <= 0)) {

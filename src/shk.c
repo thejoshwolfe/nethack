@@ -847,7 +847,6 @@ static void pay (long tmp, struct monst *shkp) {
 
     u.ugold -= balance;
     shkp->mgold += balance;
-    flags.botl = 1;
     if(robbed) {
         robbed -= tmp;
         if(robbed < 0) robbed = 0L;
@@ -1335,7 +1334,6 @@ proceed:
                 eshkp->debit = 0L;
                 eshkp->loan = 0L;
                 You("pay that debt.");
-                flags.botl = 1;
             } else {
                 dtmp -= eshkp->credit;
                 eshkp->credit = 0L;
@@ -1345,7 +1343,6 @@ proceed:
                 eshkp->loan = 0L;
                 pline("That debt is partially offset by your credit.");
                 You("pay the remainder.");
-                flags.botl = 1;
             }
             paid = true;
         }
@@ -1504,7 +1501,6 @@ static bool inherits(struct monst *shkp, int numsk, int croaked) {
             if (eshkp->robbed < 0L) eshkp->robbed = 0L;
             shkp->mgold += u.ugold;
             u.ugold = 0L;
-            flags.botl = 1;
             pline("%s %s all your possessions.",
                     shkname(shkp), takes);
             taken = true;
@@ -1513,7 +1509,6 @@ static bool inherits(struct monst *shkp, int numsk, int croaked) {
         } else {
             shkp->mgold += loss;
             u.ugold -= loss;
-            flags.botl = 1;
             pline("%s %s the %ld %s %sowed %s.",
                     "TODO: Monnam(shkp)", takes,
                     loss, currency(loss),
@@ -2995,7 +2990,6 @@ getcad:
         cost_of_damage = check_credit(cost_of_damage, shkp);
         u.ugold -= cost_of_damage;
         shkp->mgold += cost_of_damage;
-        flags.botl = 1;
         pline("Mollified, %s accepts your restitution.",
                 shkname(shkp));
         /* move shk back to his home loc */

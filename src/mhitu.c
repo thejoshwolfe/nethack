@@ -927,7 +927,6 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
                         if (dmg < 1) dmg = 1;
                         if (dmg > 1) exercise(A_STR, false);
                         u.mh -= dmg;
-                        flags.botl = 1;
                         dmg = 0;
                         if (cloneu()) {
                             char name[BUFSZ];
@@ -1391,7 +1390,6 @@ do_stone:
                 if (!rn2(3)) exercise(A_STR, true);
                 if (!rn2(3)) exercise(A_CON, true);
                 if (Sick) make_sick(0L, (char *) 0, false, SICK_ALL);
-                flags.botl = 1;
                 if (goaway) {
                     mongone(mtmp);
                     return 2;
@@ -1537,7 +1535,6 @@ do_stone:
             } else if (!Slimed) {
                 You("don't feel very well.");
                 Slimed = 10L;
-                flags.botl = 1;
                 fprintf(stderr, "TODO: delayed_killer = %s\n", mtmp->data->mname);
             } else
                 pline("Yuck!");
@@ -1604,7 +1601,6 @@ do_stone:
                 *hpmax_p = lowerlimit;
             else    /* unlikely... */
                 ;   /* already at or below minimum threshold; do nothing */
-            flags.botl = 1;
         }
 
         mdamageu(mtmp, dmg);
@@ -2041,7 +2037,6 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
 
 /* mtmp hits you for n points damage */
 void mdamageu ( struct monst *mtmp, int n) {
-    flags.botl = 1;
     if (Upolyd) {
         u.mh -= n;
         if (u.mh < 1) rehumanize();
@@ -2275,12 +2270,10 @@ int doseduce (struct monst *mon) {
             case 1: You("are down in the dumps.");
                     (void) adjattrib(A_CON, -1, true);
                     exercise(A_CON, false);
-                    flags.botl = 1;
                     break;
             case 2: Your("senses are dulled.");
                     (void) adjattrib(A_WIS, -1, true);
                     exercise(A_WIS, false);
-                    flags.botl = 1;
                     break;
             case 3:
                     if (!resists_drli(&youmonst)) {
@@ -2311,12 +2304,10 @@ int doseduce (struct monst *mon) {
             case 1: You_feel("good enough to do it again.");
                     (void) adjattrib(A_CON, 1, true);
                     exercise(A_CON, true);
-                    flags.botl = 1;
                     break;
             case 2: You("will always remember %s...", noit_name);
                     (void) adjattrib(A_WIS, 1, true);
                     exercise(A_WIS, true);
-                    flags.botl = 1;
                     break;
             case 3: pline("That was a very educational experience.");
                     pluslvl(false);
@@ -2327,7 +2318,6 @@ int doseduce (struct monst *mon) {
                     if (Upolyd)
                         u.mh = u.mhmax;
                     exercise(A_STR, true);
-                    flags.botl = 1;
                     break;
         }
     }
@@ -2357,7 +2347,6 @@ int doseduce (struct monst *mon) {
                     noit_name_cap, cost, currency(cost));
             u.ugold -= cost;
             mon->mgold += cost;
-            flags.botl = 1;
         }
     }
     if (!rn2(25)) mon->mcan = 1; /* monster is worn out */
@@ -2565,6 +2554,5 @@ struct monst * cloneu (void) {
     mon->mhpmax = u.mhmax;
     mon->mhp = u.mh / 2;
     u.mh -= mon->mhp;
-    flags.botl = 1;
     return(mon);
 }

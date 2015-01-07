@@ -13,7 +13,6 @@ void take_gold (void) {
     } else {
         You("notice you have no gold!");
         u.ugold = 0;
-        flags.botl = 1;
     }
 }
 
@@ -161,7 +160,6 @@ in_water:
                     make_blinded(0L,true);
                     make_sick(0L, (char *) 0, false, SICK_ALL);
                     heal_legs();
-                    flags.botl = 1;
                     break;
                 case 5:
                     take_gold();

@@ -500,7 +500,6 @@ void freeinv_core (struct obj *obj) {
         if (obj->oclass == COIN_CLASS) {
                 u.ugold -= obj->quan;
                 obj->in_use = false;
-                flags.botl = 1;
                 return;
         } else if (obj->otyp == AMULET_OF_YENDOR) {
                 if (!u.uhave.amulet) impossible("don't have amulet?");
@@ -527,7 +526,6 @@ void freeinv_core (struct obj *obj) {
                 curse(obj);
         } else if (confers_luck(obj)) {
                 set_moreluck();
-                flags.botl = 1;
         } else if (obj->otyp == FIGURINE && obj->timed) {
                 (void) stop_timer(FIG_TRANSFORM, (void *) obj);
         }
@@ -645,7 +643,6 @@ struct obj * mkgoldobj (long q) {
         u.ugold -= q;
         otmp->quan = q;
         otmp->owt = weight(otmp);
-        flags.botl = 1;
         return(otmp);
 }
 

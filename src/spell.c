@@ -994,12 +994,10 @@ spelleffects (int spell, bool atme)
         if (confused || (rnd(100) > chance)) {
                 You("fail to cast the spell correctly.");
                 u.uen -= energy / 2;
-                flags.botl = 1;
                 return(1);
         }
 
         u.uen -= energy;
-        flags.botl = 1;
         exercise(A_WIS, true);
         /* pseudo is a temporary "false" object containing the spell stats */
         pseudo = mksobj(spellid(spell), false, false);

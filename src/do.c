@@ -1510,7 +1510,6 @@ void set_wounded_legs (long side, int timex) {
 
         if(!Wounded_legs) {
                 ATEMP(A_DEX)--;
-                flags.botl = 1;
         }
 
         if(!Wounded_legs || (HWounded_legs & TIMEOUT))
@@ -1523,7 +1522,6 @@ void heal_legs (void) {
         if(Wounded_legs) {
                 if (ATEMP(A_DEX) < 0) {
                         ATEMP(A_DEX)++;
-                        flags.botl = 1;
                 }
 
                 if (!u.usteed)

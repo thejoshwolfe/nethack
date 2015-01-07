@@ -137,7 +137,6 @@ void burn_away_slime(void) {
     if (Slimed) {
         pline_The("slime that covers you is burned away!");
         Slimed = 0L;
-        flags.botl = 1;
     }
     return;
 }
@@ -1601,7 +1600,6 @@ void stop_occupation (void) {
         if (!maybe_finished_meal(true))
             You("stop %s.", occtxt);
         occupation = 0;
-        flags.botl = 1; /* in case u.uhs changed */
         /* fainting stops your occupation, there's no reason to sync.
            sync_hunger();
            */

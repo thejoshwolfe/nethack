@@ -321,7 +321,6 @@ int doconsult (struct monst *oracl) {
     }
     u.ugold -= (long)u_pay;
     oracl->mgold += (long)u_pay;
-    flags.botl = 1;
     add_xpts = 0;   /* first oracle of each type gives experience points */
     if (u_pay == minor_cost) {
         outrumor(1, BY_ORACLE);

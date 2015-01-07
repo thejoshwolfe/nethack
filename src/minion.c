@@ -222,7 +222,6 @@ long bribe (struct monst *mtmp) {
     }
     u.ugold -= offer;
     mtmp->mgold += offer;
-    flags.botl = 1;
     return offer;
 }
 

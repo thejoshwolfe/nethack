@@ -1435,8 +1435,6 @@ void domove(void) {
     if (flags.run && iflags.runmode != RUN_TPORT) {
         /* display every step or every 7th step depending upon mode */
         if (iflags.runmode != RUN_LEAP || !(moves % 7L)) {
-            if (flags.time)
-                flags.botl = 1;
             curs_on_u();
         }
     }
@@ -2080,7 +2078,6 @@ void losehp (int n, struct Killer k) {
     if (Upolyd) {
         u.mh -= n;
         if (u.mhmax < u.mh) u.mhmax = u.mh;
-        flags.botl = 1;
         if (u.mh < 1)
             rehumanize();
         else if (n > 0 && u.mh*10 < u.mhmax && Unchanging)
@@ -2091,7 +2088,6 @@ void losehp (int n, struct Killer k) {
     u.uhp -= n;
     if(u.uhp > u.uhpmax)
         u.uhpmax = u.uhp;       /* perhaps n was negative */
-    flags.botl = 1;
     if(u.uhp < 1) {
         killer = k;          /* the thing that killed you */
         You("die...");

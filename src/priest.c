@@ -431,7 +431,6 @@ void priest_talk (struct monst *priest) {
                 else
                     u.ugold = 1L;
                 priest->mgold -= u.ugold;
-                flags.botl = 1;
             } else {
                 message_monster(MSG_M_PREACHES_VIRTUES_POVERTY, priest);
             }

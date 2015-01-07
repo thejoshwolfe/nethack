@@ -195,7 +195,6 @@ dead: /* we come directly here if their experience level went to 0 or less */
                 Your("body transforms, but there is still slime on you.");
                 Slimed = 10L;
         }
-        flags.botl = 1;
         see_monsters();
         (void) encumber_msg();
 }
@@ -398,11 +397,9 @@ polymon (       /* returns 1 if polymorph successful */
             if (flaming(youmonst.data)) {
                 pline_The("slime burns away!");
                 Slimed = 0L;
-                flags.botl = 1;
             } else if (mntmp == PM_GREEN_SLIME) {
                 /* do it silently */
                 Slimed = 0L;
-                flags.botl = 1;
             }
         }
         if (nohands(youmonst.data)) Glib = 0;
@@ -529,7 +526,6 @@ polymon (       /* returns 1 if polymorph successful */
             You("orient yourself on the web.");
             u.utrap = 0;
         }
-        flags.botl = 1;
         vision_full_recalc = 1;
         see_monsters();
         exercise(A_CON, false);
@@ -689,7 +685,6 @@ void rehumanize (void) {
     if (!uarmg) selftouch("No longer petrify-resistant, you");
     nomul(0);
 
-    flags.botl = 1;
     vision_full_recalc = 1;
     (void) encumber_msg();
 }
@@ -706,7 +701,6 @@ int dobreathe(void) {
         return (0);
     }
     u.uen -= 15;
-    flags.botl = 1;
 
     if (!getdir((char *)0))
         return (0);
@@ -865,7 +859,6 @@ dosummon (void)
             return(0);
         }
         u.uen -= 10;
-        flags.botl = 1;
 
         You("call upon your brethren for help!");
         exercise(A_WIS, true);
@@ -902,7 +895,6 @@ int dogaze(void) {
             return(0);
         }
         u.uen -= 15;
-        flags.botl = 1;
 
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp)) continue;
@@ -1017,7 +1009,6 @@ int domindblast (void) {
         return(0);
     }
     u.uen -= 10;
-    flags.botl = 1;
 
     You("concentrate.");
     pline("A wave of psychic energy pours out.");
@@ -1208,7 +1199,6 @@ ugolemeffects (int damtype, int dam)
         if (heal && (u.mh < u.mhmax)) {
                 u.mh += heal;
                 if (u.mh > u.mhmax) u.mh = u.mhmax;
-                flags.botl = 1;
                 pline("Strangely, you feel better than before.");
                 exercise(A_STR, true);
         }
