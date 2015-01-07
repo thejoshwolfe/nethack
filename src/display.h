@@ -9,6 +9,38 @@
 #include "youprop.h"
 #include "flag.h"
 #include "trap.h"
+#include "rnd.h"
+
+void magic_map_background(signed char,signed char,int);
+void map_background(signed char,signed char,int);
+void map_trap(struct trap *,int);
+void map_object(struct obj *,int);
+void map_invisible(signed char,signed char);
+void unmap_object(int,int);
+void map_location(int,int,int);
+void feel_location(signed char,signed char);
+void newsym(int,int);
+void shieldeff(signed char,signed char);
+void tmp_at(int,int);
+void swallowed(int);
+void under_ground(int);
+void under_water(int);
+void see_monsters(void);
+void set_mimic_blocking(void);
+void see_objects(void);
+void see_traps(void);
+void curs_on_u(void);
+int doredraw(void);
+void docrt(void);
+void show_glyph(int,int,int);
+void clear_glyph_buffer(void);
+void row_refresh(int,int,int);
+void cls(void);
+void flush_screen(int);
+int back_to_glyph(signed char,signed char);
+int zapdir_to_glyph(int,int,int);
+int glyph_at(signed char,signed char);
+void set_wall_state(void);
 
 #define vobj_at(x,y) (level.objects[x][y])
 
@@ -182,26 +214,6 @@
 /* Total number of cmap indices in the sheild_static[] array. */
 #define SHIELD_COUNT 21
 
-
-/*
- * display_self()
- *
- * Display the hero.  It is assumed that all checks necessary to determine
- * _if_ the hero can be seen have already been done.
- */
-#define maybe_display_usteed    (u.usteed && mon_visible(u.usteed)) ? \
-                                        ridden_mon_to_glyph(u.usteed) :
-
-#define display_self()                                                  \
-    show_glyph(u.ux, u.uy,                                              \
-        maybe_display_usteed                    /* else */              \
-        youmonst.m_ap_type == M_AP_NOTHING ?                            \
-                                hero_glyph :                            \
-        youmonst.m_ap_type == M_AP_FURNITURE ?                          \
-                                cmap_to_glyph(youmonst.mappearance) :   \
-        youmonst.m_ap_type == M_AP_OBJECT ?                             \
-                                objnum_to_glyph(youmonst.mappearance) : \
-        /* else M_AP_MONSTER */ monnum_to_glyph(youmonst.mappearance))
 
 /*
  * A glyph is an abstraction that represents a _unique_ monster, object,
@@ -382,36 +394,22 @@
     ((glyph) >= GLYPH_WARNING_OFF && (glyph) < (GLYPH_WARNING_OFF + WARNCOUNT))
 
 
-void magic_map_background(signed char,signed char,int);
-void map_background(signed char,signed char,int);
-void map_trap(struct trap *,int);
-void map_object(struct obj *,int);
-void map_invisible(signed char,signed char);
-void unmap_object(int,int);
-void map_location(int,int,int);
-void feel_location(signed char,signed char);
-void newsym(int,int);
-void shieldeff(signed char,signed char);
-void tmp_at(int,int);
-void swallowed(int);
-void under_ground(int);
-void under_water(int);
-void see_monsters(void);
-void set_mimic_blocking(void);
-void see_objects(void);
-void see_traps(void);
-void curs_on_u(void);
-int doredraw(void);
-void docrt(void);
-void show_glyph(int,int,int);
-void clear_glyph_buffer(void);
-void row_refresh(int,int,int);
-void cls(void);
-void flush_screen(int);
-int back_to_glyph(signed char,signed char);
-int zapdir_to_glyph(int,int,int);
-int glyph_at(signed char,signed char);
-void set_wall_state(void);
+/*
+ * display_self()
+ *
+ * Display the hero.  It is assumed that all checks necessary to determine
+ * _if_ the hero can be seen have already been done.
+ */
+static void display_self(void) {
+    show_glyph(u.ux, u.uy, (u.usteed && mon_visible(u.usteed)) ?  ridden_mon_to_glyph(u.usteed) :
+        youmonst.m_ap_type == M_AP_NOTHING ?
+                                hero_glyph :
+        youmonst.m_ap_type == M_AP_FURNITURE ?
+                                cmap_to_glyph(youmonst.mappearance) :
+        youmonst.m_ap_type == M_AP_OBJECT ?
+                                objnum_to_glyph(youmonst.mappearance) :
+        /* else M_AP_MONSTER */ monnum_to_glyph(youmonst.mappearance));
+}
 
 
 #endif /* DISPLAY_H */

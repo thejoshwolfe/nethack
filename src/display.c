@@ -584,7 +584,8 @@ void newsym (int x, int y) {
 
     /* only permit updating the hero when swallowed */
     if (u.uswallow) {
-        if (x == u.ux && y == u.uy) display_self();
+        if (x == u.ux && y == u.uy)
+            display_self();
         return;
     }
     if (Underwater && !Is_waterlevel(&u.uz)) {
@@ -629,8 +630,8 @@ void newsym (int x, int y) {
             mon = m_at(x,y);
             worm_tail = is_worm_tail(mon, x, y);
             see_it = mon && (worm_tail
-                ? (!mon->minvis || See_invisible)
-                : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
+                    ? (!mon->minvis || See_invisible)
+                    : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
             if (mon && (see_it || (!worm_tail && Detect_monsters))) {
                 if (mon->mtrapped) {
                     struct trap *trap = t_at(x, y);
@@ -638,7 +639,7 @@ void newsym (int x, int y) {
 
                     /* if monster is in a physical trap, you see the trap too */
                     if (tt == BEAR_TRAP || tt == PIT ||
-                        tt == SPIKED_PIT ||tt == WEB) {
+                            tt == SPIKED_PIT ||tt == WEB) {
                         trap->tseen = true;
                     }
                 }
@@ -664,7 +665,7 @@ void newsym (int x, int y) {
         }
         else if ((mon = m_at(x,y))
                 && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon)
-                                || (see_with_infrared(mon) && mon_visible(mon))))
+                            || (see_with_infrared(mon) && mon_visible(mon))))
                     || Detect_monsters)
                 && !is_worm_tail(mon, x, y)) {
             /* Monsters are printed every time. */
@@ -672,8 +673,8 @@ void newsym (int x, int y) {
             display_monster(x, y, mon, see_it ? 0 : DETECTED, 0);
         }
         else if ((mon = m_at(x,y)) && mon_warning(mon) &&
-                 !is_worm_tail(mon, x, y)) {
-                display_warning(mon);
+                !is_worm_tail(mon, x, y)) {
+            display_warning(mon);
         }
 
         /*
