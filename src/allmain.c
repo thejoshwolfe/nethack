@@ -79,7 +79,7 @@ static void dump_vision_to_stdout(void) {
 
 void moveloop(void) {
     int moveamt = 0, wtcap = 0, change = 0;
-    bool didmove = false, monscanmove = false;
+    bool monscanmove = false;
 
     flags.moonphase = phase_of_the_moon();
     if (flags.moonphase == FULL_MOON) {
@@ -103,7 +103,7 @@ void moveloop(void) {
     youmonst.movement = NORMAL_SPEED; /* give the hero some movement points */
 
     for (;;) {
-        didmove = flags.move;
+        bool didmove = flags.move;
         if (didmove) {
             /* actual time passed */
             youmonst.movement -= NORMAL_SPEED;
@@ -377,9 +377,8 @@ void moveloop(void) {
             continue;
         }
 
-        if ((u.uhave.amulet || Clairvoyant) && !In_endgame(&u.uz) && !BClairvoyant&&
-        !(moves % 15) && !rn2(2))
-        do_vicinity_map();
+        if ((u.uhave.amulet || Clairvoyant) && !In_endgame(&u.uz) && !BClairvoyant && !(moves % 15) && !rn2(2))
+            do_vicinity_map();
 
         if (u.utrap && u.utraptype == TT_LAVA) {
             if (!is_lava(u.ux, u.uy))
