@@ -416,7 +416,7 @@ void moveloop(void) {
                 domove();
             } else {
                 --multi;
-                rhack(save_cm);
+                rhack(NULL);
             }
         } else if (multi == 0) {
             ckmailstatus();
