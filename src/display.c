@@ -113,6 +113,7 @@
  *                   vertical.
  */
 
+#include "stdout_msg.h"
 #include "display.h"
 #include "hack.h"
 #include "region.h"
@@ -1179,6 +1180,7 @@ void show_glyph (int x, int y, int glyph) {
     if (gbuf[y][x].glyph != glyph) {
         gbuf[y][x].glyph = glyph;
         gbuf[y][x].new   = 1;
+        stdout_msg_glyph(x, y, glyph);
         if (gbuf_start[y] > x) gbuf_start[y] = x;
         if (gbuf_stop[y]  < x) gbuf_stop[y]  = x;
     }
@@ -1215,6 +1217,7 @@ void clear_glyph_buffer (void) {
         }
     }
     reset_glyph_bbox();
+    stdout_msg_const(OUT_MSG_SET_ALL_ROCK);
 }
 
 /*

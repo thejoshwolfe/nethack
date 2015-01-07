@@ -21,6 +21,7 @@ function Socket() {
     var wsProto = isHttps ? "wss:" : "ws:";
     var wsUrl = wsProto + '//' + hostName + ':' + port + pathname;
     self.ws = new WebSocket(wsUrl);
+    self.ws.binaryType = 'arraybuffer';
 
     self.ws.addEventListener('message', onMessage, false);
     self.ws.addEventListener('error', timeoutThenCreateNew, false);
@@ -33,8 +34,12 @@ function Socket() {
     }
 
     function onMessage(ev) {
-      var msg = JSON.parse(ev.data);
-      self.emit(msg.name, msg.args);
+      if (typeof ev.data === 'string') {
+        var msg = JSON.parse(ev.data);
+        self.emit(msg.name, msg.args);
+      } else {
+        self.emit('binaryMessage', ev.data);
+      }
     }
 
     function timeoutThenCreateNew() {
