@@ -45,7 +45,6 @@ void stealgold (struct monst *mtmp) {
         if (!tele_restrict(mtmp)) (void) rloc(mtmp, false);
         mtmp->mavenge = 1;
         monflee(mtmp, 0, false, false);
-        flags.botl = 1;
     }
 }
 

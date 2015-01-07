@@ -474,7 +474,6 @@ static int gulpum(struct monst *mdef, struct attack *mattk) {
                             sprintf(msgbuf, "%s isn't sitting well with you.", The(mdef->data->mname));
                             if (!Unchanging) {
                                 Slimed= 5L;
-                                flags.botl = 1;
                             }
                         } else
                             exercise(A_CON, true);
@@ -1891,7 +1890,6 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 ABASE(A_INT) += rnd(4);
                 if (ABASE(A_INT) > AMAX(A_INT))
                     ABASE(A_INT) = AMAX(A_INT);
-                flags.botl = 1;
             }
             exercise(A_WIS, true);
             break;

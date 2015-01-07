@@ -20,7 +20,6 @@ struct flag {
         bool  autoquiver;    /* Automatically fill quiver */
         bool  beginner;
         bool  biff;          /* enable checking for mail */
-        bool  botl;          /* partially redo status line */
         bool  botlx;         /* print an entirely new bottom line */
         bool  confirm;       /* confirm before hitting tame monsters */
         bool  debug;         /* in debugging mode */

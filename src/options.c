@@ -1605,12 +1605,8 @@ goodfruit:
             /* only do processing below if setting with doset() */
             if (initial) return;
 
-            if ((boolopt[i].addr) == &flags.time
-                    || (boolopt[i].addr) == &flags.showexp
-               )
-                flags.botl = true;
-
-            else if ((boolopt[i].addr) == &flags.invlet_constant) {
+            if ((boolopt[i].addr) == &flags.time || (boolopt[i].addr) == &flags.showexp) {
+            } else if ((boolopt[i].addr) == &flags.invlet_constant) {
                 if (flags.invlet_constant) reassign();
             }
             else if ((boolopt[i].addr) == &flags.lit_corridor) {

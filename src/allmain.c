@@ -171,8 +171,6 @@ void moveloop(void) {
 
                     if (u.ublesscnt)
                         u.ublesscnt--;
-                    if (flags.time && !flags.run)
-                        flags.botl = 1;
 
                     /* One possible result of prayer is healing.  Whether or
                      * not you get healed depends on your current hit points.
@@ -187,14 +185,13 @@ void moveloop(void) {
                     } else if (Upolyd && youmonst.data->mlet == S_EEL && !is_pool(u.ux, u.uy) && !Is_waterlevel(&u.uz)) {
                         if (u.mh > 1) {
                             u.mh--;
-                            flags.botl = 1;
-                        } else if (u.mh < 1)
+                        } else if (u.mh < 1) {
                             rehumanize();
+                        }
                     } else if (Upolyd && u.mh < u.mhmax) {
-                        if (u.mh < 1)
+                        if (u.mh < 1) {
                             rehumanize();
-                        else if (Regeneration || (wtcap < MOD_ENCUMBER && !(moves % 20))) {
-                            flags.botl = 1;
+                        } else if (Regeneration || (wtcap < MOD_ENCUMBER && !(moves % 20))) {
                             u.mh++;
                         }
                     } else if (u.uhp < u.uhpmax && (wtcap < MOD_ENCUMBER || !u.umoved || Regeneration)) {
@@ -208,12 +205,10 @@ void moveloop(void) {
                                 if (heal > u.ulevel - 9)
                                     heal = u.ulevel - 9;
                             }
-                            flags.botl = 1;
                             u.uhp += heal;
                             if (u.uhp > u.uhpmax)
                                 u.uhp = u.uhpmax;
                         } else if (Regeneration || (u.ulevel <= 9 && !(moves % ((MAXULEV + 12) / (u.ulevel + 2) + 1)))) {
-                            flags.botl = 1;
                             u.uhp++;
                         }
                     }
@@ -237,7 +232,6 @@ void moveloop(void) {
                         u.uen += rn1((int)(ACURR(A_WIS) + ACURR(A_INT)) / 15 + 1, 1);
                         if (u.uen > u.uenmax)
                             u.uen = u.uenmax;
-                        flags.botl = 1;
                     }
 
                     if (!u.uinvulnerable) {
@@ -385,8 +379,6 @@ void moveloop(void) {
             if (!multi) {
                 /* lookaround may clear multi */
                 flags.move = 0;
-                if (flags.time)
-                    flags.botl = 1;
                 continue;
             }
             if (flags.mv) {
@@ -405,17 +397,8 @@ void moveloop(void) {
             /* change dungeon level */
             deferred_goto(); /* after rhack() */
         }
-        /* !flags.move here: multiple movement command stopped */
-        else if (flags.time && (!flags.move || !flags.mv)) {
-            flags.botl = 1;
-        }
 
         vision_recalc(0);
-        /* when running in non-tport mode, this gets done through domove() */
-        if ((!flags.run || iflags.runmode == RUN_TPORT) && (multi && (!flags.travel ? !(multi % 7) : !(moves % 7L)))) {
-            if (flags.time && flags.run)
-                flags.botl = 1;
-        }
 
         fprintf(stderr, "TODO: main loop\n");
         exit(1);

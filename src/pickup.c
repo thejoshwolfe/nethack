@@ -1110,7 +1110,6 @@ int pickup_object ( struct obj *obj, long count, bool telekinesis) {
             else
                 obj->quan -= count;
         }
-        flags.botl = 1;
         if (flags.run) nomul(0);
         return 1;
     } else if (obj->otyp == CORPSE) {
@@ -1226,7 +1225,6 @@ int encumber_msg (void) {
                              newcap == 4 ? "can barely" : "can't even");
                      break;
         }
-        flags.botl = 1;
     } else if(oldcap > newcap) {
         switch(newcap) {
             case 0: Your("movements are now unencumbered.");
@@ -1239,7 +1237,6 @@ int encumber_msg (void) {
                             stagger(youmonst.data, "stagger"));
                     break;
         }
-        flags.botl = 1;
     }
 
     oldcap = newcap;

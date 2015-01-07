@@ -166,7 +166,6 @@ bool adjattrib(int ndx, int incr, int msgflg) {
         You_feel("%s%s!",
                 (incr > 1 || incr < -1) ? "very ": "",
                 (incr > 0) ? plusattr[ndx] : minusattr[ndx]);
-    flags.botl = 1;
     if (moves > 1 && (ndx == A_STR || ndx == A_CON))
         (void)encumber_msg();
     return true;

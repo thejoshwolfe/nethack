@@ -857,7 +857,6 @@ int use_pick_axe2 (struct obj *obj) {
         if (dam <= 0) dam = 1;
         You("hit yourself with %s.", yname(uwep));
         losehp(dam, killed_by_object(KM_YOUR_OWN_O, obj));
-        flags.botl=1;
         return(1);
     } else if(u.dz == 0) {
         if(Stunned || (Confusion && !rn2(5))) confdir();

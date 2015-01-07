@@ -743,7 +743,6 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
                         You("lose magical energy!");
                         u.uenmax--;
                         if (u.uen > 0) u.uen--;
-                        flags.botl = 1;
                     }
                 } else {
                     if (mdef->data == &mons[PM_CLAY_GOLEM])
@@ -752,7 +751,6 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
                         You("absorb magical energy!");
                         u.uenmax++;
                         u.uen++;
-                        flags.botl = 1;
                     }
                 }
             }
@@ -1151,7 +1149,6 @@ static int arti_invoke (struct obj *obj) {
                               if(Sick) make_sick(0L,(char *)0,false,SICK_ALL);
                               if(Slimed) Slimed = 0L;
                               if (Blinded > creamed) make_blinded(creamed, false);
-                              flags.botl = 1;
                               break;
                           }
             case ENERGY_BOOST: {
@@ -1161,7 +1158,6 @@ static int arti_invoke (struct obj *obj) {
                                    if(epboost) {
                                        You_feel("re-energized.");
                                        u.uen += epboost;
-                                       flags.botl = 1;
                                    } else
                                        goto nothing_special;
                                    break;

@@ -1658,8 +1658,6 @@ void use_unicorn_horn (struct obj *obj) {
                 "great" : "better");
     else if (!did_prop)
         pline("Nothing seems to happen.");
-
-    flags.botl = (did_attr || did_prop);
 }
 
 static bool figurine_location_checks(struct obj *obj, coord *cc, bool quietly) {
@@ -2069,7 +2067,6 @@ static int use_whip (struct obj *obj) {
         if (dam <= 0) dam = 1;
         You("hit your %s with your bullwhip.", body_part(FOOT));
         losehp(dam, killed_by_const(KM_HIT_SELF_BULLWHIP));
-        flags.botl = 1;
         return 1;
 
     } else if ((Fumbling || Glib) && !rn2(5)) {

@@ -1146,7 +1146,6 @@ id:
                     u.uen = u.uenmax;
                 else
                     u.uen = (u.uenmax += d(5,4));
-                flags.botl = 1;
                 break;
             }
             known = true;
