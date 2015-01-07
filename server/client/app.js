@@ -2,7 +2,7 @@ var Socket = require('./socket');
 var resource_loader = require('./resource_loader');
 
 var caseCorrectUsername;
-var vision;
+var currentLevel;
 var tileWidth;
 var tileHeight;
 var tilesImageTileXCount;
@@ -12,7 +12,17 @@ var tilesImage = resource_loader.fetchImage("tiles.png");
 var tilesImageTileWidth = 128;
 var tilesImageTileHeight = 128;
 
+var NETHACK_MSG_TYPE_COUNT = 0;
+var NETHACK_MSG_TYPE_GLYPH = NETHACK_MSG_TYPE_COUNT++;
+var NETHACK_MSG_TYPE_SET_ALL_ROCK = NETHACK_MSG_TYPE_COUNT++;
+
+var binaryMessageHandlers = [
+  handleGlyph,
+  handleSetAllRock,
+];
+
 var constants = require('../../build/constants');
+var GLYPH_STONE = constants.GLYPH_CMAP_OFF + 0;
 
 var loadingDiv = document.getElementById('loading');
 var loginDiv = document.getElementById('login');
@@ -57,7 +67,7 @@ var socket = new Socket();
 socket.on('registerResult', onRegisterResult);
 socket.on('loginResult', onLoginResult);
 socket.on('playError', onPlayError);
-socket.on('vision', onVision);
+socket.on('binaryMessage', onBinaryMessage);
 
 socket.on('connect', function() {
   tryToLoginWithSavedCredentials();
@@ -69,7 +79,7 @@ socket.on('disconnect', function() {
 
 function resetState() {
   caseCorrectUsername = null;
-  vision = null;
+  currentLevel = null;
   tileWidth = null;
   tileHeight = null;
   tilesImageTileXCount = null;
@@ -236,6 +246,8 @@ function playNetHack() {
 
     tilesImageTileXCount = Math.floor(tilesImage.width / tilesImageTileWidth);
     tilesImageTileYCount = Math.floor(tilesImage.height / tilesImageTileHeight);
+
+    handleSetAllRock();
   });
 }
 
@@ -252,28 +264,43 @@ function onPlayError(msg) {
   showPlayErr(msg.err);
 }
 
-function onVision(msg) {
-  vision = msg;
-  renderVision();
+function onBinaryMessage(buffer) {
+  var dv = new DataView(buffer);
+  var id = dv.getUint32(0, true);
+  var handler = binaryMessageHandlers[id];
+  if (!handler) throw new Error("no handler for id " + id);
+  handler(new DataView(buffer, 8));
 }
 
-function renderVision() {
-  // clear canvas to black
-  context.fillStyle = '#000000'
-  context.fillRect(0, 0, canvas.width, canvas.height);
+function handleGlyph(dv) {
+  var x = dv.getInt32(0, true);
+  var y = dv.getInt32(4, true);
+  var glyph = dv.getInt32(8, true);
+  setGlyph(x, y, glyph);
+}
 
+function setGlyph(x, y, glyph) {
+  currentLevel[y][x] = glyph;
+
+  // not sure where this magic number comes from
+  var tileIndex = glyph - 1515;
+
+  var tileRow = Math.floor(tileIndex / tilesImageTileXCount);
+  var tileCol = tileIndex % tilesImageTileXCount;
+
+  context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
+      tilesImageTileWidth, tilesImageTileHeight,
+      x * tileWidth, y * tileHeight,
+      tileWidth, tileHeight);
+}
+
+function handleSetAllRock() {
+  currentLevel = new Array(constants.ROWNO);
   for (var y = 0; y < constants.ROWNO; y += 1) {
+    var col = new Array(constants.COLNO);
+    currentLevel[y] = col;
     for (var x = 0; x < constants.COLNO; x += 1) {
-      // not sure where this magic number is coming from
-      var glyph = vision[y][x] - 1515;
-
-      var tileRow = Math.floor(glyph / tilesImageTileXCount);
-      var tileCol = glyph % tilesImageTileXCount;
-
-      context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
-          tilesImageTileWidth, tilesImageTileHeight,
-          x * tileWidth, y * tileHeight,
-          tileWidth, tileHeight);
+      setGlyph(x, y, GLYPH_STONE);
     }
   }
 }

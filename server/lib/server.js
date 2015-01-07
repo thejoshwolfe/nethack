@@ -10,7 +10,6 @@ var leveldown = require('leveldown');
 var dbIterate = require('./db_iterate');
 var uuid = require('./uuid');
 var WritableStream = require('stream').Writable;
-var constants = require('../../build/constants');
 
 var httpPort = process.env.NETHACK_HTTP_PORT || 21119;
 var httpHost = process.env.NETHACK_HTTP_HOST || '0.0.0.0';
@@ -117,9 +116,9 @@ Session.prototype.play = function(args) {
       var msgType = buf.readUInt32LE(0);
       var msgSize = buf.readUInt32LE(4);
       if (buf.length - 8 < msgSize) break;
-      var slice = buf.slice(8, 8 + msgSize);
+      var slice = buf.slice(0, 8 + msgSize);
       buf = buf.slice(8 + msgSize);
-      self.handleNetHackMsg(msgType, slice);
+      self.ws.sendBinary(slice);
     }
     callback();
   };
@@ -132,33 +131,6 @@ Session.prototype.killChildProcess = function() {
     this.netHackProcess.kill();
     this.netHackProcess = null;
     this.closeHook = null;
-  }
-};
-
-var NETHACK_MSG_TYPE_COUNT = 0;
-var NETHACK_MSG_TYPE_VISION = NETHACK_MSG_TYPE_COUNT++;
-
-var NETHACK_COLNO = constants.COLNO;
-var NETHACK_ROWNO = constants.ROWNO;
-
-Session.prototype.handleNetHackMsg = function(msgType, buffer) {
-  switch(msgType) {
-    case NETHACK_MSG_TYPE_VISION:
-      var rows = [];
-      var pos = 0;
-      for (var y = 0; y < NETHACK_ROWNO; y += 1) {
-        var cols = [];
-        rows.push(cols);
-        for (var x = 0; x < NETHACK_COLNO; x += 1) {
-          var i = buffer.readInt32LE(pos);
-          cols.push(i);
-          pos += 4;
-        }
-      }
-      this.send('vision', rows);
-      break;
-    default:
-      console.error("Unrecognized message from nethack binary: " + msgType);
   }
 };
 
