@@ -937,14 +937,15 @@ static bool help_dir(char sym, const char *msg) {
     return true;
 }
 
-void rhack(char *cmd) {
-    bool do_walk, do_rush, prefix_seen, bad_command, firsttime = (cmd == 0);
+void rhack() {
+    bool do_walk;
+    bool do_rush;
+    bool prefix_seen;
+    bool bad_command;
 
     iflags.menu_requested = false;
-    if (firsttime) {
-        flags.nopick = 0;
-        cmd = parse();
-    }
+    flags.nopick = 0;
+    char * cmd = parse();
     if (*cmd == '\033') {
         flags.move = false;
         return;
@@ -1073,11 +1074,9 @@ void rhack(char *cmd) {
         flags.forcefight = 0;
         return;
     } else if (do_rush) {
-        if (firsttime) {
-            if (!multi)
-                multi = max(COLNO, ROWNO);
-            u.last_str_turn = 0;
-        }
+        if (!multi)
+            multi = max(COLNO, ROWNO);
+        u.last_str_turn = 0;
         flags.mv = true;
         domove();
         return;
