@@ -914,7 +914,7 @@ void potionhit (struct monst *mon, struct obj *obj, bool your_fault) {
                 break;
             case POT_POLYMORPH:
                 You_feel("a little %s.", Hallucination() ? "normal" : "strange");
-                if (!Unchanging && !Antimagic) polyself(false);
+                if (!Unchanging && !Antimagic()) polyself(false);
                 break;
             case POT_ACID:
                 if (!Acid_resistance) {

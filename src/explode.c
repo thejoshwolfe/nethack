@@ -128,7 +128,7 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                     explmask[i][j] = 0;
                     break;
                 case AD_MAGM:
-                    explmask[i][j] = !!Antimagic;
+                    explmask[i][j] = !!Antimagic();
                     break;
                 case AD_FIRE:
                     explmask[i][j] = !!Fire_resistance();

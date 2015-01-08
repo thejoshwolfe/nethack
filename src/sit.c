@@ -292,7 +292,7 @@ void rndcurse (void) {
         return;
     }
 
-    if(Antimagic) {
+    if(Antimagic()) {
         shieldeff(u.ux, u.uy);
         You(mal_aura, "you");
     }
@@ -301,7 +301,7 @@ void rndcurse (void) {
         nobj++;
     }
     if (nobj) {
-        for (cnt = rnd(6/((!!Antimagic) + (!!Half_spell_damage) + 1));
+        for (cnt = rnd(6/((!!Antimagic()) + (!!Half_spell_damage) + 1));
                 cnt > 0; cnt--)  {
             onum = rnd(nobj);
             for (otmp = invent; otmp; otmp = otmp->nobj) {

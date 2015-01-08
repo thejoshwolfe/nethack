@@ -664,7 +664,7 @@ static int mbhitm(struct monst *mtmp, struct obj *otmp) {
             if (mtmp == &youmonst) {
                 if (zap_oseen)
                     makeknown(WAN_STRIKING);
-                if (Antimagic) {
+                if (Antimagic()) {
                     shieldeff(u.ux, u.uy);
                     pline("Boing!");
                 } else if (rnd(20) < 10 + u.uac) {

@@ -1759,7 +1759,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
         case WAN_STRIKING:
             makeknown(WAN_STRIKING);
         case SPE_FORCE_BOLT:
-            if (Antimagic) {
+            if (Antimagic()) {
                 shieldeff(u.ux, u.uy);
                 pline("Boing!");
             } else {
@@ -1833,7 +1833,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
         case WAN_MAGIC_MISSILE:
             makeknown(WAN_MAGIC_MISSILE);
         case SPE_MAGIC_MISSILE:
-            if (Antimagic) {
+            if (Antimagic()) {
                 shieldeff(u.ux, u.uy);
                 pline_The("missiles bounce!");
             } else {
@@ -2092,7 +2092,7 @@ bool cancel_monst(struct monst *mdef, struct obj *obj, bool youattack, bool allo
     bool youdefend = (mdef == &youmonst);
     static const char your[] = "your"; /* should be extern */
 
-    if (youdefend ? (!youattack && Antimagic) : resist(mdef, obj->oclass, 0, NOTELL))
+    if (youdefend ? (!youattack && Antimagic()) : resist(mdef, obj->oclass, 0, NOTELL))
         return false; /* resisted cancellation */
 
     if (self_cancel) { /* 1st cancel inventory */
@@ -2855,7 +2855,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
 
     switch (abs(type) % 10) {
         case ZT_MAGIC_MISSILE:
-            if (Antimagic) {
+            if (Antimagic()) {
                 shieldeff(sx, sy);
                 pline_The("missiles bounce off!");
             } else {
@@ -2926,7 +2926,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
                 shieldeff(sx, sy);
                 You("seem unaffected.");
                 break;
-            } else if (Antimagic) {
+            } else if (Antimagic()) {
                 shieldeff(sx, sy);
                 You("aren't affected.");
                 break;

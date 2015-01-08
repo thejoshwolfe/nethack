@@ -337,7 +337,7 @@ void set_artifact_intrinsic(struct obj *otmp, bool on, long wp_mask) {
     else if (dtyp == AD_ELEC)
         mask = &u.uprops[SHOCK_RES].extrinsic;
     else if (dtyp == AD_MAGM)
-        mask = &EAntimagic;
+        mask = &u.uprops[ANTIMAGIC].extrinsic;
     else if (dtyp == AD_DISN)
         mask = &u.uprops[DISINT_RES].intrinsic;
     else if (dtyp == AD_DRST)
@@ -500,7 +500,7 @@ int touch_artifact (struct obj *obj, struct monst *mon) {
         if (!yours) return 0;
         const char *name = the(xname(obj));
         You("are blasted by %s%s power!", name, possessive_suffix(name));
-        dmg = d((Antimagic ? 2 : 4), (self_willed ? 10 : 4));
+        dmg = d((Antimagic() ? 2 : 4), (self_willed ? 10 : 4));
         losehp(dmg, killed_by_artifact(KM_TOUCH_ARTIFACT, oart));
         exercise(A_WIS, false);
     }
@@ -559,7 +559,7 @@ static int spec_applies (const struct artifact *weap, struct monst *mtmp) {
                 return !(yours ? Shock_resistance() : resists_elec(mtmp));
             case AD_MAGM:
             case AD_STUN:
-                return !(yours ? Antimagic : (rn2(100) < ptr->mr));
+                return !(yours ? Antimagic() : (rn2(100) < ptr->mr));
             case AD_DRST:
                 return !(yours ? Poison_resistance() : resists_poison(mtmp));
             case AD_DRLI:
@@ -758,7 +758,7 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
 
         case MB_INDEX_SCARE:
             if (youdefend) {
-                if (Antimagic) {
+                if (Antimagic()) {
                     resisted = true;
                 } else {
                     nomul(-3);

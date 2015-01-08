@@ -2089,7 +2089,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
             break;
         case AD_MAGM:
             /* wrath of gods for attacking Oracle */
-            if (Antimagic) {
+            if (Antimagic()) {
                 shieldeff(u.ux, u.uy);
                 pline("A hail of magic missiles narrowly misses you!");
             } else {

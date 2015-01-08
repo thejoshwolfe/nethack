@@ -1367,7 +1367,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
 
         case ANTI_MAGIC:
             seetrap(trap);
-            if (Antimagic) {
+            if (Antimagic()) {
                 shieldeff(u.ux, u.uy);
                 You_feel("momentarily lethargic.");
             } else
@@ -1387,7 +1387,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 Levitation ? "float" : locomotion(youmonst.data, "step"));
             }
             You("%s onto a polymorph trap!", verbbuf);
-            if (Antimagic || Unchanging) {
+            if (Antimagic() || Unchanging) {
                 shieldeff(u.ux, u.uy);
                 You_feel("momentarily different.");
                 /* Trap did nothing; don't remove it --KAA */
