@@ -1102,7 +1102,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
 
         case SLP_GAS_TRAP:
             seetrap(trap);
-            if (Sleep_resistance || breathless(youmonst.data)) {
+            if (Sleep_resistance() || breathless(youmonst.data)) {
                 You("are enveloped in a cloud of gas!");
                 break;
             }

@@ -550,7 +550,7 @@ int peffects (struct obj *otmp) {
             }
             break;
         case POT_SLEEPING:
-            if(Sleep_resistance || Free_action)
+            if(Sleep_resistance() || Free_action)
                 You("yawn.");
             else {
                 You("suddenly fall asleep!");
@@ -1172,7 +1172,7 @@ void potionbreathe (struct obj *obj) {
             break;
         case POT_SLEEPING:
             kn++;
-            if (!Free_action && !Sleep_resistance) {
+            if (!Free_action && !Sleep_resistance()) {
                 You_feel("rather tired.");
                 nomul(-rnd(5));
                 nomovemsg = You_can_move_again;

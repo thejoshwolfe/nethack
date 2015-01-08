@@ -358,7 +358,7 @@ void nh_timeout(void) {
                     stop_occupation();
                     break;
                 case SLEEPING:
-                    if (unconscious() || Sleep_resistance)
+                    if (unconscious() || Sleep_resistance())
                         HSleeping += rnd(100);
                     else if (Sleeping) {
                         You("fall asleep.");

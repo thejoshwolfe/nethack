@@ -1902,7 +1902,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
         case WAN_SLEEP:
             makeknown(WAN_SLEEP);
         case SPE_SLEEP:
-            if(Sleep_resistance) {
+            if(Sleep_resistance()) {
                 shieldeff(u.ux, u.uy);
                 You("don't feel sleepy!");
             } else {
@@ -2893,7 +2893,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
                 destroy_item(POTION_CLASS, AD_COLD);
             break;
         case ZT_SLEEP:
-            if (Sleep_resistance) {
+            if (Sleep_resistance()) {
                 shieldeff(u.ux, u.uy);
                 You("don't feel sleepy.");
             } else {
