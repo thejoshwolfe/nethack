@@ -27,7 +27,7 @@
 static long get_HFire_resistance() {
     return u.uprops[FIRE_RES].intrinsic;
 }
-static void set_HFire_resistance(hFireRes) {
+static void set_HFire_resistance(long hFireRes) {
     u.uprops[FIRE_RES].intrinsic = hFireRes;
 }
 static long EFire_resistance() {
