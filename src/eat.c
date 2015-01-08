@@ -438,12 +438,12 @@ static void givit (int type, struct permonst *ptr) {
                 }
                 break;
             case SHOCK_RES:     /* shock (electricity) resistance */
-                if(!(HShock_resistance & FROMOUTSIDE)) {
+                if(!(get_HShock_resistance() & FROMOUTSIDE)) {
                         if (Hallucination)
                                 You_feel("grounded in reality.");
                         else
                                 Your("health currently feels amplified!");
-                        HShock_resistance |= FROMOUTSIDE;
+                        set_HShock_resistance(get_HShock_resistance() | FROMOUTSIDE);
                 }
                 break;
             case POISON_RES:

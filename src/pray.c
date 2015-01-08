@@ -631,7 +631,7 @@ gcrownu (void)
     HSee_invisible |= FROMOUTSIDE;
     set_HFire_resistance(get_HFire_resistance() | FROMOUTSIDE);
     set_HCold_resistance(get_HCold_resistance() | FROMOUTSIDE);
-    HShock_resistance |= FROMOUTSIDE;
+    set_HShock_resistance(get_HShock_resistance() | FROMOUTSIDE);
     set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
     HPoison_resistance |= FROMOUTSIDE;
     godvoice(u.ualign.type, (char *)0);

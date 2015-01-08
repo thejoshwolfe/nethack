@@ -56,7 +56,7 @@ const struct innate {
                      {   9, &(HSearching), "perceptive", "unaware" },
                      {  11, &(u.uprops[FIRE_RES].intrinsic), "cool", "warmer" },
                      {  13, &(u.uprops[COLD_RES].intrinsic), "warm", "cooler" },
-                     {  15, &(HShock_resistance), "insulated", "conductive" },
+                     {  15, &(u.uprops[SHOCK_RES].intrinsic), "insulated", "conductive" },
                      {  17, &(HTeleport_control), "controlled","uncontrolled" },
                      {   0, 0, 0, 0 } },
 

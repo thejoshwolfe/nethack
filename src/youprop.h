@@ -75,10 +75,18 @@ static bool Disint_resistance() {
     return (get_HDisint_resistance() || EDisint_resistance || resists_disint(&youmonst));
 }
 
-#define HShock_resistance       u.uprops[SHOCK_RES].intrinsic
-#define EShock_resistance       u.uprops[SHOCK_RES].extrinsic
-#define Shock_resistance        (HShock_resistance || EShock_resistance || \
-                                 resists_elec(&youmonst))
+static long get_HShock_resistance() {
+    return u.uprops[SHOCK_RES].intrinsic;
+}
+static void set_HShock_resistance(long hShockRes) {
+    u.uprops[SHOCK_RES].intrinsic = hShockRes;
+}
+static long EShock_resistance() {
+    return u.uprops[SHOCK_RES].extrinsic;
+}
+static bool Shock_resistance() {
+    return (get_HShock_resistance() || EShock_resistance() || resists_elec(&youmonst));
+}
 
 #define HPoison_resistance      u.uprops[POISON_RES].intrinsic
 #define EPoison_resistance      u.uprops[POISON_RES].extrinsic
