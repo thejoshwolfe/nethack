@@ -235,7 +235,7 @@ static int Cloak_on (void) {
             }
             /* Alchemy smock gives poison _and_ acid resistance */
         case ALCHEMY_SMOCK:
-            EAcid_resistance |= WORN_CLOAK;
+            set_EAcid_resistance(get_EAcid_resistance() | WORN_CLOAK);
             break;
         default: impossible(unknown_type, c_cloak, uarmc->otyp);
     }
@@ -279,7 +279,7 @@ int Cloak_off (void) {
                 break;
         /* Alchemy smock gives poison _and_ acid resistance */
         case ALCHEMY_SMOCK:
-                EAcid_resistance &= ~WORN_CLOAK;
+                set_EAcid_resistance(get_EAcid_resistance() & ~WORN_CLOAK);
                 break;
         default: impossible(unknown_type, c_cloak, otyp);
     }

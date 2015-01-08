@@ -814,7 +814,7 @@ int peffects (struct obj *otmp) {
             }
             break;
         case POT_ACID:
-            if (Acid_resistance)
+            if (Acid_resistance())
                 /* Not necessarily a creature who _likes_ acid */
                 pline("This tastes %s.", Hallucination() ? "tangy" : "sour");
             else {
@@ -917,7 +917,7 @@ void potionhit (struct monst *mon, struct obj *obj, bool your_fault) {
                 if (!Unchanging && !Antimagic()) polyself(false);
                 break;
             case POT_ACID:
-                if (!Acid_resistance) {
+                if (!Acid_resistance()) {
                     pline("This burns%s!", obj->blessed ? " a little" :
                             obj->cursed ? " a lot" : "");
                     losehp(d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8),
