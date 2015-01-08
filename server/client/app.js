@@ -9,8 +9,8 @@ var tilesImageTileXCount;
 var tilesImageTileYCount;
 
 var tilesImage = resource_loader.fetchImage("tiles.png");
-var tilesImageTileWidth = 128;
-var tilesImageTileHeight = 128;
+var tilesImageTileWidth = 32;
+var tilesImageTileHeight = 32;
 
 var NETHACK_MSG_TYPE_COUNT = 0;
 var NETHACK_MSG_TYPE_GLYPH = NETHACK_MSG_TYPE_COUNT++;
