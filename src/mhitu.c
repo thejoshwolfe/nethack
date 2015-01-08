@@ -1486,7 +1486,7 @@ do_stone:
             }
             switch (rn2(20)) {
                 case 19: case 18: case 17:
-                    if (!Antimagic) {
+                    if (!Antimagic()) {
                         killer = killed_by_const(KM_TOUCH_OF_DEATH);
                         done(DIED);
                         dmg = 0;
@@ -1497,7 +1497,7 @@ do_stone:
                     permdmg = 1;        /* actual damage done below */
                     break;
                 case 4: case 3: case 2: case 1: case 0:
-                    if (Antimagic) shieldeff(u.ux, u.uy);
+                    if (Antimagic()) shieldeff(u.ux, u.uy);
                     pline("Lucky for you, it didn't work!");
                     dmg = 0;
                     break;

@@ -128,9 +128,12 @@ static long Invulnerable() {
 }
 
 /* Extrinsics only */
-#define EAntimagic              u.uprops[ANTIMAGIC].extrinsic
-#define Antimagic               (EAntimagic || \
-                                 (Upolyd && resists_magm(&youmonst)))
+static long EAntimagic() {
+    return u.uprops[ANTIMAGIC].extrinsic;
+}
+static bool Antimagic() {
+    return (EAntimagic() || (Upolyd && resists_magm(&youmonst)));
+}
 
 #define EAcid_resistance        u.uprops[ACID_RES].extrinsic
 #define Acid_resistance         (EAcid_resistance || resists_acid(&youmonst))

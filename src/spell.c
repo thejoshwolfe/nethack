@@ -142,7 +142,7 @@ cursed_book (struct obj *bp)
                 bp->in_use = true;
                 break;
         case 6:
-                if(Antimagic) {
+                if(Antimagic()) {
                     shieldeff(u.ux, u.uy);
                     pline_The("book %s, but you are unharmed!", explodes);
                 } else {

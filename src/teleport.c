@@ -741,8 +741,8 @@ void domagicportal (struct trap *ttmp) {
 }
 
 void tele_trap (struct trap *trap) {
-        if (In_endgame(&u.uz) || Antimagic) {
-                if (Antimagic)
+        if (In_endgame(&u.uz) || Antimagic()) {
+                if (Antimagic())
                         shieldeff(u.ux, u.uy);
                 You_feel("a wrenching sensation.");
         } else if (!next_to_u()) {
@@ -759,10 +759,10 @@ void level_tele_trap (struct trap *trap) {
         You("%s onto a level teleport trap!",
                       Levitation ? (const char *)"float" :
                                   locomotion(youmonst.data, "step"));
-        if (Antimagic) {
+        if (Antimagic()) {
             shieldeff(u.ux, u.uy);
         }
-        if (Antimagic || In_endgame(&u.uz)) {
+        if (Antimagic() || In_endgame(&u.uz)) {
             You_feel("a wrenching sensation.");
             return;
         }
