@@ -2185,7 +2185,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
                 }
                 break;
             case AD_ELEC:
-                if(Shock_resistance) {
+                if(Shock_resistance()) {
                     shieldeff(u.ux, u.uy);
                     You_feel("a mild tingle.");
                     ugolemeffects(AD_ELEC, tmp);

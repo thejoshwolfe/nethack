@@ -142,7 +142,7 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                         !!Disint_resistance();
                     break;
                 case AD_ELEC:
-                    explmask[i][j] = !!Shock_resistance;
+                    explmask[i][j] = !!Shock_resistance();
                     break;
                 case AD_DRST:
                     explmask[i][j] = !!Poison_resistance;
