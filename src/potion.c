@@ -802,7 +802,7 @@ int peffects (struct obj *otmp) {
                         good_for_you = true;
                     } else {
                         You("burn your %s.", body_part(FACE));
-                        losehp(d(Fire_resistance ? 1 : 3, 4),
+                        losehp(d(Fire_resistance() ? 1 : 3, 4),
                                 killed_by_const(KM_BURNING_POTION_OF_OIL));
                     }
                 } else if(otmp->cursed) {

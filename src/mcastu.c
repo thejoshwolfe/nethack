@@ -276,7 +276,7 @@ int castmu (struct monst *mtmp, struct attack *mattk, bool thinks_it_foundyou, b
 
             case AD_FIRE:
                 pline("You're enveloped in flames.");
-                if(Fire_resistance) {
+                if(Fire_resistance()) {
                         shieldeff(u.ux, u.uy);
                         pline("But you resist the effects.");
                         dmg = 0;
@@ -497,7 +497,7 @@ static void cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum) {
         break;
     case CLC_FIRE_PILLAR:
         pline("A pillar of fire strikes all around you!");
-        if (Fire_resistance) {
+        if (Fire_resistance()) {
             shieldeff(u.ux, u.uy);
             dmg = 0;
         } else

@@ -787,14 +787,14 @@ static void dofiretrap(struct obj *box) {
 
     if ((box && !carried(box)) ? is_pool(box->ox, box->oy) : Underwater) {
         pline("A cascade of steamy bubbles erupts from %s!", the(box ? xname(box) : surface(u.ux, u.uy)));
-        if (Fire_resistance)
+        if (Fire_resistance())
             You("are uninjured.");
         else
             losehp(rnd(3), killed_by_const(KM_BOILING_WATER));
         return;
     }
     pline("A %s %s from %s!", tower_of_flame, box ? "bursts" : "erupts", the(box ? xname(box) : surface(u.ux, u.uy)));
-    if (Fire_resistance) {
+    if (Fire_resistance()) {
         shieldeff(u.ux, u.uy);
         num = rn2(2);
     } else if (Upolyd) {
@@ -3591,7 +3591,7 @@ bool lava_effects(void) {
     if (likes_lava(youmonst.data))
         return false;
 
-    if (!Fire_resistance) {
+    if (!Fire_resistance()) {
         if (Wwalking) {
             dmg = d(6, 6);
             pline_The("lava here burns you!");
