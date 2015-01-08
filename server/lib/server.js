@@ -134,10 +134,35 @@ Session.prototype.killChildProcess = function() {
   }
 };
 
+Session.prototype.move = function(args) {
+  var x = args.x;
+  var y = args.y;
+  var xAxis = ['l', 'c', 'r'];
+  var yAxis = ['t', 'm', 'b'];
+  var word = {
+    tl: '7',
+    tc: '8',
+    tr: '9',
+    ml: '4',
+    mc: '5',
+    mr: '6',
+    bl: '1',
+    bc: '2',
+    br: '3',
+  };
+  var c = word[yAxis[y + 1] + xAxis[x + 1]];
+  if (!c) {
+    this.send('playError', {err: "invalid movement direction"});
+    return;
+  }
+  this.netHackProcess.stdin.write(c);
+};
+
 var messageHandlers = {
   register: Session.prototype.register,
   login: Session.prototype.login,
   play: Session.prototype.play,
+  move: Session.prototype.move,
 };
 
 function spawnNethack(cb) {

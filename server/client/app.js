@@ -63,6 +63,8 @@ registerPassword.addEventListener('keydown', registerFormKeyDown);
 logOutBtn.addEventListener('click', logOut);
 playBtn.addEventListener('click', playNetHack);
 
+window.addEventListener('keydown', onKeyDown);
+
 var socket = new Socket();
 socket.on('registerResult', onRegisterResult);
 socket.on('loginResult', onLoginResult);
@@ -248,6 +250,8 @@ function playNetHack() {
     tilesImageTileYCount = Math.floor(tilesImage.height / tilesImageTileHeight);
 
     handleSetAllRock();
+
+    canvas.focus();
   });
 }
 
@@ -277,6 +281,7 @@ function handleGlyph(dv) {
   var y = dv.getInt32(4, true);
   var glyph = dv.getInt32(8, true);
   setGlyph(x, y, glyph);
+  console.log("display glyph at", x, y);
 }
 
 function setGlyph(x, y, glyph) {
@@ -303,4 +308,59 @@ function handleSetAllRock() {
       setGlyph(x, y, GLYPH_STONE);
     }
   }
+}
+
+var keyDownHandlers = {
+  // numpad 1
+  97: function() {
+    moveDir(-1, 1);
+  },
+  // numpad 2
+  98: function() {
+    moveDir(0, 1);
+  },
+  // numpad 3
+  99: function() {
+    moveDir(1, 1);
+  },
+  // numpad 4
+  100: function() {
+    moveDir(-1, 0);
+  },
+  // numpad 5
+  101: function() {
+    moveDir(0, 0);
+  },
+  // numpad 6
+  102: function() {
+    moveDir(1, 0);
+  },
+  // numpad 7
+  103: function() {
+    moveDir(-1, -1);
+  },
+  // numpad 8
+  104: function() {
+    moveDir(0, -1);
+  },
+  // numpad 9
+  105: function() {
+    moveDir(1, -1);
+  },
+};
+
+function onKeyDown(ev) {
+  var fn = keyDownHandlers[ev.which];
+  if (fn) {
+    fn(ev);
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
+}
+
+function onCanvasKeyUp(ev) {
+}
+
+function moveDir(x, y) {
+  socket.send('move', {x: x, y: y});
 }
