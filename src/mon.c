@@ -1800,7 +1800,7 @@ void poisoned (const char *string, int typ, const char *pname, int fatal) {
                 string, plural ? "were" : "was");
     }
 
-    if(Poison_resistance) {
+    if(Poison_resistance()) {
         if(!strcmp(string, "blast")) shieldeff(u.ux, u.uy);
         pline_The("poison doesn't seem to affect you.");
         return;

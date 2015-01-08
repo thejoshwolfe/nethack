@@ -145,7 +145,7 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                     explmask[i][j] = !!Shock_resistance();
                     break;
                 case AD_DRST:
-                    explmask[i][j] = !!Poison_resistance;
+                    explmask[i][j] = !!Poison_resistance();
                     break;
                 case AD_ACID:
                     explmask[i][j] = !!Acid_resistance;

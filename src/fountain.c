@@ -252,7 +252,7 @@ drinkfountain (void)
                 case 21: /* Poisonous */
 
                         pline_The("water is contaminated!");
-                        if (Poison_resistance) {
+                        if (Poison_resistance()) {
                            pline(
                               "Perhaps it is runoff from the nearby %s farm.",
                                  fruitname(false));

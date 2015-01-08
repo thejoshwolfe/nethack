@@ -602,7 +602,7 @@ int peffects (struct obj *otmp) {
                     losehp(1, killed_by_const(KM_MILDLY_CONTAMINATED_POTION));
                 }
             } else {
-                if(Poison_resistance)
+                if(Poison_resistance())
                     pline( "(But in fact it was biologically contaminated %s.)", fruitname(true));
                 if (Role_if(PM_HEALER))
                     pline("Fortunately, you have been immunized.");
@@ -612,10 +612,10 @@ int peffects (struct obj *otmp) {
                     if (!Fixed_abil) {
                         poisontell(typ);
                         (void) adjattrib(typ,
-                                Poison_resistance ? -1 : -rn1(4,3),
+                                Poison_resistance() ? -1 : -rn1(4,3),
                                 true);
                     }
-                    if(!Poison_resistance) {
+                    if(!Poison_resistance()) {
                         if (otmp->fromsink) {
                             losehp(rnd(10)+5*!!(otmp->cursed),
                                     killed_by_const(KM_CONTAMINATED_TAP_WATER));
