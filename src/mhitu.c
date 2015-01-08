@@ -1837,7 +1837,7 @@ static int explmu ( struct monst *mtmp, struct attack *mattk, bool ufound) {
                 not_affected |= Fire_resistance();
                 goto common;
             case AD_ELEC:
-                not_affected |= Shock_resistance;
+                not_affected |= Shock_resistance();
 common:
 
                 if (!not_affected) {
