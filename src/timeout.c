@@ -57,7 +57,7 @@ static void vomiting_dialogue(void) {
             morehungry(20);
             break;
         case 2:
-            make_stunned(HStun + d(2,4), false);
+            make_stunned(get_HStun() + d(2,4), false);
             /* fall through */
         case 3:
             make_confused(HConfusion + d(2,4), false);
@@ -324,7 +324,7 @@ void nh_timeout(void) {
                     stop_occupation();
                     break;
                 case STUNNED:
-                    HStun = 1;
+                    set_HStun(1);
                     make_stunned(0L, true);
                     stop_occupation();
                     break;

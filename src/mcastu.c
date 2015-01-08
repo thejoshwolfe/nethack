@@ -429,14 +429,14 @@ static void cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum) {
     case MGC_STUN_YOU:
         if (Antimagic() || Free_action) {
             shieldeff(u.ux, u.uy);
-            if (!Stunned)
+            if (!Stunned())
                 You_feel("momentarily disoriented.");
             make_stunned(1L, false);
         } else {
-            You(Stunned ? "struggle to keep your balance." : "reel...");
+            You(Stunned() ? "struggle to keep your balance." : "reel...");
             dmg = d(ACURR(A_DEX) < 12 ? 6 : 4, 4);
             if (Half_spell_damage) dmg = (dmg + 1) / 2;
-            make_stunned(HStun + dmg, false);
+            make_stunned(get_HStun() + dmg, false);
         }
         dmg = 0;
         break;

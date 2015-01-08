@@ -896,7 +896,7 @@ int seffects (struct obj *sobj) {
                 } else {        /* armor and scroll both cursed */
                     message_object(MSG_YOUR_O_VIBRATES, otmp);
                     if (otmp->spe >= -6) otmp->spe--;
-                    make_stunned(HStun + rn1(10, 10), true);
+                    make_stunned(get_HStun() + rn1(10, 10), true);
                 }
             }
             break;

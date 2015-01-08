@@ -1434,7 +1434,7 @@ do_stone:
         case AD_STUN:
             hitmsg(mtmp, mattk);
             if(!mtmp->mcan && !rn2(4)) {
-                make_stunned(HStun + dmg, true);
+                make_stunned(get_HStun() + dmg, true);
                 dmg /= 2;
             }
             break;
@@ -1984,7 +1984,7 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
                 char name[BUFSZ];
                 Monnam(name, BUFSZ, mtmp);
                 pline("%s stares piercingly at you!", name);
-                make_stunned(HStun + stun, true);
+                make_stunned(get_HStun() + stun, true);
                 stop_occupation();
             }
             break;

@@ -193,7 +193,7 @@ in_trouble (void)
                     && !u.usteed
                                 ) return (TROUBLE_WOUNDED_LEGS);
         if(u.uhs >= HUNGRY) return(TROUBLE_HUNGRY);
-        if(HStun) return (TROUBLE_STUNNED);
+        if(get_HStun()) return (TROUBLE_STUNNED);
         if(HConfusion) return (TROUBLE_CONFUSED);
         if(Hallucination()) return(TROUBLE_HALLUCINATION);
         return(0);

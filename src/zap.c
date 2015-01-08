@@ -1945,8 +1945,8 @@ int zapyourself(struct obj *obj, bool ordinary) {
             (void) unturn_dead(&youmonst);
             if (is_undead(youmonst.data)) {
                 You_feel("frightened and %sstunned.",
-                        Stunned ? "even more " : "");
-                make_stunned(HStun + rnd(30), false);
+                        Stunned() ? "even more " : "");
+                make_stunned(get_HStun() + rnd(30), false);
             } else
                 You("shudder in dread.");
             break;

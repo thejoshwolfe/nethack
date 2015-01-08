@@ -879,7 +879,7 @@ bool attack(struct monst *mtmp) {
 static int joust(struct monst *mon, struct obj *obj) {
     int skill_rating, joust_dieroll;
 
-    if (Fumbling || Stunned)
+    if (Fumbling || Stunned())
         return 0;
     /* sanity check; lance must be wielded in order to joust */
     if (obj != uwep && (obj != uswapwep || !u.twoweap))
@@ -2169,7 +2169,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
                 }
                 break;
             case AD_STUN: /* specifically yellow mold */
-                if(!Stunned)
+                if(!Stunned())
                     make_stunned((long)tmp, true);
                 break;
             case AD_FIRE:

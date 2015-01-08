@@ -540,10 +540,10 @@ static void cpostfx(int pm) {
             case PM_YELLOW_LIGHT:
                 /* fall into next case */
             case PM_GIANT_BAT:
-                make_stunned(HStun + 30,false);
+                make_stunned(get_HStun() + 30,false);
                 /* fall into next case */
             case PM_BAT:
-                make_stunned(HStun + 30,false);
+                make_stunned(get_HStun() + 30,false);
                 break;
             case PM_GIANT_MIMIC:
                 tmp += 10;
@@ -587,7 +587,7 @@ static void cpostfx(int pm) {
                 }
                 break;
             case PM_LIZARD:
-                if (HStun > 2)  make_stunned(2L,false);
+                if (get_HStun() > 2)  make_stunned(2L,false);
                 if (HConfusion > 2)  make_confused(2L,false);
                 break;
             case PM_CHAMELEON:
@@ -1658,7 +1658,7 @@ int doeat (void) {
                 pline("Ulch - That %s was rustproofed!", xname(otmp));
                 /* The regurgitated object's rustproofing is gone now */
                 otmp->oerodeproof = 0;
-                make_stunned(HStun + rn2(10), true);
+                make_stunned(get_HStun() + rn2(10), true);
                 You("spit %s out onto the %s.", the(xname(otmp)),
                         surface(u.ux, u.uy));
                 if (carried(otmp)) {

@@ -384,7 +384,7 @@ static bool landing_spot ( coord *spot, int reason, int forceit) {
     struct trap *t;
 
     /* avoid known traps (i == 0) and boulders, but allow them as a backup */
-    if (reason != DISMOUNT_BYCHOICE || Stunned || Confusion || Fumbling) i = 1;
+    if (reason != DISMOUNT_BYCHOICE || Stunned() || Confusion || Fumbling) i = 1;
     for (; !found && i < 2; ++i) {
         for (x = u.ux-1; x <= u.ux+1; x++)
             for (y = u.uy-1; y <= u.uy+1; y++) {

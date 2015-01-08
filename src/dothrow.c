@@ -95,7 +95,7 @@ static int throw_obj (struct obj *obj, int shotlimit) {
     skill = objects[obj->otyp].oc_subtyp;
     if ((ammo_and_launcher(obj, uwep) || skill == P_DAGGER ||
                 skill == -P_DART || skill == -P_SHURIKEN) &&
-            !(Confusion || Stunned)) {
+            !(Confusion || Stunned())) {
         /* Bonus if the player is proficient in this weapon... */
         switch (P_SKILL(weapon_type(obj))) {
             default:    break; /* No bonus */
@@ -798,7 +798,7 @@ static void sho_obj_return_to_u (struct obj *obj) {
 void throwit(struct obj *obj, long wep_mask, bool twoweap) {
     struct monst *mon;
     int range, urange;
-    bool impaired = (Confusion || Stunned || Blind ||
+    bool impaired = (Confusion || Stunned() || Blind ||
             Hallucination() || Fumbling);
 
     if ((obj->cursed || obj->greased) && (u.dx || u.dy) && !rn2(7)) {
