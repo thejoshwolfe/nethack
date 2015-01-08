@@ -14,6 +14,7 @@ void stdout_msg_glyph(int x, int y, int glyph) {
     fwrite(&x32, sizeof(int32_t), 1, stdout);
     fwrite(&y32, sizeof(int32_t), 1, stdout);
     fwrite(&glyph32, sizeof(int32_t), 1, stdout);
+    fflush(stdout);
 }
 
 void stdout_msg_const(enum StdoutMsgId id) {
@@ -21,4 +22,5 @@ void stdout_msg_const(enum StdoutMsgId id) {
     uint32_t size = 0;
     fwrite(&id32, sizeof(uint32_t), 1, stdout);
     fwrite(&size, sizeof(uint32_t), 1, stdout);
+    fflush(stdout);
 }
