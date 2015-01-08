@@ -480,7 +480,7 @@ static void god_zaps_you (aligntyp resp_god) {
                 pline("For some reason you're unaffected.");
             else
                 (void) ureflects("%s reflects from your %s.", "It");
-        } else if (Shock_resistance) {
+        } else if (Shock_resistance()) {
             shieldeff(u.ux, u.uy);
             pline("It seems not to affect you.");
         } else

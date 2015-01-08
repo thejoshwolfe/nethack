@@ -984,7 +984,7 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
             hitmsg(mtmp, mattk);
             if (uncancelled) {
                 You("get zapped!");
-                if (Shock_resistance) {
+                if (Shock_resistance()) {
                     pline_The("zap doesn't shock you!");
                     dmg = 0;
                 }
@@ -1750,7 +1750,7 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
         case AD_ELEC:
             if(!mtmp->mcan && rn2(2)) {
                 pline_The("air around you crackles with electricity.");
-                if (Shock_resistance) {
+                if (Shock_resistance()) {
                     shieldeff(u.ux, u.uy);
                     You("seem unhurt.");
                     ugolemeffects(AD_ELEC,tmp);

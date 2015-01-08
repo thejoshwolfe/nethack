@@ -1774,7 +1774,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
 
         case WAN_LIGHTNING:
             makeknown(WAN_LIGHTNING);
-            if (!Shock_resistance) {
+            if (!Shock_resistance()) {
                 You("shock yourself!");
                 damage = d(12, 6);
                 exercise(A_CON, false);
@@ -2937,7 +2937,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
             done(DIED);
             return; /* lifesaved */
         case ZT_LIGHTNING:
-            if (Shock_resistance) {
+            if (Shock_resistance()) {
                 shieldeff(sx, sy);
                 You("aren't affected.");
                 ugolemeffects(AD_ELEC, d(nd, 6));
@@ -3636,7 +3636,7 @@ void destroy_item(int osym, int dmgtyp) {
                 }
                 break;
             case AD_ELEC:
-                xresist = (Shock_resistance && obj->oclass != RING_CLASS);
+                xresist = (Shock_resistance() && obj->oclass != RING_CLASS);
                 quan = obj->quan;
                 switch (osym) {
                     case RING_CLASS:

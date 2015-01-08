@@ -145,8 +145,8 @@ in_water:
                     break;
                 case 3:
                     pline("A%s electric shock shoots through your body!",
-                            (Shock_resistance) ? "n" : " massive");
-                    losehp(Shock_resistance ? rnd(6) : rnd(30), killed_by_const(KM_ELECTRIC_CHAIR));
+                            (Shock_resistance()) ? "n" : " massive");
+                    losehp(Shock_resistance() ? rnd(6) : rnd(30), killed_by_const(KM_ELECTRIC_CHAIR));
                     exercise(A_CON, false);
                     break;
                 case 4:

@@ -516,7 +516,7 @@ static void cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum) {
 
         pline("A bolt of lightning strikes down at you from above!");
         reflects = ureflects("It bounces off your %s%s.", "");
-        if (reflects || Shock_resistance) {
+        if (reflects || Shock_resistance()) {
             shieldeff(u.ux, u.uy);
             dmg = 0;
             if (reflects)

@@ -3471,7 +3471,7 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                 int dmg;
 
                 You("are jolted by a surge of electricity!");
-                if (Shock_resistance) {
+                if (Shock_resistance()) {
                     shieldeff(u.ux, u.uy);
                     You("don't seem to be affected.");
                     dmg = 0;
