@@ -72,7 +72,7 @@ static long EDisint_resistance() {
     return u.uprops[DISINT_RES].extrinsic;
 }
 static bool Disint_resistance() {
-    return (get_HDisint_resistance() || EDisint_resistance || resists_disint(&youmonst));
+    return (get_HDisint_resistance() || EDisint_resistance() || resists_disint(&youmonst));
 }
 
 static long get_HShock_resistance() {

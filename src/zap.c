@@ -2902,7 +2902,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
             break;
         case ZT_DEATH:
             if (abs(type) == ZT_BREATH(ZT_DEATH)) {
-                if (Disint_resistance) {
+                if (Disint_resistance()) {
                     You("are not disintegrated.");
                     break;
                 } else if (uarms) {
