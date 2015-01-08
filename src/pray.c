@@ -633,7 +633,7 @@ gcrownu (void)
     set_HCold_resistance(get_HCold_resistance() | FROMOUTSIDE);
     set_HShock_resistance(get_HShock_resistance() | FROMOUTSIDE);
     set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
-    HPoison_resistance |= FROMOUTSIDE;
+    set_HPoison_resistance(get_HPoison_resistance() | FROMOUTSIDE);
     godvoice(u.ualign.type, (char *)0);
 
     obj = ok_wep(uwep) ? uwep : 0;

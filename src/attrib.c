@@ -31,7 +31,7 @@ const struct innate {
                      {  10, &(HSearching), "perceptive", "" },
                      {   0, 0, 0, 0 } },
 
-        bar_abil[] = { {         1, &(HPoison_resistance), "", "" },
+        bar_abil[] = { {         1, &(u.uprops[POISON_RES].intrinsic), "", "" },
                      {   7, &(HFast), "quick", "slow" },
                      {  15, &(HStealth), "stealthy", "" },
                      {   0, 0, 0, 0 } },
@@ -40,7 +40,7 @@ const struct innate {
                      {  15, &(HWarning), "sensitive", "" },
                      {   0, 0, 0, 0 } },
 
-        hea_abil[] = { {         1, &(HPoison_resistance), "", "" },
+        hea_abil[] = { {         1, &(u.uprops[POISON_RES].intrinsic), "", "" },
                      {  15, &(HWarning), "sensitive", "" },
                      {   0, 0, 0, 0 } },
 
@@ -50,7 +50,7 @@ const struct innate {
         mon_abil[] = { {   1, &(HFast), "", "" },
                      {   1, &(u.uprops[SLEEP_RES].intrinsic), "", "" },
                      {   1, &(HSee_invisible), "", "" },
-                     {   3, &(HPoison_resistance), "healthy", "" },
+                     {   3, &(u.uprops[POISON_RES].intrinsic), "healthy", "" },
                      {   5, &(HStealth), "stealthy", "" },
                      {   7, &(HWarning), "sensitive", "" },
                      {   9, &(HSearching), "perceptive", "unaware" },
@@ -78,7 +78,7 @@ const struct innate {
                      {   0, 0, 0, 0 } },
 
         tou_abil[] = { {        10, &(HSearching), "perceptive", "" },
-                     {  20, &(HPoison_resistance), "hardy", "" },
+                     {  20, &(u.uprops[POISON_RES].intrinsic), "hardy", "" },
                      {   0, 0, 0, 0 } },
 
         val_abil[] = { {         1, &(u.uprops[COLD_RES].intrinsic), "", "" },
@@ -94,7 +94,7 @@ const struct innate {
         elf_abil[] = { {        4, &(u.uprops[SLEEP_RES].intrinsic), "awake", "tired" },
                      {   0, 0, 0, 0 } },
 
-        orc_abil[] = { {        1, &(HPoison_resistance), "", "" },
+        orc_abil[] = { {        1, &(u.uprops[POISON_RES].intrinsic), "", "" },
                      {   0, 0, 0, 0 } };
 
 static long next_check = 600L;  /* arbitrary first setting */
