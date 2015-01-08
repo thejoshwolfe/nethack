@@ -59,7 +59,7 @@ static long ESleep_resistance() {
     return u.uprops[SLEEP_RES].extrinsic;
 }
 static bool Sleep_resistance() {
-    return (get_HSleep_resistance() || ESleep_resistance || resists_sleep(&youmonst));
+    return (get_HSleep_resistance() || ESleep_resistance() || resists_sleep(&youmonst));
 }
 
 static long get_HDisint_resistance() {

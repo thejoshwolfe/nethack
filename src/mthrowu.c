@@ -709,7 +709,7 @@ breamu (                        /* monster breathes at you (ranged) */
                      */
                     if(!rn2(3))
                         mtmp->mspec_used = 10+rn2(20);
-                    if(typ == AD_SLEE && !Sleep_resistance)
+                    if(typ == AD_SLEE && !Sleep_resistance())
                         mtmp->mspec_used += rnd(20);
                 } else impossible("Breath weapon %d used", typ-1);
             }

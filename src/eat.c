@@ -1389,7 +1389,7 @@ static void eataccessory (struct obj *otmp) {
                 /* Give sleep resistance instead */
                 if (!(get_HSleep_resistance() & FROMOUTSIDE))
                     accessory_has_effect(otmp);
-                if (!Sleep_resistance)
+                if (!Sleep_resistance())
                     You_feel("wide awake.");
                 set_HSleep_resistance(get_HSleep_resistance() | FROMOUTSIDE);
                 break;

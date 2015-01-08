@@ -997,7 +997,7 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
         case AD_SLEE:
             hitmsg(mtmp, mattk);
             if (uncancelled && multi >= 0 && !rn2(5)) {
-                if (Sleep_resistance) break;
+                if (Sleep_resistance()) break;
                 fall_asleep(-rnd(10), true);
                 if (Blind) {
                     You("are put to sleep!");
