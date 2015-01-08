@@ -145,7 +145,7 @@ function spawnNethack(cb) {
     stdio: ['pipe', 'pipe', process.stderr],
     cwd: NETHACK_DIR,
   };
-  var exePath = path.join(NETHACK_DIR, 'nethack');
+  var exePath = path.join(NETHACK_DIR, 'build', 'nethack');
   var child = spawn(exePath, [], options);
   return child;
 }
