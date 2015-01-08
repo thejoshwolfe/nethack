@@ -66,7 +66,7 @@ int use_saddle (struct obj *otmp) {
         return 1;
     }
     ptr = mtmp->data;
-    if (touch_petrifies(ptr) && !uarmg && !Stone_resistance) {
+    if (touch_petrifies(ptr) && !uarmg && !Stone_resistance()) {
         char kbuf[BUFSZ];
 
         message_monster(MSG_YOU_TOUCH_M, mtmp);
@@ -236,7 +236,7 @@ bool mount_steed ( struct monst *mtmp, bool force) {
         return (false);
     }
     ptr = mtmp->data;
-    if (touch_petrifies(ptr) && !Stone_resistance) {
+    if (touch_petrifies(ptr) && !Stone_resistance()) {
         char kbuf[BUFSZ];
 
         message_monster(MSG_YOU_TOUCH_M, mtmp);

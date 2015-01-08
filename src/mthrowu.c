@@ -433,7 +433,7 @@ m_throw (
                         }
                     }
                     if (hitu && singleobj->otyp == EGG) {
-                        if (!Stone_resistance
+                        if (!Stone_resistance()
                             && !(poly_when_stoned(youmonst.data) &&
                                  polymon(PM_STONE_GOLEM)))
                         {

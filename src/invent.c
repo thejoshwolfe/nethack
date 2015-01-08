@@ -2058,7 +2058,7 @@ int dolook (void) {
 }
 
 bool will_feel_cockatrice (struct obj *otmp, bool force_touch) {
-        if ((Blind || force_touch) && !uarmg && !Stone_resistance &&
+        if ((Blind || force_touch) && !uarmg && !Stone_resistance() &&
                 (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])))
                         return true;
         return false;

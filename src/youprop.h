@@ -145,8 +145,12 @@ static bool Acid_resistance() {
     return (get_EAcid_resistance() || resists_acid(&youmonst));
 }
 
-#define EStone_resistance       u.uprops[STONE_RES].extrinsic
-#define Stone_resistance        (EStone_resistance || resists_ston(&youmonst))
+static long EStone_resistance() {
+    return u.uprops[STONE_RES].extrinsic;
+}
+static bool Stone_resistance() {
+    return (EStone_resistance() || resists_ston(&youmonst));
+}
 
 
 /*** Troubles ***/

@@ -1114,7 +1114,7 @@ int pickup_object ( struct obj *obj, long count, bool telekinesis) {
         return 1;
     } else if (obj->otyp == CORPSE) {
         if ( (touch_petrifies(&mons[obj->corpsenm])) && !uarmg
-                && !Stone_resistance && !telekinesis) {
+                && !Stone_resistance() && !telekinesis) {
             if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
                 display_nhwindow(WIN_MESSAGE, false);
             else {
@@ -1563,7 +1563,7 @@ static int in_container (struct obj *obj) {
 
     if (obj->otyp == CORPSE) {
         if ( (touch_petrifies(&mons[obj->corpsenm])) && !uarmg
-                && !Stone_resistance) {
+                && !Stone_resistance()) {
             if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
                 display_nhwindow(WIN_MESSAGE, false);
             else {
@@ -1675,7 +1675,7 @@ static int out_container (struct obj *obj) {
 
     if (obj->otyp == CORPSE) {
         if ( (touch_petrifies(&mons[obj->corpsenm])) && !uarmg
-                && !Stone_resistance) {
+                && !Stone_resistance()) {
             if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
                 display_nhwindow(WIN_MESSAGE, false);
             else {

@@ -414,7 +414,7 @@ static int gulpum(struct monst *mdef, struct attack *mattk) {
         for (otmp = mdef->minvent; otmp; otmp = otmp->nobj)
             (void)snuff_lit(otmp);
 
-        if (!touch_petrifies(mdef->data) || Stone_resistance) {
+        if (!touch_petrifies(mdef->data) || Stone_resistance()) {
             static char msgbuf[BUFSZ];
             start_engulf(mdef);
             switch (mattk->adtyp) {
@@ -1872,7 +1872,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
 
             message_monster(MSG_YOU_EAT_M_BRAIN, mdef);
             u.uconduct.food++;
-            if (touch_petrifies(mdef->data) && !Stone_resistance && !Stoned) {
+            if (touch_petrifies(mdef->data) && !Stone_resistance() && !Stoned) {
                 Stoned = 5;
                 fprintf(stderr, "TODO: delayed_killer = %s\n", mdef->data->mname);
             }
@@ -2061,7 +2061,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
 
                 if (protector == 0L || /* no protection */
                         (protector == W_ARMG && !uarmg && !uwep) || (protector == W_ARMF && !uarmf) || (protector == W_ARMH && !uarmh) || (protector == (W_ARMC | W_ARMG) && (!uarmc || !uarmg))) {
-                    if (!Stone_resistance && !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
+                    if (!Stone_resistance() && !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
                         You("turn to stone...");
                         done_in_by(mon);
                         return 2;

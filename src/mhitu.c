@@ -1174,7 +1174,7 @@ dopois:
                         You_hear("%s%s hissing!", attacker, possessive_suffix(attacker));
                     if (!rn2(10) || (flags.moonphase == NEW_MOON && !have_lizard())) {
 do_stone:
-                        if (!Stoned && !Stone_resistance && !(poly_when_stoned(youmonst.data) &&
+                        if (!Stoned && !Stone_resistance() && !(poly_when_stoned(youmonst.data) &&
                                     polymon(PM_STONE_GOLEM)))
                         {
                             Stoned = 5;
@@ -1943,7 +1943,7 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
                 if (mtmp->mhp > 0) break;
                 return 2;
             }
-            if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && !Stone_resistance) {
+            if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && !Stone_resistance()) {
                 char pname[BUFSZ];
                 monster_possessive(pname, BUFSZ, mtmp);
                 You("meet %s gaze.", pname);
