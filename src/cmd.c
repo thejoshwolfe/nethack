@@ -391,7 +391,7 @@ void dump_enlightenment (int final) {
     if (Sleep_resistance()) dump(youwere, "sleep resistant");
     if (Disint_resistance()) dump(youwere, "disintegration-resistant");
     if (Shock_resistance()) dump(youwere, "shock resistant");
-    if (Poison_resistance) dump(youwere, "poison resistant");
+    if (Poison_resistance()) dump(youwere, "poison resistant");
     if (Drain_resistance) dump(youwere, "level-drain resistant");
     if (Sick_resistance) dump(youwere, "immune to sickness");
     if (Antimagic) dump(youwere, "magic-protected");

@@ -136,8 +136,8 @@ cursed_book (struct obj *bp)
                 }
                 /* temp disable in_use; death should not destroy the book */
                 bp->in_use = false;
-                losestr(Poison_resistance ? rn1(2,1) : rn1(4,3));
-                losehp(rnd(Poison_resistance ? 6 : 10),
+                losestr(Poison_resistance() ? rn1(2,1) : rn1(4,3));
+                losehp(rnd(Poison_resistance() ? 6 : 10),
                         killed_by_const(KM_CONTACT_POISONED_SPELLBOOK));
                 bp->in_use = true;
                 break;

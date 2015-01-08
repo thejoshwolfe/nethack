@@ -713,7 +713,7 @@ inside_gas_cloud (void *p1, void *p2)
             return false;
         if (!Blind)
             make_blinded(1L, false);
-        if (!Poison_resistance) {
+        if (!Poison_resistance()) {
             pline("%s is burning your %s!", Something, makeplural(body_part(LUNG)));
             You("cough and spit blood!");
             losehp(rnd(dam) + 5, killed_by_const(KM_GAS_CLOUD));

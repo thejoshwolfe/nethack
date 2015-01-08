@@ -98,7 +98,7 @@ static long EPoison_resistance() {
     return u.uprops[POISON_RES].extrinsic;
 }
 static bool Poison_resistance() {
-    return (get_HPoison_resistance() || EPoison_resistance || resists_poison(&youmonst));
+    return (get_HPoison_resistance() || EPoison_resistance() || resists_poison(&youmonst));
 }
 
 #define HDrain_resistance       u.uprops[DRAIN_RES].intrinsic
