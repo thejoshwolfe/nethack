@@ -2152,7 +2152,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
                 break;
             case AD_COLD: /* brown mold or blue jelly */
                 if(monnear(mon, u.ux, u.uy)) {
-                    if(Cold_resistance) {
+                    if(Cold_resistance()) {
                         shieldeff(u.ux, u.uy);
                         You_feel("a mild chill.");
                         ugolemeffects(AD_COLD, tmp);

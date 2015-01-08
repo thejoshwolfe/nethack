@@ -1819,7 +1819,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
             makeknown(WAN_COLD);
         case SPE_CONE_OF_COLD:
         case FROST_HORN:
-            if (Cold_resistance) {
+            if (Cold_resistance()) {
                 shieldeff(u.ux, u.uy);
                 You_feel("a little chill.");
                 ugolemeffects(AD_COLD, d(12, 6));
@@ -2882,7 +2882,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
             }
             break;
         case ZT_COLD:
-            if (Cold_resistance) {
+            if (Cold_resistance()) {
                 shieldeff(sx, sy);
                 You("don't feel cold.");
                 ugolemeffects(AD_COLD, d(nd, 6));
