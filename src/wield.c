@@ -128,7 +128,7 @@ static int ready_weapon(struct obj *wep) {
             res++;
         } else
             You("are already empty %s.", body_part(HANDED));
-    } else if (!uarmg && !Stone_resistance && wep->otyp == CORPSE && touch_petrifies(&mons[wep->corpsenm])) {
+    } else if (!uarmg && !Stone_resistance() && wep->otyp == CORPSE && touch_petrifies(&mons[wep->corpsenm])) {
         /* Prevent wielding cockatrice when not wearing gloves --KAA */
         char kbuf[BUFSZ];
 
@@ -434,7 +434,7 @@ int can_twoweapon(void) {
         char it_resists[BUFSZ];
         otense(it_resists, BUFSZ, uswapwep, "resist");
         pline("%s %s being held second to another weapon!", Yname2(uswapwep), it_resists);
-    } else if (!uarmg && !Stone_resistance && (uswapwep->otyp == CORPSE && touch_petrifies(&mons[uswapwep->corpsenm]))) {
+    } else if (!uarmg && !Stone_resistance() && (uswapwep->otyp == CORPSE && touch_petrifies(&mons[uswapwep->corpsenm]))) {
         char kbuf[BUFSZ];
 
         You("wield the %s corpse with your bare %s.", mons[uswapwep->corpsenm].mname, body_part(HAND));

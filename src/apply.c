@@ -1483,7 +1483,7 @@ static void use_tinning_kit (struct obj *obj) {
         return;
     }
     if (touch_petrifies(&mons[corpse->corpsenm])
-            && !Stone_resistance && !uarmg) {
+            && !Stone_resistance() && !uarmg) {
         char kbuf[BUFSZ];
 
         if (poly_when_stoned(youmonst.data))
@@ -2177,7 +2177,7 @@ static int use_whip (struct obj *obj) {
                         You("snatch %s%s %s!", name, possessive_suffix(name), onambuf);
                         if (otmp->otyp == CORPSE &&
                                 touch_petrifies(&mons[otmp->corpsenm]) &&
-                                !uarmg && !Stone_resistance &&
+                                !uarmg && !Stone_resistance() &&
                                 !(poly_when_stoned(youmonst.data) &&
                                     polymon(PM_STONE_GOLEM))) {
                             char kbuf[BUFSZ];

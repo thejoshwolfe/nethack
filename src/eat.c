@@ -715,7 +715,7 @@ static void fpostfx (struct obj *otmp) {
                 break;
             case EGG:
                 if (touch_petrifies(&mons[otmp->corpsenm])) {
-                    if (!Stone_resistance &&
+                    if (!Stone_resistance() &&
                         !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)))
                     {
                         if (!Stoned) Stoned = 5;
@@ -792,7 +792,7 @@ static bool maybe_cannibal (int pm, bool allowmsg) {
 static void cprefx (int pm) {
     (void) maybe_cannibal(pm,true);
     if (touch_petrifies(&mons[pm]) || pm == PM_MEDUSA) {
-        if (!Stone_resistance &&
+        if (!Stone_resistance() &&
                 !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
             killer = killed_by_int(KM_TASTING_O_MEAT, pm);
             You("turn to stone.");
@@ -1097,7 +1097,7 @@ static int eatcorpse (struct obj *otmp) {
     long rotted = 0L;
     bool uniq = !!(mons[mnum].geno & G_UNIQ);
     int retcode = 0;
-    bool stoneable = (touch_petrifies(&mons[mnum]) && !Stone_resistance &&
+    bool stoneable = (touch_petrifies(&mons[mnum]) && !Stone_resistance() &&
             !poly_when_stoned(youmonst.data));
 
     /* KMH, conduct */
@@ -1505,7 +1505,7 @@ static int edibility_prompts (struct obj *otmp) {
     if (cadaver || otmp->otyp == EGG || otmp->otyp == TIN) {
         /* These checks must match those in eatcorpse() */
         stoneorslime = (touch_petrifies(&mons[mnum]) &&
-                !Stone_resistance &&
+                !Stone_resistance() &&
                 !poly_when_stoned(youmonst.data));
 
         if (mnum == PM_GREEN_SLIME)

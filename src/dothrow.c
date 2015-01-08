@@ -78,7 +78,7 @@ static int throw_obj (struct obj *obj, int shotlimit) {
         return(0);
     }
     u_wipe_engr(2);
-    if (!uarmg && !Stone_resistance && (obj->otyp == CORPSE &&
+    if (!uarmg && !Stone_resistance() && (obj->otyp == CORPSE &&
                 touch_petrifies(&mons[obj->corpsenm])))
     {
         You("throw the %s corpse with your bare %s.", mons[obj->corpsenm].mname, body_part(HAND));
@@ -702,7 +702,7 @@ static bool toss_up(struct obj *obj, bool hitsroof) {
         switch (otyp) {
         case EGG:
                 if (touch_petrifies(&mons[ocorpsenm]) &&
-                    !uarmh && !Stone_resistance &&
+                    !uarmh && !Stone_resistance() &&
                     !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)))
                 goto petrify;
         case CREAM_PIE:
@@ -750,7 +750,7 @@ static bool toss_up(struct obj *obj, bool hitsroof) {
                     !(obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])))
                 Your("%s does not protect you.", xname(uarmh));
         } else if (obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])) {
-            if (!Stone_resistance &&
+            if (!Stone_resistance() &&
                     !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)))
             {
  petrify:

@@ -2205,7 +2205,7 @@ int mintrap(struct monst *mtmp) {
 
 /* Combine cockatrice checks into single functions to avoid repeating code. */
 void instapetrify(const char *str) {
-    if (Stone_resistance)
+    if (Stone_resistance())
         return;
     if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
         return;
@@ -2239,13 +2239,13 @@ void minstapetrify(struct monst *mon, bool byplayer) {
 void selftouch(const char *arg) {
     char kbuf[BUFSZ];
 
-    if (uwep && uwep->otyp == CORPSE && touch_petrifies(&mons[uwep->corpsenm]) && !Stone_resistance) {
+    if (uwep && uwep->otyp == CORPSE && touch_petrifies(&mons[uwep->corpsenm]) && !Stone_resistance()) {
         pline("%s touch the %s corpse.", arg, mons[uwep->corpsenm].mname);
         sprintf(kbuf, "%s corpse", an(mons[uwep->corpsenm].mname));
         instapetrify(kbuf);
     }
     /* Or your secondary weapon, if wielded */
-    if (u.twoweap && uswapwep && uswapwep->otyp == CORPSE && touch_petrifies(&mons[uswapwep->corpsenm]) && !Stone_resistance) {
+    if (u.twoweap && uswapwep && uswapwep->otyp == CORPSE && touch_petrifies(&mons[uswapwep->corpsenm]) && !Stone_resistance()) {
         pline("%s touch the %s corpse.", arg, mons[uswapwep->corpsenm].mname);
         sprintf(kbuf, "%s corpse", an(mons[uswapwep->corpsenm].mname));
         instapetrify(kbuf);
@@ -3101,7 +3101,7 @@ static int help_monster_out(struct monst *mtmp, struct trap *ttmp) {
     }
 
     /* is it a cockatrice?... */
-    if (touch_petrifies(mtmp->data) && !uarmg && !Stone_resistance) {
+    if (touch_petrifies(mtmp->data) && !uarmg && !Stone_resistance()) {
         You("grab the trapped %s using your bare %s.", mtmp->data->mname, makeplural(body_part(HAND)));
 
         if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))

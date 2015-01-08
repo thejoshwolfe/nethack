@@ -685,7 +685,7 @@ void mon_break_armor (struct monst *mon, bool polyspot) {
         noride:
         mon_nam(lowercase_name, BUFSZ, mon);
         You("can no longer ride %s.", lowercase_name);
-        if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
+        if (touch_petrifies(u.usteed->data) && !Stone_resistance() && rnl(3)) {
             char steed_name[BUFSZ];
             mon_nam(steed_name, BUFSZ, u.usteed);
             You("touch %s.", steed_name);

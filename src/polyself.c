@@ -384,7 +384,7 @@ polymon (       /* returns 1 if polymorph successful */
          */
         if(strongmonst(&mons[mntmp])) ABASE(A_STR) = AMAX(A_STR) = STR18(100);
 
-        if (Stone_resistance && Stoned) { /* parnes@eniac.seas.upenn.edu */
+        if (Stone_resistance() && Stoned) { /* parnes@eniac.seas.upenn.edu */
                 Stoned = 0;
                 delayed_killer.method = KM_DIED;
                 You("no longer seem to be petrifying.");
@@ -452,7 +452,7 @@ polymon (       /* returns 1 if polymorph successful */
         if (!sticky && !u.uswallow && u.ustuck && sticks(youmonst.data)) u.ustuck = 0;
         else if (sticky && !sticks(youmonst.data)) uunstick();
         if (u.usteed) {
-            if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
+            if (touch_petrifies(u.usteed->data) && !Stone_resistance() && rnl(3)) {
                 char buf[BUFSZ];
 
                 message_monster(MSG_TOUCH_PETRIFYING_STEED, u.usteed);

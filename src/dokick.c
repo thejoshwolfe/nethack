@@ -420,7 +420,7 @@ static int kick_object(signed char x, signed char y) {
         }
 
         if(kickobj->otyp == CORPSE && touch_petrifies(&mons[kickobj->corpsenm])
-                        && !Stone_resistance && !uarmf) {
+                        && !Stone_resistance() && !uarmf) {
             char kbuf[BUFSZ];
 
             You("kick the %s with your bare %s.",
