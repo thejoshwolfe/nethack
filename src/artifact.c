@@ -563,7 +563,7 @@ static int spec_applies (const struct artifact *weap, struct monst *mtmp) {
             case AD_DRST:
                 return !(yours ? Poison_resistance() : resists_poison(mtmp));
             case AD_DRLI:
-                return !(yours ? Drain_resistance : resists_drli(mtmp));
+                return !(yours ? Drain_resistance() : resists_drli(mtmp));
             case AD_STON:
                 return !(yours ? Stone_resistance : resists_ston(mtmp));
             default:        impossible("Weird weapon special attack.");
