@@ -85,7 +85,7 @@ void make_sick ( long xtime, const char *cause, bool talk, int type) {
     long old = Sick;
 
     if (xtime > 0L) {
-        if (Sick_resistance) return;
+        if (Sick_resistance()) return;
         if (!old) {
             /* newly sick */
             You_feel("deathly sick.");

@@ -1118,7 +1118,7 @@ static int eatcorpse (struct obj *otmp) {
                 mons[mnum].mlet == S_FUNGUS ? "fungoid vegetation" :
                 !vegetarian(&mons[mnum]) ? "meat" : "protoplasm",
                 cannibal ? " cannibal" : "");
-        if (Sick_resistance) {
+        if (Sick_resistance()) {
             pline("It doesn't seem at all sickening, though...");
         } else {
             char buf[BUFSZ];
@@ -1156,7 +1156,7 @@ static int eatcorpse (struct obj *otmp) {
             You("seem unaffected by the poison.");
         }
         /* now any corpse left too long will make you mildly ill */
-    } else if ((rotted > 5L || (rotted > 3L && rn2(5))) && !Sick_resistance) {
+    } else if ((rotted > 5L || (rotted > 3L && rn2(5))) && !Sick_resistance()) {
         tp++;
         You_feel("%ssick.", (Sick) ? "very " : "");
         losehp(rnd(8), killed_by_const(KM_CADAVER));
@@ -1527,7 +1527,7 @@ static int edibility_prompts (struct obj *otmp) {
      * order from most detrimental to least detrimental.
      */
 
-    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && !Sick_resistance) {
+    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && !Sick_resistance()) {
         /* Tainted meat */
         sprintf(buf, "%s like %s could be tainted! %s",
                 foodsmell, it_or_they, eat_it_anyway);
@@ -1598,7 +1598,7 @@ static int edibility_prompts (struct obj *otmp) {
         else return 2;
     }
 
-    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && Sick_resistance) {
+    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && Sick_resistance()) {
         /* Tainted meat with Sick_resistance */
         sprintf(buf, "%s like %s could be tainted! %s",
                 foodsmell, it_or_they, eat_it_anyway);

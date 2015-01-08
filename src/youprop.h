@@ -9,6 +9,7 @@
 #include "mondata.h"
 #include "pm.h"
 #include "onames.h"
+#include "artifact.h"
 #include "artifact_names.h"
 #include "decl.h"
 
@@ -112,11 +113,16 @@ static bool Drain_resistance() {
 }
 
 /* Intrinsics only */
-#define HSick_resistance        u.uprops[SICK_RES].intrinsic
-#define Sick_resistance         (HSick_resistance || \
-                                 youmonst.data->mlet == S_FUNGUS || \
-                                 youmonst.data == &mons[PM_GHOUL] || \
-                                 defends(AD_DISE,uwep))
+static long HSick_resistance() {
+    return u.uprops[SICK_RES].intrinsic;
+}
+static long Sick_resistance() {
+    return (HSick_resistance()
+            || youmonst.data->mlet == S_FUNGUS
+            || youmonst.data == &mons[PM_GHOUL]
+            || defends(AD_DISE,uwep));
+}
+
 #define Invulnerable            u.uprops[INVULNERABLE].intrinsic    /* [Tom] */
 
 /* Extrinsics only */
