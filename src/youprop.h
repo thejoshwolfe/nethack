@@ -158,9 +158,15 @@ static bool Stone_resistance() {
 #define Punished                (uball)
 
 /* Those implemented solely as timeouts (we use just intrinsic) */
-#define HStun                   u.uprops[STUNNED].intrinsic
-#define Stunned                 (HStun || u.umonnum == PM_STALKER || \
-                                 youmonst.data->mlet == S_BAT)
+static long get_HStun() {
+    return u.uprops[STUNNED].intrinsic;
+}
+static void set_HStun(long hStun) {
+    u.uprops[STUNNED].intrinsic = hStun;
+}
+static bool Stunned() {
+    return (get_HStun() || u.umonnum == PM_STALKER || youmonst.data->mlet == S_BAT);
+}
                 /* Note: birds will also be stunned */
 
 #define HConfusion              u.uprops[CONFUSION].intrinsic

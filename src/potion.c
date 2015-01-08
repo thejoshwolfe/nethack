@@ -61,7 +61,7 @@ void make_confused (long xtime, bool talk) {
 }
 
 void make_stunned (long xtime, bool talk) {
-        long old = HStun;
+        long old = get_HStun();
 
         if (!xtime && old) {
                 if (talk)
@@ -77,7 +77,7 @@ void make_stunned (long xtime, bool talk) {
                 }
         }
 
-        set_itimeout(&HStun, xtime);
+        set_itimeout(&u.uprops[STUNNED].intrinsic, xtime);
 }
 
 // const char *cause,      /* sickness cause */

@@ -2813,7 +2813,7 @@ static int untrap_prob(struct trap *ttmp) {
     if (Confusion|| Hallucination()) chance++;
     if (Blind)
         chance++;
-    if (Stunned)
+    if (Stunned())
         chance += 2;
     if (Fumbling)
         chance *= 2;
@@ -3499,7 +3499,7 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                 pline("A cloud of %s gas billows from %s.",
                         Blind ? blindgas[rn2(SIZE(blindgas))] :
                         rndcolor(), the(xname(obj)));
-                if(!Stunned) {
+                if(!Stunned()) {
                     if (Hallucination())
                     pline("What a groovy feeling!");
                     else if (Blind)
@@ -3509,7 +3509,7 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                     You("%s and your vision blurs...",
                             stagger(youmonst.data, "stagger"));
                 }
-                make_stunned(HStun + rn1(7, 16),false);
+                make_stunned(get_HStun() + rn1(7, 16),false);
                 (void) make_hallucinated(u.uprops[HALLUC].intrinsic + rn1(5, 16),false,0L);
                 break;
                 default: impossible("bad chest trap");
@@ -3573,7 +3573,7 @@ void b_trapped(const char *item, int bodypart) {
     exercise(A_STR, false);
     if (bodypart)
         exercise(A_CON, false);
-    make_stunned(HStun+ dmg, true);
+    make_stunned(get_HStun() + dmg, true);
 }
 
 bool unconscious(void) {

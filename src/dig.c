@@ -859,7 +859,7 @@ int use_pick_axe2 (struct obj *obj) {
         losehp(dam, killed_by_object(KM_YOUR_OWN_O, obj));
         return(1);
     } else if(u.dz == 0) {
-        if(Stunned || (Confusion && !rn2(5))) confdir();
+        if(Stunned() || (Confusion && !rn2(5))) confdir();
         rx = u.ux + u.dx;
         ry = u.uy + u.dy;
         if(!isok(rx, ry)) {

@@ -794,7 +794,7 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
     /* stun if that was selected and a worse effect didn't occur */
     if (do_stun) {
         if (youdefend)
-            make_stunned((HStun + 3), false);
+            make_stunned((get_HStun() + 3), false);
         else
             mdef->mstun = 1;
         /* avoid extra stun message below if we used mb_verb["stun"] above */

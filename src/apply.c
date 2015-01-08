@@ -267,7 +267,7 @@ static int use_stethoscope (struct obj *obj) {
             message_const(MSG_YOU_HEAR_YOUR_HEART_BEAT);
             return res;
         }
-    if (Stunned || (Confusion && !rn2(5))) confdir();
+    if (Stunned() || (Confusion && !rn2(5))) confdir();
     if (!u.dx && !u.dy) {
         ustatusline();
         return res;
@@ -1550,7 +1550,7 @@ void use_unicorn_horn (struct obj *obj) {
                                 Hallucination() ? "trippy" : "confused");
                     make_confused(HConfusion + lcount, true);
                     break;
-            case 3: make_stunned(HStun + lcount, true);
+            case 3: make_stunned(get_HStun() + lcount, true);
                     break;
             case 4: (void) adjattrib(rn2(A_MAX), -1, false);
                     break;
@@ -1572,7 +1572,7 @@ void use_unicorn_horn (struct obj *obj) {
     if (u.uprops[HALLUC].intrinsic) trouble_list[trouble_count++] = prop2trbl(HALLUC);
     if (Vomiting) trouble_list[trouble_count++] = prop2trbl(VOMITING);
     if (HConfusion) trouble_list[trouble_count++] = prop2trbl(CONFUSION);
-    if (HStun) trouble_list[trouble_count++] = prop2trbl(STUNNED);
+    if (get_HStun()) trouble_list[trouble_count++] = prop2trbl(STUNNED);
 
     unfixable_trbl = unfixable_trouble_count(true);
 
@@ -1919,7 +1919,7 @@ static void use_trap (struct obj *otmp) {
 
     if (nohands(youmonst.data))
         what = "without hands";
-    else if (Stunned)
+    else if (Stunned())
         what = "while stunned";
     else if (u.uswallow)
         what = is_animal(u.ustuck->data) ? "while swallowed" :
@@ -2014,7 +2014,7 @@ static int use_whip (struct obj *obj) {
     }
     if (!getdir((char *)0)) return res;
 
-    if (Stunned || (Confusion && !rn2(5))) confdir();
+    if (Stunned() || (Confusion && !rn2(5))) confdir();
     rx = u.ux + u.dx;
     ry = u.uy + u.dy;
     mtmp = m_at(rx, ry);
@@ -2875,7 +2875,7 @@ int unfixable_trouble_count(bool is_horn) {
         if (Sick) unfixable_trbl++;
         if (u.uprops[HALLUC].intrinsic) unfixable_trbl++;
         if (Vomiting) unfixable_trbl++;
-        if (HStun) unfixable_trbl++;
+        if (get_HStun()) unfixable_trbl++;
     }
     return unfixable_trbl;
 }

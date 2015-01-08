@@ -365,7 +365,7 @@ void tele (void) {
             You_feel("disoriented for a moment.");
             return;
         }
-        if ((Teleport_control && !Stunned)
+        if ((Teleport_control && !Stunned())
                             || flags.debug
                                         ) {
             if (unconscious()) {
@@ -500,7 +500,7 @@ void level_tele (void) {
             You_feel("very disoriented for a moment.");
             return;
         }
-        if ((Teleport_control && !Stunned)
+        if ((Teleport_control && !Stunned())
            || flags.debug
                 ) {
             char qbuf[BUFSZ];

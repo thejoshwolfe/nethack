@@ -403,7 +403,7 @@ void dump_enlightenment (int final) {
     /*** Troubles ***/
     if (Halluc_resistance())  dump("  ", "You resisted hallucinations");
     if (Hallucination) dump(youwere, "hallucinating");
-    if (Stunned) dump(youwere, "stunned");
+    if (Stunned()) dump(youwere, "stunned");
     if (Confusion) dump(youwere, "confused");
     if (Blinded) dump(youwere, "blinded");
     if (Sick) {
@@ -1233,7 +1233,7 @@ int getdir(const char *s) {
         }
         return 0;
     }
-    if (!u.dz && (Stunned || (Confusion&& !rn2(5)))) confdir();
+    if (!u.dz && (Stunned() || (Confusion&& !rn2(5)))) confdir();
     return 1;
 }
 

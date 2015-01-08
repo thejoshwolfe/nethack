@@ -300,7 +300,7 @@ ustatusline (void)
                 strcat(info, "ed by sticky goop");
             }   /* note: "goop" == "glop"; variation is intentional */
         }
-        if (Stunned)            strcat(info, ", stunned");
+        if (Stunned())            strcat(info, ", stunned");
         if (!u.usteed)
         if (Wounded_legs) {
             const char *what = body_part(LEG);
