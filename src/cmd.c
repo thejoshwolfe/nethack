@@ -395,7 +395,7 @@ void dump_enlightenment (int final) {
     if (Drain_resistance()) dump(youwere, "level-drain resistant");
     if (Sick_resistance()) dump(youwere, "immune to sickness");
     if (Antimagic()) dump(youwere, "magic-protected");
-    if (Acid_resistance) dump(youwere, "acid resistant");
+    if (Acid_resistance()) dump(youwere, "acid resistant");
     if (Stone_resistance) dump(youwere, "petrification resistant");
     if (Invulnerable()) dump(youwere, "invulnerable");
     if (u.uedibility) dump(youcould, "recognize detrimental food");

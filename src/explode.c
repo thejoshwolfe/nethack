@@ -148,7 +148,7 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                     explmask[i][j] = !!Poison_resistance();
                     break;
                 case AD_ACID:
-                    explmask[i][j] = !!Acid_resistance;
+                    explmask[i][j] = !!Acid_resistance();
                     break;
                 default:
                     impossible("explosion type %d?", adtyp);

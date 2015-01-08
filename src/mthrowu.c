@@ -69,7 +69,7 @@ thitu (
                         pline_The("silver sears your flesh!");
                         exercise(A_CON, false);
                 }
-                if (is_acid && Acid_resistance)
+                if (is_acid && Acid_resistance())
                         pline("It doesn't seem to hurt you.");
                 else {
                         if (is_acid) pline("It burns!");

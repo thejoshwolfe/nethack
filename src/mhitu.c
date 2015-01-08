@@ -1441,7 +1441,7 @@ do_stone:
         case AD_ACID:
             hitmsg(mtmp, mattk);
             if (!mtmp->mcan && !rn2(3))
-                if (Acid_resistance) {
+                if (Acid_resistance()) {
                     pline("You're covered in acid, but it seems harmless.");
                     dmg = 0;
                 } else {
@@ -1726,7 +1726,7 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
             }
             break;
         case AD_ACID:
-            if (Acid_resistance) {
+            if (Acid_resistance()) {
                 You("are covered with a seemingly harmless goo.");
                 tmp = 0;
             } else {

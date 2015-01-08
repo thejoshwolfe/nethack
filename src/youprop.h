@@ -135,8 +135,15 @@ static bool Antimagic() {
     return (EAntimagic() || (Upolyd && resists_magm(&youmonst)));
 }
 
-#define EAcid_resistance        u.uprops[ACID_RES].extrinsic
-#define Acid_resistance         (EAcid_resistance || resists_acid(&youmonst))
+static long get_EAcid_resistance() {
+    return u.uprops[ACID_RES].extrinsic;
+}
+static void set_EAcid_resistance(long eAcidRes) {
+    u.uprops[ACID_RES].extrinsic = eAcidRes;
+}
+static bool Acid_resistance() {
+    return (get_EAcid_resistance() || resists_acid(&youmonst));
+}
 
 #define EStone_resistance       u.uprops[STONE_RES].extrinsic
 #define Stone_resistance        (EStone_resistance || resists_ston(&youmonst))

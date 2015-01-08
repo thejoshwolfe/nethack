@@ -2954,7 +2954,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
             poisoned("blast", A_DEX, "poisoned blast", 15);
             break;
         case ZT_ACID:
-            if (Acid_resistance) {
+            if (Acid_resistance()) {
                 dam = 0;
             } else {
                 pline_The("acid burns!");

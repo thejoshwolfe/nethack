@@ -1142,7 +1142,7 @@ static int eatcorpse (struct obj *otmp) {
         if (carried(otmp)) useup(otmp);
         else useupf(otmp, 1L);
         return(2);
-    } else if (acidic(&mons[mnum]) && !Acid_resistance) {
+    } else if (acidic(&mons[mnum]) && !Acid_resistance()) {
         tp++;
         You("have a very bad case of stomach acid."); /* not body_part() */
         losehp(rnd(15), killed_by_const(KM_ACIDIC_CORPSE));
@@ -1561,7 +1561,7 @@ static int edibility_prompts (struct obj *otmp) {
         if (yn_function(buf,ynchars,'n')=='n') return 1;
         else return 2;
     }
-    if (cadaver && acidic(&mons[mnum]) && !Acid_resistance) {
+    if (cadaver && acidic(&mons[mnum]) && !Acid_resistance()) {
         sprintf(buf, "%s rather acidic. %s",
                 foodsmell, eat_it_anyway);
         if (yn_function(buf,ynchars,'n')=='n') return 1;

@@ -2036,7 +2036,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
                     message_monster(MSG_YOU_ARE_SPLASHED_BY_M_ACID, mon);
                 }
 
-                if (!Acid_resistance)
+                if (!Acid_resistance())
                     mdamageu(mon, tmp);
                 if (!rn2(30))
                     erode_armor(&youmonst, true);
