@@ -4,7 +4,6 @@
 #define HACK_H
 
 #include <stdbool.h>
-#include <sys/sysmacros.h>
 
 #include "cmd.h"
 #include "coord.h"
