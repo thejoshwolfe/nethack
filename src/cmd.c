@@ -944,7 +944,6 @@ static bool help_dir(char sym, const char *msg) {
 void rhack() {
     bool do_walk;
     bool do_rush;
-    bool prefix_seen;
     bool bad_command;
 
     iflags.menu_requested = false;
@@ -981,15 +980,14 @@ void rhack() {
         }
     }
     /* handle most movement commands */
-    do_walk = do_rush = prefix_seen = false;
+    do_walk = do_rush = false;
     flags.travel = iflags.travel1 = 0;
     switch (*cmd) {
         case 'g':
             if (movecmd(cmd[1])) {
                 flags.run = 2;
                 do_rush = true;
-            } else
-                prefix_seen = true;
+            }
             break;
         case '5':
             if (!iflags.num_pad)
@@ -998,8 +996,7 @@ void rhack() {
             if (movecmd(lowc(cmd[1]))) {
                 flags.run = 3;
                 do_rush = true;
-            } else
-                prefix_seen = true;
+            }
             break;
         case '-':
             if (!iflags.num_pad)
@@ -1013,8 +1010,7 @@ void rhack() {
             if (movecmd(cmd[1])) {
                 flags.forcefight = 1;
                 do_walk = true;
-            } else
-                prefix_seen = true;
+            }
             break;
         case 'm':
             if (movecmd(cmd[1]) || u.dz) {
@@ -1024,16 +1020,14 @@ void rhack() {
                     do_walk = true;
                 else
                     cmd[0] = cmd[1]; /* "m<" or "m>" */
-            } else
-                prefix_seen = true;
+            }
             break;
         case 'M':
             if (movecmd(lowc(cmd[1]))) {
                 flags.run = 1;
                 flags.nopick = 1;
                 do_rush = true;
-            } else
-                prefix_seen = true;
+            }
             break;
         case '0':
             if (!iflags.num_pad)
@@ -1066,13 +1060,6 @@ void rhack() {
             break;
     }
 
-    /* some special prefix handling */
-    /* overload 'm' prefix for ',' to mean "request a menu" */
-    if (prefix_seen && cmd[1] == ',') {
-        iflags.menu_requested = true;
-        ++cmd;
-    }
-
     if (do_walk) {
         if (multi)
             flags.mv = true;
@@ -1086,9 +1073,6 @@ void rhack() {
         flags.mv = true;
         domove();
         return;
-    } else if (prefix_seen && cmd[1] == '\033') { /* <prefix><escape> */
-        /* don't report "unknown command" for change of heart... */
-        bad_command = false;
     } else if (*cmd == ' ' && !flags.rest_on_space) {
         bad_command = true; /* skip cmdlist[] loop */
 
@@ -1139,7 +1123,7 @@ void rhack() {
             }
         }
         *cp = '\0';
-        if (!prefix_seen || !iflags.cmdassist || !help_dir(0, "Invalid direction key!"))
+        if (!iflags.cmdassist || !help_dir(0, "Invalid direction key!"))
             Norep("Unknown command '%s'.", expcmd);
     }
     /* didn't move */
