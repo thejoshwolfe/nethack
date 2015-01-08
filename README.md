@@ -23,7 +23,7 @@ make
 ### Run
 
 ```
-./nethack
+./build/nethack
 ```
 
 ## Why are you doing this?

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "apply.h"
 #include "artifact.h"
@@ -535,6 +536,14 @@ static void wd_message(void) {
 }
 
 int main(int argc, char *argv[]) {
+    mkdir("run", 0770);
+    mkdir("run/dumps", 0770);
+    mkdir("run/save", 0770);
+
+    // see topten.c topten()
+    fclose(fopen("run/logfile", "a"));
+    fclose(fopen("run/record", "a"));
+
     /*
      * Change directories before we initialize the window system so
      * we can find the tile file.
