@@ -1856,7 +1856,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
             break;
 
         case SPE_DRAIN_LIFE:
-            if (!Drain_resistance) {
+            if (!Drain_resistance()) {
                 losexp("life drainage");
                 makeknown(obj->otyp);
             }

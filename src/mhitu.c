@@ -1115,7 +1115,7 @@ dopois:
             break;
         case AD_DRLI:
             hitmsg(mtmp, mattk);
-            if (uncancelled && !rn2(3) && !Drain_resistance) {
+            if (uncancelled && !rn2(3) && !Drain_resistance()) {
                 losexp("life drainage");
             }
             break;

@@ -101,10 +101,15 @@ static bool Poison_resistance() {
     return (get_HPoison_resistance() || EPoison_resistance() || resists_poison(&youmonst));
 }
 
-#define HDrain_resistance       u.uprops[DRAIN_RES].intrinsic
-#define EDrain_resistance       u.uprops[DRAIN_RES].extrinsic
-#define Drain_resistance        (HDrain_resistance || EDrain_resistance || \
-                                 resists_drli(&youmonst))
+static long HDrain_resistance() {
+    return u.uprops[DRAIN_RES].intrinsic;
+}
+static long EDrain_resistance() {
+    return u.uprops[DRAIN_RES].extrinsic;
+}
+static bool Drain_resistance() {
+    return (HDrain_resistance() || EDrain_resistance() || resists_drli(&youmonst));
+}
 
 /* Intrinsics only */
 #define HSick_resistance        u.uprops[SICK_RES].intrinsic
