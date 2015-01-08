@@ -389,7 +389,7 @@ polymon (       /* returns 1 if polymorph successful */
                 delayed_killer.method = KM_DIED;
                 You("no longer seem to be petrifying.");
         }
-        if (Sick_resistance && Sick) {
+        if (Sick_resistance() && Sick) {
                 make_sick(0L, NULL, false, SICK_ALL);
                 You("no longer feel sick.");
         }

@@ -744,7 +744,7 @@ static void hurtarmor (int attk) {
 }
 
 static bool diseasemu (struct permonst *mdat) {
-    if (Sick_resistance) {
+    if (Sick_resistance()) {
         You_feel("a slight illness.");
         return false;
     } else {

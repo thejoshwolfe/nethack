@@ -697,7 +697,7 @@ static bool hmonas( /* attack monster as a monster. */
                         message_monster(MSG_YOUR_ATTEMPT_TO_SURROUND_M_IS_HARMLESS, mon);
                     } else {
                         sum[i] = gulpum(mon, mattk);
-                        if (sum[i] == 2 && (mon->data->mlet == S_ZOMBIE || mon->data->mlet == S_MUMMY) && rn2(5) && !Sick_resistance) {
+                        if (sum[i] == 2 && (mon->data->mlet == S_ZOMBIE || mon->data->mlet == S_MUMMY) && rn2(5) && !Sick_resistance()) {
                             You_feel("%ssick.", (Sick) ? "very " : "");
                             mdamageu(mon, rnd(8));
                         }
