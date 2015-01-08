@@ -930,8 +930,11 @@ void sanity_check (void) {
 #define unctrl(c)       ((c) <= C('z') ? (0x60 | (c)) : (c))
 #define unmeta(c)       (0x7f & (c))
 
-static char * parse(void) {
-    return "#TODO";
+void parse(char * buf, size_t bufsize) {
+    ssize_t count = read(STDIN_FILENO, buf, bufsize - 1);
+    if (count < 0)
+        count = 0;
+    buf[count] = '\0';
 }
 
 static bool help_dir(char sym, const char *msg) {
@@ -946,7 +949,9 @@ void rhack() {
 
     iflags.menu_requested = false;
     flags.nopick = 0;
-    char * cmd = parse();
+    char cmd_buffer[BUFSZ];
+    parse(cmd_buffer, BUFSZ);
+    char * cmd = cmd_buffer;
     if (*cmd == '\033') {
         flags.move = false;
         return;

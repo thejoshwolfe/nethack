@@ -399,9 +399,6 @@ void moveloop(void) {
         }
 
         vision_recalc(0);
-
-        fprintf(stderr, "TODO: main loop\n");
-        exit(1);
     }
 }
 
