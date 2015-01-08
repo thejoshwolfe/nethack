@@ -38,3 +38,9 @@ Thanks to the following for their contributions over the years:
  * Steve Linhart
  * Stichting Mathematisch Centrum, Amsterdam
  * Timo Hakulinen
+
+server/public/tiles.png;
+I (Andrew Kelley) have personally corresponded with Clive Crous
+(support@darkarts.co.za) who has assured me that the itakura tile set is
+covered by the noeGNUd license, which he has informed me is released under
+the same license as NetHack itself.
