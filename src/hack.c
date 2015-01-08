@@ -961,7 +961,7 @@ void domove(void) {
                 skates = find_skates();
             if ((uarmf && uarmf->otyp == skates) || resists_cold(&youmonst) || Flying || is_floater(youmonst.data) || is_clinger(youmonst.data) || is_whirly(youmonst.data))
                 on_ice = false;
-            else if (!rn2(Cold_resistance ? 3 : 2)) {
+            else if (!rn2(Cold_resistance() ? 3 : 2)) {
                 HFumbling|= FROMOUTSIDE;
                 HFumbling &= ~TIMEOUT;
                 HFumbling += 1; /* slip on next move */

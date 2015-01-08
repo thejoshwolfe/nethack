@@ -387,7 +387,7 @@ void dump_enlightenment (int final) {
 
     /*** Resistances to troubles ***/
     if (Fire_resistance()) dump(youwere, "fire resistant");
-    if (Cold_resistance) dump(youwere, "cold resistant");
+    if (Cold_resistance()) dump(youwere, "cold resistant");
     if (Sleep_resistance) dump(youwere, "sleep resistant");
     if (Disint_resistance) dump(youwere, "disintegration-resistant");
     if (Shock_resistance) dump(youwere, "shock resistant");

@@ -125,7 +125,7 @@ in_water:
     } else if (is_ice(u.ux, u.uy)) {
 
         You(sit_message, defsyms[S_ice].explanation);
-        if (!Cold_resistance) pline_The("ice feels cold.");
+        if (!Cold_resistance()) pline_The("ice feels cold.");
 
     } else if (typ == DRAWBRIDGE_DOWN) {
 

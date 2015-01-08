@@ -285,7 +285,7 @@ int castmu (struct monst *mtmp, struct attack *mattk, bool thinks_it_foundyou, b
                 break;
             case AD_COLD:
                 pline("You're covered in frost.");
-                if(Cold_resistance) {
+                if(Cold_resistance()) {
                         shieldeff(u.ux, u.uy);
                         pline("But you resist the effects.");
                         dmg = 0;
