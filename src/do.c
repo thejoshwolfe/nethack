@@ -102,9 +102,9 @@ bool boulder_hits_pool(struct obj *otmp, int rx, int ry, bool pushing) {
                     vision_full_recalc = 1;
                     You("find yourself on dry land again!");
                 } else if (lava && distu(rx,ry) <= 2) {
-                    You("are hit by molten lava%c", Fire_resistance ? '.' : '!');
+                    You("are hit by molten lava%c", Fire_resistance() ? '.' : '!');
                     burn_away_slime();
-                    losehp(d((Fire_resistance ? 1 : 3), 6), killed_by_const(KM_MOLTEN_LAVA));
+                    losehp(d((Fire_resistance() ? 1 : 3), 6), killed_by_const(KM_MOLTEN_LAVA));
                 } else if (!fills_up && flags.verbose && (pushing ? !Blind : cansee(rx,ry))) {
                     pline("It sinks without a trace!");
                 }

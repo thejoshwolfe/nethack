@@ -1800,7 +1800,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
         case WAN_FIRE:
             makeknown(WAN_FIRE);
         case FIRE_HORN:
-            if (Fire_resistance) {
+            if (Fire_resistance()) {
                 shieldeff(u.ux, u.uy);
                 You_feel("rather warm.");
                 ugolemeffects(AD_FIRE, d(12, 6));
@@ -2864,7 +2864,7 @@ static void zhitu(int type, int nd, const char *fltxt, signed char sx, signed ch
             }
             break;
         case ZT_FIRE:
-            if (Fire_resistance) {
+            if (Fire_resistance()) {
                 shieldeff(sx, sy);
                 You("don't feel hot!");
                 ugolemeffects(AD_FIRE, d(nd, 6));
@@ -3607,7 +3607,7 @@ void destroy_item(int osym, int dmgtyp) {
                     skip++;
                 break;
             case AD_FIRE:
-                xresist = (Fire_resistance && obj->oclass != POTION_CLASS);
+                xresist = (Fire_resistance() && obj->oclass != POTION_CLASS);
 
                 if (obj->otyp == SCR_FIRE || obj->otyp == SPE_FIREBALL)
                     skip++;

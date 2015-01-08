@@ -490,7 +490,7 @@ void drinksink (void) {
         case 1: You("take a sip of very warm water.");
                 break;
         case 2: You("take a sip of scalding hot water.");
-                if (Fire_resistance)
+                if (Fire_resistance())
                     pline("It seems quite tasty.");
                 else
                     losehp(rnd(6), killed_by_const(KM_SIP_BOILING_WATER));

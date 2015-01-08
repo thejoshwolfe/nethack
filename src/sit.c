@@ -120,7 +120,7 @@ in_water:
             return 1;
         }
         pline_The("lava burns you!");
-        losehp(d((Fire_resistance ? 2 : 10), 10), killed_by_const(KM_SITTING_ON_LAVA));
+        losehp(d((Fire_resistance() ? 2 : 10), 10), killed_by_const(KM_SITTING_ON_LAVA));
 
     } else if (is_ice(u.ux, u.uy)) {
 

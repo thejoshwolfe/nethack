@@ -2174,7 +2174,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
                 break;
             case AD_FIRE:
                 if(monnear(mon, u.ux, u.uy)) {
-                    if(Fire_resistance) {
+                    if(Fire_resistance()) {
                         shieldeff(u.ux, u.uy);
                         You_feel("mildly warm.");
                         ugolemeffects(AD_FIRE, tmp);
