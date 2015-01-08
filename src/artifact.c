@@ -341,7 +341,7 @@ void set_artifact_intrinsic(struct obj *otmp, bool on, long wp_mask) {
     else if (dtyp == AD_DISN)
         mask = &u.uprops[DISINT_RES].intrinsic;
     else if (dtyp == AD_DRST)
-        mask = &EPoison_resistance;
+        mask = &u.uprops[POISON_RES].extrinsic;
 
     if (mask && wp_mask == W_ART && !on) {
         /* find out if some other artifact also confers this intrinsic */
@@ -561,7 +561,7 @@ static int spec_applies (const struct artifact *weap, struct monst *mtmp) {
             case AD_STUN:
                 return !(yours ? Antimagic : (rn2(100) < ptr->mr));
             case AD_DRST:
-                return !(yours ? Poison_resistance : resists_poison(mtmp));
+                return !(yours ? Poison_resistance() : resists_poison(mtmp));
             case AD_DRLI:
                 return !(yours ? Drain_resistance : resists_drli(mtmp));
             case AD_STON:

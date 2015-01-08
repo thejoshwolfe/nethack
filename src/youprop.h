@@ -88,10 +88,18 @@ static bool Shock_resistance() {
     return (get_HShock_resistance() || EShock_resistance() || resists_elec(&youmonst));
 }
 
-#define HPoison_resistance      u.uprops[POISON_RES].intrinsic
-#define EPoison_resistance      u.uprops[POISON_RES].extrinsic
-#define Poison_resistance       (HPoison_resistance || EPoison_resistance || \
-                                 resists_poison(&youmonst))
+static long get_HPoison_resistance() {
+    return u.uprops[POISON_RES].intrinsic;
+}
+static void set_HPoison_resistance(long hPoisonRes) {
+    u.uprops[POISON_RES].intrinsic = hPoisonRes;
+}
+static long EPoison_resistance() {
+    return u.uprops[POISON_RES].extrinsic;
+}
+static bool Poison_resistance() {
+    return (get_HPoison_resistance() || EPoison_resistance || resists_poison(&youmonst));
+}
 
 #define HDrain_resistance       u.uprops[DRAIN_RES].intrinsic
 #define EDrain_resistance       u.uprops[DRAIN_RES].extrinsic

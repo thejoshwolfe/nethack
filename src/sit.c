@@ -358,8 +358,8 @@ void attrcurse (void) {
                      You_feel("less jumpy.");
                      break;
                  }
-        case 3 : if (HPoison_resistance & INTRINSIC) {
-                     HPoison_resistance &= ~INTRINSIC;
+        case 3 : if (get_HPoison_resistance() & INTRINSIC) {
+                     set_HPoison_resistance(get_HPoison_resistance() & ~INTRINSIC);
                      You_feel("a little sick!");
                      break;
                  }

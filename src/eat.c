@@ -447,10 +447,10 @@ static void givit (int type, struct permonst *ptr) {
                 }
                 break;
             case POISON_RES:
-                if(!(HPoison_resistance & FROMOUTSIDE)) {
-                        You_feel(Poison_resistance ?
+                if(!(get_HPoison_resistance() & FROMOUTSIDE)) {
+                        You_feel(Poison_resistance() ?
                                  "especially healthy." : "healthy.");
-                        HPoison_resistance |= FROMOUTSIDE;
+                        set_HPoison_resistance(get_HPoison_resistance() | FROMOUTSIDE);
                 }
                 break;
             case TELEPORT:
@@ -1149,7 +1149,7 @@ static int eatcorpse (struct obj *otmp) {
     } else if (poisonous(&mons[mnum]) && rn2(5)) {
         tp++;
         pline("Ecch - that must have been poisonous!");
-        if(!Poison_resistance) {
+        if(!Poison_resistance()) {
             losestr(rnd(4));
             losehp(rnd(15), killed_by_const(KM_POISONOUS_CORPSE));
         } else {
@@ -1547,7 +1547,7 @@ static int edibility_prompts (struct obj *otmp) {
         if (yn_function(buf,ynchars,'n')=='n') return 1;
         else return 2;
     }
-    if (cadaver && poisonous(&mons[mnum]) && !Poison_resistance) {
+    if (cadaver && poisonous(&mons[mnum]) && !Poison_resistance()) {
         /* poisonous */
         sprintf(buf, "%s like %s might be poisonous! %s",
                 foodsmell, it_or_they, eat_it_anyway);
@@ -1710,7 +1710,7 @@ int doeat (void) {
 
             if (otmp->oclass == WEAPON_CLASS && otmp->opoisoned) {
                 pline("Ecch - that must have been poisonous!");
-                if(!Poison_resistance) {
+                if(!Poison_resistance()) {
                     losestr(rnd(4));
                     losehp(rnd(15), killed_by_object(KM_O, otmp));
                 } else {
