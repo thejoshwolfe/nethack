@@ -7,13 +7,41 @@
  * deal with players as well. - 11/89
  */
 
+#include <stddef.h>
+
+#include "cmd.h"
+#include "coord.h"
+#include "dbridge.h"
+#include "decl.h"
+#include "display.h"
+#include "do.h"
+#include "do_name.h"
+#include "dungeon.h"
+#include "end.h"
+#include "flag.h"
+#include "global.h"
 #include "hack.h"
 #include "invent.h"
-#include "dbridge.h"
-#include "do_name.h"
+#include "mkobj.h"
+#include "mon.h"
+#include "monattk.h"
+#include "mondata.h"
+#include "monst.h"
 #include "objnam.h"
-#include "display.h"
-#include "everything.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "region.h"
+#include "rm.h"
+#include "rnd.h"
+#include "steed.h"
+#include "teleport.h"
+#include "trap.h"
+#include "util.h"
+#include "vision.h"
+#include "you.h"
+#include "youprop.h"
 
 static void get_wall_for_db(int *, int *);
 static struct entity *e_at(int, int);

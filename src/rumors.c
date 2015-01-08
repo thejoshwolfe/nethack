@@ -1,12 +1,30 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "rumors.h"
-#include "hack.h"
-#include "lev.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "attrib.h"
+#include "decl.h"
 #include "dlb.h"
+#include "eat.h"
+#include "exper.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "lev.h"
+#include "monst.h"
+#include "pline.h"
+#include "restore.h"
+#include "rnd.h"
+#include "save.h"
+#include "util.h"
+#include "wintype.h"
+#include "you.h"
 #include "youprop.h"
-#include "flag.h"
-#include "everything.h"
 
 /*      [note: this comment is fairly old, but still accurate for 3.1]
  * Rumors have been entirely rewritten to speed up the access.  This is

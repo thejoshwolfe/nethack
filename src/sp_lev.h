@@ -3,9 +3,11 @@
 #ifndef SP_LEV_H
 #define SP_LEV_H
 
-#include "global.h"
+#include <stdbool.h>
+
 #include "align.h"
 #include "coord.h"
+#include "global.h"
 
     /* wall directions */
 enum {

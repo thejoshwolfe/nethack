@@ -1,19 +1,34 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "hack.h"
-#include "objnam.h"
+#include <stdbool.h>
+#include <string.h>
+
+#include "align.h"
+#include "artifact.h"
+#include "artifact_names.h"
+#include "decl.h"
 #include "do_name.h"
-#include "youprop.h"
+#include "dungeon.h"
+#include "global.h"
+#include "hack.h"
+#include "makemon.h"
+#include "mkobj.h"
+#include "mondata.h"
+#include "monst.h"
+#include "muse.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
 #include "rm.h"
 #include "rnd.h"
-#include "mkobj.h"
 #include "steal.h"
 #include "teleport.h"
-#include "makemon.h"
-#include "pline.h"
-#include "artifact.h"
 #include "worn.h"
-#include "muse.h"
+#include "you.h"
 
 /* These are the names of those who
  * contributed to the development of NetHack 3.2/3.3/3.4.

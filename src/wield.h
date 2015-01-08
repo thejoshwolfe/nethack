@@ -2,6 +2,7 @@
 #define WIELD_H
 
 #include <stdbool.h>
+
 #include "obj.h"
 
 void setuwep(struct obj *);

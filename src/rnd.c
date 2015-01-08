@@ -1,9 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "rnd.h"
-#include "hack.h"
-#include "you.h"
+
+#include <stdlib.h>
+
 #include "decl.h"
+#include "you.h"
 
 #define RND(x)  (int)(random() % (long)(x))
 

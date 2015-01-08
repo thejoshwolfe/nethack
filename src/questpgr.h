@@ -2,6 +2,7 @@
 #define QUESTPGR_H
 
 #include <stdbool.h>
+
 #include "obj.h"
 #include "permonst.h"
 

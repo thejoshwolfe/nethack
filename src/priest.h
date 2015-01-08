@@ -1,11 +1,14 @@
 #ifndef PRIEST_H
 #define PRIEST_H
 
-#include <stdlib.h>
 #include <stdbool.h>
-#include "monst.h"
-#include "mkroom.h"
+#include <stddef.h>
+#include <stdlib.h>
+
+#include "align.h"
 #include "dungeon.h"
+#include "mkroom.h"
+#include "monst.h"
 
 int move_special(struct monst *,bool,signed char,bool,bool, signed char,signed char,signed char,signed char);
 char temple_occupied(char *);

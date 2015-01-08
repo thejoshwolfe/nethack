@@ -3,14 +3,20 @@
 #ifndef MONDATA_H
 #define MONDATA_H
 
-#include "global.h"
-#include "pm.h"
-#include "monsym.h"
-#include "you.h"
+#include <stdbool.h>
+
+#include "align.h"
 #include "epri.h"
+#include "global.h"
+#include "monattk.h"
+#include "monflag.h"
+#include "monst.h"
+#include "monsym.h"
 #include "obj.h"
 #include "objclass.h"
 #include "permonst.h"
+#include "pm.h"
+#include "you.h"
 
 void set_mon_data(struct monst *,struct permonst *,int);
 const struct attack * attacktype_fordmg(const struct permonst *, int, int);

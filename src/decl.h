@@ -3,17 +3,21 @@
 #ifndef DECL_H
 #define DECL_H
 
-#include "dungeon.h"
-#include "monsym.h"
-#include "wintype.h"
-#include "objclass.h"
+#include <stdbool.h>
+
 #include "coord.h"
+#include "dungeon.h"
+#include "global.h"
+#include "hack.h"
+#include "monst.h"
+#include "monsym.h"
+#include "obj.h"
+#include "objclass.h"
+#include "pm.h"
 #include "quest.h"
 #include "spell.h"
-#include "pm.h"
-#include "monst.h"
+#include "wintype.h"
 #include "you.h"
-#include "obj.h"
 
 
 extern int (*occupation)(void);

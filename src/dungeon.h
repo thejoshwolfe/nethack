@@ -2,6 +2,8 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
+#include <stdbool.h>
+
 #include "global.h"
 
 typedef struct d_flags {        /* dungeon/level type flags */

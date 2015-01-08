@@ -1,11 +1,11 @@
 #ifndef MTHROWU_H
 #define MTHROWU_H
 
-#include "monst.h"
-#include "permonst.h"
-#include "obj.h"
-
 #include <stdbool.h>
+
+#include "monst.h"
+#include "obj.h"
+#include "permonst.h"
 
 int thitu(int,int,struct obj *,const char *);
 int ohitmon(struct monst *,struct obj *,int,bool);

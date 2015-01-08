@@ -2,6 +2,7 @@
 #define EXPER_H
 
 #include <stdbool.h>
+
 #include "monst.h"
 
 int experience(struct monst *,int);

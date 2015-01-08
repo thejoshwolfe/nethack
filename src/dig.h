@@ -1,10 +1,10 @@
 #ifndef DIG_H
 #define DIG_H
 
+#include <stdbool.h>
+
 #include "monst.h"
 #include "obj.h"
-
-#include <stdbool.h>
 
 bool is_digging(void);
 int holetime(void);

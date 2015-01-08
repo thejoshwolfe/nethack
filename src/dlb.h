@@ -2,7 +2,9 @@
 #ifndef DLB_H
 #define DLB_H
 
+#include <stdbool.h>
 #include <stdio.h>
+
 #include "global.h"
 
 /* directory structure in memory */

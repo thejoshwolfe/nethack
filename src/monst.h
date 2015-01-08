@@ -3,6 +3,8 @@
 #ifndef MONST_H
 #define MONST_H
 
+#include <stddef.h>
+
 #include "align.h"
 #include "coord.h"
 #include "util.h"

@@ -1,17 +1,31 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "polyself.h"
-#include "dog.h"
-#include "makemon.h"
-#include "weapon.h"
-#include "worn.h"
-#include "pline.h"
-#include "were.h"
-#include "hack.h"
-#include "pm_props.h"
+#include <stdio.h>
+#include <string.h>
+
+#include "decl.h"
 #include "display.h"
 #include "do_name.h"
+#include "dog.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "makemon.h"
+#include "mondata.h"
+#include "monst.h"
 #include "objnam.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "polyself.h"
+#include "rnd.h"
+#include "weapon.h"
+#include "were.h"
+#include "worn.h"
+#include "you.h"
+#include "youprop.h"
 
 
 void were_change(struct monst *mon) {

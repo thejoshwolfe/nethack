@@ -1,10 +1,10 @@
 #ifndef MHITU_H
 #define MHITU_H
 
-#include "permonst.h"
-#include "monst.h"
-
 #include <stdbool.h>
+
+#include "monst.h"
+#include "permonst.h"
 
 const char *mpoisons_subj(struct monst *,struct attack *);
 void u_slow_down(void);

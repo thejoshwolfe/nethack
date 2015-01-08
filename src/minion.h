@@ -1,9 +1,10 @@
 #ifndef MINION_H
 #define MINION_H
 
-#include "monst.h"
-
 #include <stdbool.h>
+
+#include "align.h"
+#include "monst.h"
 
 void msummon(struct monst *);
 void summon_minion(aligntyp,bool);

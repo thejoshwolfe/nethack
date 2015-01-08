@@ -1,14 +1,37 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "objnam.h"
-#include "hack.h"
-#include "pm_props.h"
-#include "shk.h"
-#include "onames.h"
-#include "artifact_names.h"
-#include "youprop.h"
+
+#include <stdio.h>
+#include <string.h>
+
+#include "artifact.h"
+#include "decl.h"
 #include "flag.h"
-#include "everything.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mkobj.h"
+#include "mkroom.h"
+#include "mondata.h"
+#include "monflag.h"
+#include "monst.h"
+#include "obj.h"
+#include "objclass.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "polyself.h"
+#include "prop.h"
+#include "rnd.h"
+#include "shk.h"
+#include "util.h"
+#include "you.h"
+#include "youprop.h"
+#include "zap.h"
 
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX  80      /* (56) */

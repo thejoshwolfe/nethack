@@ -2,6 +2,9 @@
 #ifndef VISION_H
 #define VISION_H
 
+#include <stdbool.h>
+
+#include "decl.h"
 #include "rm.h"
 
 #define COULD_SEE 0x1           /* location could be seen, if it were lit */

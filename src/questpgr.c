@@ -1,18 +1,37 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "questpgr.h"
-#include "hack.h"
-#include "dlb.h"
-#include "qtext.h"
-#include "pm_props.h"
-#include "youprop.h"
-#include "flag.h"
-#include "end.h"
-#include "pline.h"
-#include "objnam.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "align.h"
 #include "artifact.h"
-#include "pray.h"
+#include "decl.h"
+#include "dlb.h"
+#include "dungeon.h"
+#include "end.h"
+#include "flag.h"
+#include "global.h"
+#include "hacklib.h"
 #include "makemon.h"
+#include "mondata.h"
+#include "monflag.h"
+#include "obj.h"
+#include "objnam.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm_props.h"
+#include "pray.h"
+#include "qtext.h"
+#include "qtmsg.h"
+#include "quest.h"
+#include "rnd.h"
+#include "util.h"
+#include "wintype.h"
+#include "you.h"
+#include "youprop.h"
 
 #define QTEXT_FILE      "quest.dat"
 

@@ -3,7 +3,10 @@
 #ifndef VAULT_H
 #define VAULT_H
 
+#include <stdbool.h>
+
 #include "dungeon.h"
+#include "global.h"
 #include "monst.h"
 
 #define FCSIZ   (ROWNO+COLNO)

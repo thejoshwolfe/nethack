@@ -1,17 +1,32 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "engrave.h"
-#include "mkobj.h"
-#include "write.h"
-#include "hack.h"
-#include "onames.h"
-#include "artifact_names.h"
-#include "youprop.h"
-#include "objnam.h"
-#include "shk.h"
-#include "invent.h"
-#include "pline.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "attrib.h"
+#include "decl.h"
 #include "do.h"
+#include "engrave.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mkobj.h"
+#include "mondata.h"
+#include "monst.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "pline.h"
+#include "pm.h"
+#include "rnd.h"
+#include "shk.h"
+#include "util.h"
+#include "write.h"
+#include "you.h"
+#include "youprop.h"
 
 static int cost(struct obj *);
 

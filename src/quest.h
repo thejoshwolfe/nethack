@@ -3,6 +3,8 @@
 #ifndef QUEST_H
 #define QUEST_H
 
+#include <stdbool.h>
+
 #include "monst.h"
 
 struct q_score {                        /* Quest "scorecard" */

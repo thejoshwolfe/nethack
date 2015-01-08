@@ -1,10 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "global.h"
-#include "version.h"
-#include "hack.h"
+#include <stdlib.h>
+#include <string.h>
+
 #include "date.h"
+#include "global.h"
+#include "hack.h"
 #include "patchlevel.h"
+#include "version.h"
 
 /* fill buffer with short version (so caller can avoid including date.h) */
 char * version_string(char *buf) {

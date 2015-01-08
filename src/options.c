@@ -1,17 +1,36 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "options.h"
-#include "hack.h"
-#include "pm_props.h"
-#include "display.h"
-#include "files.h"
-#include "pline.h"
-#include "drawing.h"
-#include "version.h"
-#include "role.h"
-#include "invent.h"
 
 #include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "coord.h"
+#include "decl.h"
+#include "display.h"
+#include "drawing.h"
+#include "files.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mondata.h"
+#include "monsym.h"
+#include "objclass.h"
+#include "onames.h"
+#include "pline.h"
+#include "pm_props.h"
+#include "rm.h"
+#include "rnd.h"
+#include "role.h"
+#include "util.h"
+#include "version.h"
+#include "vision.h"
+#include "wintype.h"
+#include "you.h"
 
 #define WINTYPELEN 16
 

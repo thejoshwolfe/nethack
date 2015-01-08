@@ -1,11 +1,12 @@
 #ifndef OBJNAM_H
 #define OBJNAM_H
 
-#include "obj.h"
-#include "monst.h"
-
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
+
+#include "monst.h"
+#include "obj.h"
 
 char *obj_typename(int);
 char *simple_typename(int);

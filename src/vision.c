@@ -1,13 +1,23 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "pline.h"
-#include "light.h"
-#include "display.h"
-#include "vision.h"
-#include "hack.h"
-#include "youprop.h"
-#include "flag.h"
+#include <string.h>
+
+#include "cmd.h"
 #include "dbridge.h"
+#include "display.h"
+#include "dungeon.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "light.h"
+#include "monst.h"
+#include "obj.h"
+#include "onames.h"
+#include "pline.h"
+#include "rm.h"
+#include "vision.h"
+#include "you.h"
+#include "youprop.h"
 
 /* Circles ==================================================================*/
 

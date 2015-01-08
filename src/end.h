@@ -1,11 +1,11 @@
 #ifndef END_H
 #define END_H
 
-#include "obj.h"
+#include <stdbool.h>
+
 #include "hack.h"
 #include "monst.h"
-
-#include <stdbool.h>
+#include "obj.h"
 
 void done1(int);
 int done2(void);

@@ -1,8 +1,10 @@
 #ifndef MON_H
 #define MON_H
 
-#include "monst.h"
 #include <stdbool.h>
+
+#include "coord.h"
+#include "monst.h"
 #include "obj.h"
 
 int undead_to_corpse(int);

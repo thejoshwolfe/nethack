@@ -1,6 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 #include "dlb.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 #define DATAPREFIX 4
 
 /*

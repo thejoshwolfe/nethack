@@ -1,14 +1,36 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "hack.h"
-#include "mail.h"
-#include "invent.h"
-#include "do_name.h"
+#include "cmd.h"
+#include "coord.h"
+#include "decl.h"
 #include "display.h"
-#include "everything.h"
-
-#include <fcntl.h>
-#include <errno.h>
+#include "do_name.h"
+#include "dungeon.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mail.h"
+#include "makemon.h"
+#include "mkobj.h"
+#include "mon.h"
+#include "monst.h"
+#include "obj.h"
+#include "onames.h"
+#include "options.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "rm.h"
+#include "rnd.h"
+#include "role.h"
+#include "steed.h"
+#include "teleport.h"
+#include "util.h"
+#include "vision.h"
+#include "you.h"
+#include "youprop.h"
 
 /*
  * Notify user when new mail has arrived.  Idea by Merlyn Leroy.
@@ -40,8 +62,14 @@ extern char *viz_rmin, *viz_rmax;       /* line-of-sight limits (vision.c) */
 
 
 
-#include <sys/stat.h>
 #include <pwd.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 extern struct passwd *getpwuid(uid_t);
 
 static struct stat omstat,nmstat;

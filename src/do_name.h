@@ -1,10 +1,11 @@
 #ifndef DO_NAME_H
 #define DO_NAME_H
 
-#include "coord.h"
-
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
+
+#include "coord.h"
 
 int getpos(coord *, bool, const char *);
 struct monst *christen_monst(struct monst *, const char *);

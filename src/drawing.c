@@ -1,10 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "drawing.h"
-#include "hack.h"
-#include "flag.h"
-#include "rm.h"
+
 #include "color.h"
+#include "decl.h"
+#include "hack.h"
+#include "monsym.h"
+#include "objclass.h"
+#include "rm.h"
 
 /* Relevent header information in rm.h and objclass.h. */
 

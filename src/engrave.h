@@ -4,6 +4,7 @@
 #define ENGRAVE_H
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 struct engr {
         struct engr *nxt_engr;

@@ -2,6 +2,7 @@
 #define MONMOVE_H
 
 #include <stdbool.h>
+
 #include "monst.h"
 
 bool itsstuck(struct monst *);

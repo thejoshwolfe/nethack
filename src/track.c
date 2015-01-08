@@ -1,8 +1,9 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "hacklib.h"
 #include "decl.h"
+#include "hacklib.h"
 #include "track.h"
+#include "you.h"
 
 #define UTSZ    50
 

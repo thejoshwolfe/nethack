@@ -2,6 +2,7 @@
 #define UHITM_H
 
 #include <stdbool.h>
+
 #include "monst.h"
 #include "obj.h"
 #include "permonst.h"

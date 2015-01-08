@@ -1,12 +1,26 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "hack.h"
-#include "display.h"
+#include <stdbool.h>
+
 #include "color.h"
-#include "quest.h"
+#include "coord.h"
+#include "decl.h"
+#include "display.h"
+#include "dungeon.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
 #include "mkroom.h"
-#include "eat.h"
-#include "pline.h"
+#include "monst.h"
+#include "obj.h"
+#include "objclass.h"
+#include "onames.h"
+#include "pm.h"
+#include "quest.h"
+#include "rm.h"
+#include "spell.h"
+#include "wintype.h"
+#include "you.h"
 
 int (*afternmv)(void);
 int (*occupation)(void);

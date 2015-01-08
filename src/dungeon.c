@@ -1,16 +1,32 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "dungeon.h"
-#include "hack.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "align.h"
+#include "coord.h"
+#include "decl.h"
 #include "dgn_file.h"
 #include "dlb.h"
-#include "display.h"
-#include "save.h"
-#include "restore.h"
-#include "end.h"
-#include "pline.h"
-#include "version.h"
 #include "do.h"
+#include "end.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "monst.h"
+#include "pline.h"
+#include "restore.h"
+#include "rm.h"
+#include "rnd.h"
+#include "save.h"
+#include "util.h"
+#include "version.h"
+#include "wintype.h"
+#include "you.h"
 
 
 #define DUNGEON_FILE    "dungeon"

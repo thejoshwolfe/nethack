@@ -1,9 +1,9 @@
 #ifndef INVENT_H
 #define INVENT_H
 
-#include "obj.h"
-
 #include <stdbool.h>
+
+#include "obj.h"
 
 void assigninvlet(struct obj *);
 struct obj *merge_choice(struct obj *,struct obj *);

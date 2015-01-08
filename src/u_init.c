@@ -1,21 +1,38 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "wield.h"
-#include "worn.h"
+#include <stdbool.h>
+#include <string.h>
+#include <time.h>
+
+#include "align.h"
+#include "attrib.h"
+#include "decl.h"
+#include "do_wear.h"
+#include "dungeon.h"
+#include "eat.h"
+#include "files.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
 #include "invent.h"
 #include "mkobj.h"
-#include "do_wear.h"
-#include "vault.h"
-#include "files.h"
-#include "weapon.h"
-#include "eat.h"
-#include "polyself.h"
-#include "hack.h"
-#include "pm_props.h"
+#include "o_init.h"
+#include "obj.h"
+#include "objclass.h"
 #include "onames.h"
-#include "artifact_names.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "polyself.h"
+#include "prop.h"
+#include "rnd.h"
+#include "skills.h"
+#include "spell.h"
+#include "vault.h"
+#include "weapon.h"
+#include "wield.h"
+#include "worn.h"
+#include "you.h"
 #include "youprop.h"
-#include "flag.h"
 
 struct trobj {
     short trotyp;

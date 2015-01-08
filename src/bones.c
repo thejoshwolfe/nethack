@@ -1,14 +1,49 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "bones.h"
-#include "hack.h"
-#include "lev.h"
-#include "pm_props.h"
-#include "invent.h"
-#include "do_name.h"
-#include "objnam.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "apply.h"
+#include "artifact.h"
+#include "decl.h"
 #include "display.h"
-#include "everything.h"
+#include "do.h"
+#include "do_name.h"
+#include "dog.h"
+#include "dungeon.h"
+#include "files.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "invent.h"
+#include "lev.h"
+#include "light.h"
+#include "makemon.h"
+#include "mkobj.h"
+#include "mon.h"
+#include "monflag.h"
+#include "monst.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "questpgr.h"
+#include "restore.h"
+#include "rm.h"
+#include "rnd.h"
+#include "save.h"
+#include "steed.h"
+#include "timeout.h"
+#include "trap.h"
+#include "worn.h"
+#include "you.h"
 
 extern char bones[];    /* from files.c */
 

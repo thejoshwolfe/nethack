@@ -1,10 +1,14 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "hack.h"
-#include "hacklib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "do_name.h"
-#include "global.h"
 #include "end.h"
+#include "global.h"
+#include "hacklib.h"
+#include "util.h"
 
 /*=
     Assorted 'small' utility routines.  They're virtually independent of

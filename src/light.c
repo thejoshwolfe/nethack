@@ -1,13 +1,30 @@
 /* See LICENSE in the root of this project for change info */
 
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "light.h"
+#include "artifact.h"
+#include "decl.h"
+#include "end.h"
+#include "global.h"
 #include "hack.h"
 #include "lev.h"        /* for checking save modes */
-#include "shk.h"
-#include "vision.h"
-#include "timeout.h"
+#include "monst.h"
+#include "obj.h"
 #include "onames.h"
-#include "artifact_names.h"
-#include "everything.h"
+#include "pline.h"
+#include "restore.h"
+#include "rm.h"
+#include "save.h"
+#include "shk.h"
+#include "timeout.h"
+#include "util.h"
+#include "vision.h"
+#include "wintype.h"
+#include "you.h"
+#include "zap.h"
 
 /*
  * Mobile light sources.

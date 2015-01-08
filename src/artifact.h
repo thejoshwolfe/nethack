@@ -3,11 +3,12 @@
 #ifndef ARTIFACT_H
 #define ARTIFACT_H
 
-#include "align.h"
-#include "permonst.h"
-#include "monst.h"
-
 #include <stdbool.h>
+
+#include "align.h"
+#include "monst.h"
+#include "permonst.h"
+#include "prop.h"
 
 #define SPFX_NONE   0x0000000L  /* no special effects, just a bonus */
 #define SPFX_NOGEN  0x0000001L  /* item is special, bequeathed by gods */

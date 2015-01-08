@@ -1,8 +1,9 @@
 #ifndef DETECT_H
 #define DETECT_H
 
-#include "trap.h"
+#include "dungeon.h"
 #include "rm.h"
+#include "trap.h"
 
 struct obj *o_in(struct obj*,char);
 struct obj *o_material(struct obj*,unsigned);

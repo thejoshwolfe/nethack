@@ -1,10 +1,50 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "sounds.h"
-#include "hack.h"
-#include "edog.h"
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "cmd.h"
+#include "decl.h"
 #include "display.h"
-#include "everything.h"
+#include "do_name.h"
+#include "dungeon.h"
+#include "edog.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mhitu.h"
+#include "minion.h"
+#include "mkroom.h"
+#include "mon.h"
+#include "mondata.h"
+#include "monflag.h"
+#include "monst.h"
+#include "monsym.h"
+#include "mplayer.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "polyself.h"
+#include "priest.h"
+#include "quest.h"
+#include "rm.h"
+#include "rnd.h"
+#include "rumors.h"
+#include "shk.h"
+#include "trap.h"
+#include "util.h"
+#include "vault.h"
+#include "wizard.h"
+#include "you.h"
+#include "youprop.h"
 
 static const char * const h_sounds[] = {
     "beep", "boing", "sing", "belche", "creak", "cough", "rattle",

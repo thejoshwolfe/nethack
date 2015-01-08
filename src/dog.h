@@ -1,9 +1,11 @@
 #ifndef DOG_H
 #define DOG_H
 
+#include <stdbool.h>
+
+#include "coord.h"
 #include "monst.h"
 #include "obj.h"
-#include <stdbool.h>
 
 void initedog(struct monst *);
 struct monst *make_familiar(struct obj *,signed char,signed char,bool);

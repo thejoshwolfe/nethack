@@ -1,9 +1,51 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "steed.h"
-#include "hack.h"
+
+#include <stdio.h>
+#include <string.h>
+
+#include "apply.h"
+#include "attrib.h"
+#include "cmd.h"
+#include "coord.h"
+#include "dbridge.h"
+#include "decl.h"
 #include "display.h"
-#include "everything.h"
+#include "do.h"
+#include "engrave.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mon.h"
+#include "mondata.h"
+#include "monflag.h"
+#include "monmove.h"
+#include "monst.h"
+#include "monsym.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pickup.h"
+#include "pline.h"
+#include "pm.h"
+#include "polyself.h"
+#include "prop.h"
+#include "rm.h"
+#include "rnd.h"
+#include "skills.h"
+#include "steal.h"
+#include "teleport.h"
+#include "trap.h"
+#include "util.h"
+#include "weapon.h"
+#include "worn.h"
+#include "you.h"
+#include "youprop.h"
 
 
 /* Monsters that might be ridden */

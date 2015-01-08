@@ -2,8 +2,9 @@
 #define DO_H
 
 #include <stdbool.h>
-#include "obj.h"
+
 #include "dungeon.h"
+#include "obj.h"
 
 int dodrop(void);
 bool boulder_hits_pool(struct obj *,int,int,bool);

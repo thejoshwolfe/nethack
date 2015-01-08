@@ -2,6 +2,8 @@
 #define TELEPORT_H
 
 #include <stdbool.h>
+
+#include "coord.h"
 #include "monst.h"
 #include "trap.h"
 

@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include "obj.h"
+
 int doread(void);
 bool is_chargeable(struct obj *);
 void recharge(struct obj *,int);

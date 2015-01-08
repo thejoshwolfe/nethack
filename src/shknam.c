@@ -2,11 +2,36 @@
 /* shknam.c -- initialize a shop */
 
 #include "shknam.h"
-#include "hack.h"
+
+#include <stdio.h>
+#include <string.h>
+
+#include "cmd.h"
+#include "coord.h"
+#include "decl.h"
+#include "detect.h"
+#include "display.h"
+#include "dungeon.h"
+#include "engrave.h"
 #include "eshk.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "makemon.h"
+#include "mkobj.h"
+#include "mkroom.h"
+#include "monst.h"
+#include "monsym.h"
+#include "obj.h"
+#include "objclass.h"
 #include "onames.h"
-#include "artifact_names.h"
-#include "everything.h"
+#include "permonst.h"
+#include "pm.h"
+#include "rm.h"
+#include "rnd.h"
+#include "shk.h"
+#include "teleport.h"
+#include "you.h"
 
 static const char * const shkliquors[] = {
     /* Ukraine */

@@ -2,6 +2,7 @@
 #define POLYSELF_H
 
 #include <stdbool.h>
+
 #include "monst.h"
 
 void set_uasmon(void);

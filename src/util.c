@@ -1,9 +1,8 @@
 #include "util.h"
 
-#include <stdlib.h>
+#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <assert.h>
 
 static const char *message_id_str[] = {
     "A_BLIND_M_CANNOT_DEFEND_ITSELF",

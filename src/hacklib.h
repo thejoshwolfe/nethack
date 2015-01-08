@@ -1,11 +1,12 @@
 #ifndef HACKLIB_H
 #define HACKLIB_H
 
-#include "monst.h"
-
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <time.h>
+
+#include "monst.h"
 
 bool digit(char);
 bool letter(char);

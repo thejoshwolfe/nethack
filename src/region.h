@@ -2,9 +2,11 @@
 #ifndef REGION_H
 #define REGION_H
 
+#include <stdbool.h>
+
 #include "global.h"
-#include "rect.h"
 #include "monst.h"
+#include "rect.h"
 
 /* generic callback function */
 typedef bool (*callback_proc)(void *, void *);

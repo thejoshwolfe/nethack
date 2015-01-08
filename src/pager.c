@@ -4,13 +4,35 @@
 /* a few other help related facilities */
 
 #include "pager.h"
-#include "hack.h"
-#include "dlb.h"
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "cmd.h"
+#include "coord.h"
+#include "decl.h"
 #include "display.h"
-#include "pline.h"
-#include "objnam.h"
+#include "dlb.h"
 #include "do_name.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
 #include "invent.h"
+#include "monsym.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "rm.h"
+#include "trap.h"
+#include "util.h"
+#include "wintype.h"
+#include "you.h"
 
 /* getpos() return values */
 enum {

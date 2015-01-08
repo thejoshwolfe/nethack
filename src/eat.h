@@ -2,6 +2,7 @@
 #define EAT_H
 
 #include <stdbool.h>
+
 #include "obj.h"
 
 bool is_edible(struct obj *);

@@ -4,9 +4,12 @@
 #ifndef ATTRIB_H
 #define ATTRIB_H
 
+#include <stdbool.h>
+
+#include "monst.h"
 #include "obj.h"
 
-#include <stdbool.h>
+struct attribs;
 
 #define A_STR   0
 #define A_INT   1

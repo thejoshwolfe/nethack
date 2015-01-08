@@ -1,9 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "rect.h"
-#include "hack.h"
+
+#include <stdbool.h>
+
 #include "flag.h"
+#include "global.h"
 #include "pline.h"
+#include "rnd.h"
 
 /*
  * In this file, we will handle the various rectangle functions we

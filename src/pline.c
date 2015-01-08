@@ -1,19 +1,34 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "pline.h"
-#include "hack.h"
-#include "epri.h"
-#include "edog.h"
-#include "youprop.h"
-#include "flag.h"
-#include "vision.h"
-#include "end.h"
-#include "do_name.h"
-#include "worn.h"
-#include "polyself.h"
-#include "objnam.h"
 
 #include <stdarg.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "decl.h"
+#include "do_name.h"
+#include "edog.h"
+#include "end.h"
+#include "epri.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "mondata.h"
+#include "monst.h"
+#include "objnam.h"
+#include "permonst.h"
+#include "pm.h"
+#include "polyself.h"
+#include "prop.h"
+#include "util.h"
+#include "vision.h"
+#include "worn.h"
+#include "you.h"
+#include "youprop.h"
 
 static bool no_repeat = false;
 

@@ -113,15 +113,26 @@
  *                   vertical.
  */
 
-#include "stdout_msg.h"
-#include "display.h"
-#include "hack.h"
-#include "region.h"
-#include "invent.h"
-#include "dbridge.h"
-#include "everything.h"
-
 #include <assert.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include "cmd.h"
+#include "coord.h"
+#include "dbridge.h"
+#include "display.h"
+#include "dungeon.h"
+#include "end.h"
+#include "global.h"
+#include "hack.h"
+#include "invent.h"
+#include "monsym.h"
+#include "objclass.h"
+#include "pline.h"
+#include "region.h"
+#include "stdout_msg.h"
+#include "util.h"
+#include "worm.h"
 
 static void display_monster(signed char,signed char,struct monst *,int,signed char);
 static int swallow_to_glyph(int, int);

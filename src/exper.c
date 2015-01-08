@@ -1,11 +1,31 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "exper.h"
-#include "hack.h"
-#include "pm_props.h"
-#include "youprop.h"
+
+#include <stdio.h>
+#include <string.h>
+
+#include "attrib.h"
+#include "decl.h"
+#include "end.h"
 #include "flag.h"
-#include "everything.h"
+#include "global.h"
+#include "hack.h"
+#include "makemon.h"
+#include "monattk.h"
+#include "mondata.h"
+#include "monst.h"
+#include "monsym.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "rnd.h"
+#include "role.h"
+#include "util.h"
+#include "worn.h"
+#include "you.h"
+#include "youprop.h"
 
 static long newuexp(int);
 static int enermod(int);

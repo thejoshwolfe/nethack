@@ -1,12 +1,27 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "role.h"
-#include "hack.h"
-#include "pm_props.h"
-#include "onames.h"
+
+#include <stdio.h>
+#include <string.h>
+
+#include "align.h"
 #include "artifact_names.h"
+#include "attrib.h"
+#include "decl.h"
 #include "flag.h"
-#include "everything.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "monflag.h"
+#include "monst.h"
+#include "monsym.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "rnd.h"
+#include "you.h"
 
 
 /*** Table of all roles ***/

@@ -4,9 +4,12 @@
 #ifndef TRAP_H
 #define TRAP_H
 
-#include "monst.h"
-#include "dungeon.h"
+#include <stdbool.h>
+#include <stdlib.h>
+
 #include "coord.h"
+#include "dungeon.h"
+#include "monst.h"
 
 union vlaunchinfo {
         short v_launch_otyp;    /* type of object to be triggered */

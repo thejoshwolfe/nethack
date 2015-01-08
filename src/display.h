@@ -3,13 +3,25 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "worm.h"
-#include "pm_props.h"
-#include "vision.h"
-#include "youprop.h"
+#include "dbridge.h"
+#include "decl.h"
 #include "flag.h"
-#include "trap.h"
+#include "hack.h"
+#include "mondata.h"
+#include "monst.h"
+#include "obj.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "prop.h"
+#include "rm.h"
 #include "rnd.h"
+#include "trap.h"
+#include "vision.h"
+#include "worm.h"
+#include "you.h"
+#include "youprop.h"
 
 void magic_map_background(signed char,signed char,int);
 void map_background(signed char,signed char,int);

@@ -1,9 +1,9 @@
 #ifndef RUMORS_H
 #define RUMORS_H
 
-#include "monst.h"
-
 #include <stdbool.h>
+
+#include "monst.h"
 
 char *getrumor(int,char *, bool);
 void outrumor(int,int);

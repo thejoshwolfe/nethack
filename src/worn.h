@@ -2,8 +2,9 @@
 #define WORN_H
 
 #include <stdbool.h>
-#include "obj.h"
+
 #include "monst.h"
+#include "obj.h"
 
 void setworn(struct obj *,long);
 void setnotworn(struct obj *);

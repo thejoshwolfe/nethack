@@ -1,19 +1,35 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "region.h"
-#include "hack.h"
-#include "lev.h"
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "cmd.h"
+#include "decl.h"
 #include "display.h"
 #include "do_name.h"
-#include "objnam.h"
-#include "monst.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "lev.h"
+#include "light.h"
 #include "mon.h"
+#include "monattk.h"
+#include "mondata.h"
+#include "monst.h"
+#include "objnam.h"
 #include "pline.h"
 #include "polyself.h"
-#include "restore.h"
-#include "light.h"
-#include "save.h"
 #include "potion.h"
+#include "restore.h"
+#include "rm.h"
+#include "rnd.h"
+#include "save.h"
+#include "util.h"
+#include "vision.h"
+#include "you.h"
+#include "youprop.h"
 
 /*
  * This should really go into the level structure, but

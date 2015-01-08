@@ -1,9 +1,11 @@
 #ifndef STEAL_H
 #define STEAL_H
 
+#include <stdbool.h>
+
+#include "global.h"
 #include "monst.h"
 #include "obj.h"
-#include "global.h"
 
 long somegold(void);
 void stealgold(struct monst *);

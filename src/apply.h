@@ -1,9 +1,9 @@
 #ifndef APPLY_H
 #define APPLY_H
 
-#include "monst.h"
-
 #include <stdbool.h>
+
+#include "monst.h"
 
 int doapply(void);
 int dorub(void);

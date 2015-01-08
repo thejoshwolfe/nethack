@@ -1,11 +1,12 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "wintype.h"
-
-#include <stdlib.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdlib.h>
+
+#include "wintype.h"
 
 // These functions return the number of bytes that we *wanted* to write,
 // excluding the \0. If this number is >= than dest_size, the buffer was

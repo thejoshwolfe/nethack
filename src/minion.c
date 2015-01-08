@@ -1,16 +1,39 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "minion.h"
-#include "hack.h"
+
+#include <stdio.h>
+
+#include "artifact_names.h"
+#include "decl.h"
+#include "display.h"
+#include "do_name.h"
+#include "dungeon.h"
 #include "emin.h"
 #include "epri.h"
-#include "pm_props.h"
-#include "invent.h"
-#include "do_name.h"
-#include "mondata.h"
-#include "youprop.h"
 #include "flag.h"
-#include "everything.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "makemon.h"
+#include "mon.h"
+#include "mondata.h"
+#include "monflag.h"
+#include "monst.h"
+#include "monsym.h"
+#include "obj.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "pray.h"
+#include "rnd.h"
+#include "teleport.h"
+#include "util.h"
+#include "wizard.h"
+#include "you.h"
+#include "youprop.h"
 
 /* mon summons a monster */
 void msummon ( struct monst *mon) {

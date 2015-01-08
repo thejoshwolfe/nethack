@@ -2,6 +2,7 @@
 #define MAKEMON_H
 
 #include <stdbool.h>
+
 #include "monst.h"
 #include "obj.h"
 

@@ -1,17 +1,31 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "files.h"
-#include "hack.h"
-#include "dlb.h"
-#include "invent.h"
-#include "objnam.h"
-#include "youprop.h"
-#include "flag.h"
-#include "everything.h"
 
-#include <ctype.h>
 #include <fcntl.h>
+#include <ctype.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "decl.h"
+#include "drawing.h"
+#include "flag.h"
+#include "global.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "monsym.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "options.h"
+#include "pline.h"
+#include "rm.h"
+#include "role.h"
+#include "util.h"
+#include "you.h"
 
 char bones[] = "bonesnn.xxx";
 char lock[PL_NSIZ+14] = "run/1lock"; /* long enough for uid+name+.99 */

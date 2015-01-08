@@ -1,6 +1,9 @@
 #ifndef ZAP_H
 #define ZAP_H
 
+#include <stdbool.h>
+
+#include "coord.h"
 #include "global.h"
 #include "monst.h"
 #include "obj.h"

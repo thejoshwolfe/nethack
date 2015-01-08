@@ -2,6 +2,8 @@
 #ifndef SPELL_H
 #define SPELL_H
 
+#include <stdbool.h>
+
 struct spell {
     short       sp_id;                  /* spell id (== object.otyp) */
     signed char sp_lev;                 /* power level */

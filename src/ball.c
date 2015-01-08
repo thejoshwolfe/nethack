@@ -3,14 +3,36 @@
 /* Ball & Chain =============================================================*/
 
 #include "ball.h"
-#include "hack.h"
-#include "invent.h"
-#include "objnam.h"
-#include "hacklib.h"
+
+#include <stdlib.h>
+
+#include "attrib.h"
 #include "dbridge.h"
-#include "youprop.h"
+#include "decl.h"
+#include "display.h"
+#include "do.h"
+#include "dothrow.h"
+#include "dungeon.h"
 #include "flag.h"
-#include "everything.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mkobj.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "pline.h"
+#include "polyself.h"
+#include "prop.h"
+#include "rm.h"
+#include "rnd.h"
+#include "trap.h"
+#include "uhitm.h"
+#include "wield.h"
+#include "worn.h"
+#include "you.h"
+#include "youprop.h"
+#include "zap.h"
 
 static int bc_order(void);
 static void litter(void);

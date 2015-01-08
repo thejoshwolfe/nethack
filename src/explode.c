@@ -1,13 +1,50 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "explode.h"
-#include "hack.h"
-#include "invent.h"
-#include "objnam.h"
-#include "shk.h"
-#include "do_name.h"
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "attrib.h"
+#include "cmd.h"
+#include "coord.h"
+#include "decl.h"
 #include "display.h"
-#include "everything.h"
+#include "do_name.h"
+#include "dothrow.h"
+#include "end.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "mkobj.h"
+#include "mon.h"
+#include "monattk.h"
+#include "mondata.h"
+#include "monmove.h"
+#include "monst.h"
+#include "mthrowu.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "pline.h"
+#include "pm.h"
+#include "polyself.h"
+#include "rm.h"
+#include "rnd.h"
+#include "shk.h"
+#include "timeout.h"
+#include "trap.h"
+#include "util.h"
+#include "vision.h"
+#include "weapon.h"
+#include "you.h"
+#include "youprop.h"
+#include "zap.h"
 
 
 /* Note: Arrays are column first, while the screen is row first */

@@ -1,22 +1,48 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "mkmaze.h"
-#include "hack.h"
-#include "sp_lev.h"
-#include "lev.h"        /* save & restore info */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "ball.h"
+#include "cmd.h"
 #include "dbridge.h"
+#include "decl.h"
+#include "detect.h"
 #include "display.h"
 #include "end.h"
-#include "mklev.h"
-#include "pline.h"
-#include "teleport.h"
-#include "detect.h"
-#include "mkobj.h"
-#include "mon.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "lev.h"        /* save & restore info */
 #include "makemon.h"
-#include "ball.h"
-#include "save.h"
+#include "mklev.h"
+#include "mkobj.h"
+#include "mkroom.h"
+#include "mon.h"
+#include "mondata.h"
+#include "monflag.h"
+#include "monst.h"
+#include "obj.h"
+#include "objclass.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
 #include "restore.h"
+#include "rm.h"
+#include "rnd.h"
+#include "save.h"
+#include "sp_lev.h"
+#include "teleport.h"
+#include "trap.h"
+#include "vision.h"
+#include "worm.h"
+#include "you.h"
+#include "youprop.h"
 
 /* from sp_lev.c, for fixup_special() */
 extern char *lev_message;

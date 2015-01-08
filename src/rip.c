@@ -1,11 +1,10 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "decl.h"
-#include "global.h"
-#include "rip.h"
-#include "hack.h"
-
+#include <stdio.h>
 #include <string.h>
+
+#include "rip.h"
+#include "wintype.h"
 
 extern const char * const killed_by_prefix[];   /* from topten.c */
 

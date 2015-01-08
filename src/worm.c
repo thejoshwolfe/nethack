@@ -1,16 +1,29 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "mhitu.h"
-#include "teleport.h"
-#include "restore.h"
-#include "save.h"
-#include "makemon.h"
-#include "pline.h"
-#include "worm.h"
-#include "hack.h"
-#include "lev.h"
+#include <stdlib.h>
+
+#include "decl.h"
 #include "display.h"
 #include "do_name.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "lev.h"
+#include "makemon.h"
+#include "mhitu.h"
+#include "monst.h"
+#include "obj.h"
+#include "pline.h"
+#include "pm.h"
+#include "restore.h"
+#include "rm.h"
+#include "rnd.h"
+#include "save.h"
+#include "teleport.h"
+#include "vision.h"
+#include "worm.h"
+
+struct wseg;
 
 #define newseg()                (struct wseg *) malloc(sizeof(struct wseg))
 #define dealloc_seg(wseg)       free((void *) (wseg))

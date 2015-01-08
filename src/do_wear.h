@@ -2,6 +2,7 @@
 #define DO_WEAR_H
 
 #include <stdbool.h>
+
 #include "obj.h"
 
 void off_msg(struct obj *);

@@ -1,13 +1,13 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "permonst.h"
-#include "monsym.h"
-#include "dungeon.h"    /* prerequisite for eshk,vault,epri */
-#include "eshk.h"
-#include "vault.h"
+#include "align.h"
 #include "epri.h"
-#include "do_name.h"
-#include "hacklib.h"
+#include "eshk.h"
+#include "monattk.h"
+#include "monflag.h"
+#include "monsym.h"
+#include "permonst.h"
+#include "vault.h"
 
 #define NO_ATTK {0,0,0,0}
 
@@ -15,6 +15,7 @@
 #define WT_DRAGON 4500
 
 #include "color.h"
+
 #define C(color)        color
 #define HI_DOMESTIC     CLR_WHITE       /* use for player + friendlies */
 #define HI_LORD         CLR_MAGENTA

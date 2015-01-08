@@ -3,11 +3,16 @@
 #ifndef HACK_H
 #define HACK_H
 
+#include <stdbool.h>
+#include <sys/sysmacros.h>
+
+#include "cmd.h"
 #include "coord.h"
 #include "hacklib.h"
 #include "o_init.h"
+#include "obj.h"
 #include "rnd.h"
-#include "cmd.h"
+#include "you.h"
 
 // to edit this struct you must also edit killer_method_enum_str
 enum KillerMethod {

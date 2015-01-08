@@ -2,6 +2,7 @@
 #define LOCK_H
 
 #include <stdbool.h>
+
 #include "obj.h"
 
 bool picking_lock(int *,int *);

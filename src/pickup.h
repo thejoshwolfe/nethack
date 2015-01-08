@@ -1,9 +1,9 @@
 #ifndef PICKUP_H
 #define PICKUP_H
 
-#include "obj.h"
-
 #include <stdbool.h>
+
+#include "obj.h"
 
 int collect_obj_classes(char *,struct obj *,bool,bool,bool (*)(const struct obj *), int *);
 void add_valid_menu_class(int);

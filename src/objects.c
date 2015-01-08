@@ -1,10 +1,11 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "obj.h"
+#include <stddef.h>
+
+#include "color.h"
 #include "objclass.h"
 #include "prop.h"
 #include "skills.h"
-#include "color.h"
 
 /* objects have symbols: ) [ = " ( % ! ? + / $ * ` 0 _ . */
 

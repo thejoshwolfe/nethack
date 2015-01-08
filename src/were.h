@@ -1,8 +1,9 @@
 #ifndef WERE_H
 #define WERE_H
 
-#include "monst.h"
 #include <stdbool.h>
+
+#include "monst.h"
 
 void were_change(struct monst *);
 void new_were(struct monst *);

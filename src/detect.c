@@ -6,14 +6,49 @@
  */
 
 #include "detect.h"
-#include "hack.h"
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "artifact.h"
-#include "invent.h"
+#include "attrib.h"
+#include "cmd.h"
+#include "coord.h"
 #include "dbridge.h"
-#include "objnam.h"
-#include "do_name.h"
+#include "decl.h"
 #include "display.h"
-#include "everything.h"
+#include "do_name.h"
+#include "drawing.h"
+#include "flag.h"
+#include "global.h"
+#include "hack.h"
+#include "invent.h"
+#include "mhitu.h"
+#include "mkroom.h"
+#include "mon.h"
+#include "mondata.h"
+#include "monst.h"
+#include "monsym.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pline.h"
+#include "pm.h"
+#include "polyself.h"
+#include "potion.h"
+#include "prop.h"
+#include "rm.h"
+#include "rnd.h"
+#include "trap.h"
+#include "util.h"
+#include "vault.h"
+#include "vision.h"
+#include "worm.h"
+#include "you.h"
+#include "youprop.h"
 
 extern bool known;   /* from read.c */
 

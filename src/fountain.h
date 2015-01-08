@@ -2,6 +2,7 @@
 #define FOUNTAIN_H
 
 #include <stdbool.h>
+
 #include "obj.h"
 
 void floating_above(const char *);

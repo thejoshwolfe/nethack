@@ -1,8 +1,10 @@
 #ifndef SHKNAM_H
 #define SHKNAM_H
 
-#include "monst.h"
+#include <stdbool.h>
+
 #include "mkroom.h"
+#include "monst.h"
 
 void stock_room(int,struct mkroom *);
 bool saleable(struct monst *,struct obj *);

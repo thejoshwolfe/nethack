@@ -1,14 +1,30 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "o_init.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "attrib.h"
+#include "decl.h"
+#include "dungeon.h"
+#include "flag.h"
+#include "global.h"
 #include "hack.h"
-#include "lev.h"        /* save & restore info */
+#include "hacklib.h"
 #include "invent.h"
+#include "lev.h"        /* save & restore info */
+#include "objclass.h"
 #include "objnam.h"
 #include "onames.h"
-#include "artifact_names.h"
-#include "flag.h"
-#include "everything.h"
+#include "pline.h"
+#include "restore.h"
+#include "rnd.h"
+#include "save.h"
+#include "util.h"
+#include "wintype.h"
+#include "you.h"
 
 static short disco[NUM_OBJECTS] = DUMMY;
 

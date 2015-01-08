@@ -1,8 +1,11 @@
 #ifndef MKLEV_H
 #define MKLEV_H
 
-#include "mkroom.h"
+#include <stdbool.h>
+
+#include "coord.h"
 #include "dungeon.h"
+#include "mkroom.h"
 
 void sort_rooms(void);
 void add_room(int,int,int,int,bool,signed char,bool);

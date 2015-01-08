@@ -1,12 +1,23 @@
 /* See LICENSE in the root of this project for change info */
 
 #include "mkmap.h"
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "cmd.h"
+#include "coord.h"
+#include "decl.h"
+#include "dungeon.h"
+#include "global.h"
 #include "hack.h"
-#include "sp_lev.h"
-#include "rm.h"
-#include "mkroom.h"
 #include "mklev.h"
+#include "mkroom.h"
 #include "pline.h"
+#include "rm.h"
+#include "rnd.h"
+#include "sp_lev.h"
+#include "you.h"
 
 #define HEIGHT  (ROWNO - 1)
 #define WIDTH   (COLNO - 2)

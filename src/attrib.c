@@ -3,13 +3,29 @@
 /*  attribute modification routines. */
 
 #include "attrib.h"
-#include "hack.h"
-#include "pickup.h"
-#include "invent.h"
-#include "hacklib.h"
-#include "youprop.h"
+
+#include <stdlib.h>
+
+#include "align.h"
+#include "artifact.h"
+#include "decl.h"
+#include "display.h"
 #include "flag.h"
-#include "everything.h"
+#include "hack.h"
+#include "hacklib.h"
+#include "invent.h"
+#include "monsym.h"
+#include "obj.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pickup.h"
+#include "pline.h"
+#include "pm.h"
+#include "prop.h"
+#include "rnd.h"
+#include "weapon.h"
+#include "you.h"
+#include "youprop.h"
 
         /* part of the output on gain or loss of attribute */
 static

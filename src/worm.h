@@ -2,6 +2,7 @@
 #define WORM_H
 
 #include <stdbool.h>
+
 #include "monst.h"
 #include "obj.h"
 

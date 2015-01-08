@@ -1,12 +1,32 @@
 /* See LICENSE in the root of this project for change info */
 
-#include "hack.h"
-#include "eshk.h"
-#include "epri.h"
-#include "pm_props.h"
-#include "shk.h"
+#include <stdbool.h>
+#include <string.h>
+
+#include "artifact.h"
+#include "artifact_names.h"
+#include "decl.h"
 #include "display.h"
-#include "everything.h"
+#include "end.h"
+#include "global.h"
+#include "hacklib.h"
+#include "monattk.h"
+#include "mondata.h"
+#include "monflag.h"
+#include "monst.h"
+#include "monsym.h"
+#include "obj.h"
+#include "objclass.h"
+#include "objnam.h"
+#include "onames.h"
+#include "permonst.h"
+#include "pm.h"
+#include "pm_props.h"
+#include "prop.h"
+#include "shk.h"
+#include "wizard.h"
+#include "you.h"
+#include "youprop.h"
 
 /*      These routines provide basic data for any type of monster. */
 
