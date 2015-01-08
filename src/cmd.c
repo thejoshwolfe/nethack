@@ -1024,24 +1024,6 @@ void rhack() {
         flags.move = false;
         return; /* probably we just had an interrupt */
     }
-    if (iflags.num_pad && iflags.num_pad_mode == 1) {
-        /* This handles very old inconsistent DOS/Windows behaviour
-         * in a new way: earlier, the keyboard handler mapped these,
-         * which caused counts to be strange when entered from the
-         * number pad. Now do not map them until here.
-         */
-        switch (*cmd) {
-            case '5':
-                *cmd = 'g';
-                break;
-            case M('5'):
-                *cmd = 'G';
-                break;
-            case M('0'):
-                *cmd = 'I';
-                break;
-        }
-    }
     /* handle most movement commands */
     do_walk = do_rush = false;
     flags.travel = iflags.travel1 = 0;
@@ -1053,8 +1035,6 @@ void rhack() {
             }
             break;
         case '5':
-            if (!iflags.num_pad)
-                break; /* else FALLTHRU */
         case 'G':
             if (movecmd(lowc(cmd[1]))) {
                 flags.run = 3;
@@ -1062,8 +1042,6 @@ void rhack() {
             }
             break;
         case '-':
-            if (!iflags.num_pad)
-                break; /* else FALLTHRU */
             /* Effects of movement commands and invisible monsters:
              * m: always move onto space (even if 'I' remembered)
              * F: always attack space (even if 'I' not remembered)
@@ -1093,8 +1071,6 @@ void rhack() {
             }
             break;
         case '0':
-            if (!iflags.num_pad)
-                break;
             (void)ddoinv(); /* a convenience borrowed from the PC */
             flags.move = false;
             multi = 0;
@@ -1113,7 +1089,7 @@ void rhack() {
             if (movecmd(*cmd)) { /* ordinary movement */
                 flags.run = 0; /* only matters here if it was 8 */
                 do_walk = true;
-            } else if (movecmd(iflags.num_pad ? unmeta(*cmd) : lowc(*cmd))) {
+            } else if (movecmd(unmeta(*cmd))) {
                 flags.run = 1;
                 do_rush = true;
             } else if (movecmd(unctrl(*cmd))) {
@@ -1213,10 +1189,7 @@ void dtoxy(coord * cc, int dd) {
 int movecmd(char sym) {
     const char *dp;
     const char *sdp;
-    if (iflags.num_pad)
-        sdp = ndir;
-    else
-        sdp = sdir; /* DICE workaround */
+    sdp = ndir;
 
     u.dz = 0;
     if (!(dp = index(sdp, sym)))

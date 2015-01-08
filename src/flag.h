@@ -128,14 +128,12 @@ struct instance_flags {
         bool  echo;          /* 1 to echo characters */
         bool  IBMgraphics;   /* use IBM extended character set */
         unsigned msg_history;   /* hint: # of top lines to save */
-        bool  num_pad;       /* use numbers for movement commands */
         bool  news;          /* print news */
         bool  window_inited; /* true if init_nhwindows() completed */
         bool  vision_inited; /* true if vision is ready */
         bool  menu_tab_sep;  /* Use tabs to separate option menu fields */
         bool  menu_requested; /* Flag for overloaded use of 'm' prefix
                                   * on some non-move commands */
-        unsigned char num_pad_mode;
         int     menu_headings;  /* ATR for menu headings */
         int      purge_monsters;        /* # of dead monsters still on fmon list */
         int *opt_booldup;       /* for duplication of bool opts in config file */

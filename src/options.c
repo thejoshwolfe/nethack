@@ -190,7 +190,6 @@ static struct Comp_Opt {
     {"msg_window", "the type of message window required",1, SET_IN_GAME},
     { "name",     "your character's name (e.g., name:Merlin-W)",
         PL_NSIZ, DISP_IN_GAME },
-    { "number_pad", "use the number pad", 1, SET_IN_GAME},
     { "objects",  "the symbols to use for objects",
         MAXOCLASSES, SET_IN_FILE },
     { "packorder", "the inventory order of the items in your pack",
@@ -1896,7 +1895,7 @@ static bool special_handling(const char *optname, bool setinitial, bool setfromf
     bool retval = false;
 
     /* Special handling of menustyle, pickup_burden, pickup_types,
-     * disclose, runmode, msg_window, menu_headings, number_pad and sortloot
+     * disclose, runmode, msg_window, menu_headings, and sortloot
      * Also takes care of interactive autopickup_exception_handling changes.
      */
     if (!strcmp("menustyle", optname)) {
@@ -2206,8 +2205,6 @@ static const char * get_compopt_value(const char *optname, char *buf) {
         sprintf(buf, "%s", (iflags.prevmsg_window == 's') ? "single" : (iflags.prevmsg_window == 'c') ? "combination" : (iflags.prevmsg_window == 'f') ? "full" : "reversed");
     else if (!strcmp(optname, "name"))
         sprintf(buf, "%s", plname);
-    else if (!strcmp(optname, "number_pad"))
-        sprintf(buf, "%s", (!iflags.num_pad) ? "0=off" : (iflags.num_pad_mode) ? "2=on, DOS compatible" : "1=on");
     else if (!strcmp(optname, "objects"))
         sprintf(buf, "%s", to_be_done);
     else if (!strcmp(optname, "packorder")) {
