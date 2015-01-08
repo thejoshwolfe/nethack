@@ -123,7 +123,9 @@ static long Sick_resistance() {
             || defends(AD_DISE,uwep));
 }
 
-#define Invulnerable            u.uprops[INVULNERABLE].intrinsic    /* [Tom] */
+static long Invulnerable() {
+    return u.uprops[INVULNERABLE].intrinsic; /* [Tom] */
+}
 
 /* Extrinsics only */
 #define EAntimagic              u.uprops[ANTIMAGIC].extrinsic

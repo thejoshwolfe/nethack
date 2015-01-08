@@ -340,7 +340,7 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
             You("are caught in the %s!", str);
         /* do property damage first, in case we end up leaving bones */
         if (adtyp == AD_FIRE) burn_away_slime();
-        if (Invulnerable) {
+        if (Invulnerable()) {
             damu = 0;
             You("are unharmed!");
         } else if (Half_physical_damage && adtyp == AD_PHYS)
