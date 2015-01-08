@@ -139,7 +139,7 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
                 case AD_DISN:
                     explmask[i][j] = (olet == WAND_CLASS) ?
                         !!(nonliving(youmonst.data) || is_demon(youmonst.data)) :
-                        !!Disint_resistance;
+                        !!Disint_resistance();
                     break;
                 case AD_ELEC:
                     explmask[i][j] = !!Shock_resistance;
