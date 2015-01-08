@@ -397,7 +397,7 @@ void dump_enlightenment (int final) {
     if (Antimagic) dump(youwere, "magic-protected");
     if (Acid_resistance) dump(youwere, "acid resistant");
     if (Stone_resistance) dump(youwere, "petrification resistant");
-    if (Invulnerable) dump(youwere, "invulnerable");
+    if (Invulnerable()) dump(youwere, "invulnerable");
     if (u.uedibility) dump(youcould, "recognize detrimental food");
 
     /*** Troubles ***/
