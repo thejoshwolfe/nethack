@@ -920,13 +920,13 @@ static void domagictrap(void) {
                 /* uncurse stuff */
             {
                 struct obj pseudo;
-                long save_conf = HConfusion;
+                long save_conf = get_HConfusion();
 
                 pseudo = zeroobj; /* neither cursed nor blessed */
                 pseudo.otyp = SCR_REMOVE_CURSE;
-                HConfusion= 0L;
+                set_HConfusion(0L);
                 (void)seffects(&pseudo);
-                HConfusion= save_conf;
+                set_HConfusion(save_conf);
                 break;
             }
             default:
@@ -2810,7 +2810,7 @@ static int untrap_prob(struct trap *ttmp) {
     /* Only spiders know how to deal with webs reliably */
     if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
         chance = 30;
-    if (Confusion|| Hallucination()) chance++;
+    if (Confusion() || Hallucination()) chance++;
     if (Blind)
         chance++;
     if (Stunned())
@@ -3156,7 +3156,7 @@ static int help_monster_out(struct monst *mtmp, struct trap *ttmp) {
 
 int untrap(bool force) {
     struct obj *otmp;
-    bool confused = (Confusion> 0 || Hallucination() > 0);
+    bool confused = (Confusion() > 0 || Hallucination() > 0);
     int x, y;
     int ch;
     struct trap *ttmp;

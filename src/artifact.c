@@ -804,7 +804,7 @@ static bool Mb_hit(struct monst *magr, struct monst *mdef,
     do_confuse = !rn2(12);
     if (do_confuse) {
         if (youdefend)
-            make_confused(HConfusion + 4, false);
+            make_confused(get_HConfusion() + 4, false);
         else
             mdef->mconf = 1;
     }

@@ -331,7 +331,7 @@ do_pit:             chasm = maketrap(x,y,PIT);
  * The player is trying to extract something from his/her instrument.
  */
 static int do_improvisation (struct obj *instr) {
-    int damage, do_spec = !Confusion;
+    int damage, do_spec = !Confusion();
     if (!do_spec)
         pline("What you produce is quite far from music...");
     else

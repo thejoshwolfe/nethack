@@ -290,7 +290,7 @@ ustatusline (void)
         if (Slimed)             strcat(info, ", becoming slimy");
         if (Strangled)          strcat(info, ", being strangled");
         if (Vomiting)           strcat(info, ", nauseated"); /* !"nauseous" */
-        if (Confusion)          strcat(info, ", confused");
+        if (Confusion())          strcat(info, ", confused");
         if (Blind) {
             strcat(info, ", blind");
             if (u.ucreamed) {

@@ -257,7 +257,7 @@ int food_detect (struct obj *sobj) {
     struct obj *obj;
     struct monst *mtmp;
     int ct = 0, ctu = 0;
-    bool confused = (Confusion || (sobj && sobj->cursed)), stale;
+    bool confused = (Confusion() || (sobj && sobj->cursed)), stale;
     char oclass = confused ? POTION_CLASS : FOOD_CLASS;
     const char *what = confused ? something : "food";
     int uw = u.uinwater;
@@ -388,7 +388,7 @@ int object_detect (struct obj *detector, int class) {
     if (sym && iflags.bouldersym && sym == iflags.bouldersym)
         boulder = ROCK_CLASS;
 
-    if (Hallucination() || (Confusion && class == SCROLL_CLASS))
+    if (Hallucination() || (Confusion() && class == SCROLL_CLASS))
         strcpy(stuff, something);
     else
         strcpy(stuff, class ? oclass_names[class] : "objects");
@@ -738,7 +738,7 @@ void use_crystal_ball (struct obj *obj) {
                     char confuse_clause[BUFSZ];
                     Tobjnam(confuse_clause, BUFSZ, obj, "confuse");
                     pline("%s you!", confuse_clause);
-                    make_confused(HConfusion + rnd(100),false);
+                    make_confused(get_HConfusion() + rnd(100),false);
                 }
                 break;
             case 3:
@@ -861,7 +861,7 @@ void use_crystal_ball (struct obj *obj) {
 static void show_map_spot (int x, int y) {
     struct rm *lev;
 
-    if (Confusion && rn2(7)) return;
+    if (Confusion() && rn2(7)) return;
     lev = &levl[x][y];
 
     lev->seenv = SVALL;

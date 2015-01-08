@@ -49,7 +49,7 @@ void incr_itimeout (long *which, int incr) {
 }
 
 void make_confused (long xtime, bool talk) {
-        long old = HConfusion;
+        long old = get_HConfusion();
 
         if (!xtime && old) {
                 if (talk)
@@ -57,7 +57,7 @@ void make_confused (long xtime, bool talk) {
                         Hallucination() ? "trippy" : "confused");
         }
 
-        set_itimeout(&HConfusion, xtime);
+        set_itimeout(&u.uprops[CONFUSION].intrinsic, xtime);
 }
 
 void make_stunned (long xtime, bool talk) {
@@ -443,7 +443,7 @@ int peffects (struct obj *otmp) {
                     otmp->odiluted ? "watered down " : "",
                     Hallucination() ? "dandelion wine" : "liquid fire");
             if (!otmp->blessed)
-                make_confused(itimeout_incr(HConfusion, d(3,8)), false);
+                make_confused(itimeout_incr(get_HConfusion(), d(3,8)), false);
             /* the whiskey makes us feel better */
             if (!otmp->odiluted) healup(1, 0, false, false);
             u.uhunger += 10 * (2 + bcsign(otmp));
@@ -633,14 +633,14 @@ int peffects (struct obj *otmp) {
             }
             break;
         case POT_CONFUSION:
-            if(!Confusion)
+            if(!Confusion())
                 if (Hallucination()) {
                     pline("What a trippy feeling!");
                     unkn++;
                 } else
                     pline("Huh, What?  Where am I?");
                 else    nothing++;
-            make_confused(itimeout_incr(HConfusion,
+            make_confused(itimeout_incr(get_HConfusion(),
                         rn1(7, 16 - 8 * bcsign(otmp))),
                     false);
             break;
@@ -1149,9 +1149,9 @@ void potionbreathe (struct obj *obj) {
             break;
         case POT_CONFUSION:
         case POT_BOOZE:
-            if(!Confusion)
+            if(!Confusion())
                 You_feel("somewhat dizzy.");
-            make_confused(itimeout_incr(HConfusion, rnd(5)), false);
+            make_confused(itimeout_incr(get_HConfusion(), rnd(5)), false);
             break;
         case POT_INVISIBILITY:
             if (!Blind && !Invis) {

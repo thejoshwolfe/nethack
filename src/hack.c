@@ -972,7 +972,7 @@ void domove(void) {
 
         x = u.ux + u.dx;
         y = u.uy + u.dy;
-        if (Stunned() || (Confusion&& !rn2(5))) {
+        if (Stunned() || (Confusion() && !rn2(5))) {
             int tries = 0;
 
             do {

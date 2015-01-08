@@ -907,10 +907,10 @@ int dogaze(void) {
                 } else if (mtmp->m_ap_type == M_AP_FURNITURE || mtmp->m_ap_type == M_AP_OBJECT) {
                     looked--;
                     continue;
-                } else if (flags.safe_dog && !Confusion && !Hallucination() && mtmp->mtame) {
+                } else if (flags.safe_dog && !Confusion() && !Hallucination() && mtmp->mtame) {
                     message_monster(MSG_YOU_AVOID_GAZING_AT_M, mtmp);
                 } else {
-                    if (flags.confirm && mtmp->mpeaceful && !Confusion
+                    if (flags.confirm && mtmp->mpeaceful && !Confusion()
                                                         && !Hallucination()) {
                         sprintf(qbuf, "Really %s %s?",
                             (adtyp == AD_CONF) ? "confuse" : "attack", "TODO: mon_nam(mtmp)");

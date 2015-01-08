@@ -397,7 +397,7 @@ static bool e_jumps (struct entity *etmp) {
                          !etmp->edata->mmove   || etmp->emon->wormno))
                 return(false);
 
-        if (is_u(etmp)? Confusion : etmp->emon->mconf)
+        if (is_u(etmp)? Confusion() : etmp->emon->mconf)
                 tmp -= 2;
 
         if (is_u(etmp)? Stunned() : etmp->emon->mstun)

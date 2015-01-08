@@ -1466,10 +1466,10 @@ do_stone:
             hitmsg(mtmp, mattk);
             if(!mtmp->mcan && !rn2(4) && !mtmp->mspec_used) {
                 mtmp->mspec_used = mtmp->mspec_used + (dmg + rn2(6));
-                if(Confusion)
+                if(Confusion())
                     You("are getting even more confused.");
                 else You("are getting confused.");
-                make_confused(HConfusion + dmg, false);
+                make_confused(get_HConfusion() + dmg, false);
             }
             dmg = 0;
             break;
@@ -1963,14 +1963,14 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
                 int conf = d(3,4);
 
                 mtmp->mspec_used = mtmp->mspec_used + (conf + rn2(6));
-                if(!Confusion) {
+                if(!Confusion()) {
                     char pname[BUFSZ];
                     monster_possessive_cap(pname, BUFSZ, mtmp);
                     pline("%s gaze confuses you!", pname);
                 } else {
                     You("are getting more and more confused.");
                 }
-                make_confused(HConfusion + conf, false);
+                make_confused(get_HConfusion() + conf, false);
                 stop_occupation();
             }
             break;
