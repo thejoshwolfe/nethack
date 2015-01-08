@@ -423,7 +423,7 @@ int dotele (void) {
             if (!Teleportation || (u.ulevel < (Role_if(PM_WIZARD) ? 8 : 12)
                                         && !can_teleport(youmonst.data))) {
                 /* Try to use teleport away spell. */
-                if (objects[SPE_TELEPORT_AWAY].oc_name_known && !Confusion)
+                if (objects[SPE_TELEPORT_AWAY].oc_name_known && !Confusion())
                     for (sp_no = 0; sp_no < MAXSPELL; sp_no++)
                         if (spl_book[sp_no].sp_id == SPE_TELEPORT_AWAY) {
                                 castit = true;
@@ -515,14 +515,14 @@ void level_tele (void) {
                 }
                 getlin(qbuf, buf);
                 if (!strcmp(buf,"\033")) {      /* cancelled */
-                    if (Confusion && rnl(5)) {
+                    if (Confusion() && rnl(5)) {
                         pline("Oops...");
                         goto random_levtport;
                     }
                     return;
                 } else if (!strcmp(buf,"*")) {
                     goto random_levtport;
-                } else if (Confusion && rnl(5)) {
+                } else if (Confusion() && rnl(5)) {
                     pline("Oops...");
                     goto random_levtport;
                 }

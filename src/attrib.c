@@ -309,7 +309,7 @@ static void exerper (void) {
         if (HRegeneration)                      exercise(A_STR, true);
 
         if(Sick || Vomiting)     exercise(A_CON, false);
-        if(Confusion || Hallucination())          exercise(A_WIS, false);
+        if(Confusion() || Hallucination())          exercise(A_WIS, false);
         if((Wounded_legs
                     && !u.usteed
            ) || Fumbling || get_HStun())     exercise(A_DEX, false);

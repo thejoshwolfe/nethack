@@ -1357,7 +1357,7 @@ lootcont:
             }
         }
         if (any) c = 'y';
-    } else if (Confusion) {
+    } else if (Confusion()) {
         if (u.ugold){
             long contribution = rnd((int)min(LARGEST_INT,u.ugold));
             struct obj *goldob = mkgoldobj(contribution);

@@ -60,7 +60,7 @@ static void vomiting_dialogue(void) {
             make_stunned(get_HStun() + d(2,4), false);
             /* fall through */
         case 3:
-            make_confused(HConfusion + d(2,4), false);
+            make_confused(get_HConfusion() + d(2,4), false);
             break;
     }
     exercise(A_CON, false);
@@ -319,7 +319,7 @@ void nh_timeout(void) {
                                 Fast ? " a bit" : "");
                     break;
                 case CONFUSION:
-                    HConfusion= 1; /* So make_confused works properly */
+                    set_HConfusion(1); /* So make_confused works properly */
                     make_confused(0L, true);
                     stop_occupation();
                     break;

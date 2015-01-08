@@ -169,8 +169,15 @@ static bool Stunned() {
 }
                 /* Note: birds will also be stunned */
 
-#define HConfusion              u.uprops[CONFUSION].intrinsic
-#define Confusion               HConfusion
+static long get_HConfusion() {
+    return u.uprops[CONFUSION].intrinsic;
+}
+static void set_HConfusion(long hConfusion) {
+    u.uprops[CONFUSION].intrinsic = hConfusion;
+}
+static bool Confusion() {
+    return get_HConfusion();
+}
 
 #define Blinded                 u.uprops[BLINDED].intrinsic
 #define Blindfolded             (ublindf && ublindf->otyp != LENSES)

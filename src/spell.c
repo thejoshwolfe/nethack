@@ -112,7 +112,7 @@ cursed_book (struct obj *bp)
                 break;
         case 4:
                 pline("These runes were just too much to comprehend.");
-                make_confused(HConfusion + rn1(7,16),false);
+                make_confused(get_HConfusion() + rn1(7,16),false);
                 break;
         case 5:
                 pline_The("book was coated with contact poison!");
@@ -304,7 +304,7 @@ learn (void)
 
         /* JDS: lenses give 50% faster reading; 33% smaller read time */
         if (delay && ublindf && ublindf->otyp == LENSES && rn2(2)) delay++;
-        if (Confusion) {                /* became confused while learning */
+        if (Confusion()) {                /* became confused while learning */
             (void) confused_book(book);
             book = 0;                   /* no longer studying */
             nomul(delay);               /* remaining delay is uninterrupted */
@@ -372,7 +372,7 @@ int
 study_book (struct obj *spellbook)
 {
         int      booktype = spellbook->otyp;
-        bool confused = (Confusion != 0);
+        bool confused = (Confusion());
         bool too_hard = false;
 
         if (delay && !confused && spellbook == book &&
@@ -911,7 +911,7 @@ spelleffects (int spell, bool atme)
 {
         int energy, damage, chance, n, intell;
         int skill, role_skill;
-        bool confused = (Confusion != 0);
+        bool confused = (Confusion());
         struct obj *pseudo;
         coord cc;
 
@@ -1152,7 +1152,7 @@ spelleffects (int spell, bool atme)
 }
 
 void losespells (void) {
-    bool confused = (Confusion != 0);
+    bool confused = (Confusion());
     int  n, nzap, i;
 
     book = 0;

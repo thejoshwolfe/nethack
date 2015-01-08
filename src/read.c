@@ -100,7 +100,7 @@ int doread (void) {
             scroll->otyp != SCR_BLANK_PAPER)
         u.uconduct.literate++;
 
-    confused = (Confusion != 0);
+    confused = (Confusion());
     if (scroll->otyp == SCR_MAIL) confused = false;
     if(scroll->oclass == SPBOOK_CLASS) {
         return(study_book(scroll));
@@ -746,7 +746,7 @@ static void do_class_genocide (void) {
 
 int seffects (struct obj *sobj) {
     int cval;
-    bool confused = (Confusion != 0);
+    bool confused = (Confusion());
     struct obj *otmp;
 
     if (objects[sobj->otyp].oc_magic)
@@ -903,15 +903,15 @@ int seffects (struct obj *sobj) {
         case SCR_CONFUSE_MONSTER:
         case SPE_CONFUSE_MONSTER:
             if(youmonst.data->mlet != S_HUMAN || sobj->cursed) {
-                if(!HConfusion) You_feel("confused.");
-                make_confused(HConfusion + rnd(100),false);
+                if(!get_HConfusion()) You_feel("confused.");
+                make_confused(get_HConfusion() + rnd(100),false);
             } else  if(confused) {
                 if(!sobj->blessed) {
                     Your("%s begin to %s%s.",
                             makeplural(body_part(HAND)),
                             Blind ? "tingle" : "glow ",
                             Blind ? nul : hcolor(NH_PURPLE));
-                    make_confused(HConfusion + rnd(100),false);
+                    make_confused(get_HConfusion() + rnd(100),false);
                 } else {
                     pline("A %s%s surrounds your %s.",
                             Blind ? nul : hcolor(NH_RED),
@@ -1089,7 +1089,7 @@ int seffects (struct obj *sobj) {
             You("have found a scroll of genocide!");
             known = true;
             if (sobj->blessed) do_class_genocide();
-            else do_genocide(!sobj->cursed | (2 * !!Confusion));
+            else do_genocide(!sobj->cursed | (2 * !!Confusion()));
             break;
         case SCR_LIGHT:
             if(!Blind) known = true;
@@ -1161,7 +1161,7 @@ id:
                     pline("Wow!  Modern art.");
                 else
                     Your("%s spins in bewilderment.", body_part(HEAD));
-                make_confused(HConfusion + rnd(30), false);
+                make_confused(get_HConfusion() + rnd(30), false);
                 break;
             }
             if (sobj->blessed) {
@@ -1177,15 +1177,15 @@ id:
         case SPE_MAGIC_MAPPING:
             if (level.flags.nommap) {
                 Your("%s spins as %s blocks the spell!", body_part(HEAD), something);
-                make_confused(HConfusion + rnd(30), false);
+                make_confused(get_HConfusion() + rnd(30), false);
                 break;
             }
             pline("A map coalesces in your mind!");
             cval = (sobj->cursed && !confused);
-            if(cval) HConfusion = 1;        /* to screw up map */
+            if(cval) set_HConfusion(1);        /* to screw up map */
             do_mapping();
             if(cval) {
-                HConfusion = 0;             /* restore */
+                set_HConfusion(0);             /* restore */
                 pline("Unfortunately, you can't grasp the details.");
             }
             break;

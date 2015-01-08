@@ -267,7 +267,7 @@ static int use_stethoscope (struct obj *obj) {
             message_const(MSG_YOU_HEAR_YOUR_HEART_BEAT);
             return res;
         }
-    if (Stunned() || (Confusion && !rn2(5))) confdir();
+    if (Stunned() || (Confusion() && !rn2(5))) confdir();
     if (!u.dx && !u.dy) {
         ustatusline();
         return res;
@@ -582,7 +582,7 @@ static int use_mirror (struct obj *obj) {
                 message_const(MSG_YOU_HAVE_NO_REFLECTION);
             } else if (u.umonnum == PM_UMBER_HULK) {
                 message_const(MSG_HUH_NO_LOOK_LIKE_YOU);
-                make_confused(HConfusion + d(3,4), false);
+                make_confused(get_HConfusion() + d(3,4), false);
             } else if (Hallucination()) {
                 message_int(MSG_YOU_LOOK_COLOR, halluc_color_int());
             } else if (Sick) {
@@ -1545,10 +1545,10 @@ void use_unicorn_horn (struct obj *obj) {
                     break;
             case 1: make_blinded(Blinded + lcount, true);
                     break;
-            case 2: if (!Confusion)
+            case 2: if (!Confusion())
                         You("suddenly feel %s.",
                                 Hallucination() ? "trippy" : "confused");
-                    make_confused(HConfusion + lcount, true);
+                    make_confused(get_HConfusion() + lcount, true);
                     break;
             case 3: make_stunned(get_HStun() + lcount, true);
                     break;
@@ -1571,7 +1571,7 @@ void use_unicorn_horn (struct obj *obj) {
     if (Blinded > (long)u.ucreamed) trouble_list[trouble_count++] = prop2trbl(BLINDED);
     if (u.uprops[HALLUC].intrinsic) trouble_list[trouble_count++] = prop2trbl(HALLUC);
     if (Vomiting) trouble_list[trouble_count++] = prop2trbl(VOMITING);
-    if (HConfusion) trouble_list[trouble_count++] = prop2trbl(CONFUSION);
+    if (get_HConfusion()) trouble_list[trouble_count++] = prop2trbl(CONFUSION);
     if (get_HStun()) trouble_list[trouble_count++] = prop2trbl(STUNNED);
 
     unfixable_trbl = unfixable_trouble_count(true);
@@ -2014,7 +2014,7 @@ static int use_whip (struct obj *obj) {
     }
     if (!getdir((char *)0)) return res;
 
-    if (Stunned() || (Confusion && !rn2(5))) confdir();
+    if (Stunned() || (Confusion() && !rn2(5))) confdir();
     rx = u.ux + u.dx;
     ry = u.uy + u.dy;
     mtmp = m_at(rx, ry);
@@ -2871,7 +2871,7 @@ int unfixable_trouble_count(bool is_horn) {
     /* we'll assume that intrinsic stunning from being a bat/stalker
        doesn't make you feel bad */
     if (!is_horn) {
-        if (Confusion) unfixable_trbl++;
+        if (Confusion()) unfixable_trbl++;
         if (Sick) unfixable_trbl++;
         if (u.uprops[HALLUC].intrinsic) unfixable_trbl++;
         if (Vomiting) unfixable_trbl++;

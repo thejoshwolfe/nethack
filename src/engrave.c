@@ -978,7 +978,7 @@ Note: this won't add or remove any spaces. */
     for (sp = ebuf; *sp; sp++) {
         if (isspace(*sp)) continue;
         if (((type == DUST || type == ENGR_BLOOD) && !rn2(25)) ||
-                (Blind && !rn2(11)) || (Confusion && !rn2(7)) ||
+                (Blind && !rn2(11)) || (Confusion() && !rn2(7)) ||
                 (Stunned() && !rn2(4)) || (Hallucination() && !rn2(2)))
             *sp = ' ' + rnd(96 - 2);        /* ASCII '!' thru '~'
                                                (excludes ' ' and DEL) */

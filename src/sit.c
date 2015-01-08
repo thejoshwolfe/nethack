@@ -199,7 +199,7 @@ in_water:
                         if (level.flags.nommap) {
                             pline(
                                     "A terrible drone fills your head!");
-                            make_confused(HConfusion + rnd(30),
+                            make_confused(get_HConfusion() + rnd(30),
                                     false);
                         } else {
                             pline("An image forms in your mind.");
@@ -230,7 +230,7 @@ in_water:
                     break;
                 case 13:
                     Your("mind turns into a pretzel!");
-                    make_confused(HConfusion + rn1(7,16),false);
+                    make_confused(get_HConfusion() + rn1(7,16),false);
                     break;
                 default:    impossible("throne effect");
                             break;

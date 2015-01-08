@@ -588,7 +588,7 @@ static void cpostfx(int pm) {
                 break;
             case PM_LIZARD:
                 if (get_HStun() > 2)  make_stunned(2L,false);
-                if (HConfusion > 2)  make_confused(2L,false);
+                if (get_HConfusion() > 2)  make_confused(2L,false);
                 break;
             case PM_CHAMELEON:
             case PM_DOPPELGANGER:
@@ -1065,7 +1065,7 @@ static int rottenfood (struct obj *obj) {
         if(!rn2(4)) {
                 if (Hallucination()) You_feel("rather trippy.");
                 else You_feel("rather %s.", body_part(LIGHT_HEADED));
-                make_confused(HConfusion + d(2,4),false);
+                make_confused(get_HConfusion() + d(2,4),false);
         } else if(!rn2(4) && !Blind) {
                 pline("Everything suddenly goes dark.");
                 make_blinded((long)d(2,10),false);

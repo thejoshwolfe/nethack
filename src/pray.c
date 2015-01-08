@@ -194,7 +194,7 @@ in_trouble (void)
                                 ) return (TROUBLE_WOUNDED_LEGS);
         if(u.uhs >= HUNGRY) return(TROUBLE_HUNGRY);
         if(get_HStun()) return (TROUBLE_STUNNED);
-        if(HConfusion) return (TROUBLE_CONFUSED);
+        if(get_HConfusion()) return (TROUBLE_CONFUSED);
         if(Hallucination()) return(TROUBLE_HALLUCINATION);
         return(0);
 }
@@ -1671,7 +1671,7 @@ doturn (void)
                    (is_demon(mtmp->data) && (u.ulevel > (MAXULEV/2))))) {
 
                     mtmp->msleeping = 0;
-                    if (Confusion) {
+                    if (Confusion()) {
                         if (!once++)
                             pline("Unfortunately, your voice falters.");
                         mtmp->mflee = 0;

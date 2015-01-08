@@ -91,7 +91,7 @@ int dochugw (struct monst *mtmp) {
 
     /* a similar check is in monster_nearby() in hack.c */
     /* check whether hero notices monster and stops current activity */
-    if (occupation && !rd && !Confusion &&
+    if (occupation && !rd && !Confusion() &&
             (!mtmp->mpeaceful || Hallucination()) &&
             /* it's close enough to be a threat */
             distu(mtmp->mx,mtmp->my) <= (BOLT_LIM+1)*(BOLT_LIM+1) &&

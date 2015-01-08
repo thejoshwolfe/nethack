@@ -616,11 +616,11 @@ static void cast_cleric_spell (struct monst *mtmp, int dmg, int spellnum) {
             shieldeff(u.ux, u.uy);
             You_feel("momentarily dizzy.");
         } else {
-            bool oldprop = !!Confusion;
+            bool oldprop = !!Confusion();
 
             dmg = (int)mtmp->m_lev;
             if (Half_spell_damage) dmg = (dmg + 1) / 2;
-            make_confused(HConfusion + dmg, true);
+            make_confused(get_HConfusion() + dmg, true);
             if (Hallucination())
                 You_feel("%s!", oldprop ? "trippier" : "trippy");
             else

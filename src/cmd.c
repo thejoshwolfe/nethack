@@ -200,16 +200,17 @@ static int wiz_identify (void) {
 static int wiz_map (void) {
     if (flags.debug) {
         struct trap *t;
-        long save_Hconf = HConfusion,
+        long save_Hconf = get_HConfusion(),
              save_Hhallu = u.uprops[HALLUC].intrinsic;
 
-        HConfusion = u.uprops[HALLUC].intrinsic = 0L;
+        set_HConfusion(0L);
+        u.uprops[HALLUC].intrinsic = 0L;
         for (t = ftrap; t != 0; t = t->ntrap) {
             t->tseen = 1;
             map_trap(t, true);
         }
         do_mapping();
-        HConfusion = save_Hconf;
+        set_HConfusion(save_Hconf);
         u.uprops[HALLUC].intrinsic = save_Hhallu;
     } else
         pline("Unavailable command '^F'.");
@@ -404,7 +405,7 @@ void dump_enlightenment (int final) {
     if (Halluc_resistance())  dump("  ", "You resisted hallucinations");
     if (Hallucination) dump(youwere, "hallucinating");
     if (Stunned()) dump(youwere, "stunned");
-    if (Confusion) dump(youwere, "confused");
+    if (Confusion()) dump(youwere, "confused");
     if (Blinded) dump(youwere, "blinded");
     if (Sick) {
         if (u.usick_type & SICK_VOMITABLE)
@@ -1233,7 +1234,7 @@ int getdir(const char *s) {
         }
         return 0;
     }
-    if (!u.dz && (Stunned() || (Confusion&& !rn2(5)))) confdir();
+    if (!u.dz && (Stunned() || (Confusion() && !rn2(5)))) confdir();
     return 1;
 }
 
