@@ -11,6 +11,13 @@ var tilesImageTileYCount;
 var tilesImage = resource_loader.fetchImage("tiles.png");
 var tilesImageTileWidth = 32;
 var tilesImageTileHeight = 32;
+var tilesImageWarningOffset = 1007;
+var tilesImageSwallowOffset = 904;
+var tilesImageZapOffset = 975;
+var tilesImageExplodeOffset = 912;
+var tilesImageMapOffset = 829;
+var tilesImageObjectOffset = 394;
+var tilesImageMonsterOffset = 0;
 
 var NETHACK_MSG_TYPE_COUNT = 0;
 var NETHACK_MSG_TYPE_GLYPH = NETHACK_MSG_TYPE_COUNT++;
@@ -64,6 +71,7 @@ logOutBtn.addEventListener('click', logOut);
 playBtn.addEventListener('click', playNetHack);
 
 window.addEventListener('keydown', onKeyDown);
+canvas.addEventListener('mousedown', onCanvasMouseDown);
 
 var socket = new Socket();
 socket.on('registerResult', onRegisterResult);
@@ -281,17 +289,61 @@ function handleGlyph(dv) {
   var y = dv.getInt32(4, true);
   var glyph = dv.getInt32(8, true);
   setGlyph(x, y, glyph);
-  console.log("display glyph at", x, y);
+}
+
+function glyphTileIndex(glyph) {
+  var offset;
+
+  if ((offset = (glyph - constants.GLYPH_WARNING_OFF)) >= 0) {
+    return tilesImageWarningOffset + offset;
+  }
+  if ((offset = (glyph - constants.GLYPH_SWALLOW_OFF)) >= 0) {
+    return tilesImageSwallowOffset + (offset & 0x7);
+  }
+  if ((offset = (glyph - constants.GLYPH_ZAP_OFF)) >= 0) {
+    return tilesImageZapOffset + (offset & 0x3);
+  }
+  if ((offset = (glyph - constants.GLYPH_EXPLODE_OFF)) >= 0) {
+    return tilesImageExplodeOffset + (offset % 9);
+  }
+  if ((offset = (glyph - constants.GLYPH_CMAP_OFF)) >= 0) {
+    return tilesImageMapOffset + offset;
+  }
+  if ((offset = (glyph - constants.GLYPH_OBJ_OFF)) >= 0) {
+    return tilesImageObjectOffset + offset;
+  }
+  if ((offset = (glyph - constants.GLYPH_RIDDEN_OFF)) >= 0) {
+    return tilesImageMonsterOffset + offset;
+  }
+  if ((offset = (glyph - constants.GLYPH_BODY_OFF)) >= 0) {
+    // corpse. if we figure out how to do a special corpse per monster we could do that here
+    return 640;
+  }
+  if ((offset = (glyph - constants.GLYPH_DETECT_OFF)) >= 0) {
+    return tilesImageMonsterOffset + offset;
+  }
+  if ((offset = (glyph - constants.GLYPH_INVIS_OFF)) >= 0) {
+    // invisible monster
+    return 393;
+  }
+  if ((offset = (glyph - constants.GLYPH_PET_OFF)) >= 0) {
+    return tilesImageMonsterOffset + offset;
+  }
+
+  return tilesImageMonsterOffset + glyph;
 }
 
 function setGlyph(x, y, glyph) {
   currentLevel[y][x] = glyph;
 
   // not sure where this magic number comes from
-  var tileIndex = glyph - 1515;
+  var tileIndex = glyphTileIndex(glyph);
 
   var tileRow = Math.floor(tileIndex / tilesImageTileXCount);
   var tileCol = tileIndex % tilesImageTileXCount;
+
+  context.fillStyle = '#000000';
+  context.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 
   context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
       tilesImageTileWidth, tilesImageTileHeight,
@@ -358,7 +410,11 @@ function onKeyDown(ev) {
   }
 }
 
-function onCanvasKeyUp(ev) {
+function onCanvasMouseDown(ev) {
+  var tileX = Math.floor(ev.clientX / tileWidth);
+  var tileY = Math.floor(ev.clientY / tileHeight);
+  var glyph = currentLevel[tileY][tileX];
+  console.log("x", tileX, "y", tileY, glyph);
 }
 
 function moveDir(x, y) {

@@ -376,9 +376,7 @@ static char * enlght_combatinc (const char *inctyp, int incamt, int final, char 
     char numbuf[24];
     const char *modif, *bonus;
 
-    if (final
-            || flags.debug
-       ) {
+    if (final || flags.debug) {
         sprintf(numbuf, "%s%d",
                 (incamt > 0) ? "+" : "", incamt);
         modif = (const char *) numbuf;
@@ -404,6 +402,7 @@ static char * enlght_combatinc (const char *inctyp, int incamt, int final, char 
 /* 0 => still in progress; 1 => over, survived; 2 => dead */
 void enlightenment (int final) {
     // have to redo this function differently; it depended heavily on tty
+    fprintf(stderr, "TODO: enlightenment\n");
 }
 
 void dump_enlightenment (int final) {
@@ -485,9 +484,7 @@ void dump_enlightenment (int final) {
         dump(youhad, buf);
     }
     if (Fumbling) dump("  ", "You fumbled");
-    if (Wounded_legs
-            && !u.usteed
-       ) {
+    if (Wounded_legs && !u.usteed) {
         sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
         dump(youhad, buf);
     }
@@ -1234,7 +1231,15 @@ int get_adjacent_loc(const char *prompt, const char *emsg, signed char x, signed
 }
 
 char yn_function(const char *prompt, const char *options, char default_option) {
-    fprintf(stderr, "TODO: yn_function(\"%s\", \"%s\", '%c')\n", prompt, options, default_option);
+    fprintf(stderr, "TODO: waiting on yn...\n");
+    char yn[2];
+    parse(yn, 2);
+    const char *c = options;
+    while (*c) {
+        if (*c == yn[0])
+            return *c;
+        c += 1;
+    }
     return default_option;
 }
 

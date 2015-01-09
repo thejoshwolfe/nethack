@@ -331,8 +331,7 @@ static void display_monster (
 )
 {
     bool mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
-    int sensed = mon_mimic &&
-        (Protection_from_shape_changers || sensemon(mon));
+    int sensed = mon_mimic && (Protection_from_shape_changers || sensemon(mon));
     /*
      * We must do the mimic check first.  If the mimic is mimicing something,
      * and the location is in sight, we have to change the hero's memory
