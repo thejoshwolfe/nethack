@@ -1129,8 +1129,6 @@ typedef struct {
 } gbuf_entry;
 
 static gbuf_entry gbuf[ROWNO][COLNO];
-static char gbuf_start[ROWNO];
-static char gbuf_stop[ROWNO];
 
 /*
  * Store the glyph in the 3rd screen for later flushing.
@@ -1192,25 +1190,8 @@ void show_glyph (int x, int y, int glyph) {
         gbuf[y][x].glyph = glyph;
         gbuf[y][x].new   = 1;
         stdout_msg_glyph(x, y, glyph);
-        if (gbuf_start[y] > x) gbuf_start[y] = x;
-        if (gbuf_stop[y]  < x) gbuf_stop[y]  = x;
     }
 }
-
-
-/*
- * Reset the changed glyph borders so that none of the 3rd screen has
- * changed.
- */
-#define reset_glyph_bbox()                      \
-    {                                           \
-        int i;                                  \
-                                                \
-        for (i = 0; i < ROWNO; i++) {           \
-            gbuf_start[i] = COLNO-1;            \
-            gbuf_stop[i]  = 0;                  \
-        }                                       \
-    }
 
 
 static gbuf_entry nul_gbuf = { 0, cmap_to_glyph(S_stone) };
@@ -1227,7 +1208,6 @@ void clear_glyph_buffer (void) {
             *gptr++ = nul_gbuf;
         }
     }
-    reset_glyph_bbox();
     stdout_msg_const(OUT_MSG_SET_ALL_ROCK);
 }
 
@@ -1293,8 +1273,6 @@ static unsigned char get_glyph_char (int glyph) {
     }
     return ch;
 }
-
-extern const char * compress_str(const char *);
 
 /*
  * back_to_glyph()
