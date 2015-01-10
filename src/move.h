@@ -7,3 +7,4 @@ bool test_move(int, int, int, int, int);
 void domove(void);
 void movobj(struct obj *,signed char,signed char);
 void spoteffects(bool);
+void check_special_room(bool);

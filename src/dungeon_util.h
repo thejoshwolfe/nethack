@@ -82,3 +82,5 @@
 #define within_bounded_area(X,Y,LX,LY,HX,HY) \
                 ((X) >= (LX) && (X) <= (HX) && (Y) >= (LY) && (Y) <= (HY))
 
+#define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
+

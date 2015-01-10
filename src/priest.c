@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "move.h"
 #include "dungeon_util.h"
 #include "attrib.h"
 #include "coord.h"

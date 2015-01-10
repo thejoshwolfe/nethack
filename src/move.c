@@ -1426,3 +1426,153 @@ void spoteffects(bool pick) {
     }
 }
 
+static void move_update(bool newlev) {
+    char *ptr1, *ptr2, *ptr3, *ptr4;
+
+    strcpy(u.urooms0, u.urooms);
+    strcpy(u.ushops0, u.ushops);
+    if (newlev) {
+        u.urooms[0] = '\0';
+        u.uentered[0] = '\0';
+        u.ushops[0] = '\0';
+        u.ushops_entered[0] = '\0';
+        strcpy(u.ushops_left, u.ushops0);
+        return;
+    }
+    strcpy(u.urooms, in_rooms(u.ux, u.uy, 0));
+
+    for (ptr1 = &u.urooms[0], ptr2 = &u.uentered[0], ptr3 = &u.ushops[0], ptr4 = &u.ushops_entered[0]; *ptr1; ptr1++) {
+        if (!index(u.urooms0, *ptr1))
+            *(ptr2++) = *ptr1;
+        if (IS_SHOP(*ptr1 - ROOMOFFSET)) {
+            *(ptr3++) = *ptr1;
+            if (!index(u.ushops0, *ptr1))
+                *(ptr4++) = *ptr1;
+        }
+    }
+    *ptr2 = '\0';
+    *ptr3 = '\0';
+    *ptr4 = '\0';
+
+    /* filter u.ushops0 -> u.ushops_left */
+    for (ptr1 = &u.ushops0[0], ptr2 = &u.ushops_left[0]; *ptr1; ptr1++)
+        if (!index(u.ushops, *ptr1))
+            *(ptr2++) = *ptr1;
+    *ptr2 = '\0';
+}
+
+static bool monstinroom(struct permonst *mdat, int roomno) {
+    struct monst *mtmp;
+
+    for (mtmp = fmon; mtmp; mtmp = mtmp->nmon)
+        if (!DEADMONSTER(mtmp) && mtmp->data == mdat && index(in_rooms(mtmp->mx, mtmp->my, 0), roomno + ROOMOFFSET))
+            return (true);
+    return (false);
+}
+
+void check_special_room(bool newlev) {
+    struct monst *mtmp;
+    char *ptr;
+
+    move_update(newlev);
+
+    if (*u.ushops0)
+        u_left_shop(u.ushops_left, newlev);
+
+    if (!*u.uentered && !*u.ushops_entered) /* implied by newlev */
+        return; /* no entrance messages necessary */
+
+    /* Did we just enter a shop? */
+    if (*u.ushops_entered)
+        u_entered_shop(u.ushops_entered);
+
+    for (ptr = &u.uentered[0]; *ptr; ptr++) {
+        int roomno = *ptr - ROOMOFFSET, rt = rooms[roomno].rtype;
+
+        /* Did we just enter some other special room? */
+        /* vault.c insists that a vault remain a VAULT,
+         * and temples should remain TEMPLEs,
+         * but everything else gives a message only the first time */
+        switch (rt) {
+            case ZOO:
+                pline("Welcome to David's treasure zoo!");
+                break;
+            case SWAMP:
+                pline("It %s rather %s down here.", Blind ? "feels" : "looks", Blind ? "humid" : "muddy");
+                break;
+            case COURT:
+                You("enter an opulent throne room!");
+                break;
+            case LEPREHALL:
+                You("enter a leprechaun hall!");
+                break;
+            case MORGUE:
+                if (midnight()) {
+                    const char *run = locomotion(youmonst.data, "Run");
+                    pline("%s away!  %s away!", run, run);
+                } else {
+                    You("have an uncanny feeling...");
+                }
+                break;
+            case BEEHIVE:
+                You("enter a giant beehive!");
+                break;
+            case COCKNEST:
+                You("enter a disgusting nest!");
+                break;
+            case ANTHOLE:
+                You("enter an anthole!");
+                break;
+            case BARRACKS:
+                if (monstinroom(&mons[PM_SOLDIER], roomno) || monstinroom(&mons[PM_SERGEANT], roomno) || monstinroom(&mons[PM_LIEUTENANT], roomno) || monstinroom(&mons[PM_CAPTAIN], roomno))
+                    You("enter a military barracks!");
+                else
+                    You("enter an abandoned barracks.");
+                break;
+            case DELPHI:
+                if (monstinroom(&mons[PM_ORACLE], roomno))
+                    verbalize("%s, %s, welcome to Delphi!", Hello((struct monst *)0), plname);
+                break;
+            case TEMPLE:
+                intemple(roomno + ROOMOFFSET);
+                /* fall through */
+            default:
+                rt = 0;
+        }
+
+        if (rt != 0) {
+            rooms[roomno].rtype = OROOM;
+            if (!search_special(rt)) {
+                /* No more room of that type */
+                switch (rt) {
+                    case COURT:
+                        level.flags.has_court = 0;
+                        break;
+                    case SWAMP:
+                        level.flags.has_swamp = 0;
+                        break;
+                    case MORGUE:
+                        level.flags.has_morgue = 0;
+                        break;
+                    case ZOO:
+                        level.flags.has_zoo = 0;
+                        break;
+                    case BARRACKS:
+                        level.flags.has_barracks = 0;
+                        break;
+                    case TEMPLE:
+                        level.flags.has_temple = 0;
+                        break;
+                    case BEEHIVE:
+                        level.flags.has_beehive = 0;
+                        break;
+                }
+            }
+            if (rt == COURT || rt == SWAMP || rt == MORGUE || rt == ZOO)
+                for (mtmp = fmon; mtmp; mtmp = mtmp->nmon)
+                    if (!DEADMONSTER(mtmp) && !Stealth && !rn2(3))
+                        mtmp->msleeping = 0;
+        }
+    }
+}
+

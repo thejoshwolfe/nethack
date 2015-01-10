@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "move.h"
 #include "dungeon_util.h"
 #include "align.h"
 #include "apply.h"
@@ -74,8 +75,6 @@ enum {
     PAY_SKIP  =  -1,
     PAY_BROKE =  -2,
 };
-
-#define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
 
 extern const struct shclass shtypes[];  /* defined in shknam.c */
 extern struct obj *thrownobj;           /* defined in dothrow.c */
