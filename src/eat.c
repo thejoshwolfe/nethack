@@ -1888,7 +1888,7 @@ void gethungry (void) {
                         u.uhunger--;
             if (near_capacity() > SLT_ENCUMBER) u.uhunger--;
         } else {                /* even turns */
-            if (Hunger) u.uhunger--;
+            if (Hunger()) u.uhunger--;
             /* Conflict uses up food too */
             if (HConflict || (EConflict & (~W_ARTI))) u.uhunger--;
             /* +0 charged rings don't do anything, so don't affect hunger */

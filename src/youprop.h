@@ -239,9 +239,15 @@ static bool Wounded_legs() {
 #define ESleeping               u.uprops[SLEEPING].extrinsic
 #define Sleeping                (HSleeping || ESleeping)
 
-#define HHunger                 u.uprops[HUNGER].intrinsic
-#define EHunger                 u.uprops[HUNGER].extrinsic
-#define Hunger                  (HHunger || EHunger)
+static long HHunger() {
+    return u.uprops[HUNGER].intrinsic;
+}
+static long EHunger() {
+    return u.uprops[HUNGER].extrinsic;
+}
+static bool Hunger() {
+    return (HHunger() || EHunger());
+}
 
 
 /*** Vision and senses ***/

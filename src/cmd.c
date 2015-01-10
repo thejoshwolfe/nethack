@@ -498,7 +498,7 @@ void dump_enlightenment (int final) {
         dump("  ", buf);
     }
     if (Sleeping) dump("  ", "You fell asleep");
-    if (Hunger) dump("  ", "You hungered rapidly");
+    if (Hunger()) dump("  ", "You hungered rapidly");
 
     /*** Vision and senses ***/
     if (See_invisible) dump("  ", "You saw invisible");
