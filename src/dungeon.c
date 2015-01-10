@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "onames.h"
+#include "invent.h"
+#include "mondata.h"
 #include "dungeon_util.h"
 #include "align.h"
 #include "coord.h"
@@ -1304,3 +1307,21 @@ signed char lev_by_name(const char *nam) {
 signed char print_dungeon(bool bymenu, signed char *rlev, signed char *rdgn) {
     return 0;
 }
+
+/* intended to be called only on ROCKs */
+bool may_dig(signed char x, signed char y) {
+    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].wall_info & W_NONDIGGABLE)));
+}
+
+bool may_passwall(signed char x, signed char y) {
+    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].wall_info & W_NONPASSWALL)));
+}
+
+bool bad_rock(struct permonst *mdat, signed char x, signed char y) {
+    return ((bool)((In_sokoban(&u.uz) && sobj_at(BOULDER, x, y)) || (IS_ROCK(levl[x][y].typ) && (!tunnels(mdat) || needspick(mdat) || !may_dig(x, y)) && !(passes_walls(mdat) && may_passwall(x, y)))));
+}
+
+bool invocation_pos(signed char x, signed char y) {
+    return ((bool)(Invocation_lev(&u.uz) && x == inv_pos.x && y == inv_pos.y));
+}
+

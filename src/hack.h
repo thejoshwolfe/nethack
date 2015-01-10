@@ -177,10 +177,6 @@ struct Killer killed_by_int(enum KillerMethod method, int);
 struct Killer killed_by_artifact(enum KillerMethod method, const struct artifact *art);
 
 bool revive_nasty(int,int,const char*);
-bool may_dig(signed char,signed char);
-bool may_passwall(signed char,signed char);
-bool bad_rock(struct permonst *,signed char,signed char);
-bool invocation_pos(signed char,signed char);
 char *in_rooms(signed char,signed char,int);
 bool in_town(int,int);
 void check_special_room(bool);

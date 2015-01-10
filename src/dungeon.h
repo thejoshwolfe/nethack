@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "global.h"
+#include "permonst.h"
 
 typedef struct d_flags {        /* dungeon/level type flags */
         unsigned town: 1;      /* is this a town? (levels only) */
@@ -167,6 +168,9 @@ bool Invocation_lev(d_level *);
 signed char level_difficulty(void);
 signed char lev_by_name(const char *);
 signed char print_dungeon(bool,signed char *,signed char *);
-
+bool may_dig(signed char,signed char);
+bool may_passwall(signed char,signed char);
+bool bad_rock(struct permonst *,signed char,signed char);
+bool invocation_pos(signed char,signed char);
 
 #endif /* DUNGEON_H */

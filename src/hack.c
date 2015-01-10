@@ -244,23 +244,6 @@ bool revive_nasty(int x, int y, const char *msg) {
     return (revived);
 }
 
-/* intended to be called only on ROCKs */
-bool may_dig(signed char x, signed char y) {
-    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].wall_info & W_NONDIGGABLE)));
-}
-
-bool may_passwall(signed char x, signed char y) {
-    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].wall_info & W_NONPASSWALL)));
-}
-
-bool bad_rock(struct permonst *mdat, signed char x, signed char y) {
-    return ((bool)((In_sokoban(&u.uz) && sobj_at(BOULDER, x, y)) || (IS_ROCK(levl[x][y].typ) && (!tunnels(mdat) || needspick(mdat) || !may_dig(x, y)) && !(passes_walls(mdat) && may_passwall(x, y)))));
-}
-
-bool invocation_pos(signed char x, signed char y) {
-    return ((bool)(Invocation_lev(&u.uz) && x == inv_pos.x && y == inv_pos.y));
-}
-
 static bool monstinroom(struct permonst *mdat, int roomno) {
     struct monst *mtmp;
 
