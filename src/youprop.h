@@ -24,131 +24,131 @@
 
 /*** Resistances to troubles ***/
 /* With intrinsics and extrinsics */
-static long get_HFire_resistance() {
+static long get_HFire_resistance(void) {
     return u.uprops[FIRE_RES].intrinsic;
 }
 static void set_HFire_resistance(long hFireRes) {
     u.uprops[FIRE_RES].intrinsic = hFireRes;
 }
-static long EFire_resistance() {
+static long EFire_resistance(void) {
     return u.uprops[FIRE_RES].extrinsic;
 }
-static bool Fire_resistance() {
+static bool Fire_resistance(void) {
     return (get_HFire_resistance() || EFire_resistance() || resists_fire(&youmonst));
 }
 
-static long get_HCold_resistance() {
+static long get_HCold_resistance(void) {
     return u.uprops[COLD_RES].intrinsic;
 }
 static void set_HCold_resistance(long hColdRes) {
     u.uprops[COLD_RES].intrinsic = hColdRes;
 }
-static long ECold_resistance() {
+static long ECold_resistance(void) {
     return u.uprops[COLD_RES].extrinsic;
 }
-static bool Cold_resistance() {
+static bool Cold_resistance(void) {
     return (get_HCold_resistance() || ECold_resistance() || resists_cold(&youmonst));
 }
 
-static long get_HSleep_resistance() {
+static long get_HSleep_resistance(void) {
     return u.uprops[SLEEP_RES].intrinsic;
 }
 static void set_HSleep_resistance(long hSleepRes) {
     u.uprops[SLEEP_RES].intrinsic = hSleepRes;
 }
-static long ESleep_resistance() {
+static long ESleep_resistance(void) {
     return u.uprops[SLEEP_RES].extrinsic;
 }
-static bool Sleep_resistance() {
+static bool Sleep_resistance(void) {
     return (get_HSleep_resistance() || ESleep_resistance() || resists_sleep(&youmonst));
 }
 
-static long get_HDisint_resistance() {
+static long get_HDisint_resistance(void) {
     return u.uprops[DISINT_RES].intrinsic;
 }
 static void set_HDisint_resistance(long hDisintRes) {
     u.uprops[DISINT_RES].intrinsic = hDisintRes;
 }
-static long EDisint_resistance() {
+static long EDisint_resistance(void) {
     return u.uprops[DISINT_RES].extrinsic;
 }
-static bool Disint_resistance() {
+static bool Disint_resistance(void) {
     return (get_HDisint_resistance() || EDisint_resistance() || resists_disint(&youmonst));
 }
 
-static long get_HShock_resistance() {
+static long get_HShock_resistance(void) {
     return u.uprops[SHOCK_RES].intrinsic;
 }
 static void set_HShock_resistance(long hShockRes) {
     u.uprops[SHOCK_RES].intrinsic = hShockRes;
 }
-static long EShock_resistance() {
+static long EShock_resistance(void) {
     return u.uprops[SHOCK_RES].extrinsic;
 }
-static bool Shock_resistance() {
+static bool Shock_resistance(void) {
     return (get_HShock_resistance() || EShock_resistance() || resists_elec(&youmonst));
 }
 
-static long get_HPoison_resistance() {
+static long get_HPoison_resistance(void) {
     return u.uprops[POISON_RES].intrinsic;
 }
 static void set_HPoison_resistance(long hPoisonRes) {
     u.uprops[POISON_RES].intrinsic = hPoisonRes;
 }
-static long EPoison_resistance() {
+static long EPoison_resistance(void) {
     return u.uprops[POISON_RES].extrinsic;
 }
-static bool Poison_resistance() {
+static bool Poison_resistance(void) {
     return (get_HPoison_resistance() || EPoison_resistance() || resists_poison(&youmonst));
 }
 
-static long HDrain_resistance() {
+static long HDrain_resistance(void) {
     return u.uprops[DRAIN_RES].intrinsic;
 }
-static long EDrain_resistance() {
+static long EDrain_resistance(void) {
     return u.uprops[DRAIN_RES].extrinsic;
 }
-static bool Drain_resistance() {
+static bool Drain_resistance(void) {
     return (HDrain_resistance() || EDrain_resistance() || resists_drli(&youmonst));
 }
 
 /* Intrinsics only */
-static long HSick_resistance() {
+static long HSick_resistance(void) {
     return u.uprops[SICK_RES].intrinsic;
 }
-static long Sick_resistance() {
+static long Sick_resistance(void) {
     return (HSick_resistance()
             || youmonst.data->mlet == S_FUNGUS
             || youmonst.data == &mons[PM_GHOUL]
             || defends(AD_DISE,uwep));
 }
 
-static long Invulnerable() {
+static long Invulnerable(void) {
     return u.uprops[INVULNERABLE].intrinsic; /* [Tom] */
 }
 
 /* Extrinsics only */
-static long EAntimagic() {
+static long EAntimagic(void) {
     return u.uprops[ANTIMAGIC].extrinsic;
 }
-static bool Antimagic() {
+static bool Antimagic(void) {
     return (EAntimagic() || (Upolyd && resists_magm(&youmonst)));
 }
 
-static long get_EAcid_resistance() {
+static long get_EAcid_resistance(void) {
     return u.uprops[ACID_RES].extrinsic;
 }
 static void set_EAcid_resistance(long eAcidRes) {
     u.uprops[ACID_RES].extrinsic = eAcidRes;
 }
-static bool Acid_resistance() {
+static bool Acid_resistance(void) {
     return (get_EAcid_resistance() || resists_acid(&youmonst));
 }
 
-static long EStone_resistance() {
+static long EStone_resistance(void) {
     return u.uprops[STONE_RES].extrinsic;
 }
-static bool Stone_resistance() {
+static bool Stone_resistance(void) {
     return (EStone_resistance() || resists_ston(&youmonst));
 }
 
@@ -158,24 +158,24 @@ static bool Stone_resistance() {
 #define Punished                (uball)
 
 /* Those implemented solely as timeouts (we use just intrinsic) */
-static long get_HStun() {
+static long get_HStun(void) {
     return u.uprops[STUNNED].intrinsic;
 }
 static void set_HStun(long hStun) {
     u.uprops[STUNNED].intrinsic = hStun;
 }
-static bool Stunned() {
+static bool Stunned(void) {
     return (get_HStun() || u.umonnum == PM_STALKER || youmonst.data->mlet == S_BAT);
 }
                 /* Note: birds will also be stunned */
 
-static long get_HConfusion() {
+static long get_HConfusion(void) {
     return u.uprops[CONFUSION].intrinsic;
 }
 static void set_HConfusion(long hConfusion) {
     u.uprops[CONFUSION].intrinsic = hConfusion;
 }
-static bool Confusion() {
+static bool Confusion(void) {
     return get_HConfusion();
 }
 
@@ -203,35 +203,35 @@ static bool Hallucination(void) {
 }
 
 /* Timeout, plus a worn mask */
-static long get_HFumbling() {
+static long get_HFumbling(void) {
     return u.uprops[FUMBLING].intrinsic;
 }
 static void set_HFumbling(long hFumbling) {
     u.uprops[FUMBLING].intrinsic = hFumbling;
 }
-static long get_EFumbling() {
+static long get_EFumbling(void) {
     return u.uprops[FUMBLING].extrinsic;
 }
 static void set_EFumbling(long eFumbling) {
     u.uprops[FUMBLING].extrinsic = eFumbling;
 }
-static bool Fumbling() {
+static bool Fumbling(void) {
     return (get_HFumbling() || get_EFumbling());
 }
 
-static long get_HWounded_legs() {
+static long get_HWounded_legs(void) {
     return u.uprops[WOUNDED_LEGS].intrinsic;
 }
 static void set_HWounded_legs(long hWoundedLegs) {
     u.uprops[WOUNDED_LEGS].intrinsic = hWoundedLegs;
 }
-static long get_EWounded_legs() {
+static long get_EWounded_legs(void) {
     return u.uprops[WOUNDED_LEGS].extrinsic;
 }
 static void set_EWounded_legs(long eWoundedLegs) {
     u.uprops[WOUNDED_LEGS].extrinsic = eWoundedLegs;
 }
-static bool Wounded_legs() {
+static bool Wounded_legs(void) {
     return (get_HWounded_legs() || get_EWounded_legs());
 }
 
@@ -239,28 +239,28 @@ static bool Wounded_legs() {
 #define ESleeping               u.uprops[SLEEPING].extrinsic
 #define Sleeping                (HSleeping || ESleeping)
 
-static long HHunger() {
+static long HHunger(void) {
     return u.uprops[HUNGER].intrinsic;
 }
-static long EHunger() {
+static long EHunger(void) {
     return u.uprops[HUNGER].extrinsic;
 }
-static bool Hunger() {
+static bool Hunger(void) {
     return (HHunger() || EHunger());
 }
 
 
 /*** Vision and senses ***/
-static long get_HSee_invisible() {
+static long get_HSee_invisible(void) {
     return u.uprops[SEE_INVIS].intrinsic;
 }
 static void set_HSee_invisible(long hSeeInvis) {
     u.uprops[SEE_INVIS].intrinsic = hSeeInvis;
 }
-static long ESee_invisible() {
+static long ESee_invisible(void) {
     return u.uprops[SEE_INVIS].extrinsic;
 }
-static bool See_invisible() {
+static bool See_invisible(void) {
     return (get_HSee_invisible() || ESee_invisible()
             || perceives(youmonst.data));
 }
