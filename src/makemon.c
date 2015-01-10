@@ -1608,7 +1608,7 @@ set_mimic_sym (         /* KAA, modified by ERS */
                 else
                     appear = S_vcdoor;
 
-                if(!mtmp->minvis || See_invisible)
+                if(!mtmp->minvis || See_invisible())
                     block_point(mx,my); /* vision */
         } else if (level.flags.is_maze_lev && rn2(2)) {
                 ap_type = M_AP_OBJECT;
@@ -1616,7 +1616,7 @@ set_mimic_sym (         /* KAA, modified by ERS */
         } else if (roomno < 0) {
                 ap_type = M_AP_OBJECT;
                 appear = BOULDER;
-                if(!mtmp->minvis || See_invisible)
+                if(!mtmp->minvis || See_invisible())
                     block_point(mx,my); /* vision */
         } else if (rt == ZOO || rt == VAULT) {
                 ap_type = M_AP_OBJECT;

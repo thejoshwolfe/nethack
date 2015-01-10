@@ -578,7 +578,7 @@ static void cpostfx(int pm) {
                 } else {
                         if (!(HInvis & INTRINSIC)) You_feel("hidden!");
                         HInvis |= FROMOUTSIDE;
-                        HSee_invisible |= FROMOUTSIDE;
+                        set_HSee_invisible(get_HSee_invisible() | FROMOUTSIDE);
                 }
                 newsym(u.ux, u.uy);
                 /* fall into next case */
@@ -1372,7 +1372,7 @@ static void eataccessory (struct obj *otmp) {
                   case RIN_SEE_INVISIBLE:
                     set_mimic_blocking();
                     see_monsters();
-                    if (Invis && !oldprop && !ESee_invisible &&
+                    if (Invis && !oldprop && !ESee_invisible() &&
                                 !perceives(youmonst.data) && !Blind) {
                         newsym(u.ux,u.uy);
                         pline("Suddenly you can see yourself.");
@@ -1381,7 +1381,7 @@ static void eataccessory (struct obj *otmp) {
                     break;
                   case RIN_INVISIBILITY:
                     if (!oldprop && !EInvis && !BInvis &&
-                                        !See_invisible && !Blind) {
+                                        !See_invisible() && !Blind) {
                         newsym(u.ux,u.uy);
                         Your("body takes on a %s transparency...",
                                 Hallucination() ? "normal" : "strange");

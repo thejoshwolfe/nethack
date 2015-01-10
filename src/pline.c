@@ -363,7 +363,7 @@ self_invis_message (void)
 {
         pline("%s %s.",
             Hallucination() ? "Far out, man!  You" : "Gee!  All of a sudden, you",
-            See_invisible ? "can see right through yourself" :
+            See_invisible() ? "can see right through yourself" :
                 "can't see yourself");
 }
 

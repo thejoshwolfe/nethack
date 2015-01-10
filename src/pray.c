@@ -687,7 +687,7 @@ gcrownu (void)
     int sp_no;
 #define ok_wep(o) ((o) && ((o)->oclass == WEAPON_CLASS || is_weptool(o)))
 
-    HSee_invisible |= FROMOUTSIDE;
+    set_HSee_invisible(get_HSee_invisible() | FROMOUTSIDE);
     set_HFire_resistance(get_HFire_resistance() | FROMOUTSIDE);
     set_HCold_resistance(get_HCold_resistance() | FROMOUTSIDE);
     set_HShock_resistance(get_HShock_resistance() | FROMOUTSIDE);

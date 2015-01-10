@@ -95,7 +95,7 @@ void set_wall_state(void);
  */
 #define mon_visible(mon) (              /* The hero can see the monster     */\
                                         /* IF the monster                   */\
-    (!mon->minvis || See_invisible) &&  /* 1. is not invisible AND          */\
+    (!mon->minvis || See_invisible()) &&  /* 1. is not invisible AND          */\
     (!mon->mundetected) &&              /* 2. not an undetected hider       */\
     (!(mon->mburied || u.uburied))      /* 3. neither you or it is buried   */\
 )
@@ -146,7 +146,7 @@ void set_wall_state(void);
  */
 #define knowninvisible(mon) \
         (mtmp->minvis && \
-            ((cansee(mon->mx, mon->my) && (See_invisible || Detect_monsters)) || \
+            ((cansee(mon->mx, mon->my) && (See_invisible() || Detect_monsters)) || \
                 (!Blind && (HTelepat & ~INTRINSIC) && \
                     distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM) \
                 ) \

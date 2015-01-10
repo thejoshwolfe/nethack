@@ -381,7 +381,7 @@ void nh_timeout(void) {
                 case INVIS:
                     newsym(u.ux,u.uy);
                     if (!Invis && !BInvis && !Blind) {
-                        You(!See_invisible ?
+                        You(!See_invisible() ?
                                 "are no longer invisible." :
                                 "can no longer see through yourself.");
                         stop_occupation();

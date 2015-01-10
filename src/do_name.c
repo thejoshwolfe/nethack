@@ -212,7 +212,7 @@ int do_mname (void) {
                 (!(cansee(cx,cy) || see_with_infrared(mtmp)) || mtmp->mundetected
                  || mtmp->m_ap_type == M_AP_FURNITURE
                  || mtmp->m_ap_type == M_AP_OBJECT
-                 || (mtmp->minvis && !See_invisible)))) {
+                 || (mtmp->minvis && !See_invisible())))) {
         pline("I see no monster there.");
         return(0);
     }

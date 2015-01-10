@@ -507,7 +507,7 @@ outer_break:
         update_mon_intrinsics(mon, best, true, creation);
         /* if couldn't see it but now can, or vice versa, */
         if (!creation && (unseen ^ !canseemon(mon))) {
-                if (mon->minvis && !See_invisible) {
+                if (mon->minvis && !See_invisible()) {
                         pline("Suddenly you cannot see %s.", name);
                         makeknown(best->otyp);
                 }

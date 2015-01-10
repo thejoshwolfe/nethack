@@ -453,7 +453,7 @@ static void cast_wizard_spell (struct monst *mtmp, int dmg, int spellnum) {
                 char name[BUFSZ];
                 Monnam(name, BUFSZ, mtmp);
                 pline("%s suddenly %s!", name,
-                      !See_invisible ? "disappears" : "becomes transparent");
+                      !See_invisible() ? "disappears" : "becomes transparent");
             }
             mon_set_minvis(mtmp);
             dmg = 0;
@@ -749,7 +749,7 @@ static bool spell_would_be_useless (struct monst *mtmp, unsigned int adtyp, int 
            same as when monsters drink potions of invisibility.  This doesn't
            really make a lot of sense, but lets the player avoid hitting
            peaceful monsters by mistake */
-        if (mtmp->mpeaceful && !See_invisible && spellnum == MGC_DISAPPEAR)
+        if (mtmp->mpeaceful && !See_invisible() && spellnum == MGC_DISAPPEAR)
             return true;
         /* healing when already healed */
         if (mtmp->mhp == mtmp->mhpmax && spellnum == MGC_CURE_SELF)

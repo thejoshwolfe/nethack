@@ -236,7 +236,7 @@ in_water:
                     } else      rndcurse();
                     break;
                 case 10:
-                    if (Luck < 0 || (HSee_invisible & INTRINSIC))  {
+                    if (Luck < 0 || (get_HSee_invisible() & INTRINSIC))  {
                         if (level.flags.nommap) {
                             pline(
                                     "A terrible drone fills your head!");
@@ -248,7 +248,7 @@ in_water:
                         }
                     } else  {
                         Your("vision becomes clear.");
-                        HSee_invisible |= FROMOUTSIDE;
+                        set_HSee_invisible(get_HSee_invisible() | FROMOUTSIDE);
                         newsym(u.ux, u.uy);
                     }
                     break;
@@ -421,8 +421,8 @@ void attrcurse (void) {
                      You_feel("paranoid.");
                      break;
                  }
-        case 7 : if (HSee_invisible & INTRINSIC) {
-                     HSee_invisible &= ~INTRINSIC;
+        case 7 : if (get_HSee_invisible() & INTRINSIC) {
+                     set_HSee_invisible(get_HSee_invisible() & ~INTRINSIC);
                      You("%s!", Hallucination() ? "tawt you taw a puttie tat"
                              : "thought you saw something");
                      break;

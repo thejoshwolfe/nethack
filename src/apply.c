@@ -702,7 +702,7 @@ static int use_mirror (struct obj *obj) {
         }
         monflee(mtmp, d(2,4), false, false);
     } else if (!Blind) {
-        if (mtmp->minvis && !See_invisible) {
+        if (mtmp->minvis && !See_invisible()) {
             // nothing
         } else if ((mtmp->minvis && !perceives(mtmp->data)) || !haseyes(mtmp->data)) {
             char name[BUFSZ];

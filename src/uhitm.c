@@ -2311,7 +2311,7 @@ void stumble_onto_mimic(struct monst *mtmp) {
 
         /* cloned Wiz starts out mimicking some other monster and
          might make himself invisible before being revealed */
-        if (mtmp->minvis && !See_invisible)
+        if (mtmp->minvis && !See_invisible())
             what = generic;
         else
             what = "TODO:a_monnam(mtmp)";

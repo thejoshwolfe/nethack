@@ -582,9 +582,9 @@ int peffects (struct obj *otmp) {
                     make_blinded(0L,true);
                 }
                 if (otmp->blessed)
-                    HSee_invisible |= FROMOUTSIDE;
+                    set_HSee_invisible(get_HSee_invisible() | FROMOUTSIDE);
                 else
-                    incr_itimeout(&HSee_invisible, rn1(100,750));
+                    incr_itimeout(&u.uprops[SEE_INVIS].intrinsic, rn1(100,750));
                 set_mimic_blocking(); /* do special mimic handling */
                 see_monsters(); /* see invisible monsters */
                 newsym(u.ux,u.uy); /* see yourself! */
@@ -1218,7 +1218,7 @@ void potionbreathe (struct obj *obj) {
             if (!Blind && !Invis) {
                 kn++;
                 pline("For an instant you %s!",
-                        See_invisible ? "could see right through yourself"
+                        See_invisible() ? "could see right through yourself"
                         : "couldn't see yourself");
             }
             break;

@@ -65,7 +65,7 @@ const struct innate {
 
         mon_abil[] = { {   1, &(HFast), "", "" },
                      {   1, &(u.uprops[SLEEP_RES].intrinsic), "", "" },
-                     {   1, &(HSee_invisible), "", "" },
+                     {   1, &(u.uprops[SEE_INVIS].intrinsic), "", "" },
                      {   3, &(u.uprops[POISON_RES].intrinsic), "healthy", "" },
                      {   5, &(HStealth), "stealthy", "" },
                      {   7, &(HWarning), "sensitive", "" },
@@ -82,7 +82,7 @@ const struct innate {
 
         ran_abil[] = { {   1, &(HSearching), "", "" },
                      {   7, &(HStealth), "stealthy", "" },
-                     {  15, &(HSee_invisible), "", "" },
+                     {  15, &(u.uprops[SEE_INVIS].intrinsic), "", "" },
                      {   0, 0, 0, 0 } },
 
         rog_abil[] = { {         1, &(HStealth), "", ""  },
@@ -461,7 +461,7 @@ void redist_attr (void) {
 
 static void postadjabil (long *ability) {
     if (!ability) return;
-    if (ability == &(HWarning) || ability == &(HSee_invisible))
+    if (ability == &(HWarning) || ability == &(u.uprops[SEE_INVIS].intrinsic))
         see_monsters();
 }
 

@@ -256,7 +256,7 @@ static int Cloak_on (void) {
             if ((HInvis || EInvis || pm_invisible(youmonst.data)) && !Blind) {
                 newsym(u.ux,u.uy);
                 You("can %s!",
-                        See_invisible ? "no longer see through yourself"
+                        See_invisible() ? "no longer see through yourself"
                         : see_yourself);
             }
             break;
@@ -267,7 +267,7 @@ static int Cloak_on (void) {
                 makeknown(uarmc->otyp);
                 newsym(u.ux,u.uy);
                 pline("Suddenly you can%s yourself.",
-                        See_invisible ? " see through" : "not see");
+                        See_invisible() ? " see through" : "not see");
             }
             break;
         case OILSKIN_CLOAK:
@@ -308,7 +308,7 @@ int Cloak_off (void) {
                 if (Invis && !Blind) {
                     newsym(u.ux,u.uy);
                     You("can %s.",
-                        See_invisible ? "see through yourself"
+                        See_invisible() ? "see through yourself"
                         : "no longer see yourself");
                 }
                 break;
@@ -317,7 +317,7 @@ int Cloak_off (void) {
                     makeknown(CLOAK_OF_INVISIBILITY);
                     newsym(u.ux,u.uy);
                     pline("Suddenly you can %s.",
-                        See_invisible ? "no longer see through yourself"
+                        See_invisible() ? "no longer see through yourself"
                         : see_yourself);
                 }
                 break;
@@ -683,7 +683,7 @@ void Ring_on (struct obj *obj) {
                 set_mimic_blocking(); /* do special mimic handling */
                 see_monsters();
 
-                if (Invis && !oldprop && !HSee_invisible &&
+                if (Invis && !oldprop && !get_HSee_invisible() &&
                                 !perceives(youmonst.data) && !Blind) {
                     newsym(u.ux,u.uy);
                     pline("Suddenly you are transparent, but there!");
@@ -775,7 +775,7 @@ static void Ring_off_or_gone(struct obj *obj, bool gone) {
                 break;
         case RIN_SEE_INVISIBLE:
                 /* Make invisible monsters go away */
-                if (!See_invisible) {
+                if (!See_invisible()) {
                     set_mimic_blocking(); /* do special mimic handling */
                     see_monsters();
                 }
@@ -790,7 +790,7 @@ static void Ring_off_or_gone(struct obj *obj, bool gone) {
                 if (!Invis && !BInvis && !Blind) {
                     newsym(u.ux,u.uy);
                     Your("body seems to unfade%s.",
-                         See_invisible ? " completely" : "..");
+                         See_invisible() ? " completely" : "..");
                     makeknown(RIN_INVISIBILITY);
                 }
                 break;

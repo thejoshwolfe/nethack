@@ -1673,13 +1673,13 @@ bool find_misc(struct monst *mtmp) {
          */
         if (m.has_misc == MUSE_WAN_MAKE_INVISIBLE)
             continue;
-        if (obj->otyp == WAN_MAKE_INVISIBLE && obj->spe > 0 && !mtmp->minvis && !mtmp->invis_blkd && (!mtmp->mpeaceful || See_invisible) && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
+        if (obj->otyp == WAN_MAKE_INVISIBLE && obj->spe > 0 && !mtmp->minvis && !mtmp->invis_blkd && (!mtmp->mpeaceful || See_invisible()) && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_MAKE_INVISIBLE;
         }
         if (m.has_misc == MUSE_POT_INVISIBILITY)
             continue;
-        if (obj->otyp == POT_INVISIBILITY && !mtmp->minvis && !mtmp->invis_blkd && (!mtmp->mpeaceful || See_invisible) && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
+        if (obj->otyp == POT_INVISIBILITY && !mtmp->minvis && !mtmp->invis_blkd && (!mtmp->mpeaceful || See_invisible()) && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_INVISIBILITY;
         }
@@ -1809,10 +1809,10 @@ int use_misc(struct monst *mtmp) {
             } else
                 mquaffmsg(mtmp, otmp);
             /* format monster's name before altering its visibility */
-            strcpy(nambuf, See_invisible ? name_capitalized : name_lowercase);
+            strcpy(nambuf, See_invisible() ? name_capitalized : name_lowercase);
             mon_set_minvis(mtmp);
             if (vismon && mtmp->minvis) { /* was seen, now invisible */
-                if (See_invisible)
+                if (See_invisible())
                     pline("%s%s body takes on a %s transparency.", nambuf, possessive_suffix(nambuf), Hallucination() ? "normal" : "strange");
                 else
                     pline("Suddenly you cannot see %s.", nambuf);
@@ -1955,7 +1955,7 @@ int rnd_misc_item(struct monst *mtmp) {
                 return 0;
             return rn2(6) ? POT_SPEED : WAN_SPEED_MONSTER;
         case 1:
-            if (mtmp->mpeaceful && !See_invisible)
+            if (mtmp->mpeaceful && !See_invisible())
                 return 0;
             return rn2(6) ? POT_INVISIBILITY : WAN_MAKE_INVISIBLE;
         case 2:

@@ -958,7 +958,7 @@ int dogaze(void) {
                 looked++;
                 if (Invis && !perceives(mtmp->data)) {
                     message_monster(MSG_M_SEEMS_NOT_NOTICE_GAZE, mtmp);
-                } else if (mtmp->minvis && !See_invisible) {
+                } else if (mtmp->minvis && !See_invisible()) {
                     message_monster(MSG_YOU_CANT_SEE_WHERE_GAZE_M, mtmp);
                 } else if (mtmp->m_ap_type == M_AP_FURNITURE || mtmp->m_ap_type == M_AP_OBJECT) {
                     looked--;

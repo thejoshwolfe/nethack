@@ -251,10 +251,19 @@ static bool Hunger() {
 
 
 /*** Vision and senses ***/
-#define HSee_invisible          u.uprops[SEE_INVIS].intrinsic
-#define ESee_invisible          u.uprops[SEE_INVIS].extrinsic
-#define See_invisible           (HSee_invisible || ESee_invisible || \
-                                 perceives(youmonst.data))
+static long get_HSee_invisible() {
+    return u.uprops[SEE_INVIS].intrinsic;
+}
+static void set_HSee_invisible(long hSeeInvis) {
+    u.uprops[SEE_INVIS].intrinsic = hSeeInvis;
+}
+static long ESee_invisible() {
+    return u.uprops[SEE_INVIS].extrinsic;
+}
+static bool See_invisible() {
+    return (get_HSee_invisible() || ESee_invisible()
+            || perceives(youmonst.data));
+}
 
 #define HTelepat                u.uprops[TELEPAT].intrinsic
 #define ETelepat                u.uprops[TELEPAT].extrinsic
@@ -302,7 +311,7 @@ static bool Hunger() {
 #define BInvis                  u.uprops[INVIS].blocked
 #define Invis                   ((HInvis || EInvis || \
                                  pm_invisible(youmonst.data)) && !BInvis)
-#define Invisible               (Invis && !See_invisible)
+#define Invisible               (Invis && !See_invisible())
                 /* Note: invisibility also hides inventory and steed */
 
 #define EDisplaced              u.uprops[DISPLACED].extrinsic

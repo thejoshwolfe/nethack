@@ -501,7 +501,7 @@ void dump_enlightenment (int final) {
     if (Hunger()) dump("  ", "You hungered rapidly");
 
     /*** Vision and senses ***/
-    if (See_invisible) dump("  ", "You saw invisible");
+    if (See_invisible()) dump("  ", "You saw invisible");
     if (Blind_telepat) dump(youwere, "telepathic");
     if (Warning) dump(youwere, "warned");
     if (Warn_of_mon && flags.warntype) {
