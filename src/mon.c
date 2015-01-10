@@ -1202,8 +1202,11 @@ void replmon (struct monst *mtmp, struct monst *mtmp2) {
     relmon(mtmp);
 
     /* finish adding its replacement */
-    if (mtmp == u.usteed) ; else        /* don't place steed onto the map */
+    if (mtmp == u.usteed) {
+        /* don't place steed onto the map */
+    } else {
         place_monster(mtmp2, mtmp2->mx, mtmp2->my);
+    }
     if (mtmp2->wormno)      /* update level.monsters[wseg->wx][wseg->wy] */
         place_wsegs(mtmp2); /* locations to mtmp2 not mtmp. */
     if (emits_light(mtmp2->data)) {

@@ -49,8 +49,6 @@
 #include "you.h"
 #include "youprop.h"
 
-extern const char what_is_an_unknown_object[];          /* from pager.c */
-
 /* Aliases for road-runner nemesis
  */
 static const char * const coynames[] = {
@@ -147,12 +145,6 @@ static const char * const bogusmons[] = {
         "Predator",                             /* Movie */
         "mother-in-law"                         /* common pest */
 };
-
-static const char pick_chars[] = ".,;:";
-
-/* the response for '?' help request in getpos() */
-static void getpos_help(bool force, const char *goal) {
-}
 
 int getpos(coord *cc, bool force, const char *goal) {
     return 0;

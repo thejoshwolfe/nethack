@@ -1511,65 +1511,6 @@ mins:
     return bp;
 }
 
-/* compare user string against object name string using fuzzy matching */
-//  const char *u_str,      /* from user, so might be variant spelling */
-//  const char *o_str,      /* from objects[], so is in canonical form */
-//  bool retry_inverted /* optional extra "of" handling */
-static bool wishymatch ( const char *u_str, const char *o_str, bool retry_inverted) {
-    /* special case: wizards can wish for traps.  The object is "beartrap"
-     * and the trap is "bear trap", so to let wizards wish for both we
-     * must not fuzzymatch.
-     */
-    if (flags.debug && !strcmp(o_str, "beartrap"))
-        return !strncmpi(o_str, u_str, 8);
-
-    /* ignore spaces & hyphens and upper/lower case when comparing */
-    if (fuzzymatch(u_str, o_str, " -", true)) return true;
-
-    if (retry_inverted) {
-        const char *u_of, *o_of;
-        char *p, buf[BUFSZ];
-
-        /* when just one of the strings is in the form "foo of bar",
-           convert it into "bar foo" and perform another comparison */
-        u_of = strstri(u_str, " of ");
-        o_of = strstri(o_str, " of ");
-        if (u_of && !o_of) {
-            strcpy(buf, u_of + 4);
-            p = eos(strcat(buf, " "));
-            while (u_str < u_of) *p++ = *u_str++;
-            *p = '\0';
-            return fuzzymatch(buf, o_str, " -", true);
-        } else if (o_of && !u_of) {
-            strcpy(buf, o_of + 4);
-            p = eos(strcat(buf, " "));
-            while (o_str < o_of) *p++ = *o_str++;
-            *p = '\0';
-            return fuzzymatch(u_str, buf, " -", true);
-        }
-    }
-
-    /* [note: if something like "elven speed boots" ever gets added, these
-       special cases should be changed to call wishymatch() recursively in
-       order to get the "of" inversion handling] */
-    if (!strncmp(o_str, "dwarvish ", 9)) {
-        if (!strncmpi(u_str, "dwarven ", 8))
-            return fuzzymatch(u_str + 8, o_str + 9, " -", true);
-    } else if (!strncmp(o_str, "elven ", 6)) {
-        if (!strncmpi(u_str, "elvish ", 7))
-            return fuzzymatch(u_str + 7, o_str + 6, " -", true);
-        else if (!strncmpi(u_str, "elfin ", 6))
-            return fuzzymatch(u_str + 6, o_str + 6, " -", true);
-    } else if (!strcmp(o_str, "aluminum")) {
-        /* this special case doesn't really fit anywhere else... */
-        /* (note that " wand" will have been stripped off by now) */
-        if (!strcmpi(u_str, "aluminium"))
-            return fuzzymatch(u_str + 9, o_str + 8, " -", true);
-    }
-
-    return false;
-}
-
 /*
  * Return something wished for.  Specifying a null pointer for
  * the user request string results in a random object.  Otherwise,

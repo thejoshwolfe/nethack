@@ -106,7 +106,6 @@ static char right_ptrs[ROWNO][COLNO];
 /* Forward declarations. */
 static void fill_point(int,int);
 static void dig_point(int,int);
-static void view_init(void);
 static void view_from(int,int,char **,char *,char *,int,
                              void (*)(int,int,void *),void *);
 static void get_unused_cs(char ***,char **,char **);

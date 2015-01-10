@@ -46,23 +46,6 @@ enum {
 const char what_is_an_unknown_object[] = "an unknown object";
 
 
-/* data for help_menu() */
-static const int WIZHLP_SLOT = 9;
-static const char *help_menu_items[] = {
-/* 0*/  "Long description of the game and commands.",
-/* 1*/  "List of game commands.",
-/* 2*/  "Concise history of NetHack.",
-/* 3*/  "Info on a character in the game display.",
-/* 4*/  "Info on what a given key does.",
-/* 5*/  "List of game options.",
-/* 6*/  "Longer explanation of game options.",
-/* 7*/  "List of extended commands.",
-/* 8*/  "The NetHack license.",
-        "List of debug-mode commands.",
-        "",
-        NULL,
-};
-
 /* Returns "true" for characters that could represent a monster's stomach. */
 static bool is_swallow_sym (int c) {
     int i;
@@ -628,33 +611,6 @@ int dowhatdoes(void) {
         else
                 pline("I've never heard of such commands.");
         return 0;
-}
-
-static bool help_menu (int *sel) {
-        winid tmpwin = create_nhwindow(NHW_MENU);
-        int i, n;
-        menu_item *selected;
-        anything any;
-
-        any.a_void = 0;         /* zero all bits */
-        start_menu(tmpwin);
-        if (!flags.debug) help_menu_items[WIZHLP_SLOT] = "",
-                     help_menu_items[WIZHLP_SLOT+1] = NULL;
-        for (i = 0; help_menu_items[i]; i++)
-            {
-                any.a_int = (*help_menu_items[i]) ? i+1 : 0;
-                add_menu(tmpwin, NO_GLYPH, &any, 0, 0,
-                        ATR_NONE, help_menu_items[i], MENU_UNSELECTED);
-            }
-        end_menu(tmpwin, "Select one item:");
-        n = select_menu(tmpwin, PICK_ONE, &selected);
-        destroy_nhwindow(tmpwin);
-        if (n > 0) {
-            *sel = selected[0].item.a_int - 1;
-            free((void *)selected);
-            return true;
-        }
-        return false;
 }
 
 int dohelp(void) {

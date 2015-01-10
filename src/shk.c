@@ -2859,12 +2859,13 @@ void shopdig (int fall) {
 
     /* 0 == can't speak, 1 == makes animal noises, 2 == speaks */
     lang = 0;
-    if (shkp->msleeping || !shkp->mcanmove || is_silent(shkp->data))
-        ;       /* lang stays 0 */
-    else if (shkp->data->msound <= MS_ANIMAL)
+    if (shkp->msleeping || !shkp->mcanmove || is_silent(shkp->data)) {
+        /* lang stays 0 */
+    } else if (shkp->data->msound <= MS_ANIMAL) {
         lang = 1;
-    else if (shkp->data->msound >= MS_HUMANOID)
+    } else if (shkp->data->msound >= MS_HUMANOID) {
         lang = 2;
+    }
 
     if(!inhishop(shkp)) {
         if (Role_if(PM_KNIGHT)) {

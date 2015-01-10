@@ -83,14 +83,6 @@ void do_vanquished(int, bool, bool);
 /*
  * The order of these needs to match the macros in hack.h.
  */
-static const char *deaths[] = {         /* the array of death */
-        "died", "choked", "poisoned", "starvation", "drowning",
-        "burning", "dissolving under the heat and pressure",
-        "crushed", "turned to stone", "turned into slime",
-        "genocided", "panic", "trickery",
-        "quit", "escaped", "ascended"
-};
-
 static const char *ends[] = {           /* "when you..." */
         "died", "choked", "were poisoned", "starved", "drowned",
         "burned", "dissolved in the lava",
@@ -98,8 +90,6 @@ static const char *ends[] = {           /* "when you..." */
         "were genocided", "panicked", "were tricked",
         "quit", "escaped", "ascended"
 };
-
-extern const char * const killed_by_prefix[];   /* from topten.c */
 
 FILE *dump_fp = NULL;  /* file pointer for dumps */
 /* functions dump_init, dump_exit and dump are from the dump patch */
@@ -194,22 +184,6 @@ int done2 (void) {
     }
     done(QUIT);
     return 0;
-}
-
-/* called as signal() handler, so sent at least one arg */
-static void done_intr ( int sig_unused) {
-    done_stopprint++;
-    signal(SIGINT, SIG_IGN);
-    signal(SIGQUIT, SIG_IGN);
-    return;
-}
-
-// signal() handler
-static void done_hangup(int sig) {
-    program_state.done_hup++;
-    signal(SIGHUP, SIG_IGN);
-    done_intr(sig);
-    return;
 }
 
 void done_in_by (struct monst *mtmp) {

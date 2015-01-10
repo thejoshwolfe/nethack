@@ -72,8 +72,6 @@ static void init_level(int,int,struct proto_dungeon *);
 static int possible_places(int, bool *, struct proto_dungeon *);
 static signed char pick_level(bool *, int);
 static bool place_level(int, struct proto_dungeon *);
-static const char *br_string(int);
-static void print_branch(winid, int, int, int, bool, struct lchoice *);
 
 
 /* Save the dungeon structures. */
