@@ -1576,18 +1576,18 @@ void set_wounded_legs (long side, int timex) {
          * Caller is also responsible for adjusting messages.
          */
 
-        if(!Wounded_legs) {
+        if(!Wounded_legs()) {
                 ATEMP(A_DEX)--;
         }
 
-        if(!Wounded_legs || (HWounded_legs & TIMEOUT))
-                HWounded_legs = timex;
-        EWounded_legs = side;
+        if(!Wounded_legs() || (get_HWounded_legs() & TIMEOUT))
+            set_HWounded_legs(timex);
+        set_EWounded_legs(side);
         (void)encumber_msg();
 }
 
 void heal_legs (void) {
-        if(Wounded_legs) {
+        if(Wounded_legs()) {
                 if (ATEMP(A_DEX) < 0) {
                         ATEMP(A_DEX)++;
                 }
@@ -1595,7 +1595,7 @@ void heal_legs (void) {
                 if (!u.usteed)
                 {
                         /* KMH, intrinsics patch */
-                        if((EWounded_legs & BOTH_SIDES) == BOTH_SIDES) {
+                        if((get_EWounded_legs() & BOTH_SIDES) == BOTH_SIDES) {
                         Your("%s feel somewhat better.",
                                 makeplural(body_part(LEG)));
                 } else {
@@ -1603,7 +1603,8 @@ void heal_legs (void) {
                                 body_part(LEG));
                 }
                 }
-                HWounded_legs = EWounded_legs = 0;
+                set_HWounded_legs(0);
+                set_EWounded_legs(0);
         }
         (void)encumber_msg();
 }

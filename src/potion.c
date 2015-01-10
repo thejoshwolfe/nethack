@@ -725,7 +725,7 @@ int peffects (struct obj *otmp) {
             }
             break;
         case POT_SPEED:
-            if(Wounded_legs && !otmp->cursed
+            if(Wounded_legs() && !otmp->cursed
                     && !u.usteed /* heal_legs() would heal steeds legs */
               ) {
                 heal_legs();

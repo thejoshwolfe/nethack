@@ -709,9 +709,9 @@ dokick (void)
                 } else {
                     return 0;
                 }
-        } else if (Wounded_legs) {
+        } else if (Wounded_legs()) {
                 /* note: jump() has similar code */
-                long wl = (EWounded_legs & BOTH_SIDES);
+                long wl = (get_EWounded_legs() & BOTH_SIDES);
                 const char *bp = body_part(LEG);
 
                 if (wl == BOTH_SIDES) bp = makeplural(bp);

@@ -486,11 +486,11 @@ void dump_enlightenment (int final) {
         dump(youhad, buf);
     }
     if (Fumbling()) dump("  ", "You fumbled");
-    if (Wounded_legs && !u.usteed) {
+    if (Wounded_legs() && !u.usteed) {
         sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
         dump(youhad, buf);
     }
-    if (Wounded_legs && u.usteed) {
+    if (Wounded_legs() && u.usteed) {
         x_monnam(buf, BUFSZ, u.usteed, ARTICLE_YOUR, NULL,
                 SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION, false);
         *buf = highc(*buf);

@@ -638,8 +638,8 @@ int weight_cap (void) {
         else {
                 if(carrcap > MAX_CARR_CAP) carrcap = MAX_CARR_CAP;
                 if (!Flying) {
-                        if(EWounded_legs & LEFT_SIDE) carrcap -= 100;
-                        if(EWounded_legs & RIGHT_SIDE) carrcap -= 100;
+                        if(get_EWounded_legs() & LEFT_SIDE) carrcap -= 100;
+                        if(get_EWounded_legs() & RIGHT_SIDE) carrcap -= 100;
                 }
                 if (carrcap < 0) carrcap = 0;
         }

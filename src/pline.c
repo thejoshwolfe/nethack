@@ -317,9 +317,9 @@ ustatusline (void)
         }
         if (Stunned())            strcat(info, ", stunned");
         if (!u.usteed)
-        if (Wounded_legs) {
+        if (Wounded_legs()) {
             const char *what = body_part(LEG);
-            if ((Wounded_legs & BOTH_SIDES) == BOTH_SIDES)
+            if ((Wounded_legs() & BOTH_SIDES) == BOTH_SIDES)
                 what = makeplural(what);
                                 sprintf(eos(info), ", injured %s", what);
         }

@@ -1378,8 +1378,8 @@ int jump ( int magic ) {
     } else if (!magic && (u.uhunger <= 100 || ACURR(A_STR) < 6)) {
         You("lack the strength to jump!");
         return 0;
-    } else if (Wounded_legs) {
-        long wl = (Wounded_legs & BOTH_SIDES);
+    } else if (Wounded_legs()) {
+        long wl = (Wounded_legs() & BOTH_SIDES);
         const char *bp = body_part(LEG);
 
         if (wl == BOTH_SIDES) bp = makeplural(bp);
@@ -2883,9 +2883,7 @@ int unfixable_trouble_count(bool is_horn) {
 
     if (Stoned) unfixable_trbl++;
     if (Strangled) unfixable_trbl++;
-    if (Wounded_legs
-            && !u.usteed
-       ) unfixable_trbl++;
+    if (Wounded_legs() && !u.usteed) unfixable_trbl++;
     if (Slimed) unfixable_trbl++;
     /* lycanthropy is not desirable, but it doesn't actually make you feel
        bad */

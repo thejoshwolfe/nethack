@@ -219,9 +219,21 @@ static bool Fumbling() {
     return (get_HFumbling() || get_EFumbling());
 }
 
-#define HWounded_legs           u.uprops[WOUNDED_LEGS].intrinsic
-#define EWounded_legs           u.uprops[WOUNDED_LEGS].extrinsic
-#define Wounded_legs            (HWounded_legs || EWounded_legs)
+static long get_HWounded_legs() {
+    return u.uprops[WOUNDED_LEGS].intrinsic;
+}
+static void set_HWounded_legs(long hWoundedLegs) {
+    u.uprops[WOUNDED_LEGS].intrinsic = hWoundedLegs;
+}
+static long get_EWounded_legs() {
+    return u.uprops[WOUNDED_LEGS].extrinsic;
+}
+static void set_EWounded_legs(long eWoundedLegs) {
+    u.uprops[WOUNDED_LEGS].extrinsic = eWoundedLegs;
+}
+static bool Wounded_legs() {
+    return (get_HWounded_legs() || get_EWounded_legs());
+}
 
 #define HSleeping               u.uprops[SLEEPING].intrinsic
 #define ESleeping               u.uprops[SLEEPING].extrinsic

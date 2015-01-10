@@ -237,12 +237,15 @@ bool mount_steed ( struct monst *mtmp, bool force) {
      * mounting a steed, the potential for abuse is
      * minimized, if not eliminated altogether.
      */
-    if (Wounded_legs) {
+    if (Wounded_legs()) {
         Your("%s are in no shape for riding.", makeplural(body_part(LEG)));
-        if (force && flags.debug && yn("Heal your legs?") == 'y')
-            HWounded_legs = EWounded_legs = 0;
-        else
+        if (force && flags.debug && yn("Heal your legs?") == 'y') {
+            set_HWounded_legs(0);
+            set_EWounded_legs(0);
+        }
+        else {
             return (false);
+        }
     }
 
     if (Upolyd && (!humanoid(youmonst.data) || verysmall(youmonst.data) ||
@@ -325,7 +328,7 @@ bool mount_steed ( struct monst *mtmp, bool force) {
             uarm->oeroded ? "rusty" : "corroded");
         return (false);
     }
-    if (!force && (Confusion() || Fumbling() || Glib || Wounded_legs ||
+    if (!force && (Confusion() || Fumbling() || Glib || Wounded_legs() ||
                 otmp->cursed || (u.ulevel+mtmp->mtame < rnd(MAXULEV/2+5))))
     {
         if (Levitation) {
@@ -484,7 +487,7 @@ void dismount_steed ( int reason) {
             message_monster_string(MSG_YOU_FALL_OFF_OF_M, mtmp, verb);
             if (!have_spot) have_spot = landing_spot(&cc,reason,1);
             losehp(rn1(10,10), killed_by_const(KM_RIDING_ACCIDENT));
-            set_wounded_legs(BOTH_SIDES, (int)HWounded_legs + rn1(5,5));
+            set_wounded_legs(BOTH_SIDES, (int)get_HWounded_legs() + rn1(5,5));
             repair_leg_damage = false;
             break;
         case DISMOUNT_POLY:
@@ -525,7 +528,10 @@ void dismount_steed ( int reason) {
      * so after dismounting they refer to the player's
      * legs once again.
      */
-    if (repair_leg_damage) HWounded_legs = EWounded_legs = 0;
+    if (repair_leg_damage){
+      set_HWounded_legs(0);
+      set_EWounded_legs(0);
+    }
 
     /* Release the steed and saddle */
     u.usteed = 0;
