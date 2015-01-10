@@ -163,17 +163,6 @@ bool attack_checks(struct monst *mtmp, struct obj *wep) {
         return false;
 
     if (flags.forcefight) {
-        /* Do this in the caller, after we checked that the monster
-         * didn't die from the blow.  Reason: putting the 'I' there
-         * causes the hero to forget the square's contents since
-         * both 'I' and remembered contents are stored in .glyph.
-         * If the monster dies immediately from the blow, the 'I' will
-         * not stay there, so the player will have suddenly forgotten
-         * the square's contents for no apparent reason.
-         if (!canspotmon(mtmp) &&
-         !glyph_is_invisible(levl[u.ux+u.dx][u.uy+u.dy].glyph))
-         map_invisible(u.ux+u.dx, u.uy+u.dy);
-         */
         return false;
     }
 

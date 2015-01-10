@@ -1973,8 +1973,9 @@ void wakeup (struct monst *mtmp) {
     mtmp->msleeping = 0;
     mtmp->meating = 0;      /* assume there's no salvagable food left */
     setmangry(mtmp);
-    if(mtmp->m_ap_type) seemimic(mtmp);
-    else if (flags.forcefight && !flags.mon_moving && mtmp->mundetected) {
+    if (mtmp->m_ap_type) {
+        seemimic(mtmp);
+    } else if (flags.forcefight && !flags.mon_moving && mtmp->mundetected) {
         mtmp->mundetected = 0;
         newsym(mtmp->mx, mtmp->my);
     }

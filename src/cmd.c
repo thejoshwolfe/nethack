@@ -1017,7 +1017,6 @@ void rhack() {
     }
     /* Special case of *cmd == ' ' handled better below */
     if (!*cmd || *cmd == (char)0377) {
-        //nhbell();
         flags.move = false;
         return; /* probably we just had an interrupt */
     }
@@ -1046,7 +1045,7 @@ void rhack() {
              */
         case 'F':
             if (movecmd(cmd[1])) {
-                flags.forcefight = 1;
+                flags.forcefight = true;
                 do_walk = true;
             }
             break;
@@ -1067,11 +1066,6 @@ void rhack() {
                 do_rush = true;
             }
             break;
-        case '0':
-            (void)ddoinv(); /* a convenience borrowed from the PC */
-            flags.move = false;
-            multi = 0;
-            return;
         case CMD_TRAVEL :
             if (iflags.travelcmd) {
                 flags.travel = 1;
@@ -1100,7 +1094,7 @@ void rhack() {
         if (multi)
             flags.mv = true;
         domove();
-        flags.forcefight = 0;
+        flags.forcefight = false;
         return;
     } else if (do_rush) {
         if (!multi)
