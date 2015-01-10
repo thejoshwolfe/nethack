@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "dungeon_util.h"
 #include "artifact.h"
 #include "attrib.h"
 #include "coord.h"

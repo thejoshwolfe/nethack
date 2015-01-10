@@ -68,46 +68,9 @@ extern struct dgn_topology {            /* special dungeon levels for speed */
     d_level     d_qstart_level, d_qlocate_level, d_nemesis_level;
     d_level     d_knox_level;
 } dungeon_topology;
-/* macros for accesing the dungeon levels by their old names */
-#define oracle_level            (dungeon_topology.d_oracle_level)
-#define bigroom_level           (dungeon_topology.d_bigroom_level)
-#define medusa_level            (dungeon_topology.d_medusa_level)
-#define stronghold_level        (dungeon_topology.d_stronghold_level)
-#define valley_level            (dungeon_topology.d_valley_level)
-#define wiz1_level              (dungeon_topology.d_wiz1_level)
-#define wiz2_level              (dungeon_topology.d_wiz2_level)
-#define wiz3_level              (dungeon_topology.d_wiz3_level)
-#define juiblex_level           (dungeon_topology.d_juiblex_level)
-#define orcus_level             (dungeon_topology.d_orcus_level)
-#define baalzebub_level         (dungeon_topology.d_baalzebub_level)
-#define asmodeus_level          (dungeon_topology.d_asmodeus_level)
-#define portal_level            (dungeon_topology.d_portal_level)
-#define sanctum_level           (dungeon_topology.d_sanctum_level)
-#define earth_level             (dungeon_topology.d_earth_level)
-#define water_level             (dungeon_topology.d_water_level)
-#define fire_level              (dungeon_topology.d_fire_level)
-#define air_level               (dungeon_topology.d_air_level)
-#define astral_level            (dungeon_topology.d_astral_level)
-#define tower_dnum              (dungeon_topology.d_tower_dnum)
-#define sokoban_dnum            (dungeon_topology.d_sokoban_dnum)
-#define mines_dnum              (dungeon_topology.d_mines_dnum)
-#define quest_dnum              (dungeon_topology.d_quest_dnum)
-#define qstart_level            (dungeon_topology.d_qstart_level)
-#define qlocate_level           (dungeon_topology.d_qlocate_level)
-#define nemesis_level           (dungeon_topology.d_nemesis_level)
-#define knox_level              (dungeon_topology.d_knox_level)
 
 extern stairway dnstair, upstair;               /* stairs up and down */
-#define xdnstair        (dnstair.sx)
-#define ydnstair        (dnstair.sy)
-#define xupstair        (upstair.sx)
-#define yupstair        (upstair.sy)
-
 extern stairway dnladder, upladder;             /* ladders up and down */
-#define xdnladder       (dnladder.sx)
-#define ydnladder       (dnladder.sy)
-#define xupladder       (upladder.sx)
-#define yupladder       (upladder.sy)
 
 extern stairway sstairs;
 
@@ -116,7 +79,6 @@ extern dest_area updest, dndest;        /* level-change destination areas */
 extern coord inv_pos;
 extern dungeon dungeons[];
 extern s_level *sp_levchn;
-#define dunlev_reached(x)       (dungeons[(x)->dnum].dunlev_ureached)
 
 extern struct q_score quest_status;
 

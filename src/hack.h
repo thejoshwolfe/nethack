@@ -182,8 +182,6 @@ bool may_dig(signed char,signed char);
 bool may_passwall(signed char,signed char);
 bool bad_rock(struct permonst *,signed char,signed char);
 bool invocation_pos(signed char,signed char);
-bool test_move(int, int, int, int, int);
-void domove(void);
 void invocation_message(void);
 void spoteffects(bool);
 char *in_rooms(signed char,signed char,int);

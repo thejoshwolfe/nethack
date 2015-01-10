@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "align.h"
 #include "artifact.h"
 #include "attrib.h"

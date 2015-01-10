@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "cmd.h"
 #include "dbridge.h"
 #include "display.h"

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "artifact.h"
 #include "attrib.h"
 #include "cmd.h"

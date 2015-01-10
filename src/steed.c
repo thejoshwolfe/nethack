@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "move.h"
 #include "apply.h"
 #include "attrib.h"
 #include "cmd.h"

@@ -29,6 +29,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "attrib.h"
 #include "cmd.h"
 #include "dbridge.h"

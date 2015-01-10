@@ -4,6 +4,7 @@
 
 #include <stddef.h>
 
+#include "dungeon_util.h"
 #include "apply.h"
 #include "dbridge.h"
 #include "decl.h"

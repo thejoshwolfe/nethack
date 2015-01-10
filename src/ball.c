@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 
+#include "dungeon_util.h"
 #include "attrib.h"
 #include "dbridge.h"
 #include "decl.h"

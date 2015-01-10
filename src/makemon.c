@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "dungeon_util.h"
 #include "makemon.h"
 #include "align.h"
 #include "artifact.h"

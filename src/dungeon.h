@@ -93,47 +93,6 @@ enum {
 };
 
 
-/* A particular dungeon contains num_dunlevs d_levels with dlevel 1..
- * num_dunlevs.  Ledger_start and depth_start are bases that are added
- * to the dlevel of a particular d_level to get the effective ledger_no
- * and depth for that d_level.
- *
- * Ledger_no is a bookkeeping number that gives a unique identifier for a
- * particular d_level (for level.?? files, e.g.).
- *
- * Depth corresponds to the number of floors below the surface.
- */
-#define Is_astralevel(x)        (on_level(x, &astral_level))
-#define Is_earthlevel(x)        (on_level(x, &earth_level))
-#define Is_waterlevel(x)        (on_level(x, &water_level))
-#define Is_firelevel(x)         (on_level(x, &fire_level))
-#define Is_airlevel(x)          (on_level(x, &air_level))
-#define Is_medusa_level(x)      (on_level(x, &medusa_level))
-#define Is_oracle_level(x)      (on_level(x, &oracle_level))
-#define Is_valley(x)            (on_level(x, &valley_level))
-#define Is_juiblex_level(x)     (on_level(x, &juiblex_level))
-#define Is_asmo_level(x)        (on_level(x, &asmodeus_level))
-#define Is_baal_level(x)        (on_level(x, &baalzebub_level))
-#define Is_wiz1_level(x)        (on_level(x, &wiz1_level))
-#define Is_wiz2_level(x)        (on_level(x, &wiz2_level))
-#define Is_wiz3_level(x)        (on_level(x, &wiz3_level))
-#define Is_sanctum(x)           (on_level(x, &sanctum_level))
-#define Is_portal_level(x)      (on_level(x, &portal_level))
-#define Is_rogue_level(x)       (on_level(x, &rogue_level))
-#define Is_stronghold(x)        (on_level(x, &stronghold_level))
-#define Is_bigroom(x)           (on_level(x, &bigroom_level))
-#define Is_qstart(x)            (on_level(x, &qstart_level))
-#define Is_qlocate(x)           (on_level(x, &qlocate_level))
-#define Is_nemesis(x)           (on_level(x, &nemesis_level))
-#define Is_knox(x)              (on_level(x, &knox_level))
-
-#define In_sokoban(x)           ((x)->dnum == sokoban_dnum)
-#define Inhell                  In_hell(&u.uz)  /* now gehennom */
-#define In_endgame(x)           ((x)->dnum == astral_level.dnum)
-
-#define within_bounded_area(X,Y,LX,LY,HX,HY) \
-                ((X) >= (LX) && (X) <= (HX) && (Y) >= (LY) && (Y) <= (HY))
-
 /* monster and object migration codes */
 
 enum {

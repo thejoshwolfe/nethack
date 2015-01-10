@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "move.h"
+#include "dungeon_util.h"
 #include "align.h"
 #include "attrib.h"
 #include "cmd.h"

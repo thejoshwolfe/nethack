@@ -8,6 +8,7 @@
 
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "artifact.h"
 #include "cmd.h"
 #include "coord.h"

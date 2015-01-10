@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "dungeon_util.h"
 #include "align.h"
 #include "attrib.h"
 #include "cmd.h"

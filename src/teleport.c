@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "apply.h"
 #include "attrib.h"
 #include "ball.h"

@@ -9,6 +9,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "dungeon_util.h"
+#include "move.h"
 #include "apply.h"
 #include "artifact.h"
 #include "attrib.h"

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "align.h"
 #include "attrib.h"
 #include "bones.h"

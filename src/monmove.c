@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "dungeon_util.h"
 #include "monmove.h"
 #include "apply.h"
 #include "artifact.h"
