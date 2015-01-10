@@ -438,9 +438,10 @@ void nh_timeout(void) {
                     }
                     /* from outside means slippery ice; don't reset
                      counter if that's the only fumble reason */
-                    HFumbling &= ~FROMOUTSIDE;
-                    if (Fumbling)
-                        HFumbling += rnd(20);
+                    set_HFumbling(get_HFumbling() & ~FROMOUTSIDE);
+                    if (Fumbling()) {
+                        set_HFumbling(get_HFumbling() + rnd(20));
+                    }
                     break;
                 case DETECT_MONSTERS:
                     see_monsters();

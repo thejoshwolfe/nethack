@@ -279,13 +279,13 @@ void domove(void) {
             if ((uarmf && uarmf->otyp == skates) || resists_cold(&youmonst) || Flying || is_floater(youmonst.data) || is_clinger(youmonst.data) || is_whirly(youmonst.data))
                 on_ice = false;
             else if (!rn2(Cold_resistance() ? 3 : 2)) {
-                HFumbling|= FROMOUTSIDE;
-                HFumbling &= ~TIMEOUT;
-                HFumbling += 1; /* slip on next move */
+                set_HFumbling(get_HFumbling() | FROMOUTSIDE);
+                set_HFumbling(get_HFumbling() & ~TIMEOUT);
+                set_HFumbling(get_HFumbling() + 1); /* slip on next move */
             }
         }
-        if (!on_ice && (HFumbling& FROMOUTSIDE))
-        HFumbling &= ~FROMOUTSIDE;
+        if (!on_ice && (get_HFumbling() & FROMOUTSIDE))
+        set_HFumbling(get_HFumbling() & ~FROMOUTSIDE);
 
         x = u.ux + u.dx;
         y = u.uy + u.dy;
@@ -1173,7 +1173,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
                     if (amorphous(youmonst.data))
                         You("try to ooze under the door, but can't squeeze your possessions through.");
                     else if (x == ux || y == uy) {
-                        if (Blind || Stunned() || ACURR(A_DEX) < 10 || Fumbling) {
+                        if (Blind || Stunned() || ACURR(A_DEX) < 10 || Fumbling()) {
                             if (u.usteed) {
                                 char name[BUFSZ];
                                 y_monnam(name, BUFSZ, u.usteed);

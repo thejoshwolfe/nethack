@@ -262,7 +262,7 @@ static int dig (void) {
             return(0);
         }
     }
-    if(Fumbling && !rn2(3)) {
+    if(Fumbling() && !rn2(3)) {
         switch(rn2(3)) {
             case 0:
                 if(!welded(uwep)) {

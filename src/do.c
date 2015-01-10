@@ -1116,7 +1116,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
                     You("fly down along the %s.",
                         at_ladder ? "ladder" : "stairs");
                 else if (u.dz &&
-                    (near_capacity() > UNENCUMBERED || Punished || Fumbling)) {
+                    (near_capacity() > UNENCUMBERED || Punished || Fumbling())) {
                     You("fall down the %s.", at_ladder ? "ladder" : "stairs");
                     if (Punished) {
                         drag_down();

@@ -1840,7 +1840,7 @@ static void use_grease (struct obj *obj) {
     }
 
     if (obj->spe > 0) {
-        if ((obj->cursed || Fumbling) && !rn2(2)) {
+        if ((obj->cursed || Fumbling()) && !rn2(2)) {
             consume_obj_charge(obj, true);
 
             char slip_clause[BUFSZ];
@@ -1919,7 +1919,7 @@ static int set_trap (void) {
         if (!trapinfo.force_bungle)
             You("finish arming %s.",
                     the(defsyms[trap_to_defsym(what_trap(ttyp))].explanation));
-        if (((otmp->cursed || Fumbling) && (rnl(10) > 5)) || trapinfo.force_bungle)
+        if (((otmp->cursed || Fumbling()) && (rnl(10) > 5)) || trapinfo.force_bungle)
             dotrap(ttmp,
                     (unsigned)(trapinfo.force_bungle ? FORCEBUNGLE : 0));
     } else {
@@ -1989,7 +1989,7 @@ static void use_trap (struct obj *otmp) {
     if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
         bool chance;
 
-        if (Fumbling || otmp->cursed) chance = (rnl(10) > 3);
+        if (Fumbling() || otmp->cursed) chance = (rnl(10) > 3);
         else  chance = (rnl(10) > 5);
 
         char name[BUFSZ];
@@ -2046,7 +2046,7 @@ static int use_whip (struct obj *obj) {
     if (Role_if(PM_ARCHEOLOGIST)) ++proficient;
     if (ACURR(A_DEX) < 6) proficient--;
     else if (ACURR(A_DEX) >= 14) proficient += (ACURR(A_DEX) - 14);
-    if (Fumbling) --proficient;
+    if (Fumbling()) --proficient;
     if (proficient > 3) proficient = 3;
     if (proficient < 0) proficient = 0;
 
@@ -2091,7 +2091,7 @@ static int use_whip (struct obj *obj) {
         losehp(dam, killed_by_const(KM_HIT_SELF_BULLWHIP));
         return 1;
 
-    } else if ((Fumbling || Glib) && !rn2(5)) {
+    } else if ((Fumbling() || Glib) && !rn2(5)) {
         pline_The("bullwhip slips out of your %s.", body_part(HAND));
         dropx(obj);
 
@@ -2159,7 +2159,7 @@ static int use_whip (struct obj *obj) {
         if (otmp) {
             char onambuf[BUFSZ];
             const char *mon_hand;
-            bool gotit = proficient && (!Fumbling || !rn2(10));
+            bool gotit = proficient && (!Fumbling() || !rn2(10));
 
             strcpy(onambuf, cxname(otmp));
             if (gotit) {

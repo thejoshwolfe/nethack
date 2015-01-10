@@ -858,7 +858,7 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
     struct monst *mon;
     int range, urange;
     bool impaired = (Confusion() || Stunned() || Blind ||
-            Hallucination() || Fumbling);
+            Hallucination() || Fumbling());
 
     if ((obj->cursed || obj->greased) && (u.dx || u.dy) && !rn2(7)) {
         bool slipok = true;

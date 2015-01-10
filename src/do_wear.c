@@ -164,8 +164,8 @@ static int Boots_on (void) {
                 }
                 break;
         case FUMBLE_BOOTS:
-                if (!oldprop && !(HFumbling & ~TIMEOUT))
-                        incr_itimeout(&HFumbling, rnd(20));
+                if (!oldprop && !(get_HFumbling() & ~TIMEOUT))
+                        incr_itimeout(&u.uprops[FUMBLING].intrinsic, rnd(20));
                 break;
         case LEVITATION_BOOTS:
                 if (!oldprop && !HLevitation) {
@@ -213,8 +213,10 @@ Boots_off (void)
                 }
                 break;
         case FUMBLE_BOOTS:
-                if (!oldprop && !(HFumbling & ~TIMEOUT))
-                        HFumbling = EFumbling = 0;
+                if (!oldprop && !(get_HFumbling() & ~TIMEOUT)) {
+                    set_HFumbling(0);
+                    set_EFumbling(0);
+                }
                 break;
         case LEVITATION_BOOTS:
                 if (!oldprop && !HLevitation && !cancelled_don) {
@@ -430,8 +432,8 @@ static int Gloves_on (void) {
         case LEATHER_GLOVES:
                 break;
         case GAUNTLETS_OF_FUMBLING:
-                if (!oldprop && !(HFumbling & ~TIMEOUT))
-                        incr_itimeout(&HFumbling, rnd(20));
+                if (!oldprop && !(get_HFumbling() & ~TIMEOUT))
+                        incr_itimeout(&u.uprops[FUMBLING].intrinsic, rnd(20));
                 break;
         case GAUNTLETS_OF_POWER:
                 makeknown(uarmg->otyp);
@@ -454,8 +456,10 @@ int Gloves_off (void) {
         case LEATHER_GLOVES:
             break;
         case GAUNTLETS_OF_FUMBLING:
-            if (!oldprop && !(HFumbling & ~TIMEOUT))
-                HFumbling = EFumbling = 0;
+            if (!oldprop && !(get_HFumbling() & ~TIMEOUT)) {
+                set_HFumbling(0);
+                set_EFumbling(0);
+            }
             break;
         case GAUNTLETS_OF_POWER:
             makeknown(uarmg->otyp);

@@ -150,7 +150,7 @@ int use_saddle (struct obj *otmp) {
         case P_EXPERT:
             chance += 30;       break;
     }
-    if (Confusion() || Fumbling || Glib)
+    if (Confusion() || Fumbling() || Glib)
         chance -= 20;
     else if (uarmg &&
             (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *)0 &&
@@ -325,7 +325,7 @@ bool mount_steed ( struct monst *mtmp, bool force) {
             uarm->oeroded ? "rusty" : "corroded");
         return (false);
     }
-    if (!force && (Confusion() || Fumbling || Glib || Wounded_legs ||
+    if (!force && (Confusion() || Fumbling() || Glib || Wounded_legs ||
                 otmp->cursed || (u.ulevel+mtmp->mtame < rnd(MAXULEV/2+5))))
     {
         if (Levitation) {
@@ -427,7 +427,7 @@ static bool landing_spot ( coord *spot, int reason, int forceit) {
     struct trap *t;
 
     /* avoid known traps (i == 0) and boulders, but allow them as a backup */
-    if (reason != DISMOUNT_BYCHOICE || Stunned() || Confusion() || Fumbling) i = 1;
+    if (reason != DISMOUNT_BYCHOICE || Stunned() || Confusion() || Fumbling()) i = 1;
     for (; !found && i < 2; ++i) {
         for (x = u.ux-1; x <= u.ux+1; x++)
             for (y = u.uy-1; y <= u.uy+1; y++) {

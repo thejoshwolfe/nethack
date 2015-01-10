@@ -485,7 +485,7 @@ void dump_enlightenment (int final) {
         sprintf(buf, "slippery %s", makeplural(body_part(FINGER)));
         dump(youhad, buf);
     }
-    if (Fumbling) dump("  ", "You fumbled");
+    if (Fumbling()) dump("  ", "You fumbled");
     if (Wounded_legs && !u.usteed) {
         sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
         dump(youhad, buf);

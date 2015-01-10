@@ -250,7 +250,7 @@ static void kick_monster(signed char x, signed char y) {
                 else if(!rn2((i < j/5) ? 2 : 3)) clumsy = true;
         }
 
-        if(Fumbling) clumsy = true;
+        if(Fumbling()) clumsy = true;
 
         else if(uarm && objects[uarm->otyp].oc_big && ACURR(A_DEX) < rnd(25))
                 clumsy = true;
@@ -470,7 +470,7 @@ static int kick_object(signed char x, signed char y) {
                 return 1;
         }
 
-        if(Fumbling && !rn2(3)) {
+        if(Fumbling() && !rn2(3)) {
                 Your("clumsy kick missed.");
                 return(1);
         }

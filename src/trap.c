@@ -979,7 +979,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
             Levitation ? "float" : "fly", a_your[trap->madeby_u], defsyms[trap_to_defsym(ttype)].explanation);
             return;
         }
-        if (!Fumbling && ttype != MAGIC_PORTAL && ttype != ANTI_MAGIC && !forcebungle && (!rn2(5) || ((ttype == PIT || ttype == SPIKED_PIT) && is_clinger(youmonst.data)))) {
+        if (!Fumbling() && ttype != MAGIC_PORTAL && ttype != ANTI_MAGIC && !forcebungle && (!rn2(5) || ((ttype == PIT || ttype == SPIKED_PIT) && is_clinger(youmonst.data)))) {
             You("escape %s %s.", (ttype == ARROW_TRAP && !trap->madeby_u) ? "an" : a_your[trap->madeby_u], defsyms[trap_to_defsym(ttype)].explanation);
             return;
         }
@@ -2836,7 +2836,7 @@ static int untrap_prob(struct trap *ttmp) {
         chance++;
     if (Stunned())
         chance += 2;
-    if (Fumbling)
+    if (Fumbling())
         chance *= 2;
     /* Your own traps are better known than others. */
     if (ttmp && ttmp->madeby_u)
@@ -3289,7 +3289,7 @@ int untrap(bool force) {
                         ch = ACURR(A_DEX) + u.ulevel;
                         if (Role_if(PM_ROGUE))
                             ch *= 2;
-                        if (!force && (confused || Fumbling || rnd(75 + level_difficulty() / 2) > ch)) {
+                        if (!force && (confused || Fumbling() || rnd(75 + level_difficulty() / 2) > ch)) {
                             (void)chest_trap(otmp, FINGER, true);
                         } else {
                             You("disarm it!");
@@ -3342,7 +3342,7 @@ int untrap(bool force) {
         if (levl[x][y].doormask & D_TRAPPED) {
             ch = 15 + (Role_if(PM_ROGUE) ? u.ulevel * 3 : u.ulevel);
             exercise(A_DEX, true);
-            if (!force && (confused || Fumbling || rnd(75 + level_difficulty() / 2) > ch)) {
+            if (!force && (confused || Fumbling() || rnd(75 + level_difficulty() / 2) > ch)) {
                 You("set it off!");
                 b_trapped("door", FINGER);
                 levl[x][y].doormask = D_NODOOR;

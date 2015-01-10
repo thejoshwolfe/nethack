@@ -203,9 +203,21 @@ static bool Hallucination(void) {
 }
 
 /* Timeout, plus a worn mask */
-#define HFumbling               u.uprops[FUMBLING].intrinsic
-#define EFumbling               u.uprops[FUMBLING].extrinsic
-#define Fumbling                (HFumbling || EFumbling)
+static long get_HFumbling() {
+    return u.uprops[FUMBLING].intrinsic;
+}
+static void set_HFumbling(long hFumbling) {
+    u.uprops[FUMBLING].intrinsic = hFumbling;
+}
+static long get_EFumbling() {
+    return u.uprops[FUMBLING].extrinsic;
+}
+static void set_EFumbling(long eFumbling) {
+    u.uprops[FUMBLING].extrinsic = eFumbling;
+}
+static bool Fumbling() {
+    return (get_HFumbling() || get_EFumbling());
+}
 
 #define HWounded_legs           u.uprops[WOUNDED_LEGS].intrinsic
 #define EWounded_legs           u.uprops[WOUNDED_LEGS].extrinsic

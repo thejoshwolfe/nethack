@@ -475,7 +475,7 @@ struct obj * hold_another_object (struct obj *obj, const char *drop_fmt,
                 obj->oerodeproof = oerode;
             }
         }
-        if (Fumbling) {
+        if (Fumbling()) {
             if (drop_fmt) pline(drop_fmt, drop_arg);
             dropy(obj);
         } else {

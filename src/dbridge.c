@@ -422,7 +422,7 @@ static bool e_missed(struct entity *etmp, bool chunks) {
 static bool e_jumps (struct entity *etmp) {
         int tmp = 4;            /* out of 10 */
 
-        if (is_u(etmp)? (Sleeping || Fumbling) :
+        if (is_u(etmp)? (Sleeping || Fumbling()) :
                         (!etmp->emon->mcanmove || etmp->emon->msleeping ||
                          !etmp->edata->mmove   || etmp->emon->wormno))
                 return(false);

@@ -328,7 +328,7 @@ static void exerper (void) {
         if(Confusion() || Hallucination())          exercise(A_WIS, false);
         if((Wounded_legs
                     && !u.usteed
-           ) || Fumbling || get_HStun())     exercise(A_DEX, false);
+           ) || Fumbling() || get_HStun())     exercise(A_DEX, false);
     }
 }
 
