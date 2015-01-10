@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "move.h"
 #include "dungeon_util.h"
 #include "mon.h"
 #include "align.h"
