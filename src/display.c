@@ -1731,7 +1731,7 @@ do_twall:
                             col = T_tlcorn;
                         } else if (seenv == SV6) {
                             col = T_trcorn;
-                        } else if (seenv & (SV3|SV5|SV7) ||
+                        } else if ((seenv & (SV3|SV5|SV7)) ||
                                             ((seenv & SV4) && (seenv & SV6))) {
                             col = T_tdwall;
                         } else if (seenv & (SV0|SV1|SV2)) {
@@ -1742,9 +1742,9 @@ do_twall:
                         }
                         break;
                     case WM_T_LONG:
-                        if (seenv & (SV3|SV4) && !(seenv & (SV5|SV6|SV7))) {
+                        if ((seenv & (SV3|SV4)) && !(seenv & (SV5|SV6|SV7))) {
                             col = T_tlcorn;
-                        } else if (seenv&(SV6|SV7) && !(seenv&(SV3|SV4|SV5))) {
+                        } else if ((seenv&(SV6|SV7)) && !(seenv&(SV3|SV4|SV5))) {
                             col = T_trcorn;
                         } else if ((seenv & SV5) ||
                                 ((seenv & (SV3|SV4)) && (seenv & (SV6|SV7)))) {
@@ -1864,16 +1864,16 @@ horiz:
                         else if (seenv == SV6)
                             idx = S_trcorn;
                         else if (!(seenv & ~(SV0|SV1|SV2)) &&
-                                        (seenv & SV1 || seenv == (SV0|SV2)))
+                                        ((seenv & SV1) || seenv == (SV0|SV2)))
                             idx = S_tuwall;
                         else if (!(seenv & ~(SV2|SV3|SV4)) &&
-                                        (seenv & SV3 || seenv == (SV2|SV4)))
+                                        ((seenv & SV3) || seenv == (SV2|SV4)))
                             idx = S_trwall;
                         else if (!(seenv & ~(SV4|SV5|SV6)) &&
-                                        (seenv & SV5 || seenv == (SV4|SV6)))
+                                        ((seenv & SV5) || seenv == (SV4|SV6)))
                             idx = S_tdwall;
                         else if (!(seenv & ~(SV0|SV6|SV7)) &&
-                                        (seenv & SV7 || seenv == (SV0|SV6)))
+                                        ((seenv & SV7) || seenv == (SV0|SV6)))
                             idx = S_tlwall;
                         else
                             idx = S_crwall;

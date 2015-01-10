@@ -383,7 +383,7 @@ int mattacku (struct monst *mtmp) {
             i = mattackm(mtmp, u.usteed);
             if ((i & MM_AGR_DIED))
                 return (1);
-            if (i & MM_DEF_DIED || u.umoved)
+            if ((i & MM_DEF_DIED) || u.umoved)
                 return (0);
             /* Let your steed retaliate */
             return (!!(mattackm(u.usteed, mtmp) & MM_DEF_DIED));

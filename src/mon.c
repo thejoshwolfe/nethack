@@ -1005,8 +1005,8 @@ nexttry:        /* eels prefer the water, but if there is no water nearby,
             /* KMH -- Added iron bars */
             if (ntyp == IRONBARS && !(flag & ALLOW_BARS)) continue;
             if(IS_DOOR(ntyp) && !amorphous(mdat) &&
-                    ((levl[nx][ny].doormask & D_CLOSED && !(flag & OPENDOOR)) ||
-                     (levl[nx][ny].doormask & D_LOCKED && !(flag & UNLOCKDOOR))) &&
+                    (((levl[nx][ny].doormask & D_CLOSED) && !(flag & OPENDOOR)) ||
+                     ((levl[nx][ny].doormask & D_LOCKED) && !(flag & UNLOCKDOOR))) &&
                     !thrudoor) continue;
             if(nx != x && ny != y && (nodiag ||
                         ((IS_DOOR(nowtyp) && (levl[x][y].doormask & ~D_BROKEN)) ||
@@ -1874,7 +1874,7 @@ void poisoned (const char *string, int typ, const char *pname, int fatal) {
         return;
     }
     /* suppress killer prefix if it already has one */
-    if ((i = name_to_mon(pname)) >= LOW_PM && mons[i].geno & G_UNIQ) {
+    if ((i = name_to_mon(pname)) >= LOW_PM && (mons[i].geno & G_UNIQ)) {
         if (!type_is_pname(&mons[i])) pname = the(pname);
     } else if (!strncmpi(pname, "the ", 4) ||
             !strncmpi(pname, "an ", 3) ||
