@@ -488,11 +488,9 @@ int mcalcmove (struct monst *mon) {
     else if (mon->mspeed == MFAST)
         mmove = (4 * mmove + 2) / 3;
 
-    if (mon == u.usteed) {
-        if (u.ugallop && flags.mv) {
-            /* average movement is 1.50 times normal */
-            mmove = ((rn2(2) ? 4 : 5) * mmove) / 3;
-        }
+    if (mon == u.usteed && u.ugallop) {
+        /* average movement is 1.50 times normal */
+        mmove = ((rn2(2) ? 4 : 5) * mmove) / 3;
     }
 
     return mmove;

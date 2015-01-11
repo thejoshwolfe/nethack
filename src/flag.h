@@ -36,7 +36,6 @@ struct flag {
         bool  made_amulet;
         bool  mon_moving;    /* monsters' turn to move */
         bool  move;
-        bool  mv;
         bool  bypasses;      /* bypass flag is set on at least one fobj */
         bool  nopick;        /* do not pickup objects (as when running) */
         bool  null;          /* OK to send nulls to the terminal */

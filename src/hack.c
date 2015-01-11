@@ -268,7 +268,6 @@ void nomul(int nval) {
     u.uinvulnerable = false; /* Kludge to avoid ctrl-C bug -dlc */
     u.usleep = 0;
     multi = nval;
-    flags.mv = 0;
 }
 
 /* called when a non-movement, multi-turn action has completed */

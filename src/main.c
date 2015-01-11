@@ -334,21 +334,20 @@ void moveloop(void) {
         /****************************************/
 
         find_ac();
-        if (!flags.mv || Blind) {
-            /* redo monsters if hallu or wearing a helm of telepathy */
-            if (Hallucination()) { /* update screen randomly */
-                see_monsters();
-                see_objects();
-                see_traps();
-                if (u.uswallow)
-                    swallowed(0);
-            } else if (Unblind_telepat) {
-                see_monsters();
-            } else if (Warning || Warn_of_mon)
-                see_monsters();
-
-            vision_recalc(0);
+        /* redo monsters if hallu or wearing a helm of telepathy */
+        if (Hallucination()) { /* update screen randomly */
+            see_monsters();
+            see_objects();
+            see_traps();
+            if (u.uswallow)
+                swallowed(0);
+        } else if (Unblind_telepat) {
+            see_monsters();
+        } else if (Warning || Warn_of_mon) {
+            see_monsters();
         }
+
+        vision_recalc(0);
 
         flags.move = 1;
 
