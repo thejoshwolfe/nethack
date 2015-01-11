@@ -86,8 +86,6 @@
  */
 static const int NR_OF_EOFS = 20;
 
-static int (*timed_occ_fn)(void);
-
 static const char* readchar_queue="";
 
 /* Provide a means to redo the last command.  The flag `in_doagain' is set
@@ -803,7 +801,6 @@ static const struct func_tab cmdlist[] = {
     {'&', true, dowhatdoes},
     {'?', true, dohelp},
     {'.', true, donull, "waiting"},
-    {' ', true, donull, "waiting"},
     {',', false, dopickup},
     {':', true, dolook},
     {';', true, doquickwhatis},
@@ -930,13 +927,6 @@ void sanity_check (void) {
 }
 
 
-static char unctrl(char c) {
-    return (char)(c <= C('z') ? (0x60 | c) : c);
-}
-static char unmeta(char c) {
-    return (char)(0x7f & c);
-}
-
 void parse(char * buf, size_t bufsize) {
     ssize_t count = read(STDIN_FILENO, buf, bufsize - 1);
     if (count < 0)
@@ -1001,10 +991,6 @@ void rhack() {
         domove();
         flags.forcefight = false;
         return;
-    } else if (*cmd == ' ' && !flags.rest_on_space) {
-        bad_command = true; /* skip cmdlist[] loop */
-
-        /* handle all other commands */
     } else {
         const struct func_tab *tlist;
         int res, (*func)(void);

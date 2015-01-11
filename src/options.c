@@ -92,7 +92,6 @@ static struct Bool_Opt {
     {"preload_tiles", &iflags.wc_preload_tiles, true, DISP_IN_GAME},        /*WC*/
     {"pushweapon", &flags.pushweapon, false, SET_IN_GAME},
     {"rawio", (bool *)0, false, SET_IN_FILE},
-    {"rest_on_space", &flags.rest_on_space, false, SET_IN_GAME},
     {"safe_pet", &flags.safe_dog, true, SET_IN_GAME},
     {"sanity_check", &iflags.sanity_check, false, SET_IN_GAME},
     {"showexp", &flags.showexp, false, SET_IN_GAME},
@@ -288,10 +287,6 @@ static const char *menutype[] = {
 static const char *burdentype[] = {
     "unencumbered", "burdened", "stressed",
     "strained", "overtaxed", "overloaded"
-};
-
-static const char *runmodes[] = {
-    "teleport", "run", "walk", "crawl"
 };
 
 static const char *sortltype[] = {

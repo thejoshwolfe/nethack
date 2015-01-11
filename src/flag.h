@@ -42,7 +42,6 @@ struct flag {
         bool  perm_invent;   /* keep full inventories up until dismissed */
 
         bool  pushweapon;    /* When wielding, push old weapon into second slot */
-        bool  rest_on_space; /* space means rest */
         bool  safe_dog;      /* give complete protection to the dog */
         bool  showexp;       /* show experience points */
         bool  silent;        /* whether the bell rings or not */
