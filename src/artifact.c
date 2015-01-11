@@ -646,7 +646,7 @@ void discover_artifact (signed char m) {
         }
     /* there is one slot per artifact, so we should never reach the
        end without either finding the artifact or an empty slot... */
-    impossible("couldn't flags.explore artifact (%d)", (int)m);
+    impossible("couldn't discover artifact (%d)", (int)m);
 }
 
 /* used to decide whether an artifact has been fully identified */

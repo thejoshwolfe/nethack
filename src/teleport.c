@@ -718,7 +718,7 @@ void level_tele (void) {
             u.uz.dlevel = (newlev <= -10) ? -10 : 0;    /* heaven or surface */
             done(DIED);
             /* can only get here via life-saving (or declining to die in
-               explore|debug mode); the hero has now left the dungeon... */
+               debug mode); the hero has now left the dungeon... */
             escape_by_flying = "find yourself back on the surface";
             u.uz = lsav;        /* restore u.uz so escape code works */
         }

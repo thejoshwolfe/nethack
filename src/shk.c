@@ -737,7 +737,7 @@ bool same_price(struct obj *obj1, struct obj *obj2) {
 /*
  * Figure out how much is owed to a given shopkeeper.
  * At present, we ignore any amount robbed from the shop, to avoid
- * turning the `$' command into a way to flags.explore that the current
+ * turning the `$' command into a way to discover that the current
  * level is bones data which has a shk on the warpath.
  */
 static long shop_debt (struct eshk *eshkp) {

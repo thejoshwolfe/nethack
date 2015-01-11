@@ -478,9 +478,6 @@ static void process_options(int argc, char *argv[]) {
             case 'D':
                 flags.debug = true;
                 break;
-            case 'X':
-                flags.explore = true;
-                break;
             case 'n':
                 iflags.news = false;
                 break;
@@ -530,11 +527,6 @@ static void process_options(int argc, char *argv[]) {
 
     if (argc > 1)
         locknum = atoi(argv[1]);
-}
-
-static void wd_message(void) {
-    if (flags.explore)
-        You("are in non-scoring discovery mode.");
 }
 
 int main(int argc, char *argv[]) {
@@ -594,9 +586,8 @@ int main(int argc, char *argv[]) {
         if (!flags.debug && remember_wiz_mode)
             flags.debug = true;
         check_special_room(false);
-        wd_message();
 
-        if (flags.explore || flags.debug) {
+        if (flags.debug) {
             if (yn("Do you want to keep the save file?") == 'n')
                 (void)delete_savefile();
             else {
@@ -606,9 +597,7 @@ int main(int argc, char *argv[]) {
         flags.move = 0;
     } else {
         not_recovered:
-        // player_selection();
         newgame();
-        wd_message();
 
         flags.move = 0;
         set_wear();

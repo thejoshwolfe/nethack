@@ -226,7 +226,7 @@ mon_adjust_speed (
             pline("%s seems to be moving %sslower.", name, howmuch);
         }
 
-        /* might flags.explore an object if we see the speed change happen, but
+        /* might discover an object if we see the speed change happen, but
          avoid making possibly forgotten book known when casting its spell */
         if (obj != 0 && obj->dknown && objects[obj->otyp].oc_class != SPBOOK_CLASS)
             makeknown(obj->otyp);

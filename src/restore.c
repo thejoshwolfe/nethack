@@ -377,15 +377,7 @@ freefruitchn (struct fruit *flist)
         }
 }
 
-static bool 
-restgamestate (
-    int fd,
-    unsigned int *stuckid,
-    unsigned int *steedid        /* STEED */
-)
-{
-        /* flags.explore is actually flags.explore */
-        bool remember_discover = flags.explore;
+static bool restgamestate(int fd, unsigned int *stuckid, unsigned int *steedid) {
         struct obj *otmp;
         int uid;
 
@@ -400,7 +392,6 @@ restgamestate (
 
         mread(fd, (void *) &flags, sizeof(struct flag));
         flags.bypasses = 0;     /* never use the saved value of bypasses */
-        if (remember_discover) flags.explore = remember_discover;
 
         role_init();    /* Reset the initial role, race, gender, and alignment */
         mread(fd, (void *) &u, sizeof(struct you));
@@ -553,7 +544,7 @@ int dorecover(int fd) {
     getlev(fd, 0, (signed char)0, false);
     close(fd);
 
-    if (!flags.debug && !flags.explore)
+    if (!flags.debug)
         delete_savefile();
     restlevelstate(stuckid, steedid);
     /* take care of iron ball & chain */

@@ -202,9 +202,6 @@ bool can_make_bones(void) {
            (!rn2(1 + (depth(&u.uz)>>2)) /* fewer ghosts on low levels */
                 && !flags.debug
                 )) return false;
-        /* don't let multiple restarts generate multiple copies of objects
-         * in bones files */
-        if (flags.explore) return false;
         return true;
 }
 

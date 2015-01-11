@@ -222,23 +222,6 @@ static int domonability (void) {
     return 0;
 }
 
-static int enter_explore_mode (void) {
-    if(!flags.explore && !flags.debug) {
-        pline("Beware!  From explore mode there will be no return to normal game.");
-        if (yn("Do you want to enter explore mode?") == 'y') {
-            // clear_nhwindow(WIN_MESSAGE);
-            You("are now in non-scoring explore mode.");
-            flags.explore = true;
-        }
-        else {
-            // clear_nhwindow(WIN_MESSAGE);
-            pline("Resuming normal game.");
-        }
-    }
-    return 0;
-}
-
-
 /* ^W command - wish for something */
 /* Unlimited wishes for debug mode by Paul Polderman */
 static int wiz_wish (void) {
@@ -700,7 +683,7 @@ static bool minimal_enlightenment (void) {
 static int doattributes (void) {
     if (!minimal_enlightenment())
         return 0;
-    if (flags.debug || flags.explore)
+    if (flags.debug)
         enlightenment(0);
     return 0;
 }
@@ -851,7 +834,6 @@ static const struct func_tab cmdlist[] = {
     {'W', false, dowear},
     {M('w'), false, dowipe},
     {'x', false, doswapweapon},
-    {'X', true, enter_explore_mode},
     /*      'y', 'Y' : go nw */
     {'z', false, dozap},
     {'Z', true, docast},

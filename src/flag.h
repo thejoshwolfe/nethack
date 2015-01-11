@@ -24,7 +24,6 @@ struct flag {
         bool  confirm;       /* confirm before hitting tame monsters */
         bool  debug;         /* in debugging mode */
         bool  end_own;       /* list all own scores */
-        bool  explore;       /* in exploration mode TODO: remove explore mode */
         bool  female;
         bool  forcefight;
         bool  friday13;      /* it's Friday the 13th */

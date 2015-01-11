@@ -505,7 +505,7 @@ void done (int how) {
             return;
         }
     }
-    if (( flags.debug || flags.explore) && (how <= GENOCIDED)) {
+    if (flags.debug && how <= GENOCIDED) {
         if(yn("Die?") == 'y') goto die;
         pline("OK, so you don't %s.", (how == CHOKING) ? "choke" : "die");
         if(u.uhpmax <= 0) u.uhpmax = u.ulevel * 8;      /* arbitrary */

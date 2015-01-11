@@ -1428,7 +1428,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 if (!already_seen && rn2(3))
                     break;
                 seetrap(trap);
-                pline("%s %s in a pile of soil below you.", already_seen ? "There is" : "You flags.explore", trap->madeby_u ? "the trigger of your mine" : "a trigger");
+                pline("%s %s in a pile of soil below you.", already_seen ? "There is" : "You discover", trap->madeby_u ? "the trigger of your mine" : "a trigger");
                 if (already_seen && rn2(3))
                     break;
                 pline("KAABLAMM!!!  %s %s%s off!", forcebungle ? "Your inept attempt sets" : "The air currents set", already_seen ? a_your[trap->madeby_u] : "", already_seen ? " land mine" : "it");
@@ -3618,10 +3618,11 @@ bool lava_effects(void) {
                 losehp(dmg, killed_by_const(KM_MOLTEN_LAVA));
                 goto burn_stuff;
             }
-        } else
+        } else {
             You("fall into the lava!");
+        }
 
-        usurvive = Lifesaved|| flags.explore;
+        usurvive = Lifesaved;
         if (flags.debug)
             usurvive = true;
         for (obj = invent; obj; obj = obj2) {

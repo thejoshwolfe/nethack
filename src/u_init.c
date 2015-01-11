@@ -235,10 +235,6 @@ static struct trobj Towel[] = {
         { TOWEL, 0, TOOL_CLASS, 1, 0 },
         { 0, 0, 0, 0, 0 }
 };
-static struct trobj Wishing[] = {
-        { WAN_WISHING, 3, WAND_CLASS, 1, 0 },
-        { 0, 0, 0, 0, 0 }
-};
 
 /* race-based substitutions for initial inventory;
    the weaker cloak for elven rangers is intentional--they shoot better */
@@ -752,9 +748,6 @@ void u_init(void) {
         default: /* impossible */
             break;
     }
-
-    if (flags.explore)
-        ini_inv(Wishing);
 
     if (flags.debug)
         read_wizkit();
