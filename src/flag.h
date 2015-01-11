@@ -63,7 +63,6 @@ struct flag {
 #define NEW_MOON        0
 #define FULL_MOON       4
         unsigned no_of_wizards; /* 0, 1 or 2 (wizard and his shadow) */
-        bool  travel;        /* find way automatically to u.tx,u.ty */
         unsigned run;           /* 0:h, 1:H, 2:gh, 3:GH, 8:_travel */
         unsigned long warntype; /* warn_of_mon monster type M2 */
         int      warnlevel;
@@ -136,8 +135,6 @@ struct instance_flags {
         int *opt_booldup;       /* for duplication of bool opts in config file */
         int *opt_compdup;       /* for duplication of compound opts in config file */
         unsigned char   bouldersym;     /* symbol for boulder display */
-        bool travel1;        /* first travel step */
-        coord   travelcc;       /* coordinates for travel_cache */
         bool  sanity_check;  /* run sanity checks */
         bool  mon_polycontrol;       /* debug: control monster polymorphs */
         char prevmsg_window;    /* type of old message window to use */
@@ -205,7 +202,6 @@ struct instance_flags {
         /* Items which belong in flags, but are here to allow save compatibility */
         bool  lootabc;       /* use "a/b/c" rather than "o/i/b" when looting */
         bool  showrace;      /* show hero glyph by race rather than by role */
-        bool  travelcmd;     /* allow travel command */
         int      runmode;       /* update screen display during run moves */
 #define AP_LEAVE 0
 #define AP_GRAB  1

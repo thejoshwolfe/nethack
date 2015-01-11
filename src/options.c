@@ -108,7 +108,6 @@ static struct Bool_Opt {
     {"time", &flags.time, false, SET_IN_GAME},
     {"tombstone",&flags.tombstone, true, SET_IN_GAME},
     {"toptenwin",&flags.toptenwin, false, SET_IN_GAME},
-    {"travel", &iflags.travelcmd, true, SET_IN_GAME},
     {"use_inverse",   &iflags.wc_inverse, false, SET_IN_GAME},              /*WC*/
     {"verbose", &flags.verbose, true, SET_IN_GAME},
     {"wraptext", &iflags.wc2_wraptext, false, SET_IN_GAME},
@@ -443,7 +442,6 @@ void initoptions (void) {
     for (i = 0; i < WARNCOUNT; i++)
         warnsyms[i] = def_warnsyms[i].sym;
     iflags.bouldersym = 0;
-    iflags.travelcc.x = iflags.travelcc.y = -1;
     flags.warnlevel = 1;
     flags.warntype = 0L;
 

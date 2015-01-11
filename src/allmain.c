@@ -395,7 +395,7 @@ void moveloop(void) {
             }
             if (flags.mv) {
                 if (multi < COLNO && --multi == 0)
-                    flags.travel = iflags.travel1 = flags.mv = flags.run = 0;
+                    flags.mv = flags.run = 0;
                 domove();
             } else {
                 --multi;

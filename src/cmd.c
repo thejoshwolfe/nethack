@@ -86,8 +86,6 @@
  */
 static const int NR_OF_EOFS = 20;
 
-#define CMD_TRAVEL (char)0x90
-
 static int (*timed_occ_fn)(void);
 
 static const char* readchar_queue="";
@@ -710,32 +708,6 @@ static int doextcmd(void) {
     return 0;
 }
 
-static int dotravel (void) {
-    /* Keyboard travel command */
-    static char cmd[2];
-    coord cc;
-
-    if (!iflags.travelcmd) return 0;
-    cmd[1]=0;
-    cc.x = iflags.travelcc.x;
-    cc.y = iflags.travelcc.y;
-    if (cc.x == -1 && cc.y == -1) {
-        /* No cached destination, start attempt from current position */
-        cc.x = u.ux;
-        cc.y = u.uy;
-    }
-    pline("Where do you want to travel to?");
-    if (getpos(&cc, true, "the desired destination") < 0) {
-        /* user pressed ESC */
-        return 0;
-    }
-    iflags.travelcc.x = u.tx = cc.x;
-    iflags.travelcc.y = u.ty = cc.y;
-    cmd[0] = CMD_TRAVEL;
-    readchar_queue = cmd;
-    return 0;
-}
-
 static int wiz_show_seenv(void) {
     return 0;
 }
@@ -860,7 +832,6 @@ static const struct func_tab cmdlist[] = {
     {GOLD_SYM, true, doprgold},
     {SPBOOK_SYM, true, dovspell},                   /* Mike Stephenson */
     {'#', true, doextcmd},
-    {'_', true, dotravel},
     {0,0,0,0}
 };
 
@@ -991,7 +962,6 @@ static bool help_dir(char sym, const char *msg) {
 
 void rhack() {
     bool do_walk;
-    bool do_rush;
     bool bad_command;
 
     iflags.menu_requested = false;
@@ -1009,8 +979,7 @@ void rhack() {
         return; /* probably we just had an interrupt */
     }
     /* handle most movement commands */
-    do_walk = do_rush = false;
-    flags.travel = iflags.travel1 = 0;
+    do_walk = false;
     switch (*cmd) {
             /* Effects of movement commands and invisible monsters:
              * m: always move onto space (even if 'I' remembered)
@@ -1034,16 +1003,6 @@ void rhack() {
                 }
             }
             break;
-        case CMD_TRAVEL :
-            if (iflags.travelcmd) {
-                flags.travel = 1;
-                iflags.travel1 = 1;
-                flags.run = 8;
-                flags.nopick = 1;
-                do_rush = true;
-                break;
-            }
-            /*FALLTHRU*/
         default:
             if (movecmd(*cmd)) { /* ordinary movement */
                 flags.run = 0; /* only matters here if it was 8 */
@@ -1057,13 +1016,6 @@ void rhack() {
             flags.mv = true;
         domove();
         flags.forcefight = false;
-        return;
-    } else if (do_rush) {
-        if (!multi)
-            multi = max(COLNO, ROWNO);
-        u.last_str_turn = 0;
-        flags.mv = true;
-        domove();
         return;
     } else if (*cmd == ' ' && !flags.rest_on_space) {
         bad_command = true; /* skip cmdlist[] loop */
