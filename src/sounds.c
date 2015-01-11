@@ -321,7 +321,6 @@ void growl (struct monst *mtmp) {
         growl_verb = growl_sound(mtmp);
 
     message_monster_string(MSG_M_GROWLS, mtmp, growl_verb);
-    if(flags.run) nomul(0);
     wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 18);
 }
 
@@ -358,7 +357,6 @@ void yelp (struct monst *mtmp) {
     }
     if (yelp_verb) {
         message_monster_string(MSG_M_YELPS, mtmp, yelp_verb);
-        if(flags.run) nomul(0);
         wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 12);
     }
 }
@@ -387,7 +385,6 @@ void whimper (struct monst *mtmp) {
     }
     if (whimper_verb) {
         message_monster_string(MSG_M_WHIMPERS, mtmp, whimper_verb);
-        if(flags.run) nomul(0);
         wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 6);
     }
 }

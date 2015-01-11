@@ -63,7 +63,6 @@ struct flag {
 #define NEW_MOON        0
 #define FULL_MOON       4
         unsigned no_of_wizards; /* 0, 1 or 2 (wizard and his shadow) */
-        unsigned run;           /* 0:h, 1:H, 2:gh, 3:GH, 8:_travel */
         unsigned long warntype; /* warn_of_mon monster type M2 */
         int      warnlevel;
         int      djinni_count, ghost_count;     /* potion effect tuning */
@@ -202,7 +201,6 @@ struct instance_flags {
         /* Items which belong in flags, but are here to allow save compatibility */
         bool  lootabc;       /* use "a/b/c" rather than "o/i/b" when looting */
         bool  showrace;      /* show hero glyph by race rather than by role */
-        int      runmode;       /* update screen display during run moves */
 #define AP_LEAVE 0
 #define AP_GRAB  1
 };

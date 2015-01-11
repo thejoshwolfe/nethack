@@ -264,7 +264,6 @@ check_here (bool picked_some)
 
         /* If there are objects here, take a look. */
         if (ct) {
-            if (flags.run) nomul(0);
             flush_screen(1);
             (void) look_here(ct, picked_some);
         } else {
@@ -372,7 +371,7 @@ int pickup ( int what) {
 
         /* no pickup if levitating & not on air or water level */
         if (!can_reach_floor()) {
-            if ((multi && !flags.run) || autopickup)
+            if (multi || autopickup)
                 read_engr_at(u.ux, u.uy);
             return (0);
         }
@@ -392,7 +391,7 @@ int pickup ( int what) {
          * action, or possibly paralyzed, sleeping, etc.... and they just
          * teleported onto the object.  They shouldn't pick it up.
          */
-        if ((multi && !flags.run) || autopickup) {
+        if (multi || autopickup) {
             check_here(false);
             return (0);
         }
@@ -403,9 +402,6 @@ int pickup ( int what) {
                 check_here(false);
             return (0);
         }
-
-        /* if there's anything here, stop running */
-        if (OBJ_AT(u.ux,u.uy) && flags.run && flags.run != 8 && !flags.nopick) nomul(0);
     }
 
     add_valid_menu_class(0);        /* reset */
@@ -1160,7 +1156,6 @@ int pickup_object ( struct obj *obj, long count, bool telekinesis) {
             else
                 obj->quan -= count;
         }
-        if (flags.run) nomul(0);
         return 1;
     } else if (obj->otyp == CORPSE) {
         if ( (touch_petrifies(&mons[obj->corpsenm])) && !uarmg

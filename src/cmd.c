@@ -994,7 +994,6 @@ void rhack() {
             break;
         case 'm':
             if (movecmd(cmd[1]) || u.dz) {
-                flags.run = 0;
                 flags.nopick = 1;
                 if (u.dz) {
                     cmd[0] = cmd[1]; /* "m<" or "m>" */
@@ -1005,7 +1004,6 @@ void rhack() {
             break;
         default:
             if (movecmd(*cmd)) { /* ordinary movement */
-                flags.run = 0; /* only matters here if it was 8 */
                 do_walk = true;
             }
             break;

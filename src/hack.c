@@ -242,133 +242,6 @@ bool revive_nasty(int x, int y, const char *msg) {
     return revived;
 }
 
-/* stop running if we see something interesting */
-/* turn around a corner if that is the only way we can proceed */
-/* do not turn left or right twice */
-void lookaround(void) {
-    int x, y, i, x0 = 0, y0 = 0, m0 = 1, i0 = 9;
-    int corrct = 0, noturn = 0;
-    struct monst *mtmp;
-    struct trap *trap;
-
-    /* Grid bugs stop if trying to move diagonal, even if blind.  Maybe */
-    /* they polymorphed while in the middle of a long move. */
-    if (u.umonnum == PM_GRID_BUG && u.dx && u.dy) {
-        nomul(0);
-        return;
-    }
-
-    if (Blind || flags.run == 0)
-        return;
-    for (x = u.ux - 1; x <= u.ux + 1; x++)
-        for (y = u.uy - 1; y <= u.uy + 1; y++) {
-            if (!isok(x, y))
-                continue;
-
-            if (u.umonnum == PM_GRID_BUG && x != u.ux && y != u.uy)
-                continue;
-
-            if (x == u.ux && y == u.uy)
-                continue;
-
-            if ((mtmp = m_at(x, y)) && mtmp->m_ap_type != M_AP_FURNITURE && mtmp->m_ap_type != M_AP_OBJECT && (!mtmp->minvis || See_invisible()) && !mtmp->mundetected) {
-                if ((flags.run != 1 && !mtmp->mtame) || (x == u.ux + u.dx && y == u.uy + u.dy))
-                    goto stop;
-            }
-
-            if (levl[x][y].typ == STONE)
-                continue;
-            if (x == u.ux - u.dx && y == u.uy - u.dy)
-                continue;
-
-            if (IS_ROCK(levl[x][y].typ) || (levl[x][y].typ == ROOM) || IS_AIR(levl[x][y].typ))
-                continue;
-            else if (closed_door(x, y) || (mtmp && mtmp->m_ap_type == M_AP_FURNITURE && (mtmp->mappearance == S_hcdoor || mtmp->mappearance == S_vcdoor))) {
-                if (x != u.ux && y != u.uy)
-                    continue;
-                if (flags.run != 1)
-                    goto stop;
-                goto bcorr;
-            } else if (levl[x][y].typ == CORR) {
-                bcorr: if (levl[u.ux][u.uy].typ != ROOM) {
-                    if (flags.run == 1 || flags.run == 3 || flags.run == 8) {
-                        i = dist2(x, y, u.ux + u.dx, u.uy + u.dy);
-                        if (i > 2)
-                            continue;
-                        if (corrct == 1 && dist2(x, y, x0, y0) != 1)
-                            noturn = 1;
-                        if (i < i0) {
-                            i0 = i;
-                            x0 = x;
-                            y0 = y;
-                            m0 = mtmp ? 1 : 0;
-                        }
-                    }
-                    corrct++;
-                }
-                continue;
-            } else if ((trap = t_at(x, y)) && trap->tseen) {
-                if (flags.run == 1)
-                    goto bcorr;
-                /* if you must */
-                if (x == u.ux + u.dx && y == u.uy + u.dy)
-                    goto stop;
-                continue;
-            } else if (is_pool(x, y) || is_lava(x, y)) {
-                /* water and lava only stop you if directly in front, and stop
-                 * you even if you are running
-                 */
-                if (!Levitation && !Flying && !is_clinger(youmonst.data) && x == u.ux + u.dx && y == u.uy + u.dy)
-                    /* No Wwalking check; otherwise they'd be able
-                     * to test boots by trying to SHIFT-direction
-                     * into a pool and seeing if the game allowed it
-                     */
-                    goto stop;
-                continue;
-            } else { /* e.g. objects or trap or stairs */
-                if (flags.run == 1)
-                    goto bcorr;
-                if (flags.run == 8)
-                    continue;
-                if (mtmp)
-                    continue; /* d */
-                if (((x == u.ux - u.dx) && (y != u.uy + u.dy)) || ((y == u.uy - u.dy) && (x != u.ux + u.dx)))
-                    continue;
-            }
-            stop: nomul(0);
-            return;
-        } /* end for loops */
-
-    if (corrct > 1 && flags.run == 2)
-        goto stop;
-    if ((flags.run == 1 || flags.run == 3 || flags.run == 8) && !noturn && !m0 && i0 && (corrct == 1 || (corrct == 2 && i0 == 1))) {
-        /* make sure that we do not turn too far */
-        if (i0 == 2) {
-            if (u.dx == y0 - u.uy && u.dy == u.ux - x0)
-                i = 2; /* straight turn right */
-            else
-                i = -2; /* straight turn left */
-        } else if (u.dx && u.dy) {
-            if ((u.dx == u.dy && y0 == u.uy) || (u.dx != u.dy && y0 != u.uy))
-                i = -1; /* half turn left */
-            else
-                i = 1; /* half turn right */
-        } else {
-            if ((x0 - u.ux == y0 - u.uy && !u.dy) || (x0 - u.ux != y0 - u.uy && u.dy))
-                i = 1; /* half turn right */
-            else
-                i = -1; /* half turn left */
-        }
-
-        i += u.last_str_turn;
-        if (i <= 2 && i >= -2) {
-            u.last_str_turn = i;
-            u.dx = x0 - u.ux;
-            u.dy = y0 - u.uy;
-        }
-    }
-}
-
 /* something like lookaround, but we are not running */
 /* react only to monsters that might hit us */
 int monster_nearby(void) {
@@ -395,7 +268,7 @@ void nomul(int nval) {
     u.uinvulnerable = false; /* Kludge to avoid ctrl-C bug -dlc */
     u.usleep = 0;
     multi = nval;
-    flags.mv = flags.run = 0;
+    flags.mv = 0;
 }
 
 /* called when a non-movement, multi-turn action has completed */

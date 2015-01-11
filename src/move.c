@@ -153,12 +153,7 @@ void domove(void) {
             return;
         }
         if (((trap = t_at(x, y)) && trap->tseen) || (Blind && !Levitation && !Flying && !is_clinger(youmonst.data) && (is_pool(x, y) || is_lava(x, y)) && levl[x][y].seenv)) {
-            if (flags.run >= 2) {
-                nomul(0);
-                flags.move = 0;
-                return;
-            } else
-                nomul(0);
+            nomul(0);
         }
 
         if (u.ustuck && (x != u.ustuck->mx || y != u.ustuck->my)) {
@@ -215,16 +210,6 @@ void domove(void) {
         }
 
         mtmp = m_at(x, y);
-        if (mtmp) {
-            /* Don't attack if you're running, and can see it */
-            /* We should never get here if forcefight */
-            if (flags.run && ((!Blind && mon_visible(mtmp) && ((mtmp->m_ap_type != M_AP_FURNITURE && mtmp->m_ap_type != M_AP_OBJECT) ||
-            Protection_from_shape_changers)) || sensemon(mtmp))) {
-                nomul(0);
-                flags.move = 0;
-                return;
-            }
-        }
     }
 
     u.ux0 = u.ux;
@@ -541,11 +526,6 @@ void domove(void) {
     }
 
     reset_occupations();
-    if (flags.run) {
-        if (flags.run < 8)
-            if (IS_DOOR(tmpr->typ) || IS_ROCK(tmpr->typ) || IS_FURNITURE(tmpr->typ))
-                nomul(0);
-    }
 
     if (hides_under(youmonst.data))
         u.uundetected = OBJ_AT(u.ux, u.uy);
@@ -583,13 +563,6 @@ void domove(void) {
     if (cause_delay) {
         nomul(-2);
         nomovemsg = "";
-    }
-
-    if (flags.run && iflags.runmode != RUN_TPORT) {
-        /* display every step or every 7th step depending upon mode */
-        if (iflags.runmode != RUN_LEAP || !(moves % 7L)) {
-            curs_on_u();
-        }
     }
 }
 
@@ -977,7 +950,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
             /* Eat the rock. */
             if (mode == DO_MOVE && still_chewing(x, y))
                 return false;
-        } else if (flags.autodig && !flags.run && !flags.nopick && uwep && is_pick(uwep)) {
+        } else if (flags.autodig && !flags.nopick && uwep && is_pick(uwep)) {
             /* MRKR: Automatic digging when wielding the appropriate tool */
             if (mode == DO_MOVE)
                 (void)use_pick_axe2(uwep);
@@ -1052,15 +1025,6 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
             return false;
         }
     }
-    /* Pick travel path that does not require crossing a trap.
-     * Avoid water and lava using the usual running rules.
-     * (but not u.ux/u.uy because findtravelpath walks toward u.ux/u.uy) */
-    if (flags.run == 8 && mode != DO_MOVE && (x != u.ux || y != u.uy)) {
-        struct trap* t = t_at(x, y);
-
-        if ((t && t->tseen) || (!Levitation && !Flying && !is_clinger(youmonst.data) && (is_pool(x, y) || is_lava(x, y)) && levl[x][y].seenv))
-            return false;
-    }
 
     ust = &levl[ux][uy];
 
@@ -1071,8 +1035,6 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
     }
 
     if (sobj_at(BOULDER, x, y) && (In_sokoban(&u.uz) || !Passes_walls)) {
-        if (!(Blind || Hallucination()) && (flags.run >= 2) && mode != TEST_TRAV)
-            return false;
         if (mode == DO_MOVE) {
             /* tunneling monsters will chew before pushing */
             if (tunnels(youmonst.data) && !needspick(youmonst.data) && !In_sokoban(&u.uz)) {

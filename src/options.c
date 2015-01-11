@@ -422,7 +422,6 @@ void initoptions (void) {
     flags.end_own = false;
     flags.end_top = 3;
     flags.end_around = 2;
-    iflags.runmode = RUN_LEAP;
     iflags.msg_history = 20;
     iflags.prevmsg_window = 's';
     iflags.menu_headings = ATR_INVERSE;
@@ -894,25 +893,6 @@ void parseoptions(char *opts, bool tinitial, bool tfrom_file) {
         if (negated) bad_negation(fullname, false);
         else if ((op = string_for_env_opt(fullname, opts, false)) != 0)
             nmcpy(horsename, op, PL_PSIZ);
-        return;
-    }
-
-    fullname = "runmode";
-    if (match_optname(opts, fullname, 4, true)) {
-        if (negated) {
-            iflags.runmode = RUN_TPORT;
-        } else if ((op = string_for_opt(opts, false)) != 0) {
-            if (!strncmpi(op, "teleport", strlen(op)))
-                iflags.runmode = RUN_TPORT;
-            else if (!strncmpi(op, "run", strlen(op)))
-                iflags.runmode = RUN_LEAP;
-            else if (!strncmpi(op, "walk", strlen(op)))
-                iflags.runmode = RUN_STEP;
-            else if (!strncmpi(op, "crawl", strlen(op)))
-                iflags.runmode = RUN_CRAWL;
-            else
-                badoption(opts);
-        }
         return;
     }
 
@@ -2002,26 +1982,7 @@ static bool special_handling(const char *optname, bool setinitial, bool setfromf
             }
         }
         retval = true;
-    } else if (!strcmp("runmode", optname)) {
-        const char *mode_name;
-        menu_item *mode_pick = (menu_item *)0;
-        tmpwin = create_nhwindow(NHW_MENU);
-        start_menu(tmpwin);
-        for (i = 0; i < SIZE(runmodes); i++) {
-            mode_name = runmodes[i];
-            any.a_int = i + 1;
-            add_menu(tmpwin, NO_GLYPH, &any, *mode_name, 0,
-                    ATR_NONE, mode_name, MENU_UNSELECTED);
-        }
-        end_menu(tmpwin, "Select run/travel display mode:");
-        if (select_menu(tmpwin, PICK_ONE, &mode_pick) > 0) {
-            iflags.runmode = mode_pick->item.a_int - 1;
-            free((void *)mode_pick);
-        }
-        destroy_nhwindow(tmpwin);
-        retval = true;
-    }
-    else if (!strcmp("msg_window", optname)) {
+    } else if (!strcmp("msg_window", optname)) {
         /* by Christian W. Cooper */
         menu_item *window_pick = (menu_item *)0;
         tmpwin = create_nhwindow(NHW_MENU);
@@ -2216,8 +2177,6 @@ static const char * get_compopt_value(const char *optname, char *buf) {
         sprintf(buf, "%s", rolestring(flags.initrace, races, noun));
     else if (!strcmp(optname, "role"))
         sprintf(buf, "%s", rolestring(flags.initrole, roles, name.m));
-    else if (!strcmp(optname, "runmode"))
-        sprintf(buf, "%s", runmodes[iflags.runmode]);
     else if (!strcmp(optname, "scores")) {
         sprintf(buf, "%d top/%d around%s", flags.end_top, flags.end_around, flags.end_own ? "/own" : "");
     } else if (!strcmp(optname, "scroll_amount")) {
