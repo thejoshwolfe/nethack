@@ -82,11 +82,9 @@ struct linfo level_info[MAXLINFO];
 
 struct sinfo program_state;
 
-/* 'rogue'-like direction commands (cmd.c) */
-const char ndir[] = "47896321><";       /* number pad mode */
-const signed char xdir[10] = { -1,-1, 0, 1, 1, 1, 0,-1, 0, 0 };
-const signed char ydir[10] = {  0,-1,-1,-1, 0, 1, 1, 1, 0, 0 };
-const signed char zdir[10] = {  0, 0, 0, 0, 0, 0, 0, 0, 1,-1 };
+const char ndir[] = "47896321";
+const signed char xdir[] = { -1, -1,  0,  1,  1,  1,  0, -1 };
+const signed char ydir[] = {  0, -1, -1, -1,  0,  1,  1,  1 };
 
 signed char tbx = 0, tby = 0;   /* mthrowu: target */
 

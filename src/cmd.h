@@ -18,7 +18,6 @@ void dump_enlightenment(int);
 void dump_conduct(int);
 int xytod(signed char,signed char);
 void dtoxy(coord *,int);
-bool movecmd(char sym, Direction * out_direction);
 int getdir(const char *);
 void confdir(void);
 int isok(int,int);

@@ -841,9 +841,7 @@ use_pick_axe (struct obj *obj)
         char *dsp = dirsyms;
         int rx, ry;
         int res = 0;
-        const char *sdp, *verb;
-
-        sdp = ndir;
+        const char *verb;
 
         /* Check tool */
         if (obj != uwep) {

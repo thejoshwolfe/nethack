@@ -938,6 +938,23 @@ static bool help_dir(char sym, const char *msg) {
     return true;
 }
 
+/* also sets .z, but returns false for <> */
+static bool movecmd(char sym, Direction * out_direction) {
+    const char *dp;
+    if (!(dp = index(ndir, sym)))
+        return false;
+    Direction output;
+    output.x = xdir[dp - ndir];
+    output.y = ydir[dp - ndir];
+    output.z = 0;
+    if (output.x && output.y && u.umonnum == PM_GRID_BUG) {
+        output.x = output.y = 0;
+        return false;
+    }
+    *out_direction = output;
+    return output.z == 0;
+}
+
 void rhack() {
     bool bad_command;
 
@@ -1054,23 +1071,6 @@ void dtoxy(coord * cc, int dd) {
     cc->y = ydir[dd];
 }
 
-/* also sets .z, but returns false for <> */
-bool movecmd(char sym, Direction * out_direction) {
-    const char *dp;
-    if (!(dp = index(ndir, sym)))
-        return false;
-    Direction output;
-    output.x = xdir[dp - ndir];
-    output.y = ydir[dp - ndir];
-    output.z = zdir[dp - ndir];
-    if (output.x && output.y && u.umonnum == PM_GRID_BUG) {
-        output.x = output.y = 0;
-        return false;
-    }
-    *out_direction = output;
-    return output.z == 0;
-}
-
 /*
  * uses getdir() but unlike getdir() it specifically
  * produces coordinates using the direction from getdir()
@@ -1114,30 +1114,13 @@ char yn_function(const char *prompt, const char *options, char default_option) {
 }
 
 int getdir(const char *s) {
-    char dirsym;
+    fprintf(stderr, "TODO: getdir()\n");
+    // TODO: for realz plz
+    u.delta.x = u.delta.y = u.delta.z = 0;
+    confdir();
 
-    if (*readchar_queue)
-        dirsym = readchar();
-    else
-        dirsym = yn_function((s && *s != '^') ? s : "In what direction?", (char *)0, '\0');
-    savech(dirsym);
-    if (dirsym == '.' || dirsym == 's') {
-        u.delta.x = u.delta.y = u.delta.z = 0;
-    } else {
-        u.delta.z = 0;
-        if (!movecmd(dirsym, &u.delta) && !u.delta.z) {
-            bool did_help = false;
-            if (!index(quitchars, dirsym)) {
-                if (iflags.cmdassist) {
-                    did_help = help_dir((s && *s == '^') ? dirsym : 0, "Invalid direction key!");
-                }
-                if (!did_help)
-                    pline("What a strange direction!");
-            }
-            return 0;
-        }
-    }
-    if (!u.delta.z && (Stunned() || (Confusion() && !rn2(5)))) confdir();
+    if (!u.delta.z && (Stunned() || (Confusion() && !rn2(5))))
+        confdir();
     return 1;
 }
 
