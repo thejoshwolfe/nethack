@@ -173,7 +173,6 @@ static void slime_dialogue(void) {
     if (i == 3L) { /* limbs becoming oozy */
         HFast = 0L; /* lose intrinsic speed */
         stop_occupation();
-        if (multi > 0) nomul(0);
     }
     exercise(A_DEX, false);
 }

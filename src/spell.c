@@ -528,7 +528,7 @@ study_book (struct obj *spellbook)
         }
 
         book = spellbook;
-        set_occupation(learn, "studying", 0);
+        set_occupation(learn, "studying");
         return(1);
 }
 

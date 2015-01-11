@@ -386,22 +386,7 @@ void moveloop(void) {
 
         u.umoved = false;
 
-        if (multi > 0) {
-            // TODO: pretty sure this is impossible now.
-            if (!multi) {
-                /* lookaround may clear multi */
-                flags.move = 0;
-                continue;
-            }
-            if (flags.mv) {
-                if (multi < COLNO && --multi == 0)
-                    flags.mv = 0;
-                domove();
-            } else {
-                --multi;
-                rhack(NULL);
-            }
-        } else if (multi == 0) {
+        if (multi == 0) {
             ckmailstatus();
             rhack(NULL);
         }

@@ -1829,7 +1829,7 @@ static int take_off (void) {
      */
     if (todelay > 0) todelay--;
 
-    set_occupation(take_off, disrobing, 0);
+    set_occupation(take_off, disrobing);
     return(1);              /* get busy */
 }
 
@@ -1845,7 +1845,7 @@ int doddoremarm (void) {
 
     if (taking_off || takeoff_mask) {
         You("continue %s.", disrobing);
-        set_occupation(take_off, disrobing, 0);
+        set_occupation(take_off, disrobing);
         return 0;
     } else if (!uwep && !uswapwep && !uquiver && !uamul && !ublindf &&
             !uleft && !uright && !wearing_armor()) {

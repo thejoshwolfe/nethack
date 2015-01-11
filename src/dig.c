@@ -989,7 +989,7 @@ int use_pick_axe2 (struct obj *obj) {
                         d_action[dig_target]);
                 digging.chew = false;
             }
-            set_occupation(dig, verbing, 0);
+            set_occupation(dig, verbing);
         }
     } else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
         /* it must be air -- water checked above */
@@ -1019,7 +1019,7 @@ int use_pick_axe2 (struct obj *obj) {
         } else
             You("continue %s downward.", verbing);
         did_dig_msg = false;
-        set_occupation(dig, verbing, 0);
+        set_occupation(dig, verbing);
     }
     return(1);
 }

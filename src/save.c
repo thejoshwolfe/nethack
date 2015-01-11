@@ -60,7 +60,6 @@ int dosave (void) {
     clear_nhwindow(WIN_MESSAGE);
     if(yn("Really save?") == 'n') {
         clear_nhwindow(WIN_MESSAGE);
-        if(multi > 0) nomul(0);
     } else {
         clear_nhwindow(WIN_MESSAGE);
         pline("Saving...");

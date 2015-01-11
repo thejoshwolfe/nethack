@@ -102,14 +102,6 @@ static int phead, ptail, shead, stail;
 
 #define MAX_EXT_CMD 40          /* Change if we ever have > 40 ext cmds */
 
-/* Count down by decrementing multi */
-static int timed_occupation (void) {
-    (*timed_occ_fn)();
-    if (multi > 0)
-        multi--;
-    return multi > 0;
-}
-
 /* If you have moved since initially setting some occupations, they
  * now shouldn't be able to restart.
  *
@@ -133,12 +125,8 @@ void reset_occupations (void) {
 /* If a time is given, use it to timeout this function, otherwise the
  * function times out by its own means.
  */
-void set_occupation (int (*fn)(void), const char *txt, int xtime) {
-    if (xtime) {
-        occupation = timed_occupation;
-        timed_occ_fn = fn;
-    } else
-        occupation = fn;
+void set_occupation (int (*fn)(void), const char *txt) {
+    occupation = fn;
     occtxt = txt;
     occtime = 0;
     return;
@@ -1010,8 +998,6 @@ void rhack() {
     }
 
     if (do_walk) {
-        if (multi)
-            flags.mv = true;
         domove();
         flags.forcefight = false;
         return;
@@ -1034,8 +1020,6 @@ void rhack() {
                 /* we discard 'const' because some compilers seem to have
                  trouble with the pointer passed to set_occupation() */
                 func = ((struct func_tab *)tlist)->f_funct;
-                if (tlist->f_text && !occupation && multi)
-                    set_occupation(func, tlist->f_text, multi);
                 res = (*func)(); /* perform the command */
             }
             if (!res) {

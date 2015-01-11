@@ -285,10 +285,6 @@ void invault(void) {
         }
 
         stop_occupation(); /* if occupied, stop it *now* */
-        if (multi > 0) {
-            nomul(0);
-            unmul((char *)0);
-        }
         trycount = 5;
         do {
             getlin("\"Hello stranger, who are you?\" -", buf);

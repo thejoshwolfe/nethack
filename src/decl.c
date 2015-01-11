@@ -32,7 +32,7 @@ int locknum = 0;                /* max num of simultaneous users */
 
 int bases[MAXOCLASSES] = DUMMY;
 
-int multi = 0;
+int multi = 0; // never positive
 int nroom = 0;
 int nsubroom = 0;
 int occtime = 0;

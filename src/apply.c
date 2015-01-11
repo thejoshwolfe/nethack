@@ -1972,7 +1972,7 @@ static void use_trap (struct obj *otmp) {
         You("resume setting %s %s.",
                 shk_your(buf, otmp),
                 defsyms[trap_to_defsym(what_trap(ttyp))].explanation);
-        set_occupation(set_trap, occutext, 0);
+        set_occupation(set_trap, occutext);
         return;
     }
     trapinfo.tobj = otmp;
@@ -2019,7 +2019,7 @@ static void use_trap (struct obj *otmp) {
     }
     You("begin setting %s %s.", shk_your(buf, otmp),
             defsyms[trap_to_defsym(what_trap(ttyp))].explanation);
-    set_occupation(set_trap, occutext, 0);
+    set_occupation(set_trap, occutext);
 }
 
 static int use_whip (struct obj *obj) {

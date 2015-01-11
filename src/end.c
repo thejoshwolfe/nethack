@@ -154,7 +154,6 @@ void done1 (int sig_unused) {
         signal(SIGINT, done1);
         clear_nhwindow(WIN_MESSAGE);
         curs_on_u();
-        if(multi > 0) nomul(0);
     } else {
         done2();
     }
@@ -167,7 +166,6 @@ int done2 (void) {
         (void) signal(SIGINT, done1);
         clear_nhwindow(WIN_MESSAGE);
         curs_on_u();
-        if(multi > 0) nomul(0);
         if(multi == 0) {
             u.uinvulnerable = false;    /* avoid ctrl-C bug -dlc */
             u.usleep = 0;
@@ -388,7 +386,7 @@ static void savelife (int how) {
         if (how == CHOKING) init_uhunger();
         nomovemsg = "You survived that attempt on your life.";
         flags.move = 0;
-        if(multi > 0) multi = 0; else multi = -1;
+        multi = -1;
         if(u.utrap && u.utraptype == TT_LAVA) u.utrap = 0;
         u.ugrave_arise = NON_PM;
         HUnchanging = 0L;

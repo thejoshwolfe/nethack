@@ -4,7 +4,7 @@
 #include "coord.h"
 
 void reset_occupations(void);
-void set_occupation(int (*)(void),const char *,int);
+void set_occupation(int (*)(void),const char *);
 char pgetchar(void);
 void pushch(char);
 void savech(char);

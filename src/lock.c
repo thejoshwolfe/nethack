@@ -281,7 +281,7 @@ pick_lock ( /* pick a lock with a given object */
             } else {
                 const char *action = lock_action();
                 You("resume your attempt at %s.", action);
-                set_occupation(picklock, action, 0);
+                set_occupation(picklock, action);
                 return(1);
             }
         }
@@ -448,7 +448,7 @@ pick_lock ( /* pick a lock with a given object */
         xlock.chance = ch;
         xlock.picktyp = picktyp;
         xlock.usedtime = 0;
-        set_occupation(picklock, lock_action(), 0);
+        set_occupation(picklock, lock_action());
         return(1);
 }
 
@@ -475,7 +475,7 @@ doforce (void)               /* try to force a chest with your weapon */
         picktyp = is_blade(uwep);
         if(xlock.usedtime && xlock.box && picktyp == xlock.picktyp) {
             You("resume your attempt to force the lock.");
-            set_occupation(forcelock, "forcing the lock", 0);
+            set_occupation(forcelock, "forcing the lock");
             return(1);
         }
 
@@ -508,7 +508,7 @@ doforce (void)               /* try to force a chest with your weapon */
                 break;
             }
 
-        if(xlock.box)   set_occupation(forcelock, "forcing the lock", 0);
+        if(xlock.box)   set_occupation(forcelock, "forcing the lock");
         else            You("decide not to force the issue.");
         return(1);
 }
