@@ -760,7 +760,7 @@ static int wiz_show_wmodes(void) {
 #define C(c) (0x1f & (c))
 
 static const struct func_tab cmdlist[] = {
-    {C('d'), false, dokick}, /* "D" is for door!...?  Msg is in dokick.c */
+    {C('d'), false, dokick},
     {C('e'), true, wiz_detect},
     {C('f'), true, wiz_map},
     {C('g'), true, wiz_genesis},
@@ -1012,20 +1012,6 @@ void rhack() {
     do_walk = do_rush = false;
     flags.travel = iflags.travel1 = 0;
     switch (*cmd) {
-        case 'g':
-            if (movecmd(cmd[1])) {
-                flags.run = 2;
-                do_rush = true;
-            }
-            break;
-        case '5':
-        case 'G':
-            if (movecmd(lowc(cmd[1]))) {
-                flags.run = 3;
-                do_rush = true;
-            }
-            break;
-        case '-':
             /* Effects of movement commands and invisible monsters:
              * m: always move onto space (even if 'I' remembered)
              * F: always attack space (even if 'I' not remembered)
@@ -1048,13 +1034,6 @@ void rhack() {
                 }
             }
             break;
-        case 'M':
-            if (movecmd(lowc(cmd[1]))) {
-                flags.run = 1;
-                flags.nopick = 1;
-                do_rush = true;
-            }
-            break;
         case CMD_TRAVEL :
             if (iflags.travelcmd) {
                 flags.travel = 1;
@@ -1069,12 +1048,6 @@ void rhack() {
             if (movecmd(*cmd)) { /* ordinary movement */
                 flags.run = 0; /* only matters here if it was 8 */
                 do_walk = true;
-            } else if (movecmd(unmeta(*cmd))) {
-                flags.run = 1;
-                do_rush = true;
-            } else if (movecmd(unctrl(*cmd))) {
-                flags.run = 3;
-                do_rush = true;
             }
             break;
     }
