@@ -438,179 +438,181 @@ stop:
 
 /* something like lookaround, but we are not running */
 /* react only to monsters that might hit us */
-int monster_nearby (void) {
-        int x,y;
-        struct monst *mtmp;
+int monster_nearby(void) {
+    int x, y;
+    struct monst *mtmp;
 
-        /* Also see the similar check in dochugw() in monmove.c */
-        for(x = u.ux-1; x <= u.ux+1; x++)
-            for(y = u.uy-1; y <= u.uy+1; y++) {
-                if(!isok(x,y)) continue;
-                if(x == u.ux && y == u.uy) continue;
-                if((mtmp = m_at(x,y)) &&
-                   mtmp->m_ap_type != M_AP_FURNITURE &&
-                   mtmp->m_ap_type != M_AP_OBJECT &&
-                   (!mtmp->mpeaceful || Hallucination()) &&
-                   (!is_hider(mtmp->data) || !mtmp->mundetected) &&
-                   !noattacks(mtmp->data) &&
-                   mtmp->mcanmove && !mtmp->msleeping &&  /* aplvax!jcn */
-                   !onscary(u.ux, u.uy, mtmp) &&
-                   canspotmon(mtmp))
-                        return(1);
+    /* Also see the similar check in dochugw() in monmove.c */
+    for (x = u.ux - 1; x <= u.ux + 1; x++)
+        for (y = u.uy - 1; y <= u.uy + 1; y++) {
+            if (!isok(x, y))
+                continue;
+            if (x == u.ux && y == u.uy)
+                continue;
+            if ((mtmp = m_at(x, y)) && mtmp->m_ap_type != M_AP_FURNITURE && mtmp->m_ap_type != M_AP_OBJECT && (!mtmp->mpeaceful || Hallucination()) && (!is_hider(mtmp->data) || !mtmp->mundetected) && !noattacks(mtmp->data) && mtmp->mcanmove && !mtmp->msleeping && /* aplvax!jcn */
+            !onscary(u.ux, u.uy, mtmp) && canspotmon(mtmp))
+                return 1;
         }
-        return(0);
+    return 0;
 }
 
-void nomul (int nval) {
-        if(multi < nval) return;        /* This is a bug fix by ab@unido */
-        u.uinvulnerable = false;        /* Kludge to avoid ctrl-C bug -dlc */
-        u.usleep = 0;
-        multi = nval;
-        flags.travel = iflags.travel1 = flags.mv = flags.run = 0;
+void nomul(int nval) {
+    if (multi < nval)
+        return; /* This is a bug fix by ab@unido */
+    u.uinvulnerable = false; /* Kludge to avoid ctrl-C bug -dlc */
+    u.usleep = 0;
+    multi = nval;
+    flags.travel = iflags.travel1 = flags.mv = flags.run = 0;
 }
 
 /* called when a non-movement, multi-turn action has completed */
-void unmul (const char *msg_override) {
-        multi = 0;      /* caller will usually have done this already */
-        if (msg_override) nomovemsg = msg_override;
-        else if (!nomovemsg) nomovemsg = You_can_move_again;
-        if (*nomovemsg) plines(nomovemsg);
-        nomovemsg = 0;
-        u.usleep = 0;
-        if (afternmv) (*afternmv)();
-        afternmv = 0;
+void unmul(const char *msg_override) {
+    multi = 0; /* caller will usually have done this already */
+    if (msg_override)
+        nomovemsg = msg_override;
+    else if (!nomovemsg)
+        nomovemsg = You_can_move_again;
+    if (*nomovemsg)
+        plines(nomovemsg);
+    nomovemsg = 0;
+    u.usleep = 0;
+    if (afternmv)
+        (*afternmv)();
+    afternmv = 0;
 }
 
-static void maybe_wail (void) {
+static void maybe_wail(void) {
     static short powers[] = { TELEPORT, SEE_INVIS, POISON_RES, COLD_RES,
                               SHOCK_RES, FIRE_RES, SLEEP_RES, DISINT_RES,
                               TELEPORT_CONTROL, STEALTH, FAST, INVIS };
 
-    if (moves <= wailmsg + 50) return;
+    if (moves <= wailmsg + 50)
+        return;
 
     wailmsg = moves;
     if (Role_if(PM_WIZARD) || Race_if(PM_ELF) || Role_if(PM_VALKYRIE)) {
         const char *who;
         int i, powercnt;
 
-        who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ?
-                urole.name.m : "Elf";
+        who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ? urole.name.m : "Elf";
         if (u.uhp == 1) {
             pline("%s is about to die.", who);
         } else {
             for (i = 0, powercnt = 0; i < SIZE(powers); ++i)
-                if (u.uprops[powers[i]].intrinsic & INTRINSIC) ++powercnt;
+                if (u.uprops[powers[i]].intrinsic & INTRINSIC)
+                    ++powercnt;
 
-            pline(powercnt >= 4 ? "%s, all your powers will be lost..."
-                                : "%s, your life force is running out.", who);
+            pline(powercnt >= 4 ? "%s, all your powers will be lost..." : "%s, your life force is running out.", who);
         }
     } else {
-        You_hear(u.uhp == 1 ? "the wailing of the Banshee..."
-                            : "the howling of the CwnAnnwn...");
+        You_hear(u.uhp == 1 ? "the wailing of the Banshee..." : "the howling of the CwnAnnwn...");
     }
 }
 
-void losehp (int n, struct Killer k) {
+void losehp(int n, struct Killer k) {
     if (Upolyd) {
         u.mh -= n;
-        if (u.mhmax < u.mh) u.mhmax = u.mh;
+        if (u.mhmax < u.mh)
+            u.mhmax = u.mh;
         if (u.mh < 1)
             rehumanize();
-        else if (n > 0 && u.mh*10 < u.mhmax && Unchanging)
+        else if (n > 0 && u.mh * 10 < u.mhmax && Unchanging)
             maybe_wail();
         return;
     }
 
     u.uhp -= n;
-    if(u.uhp > u.uhpmax)
-        u.uhpmax = u.uhp;       /* perhaps n was negative */
-    if(u.uhp < 1) {
-        killer = k;          /* the thing that killed you */
+    if (u.uhp > u.uhpmax)
+        u.uhpmax = u.uhp; /* perhaps n was negative */
+    if (u.uhp < 1) {
+        killer = k; /* the thing that killed you */
         You("die...");
         done(DIED);
-    } else if (n > 0 && u.uhp*10 < u.uhpmax) {
+    } else if (n > 0 && u.uhp * 10 < u.uhpmax) {
         maybe_wail();
     }
 }
 
-int weight_cap (void) {
-        long carrcap;
+int weight_cap(void) {
+    long carrcap;
 
-        carrcap = 25*(ACURRSTR + ACURR(A_CON)) + 50;
-        if (Upolyd) {
-                /* consistent with can_carry() in mon.c */
-                if (youmonst.data->mlet == S_NYMPH)
-                        carrcap = MAX_CARR_CAP;
-                else if (!youmonst.data->cwt)
-                        carrcap = (carrcap * (long)youmonst.data->msize) / MZ_HUMAN;
-                else if (!strongmonst(youmonst.data)
-                        || (strongmonst(youmonst.data) && (youmonst.data->cwt > WT_HUMAN)))
-                        carrcap = (carrcap * (long)youmonst.data->cwt / WT_HUMAN);
-        }
+    carrcap = 25 * (ACURRSTR + ACURR(A_CON)) + 50;
+    if (Upolyd) {
+        /* consistent with can_carry() in mon.c */
+        if (youmonst.data->mlet == S_NYMPH)
+            carrcap = MAX_CARR_CAP;
+        else if (!youmonst.data->cwt)
+            carrcap = (carrcap * (long)youmonst.data->msize) / MZ_HUMAN;
+        else if (!strongmonst(youmonst.data) || (strongmonst(youmonst.data) && (youmonst.data->cwt > WT_HUMAN)))
+            carrcap = (carrcap * (long)youmonst.data->cwt / WT_HUMAN);
+    }
 
-        if (Levitation || Is_airlevel(&u.uz)    /* pugh@cornell */
-                        || (u.usteed && strongmonst(u.usteed->data))
-        )
-                carrcap = MAX_CARR_CAP;
-        else {
-                if(carrcap > MAX_CARR_CAP) carrcap = MAX_CARR_CAP;
-                if (!Flying) {
-                        if(get_EWounded_legs() & LEFT_SIDE) carrcap -= 100;
-                        if(get_EWounded_legs() & RIGHT_SIDE) carrcap -= 100;
-                }
-                if (carrcap < 0) carrcap = 0;
+    if (Levitation || Is_airlevel(&u.uz) || (u.usteed && strongmonst(u.usteed->data))) {
+        carrcap = MAX_CARR_CAP;
+    } else {
+        if (carrcap > MAX_CARR_CAP)
+            carrcap = MAX_CARR_CAP;
+        if (!Flying) {
+            if (get_EWounded_legs() & LEFT_SIDE)
+                carrcap -= 100;
+            if (get_EWounded_legs() & RIGHT_SIDE)
+                carrcap -= 100;
         }
-        return((int) carrcap);
+        if (carrcap < 0)
+            carrcap = 0;
+    }
+    return (int)carrcap;
 }
 
 
 /* returns how far beyond the normal capacity the player is currently. */
 /* inv_weight() is negative if the player is below normal capacity. */
-int inv_weight (void) {
-        struct obj *otmp = invent;
-        int wt = 0;
+int inv_weight(void) {
+    struct obj *otmp = invent;
+    int wt = 0;
 
-        /* when putting stuff into containers, gold is inserted at the head
-           of invent for easier manipulation by askchain & co, but it's also
-           retained in u.ugold in order to keep the status line accurate; we
-           mustn't add its weight in twice under that circumstance */
-        wt = (otmp && otmp->oclass == COIN_CLASS) ? 0 :
-                (int)((u.ugold + 50L) / 100L);
-        while (otmp) {
-                if (otmp->otyp != BOULDER || !throws_rocks(youmonst.data))
-                        wt += otmp->owt;
-                otmp = otmp->nobj;
-        }
-        wc = weight_cap();
-        return (wt - wc);
+    /* when putting stuff into containers, gold is inserted at the head
+     of invent for easier manipulation by askchain & co, but it's also
+     retained in u.ugold in order to keep the status line accurate; we
+     mustn't add its weight in twice under that circumstance */
+    wt = (otmp && otmp->oclass == COIN_CLASS) ? 0 : (int)((u.ugold + 50L) / 100L);
+    while (otmp) {
+        if (otmp->otyp != BOULDER || !throws_rocks(youmonst.data))
+            wt += otmp->owt;
+        otmp = otmp->nobj;
+    }
+    wc = weight_cap();
+    return (wt - wc);
 }
 
 /*
  * Returns 0 if below normal capacity, or the number of "capacity units"
  * over the normal capacity the player is loaded.  Max is 5.
  */
-int calc_capacity (int xtra_wt) {
+int calc_capacity(int xtra_wt) {
     int cap, wt = inv_weight() + xtra_wt;
 
-    if (wt <= 0) return UNENCUMBERED;
-    if (wc <= 1) return OVERLOADED;
-    cap = (wt*2 / wc) + 1;
+    if (wt <= 0)
+        return UNENCUMBERED;
+    if (wc <= 1)
+        return OVERLOADED;
+    cap = (wt * 2 / wc) + 1;
     return min(cap, OVERLOADED);
 }
 
-int near_capacity (void) {
+int near_capacity(void) {
     return calc_capacity(0);
 }
 
-int max_capacity (void) {
+int max_capacity(void) {
     int wt = inv_weight();
 
     return (wt - (2 * wc));
 }
 
-bool check_capacity (const char *str) {
-    if(near_capacity() >= EXT_ENCUMBER) {
-        if(str)
+bool check_capacity(const char *str) {
+    if (near_capacity() >= EXT_ENCUMBER) {
+        if (str)
             plines(str);
         else
             You_cant("do that while carrying so much stuff.");
@@ -619,15 +621,15 @@ bool check_capacity (const char *str) {
     return 0;
 }
 
-int inv_cnt (void) {
+int inv_cnt(void) {
     struct obj *otmp = invent;
     int ct = 0;
 
-    while(otmp){
+    while (otmp) {
         ct++;
         otmp = otmp->nobj;
     }
-    return(ct);
+    return ct;
 }
 
 struct Killer killed_by_const(enum KillerMethod method) {
