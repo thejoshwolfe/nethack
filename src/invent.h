@@ -67,5 +67,6 @@ int count_buc(struct obj *,int);
 void carry_obj_effects(struct obj *);
 const char *currency(long);
 void silly_thing(const char *,struct obj *);
+int dopickup(void);
 
 #endif // INVENT_H

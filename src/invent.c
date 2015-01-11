@@ -2485,8 +2485,9 @@ struct obj * display_minventory (struct monst *mon, int dflags, char *title) {
          * can happen.  Maybe even put gold in the inventory list...
          */
         if (ret == &m_gold) ret = (struct obj *) 0;
-    } else
+    } else {
         ret = (struct obj *) 0;
+    }
     return ret;
 }
 
@@ -2552,3 +2553,74 @@ int display_binventory (int x, int y, bool as_if_seen) {
         }
         return n;
 }
+
+int dopickup(void) {
+    int count;
+    struct trap *traphere = t_at(u.ux, u.uy);
+    /* awful kludge to work around parse()'s pre-decrement */
+    count = multi ? multi + 1 : 0;
+    multi = 0; /* always reset */
+    if (u.uswallow) {
+        if (!u.ustuck->minvent) {
+            if (is_animal(u.ustuck->data)) {
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, u.ustuck);
+                You("pick up %s%s tongue.", name, possessive_suffix(name));
+                pline("But it's kind of slimy, so you drop it.");
+            } else {
+                You("don't %s anything in here to pick up.", Blind ? "feel" : "see");
+            }
+            return 1;
+        } else {
+            int tmpcount = -count;
+            return loot_mon(u.ustuck, &tmpcount, (bool *)0);
+        }
+    }
+    if (is_pool(u.ux, u.uy)) {
+        if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data) || (Flying && !Breathless)) {
+            You("cannot dive into the water to pick things up.");
+            return (0);
+        } else if (!Underwater) {
+            You_cant("even see the bottom, let alone pick up %s.", something);
+            return (0);
+        }
+    }
+    if (is_lava(u.ux, u.uy)) {
+        if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data) || (Flying && !Breathless)) {
+            You_cant("reach the bottom to pick things up.");
+            return (0);
+        } else if (!likes_lava(youmonst.data)) {
+            You("would burn to a crisp trying to pick things up.");
+            return (0);
+        }
+    }
+    if (!OBJ_AT(u.ux, u.uy)) {
+        There("is nothing here to pick up.");
+        return (0);
+    }
+    if (!can_reach_floor()) {
+        if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
+            char name[BUFSZ];
+            y_monnam(name, BUFSZ, u.usteed);
+            You("aren't skilled enough to reach from %s.", name);
+        } else {
+            You("cannot reach the %s.", surface(u.ux, u.uy));
+        }
+        return 0;
+    }
+
+    if (traphere && traphere->tseen) {
+        /* Allow pickup from holes and trap doors that you escaped from
+         * because that stuff is teetering on the edge just like you, but
+         * not pits, because there is an elevation discrepancy with stuff
+         * in pits.
+         */
+        if ((traphere->ttyp == PIT || traphere->ttyp == SPIKED_PIT) && (!u.utrap || (u.utrap && u.utraptype != TT_PIT))) {
+            You("cannot reach the bottom of the pit.");
+            return (0);
+        }
+    }
+
+    return pickup(-count);
+}
+
