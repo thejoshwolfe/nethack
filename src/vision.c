@@ -119,7 +119,7 @@ static void get_unused_cs(char ***,char **,char **);
  *
  * The one-time vision initialization routine.
  *
- * This must be called before mklev() is called in newgame() [allmain.c],
+ * This must be called before mklev() is called in newgame()
  * or before a game restore.   Else we die a horrible death.
  */
 void

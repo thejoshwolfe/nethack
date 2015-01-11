@@ -43,7 +43,7 @@ MAKEDEFS = cd dat && ../build/makedefs
 HACK_H = build/onames.h build/pm.h build/artifact_names.h
 
 MAKEDEFS_NEEDS_THESE = build/monst.o build/objects.o
-NORMAL_ASS_O_FILES = build/allmain.o build/apply.o build/artifact.o build/attrib.o build/ball.o \
+NORMAL_ASS_O_FILES = build/main.o build/apply.o build/artifact.o build/attrib.o build/ball.o \
   build/bones.o build/cmd.o build/dbridge.o build/decl.o build/detect.o build/dig.o build/display.o build/dlb.o \
   build/do.o build/do_name.o build/do_wear.o build/dog.o build/dogmove.o build/dokick.o build/dothrow.o \
   build/drawing.o build/dungeon.o build/eat.o build/end.o build/engrave.o build/exper.o build/explode.o \
