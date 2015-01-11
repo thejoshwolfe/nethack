@@ -939,7 +939,6 @@ static bool help_dir(char sym, const char *msg) {
 }
 
 void rhack() {
-    bool do_walk;
     bool bad_command;
 
     iflags.menu_requested = false;
@@ -951,13 +950,13 @@ void rhack() {
         flags.move = false;
         return;
     }
-    /* Special case of *cmd == ' ' handled better below */
     if (!*cmd || *cmd == (char)0377) {
         flags.move = false;
         return; /* probably we just had an interrupt */
     }
     /* handle most movement commands */
-    do_walk = false;
+    bool do_walk = false;
+    u.dz = 0;
     switch (*cmd) {
             /* Effects of movement commands and invisible monsters:
              * m: always move onto space (even if 'I' remembered)
@@ -965,23 +964,20 @@ void rhack() {
              * normal movement: attack if 'I', move otherwise
              */
         case 'F':
-            if (movecmd(cmd[1])) {
+            if (movecmd(cmd[1], &u.delta)) {
                 flags.forcefight = true;
                 do_walk = true;
             }
             break;
         case 'm':
-            if (movecmd(cmd[1]) || u.dz) {
+            if (movecmd(cmd[1], &u.delta)) {
                 flags.nopick = 1;
-                if (u.dz) {
-                    cmd[0] = cmd[1]; /* "m<" or "m>" */
-                } else {
-                    do_walk = true;
-                }
+                do_walk = true;
             }
             break;
         default:
-            if (movecmd(*cmd)) { /* ordinary movement */
+            /* ordinary movement */
+            if (movecmd(*cmd, &u.delta)) {
                 do_walk = true;
             }
             break;
@@ -1058,23 +1054,21 @@ void dtoxy(coord * cc, int dd) {
     cc->y = ydir[dd];
 }
 
-/* also sets u.dz, but returns false for <> */
-int movecmd(char sym) {
+/* also sets .z, but returns false for <> */
+bool movecmd(char sym, Direction * out_direction) {
     const char *dp;
-    const char *sdp;
-    sdp = ndir;
-
-    u.dz = 0;
-    if (!(dp = index(sdp, sym)))
-        return 0;
-    u.dx = xdir[dp - sdp];
-    u.dy = ydir[dp - sdp];
-    u.dz = zdir[dp - sdp];
-    if (u.dx && u.dy && u.umonnum == PM_GRID_BUG) {
-        u.dx = u.dy = 0;
-        return 0;
+    if (!(dp = index(ndir, sym)))
+        return false;
+    Direction output;
+    output.x = xdir[dp - ndir];
+    output.y = ydir[dp - ndir];
+    output.z = zdir[dp - ndir];
+    if (output.x && output.y && u.umonnum == PM_GRID_BUG) {
+        output.x = output.y = 0;
+        return false;
     }
-    return !u.dz;
+    *out_direction = output;
+    return output.z == 0;
 }
 
 /*
@@ -1093,8 +1087,8 @@ int get_adjacent_loc(const char *prompt, const char *emsg, signed char x, signed
         plines(Never_mind);
         return 0;
     }
-    new_x = x + u.dx;
-    new_y = y + u.dy;
+    new_x = x + u.delta.x;
+    new_y = y + u.delta.y;
     if (cc && isok(new_x, new_y)) {
         cc->x = new_x;
         cc->y = new_y;
@@ -1128,26 +1122,29 @@ int getdir(const char *s) {
         dirsym = yn_function((s && *s != '^') ? s : "In what direction?", (char *)0, '\0');
     savech(dirsym);
     if (dirsym == '.' || dirsym == 's') {
-        u.dx = u.dy = u.dz = 0;
-    } else if (!movecmd(dirsym) && !u.dz) {
-        bool did_help = false;
-        if (!index(quitchars, dirsym)) {
-            if (iflags.cmdassist) {
-                did_help = help_dir((s && *s == '^') ? dirsym : 0, "Invalid direction key!");
+        u.delta.x = u.delta.y = u.delta.z = 0;
+    } else {
+        u.delta.z = 0;
+        if (!movecmd(dirsym, &u.delta) && !u.delta.z) {
+            bool did_help = false;
+            if (!index(quitchars, dirsym)) {
+                if (iflags.cmdassist) {
+                    did_help = help_dir((s && *s == '^') ? dirsym : 0, "Invalid direction key!");
+                }
+                if (!did_help)
+                    pline("What a strange direction!");
             }
-            if (!did_help)
-                pline("What a strange direction!");
+            return 0;
         }
-        return 0;
     }
-    if (!u.dz && (Stunned() || (Confusion() && !rn2(5)))) confdir();
+    if (!u.delta.z && (Stunned() || (Confusion() && !rn2(5)))) confdir();
     return 1;
 }
 
 void confdir (void) {
     int x = (u.umonnum == PM_GRID_BUG) ? 2*rn2(4) : rn2(8);
-    u.dx = xdir[x];
-    u.dy = ydir[x];
+    u.delta.x = xdir[x];
+    u.delta.y = ydir[x];
 }
 
 

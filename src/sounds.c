@@ -831,14 +831,14 @@ static int dochat (void) {
         return(0);
     }
 
-    if (u.usteed && u.dz > 0)
+    if (u.usteed && u.delta.z > 0)
         return (domonnoise(u.usteed));
-    if (u.dz) {
-        pline("They won't hear you %s there.", u.dz < 0 ? "up" : "down");
+    if (u.delta.z) {
+        pline("They won't hear you %s there.", u.delta.z < 0 ? "up" : "down");
         return(0);
     }
 
-    if (u.dx == 0 && u.dy == 0) {
+    if (u.delta.x == 0 && u.delta.y == 0) {
         /*
          * Let's not include this.  It raises all sorts of questions: can you wear
          * 2 helmets, 2 amulets, 3 pairs of gloves or 6 rings as a marilith,
@@ -852,7 +852,7 @@ static int dochat (void) {
         return(0);
     }
 
-    tx = u.ux+u.dx; ty = u.uy+u.dy;
+    tx = u.ux+u.delta.x; ty = u.uy+u.delta.y;
     mtmp = m_at(tx, ty);
 
     if (!mtmp || mtmp->mundetected ||

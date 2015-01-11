@@ -149,8 +149,8 @@ static void kickdmg(struct monst *mon, bool clumsy) {
         if (mon->mhp > 0 && martial() && !bigmonst(mon->data) && !rn2(3) &&
             mon->mcanmove && mon != u.ustuck && !mon->mtrapped) {
                 /* see if the monster has a place to move into */
-                mdx = mon->mx + u.dx;
-                mdy = mon->my + u.dy;
+                mdx = mon->mx + u.delta.x;
+                mdy = mon->my + u.delta.y;
                 if(goodpos(mdx, mdy, mon, 0)) {
                     char name[BUFSZ];
                     Monnam(name, BUFSZ, mon);
@@ -507,7 +507,7 @@ static int kick_object(signed char x, signed char y) {
         if(kickobj->oartifact == ART_MJOLLNIR) range = 1;
 
         /* see if the object has a place to move into */
-        if(!ZAP_POS(levl[x+u.dx][y+u.dy].typ) || closed_door(x+u.dx, y+u.dy))
+        if(!ZAP_POS(levl[x+u.delta.x][y+u.delta.y].typ) || closed_door(x+u.delta.x, y+u.delta.y))
                 range = 1;
 
         costly = ((shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) &&
@@ -596,7 +596,7 @@ static int kick_object(signed char x, signed char y) {
         obj_extract_self(kickobj);
         snuff_candle(kickobj);
         newsym(x, y);
-        mon = bhit(u.dx, u.dy, range, KICKED_WEAPON,
+        mon = bhit(u.delta.x, u.delta.y, range, KICKED_WEAPON,
                    (int (*)(struct monst *,struct obj *))0,
                    (int (*)(struct obj *,struct obj *))0,
                    kickobj);
@@ -751,10 +751,10 @@ dokick (void)
         }
 
         if(!getdir((char *)0)) return(0);
-        if(!u.dx && !u.dy) return(0);
+        if(!u.delta.x && !u.delta.y) return(0);
 
-        x = u.ux + u.dx;
-        y = u.uy + u.dy;
+        x = u.ux + u.delta.x;
+        y = u.uy + u.delta.y;
 
         /* KMH -- Kicking boots always succeed */
         if (uarmf && uarmf->otyp == KICKING_BOOTS)
@@ -779,8 +779,8 @@ dokick (void)
         if (Levitation) {
                 int xx, yy;
 
-                xx = u.ux - u.dx;
-                yy = u.uy - u.dy;
+                xx = u.ux - u.delta.x;
+                yy = u.uy - u.delta.y;
                 /* doors can be opened while levitating, so they must be
                  * reachable for bracing purposes
                  * Possible extension: allow bracing against stuff on the side?
@@ -828,7 +828,7 @@ dokick (void)
                     range = (3*(int)mdat->cwt) / range;
 
                     if(range < 1) range = 1;
-                    hurtle(-u.dx, -u.dy, range, true);
+                    hurtle(-u.delta.x, -u.delta.y, range, true);
                 }
                 return(1);
         }
@@ -848,7 +848,7 @@ dokick (void)
              || sobj_at(BOULDER,x,y))) {
                 if(kick_object(x, y)) {
                     if(Is_airlevel(&u.uz))
-                        hurtle(-u.dx, -u.dy, 1, true); /* assume it's light */
+                        hurtle(-u.delta.x, -u.delta.y, 1, true); /* assume it's light */
                     return(1);
                 }
                 goto ouch;
@@ -1079,7 +1079,7 @@ ouch:
                     int hp_to_lose = rnd(ACURR(A_CON) > 15 ? 3 : 5);
                     losehp(hp_to_lose, kick_killer());
                     if(Is_airlevel(&u.uz) || Levitation)
-                        hurtle(-u.dx, -u.dy, rn1(2,4), true); /* assume it's heavy */
+                        hurtle(-u.delta.x, -u.delta.y, rn1(2,4), true); /* assume it's heavy */
                     return(1);
                 }
                 goto dumb;
@@ -1099,7 +1099,7 @@ dumb:
                         set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
                 }
                 if ((Is_airlevel(&u.uz) || Levitation) && rn2(2)) {
-                    hurtle(-u.dx, -u.dy, 1, true);
+                    hurtle(-u.delta.x, -u.delta.y, 1, true);
                     return 1;           /* you moved, so use up a turn */
                 }
                 return(0);

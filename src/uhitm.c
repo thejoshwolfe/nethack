@@ -174,9 +174,9 @@ bool attack_checks(struct monst *mtmp, struct obj *wep) {
      * happening two turns in a row.  The latter shows a glyph on
      * the screen, so you know something is there.
      */
-    if (!canspotmon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.dx, u.uy + u.dy)) && !glyph_is_invisible(levl[u.ux+u.dx][u.uy+u.dy].glyph) && !(!Blind && mtmp->mundetected && hides_under(mtmp->data))) {
+    if (!canspotmon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.delta.x, u.uy + u.delta.y)) && !glyph_is_invisible(levl[u.ux+u.delta.x][u.uy+u.delta.y].glyph) && !(!Blind && mtmp->mundetected && hides_under(mtmp->data))) {
         pline("Wait!  There's %s there you can't see!", something);
-        map_invisible(u.ux + u.dx, u.uy + u.dy);
+        map_invisible(u.ux + u.delta.x, u.uy + u.delta.y);
         /* if it was an invisible mimic, treat it as if we stumbled
          * onto a visible mimic
          */
@@ -188,7 +188,7 @@ bool attack_checks(struct monst *mtmp, struct obj *wep) {
         return true;
     }
 
-    if (mtmp->m_ap_type && !Protection_from_shape_changers && !sensemon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.dx, u.uy + u.dy))) {
+    if (mtmp->m_ap_type && !Protection_from_shape_changers && !sensemon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.delta.x, u.uy + u.delta.y))) {
         /* If a hidden mimic was in a square where a player remembers
          * some (probably different) unseen monster, the player is in
          * luck--he attacks it even though it's hidden.
@@ -201,7 +201,7 @@ bool attack_checks(struct monst *mtmp, struct obj *wep) {
         return true;
     }
 
-    if (mtmp->mundetected && !canseemon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.dx, u.uy + u.dy)) && (hides_under(mtmp->data) || mtmp->data->mlet == S_EEL)) {
+    if (mtmp->mundetected && !canseemon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.delta.x, u.uy + u.delta.y)) && (hides_under(mtmp->data) || mtmp->data->mlet == S_EEL)) {
         mtmp->mundetected = mtmp->msleeping = 0;
         newsym(mtmp->mx, mtmp->my);
         if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph)) {
@@ -314,7 +314,7 @@ static bool known_hitum(struct monst *mon, int *mhit, struct attack *uattk) {
     if (!*mhit) {
         missum(mon, uattk);
     } else {
-        int oldhp = mon->mhp, x = u.ux + u.dx, y = u.uy + u.dy;
+        int oldhp = mon->mhp, x = u.ux + u.delta.x, y = u.uy + u.delta.y;
 
         /* KMH, conduct */
         if (uwep && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)))
@@ -629,7 +629,7 @@ static bool hmonas( /* attack monster as a monster. */
             } else
                 sum[i] = dhit;
             /* might be a worm that gets cut in half */
-            if (m_at(u.ux+u.dx, u.uy+u.dy) != mon)
+            if (m_at(u.ux+u.delta.x, u.uy+u.delta.y) != mon)
                 return ((bool)(nsum != 0));
             /* Do not print "You hit" message, since known_hitum
              * already did it.
@@ -788,7 +788,7 @@ static bool hitum( /* returns true if monster still lives */
 }
 
 /* try to attack; return false if monster evaded */
-/* u.dx and u.dy must be set */
+/* u.delta must be set */
 bool attack(struct monst *mtmp) {
     signed char tmp;
     struct permonst *mdat = mtmp->data;
@@ -877,7 +877,7 @@ bool attack(struct monst *mtmp) {
 
     /* Is the "it died" check actually correct? */
     if (mdat->mlet == S_LEPRECHAUN && !mtmp->mfrozen && !mtmp->msleeping && !mtmp->mconf && mtmp->mcansee && !rn2(7) && (m_move(mtmp, 0) == 2 || /* it died */
-            mtmp->mx != u.ux + u.dx || mtmp->my != u.uy + u.dy)) /* it moved */
+            mtmp->mx != u.ux + u.delta.x || mtmp->my != u.uy + u.delta.y)) /* it moved */
         return (false);
 
     tmp = find_roll_to_hit(mtmp);
@@ -893,8 +893,8 @@ bool attack(struct monst *mtmp) {
      * and it returned 0 (it's okay to attack), and the monster didn't
      * evade.
      */
-    if (flags.forcefight && mtmp->mhp > 0 && !canspotmon(mtmp) && !glyph_is_invisible(levl[u.ux+u.dx][u.uy+u.dy].glyph) && !(u.uswallow && mtmp == u.ustuck))
-        map_invisible(u.ux + u.dx, u.uy + u.dy);
+    if (flags.forcefight && mtmp->mhp > 0 && !canspotmon(mtmp) && !glyph_is_invisible(levl[u.ux+u.delta.x][u.uy+u.delta.y].glyph) && !(u.uswallow && mtmp == u.ustuck))
+        map_invisible(u.ux + u.delta.x, u.uy + u.delta.y);
 
     return (true);
 }
@@ -1398,7 +1398,7 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
         }
         /* avoid migrating a dead monster */
         if (mon->mhp > tmp) {
-            mhurtle(mon, u.dx, u.dy, 1);
+            mhurtle(mon, u.delta.x, u.delta.y, 1);
             mdat = mon->data; /* in case of a polymorph trap */
             if (DEADMONSTER(mon))
                 already_killed = true;
@@ -1413,7 +1413,7 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
                     message_monster(MSG_M_STAGGERS_FROM_YOUR_POWERFUL_STRIKE, mon);
                 /* avoid migrating a dead monster */
                 if (mon->mhp > tmp) {
-                    mhurtle(mon, u.dx, u.dy, 1);
+                    mhurtle(mon, u.delta.x, u.delta.y, 1);
                     mdat = mon->data; /* in case of a polymorph trap */
                     if (DEADMONSTER(mon))
                         already_killed = true;
@@ -2300,7 +2300,7 @@ void stumble_onto_mimic(struct monst *mtmp) {
         else if (mtmp->m_ap_type == M_AP_MONSTER)
             what = "TODO:a_monnam(mtmp)"; /* differs from what was sensed */
     } else {
-        int glyph = levl[u.ux + u.dx][u.uy + u.dy].glyph;
+        int glyph = levl[u.ux + u.delta.x][u.uy + u.delta.y].glyph;
 
         if (glyph_is_cmap(glyph) && (glyph_to_cmap(glyph) == S_hcdoor ||
                 glyph_to_cmap(glyph) == S_vcdoor))

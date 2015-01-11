@@ -229,7 +229,11 @@ enum {
 /*** Information about the player ***/
 struct you {
         signed char ux, uy;
-        signed char dx, dy, dz; /* direction of move (or zap or ... ) */
+
+        /* direction of move (or zap or ... ) */
+        Direction delta;
+        signed char dz;
+
         signed char di;         /* direction of FF */
         signed char tx, ty;             /* destination of travel */
         signed char ux0, uy0;           /* initial position FF */

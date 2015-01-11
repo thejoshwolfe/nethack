@@ -823,9 +823,11 @@ int dodown (void) {
                 trap->ttyp == HOLE ? "down the hole" : "through the trap door");
 
     if (trap && Is_stronghold(&u.uz)) {
+        flags.nopick = 1;
         goto_hell(false, true);
     } else {
         at_ladder = (bool) (levl[u.ux][u.uy].typ == LADDER);
+        flags.nopick = 1;
         next_level(!trap);
         at_ladder = false;
     }
@@ -873,6 +875,7 @@ int doup (void) {
         return(0);
     }
     at_ladder = (bool) (levl[u.ux][u.uy].typ == LADDER);
+    flags.nopick = 1;
     prev_level(true);
     at_ladder = false;
     return(1);
@@ -1112,10 +1115,10 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
                     if (newdungeon) u_on_sstairs();
                     else u_on_upstairs();
                 }
-                if (u.dz && Flying)
+                if (u.delta.z && Flying)
                     You("fly down along the %s.",
                         at_ladder ? "ladder" : "stairs");
-                else if (u.dz &&
+                else if (u.delta.z &&
                     (near_capacity() > UNENCUMBERED || Punished || Fumbling())) {
                     You("fall down the %s.", at_ladder ? "ladder" : "stairs");
                     if (Punished) {
@@ -1137,7 +1140,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
                         losehp(rnd(3), killed_by_const(KM_FALLING_DOWNSTAIRS));
                     }
                     selftouch("Falling, you");
-                } else if (u.dz && at_ladder)
+                } else if (u.delta.z && at_ladder)
                     You("climb down the ladder.");
             }
         } else {        /* trap door or level_tele or In_endgame */

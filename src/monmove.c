@@ -108,7 +108,7 @@ bool mb_trapped (struct monst *mtmp) {
 static void watch_on_duty (struct monst *mtmp) {
     int     x, y;
 
-    if(mtmp->mpeaceful && in_town(u.ux+u.dx, u.uy+u.dy) &&
+    if(mtmp->mpeaceful && in_town(u.ux+u.delta.x, u.uy+u.delta.y) &&
             mtmp->mcansee && m_canseeu(mtmp) && !rn2(3)) {
 
         if(picking_lock(&x, &y) && IS_DOOR(levl[x][y].typ) &&

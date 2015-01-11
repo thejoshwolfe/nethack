@@ -6,4 +6,10 @@ typedef struct nhcoord {
     signed char x,y;
 } coord;
 
+typedef struct {
+    signed char x;
+    signed char y;
+    signed char z;
+} Direction;
+
 #endif /* COORD_H */

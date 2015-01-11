@@ -402,13 +402,13 @@ static int do_improvisation (struct obj *instr) {
                     Tobjnam(vibrate_clause, BUFSZ, instr, "vibrate");
                     pline("%s.", vibrate_clause);
                     break;
-                } else if (!u.dx && !u.dy && !u.dz) {
+                } else if (!u.delta.x && !u.delta.y && !u.delta.z) {
                     if ((damage = zapyourself(instr, true)) != 0) {
                         losehp(damage, killed_by_const(KM_USING_MAGIC_HORN_ON_SELF));
                     }
                 } else {
                     buzz((instr->otyp == FROST_HORN) ? AD_COLD-1 : AD_FIRE-1,
-                            rn1(6,6), u.ux, u.uy, u.dx, u.dy);
+                            rn1(6,6), u.ux, u.uy, u.delta.x, u.delta.y);
                 }
                 makeknown(instr->otyp);
                 break;

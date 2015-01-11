@@ -92,12 +92,12 @@ int use_saddle (struct obj *otmp) {
         plines(Never_mind);
         return 0;
     }
-    if (!u.dx && !u.dy) {
+    if (!u.delta.x && !u.delta.y) {
         pline("Saddle yourself?  Very funny...");
         return 0;
     }
-    if (!isok(u.ux+u.dx, u.uy+u.dy) ||
-            !(mtmp = m_at(u.ux+u.dx, u.uy+u.dy)) ||
+    if (!isok(u.ux+u.delta.x, u.uy+u.delta.y) ||
+            !(mtmp = m_at(u.ux+u.delta.x, u.uy+u.delta.y)) ||
             !canspotmon(mtmp)) {
         pline("I see nobody there.");
         return 1;
@@ -198,10 +198,10 @@ int doride (void) {
 
     if (u.usteed)
         dismount_steed(DISMOUNT_BYCHOICE);
-    else if (getdir((char *)0) && isok(u.ux+u.dx, u.uy+u.dy)) {
+    else if (getdir((char *)0) && isok(u.ux+u.delta.x, u.uy+u.delta.y)) {
         if (flags.debug && yn("Force the mount to succeed?") == 'y')
             forcemount = true;
-        return (mount_steed(m_at(u.ux+u.dx, u.uy+u.dy), forcemount));
+        return (mount_steed(m_at(u.ux+u.delta.x, u.uy+u.delta.y), forcemount));
     } else
         return 0;
     return 1;

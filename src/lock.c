@@ -63,8 +63,8 @@ bool
 picking_lock (int *x, int *y)
 {
         if (occupation == picklock) {
-            *x = u.ux + u.dx;
-            *y = u.uy + u.dy;
+            *x = u.ux + u.delta.x;
+            *y = u.uy + u.delta.y;
             return true;
         } else {
             *x = *y = 0;
@@ -115,7 +115,7 @@ picklock (void)      /* try to open/close a lock */
                 return((xlock.usedtime = 0));           /* you or it moved */
             }
         } else {                /* door */
-            if(xlock.door != &(levl[u.ux+u.dx][u.uy+u.dy])) {
+            if(xlock.door != &(levl[u.ux+u.delta.x][u.uy+u.delta.y])) {
                 return((xlock.usedtime = 0));           /* you moved */
             }
             switch (xlock.door->doormask) {
@@ -144,10 +144,10 @@ picklock (void)      /* try to open/close a lock */
             if(xlock.door->doormask & D_TRAPPED) {
                     b_trapped("door", FINGER);
                     xlock.door->doormask = D_NODOOR;
-                    unblock_point(u.ux+u.dx, u.uy+u.dy);
-                    if (*in_rooms(u.ux+u.dx, u.uy+u.dy, SHOPBASE))
-                        add_damage(u.ux+u.dx, u.uy+u.dy, 0L);
-                    newsym(u.ux+u.dx, u.uy+u.dy);
+                    unblock_point(u.ux+u.delta.x, u.uy+u.delta.y);
+                    if (*in_rooms(u.ux+u.delta.x, u.uy+u.delta.y, SHOPBASE))
+                        add_damage(u.ux+u.delta.x, u.uy+u.delta.y, 0L);
+                    newsym(u.ux+u.delta.x, u.uy+u.delta.y);
             } else if (xlock.door->doormask & D_LOCKED)
                 xlock.door->doormask = D_CLOSED;
             else xlock.door->doormask = D_LOCKED;
@@ -305,7 +305,7 @@ pick_lock ( /* pick a lock with a given object */
             bool it;
             int count;
 
-            if (u.dz < 0) {
+            if (u.delta.z < 0) {
                 There("isn't any sort of lock up %s.",
                       Levitation ? "here" : "there");
                 return 0;
@@ -634,8 +634,8 @@ int doclose (void) {
 
         if(!getdir((char *)0)) return(0);
 
-        x = u.ux + u.dx;
-        y = u.uy + u.dy;
+        x = u.ux + u.delta.x;
+        y = u.uy + u.delta.y;
         if((x == u.ux) && (y == u.uy)) {
                 You("are in the way!");
                 return(1);

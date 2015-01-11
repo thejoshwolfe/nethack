@@ -1509,7 +1509,7 @@ MSG_YOU_TAKE_PICTURE_OF_SWALLOW
         You("take a picture of %s%s %s.", name, possessive_suffix(name), mbodypart(u.ustuck, STOMACH));
 
 MSG_YOU_TAKE_PICTURE_OF_DUNGEON
-        You("take a picture of the %s.", (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+        You("take a picture of the %s.", (u.delta.z > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
 
 message_const(MSG_YOU_HAVE_NO_FREE_HAND);
 You("have no free %s!", body_part(HAND));
@@ -1579,7 +1579,7 @@ Your("%s feels clean now.", body_part(FACE));
                 message_const(MSG_YOU_HEAR_FAINT_SPLASHING);
 
                 message_string(MSG_YOU_CANNOT_REACH_THE_DUNGEON,
-                        (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+                        (u.delta.z > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
                 You_cant("reach the %s.", );
 
                 message_const(MSG_YOU_HEAR_CRACKLING_OF_HELLFIRE);

@@ -765,7 +765,7 @@ int dobreathe(void) {
     if (!mattk)
         impossible("bad breath attack?"); /* mouthwash needed... */
     else
-        buzz((int)(20 + mattk->adtyp - 1), (int)mattk->damn, u.ux, u.uy, u.dx, u.dy);
+        buzz((int)(20 + mattk->adtyp - 1), (int)mattk->damn, u.ux, u.uy, u.delta.x, u.delta.y);
     return (1);
 }
 

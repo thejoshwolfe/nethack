@@ -959,25 +959,25 @@ void water_friction (void) {
         if (Swimming && rn2(4))
                 return;         /* natural swimmers have advantage */
 
-        if (u.dx && !rn2(!u.dy ? 3 : 6)) {      /* 1/3 chance or half that */
+        if (u.delta.x && !rn2(!u.delta.y ? 3 : 6)) {      /* 1/3 chance or half that */
                 /* cancel delta x and choose an arbitrary delta y value */
                 x = u.ux;
                 do {
                     dy = rn2(3) - 1;            /* -1, 0, 1 */
                     y = u.uy + dy;
                 } while (dy && (!isok(x,y) || !is_pool(x,y)));
-                u.dx = 0;
-                u.dy = dy;
+                u.delta.x = 0;
+                u.delta.y = dy;
                 eff = true;
-        } else if (u.dy && !rn2(!u.dx ? 3 : 5)) {       /* 1/3 or 1/5*(5/6) */
+        } else if (u.delta.y && !rn2(!u.delta.x ? 3 : 5)) {       /* 1/3 or 1/5*(5/6) */
                 /* cancel delta y and choose an arbitrary delta x value */
                 y = u.uy;
                 do {
                     dx = rn2(3) - 1;            /* -1 .. 1 */
                     x = u.ux + dx;
                 } while (dx && (!isok(x,y) || !is_pool(x,y)));
-                u.dy = 0;
-                u.dx = dx;
+                u.delta.y = 0;
+                u.delta.x = dx;
                 eff = true;
         }
         if (eff) pline("Water turbulence affects your movements.");

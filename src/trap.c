@@ -2663,7 +2663,7 @@ bool drown(void) {
     int i, x, y;
 
     /* happily wading in the same contiguous pool */
-    if (u.uinwater && is_pool(u.ux - u.dx, u.uy - u.dy) && (Swimming || Amphibious)) {
+    if (u.uinwater && is_pool(u.ux - u.delta.x, u.uy - u.delta.y) && (Swimming || Amphibious)) {
         /* water effects on objects every now and then */
         if (!rn2(5))
             inpool_ok = true;
@@ -2897,7 +2897,7 @@ static void move_into_trap(struct trap *ttmp) {
 static int try_disarm(struct trap *ttmp, bool force_failure) {
     struct monst *mtmp = m_at(ttmp->tx, ttmp->ty);
     int ttype = ttmp->ttyp;
-    bool under_u = (!u.dx && !u.dy);
+    bool under_u = (!u.delta.x && !u.delta.y);
     bool holdingtrap = (ttype == BEAR_TRAP || ttype == WEB);
 
     /* Test for monster first, monsters are displayed instead of trap. */
@@ -2911,7 +2911,7 @@ static int try_disarm(struct trap *ttmp, bool force_failure) {
         return 0;
     }
     /* duplicate tight-space checks from test_move */
-    if (u.dx && u.dy && bad_rock(youmonst.data, u.ux, ttmp->ty) && bad_rock(youmonst.data, ttmp->tx, u.uy)) {
+    if (u.delta.x && u.delta.y && bad_rock(youmonst.data, u.ux, ttmp->ty) && bad_rock(youmonst.data, ttmp->tx, u.uy)) {
         if ((invent && (inv_weight() + weight_cap() > 600)) || bigmonst(youmonst.data)) {
             /* don't allow untrap if they can't get thru to it */
             You("are unable to reach the %s!", defsyms[trap_to_defsym(ttype)].explanation);
@@ -3011,7 +3011,7 @@ struct trap *ttmp) {
             deltrap(ttmp);
         }
     }
-    newsym(u.ux + u.dx, u.uy + u.dy);
+    newsym(u.ux + u.delta.x, u.uy + u.delta.y);
     return 1;
 }
 
@@ -3054,7 +3054,7 @@ static int disarm_squeaky_board(struct trap *ttmp) {
     }
     You("repair the squeaky board."); /* no madeby_u */
     deltrap(ttmp);
-    newsym(u.ux + u.dx, u.uy + u.dy);
+    newsym(u.ux + u.delta.x, u.uy + u.delta.y);
     more_experienced(1, 5);
     newexplevel();
     return 1;
@@ -3190,11 +3190,11 @@ int untrap(bool force) {
 
     if (!getdir((char *)0))
         return (0);
-    x = u.ux + u.dx;
-    y = u.uy + u.dy;
+    x = u.ux + u.delta.x;
+    y = u.uy + u.delta.y;
 
     for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere) {
-        if (Is_box(otmp) && !u.dx && !u.dy) {
+        if (Is_box(otmp) && !u.delta.x && !u.delta.y) {
             box_here = true;
             containercnt++;
             if (containercnt > 1)
@@ -3241,7 +3241,7 @@ int untrap(bool force) {
                     return disarm_shooting_trap(ttmp, ARROW);
                 case PIT:
                 case SPIKED_PIT:
-                    if (!u.dx && !u.dy) {
+                    if (!u.delta.x && !u.delta.y) {
                         You("are already on the edge of the pit.");
                         return 0;
                     }
@@ -3251,13 +3251,13 @@ int untrap(bool force) {
                     }
                     return help_monster_out(mtmp, ttmp);
                 default:
-                    You("cannot disable %s trap.", (u.dx || u.dy) ? "that" : "this");
+                    You("cannot disable %s trap.", (u.delta.x || u.delta.y) ? "that" : "this");
                     return 0;
             }
         }
     } /* end if */
 
-    if (!u.dx && !u.dy) {
+    if (!u.delta.x && !u.delta.y) {
         for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere)
             if (Is_box(otmp)) {
                 sprintf(qbuf, "There is %s here. Check it for traps?", safe_qbuf("", sizeof("There is  here. Check it for traps?"), doname(otmp), an(simple_typename(otmp->otyp)), "a box"));

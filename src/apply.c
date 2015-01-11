@@ -126,12 +126,12 @@ static int use_camera (struct obj *obj) {
     } else if (u.uswallow) {
         message_monster_string(MSG_YOU_TAKE_PICTURE_OF_SWALLOW, u.ustuck,
                 mbodypart(u.ustuck, STOMACH));
-    } else if (u.dz) {
+    } else if (u.delta.z) {
         message_string(MSG_YOU_TAKE_PICTURE_OF_DUNGEON,
-                (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
-    } else if (!u.dx && !u.dy) {
+                (u.delta.z > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+    } else if (!u.delta.x && !u.delta.y) {
         zapyourself(obj, true);
-    } else if ((mtmp = bhit(u.dx, u.dy, COLNO, FLASHED_LIGHT, NULL, NULL, obj)) != 0) {
+    } else if ((mtmp = bhit(u.delta.x, u.delta.y, COLNO, FLASHED_LIGHT, NULL, NULL, obj)) != 0) {
         obj->ox = u.ux,  obj->oy = u.uy;
         flash_hits_mon(mtmp, obj);
     }
@@ -256,7 +256,7 @@ static int use_stethoscope (struct obj *obj) {
     last_used_move = moves;
     last_used_movement = youmonst.movement;
 
-    if (u.usteed && u.dz > 0) {
+    if (u.usteed && u.delta.z > 0) {
         if (interference) {
             message_monster(MSG_MONSTER_INTERFERES, u.ustuck);
             mstatusline(u.ustuck);
@@ -264,19 +264,19 @@ static int use_stethoscope (struct obj *obj) {
             mstatusline(u.usteed);
         return res;
     } else
-        if (u.uswallow && (u.dx || u.dy || u.dz)) {
+        if (u.uswallow && (u.delta.x || u.delta.y || u.delta.z)) {
             mstatusline(u.ustuck);
             return res;
         } else if (u.uswallow && interference) {
             message_monster(MSG_MONSTER_INTERFERES, u.ustuck);
             mstatusline(u.ustuck);
             return res;
-        } else if (u.dz) {
+        } else if (u.delta.z) {
             if (Underwater) {
                 message_const(MSG_YOU_HEAR_FAINT_SPLASHING);
-            } else if (u.dz < 0 || !can_reach_floor()) {
+            } else if (u.delta.z < 0 || !can_reach_floor()) {
                 message_string(MSG_YOU_CANNOT_REACH_THE_DUNGEON,
-                        (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+                        (u.delta.z > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
             } else if (its_dead(u.ux, u.uy, &res)) {
                 /* message already given */
             } else if (Is_stronghold(&u.uz)) {
@@ -290,11 +290,11 @@ static int use_stethoscope (struct obj *obj) {
             return res;
         }
     if (Stunned() || (Confusion() && !rn2(5))) confdir();
-    if (!u.dx && !u.dy) {
+    if (!u.delta.x && !u.delta.y) {
         ustatusline();
         return res;
     }
-    rx = u.ux + u.dx; ry = u.uy + u.dy;
+    rx = u.ux + u.delta.x; ry = u.uy + u.delta.y;
     if (!isok(rx,ry)) {
         message_const(MSG_YOU_HEAR_FAINT_TYPING_NOISE);
         return 0;
@@ -434,7 +434,7 @@ static void use_leash (struct obj *obj) {
     if(!get_adjacent_loc((char *)0, (char *)0, u.ux, u.uy, &cc)) return;
 
     if((cc.x == u.ux) && (cc.y == u.uy)) {
-        if (u.usteed && u.dz > 0) {
+        if (u.usteed && u.delta.z > 0) {
             mtmp = u.usteed;
             spotmon = 1;
             goto got_target;
@@ -591,7 +591,7 @@ static int use_mirror (struct obj *obj) {
         }
         return 1;
     }
-    if (!u.dx && !u.dy && !u.dz) {
+    if (!u.delta.x && !u.delta.y && !u.delta.z) {
         if(!Blind && !Invisible) {
             if (u.umonnum == PM_FLOATING_EYE) {
                 if (!Free_action) {
@@ -628,14 +628,14 @@ static int use_mirror (struct obj *obj) {
         message_const(MSG_YOU_APPLY_MIRROR_UNDERWATER);
         return 1;
     }
-    if (u.dz) {
+    if (u.delta.z) {
         if (!Blind) {
             message_string(MSG_YOU_REFLECT_THE_DUNGEON,
-                    (u.dz > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
+                    (u.delta.z > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
         }
         return 1;
     }
-    mtmp = bhit(u.dx, u.dy, COLNO, INVIS_BEAM, NULL, NULL, obj);
+    mtmp = bhit(u.delta.x, u.delta.y, COLNO, INVIS_BEAM, NULL, NULL, obj);
     if (!mtmp || !haseyes(mtmp->data))
         return 1;
 
@@ -1808,16 +1808,16 @@ static void use_figurine (struct obj **optr) {
         flags.move = multi = 0;
         return;
     }
-    x = u.ux + u.dx; y = u.uy + u.dy;
+    x = u.ux + u.delta.x; y = u.uy + u.delta.y;
     cc.x = x; cc.y = y;
     /* Passing false arg here will result in messages displayed */
     if (!figurine_location_checks(obj, &cc, false)) return;
     You("%s and it transforms.",
-            (u.dx||u.dy) ? "set the figurine beside you" :
+            (u.delta.x||u.delta.y) ? "set the figurine beside you" :
             (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz) ||
              is_pool(cc.x, cc.y)) ?
             "release the figurine" :
-            (u.dz < 0 ?
+            (u.delta.z < 0 ?
              "toss the figurine into the air" :
              "set the figurine on the ground"));
     (void) make_familiar(obj, cc.x, cc.y, false);
@@ -2037,8 +2037,8 @@ static int use_whip (struct obj *obj) {
     if (!getdir((char *)0)) return res;
 
     if (Stunned() || (Confusion() && !rn2(5))) confdir();
-    rx = u.ux + u.dx;
-    ry = u.uy + u.dy;
+    rx = u.ux + u.delta.x;
+    ry = u.uy + u.delta.y;
     mtmp = m_at(rx, ry);
 
     /* fake some proficiency checks */
@@ -2056,10 +2056,10 @@ static int use_whip (struct obj *obj) {
     } else if (Underwater) {
         There("is too much resistance to flick your bullwhip.");
 
-    } else if (u.dz < 0) {
+    } else if (u.delta.z < 0) {
         You("flick a bug off of the %s.",ceiling(u.ux,u.uy));
 
-    } else if ((!u.dx && !u.dy) || (u.dz > 0)) {
+    } else if ((!u.delta.x && !u.delta.y) || (u.delta.z > 0)) {
         int dam;
 
         /* Sometimes you hit your steed by mistake */

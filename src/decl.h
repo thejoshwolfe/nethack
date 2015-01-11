@@ -135,7 +135,7 @@ extern const char *nomovemsg;
 extern const char nul[];
 extern char lock[];
 
-extern const char sdir[], ndir[];
+extern const char ndir[];
 extern const signed char xdir[], ydir[], zdir[];
 
 extern signed char tbx, tby;            /* set in mthrowu.c */

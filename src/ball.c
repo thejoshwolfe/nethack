@@ -701,8 +701,8 @@ void drop_ball (signed char x, signed char y) {
             u.ux = x;
             u.uy = y;
         } else {
-            u.ux = x - u.dx;
-            u.uy = y - u.dy;
+            u.ux = x - u.delta.x;
+            u.uy = y - u.delta.y;
         }
         vision_full_recalc = 1; /* hero has moved, recalculate vision later */
 

@@ -132,7 +132,7 @@ static int throw_obj (struct obj *obj, int shotlimit) {
         pline("It's too heavy.");
         return(1);
     }
-    if(!u.dx && !u.dy && !u.dz) {
+    if(!u.delta.x && !u.delta.y && !u.delta.z) {
         You("cannot throw an object at yourself.");
         return(0);
     }
@@ -841,12 +841,12 @@ static bool throwing_weapon (struct obj *obj) {
 static void sho_obj_return_to_u (struct obj *obj) {
     /* might already be our location (bounced off a wall) */
     if (bhitpos.x != u.ux || bhitpos.y != u.uy) {
-        int x = bhitpos.x - u.dx, y = bhitpos.y - u.dy;
+        int x = bhitpos.x - u.delta.x, y = bhitpos.y - u.delta.y;
 
         tmp_at(DISP_FLASH, obj_to_glyph(obj));
         while(x != u.ux || y != u.uy) {
             tmp_at(x, y);
-            x -= u.dx; y -= u.dy;
+            x -= u.delta.x; y -= u.delta.y;
         }
         tmp_at(DISP_END, 0);
     }
@@ -860,7 +860,7 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
     bool impaired = (Confusion() || Stunned() || Blind ||
             Hallucination() || Fumbling());
 
-    if ((obj->cursed || obj->greased) && (u.dx || u.dy) && !rn2(7)) {
+    if ((obj->cursed || obj->greased) && (u.delta.x || u.delta.y) && !rn2(7)) {
         bool slipok = true;
         if (ammo_and_launcher(obj, uwep)) {
             char misfire_clause[BUFSZ];
@@ -879,14 +879,14 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
             }
         }
         if (slipok) {
-            u.dx = rn2(3)-1;
-            u.dy = rn2(3)-1;
-            if (!u.dx && !u.dy) u.dz = 1;
+            u.delta.x = rn2(3)-1;
+            u.delta.y = rn2(3)-1;
+            if (!u.delta.x && !u.delta.y) u.delta.z = 1;
             impaired = true;
         }
     }
 
-    if ((u.dx || u.dy || (u.dz < 1)) &&
+    if ((u.delta.x || u.delta.y || (u.delta.z < 1)) &&
             calc_capacity((int)obj->owt) > SLT_ENCUMBER &&
             (Upolyd ? (u.mh < 5 && u.mh != u.mhmax)
              : (u.uhp < 10 && u.uhp != u.uhpmax)) &&
@@ -895,8 +895,8 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
         You("have so little stamina, %s drops from your grasp.",
                 the(xname(obj)));
         exercise(A_CON, false);
-        u.dx = u.dy = 0;
-        u.dz = 1;
+        u.delta.x = u.delta.y = 0;
+        u.delta.z = 1;
     }
 
     thrownobj = obj;
@@ -905,8 +905,8 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
         mon = u.ustuck;
         bhitpos.x = mon->mx;
         bhitpos.y = mon->my;
-    } else if(u.dz) {
-        if (u.dz < 0 && Role_if(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR && !impaired) {
+    } else if(u.delta.z) {
+        if (u.delta.z < 0 && Role_if(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR && !impaired) {
             char hit_clause[BUFSZ];
             Tobjnam(hit_clause, BUFSZ, obj, "hit");
             pline("%s the %s and returns to your hand!", hit_clause, ceiling(u.ux,u.uy));
@@ -914,7 +914,7 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
             encumber_msg();
             setuwep(obj);
             u.twoweap = twoweap;
-        } else if (u.dz < 0 && !Is_airlevel(&u.uz) && !Underwater && !Is_waterlevel(&u.uz)) {
+        } else if (u.delta.z < 0 && !Is_airlevel(&u.uz) && !Underwater && !Is_waterlevel(&u.uz)) {
             toss_up(obj, rn2(5));
         } else {
             hitfloor(obj);
@@ -923,8 +923,8 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
         return;
     } else if(obj->otyp == BOOMERANG && !Underwater) {
         if(Is_airlevel(&u.uz) || Levitation)
-            hurtle(-u.dx, -u.dy, 1, true);
-        mon = boomhit(u.dx, u.dy);
+            hurtle(-u.delta.x, -u.delta.y, 1, true);
+        mon = boomhit(u.delta.x, u.delta.y);
         if(mon == &youmonst) {          /* the thing was caught */
             exercise(A_DEX, true);
             obj = addinv(obj);
@@ -977,14 +977,14 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
 
         if (Underwater) range = 1;
 
-        mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
+        mon = bhit(u.delta.x, u.delta.y, range, THROWN_WEAPON,
                 (int (*)(struct monst *,struct obj *))0,
                 (int (*)(struct obj *,struct obj *))0,
                 obj);
 
         /* have to do this after bhit() so u.ux & u.uy are correct */
         if(Is_airlevel(&u.uz) || Levitation)
-            hurtle(-u.dx, -u.dy, urange, true);
+            hurtle(-u.delta.x, -u.delta.y, urange, true);
     }
 
     if (mon) {
@@ -1665,7 +1665,7 @@ static int throw_gold (struct obj *obj) {
     long zorks = obj->quan;
     struct monst *mon;
 
-    if(!u.dx && !u.dy && !u.dz) {
+    if(!u.delta.x && !u.delta.y && !u.delta.z) {
         u.ugold += obj->quan;
         dealloc_obj(obj);
         You("cannot throw gold at yourself.");
@@ -1681,8 +1681,8 @@ static int throw_gold (struct obj *obj) {
         return 1;
     }
 
-    if(u.dz) {
-        if (u.dz < 0 && !Is_airlevel(&u.uz) &&
+    if(u.delta.z) {
+        if (u.delta.z < 0 && !Is_airlevel(&u.uz) &&
                 !Underwater && !Is_waterlevel(&u.uz)) {
             pline_The("gold hits the %s, then falls back on top of your %s.",
                     ceiling(u.ux,u.uy), body_part(HEAD));
@@ -1696,13 +1696,13 @@ static int throw_gold (struct obj *obj) {
         range = (int)((ACURRSTR)/2 - obj->owt/40);
 
         /* see if the gold has a place to move into */
-        odx = u.ux + u.dx;
-        ody = u.uy + u.dy;
+        odx = u.ux + u.delta.x;
+        ody = u.uy + u.delta.y;
         if(!ZAP_POS(levl[odx][ody].typ) || closed_door(odx, ody)) {
             bhitpos.x = u.ux;
             bhitpos.y = u.uy;
         } else {
-            mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
+            mon = bhit(u.delta.x, u.delta.y, range, THROWN_WEAPON,
                     (int (*)(struct monst *,struct obj *))0,
                     (int (*)(struct obj *,struct obj *))0,
                     obj);
@@ -1717,7 +1717,7 @@ static int throw_gold (struct obj *obj) {
     }
 
     if(flooreffects(obj,bhitpos.x,bhitpos.y,"fall")) return(1);
-    if(u.dz > 0)
+    if(u.delta.z > 0)
         pline_The("gold hits the %s.", surface(bhitpos.x,bhitpos.y));
     place_object(obj,bhitpos.x,bhitpos.y);
     if(*u.ushops) sellobj(obj, bhitpos.x, bhitpos.y);

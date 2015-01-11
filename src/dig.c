@@ -861,19 +861,7 @@ use_pick_axe (struct obj *obj)
             return res;
         }
 
-        while(*sdp) {
-                (void) movecmd(*sdp);   /* sets u.dx and u.dy and u.dz */
-                rx = u.ux + u.dx;
-                ry = u.uy + u.dy;
-                /* Include down even with axe, so we have at least one direction */
-                if (u.dz > 0 ||
-                    (u.dz == 0 && isok(rx, ry) &&
-                     dig_typ(obj, rx, ry) != DIGTYP_UNDIGGABLE))
-                        *dsp++ = *sdp;
-                sdp++;
-        }
-        *dsp = 0;
-        sprintf(qbuf, "In what direction do you want to %s? [%s]", verb, dirsyms);
+        sprintf(qbuf, "In what direction do you want to %s? ", verb);
         if(!getdir(qbuf))
                 return(res);
 
@@ -895,12 +883,12 @@ int use_pick_axe2 (struct obj *obj) {
         ;  /* return(1) */
     } else if (Underwater) {
         pline("Turbulence torpedoes your %s attempts.", verbing);
-    } else if(u.dz < 0) {
+    } else if(u.delta.z < 0) {
         if(Levitation)
             You("don't have enough leverage.");
         else
             You_cant("reach the %s.",ceiling(u.ux,u.uy));
-    } else if(!u.dx && !u.dy && !u.dz) {
+    } else if(!u.delta.x && !u.delta.y && !u.delta.z) {
         char buf[BUFSZ];
         int dam;
 
@@ -909,10 +897,10 @@ int use_pick_axe2 (struct obj *obj) {
         You("hit yourself with %s.", yname(uwep));
         losehp(dam, killed_by_object(KM_YOUR_OWN_O, obj));
         return(1);
-    } else if(u.dz == 0) {
+    } else if(u.delta.z == 0) {
         if(Stunned() || (Confusion() && !rn2(5))) confdir();
-        rx = u.ux + u.dx;
-        ry = u.uy + u.dy;
+        rx = u.ux + u.delta.x;
+        ry = u.uy + u.delta.y;
         if(!isok(rx, ry)) {
             pline("Clash!");
             return(1);
@@ -1177,9 +1165,9 @@ void zap_dig(void) {
             return;
         } /* swallowed */
 
-        if (u.dz) {
+        if (u.delta.z) {
             if (!Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz) && !Underwater) {
-                if (u.dz < 0 || On_stairs(u.ux, u.uy)) {
+                if (u.delta.z < 0 || On_stairs(u.ux, u.uy)) {
                     if (On_stairs(u.ux, u.uy))
                         pline_The("beam bounces off the %s and hits the %s.",
                               (u.ux == xdnladder || u.ux == xupladder) ?
@@ -1205,8 +1193,8 @@ void zap_dig(void) {
         /* normal case: digging across the level */
         shopdoor = shopwall = false;
         maze_dig = level.flags.is_maze_lev && !Is_earthlevel(&u.uz);
-        zx = u.ux + u.dx;
-        zy = u.uy + u.dy;
+        zx = u.ux + u.delta.x;
+        zy = u.uy + u.delta.y;
         digdepth = rn1(18, 8);
         tmp_at(DISP_BEAM, cmap_to_glyph(S_digbeam));
         while (--digdepth >= 0) {
@@ -1278,8 +1266,8 @@ void zap_dig(void) {
                 }
                 unblock_point(zx,zy); /* vision */
             }
-            zx += u.dx;
-            zy += u.dy;
+            zx += u.delta.x;
+            zy += u.delta.y;
         } /* while */
         tmp_at(DISP_END,0);     /* closing call */
         if (shopdoor || shopwall)

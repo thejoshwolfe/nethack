@@ -1450,7 +1450,7 @@ gotit:
                 goto lootcont;
         } else
             underfoot = false;
-        if (u.dz < 0) {
+        if (u.delta.z < 0) {
             You("%s to loot on the %s.", dont_find_anything,
                     ceiling(cc.x, cc.y));
             timepassed = 1;

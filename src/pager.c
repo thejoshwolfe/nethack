@@ -534,14 +534,14 @@ int doidtrap (void) {
         int x, y, tt;
 
         if (!getdir("^")) return 0;
-        x = u.ux + u.dx;
-        y = u.uy + u.dy;
+        x = u.ux + u.delta.x;
+        y = u.uy + u.delta.y;
         for (trap = ftrap; trap; trap = trap->ntrap)
             if (trap->tx == x && trap->ty == y) {
                 if (!trap->tseen) break;
                 tt = trap->ttyp;
-                if (u.dz) {
-                    if (u.dz < 0 ? (tt == TRAPDOOR || tt == HOLE) :
+                if (u.delta.z) {
+                    if (u.delta.z < 0 ? (tt == TRAPDOOR || tt == HOLE) :
                             tt == ROCKTRAP) break;
                 }
                 tt = what_trap(tt);

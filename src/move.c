@@ -84,7 +84,7 @@ void domove(void) {
         return;
     }
     if (u.uswallow) {
-        u.dx = u.dy = 0;
+        u.delta.x = u.delta.y = 0;
         u.ux = x = u.ustuck->mx;
         u.uy = y = u.ustuck->my;
         mtmp = u.ustuck;
@@ -123,8 +123,8 @@ void domove(void) {
         if (!on_ice && (get_HFumbling() & FROMOUTSIDE))
         set_HFumbling(get_HFumbling() & ~FROMOUTSIDE);
 
-        x = u.ux + u.dx;
-        y = u.uy + u.dy;
+        x = u.ux + u.delta.x;
+        y = u.uy + u.delta.y;
         if (Stunned() || (Confusion() && !rn2(5))) {
             int tries = 0;
 
@@ -134,19 +134,19 @@ void domove(void) {
                     return;
                 }
                 confdir();
-                x = u.ux + u.dx;
-                y = u.uy + u.dy;
+                x = u.ux + u.delta.x;
+                y = u.uy + u.delta.y;
             }while(!isok(x, y) || bad_rock(youmonst.data, x, y));
         }
         /* turbulence might alter your actual destination */
         if (u.uinwater) {
             water_friction();
-            if (!u.dx && !u.dy) {
+            if (!u.delta.x && !u.delta.y) {
                 nomul(0);
                 return;
             }
-            x = u.ux + u.dx;
-            y = u.uy + u.dy;
+            x = u.ux + u.delta.x;
+            y = u.uy + u.delta.y;
         }
         if (!isok(x, y)) {
             nomul(0);
@@ -294,7 +294,7 @@ void domove(void) {
         newsym(x, y);
     }
     /* not attacking an animal, so we try to move */
-    if (u.usteed && !u.usteed->mcanmove && (u.dx || u.dy)) {
+    if (u.usteed && !u.usteed->mcanmove && (u.delta.x || u.delta.y)) {
         char name[BUFSZ];
         y_monnam(name, BUFSZ, u.usteed);
         pline("%s won't move!", name);
@@ -409,7 +409,7 @@ void domove(void) {
                     Norep("You are %s.", predicament);
                 }
             }
-            if ((u.dx && u.dy) || !rn2(5))
+            if ((u.delta.x && u.delta.y) || !rn2(5))
                 u.utrap--;
         }
         return;
@@ -432,8 +432,8 @@ void domove(void) {
 
     /* now move the hero */
     mtmp = m_at(x, y);
-    u.ux += u.dx;
-    u.uy += u.dy;
+    u.ux += u.delta.x;
+    u.uy += u.delta.y;
     /* Move your steed, too */
     if (u.usteed) {
         u.usteed->mx = u.ux;
@@ -531,7 +531,7 @@ void domove(void) {
         u.uundetected = OBJ_AT(u.ux, u.uy);
     else if (youmonst.data->mlet == S_EEL)
         u.uundetected = is_pool(u.ux, u.uy) && !Is_waterlevel(&u.uz);
-    else if (u.dx || u.dy)
+    else if (u.delta.x || u.delta.y)
         u.uundetected = 0;
 
     /*
@@ -539,7 +539,7 @@ void domove(void) {
      * imitating something that doesn't move.  We could extend this
      * to non-moving monsters...
      */
-    if ((u.dx || u.dy) && (youmonst.m_ap_type == M_AP_OBJECT || youmonst.m_ap_type == M_AP_FURNITURE))
+    if ((u.delta.x || u.delta.y) && (youmonst.m_ap_type == M_AP_OBJECT || youmonst.m_ap_type == M_AP_FURNITURE))
         youmonst.m_ap_type = M_AP_NOTHING;
 
     check_leash(u.ux0, u.uy0);
@@ -712,14 +712,14 @@ static int move_boulder(void) {
     struct trap *ttmp;
     struct monst *mtmp;
 
-    sx = u.ux + u.dx, sy = u.uy + u.dy; /* boulder starting position */
+    sx = u.ux + u.delta.x, sy = u.uy + u.delta.y; /* boulder starting position */
     while ((otmp = sobj_at(BOULDER, sx, sy)) != 0) {
         /* make sure that this boulder is visible as the top object */
         if (otmp != level.objects[sx][sy])
             movobj(otmp, sx, sy);
 
-        rx = u.ux + 2 * u.dx; /* boulder destination position */
-        ry = u.uy + 2 * u.dy;
+        rx = u.ux + 2 * u.delta.x; /* boulder destination position */
+        ry = u.uy + 2 * u.delta.y;
         nomul(0);
         if (Levitation || Is_airlevel(&u.uz)) {
             if (Blind)
@@ -734,12 +734,12 @@ static int move_boulder(void) {
             pline("You're too small to push that %s.", xname(otmp));
             goto cannot_push;
         }
-        if (isok(rx, ry) && !IS_ROCK(levl[rx][ry].typ) && levl[rx][ry].typ != IRONBARS && (!IS_DOOR(levl[rx][ry].typ) || !(u.dx && u.dy) || ((levl[rx][ry].doormask & ~D_BROKEN) == D_NODOOR)) && !sobj_at(BOULDER, rx, ry)) {
+        if (isok(rx, ry) && !IS_ROCK(levl[rx][ry].typ) && levl[rx][ry].typ != IRONBARS && (!IS_DOOR(levl[rx][ry].typ) || !(u.delta.x && u.delta.y) || ((levl[rx][ry].doormask & ~D_BROKEN) == D_NODOOR)) && !sobj_at(BOULDER, rx, ry)) {
             ttmp = t_at(rx, ry);
             mtmp = m_at(rx, ry);
 
             /* KMH -- Sokoban doesn't let you push boulders diagonally */
-            if (In_sokoban(&u.uz) && u.dx && u.dy) {
+            if (In_sokoban(&u.uz) && u.delta.x && u.delta.y) {
                 if (Blind)
                     feel_location(sx, sy);
                 pline("%s won't roll diagonally on this %s.", The(xname(otmp)), surface(sx, sy));
@@ -913,7 +913,7 @@ static int move_boulder(void) {
                 break;
             }
 
-            if (!u.usteed && (((!invent || inv_weight() <= -850) && (!u.dx || !u.dy || (IS_ROCK(levl[u.ux][sy].typ) && IS_ROCK(levl[sx][u.uy].typ)))) || verysmall(youmonst.data))) {
+            if (!u.usteed && (((!invent || inv_weight() <= -850) && (!u.delta.x || !u.delta.y || (IS_ROCK(levl[u.ux][sy].typ) && IS_ROCK(levl[sx][u.uy].typ)))) || verysmall(youmonst.data))) {
                 pline("However, you can squeeze yourself into a small opening.");
                 if (In_sokoban(&u.uz))
                     change_luck(-1); /* Sokoban guilt */
