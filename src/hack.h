@@ -177,8 +177,6 @@ struct Killer killed_by_int(enum KillerMethod method, int);
 struct Killer killed_by_artifact(enum KillerMethod method, const struct artifact *art);
 
 bool revive_nasty(int,int,const char*);
-char *in_rooms(signed char,signed char,int);
-bool in_town(int,int);
 int dopickup(void);
 void lookaround(void);
 int monster_nearby(void);

@@ -172,5 +172,7 @@ bool may_dig(signed char,signed char);
 bool may_passwall(signed char,signed char);
 bool bad_rock(struct permonst *,signed char,signed char);
 bool invocation_pos(signed char,signed char);
+bool in_town(int,int);
+char * in_rooms(signed char,signed char,int);
 
 #endif /* DUNGEON_H */

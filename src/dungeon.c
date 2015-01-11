@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "mkroom.h"
 #include "onames.h"
 #include "invent.h"
 #include "mondata.h"
@@ -1323,5 +1324,87 @@ bool bad_rock(struct permonst *mdat, signed char x, signed char y) {
 
 bool invocation_pos(signed char x, signed char y) {
     return ((bool)(Invocation_lev(&u.uz) && x == inv_pos.x && y == inv_pos.y));
+}
+
+/* is (x,y) in a town? */
+bool in_town(int x, int y) {
+    s_level *slev = Is_special(&u.uz);
+    struct mkroom *sroom;
+    bool has_subrooms = false;
+
+    if (!slev || !slev->flags.town)
+        return false;
+
+    /*
+     * See if (x,y) is in a room with subrooms, if so, assume it's the
+     * town.  If there are no subrooms, the whole level is in town.
+     */
+    for (sroom = &rooms[0]; sroom->hx > 0; sroom++) {
+        if (sroom->nsubrooms > 0) {
+            has_subrooms = true;
+            if (inside_room(sroom, x, y))
+                return true;
+        }
+    }
+
+    return !has_subrooms;
+}
+
+static bool good_type(char rno, int typewanted, int typefound) {
+    return (!typewanted || ((typefound = rooms[rno - ROOMOFFSET].rtype) == typewanted) || ((typewanted == SHOPBASE) && (typefound > SHOPBASE)));
+}
+char * in_rooms(signed char x, signed char y, int typewanted) {
+    static char buf[5];
+    char rno, *ptr = &buf[4];
+    int typefound, min_x, min_y, max_x, max_y_offset, step;
+    struct rm *lev;
+
+    switch (rno = levl[x][y].roomno) {
+        case NO_ROOM:
+            return (ptr);
+        case SHARED:
+            step = 2;
+            break;
+        case SHARED_PLUS:
+            step = 1;
+            break;
+        default: /* i.e. a regular room # */
+            if (good_type(rno, typewanted, typefound))
+                *(--ptr) = rno;
+            return (ptr);
+    }
+
+    min_x = x - 1;
+    max_x = x + 1;
+    if (x < 1)
+        min_x += step;
+    else if (x >= COLNO)
+        max_x -= step;
+
+    min_y = y - 1;
+    max_y_offset = 2;
+    if (min_y < 0) {
+        min_y += step;
+        max_y_offset -= step;
+    } else if ((min_y + max_y_offset) >= ROWNO)
+        max_y_offset -= step;
+
+    for (x = min_x; x <= max_x; x += step) {
+        lev = &levl[x][min_y];
+        y = 0;
+        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !index(ptr, rno) && good_type(rno, typewanted, typefound))
+            *(--ptr) = rno;
+        y += step;
+        if (y > max_y_offset)
+            continue;
+        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !index(ptr, rno) && good_type(rno, typewanted, typefound))
+            *(--ptr) = rno;
+        y += step;
+        if (y > max_y_offset)
+            continue;
+        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !index(ptr, rno) && good_type(rno, typewanted, typefound))
+            *(--ptr) = rno;
+    }
+    return (ptr);
 }
 
