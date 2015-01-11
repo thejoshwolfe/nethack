@@ -971,8 +971,12 @@ void sanity_check (void) {
 }
 
 
-#define unctrl(c)       ((c) <= C('z') ? (0x60 | (c)) : (c))
-#define unmeta(c)       (0x7f & (c))
+static char unctrl(char c) {
+    return (char)(c <= C('z') ? (0x60 | c) : c);
+}
+static char unmeta(char c) {
+    return (char)(0x7f & c);
+}
 
 void parse(char * buf, size_t bufsize) {
     ssize_t count = read(STDIN_FILENO, buf, bufsize - 1);
@@ -1037,10 +1041,11 @@ void rhack() {
             if (movecmd(cmd[1]) || u.dz) {
                 flags.run = 0;
                 flags.nopick = 1;
-                if (!u.dz)
-                    do_walk = true;
-                else
+                if (u.dz) {
                     cmd[0] = cmd[1]; /* "m<" or "m>" */
+                } else {
+                    do_walk = true;
+                }
             }
             break;
         case 'M':
