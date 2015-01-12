@@ -38,7 +38,6 @@ int nsubroom = 0;
 int occtime = 0;
 
 int x_maze_max, y_maze_max;     /* initialized in main, used in mkmaze.c */
-int otg_temp;                   /* used by object_to_glyph() [otg] */
 
 /*
  *      The following structure will be initialized at startup time with

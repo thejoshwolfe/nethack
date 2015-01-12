@@ -18,7 +18,9 @@
 #include "youprop.h"
 
 
-#define vobj_at(x,y) (level.objects[x][y])
+static struct obj * vobj_at(signed char x, signed char y) {
+    return level.objects[x][y];
+}
 
 /*
  * sensemon()
@@ -26,28 +28,36 @@
  * Returns true if the hero can sense the given monster.  This includes
  * monsters that are hiding or mimicing other monsters.
  */
-#define tp_sensemon(mon) (      /* The hero can always sense a monster IF:  */\
-    (!mindless(mon->data)) &&   /* 1. the monster has a brain to sense AND  */\
-      ((Blind && Blind_telepat) ||      /* 2a. hero is blind and telepathic OR      */\
-                                /* 2b. hero is using a telepathy inducing   */\
-                                /*       object and in range                */\
-      (Unblind_telepat &&                                             \
-        (distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))))                  \
-)
+static bool tp_sensemon(const struct monst * mon) {
+    /* The hero can always sense a monster IF:  */
+    /* 1. the monster has a brain to sense AND  */
+    if (mindless(mon->data))
+        return false;
+    /* 2a. hero is blind and telepathic OR      */
+    if (Blind && Blind_telepat)
+        return true;
+    /* 2b. hero is using a telepathy inducing   */
+    /*       object and in range                */
+    if (Unblind_telepat && (distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM)))
+        return true;
+    return false;
+}
 
-#define MATCH_WARN_OF_MON(mon)   (Warn_of_mon && flags.warntype && \
-                                 (flags.warntype & (mon)->data->mflags2))
+static bool MATCH_WARN_OF_MON(const struct monst * mon) {
+    return (Warn_of_mon && flags.warntype && (flags.warntype & (mon)->data->mflags2));
+}
 
-#define sensemon(mon) (tp_sensemon(mon) || Detect_monsters || MATCH_WARN_OF_MON(mon))
+static bool sensemon(const struct monst * mon) {
+    return (tp_sensemon(mon) || Detect_monsters || MATCH_WARN_OF_MON(mon));
+}
 
 /*
  * mon_warning() is used to warn of any dangerous monsters in your
  * vicinity, and a glyph representing the warning level is displayed.
  */
-
-#define mon_warning(mon) (Warning && !(mon)->mpeaceful &&                               \
-                         (distu((mon)->mx, (mon)->my) < 100) &&                         \
-                         (((int) ((mon)->m_lev / 4)) >= flags.warnlevel))
+static bool mon_warning(const struct monst * mon) {
+    return (Warning && !(mon)->mpeaceful && (distu((mon)->mx, (mon)->my) < 100) && (((int)((mon)->m_lev / 4)) >= flags.warnlevel));
+}
 
 /*
  * mon_visible()
@@ -57,12 +67,14 @@
  * vobj_at() returns a pointer to an object that the hero can see there.
  * Infravision is not taken into account.
  */
-#define mon_visible(mon) (              /* The hero can see the monster     */\
-                                        /* IF the monster                   */\
-    (!mon->minvis || See_invisible()) &&  /* 1. is not invisible AND          */\
-    (!mon->mundetected) &&              /* 2. not an undetected hider       */\
-    (!(mon->mburied || u.uburied))      /* 3. neither you or it is buried   */\
-)
+static bool mon_visible(const struct monst * mon) {
+    /* The hero can see the monster     */
+    /* IF the monster                   */
+    /* 1. is not invisible AND          */
+    /* 2. not an undetected hider       */
+    /* 3. neither you or it is buried   */
+    return ((!mon->minvis || See_invisible()) && (!mon->mundetected) && (!(mon->mburied || u.uburied)));
+}
 
 /*
  * see_with_infrared()
@@ -72,7 +84,9 @@
  * invisible to infravision), because this is usually called from within
  * canseemon() or canspotmon() which already check that.
  */
-#define see_with_infrared(mon) (!Blind && Infravision && infravisible(mon->data) && couldsee(mon->mx, mon->my))
+static bool see_with_infrared(const struct monst * mon) {
+    return (!Blind && Infravision && infravisible(mon->data) && couldsee(mon->mx, mon->my));
+}
 
 
 /*
@@ -82,9 +96,9 @@
  * routines.  Like mon_visible(), but it checks to see if the hero sees the
  * location instead of assuming it.  (And also considers worms.)
  */
-#define canseemon(mon) ((mon->wormno ? worm_known(mon) : \
-            (cansee(mon->mx, mon->my) || see_with_infrared(mon))) \
-        && mon_visible(mon))
+static bool canseemon(const struct monst * mon) {
+    return ((mon->wormno ? worm_known(mon) : (cansee(mon->mx, mon->my) || see_with_infrared(mon))) && mon_visible(mon));
+}
 
 
 /*
@@ -94,8 +108,9 @@
  * telepathy, and is what you usually call for monsters about which nothing is
  * known.
  */
-#define canspotmon(mon) \
-        (canseemon(mon) || sensemon(mon))
+static bool canspotmon(const struct monst * mon) {
+    return (canseemon(mon) || sensemon(mon));
+}
 
 /* knowninvisible(mon)
  * This one checks to see if you know a monster is both there and invisible.
@@ -108,14 +123,9 @@
  * Infravision is not relevant; we assume that invisible monsters are also
  * invisible to infravision.
  */
-#define knowninvisible(mon) \
-        (mtmp->minvis && \
-            ((cansee(mon->mx, mon->my) && (See_invisible() || Detect_monsters)) || \
-                (!Blind && (HTelepat & ~INTRINSIC) && \
-                    distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM) \
-                ) \
-            ) \
-        )
+static bool knowninvisible(const struct monst * mon) {
+    return (mon->minvis && ((cansee(mon->mx, mon->my) && (See_invisible() || Detect_monsters)) || (!Blind && (HTelepat& ~INTRINSIC) && distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))));
+}
 
 /*
  * is_safepet(mon)
@@ -123,9 +133,9 @@
  * A special case check used in attack() and domove().  Placing the
  * definition here is convenient.
  */
-#define is_safepet(mon) \
-        (mon && mon->mtame && canspotmon(mon) && flags.safe_dog \
-                && !Confusion() && !Hallucination() && !Stunned())
+static bool is_safepet(const struct monst * mon) {
+    return (mon && mon->mtame && canspotmon(mon) && flags.safe_dog && !Confusion() && !Hallucination() && !Stunned());
+}
 
 
 /*
@@ -137,8 +147,12 @@
  * The u.uswallow check assumes that you can see yourself even if you are
  * invisible.  If not, then we don't need the check.
  */
-#define canseeself()    (Blind || u.uswallow || (!Invisible && !u.uundetected))
-#define senseself()     (canseeself() || Unblind_telepat || Detect_monsters)
+static bool canseeself(void) {
+    return (Blind || u.uswallow || (!Invisible && !u.uundetected));
+}
+static bool senseself(void) {
+    return (canseeself() || Unblind_telepat || Detect_monsters);
+}
 
 /*
  * random_monster()
@@ -147,21 +161,22 @@
  *
  * Respectively return a random monster, object, or trap number.
  */
-#define random_monster() rn2(NUMMONS)
-#define random_object()  rn1(NUM_OBJECTS-1,1)
-#define random_trap()    rn1(TRAPNUM-1,1)
+static int random_monster(void) {
+    return rn2(NUMMONS);
+}
+static int random_object(void) {
+    return rn1(NUM_OBJECTS - 1, 1);
+}
+static int random_trap(void) {
+    return rn1(TRAPNUM-1, 1);
+}
 
-/*
- * what_obj()
- * what_mon()
- * what_trap()
- *
- * If hallucinating, choose a random object/monster, otherwise, use the one
- * given.
- */
-#define what_obj(obj)   (Hallucination() ? random_object()  : obj)
-#define what_mon(mon)   (Hallucination() ? random_monster() : mon)
-#define what_trap(trp)  (Hallucination() ? random_trap()    : trp)
+static int what_mon(int mon) {
+    return Hallucination() ? random_monster() : mon;
+}
+static int what_trap(int trp) {
+    return Hallucination() ? random_trap() : trp;
+}
 
 /*
  * covers_objects()
@@ -170,49 +185,122 @@
  * These routines are true if what is really at the given location will
  * "cover" any objects or traps that might be there.
  */
-#define covers_objects(xx,yy)                                                 \
-    ((is_pool(xx,yy) && !Underwater) || (levl[xx][yy].typ == LAVAPOOL))
+static bool covers_objects(int xx, int yy) {
+    return (is_pool(xx, yy) && !Underwater) || levl[xx][yy].typ == LAVAPOOL;
+}
+static bool covers_traps(int xx, int yy) {
+    return covers_objects(xx, yy);
+}
 
-#define covers_traps(xx,yy)     covers_objects(xx,yy)
 
+static int warning_to_glyph(int mwarnlev) {
+    return mwarnlev + GLYPH_WARNING_OFF;
+}
+static int mon_to_glyph(const struct monst * mon) {
+    return what_mon(monsndx(mon->data)) + GLYPH_MON_OFF;
+}
+static int detected_mon_to_glyph(const struct monst * mon) {
+    return what_mon(monsndx(mon->data)) + GLYPH_DETECT_OFF;
+}
+static int ridden_mon_to_glyph(const struct monst * mon) {
+    return what_mon(monsndx(mon->data)) + GLYPH_RIDDEN_OFF;
+}
+static int pet_to_glyph(const struct monst * mon) {
+    return what_mon(monsndx(mon->data)) + GLYPH_PET_OFF;
+}
 
-#define warning_to_glyph(mwarnlev) ((mwarnlev)+GLYPH_WARNING_OFF)
-#define mon_to_glyph(mon) ((int) what_mon(monsndx((mon)->data))+GLYPH_MON_OFF)
-#define detected_mon_to_glyph(mon) ((int) what_mon(monsndx((mon)->data))+GLYPH_DETECT_OFF)
-#define ridden_mon_to_glyph(mon) ((int) what_mon(monsndx((mon)->data))+GLYPH_RIDDEN_OFF)
-#define pet_to_glyph(mon) ((int) what_mon(monsndx((mon)->data))+GLYPH_PET_OFF)
+static int obj_to_glyph(const struct obj * obj) {
+    if (Hallucination()) {
+        int otg_temp = random_object();
+        if (otg_temp == CORPSE)
+            return random_monster() + GLYPH_BODY_OFF;
+        else
+            return otg_temp + GLYPH_OBJ_OFF;
+    } else {
+        if (obj->otyp == CORPSE)
+            return obj->corpsenm + GLYPH_BODY_OFF;
+        else
+            return (int)obj->otyp + GLYPH_OBJ_OFF;
+    }
+}
 
-/* This has the unfortunate side effect of needing a global variable    */
-/* to store a result. 'otg_temp' is defined and declared in decl.{ch}.  */
-#define obj_to_glyph(obj)                                                     \
-    (Hallucination() ?                                                          \
-        ((otg_temp = random_object()) == CORPSE ?                             \
-            random_monster() + GLYPH_BODY_OFF :                               \
-            otg_temp + GLYPH_OBJ_OFF)   :                                     \
-        ((obj)->otyp == CORPSE ?                                              \
-            (int) (obj)->corpsenm + GLYPH_BODY_OFF :                          \
-            (int) (obj)->otyp + GLYPH_OBJ_OFF))
+static int cmap_to_glyph(unsigned cmap_idx) {
+    return (int)cmap_idx + GLYPH_CMAP_OFF;
+}
+static int explosion_to_glyph(int expltype, int idx) {
+    return ((expltype * MAXEXPCHARS) + (idx - S_explode1)) + GLYPH_EXPLODE_OFF;
+}
 
-#define cmap_to_glyph(cmap_idx) ((int) (cmap_idx)   + GLYPH_CMAP_OFF)
-#define explosion_to_glyph(expltype,idx)        \
-                ((((expltype) * MAXEXPCHARS) + ((idx) - S_explode1)) + GLYPH_EXPLODE_OFF)
-
-#define trap_to_glyph(trap)     \
-                        cmap_to_glyph(trap_to_defsym(what_trap((trap)->ttyp)))
+static int trap_to_glyph(const struct trap * trap) {
+    return cmap_to_glyph(trap_to_defsym(what_trap((trap)->ttyp)));
+}
 
 /* Not affected by hallucination.  Gives a generic body for CORPSE */
-#define objnum_to_glyph(onum)   ((int) (onum) + GLYPH_OBJ_OFF)
-#define monnum_to_glyph(mnum)   ((int) (mnum) + GLYPH_MON_OFF)
-#define detected_monnum_to_glyph(mnum)  ((int) (mnum) + GLYPH_DETECT_OFF)
-#define ridden_monnum_to_glyph(mnum)    ((int) (mnum) + GLYPH_RIDDEN_OFF)
-#define petnum_to_glyph(mnum)   ((int) (mnum) + GLYPH_PET_OFF)
+static int objnum_to_glyph(int onum) {
+    return onum + GLYPH_OBJ_OFF;
+}
+static int monnum_to_glyph(int mnum) {
+    return mnum + GLYPH_MON_OFF;
+}
+static int detected_monnum_to_glyph(int mnum) {
+    return mnum + GLYPH_DETECT_OFF;
+}
+static int ridden_monnum_to_glyph(int mnum) {
+    return mnum + GLYPH_RIDDEN_OFF;
+}
+static int petnum_to_glyph(int mnum) {
+    return mnum + GLYPH_PET_OFF;
+}
 
 /* The hero's glyph when seen as a monster.
  */
-#define hero_glyph \
-        monnum_to_glyph((Upolyd || !iflags.showrace) ? u.umonnum : \
-                        (flags.female && urace.femalenum != NON_PM) ? urace.femalenum : \
-                        urace.malenum)
+static int hero_glyph() {
+    return monnum_to_glyph((Upolyd || !iflags.showrace) ? u.umonnum : (flags.female && urace.femalenum != NON_PM) ? urace.femalenum : urace.malenum);
+}
+
+/*
+ * Return true if the given glyph is what we want.
+ * Note that corpses are considered objects.
+ */
+static bool glyph_is_normal_monster(int glyph) {
+    return glyph >= GLYPH_MON_OFF && glyph < GLYPH_MON_OFF + NUMMONS;
+}
+static bool glyph_is_pet(int glyph) {
+    return glyph >= GLYPH_PET_OFF && glyph < GLYPH_PET_OFF + NUMMONS;
+}
+static bool glyph_is_body(int glyph) {
+    return glyph >= GLYPH_BODY_OFF && glyph < GLYPH_BODY_OFF + NUMMONS;
+}
+static bool glyph_is_ridden_monster(int glyph) {
+    return glyph >= GLYPH_RIDDEN_OFF && glyph < GLYPH_RIDDEN_OFF + NUMMONS;
+}
+static bool glyph_is_detected_monster(int glyph) {
+    return glyph >= GLYPH_DETECT_OFF && glyph < GLYPH_DETECT_OFF + NUMMONS;
+}
+static bool glyph_is_invisible(int glyph) {
+    return glyph == GLYPH_INVISIBLE;
+}
+static bool glyph_is_normal_object(int glyph) {
+    return glyph >= GLYPH_OBJ_OFF && glyph < GLYPH_OBJ_OFF + NUM_OBJECTS;
+}
+static bool glyph_is_object(int glyph) {
+    return glyph_is_normal_object(glyph) || glyph_is_body(glyph);
+}
+static bool glyph_is_trap(int glyph) {
+    return glyph >= GLYPH_CMAP_OFF + trap_to_defsym(1) && glyph < GLYPH_CMAP_OFF + trap_to_defsym(1) + TRAPNUM;
+}
+static bool glyph_is_cmap(int glyph) {
+    return glyph >= GLYPH_CMAP_OFF && glyph < GLYPH_CMAP_OFF + MAXPCHARS;
+}
+static bool glyph_is_swallow(int glyph) {
+    return glyph >= GLYPH_SWALLOW_OFF && glyph < GLYPH_SWALLOW_OFF + (NUMMONS << 3);
+}
+static bool glyph_is_warning(int glyph) {
+    return glyph >= GLYPH_WARNING_OFF && glyph < GLYPH_WARNING_OFF + WARNCOUNT;
+}
+static bool glyph_is_monster(int glyph) {
+    return glyph_is_normal_monster(glyph) || glyph_is_pet(glyph) || glyph_is_ridden_monster(glyph) || glyph_is_detected_monster(glyph);
+}
 
 
 /*
@@ -227,65 +315,24 @@
  *         out of range, it will return zero (for lack of anything better
  *         to return).
  */
-#define glyph_to_mon(glyph)                                             \
-        (glyph_is_normal_monster(glyph) ? ((glyph)-GLYPH_MON_OFF) :     \
-        glyph_is_pet(glyph) ? ((glyph)-GLYPH_PET_OFF) :                 \
-        glyph_is_detected_monster(glyph) ? ((glyph)-GLYPH_DETECT_OFF) : \
-        glyph_is_ridden_monster(glyph) ? ((glyph)-GLYPH_RIDDEN_OFF) :   \
-        NO_GLYPH)
-#define glyph_to_obj(glyph)                                             \
-        (glyph_is_body(glyph) ? CORPSE :                                \
-        glyph_is_normal_object(glyph) ? ((glyph)-GLYPH_OBJ_OFF) :       \
-        NO_GLYPH)
-#define glyph_to_trap(glyph)                                            \
-        (glyph_is_trap(glyph) ?                                         \
-                ((int) defsym_to_trap((glyph) - GLYPH_CMAP_OFF)) :      \
-        NO_GLYPH)
-#define glyph_to_cmap(glyph)                                            \
-        (glyph_is_cmap(glyph) ? ((glyph) - GLYPH_CMAP_OFF) :            \
-        NO_GLYPH)
-#define glyph_to_swallow(glyph)                                         \
-        (glyph_is_swallow(glyph) ? (((glyph) - GLYPH_SWALLOW_OFF) & 0x7) : \
-        0)
-#define glyph_to_warning(glyph)                                         \
-        (glyph_is_warning(glyph) ? ((glyph) - GLYPH_WARNING_OFF) :      \
-        NO_GLYPH);
-
-/*
- * Return true if the given glyph is what we want.  Note that bodies are
- * considered objects.
- */
-#define glyph_is_monster(glyph)                                         \
-                (glyph_is_normal_monster(glyph)                         \
-                || glyph_is_pet(glyph)                                  \
-                || glyph_is_ridden_monster(glyph)                       \
-                || glyph_is_detected_monster(glyph))
-#define glyph_is_normal_monster(glyph)                                  \
-    ((glyph) >= GLYPH_MON_OFF && (glyph) < (GLYPH_MON_OFF+NUMMONS))
-#define glyph_is_pet(glyph)                                             \
-    ((glyph) >= GLYPH_PET_OFF && (glyph) < (GLYPH_PET_OFF+NUMMONS))
-#define glyph_is_body(glyph)                                            \
-    ((glyph) >= GLYPH_BODY_OFF && (glyph) < (GLYPH_BODY_OFF+NUMMONS))
-#define glyph_is_ridden_monster(glyph)                                  \
-    ((glyph) >= GLYPH_RIDDEN_OFF && (glyph) < (GLYPH_RIDDEN_OFF+NUMMONS))
-#define glyph_is_detected_monster(glyph)                                \
-    ((glyph) >= GLYPH_DETECT_OFF && (glyph) < (GLYPH_DETECT_OFF+NUMMONS))
-#define glyph_is_invisible(glyph) ((glyph) == GLYPH_INVISIBLE)
-#define glyph_is_normal_object(glyph)                                   \
-    ((glyph) >= GLYPH_OBJ_OFF && (glyph) < (GLYPH_OBJ_OFF+NUM_OBJECTS))
-#define glyph_is_object(glyph)                                          \
-                (glyph_is_normal_object(glyph)                          \
-                || glyph_is_body(glyph))
-#define glyph_is_trap(glyph)                                            \
-    ((glyph) >= (GLYPH_CMAP_OFF+trap_to_defsym(1)) &&                   \
-     (glyph) <  (GLYPH_CMAP_OFF+trap_to_defsym(1)+TRAPNUM))
-#define glyph_is_cmap(glyph)                                            \
-    ((glyph) >= GLYPH_CMAP_OFF && (glyph) < (GLYPH_CMAP_OFF+MAXPCHARS))
-#define glyph_is_swallow(glyph) \
-    ((glyph) >= GLYPH_SWALLOW_OFF && (glyph) < (GLYPH_SWALLOW_OFF+(NUMMONS << 3)))
-#define glyph_is_warning(glyph) \
-    ((glyph) >= GLYPH_WARNING_OFF && (glyph) < (GLYPH_WARNING_OFF + WARNCOUNT))
-
+static int glyph_to_mon(int glyph) {
+    return (glyph_is_normal_monster(glyph) ? ((glyph) - GLYPH_MON_OFF) : glyph_is_pet(glyph) ? ((glyph) - GLYPH_PET_OFF) : glyph_is_detected_monster(glyph) ? ((glyph) - GLYPH_DETECT_OFF) : glyph_is_ridden_monster(glyph) ? ((glyph) - GLYPH_RIDDEN_OFF) : NO_GLYPH);
+}
+static int glyph_to_obj(int glyph) {
+    return (glyph_is_body(glyph) ? CORPSE : glyph_is_normal_object(glyph) ? ((glyph) - GLYPH_OBJ_OFF) : NO_GLYPH);
+}
+static int glyph_to_trap(int glyph) {
+    return (glyph_is_trap(glyph) ? ((int)defsym_to_trap((glyph) - GLYPH_CMAP_OFF)) : NO_GLYPH);
+}
+static int glyph_to_cmap(int glyph) {
+    return (glyph_is_cmap(glyph) ? ((glyph) - GLYPH_CMAP_OFF) : NO_GLYPH);
+}
+static int glyph_to_swallow(int glyph) {
+    return (glyph_is_swallow(glyph) ? (((glyph) - GLYPH_SWALLOW_OFF) & 0x7) : 0);
+}
+static int glyph_to_warning(int glyph) {
+    return (glyph_is_warning(glyph) ? ((glyph) - GLYPH_WARNING_OFF) : NO_GLYPH);
+}
 
 /*
  * display_self()
@@ -296,7 +343,7 @@
 static void display_self(void) {
     show_glyph(u.ux, u.uy, (u.usteed && mon_visible(u.usteed)) ?  ridden_mon_to_glyph(u.usteed) :
         youmonst.m_ap_type == M_AP_NOTHING ?
-                                hero_glyph :
+                                hero_glyph() :
         youmonst.m_ap_type == M_AP_FURNITURE ?
                                 cmap_to_glyph(youmonst.mappearance) :
         youmonst.m_ap_type == M_AP_OBJECT ?

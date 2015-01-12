@@ -1195,11 +1195,11 @@ void show_glyph (int x, int y, int glyph) {
 }
 
 
-static gbuf_entry nul_gbuf = { 0, cmap_to_glyph(S_stone) };
 /*
  * Turn the 3rd screen into stone.
  */
 void clear_glyph_buffer (void) {
+    gbuf_entry nul_gbuf = { 0, cmap_to_glyph(S_stone) };
     int x, y;
     gbuf_entry *gptr;
 

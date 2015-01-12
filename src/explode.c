@@ -244,9 +244,8 @@ void explode ( int x, int y, int type, int dam, char olet, int expltype) {
         /* Start the explosion */
         for (i=0; i<3; i++) for (j=0; j<3; j++) {
             if (explmask[i][j] == 2) continue;
-            tmp_at(starting ? DISP_BEAM : DISP_CHANGE,
-                    explosion_to_glyph(expltype,expl[i][j]));
-            tmp_at(i+x-1, j+y-1);
+            tmp_at(starting ? DISP_BEAM : DISP_CHANGE, explosion_to_glyph(expltype, expl[i][j]));
+            tmp_at(i + x - 1, j + y - 1);
             starting = 0;
         }
         curs_on_u();    /* will flush screen and output */
