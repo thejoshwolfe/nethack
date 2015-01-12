@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "display_util.h"
 #include "decl.h"
 #include "display.h"
 #include "do_name.h"

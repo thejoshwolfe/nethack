@@ -6,6 +6,7 @@
 
 #include <stddef.h>
 
+#include "display_util.h"
 #include "align.h"
 #include "artifact.h"
 #include "artifact_names.h"

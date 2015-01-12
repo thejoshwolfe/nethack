@@ -2,6 +2,7 @@
 
 #include "mcastu.h"
 
+#include "display_util.h"
 #include "attrib.h"
 #include "coord.h"
 #include "decl.h"

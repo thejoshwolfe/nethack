@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "display_util.h"
 #include "dungeon_util.h"
 #include "align.h"
 #include "apply.h"

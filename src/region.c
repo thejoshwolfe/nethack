@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "display_util.h"
 #include "cmd.h"
 #include "decl.h"
 #include "display.h"

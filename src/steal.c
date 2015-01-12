@@ -4,6 +4,7 @@
 
 #include <string.h>
 
+#include "display_util.h"
 #include "apply.h"
 #include "decl.h"
 #include "display.h"

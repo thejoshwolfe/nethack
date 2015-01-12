@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "display_util.h"
 #include "apply.h"
 #include "artifact.h"
 #include "decl.h"

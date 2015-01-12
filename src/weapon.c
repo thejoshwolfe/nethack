@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "display_util.h"
 #include "artifact.h"
 #include "attrib.h"
 #include "dbridge.h"

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "display_util.h"
 #include "artifact.h"
 #include "artifact_names.h"
 #include "decl.h"

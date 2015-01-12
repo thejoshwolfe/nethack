@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 
+#include "display_util.h"
 #include "artifact.h"
 #include "decl.h"
 #include "display.h"

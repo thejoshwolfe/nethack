@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "display_util.h"
 #include "dungeon_util.h"
 #include "read.h"
 #include "apply.h"

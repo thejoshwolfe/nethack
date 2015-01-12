@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "display_util.h"
 #include "move.h"
 #include "dungeon_util.h"
 #include "align.h"

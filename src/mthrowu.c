@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "display_util.h"
 #include "attrib.h"
 #include "cmd.h"
 #include "coord.h"

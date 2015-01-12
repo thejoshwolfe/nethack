@@ -117,6 +117,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "display_util.h"
 #include "dungeon_util.h"
 #include "cmd.h"
 #include "coord.h"
