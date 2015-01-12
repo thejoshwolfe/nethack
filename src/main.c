@@ -387,7 +387,7 @@ void moveloop(void) {
 
         if (multi == 0) {
             ckmailstatus();
-            rhack(NULL);
+            read_inputs();
         }
         if (u.utotype) {
             /* change dungeon level */

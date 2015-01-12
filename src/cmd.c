@@ -955,7 +955,7 @@ static bool movecmd(char sym, Direction * out_direction) {
     return output.z == 0;
 }
 
-void rhack() {
+void read_inputs(void) {
     bool bad_command;
 
     iflags.menu_requested = false;
@@ -1005,21 +1005,17 @@ void rhack() {
         flags.forcefight = false;
         return;
     } else {
-        const struct func_tab *tlist;
-        int res, (*func)(void);
-
-        for (tlist = cmdlist; tlist->f_char; tlist++) {
+        for (const struct func_tab * tlist = cmdlist; tlist->f_char; tlist++) {
             if ((*cmd & 0xff) != (tlist->f_char & 0xff))
                 continue;
 
+            int res;
             if (u.uburied && !tlist->can_if_buried) {
                 You_cant("do that while you are buried!");
                 res = 0;
             } else {
-                /* we discard 'const' because some compilers seem to have
-                 trouble with the pointer passed to set_occupation() */
-                func = ((struct func_tab *)tlist)->f_funct;
-                res = (*func)(); /* perform the command */
+                /* perform the command */
+                res = tlist->f_funct();
             }
             if (!res) {
                 flags.move = false;
@@ -1058,8 +1054,7 @@ void rhack() {
 
 /* convert an x,y pair into a direction code */
 int xytod(signed char x, signed char y) {
-    int dd;
-    for (dd = 0; dd < 8; dd++)
+    for (int dd = 0; dd < 8; dd++)
         if (x == xdir[dd] && y == ydir[dd])
             return dd;
     return -1;
