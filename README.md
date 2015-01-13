@@ -1,6 +1,6 @@
 # nethack
 
-A fork of [nethack](http://www.nethack.org/v343/download-src.html).
+A fork of [nethack 3.4.3](http://www.nethack.org/v343/download-src.html).
 
 ## Status
 
@@ -11,7 +11,7 @@ Not cool yet.
 ### Dependencies (Ubuntu)
 
 ```
-sudo apt-get install bison flex
+sudo apt-get install bison flex clang
 ```
 
 ### Build
