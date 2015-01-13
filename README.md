@@ -107,6 +107,16 @@ The goal of this fork is to make the game more approachable for new players.
    * You can still unlock encyclopedia entries in Practice Mode.
    * Rename Wizard Mode to Debug Mode, have it only accessible by running the game locally.
    * Get rid of the standard Explore Mode.
+ * Hide some of the roles and races initially.
+   Start by presenting the player with a few choices, and reveal more choices as they play more of the game.
+   Experienced players should be able to bypass this limitation by typing in the name of the role or race they want to play.
+   The purpose of this change is to eschew the paradox of choice by making official recommendations for new players.
+   The unlocks should be pretty easy; we don't want to withhold gameplay, just make recommendations.
+   Thus, more advanced roles should probably be harder to unlock.
+   * Roles should be unlocked as you find items or perform actions associated with them.
+     See [this wiki page](https://github.com/thejoshwolfe/nethack/wiki/Challenge-Modes) for the ideas.
+   * Races should be unlocked when you eat their corpses.
+   * Gender and Alignment should start fully unlocked.
 
 Additional fun stuff maybe someday:
 
