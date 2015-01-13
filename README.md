@@ -128,8 +128,7 @@ Additional fun stuff maybe someday:
  * Achievements
  * Seed input, and other [TAS](http://en.wikipedia.org/wiki/Tool-assisted_speedrun) support features
  * (The web api for the client would already be appropriate for AI projects.)
-
-See the [wiki page](https://github.com/thejoshwolfe/nethack/wiki/Challenge-Modes) for more ideas.
+ * See the [wiki page](https://github.com/thejoshwolfe/nethack/wiki/Challenge-Modes) for more ideas.
 
 And to make this project more approachable for developers:
 
