@@ -14,17 +14,22 @@ Not cool yet.
 sudo apt-get install bison flex clang
 ```
 
+And [install node.js](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager).
+
 ### Build
 
 ```
 make
+(cd server && npm run build)
 ```
 
 ### Run
 
 ```
-./build/nethack
+(cd server && node lib/server.js)
 ```
+
+Then open the printed link in a web browser.
 
 ## Why are you doing this?
 
@@ -36,7 +41,7 @@ The goal of this fork is to make the game more approachable for new players.
 
  * Browser-based graphical interface.
    * Server-side game logic to allow spectating and prevent cheating.
-   * Try to preserve all the keyboard shortcuts, but have a more obvious way to do most things as well.
+   * Have keyboard shortcuts for everything, preferably preserving the commands from the original game.
    * (I am aware of the tile-based interface built into the standard game. It sucks.)
  * You shouldn't need the wiki.
    The game should feature an in-game encyclopedia that's unlocked as you play, and it should persist across games.
