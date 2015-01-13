@@ -591,19 +591,18 @@ static int gulpum(struct monst *mdef, struct attack *mattk) {
     return (0);
 }
 
-static bool hmonas( /* attack monster as a monster. */
-        struct monst *mon, int tmp) {
+/* attack monster as a monster. */
+static bool hmonas(struct monst *mon, int tmp) {
     struct attack *mattk, alt_attk;
     int i, sum[NATTK], hittmp = 0;
     int nsum = 0;
     int dhit = 0;
 
     for (i = 0; i < NATTK; i++) {
-
         sum[i] = 0;
         mattk = getmattk(youmonst.data, i, sum, &alt_attk);
         switch (mattk->aatyp) {
-            case AT_WEAP:
+            case AT_WEAP: {
                 use_weapon:
                 /* Certain monsters don't use weapons when encountered as enemies,
                  * but players who polymorph into them have hands or claws and thus
@@ -619,25 +618,26 @@ static bool hmonas( /* attack monster as a monster. */
                     hittmp += weapon_hit_bonus(uwep);
                     tmp += hittmp;
                 }
-            dhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
-            /* KMH -- Don't accumulate to-hit bonuses */
-            if (uwep)
-                tmp -= hittmp;
-            /* Enemy dead, before any special abilities used */
-            if (!known_hitum(mon, &dhit, mattk)) {
-                sum[i] = 2;
+                dhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
+                /* KMH -- Don't accumulate to-hit bonuses */
+                if (uwep)
+                    tmp -= hittmp;
+                /* Enemy dead, before any special abilities used */
+                if (!known_hitum(mon, &dhit, mattk)) {
+                    sum[i] = 2;
+                    break;
+                } else
+                    sum[i] = dhit;
+                /* might be a worm that gets cut in half */
+                if (m_at(u.ux+u.delta.x, u.uy+u.delta.y) != mon)
+                    return ((bool)(nsum != 0));
+                /* Do not print "You hit" message, since known_hitum
+                 * already did it.
+                 */
+                if (dhit && mattk->adtyp != AD_SPEL && mattk->adtyp != AD_PHYS)
+                    sum[i] = damageum(mon, mattk);
                 break;
-            } else
-                sum[i] = dhit;
-            /* might be a worm that gets cut in half */
-            if (m_at(u.ux+u.delta.x, u.uy+u.delta.y) != mon)
-                return ((bool)(nsum != 0));
-            /* Do not print "You hit" message, since known_hitum
-             * already did it.
-             */
-            if (dhit && mattk->adtyp != AD_SPEL && mattk->adtyp != AD_PHYS)
-                sum[i] = damageum(mon, mattk);
-            break;
+            }
             case AT_CLAW:
                 if (i == 0 && uwep && !cantwield(youmonst.data))
                     goto use_weapon;
@@ -687,8 +687,9 @@ static bool hmonas( /* attack monster as a monster. */
                         message_monster(MSG_YOU_HIT_M, mon);
                     }
                     sum[i] = damageum(mon, mattk);
-                } else
+                } else {
                     missum(mon, mattk);
+                }
                 break;
 
             case AT_HUGS:
@@ -729,42 +730,41 @@ static bool hmonas( /* attack monster as a monster. */
                             mdamageu(mon, rnd(8));
                         }
                     }
-                } else
+                } else {
                     missum(mon, mattk);
+                }
                 break;
 
             case AT_MAGC:
                 /* No check for uwep; if wielding nothing we want to
                  * do the normal 1-2 points bare hand damage...
                  */
-                if (i==0 && (youmonst.data->mlet==S_KOBOLD
-                        || youmonst.data->mlet==S_ORC
-                        || youmonst.data->mlet==S_GNOME
-                )) goto use_weapon;
+                if (i == 0 && (youmonst.data->mlet == S_KOBOLD || youmonst.data->mlet == S_ORC || youmonst.data->mlet == S_GNOME))
+                    goto use_weapon;
 
             case AT_NONE:
             case AT_BOOM:
-                continue;
                 /* Not break--avoid passive attacks from enemy */
+                continue;
 
             case AT_BREA:
             case AT_SPIT:
-            case AT_GAZE: /* all done using #monster command */
+            case AT_GAZE:
+                /* all done using #monster command */
                 dhit = 0;
                 break;
 
-            default: /* Strange... */
-                impossible("strange attack of yours (%d)",
-                        mattk->aatyp);
+            default:
+                impossible("strange attack of yours (%d)", mattk->aatyp);
         }
         if (dhit == -1) {
             u.mh = -1; /* dead in the current form */
             rehumanize();
         }
-        if (sum[i] == 2)
+        if (sum[i] == 2) {
             return ((bool)passive(mon, 1, 0, mattk->aatyp));
-        /* defender dead */
-        else {
+        } else {
+            /* defender dead */
             (void)passive(mon, sum[i], 1, mattk->aatyp);
             nsum |= sum[i];
         }
@@ -773,11 +773,11 @@ static bool hmonas( /* attack monster as a monster. */
         if (multi < 0)
             break; /* If paralyzed while attacking, i.e. floating eye */
     }
-    return ((bool)(nsum != 0));
+    return nsum != 0;
 }
 
-static bool hitum( /* returns true if monster still lives */
-        struct monst *mon, int tmp, struct attack *uattk) {
+/* returns true if monster still lives */
+static bool hitum(struct monst *mon, int tmp, struct attack *uattk) {
     bool malive;
     int mhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
 
@@ -803,8 +803,8 @@ bool attack(struct monst *mtmp) {
      * 07/92) then we assume that you're not trying to attack. Instead,
      * you'll usually just swap places if this is a movement command
      */
-    /* Intelligent chaotic weapons (Stormbringer) want blood */
     if (is_safepet(mtmp) && !flags.forcefight) {
+        /* Stormbringer wants blood */
         if (!uwep || uwep->oartifact != ART_STORMBRINGER) {
             /* there are some additional considerations: this won't work
              * if in a shop or Punished or you miss a random roll or
@@ -2032,7 +2032,6 @@ void missum(struct monst *mdef, struct attack *mattk) {
 }
 
 /*      Special (passive) attacks on you by monsters done here.         */
-
 int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
     struct permonst *ptr = mon->data;
     int i, tmp;
@@ -2052,9 +2051,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
         tmp = 0;
 
     /*      These affect you even if they just died */
-
     switch (ptr->mattk[i].adtyp) {
-
         case AD_ACID:
             if (mhit && rn2(2)) {
                 if (Blind || !flags.verbose) {
@@ -2126,8 +2123,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
             break;
         case AD_ENCH: /* KMH -- remove enchantment (disenchanter) */
             if (mhit) {
-                struct obj *obj = (struct obj *)0;
-
+                struct obj *obj = NULL;
                 if (aatyp == AT_KICK) {
                     obj = uarmf;
                     if (!obj)
@@ -2143,11 +2139,8 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
     }
 
     /*      These only affect you if they still live */
-
     if (malive && !mon->mcan && rn2(3)) {
-
         switch (ptr->mattk[i].adtyp) {
-
             case AD_PLYS:
                 if (ptr == &mons[PM_FLOATING_EYE]) {
                     if (!canseemon(mon)) {
