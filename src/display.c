@@ -1121,75 +1121,28 @@ void docrt (void) {
 }
 
 
-/* ========================================================================= */
-/* Glyph Buffering (3rd screen) ============================================ */
-
-typedef struct {
-    signed char new;            /* perhaps move this bit into the rm strucure. */
-    int   glyph;
-} gbuf_entry;
-
-static gbuf_entry gbuf[ROWNO][COLNO];
+static int gbuf[ROWNO][COLNO];
 
 /*
  * Store the glyph in the 3rd screen for later flushing.
  */
-void show_glyph (int x, int y, int glyph) {
-    /*
-     * Check for bad positions and glyphs.
-     */
+void show_glyph(int x, int y, int glyph) {
+    /* Check for bad positions and glyphs. */
     if (!isok(x, y)) {
-        const char *text;
-        int  offset;
-
         /* column 0 is invalid, but it's often used as a flag, so ignore it */
-        if (x == 0) return;
-
-        /*
-         *  This assumes an ordering of the offsets.  See display.h for
-         *  the definition.
-         */
-
-        if (glyph >= GLYPH_WARNING_OFF) {       /* a warning */
-            text = "warning";           offset = glyph - GLYPH_WARNING_OFF;
-        } else if (glyph >= GLYPH_SWALLOW_OFF) {        /* swallow border */
-            text = "swallow border";    offset = glyph - GLYPH_SWALLOW_OFF;
-        } else if (glyph >= GLYPH_ZAP_OFF) {            /* zap beam */
-            text = "zap beam";          offset = glyph - GLYPH_ZAP_OFF;
-        } else if (glyph >= GLYPH_EXPLODE_OFF) {        /* explosion */
-            text = "explosion";         offset = glyph - GLYPH_EXPLODE_OFF;
-        } else if (glyph >= GLYPH_CMAP_OFF) {           /* cmap */
-            text = "cmap_index";        offset = glyph - GLYPH_CMAP_OFF;
-        } else if (glyph >= GLYPH_OBJ_OFF) {            /* object */
-            text = "object";            offset = glyph - GLYPH_OBJ_OFF;
-        } else if (glyph >= GLYPH_RIDDEN_OFF) {         /* ridden mon */
-            text = "ridden mon";        offset = glyph - GLYPH_RIDDEN_OFF;
-        } else if (glyph >= GLYPH_BODY_OFF) {           /* a corpse */
-            text = "corpse";            offset = glyph - GLYPH_BODY_OFF;
-        } else if (glyph >= GLYPH_DETECT_OFF) {         /* detected mon */
-            text = "detected mon";      offset = glyph - GLYPH_DETECT_OFF;
-        } else if (glyph >= GLYPH_INVIS_OFF) {          /* invisible mon */
-            text = "invisible mon";     offset = glyph - GLYPH_INVIS_OFF;
-        } else if (glyph >= GLYPH_PET_OFF) {            /* a pet */
-            text = "pet";               offset = glyph - GLYPH_PET_OFF;
-        } else {                                        /* a monster */
-            text = "monster";           offset = glyph;
-        }
-
-        impossible("show_glyph:  bad pos %d %d with glyph %d [%s %d].",
-                                                x, y, glyph, text, offset);
+        if (x == 0)
+            return;
+        impossible("show_glyph:  bad pos %d %d with glyph %d.", x, y, glyph);
         return;
     }
 
     if (glyph >= MAX_GLYPH) {
-        impossible("show_glyph:  bad glyph %d [max %d] at (%d,%d).",
-                                        glyph, MAX_GLYPH, x, y);
+        impossible("show_glyph:  bad glyph %d [max %d] at (%d,%d).", glyph, MAX_GLYPH, x, y);
         return;
     }
 
-    if (gbuf[y][x].glyph != glyph) {
-        gbuf[y][x].glyph = glyph;
-        gbuf[y][x].new   = 1;
+    if (gbuf[y][x] != glyph) {
+        gbuf[y][x] = glyph;
         stdout_msg_glyph(x, y, glyph);
     }
 }
@@ -1199,14 +1152,14 @@ void show_glyph (int x, int y, int glyph) {
  * Turn the 3rd screen into stone.
  */
 void clear_glyph_buffer (void) {
-    gbuf_entry nul_gbuf = { 0, cmap_to_glyph(S_stone) };
+    int nul_glyph = cmap_to_glyph(S_stone);
     int x, y;
-    gbuf_entry *gptr;
+    int *gptr;
 
     for (y = 0; y < ROWNO; y++) {
         gptr = &gbuf[y][0];
         for (x = COLNO; x; x--) {
-            *gptr++ = nul_gbuf;
+            *gptr++ = nul_glyph;
         }
     }
     stdout_msg_const(OUT_MSG_SET_ALL_ROCK);
@@ -1230,49 +1183,6 @@ void cls (void) {
  * Synch the third screen with the display.
  */
 void flush_screen (int cursor_on_u) {
-}
-
-/* ========================================================================= */
-
-/* D: Added to dump screen to output file */
-static unsigned char get_glyph_char (int glyph) {
-    unsigned char   ch;
-    int offset;
-
-    assert (!(glyph >= NO_GLYPH));
-
-    /*
-     *  Map the glyph back to a character.
-     *
-     *  Warning:  For speed, this makes an assumption on the order of
-     *            offsets.  The order is set in display.h.
-     */
-    if ((offset = (glyph - GLYPH_WARNING_OFF)) >= 0) {  /* a warning flash */
-        ch = def_warnsyms[offset].sym;
-    } else if ((offset = (glyph - GLYPH_SWALLOW_OFF)) >= 0) {   /* swallow */
-        /* see swallow_to_glyph() in display.c */
-        ch = (unsigned char) defsyms[S_sw_tl + (offset & 0x7)].sym;
-    } else if ((offset = (glyph - GLYPH_ZAP_OFF)) >= 0) {       /* zap beam */
-        /* see zapdir_to_glyph() in display.c */
-        ch = defsyms[S_vbeam + (offset & 0x3)].sym;
-    } else if ((offset = (glyph - GLYPH_CMAP_OFF)) >= 0) {      /* cmap */
-        ch = defsyms[offset].sym;
-    } else if ((offset = (glyph - GLYPH_OBJ_OFF)) >= 0) {       /* object */
-        ch = def_oc_syms[(int)objects[offset].oc_class];
-    } else if ((offset = (glyph - GLYPH_RIDDEN_OFF)) >= 0) { /* mon ridden */
-        ch = def_monsyms[(int)mons[offset].mlet];
-    } else if ((offset = (glyph - GLYPH_BODY_OFF)) >= 0) {      /* a corpse */
-        ch = def_oc_syms[(int)objects[CORPSE].oc_class];
-    } else if ((offset = (glyph - GLYPH_DETECT_OFF)) >= 0) { /* mon detect */
-        ch = def_monsyms[(int)mons[offset].mlet];
-    } else if ((offset = (glyph - GLYPH_INVIS_OFF)) >= 0) {  /* invisible */
-        ch = DEF_INVISIBLE;
-    } else if ((offset = (glyph - GLYPH_PET_OFF)) >= 0) {       /* a pet */
-        ch = def_monsyms[(int)mons[offset].mlet];
-    } else {                                                /* a monster */
-        ch = monsyms[(int)mons[glyph].mlet];
-    }
-    return ch;
 }
 
 /*
@@ -1425,7 +1335,7 @@ int zapdir_to_glyph (int dx, int dy, int beam_type) {
 int glyph_at (signed char x, signed char y) {
     if(x < 0 || y < 0 || x >= COLNO || y >= ROWNO)
         return cmap_to_glyph(S_room);                   /* XXX */
-    return gbuf[y][x].glyph;
+    return gbuf[y][x];
 }
 
 
