@@ -1989,115 +1989,115 @@ const char * dfeature_at (int x, int y, char *buf) {
 /* look at what is here; if there are many objects (5 or more),
    don't show them unless obj_cnt is 0 */
 // int obj_cnt,    /* obj_cnt > 0 implies that autopickup is in progess */
-int look_here (int obj_cnt, bool picked_some) {
-        struct obj *otmp;
-        struct trap *trap;
-        const char *verb = Blind ? "feel" : "see";
-        const char *dfeature = (char *)0;
-        char fbuf[BUFSZ], fbuf2[BUFSZ];
-        winid tmpwin;
-        bool skip_objects = (obj_cnt >= 5), felt_cockatrice = false;
+int look_here(int obj_cnt, bool picked_some) {
+    struct obj *otmp;
+    struct trap *trap;
+    const char *verb = Blind ? "feel" : "see";
+    const char *dfeature = (char *)0;
+    char fbuf[BUFSZ], fbuf2[BUFSZ];
+    winid tmpwin;
+    bool skip_objects = (obj_cnt >= 5), felt_cockatrice = false;
 
-        if (u.uswallow && u.ustuck) {
-            struct monst *mtmp = u.ustuck;
-            char name[BUFSZ];
-            mon_nam(name, BUFSZ, mtmp);
-            sprintf(fbuf, "Contents of %s%s %s", name, possessive_suffix(name),
-                    mbodypart(mtmp, STOMACH));
-            /* Skip "Contents of " by using fbuf index 12 */
-            You("%s to %s what is lying in %s.",
-                Blind ? "try" : "look around", verb, &fbuf[12]);
-            otmp = mtmp->minvent;
-            if (otmp) {
-                for ( ; otmp; otmp = otmp->nobj) {
-                        /* If swallower is an animal, it should have become stone but... */
-                        if (otmp->otyp == CORPSE) feel_cockatrice(otmp, false);
-                }
-                if (Blind) strcpy(fbuf, "You feel");
-                strcat(fbuf,":");
-                (void) display_minventory(mtmp, MINV_ALL, fbuf);
-            } else {
-                You("%s no objects here.", verb);
+    if (u.uswallow && u.ustuck) {
+        struct monst *mtmp = u.ustuck;
+        char name[BUFSZ];
+        mon_nam(name, BUFSZ, mtmp);
+        sprintf(fbuf, "Contents of %s%s %s", name, possessive_suffix(name), mbodypart(mtmp, STOMACH));
+        /* Skip "Contents of " by using fbuf index 12 */
+        You("%s to %s what is lying in %s.",
+        Blind ? "try" : "look around", verb, &fbuf[12]);
+        otmp = mtmp->minvent;
+        if (otmp) {
+            for (; otmp; otmp = otmp->nobj) {
+                /* If swallower is an animal, it should have become stone but... */
+                if (otmp->otyp == CORPSE)
+                    feel_cockatrice(otmp, false);
             }
-            return(!!Blind);
-        }
-        if (!skip_objects && (trap = t_at(u.ux,u.uy)) && trap->tseen)
-                There("is %s here.",
-                        an(defsyms[trap_to_defsym(trap->ttyp)].explanation));
-
-        otmp = level.objects[u.ux][u.uy];
-        dfeature = dfeature_at(u.ux, u.uy, fbuf2);
-        if (dfeature && !strcmp(dfeature, "pool of water") && Underwater)
-                dfeature = 0;
-
-        if (Blind) {
-                bool drift = Is_airlevel(&u.uz) || Is_waterlevel(&u.uz);
-                if (dfeature && !strncmp(dfeature, "altar ", 6)) {
-                    /* don't say "altar" twice, dfeature has more info */
-                    You("try to feel what is here.");
-                } else {
-                    You("try to feel what is %s%s.",
-                        drift ? "floating here" : "lying here on the ",
-                        drift ? ""              : surface(u.ux, u.uy));
-                }
-                if (dfeature && !drift && !strcmp(dfeature, surface(u.ux,u.uy)))
-                        dfeature = 0;           /* ice already identifed */
-                if (!can_reach_floor()) {
-                        pline("But you can't reach it!");
-                        return(0);
-                }
-        }
-
-        if (dfeature)
-                sprintf(fbuf, "There is %s here.", an(dfeature));
-
-        if (!otmp || is_lava(u.ux,u.uy) || (is_pool(u.ux,u.uy) && !Underwater)) {
-                if (dfeature) plines(fbuf);
-                read_engr_at(u.ux, u.uy); /* Eric Backus */
-                if (!skip_objects && (Blind || !dfeature))
-                    You("%s no objects here.", verb);
-                return(!!Blind);
-        }
-        /* we know there is something here */
-
-        if (skip_objects) {
-            if (dfeature) plines(fbuf);
-            read_engr_at(u.ux, u.uy); /* Eric Backus */
-            There("are %s%s objects here.",
-                  (obj_cnt <= 10) ? "several" : "many",
-                  picked_some ? " more" : "");
-        } else if (!otmp->nexthere) {
-            /* only one object */
-            if (dfeature) plines(fbuf);
-            read_engr_at(u.ux, u.uy); /* Eric Backus */
-            You("%s here %s.", verb, doname(otmp));
-            if (otmp->otyp == CORPSE) feel_cockatrice(otmp, false);
+            if (Blind)
+                strcpy(fbuf, "You feel");
+            strcat(fbuf, ":");
+            (void)display_minventory(mtmp, MINV_ALL, fbuf);
         } else {
-            display_nhwindow(WIN_MESSAGE, false);
-            tmpwin = create_nhwindow(NHW_MENU);
-            if(dfeature) {
-                putstr(tmpwin, 0, fbuf);
-                putstr(tmpwin, 0, "");
-            }
-            putstr(tmpwin, 0, Blind ? "Things that you feel here:" :
-                                      "Things that are here:");
-            for ( ; otmp; otmp = otmp->nexthere) {
-                if (otmp->otyp == CORPSE && will_feel_cockatrice(otmp, false)) {
-                        char buf[BUFSZ];
-                        felt_cockatrice = true;
-                        strcpy(buf, doname(otmp));
-                        strcat(buf, "...");
-                        putstr(tmpwin, 0, buf);
-                        break;
-                }
-                putstr(tmpwin, 0, doname(otmp));
-            }
-            display_nhwindow(tmpwin, true);
-            destroy_nhwindow(tmpwin);
-            if (felt_cockatrice) feel_cockatrice(otmp, false);
-            read_engr_at(u.ux, u.uy); /* Eric Backus */
+            You("%s no objects here.", verb);
         }
-        return(!!Blind);
+        return (!!Blind);
+    }
+    if (!skip_objects && (trap = t_at(u.ux, u.uy)) && trap->tseen)
+        There("is %s here.", an(defsyms[trap_to_defsym(trap->ttyp)].explanation));
+
+    otmp = level.objects[u.ux][u.uy];
+    dfeature = dfeature_at(u.ux, u.uy, fbuf2);
+    if (dfeature && !strcmp(dfeature, "pool of water") && Underwater)
+        dfeature = 0;
+
+    if (Blind) {
+        bool drift = Is_airlevel(&u.uz) || Is_waterlevel(&u.uz);
+        if (dfeature && !strncmp(dfeature, "altar ", 6)) {
+            /* don't say "altar" twice, dfeature has more info */
+            You("try to feel what is here.");
+        } else {
+            You("try to feel what is %s%s.", drift ? "floating here" : "lying here on the ", drift ? "" : surface(u.ux, u.uy));
+        }
+        if (dfeature && !drift && !strcmp(dfeature, surface(u.ux, u.uy)))
+            dfeature = 0; /* ice already identifed */
+        if (!can_reach_floor()) {
+            pline("But you can't reach it!");
+            return (0);
+        }
+    }
+
+    if (dfeature)
+        sprintf(fbuf, "There is %s here.", an(dfeature));
+
+    if (!otmp || is_lava(u.ux, u.uy) || (is_pool(u.ux, u.uy) && !Underwater)) {
+        if (dfeature)
+            plines(fbuf);
+        read_engr_at(u.ux, u.uy); /* Eric Backus */
+        if (!skip_objects && (Blind || !dfeature))
+            You("%s no objects here.", verb);
+        return (!!Blind);
+    }
+    /* we know there is something here */
+
+    if (skip_objects) {
+        if (dfeature)
+            plines(fbuf);
+        read_engr_at(u.ux, u.uy); /* Eric Backus */
+        There("are %s%s objects here.", (obj_cnt <= 10) ? "several" : "many", picked_some ? " more" : "");
+    } else if (!otmp->nexthere) {
+        /* only one object */
+        if (dfeature)
+            plines(fbuf);
+        read_engr_at(u.ux, u.uy); /* Eric Backus */
+        You("%s here %s.", verb, doname(otmp));
+        if (otmp->otyp == CORPSE)
+            feel_cockatrice(otmp, false);
+    } else {
+        display_nhwindow(WIN_MESSAGE, false);
+        tmpwin = create_nhwindow(NHW_MENU);
+        if (dfeature) {
+            putstr(tmpwin, 0, fbuf);
+            putstr(tmpwin, 0, "");
+        }
+        putstr(tmpwin, 0, Blind ? "Things that you feel here:" : "Things that are here:");
+        for (; otmp; otmp = otmp->nexthere) {
+            if (otmp->otyp == CORPSE && will_feel_cockatrice(otmp, false)) {
+                char buf[BUFSZ];
+                felt_cockatrice = true;
+                strcpy(buf, doname(otmp));
+                strcat(buf, "...");
+                putstr(tmpwin, 0, buf);
+                break;
+            }
+            putstr(tmpwin, 0, doname(otmp));
+        }
+        display_nhwindow(tmpwin, true);
+        destroy_nhwindow(tmpwin);
+        if (felt_cockatrice)
+            feel_cockatrice(otmp, false);
+        read_engr_at(u.ux, u.uy); /* Eric Backus */
+    }
+    return (!!Blind);
 }
 
 /* explicilty look at what is here, including all objects */
