@@ -749,9 +749,6 @@ void u_init(void) {
             break;
     }
 
-    if (flags.debug)
-        read_wizkit();
-
     u.ugold0 += hidden_gold(); /* in case sack has gold in it */
 
     find_ac(); /* get initial ac value */

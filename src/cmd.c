@@ -765,7 +765,6 @@ static const struct func_tab cmdlist[] = {
     {M('n'), true, ddocall},
     {M('N'), true, ddocall},
     {'o', false, doopen},
-    {'O', true, doset},
     {M('o'), false, dosacrifice},
     {'p', false, dopay},
     {'P', false, doputon},
@@ -806,7 +805,6 @@ static const struct func_tab cmdlist[] = {
     {';', true, doquickwhatis},
     {'^', true, doidtrap},
     {'\\', true, dodiscovered},             /* Robert Viduya */
-    {'@', true, dotogglepickup},
     {M('2'), false, dotwoweapon},
     {WEAPON_SYM,  true, doprwep},
     {ARMOR_SYM,  true, doprarm},

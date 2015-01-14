@@ -79,16 +79,16 @@ static long laststattime;
 /* Debian uses /var/mail, too. */
 static const char *MAILPATH = "/var/mail/";
 
-void getmailstatus(void) {
-        if(!mailbox && !(mailbox = nh_getenv("MAIL"))) {
-                const char *pw_name = getpwuid(getuid())->pw_name;
-                mailbox = (char *) malloc(sizeof(MAILPATH)+strlen(pw_name));
-                strcpy(mailbox, MAILPATH);
-                strcat(mailbox, pw_name);
-        }
-        if(stat(mailbox, &omstat)){
-                omstat.st_mtime = 0;
-        }
+static void getmailstatus(void) {
+    if (!mailbox && !(mailbox = nh_getenv("MAIL"))) {
+        const char *pw_name = getpwuid(getuid())->pw_name;
+        mailbox = (char *)malloc(sizeof(MAILPATH) + strlen(pw_name));
+        strcpy(mailbox, MAILPATH);
+        strcat(mailbox, pw_name);
+    }
+    if (stat(mailbox, &omstat)) {
+        omstat.st_mtime = 0;
+    }
 }
 
 
@@ -378,25 +378,21 @@ give_up:
 }
 
 void ckmailstatus(void) {
-        mailckfreq = 10;
+    mailckfreq = 10;
 
-        if(!mailbox || u.uswallow || !flags.biff
-                    || moves < laststattime + mailckfreq)
-                return;
+    if (!mailbox || u.uswallow || !flags.biff || moves < laststattime + mailckfreq)
+        return;
 
-        laststattime = moves;
-        if(stat(mailbox, &nmstat)){
-                nmstat.st_mtime = 0;
-        } else if(nmstat.st_mtime > omstat.st_mtime) {
-                if (nmstat.st_size) {
-                    static struct mail_info deliver = {
-                        MSG_MAIL, "I have some mail for you",
-                        0, 0
-                    };
-                    newmail(&deliver);
-                }
-                getmailstatus();        /* might be too late ... */
+    laststattime = moves;
+    if (stat(mailbox, &nmstat)) {
+        nmstat.st_mtime = 0;
+    } else if (nmstat.st_mtime > omstat.st_mtime) {
+        if (nmstat.st_size) {
+            static struct mail_info deliver = { MSG_MAIL, "I have some mail for you", NULL, NULL };
+            newmail(&deliver);
         }
+        getmailstatus(); /* might be too late ... */
+    }
 }
 
 void readmail(struct obj *otmp) {

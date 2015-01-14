@@ -73,7 +73,7 @@ struct flag {
 #define DISCLOSE_NO_WITHOUT_PROMPT      '-'
         char     end_disclose[NUM_DISCLOSURE_OPTIONS + 1];  /* disclose various info
                                                                 upon exit */
-        char     menu_style;    /* User interface style setting */
+        char     menu_style;    /* Always MENU_FULL */
 
         /* KMH, role patch -- Variables used during startup.
          *
@@ -129,8 +129,6 @@ struct instance_flags {
                                   * on some non-move commands */
         int     menu_headings;  /* ATR for menu headings */
         int      purge_monsters;        /* # of dead monsters still on fmon list */
-        int *opt_booldup;       /* for duplication of bool opts in config file */
-        int *opt_compdup;       /* for duplication of compound opts in config file */
         unsigned char   bouldersym;     /* symbol for boulder display */
         bool  sanity_check;  /* run sanity checks */
         bool  mon_polycontrol;       /* debug: control monster polymorphs */

@@ -95,109 +95,54 @@ mkroom (
     }
 }
 
-static void
-mkshop (void)
-{
-        struct mkroom *sroom;
-        int i = -1;
-        char *ep = (char *)0;   /* (init == lint suppression) */
+static void mkshop(void) {
+    struct mkroom *sroom;
+    int i = -1;
+    char *ep = (char *)0; /* (init == lint suppression) */
 
-        /* first determine shoptype */
-        if(flags.debug){
-                ep = nh_getenv("SHOPTYPE");
-                if(ep){
-                        if(*ep == 'z' || *ep == 'Z'){
-                                mkzoo(ZOO);
-                                return;
-                        }
-                        if(*ep == 'm' || *ep == 'M'){
-                                mkzoo(MORGUE);
-                                return;
-                        }
-                        if(*ep == 'b' || *ep == 'B'){
-                                mkzoo(BEEHIVE);
-                                return;
-                        }
-                        if(*ep == 't' || *ep == 'T' || *ep == '\\'){
-                                mkzoo(COURT);
-                                return;
-                        }
-                        if(*ep == 's' || *ep == 'S'){
-                                mkzoo(BARRACKS);
-                                return;
-                        }
-                        if(*ep == 'a' || *ep == 'A'){
-                                mkzoo(ANTHOLE);
-                                return;
-                        }
-                        if(*ep == 'c' || *ep == 'C'){
-                                mkzoo(COCKNEST);
-                                return;
-                        }
-                        if(*ep == 'l' || *ep == 'L'){
-                                mkzoo(LEPREHALL);
-                                return;
-                        }
-                        if(*ep == '_'){
-                                mktemple();
-                                return;
-                        }
-                        if(*ep == '}'){
-                                mkswamp();
-                                return;
-                        }
-                        for(i=0; shtypes[i].name; i++)
-                                if(*ep == def_oc_syms[(int)shtypes[i].symb])
-                                    goto gottype;
-                        if(*ep == 'g' || *ep == 'G')
-                                i = 0;
-                        else
-                                i = -1;
-                }
+    gottype: for (sroom = &rooms[0];; sroom++) {
+        if (sroom->hx < 0)
+            return;
+        if (sroom - rooms >= nroom) {
+            pline("rooms not closed by -1?");
+            return;
         }
-gottype:
-        for(sroom = &rooms[0]; ; sroom++){
-                if(sroom->hx < 0) return;
-                if(sroom - rooms >= nroom) {
-                        pline("rooms not closed by -1?");
-                        return;
-                }
-                if(sroom->rtype != OROOM) continue;
-                if(has_dnstairs(sroom) || has_upstairs(sroom))
-                        continue;
-                if(
-                   (flags.debug && ep && sroom->doorct != 0) ||
-                        sroom->doorct == 1) break;
-        }
-        if (!sroom->rlit) {
-                int x, y;
+        if (sroom->rtype != OROOM)
+            continue;
+        if (has_dnstairs(sroom) || has_upstairs(sroom))
+            continue;
+        if ((flags.debug && ep && sroom->doorct != 0) || sroom->doorct == 1)
+            break;
+    }
+    if (!sroom->rlit) {
+        int x, y;
 
-                for(x = sroom->lx - 1; x <= sroom->hx + 1; x++)
-                for(y = sroom->ly - 1; y <= sroom->hy + 1; y++)
-                        levl[x][y].lit = 1;
-                sroom->rlit = 1;
-        }
+        for (x = sroom->lx - 1; x <= sroom->hx + 1; x++)
+            for (y = sroom->ly - 1; y <= sroom->hy + 1; y++)
+                levl[x][y].lit = 1;
+        sroom->rlit = 1;
+    }
 
-        if(i < 0) {                     /* shoptype not yet determined */
-            int j;
+    if (i < 0) { /* shoptype not yet determined */
+        int j;
 
-            /* pick a shop type at random */
-            for (j = rnd(100), i = 0; (j -= shtypes[i].prob) > 0; i++)
-                continue;
+        /* pick a shop type at random */
+        for (j = rnd(100), i = 0; (j -= shtypes[i].prob) > 0; i++)
+            continue;
 
-            /* big rooms cannot be wand or book shops,
-             * - so make them general stores
-             */
-            if(isbig(sroom) && (shtypes[i].symb == WAND_CLASS
-                                || shtypes[i].symb == SPBOOK_CLASS)) i = 0;
-        }
-        sroom->rtype = SHOPBASE + i;
+        /* big rooms cannot be wand or book shops,
+         * - so make them general stores
+         */
+        if (isbig(sroom) && (shtypes[i].symb == WAND_CLASS || shtypes[i].symb == SPBOOK_CLASS))
+            i = 0;
+    }
+    sroom->rtype = SHOPBASE + i;
 
-        /* set room bits before stocking the shop */
-        topologize(sroom);
+    /* set room bits before stocking the shop */
+    topologize(sroom);
 
-        /* stock the room with a shopkeeper and artifacts */
-        stock_room(i, sroom);
+    /* stock the room with a shopkeeper and artifacts */
+    stock_room(i, sroom);
 }
 
 static struct mkroom *

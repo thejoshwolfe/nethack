@@ -541,28 +541,6 @@ makemaz (const char *s)
 
         } else strcpy(protofile, "");
 
-        /* SPLEVTYPE format is "level-choice,level-choice"... */
-        if (flags.debug && *protofile && sp && sp->rndlevs) {
-            char *ep = getenv("SPLEVTYPE");     /* not nh_getenv */
-            if (ep) {
-                /* rindex always succeeds due to code in prior block */
-                int len = (rindex(protofile, '-') - protofile) + 1;
-
-                while (ep && *ep) {
-                    if (!strncmp(ep, protofile, len)) {
-                        int pick = atoi(ep + len);
-                        /* use choice only if valid */
-                        if (pick > 0 && pick <= (int) sp->rndlevs)
-                            sprintf(protofile + len, "%d", pick);
-                        break;
-                    } else {
-                        ep = index(ep, ',');
-                        if (ep) ++ep;
-                    }
-                }
-            }
-        }
-
         if(*protofile) {
             strcat(protofile, LEV_EXT);
             if(load_special(protofile)) {

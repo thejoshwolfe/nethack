@@ -664,9 +664,7 @@ static void makelevel(void) {
     {
         int u_depth = depth(&u.uz);
 
-        if (flags.debug && nh_getenv("SHOPTYPE"))
-            mkroom(SHOPBASE);
-        else if (u_depth > 1 && u_depth < depth(&medusa_level) && nroom >= room_threshold && rn2(u_depth) < 3)
+        if (u_depth > 1 && u_depth < depth(&medusa_level) && nroom >= room_threshold && rn2(u_depth) < 3)
             mkroom(SHOPBASE);
         else if (u_depth > 4 && !rn2(6))
             mkroom(COURT);
