@@ -183,7 +183,7 @@ static bool Confusion(void) {
 #define Blindfolded             (ublindf && ublindf->otyp != LENSES)
 /* ...means blind because of a cover */
 
-static bool Blind() {
+static bool Blind(void) {
     /* ...the Eyes operate even when you really are blind or don't have any eyes */
     if (ublindf && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD)
         return false;
