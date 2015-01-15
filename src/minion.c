@@ -151,7 +151,7 @@ void summon_minion (aligntyp alignment, bool talk) {
         if (talk) {
             pline_The("voice of %s booms:", align_gname(alignment));
             verbalize("Thou shalt pay for thy indiscretion!");
-            if (!Blind) {
+            if (!Blind()) {
                 char name[BUFSZ];
                 Amonnam(name, BUFSZ, mon);
                 pline("%s appears before you.", name);
@@ -179,7 +179,7 @@ int demon_talk ( struct monst *mtmp) {
     /* Slight advantage given. */
     if (is_dprince(mtmp->data) && mtmp->minvis) {
         mtmp->minvis = mtmp->perminvis = 0;
-        if (!Blind) pline("%s appears before you.", name);
+        if (!Blind()) pline("%s appears before you.", name);
         newsym(mtmp->mx,mtmp->my);
     }
     if (youmonst.data->mlet == S_DEMON) {   /* Won't blackmail their own. */

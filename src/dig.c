@@ -128,7 +128,7 @@ static void mkcavepos(signed char x, signed char y, int dist, bool waslit, bool 
     lev->typ = (rockit ? STONE : ROOM);
     if(dist >= 3)
         impossible("mkcavepos called with dist %d", dist);
-    if(Blind)
+    if(Blind())
         feel_location(x, y);
     else newsym(x,y);
 }
@@ -400,7 +400,7 @@ static int dig (void) {
 
         if(!does_block(dpx,dpy,&levl[dpx][dpy]))
             unblock_point(dpx,dpy);     /* vision:  can see through */
-        if(Blind)
+        if(Blind())
             feel_location(dpx, dpy);
         else
             newsym(dpx, dpy);
@@ -699,12 +699,12 @@ static void dig_up_grave (void) {
                 otmp->age -= 100;               /* this is an *OLD* corpse */;
             break;
         case 2:
-            if (!Blind) pline(Hallucination() ? "Dude!  The living dead!" :
+            if (!Blind()) pline(Hallucination() ? "Dude!  The living dead!" :
                     "The grave's owner is very upset!");
             (void) makemon(mkclass(S_ZOMBIE,0), u.ux, u.uy, NO_MM_FLAGS);
             break;
         case 3:
-            if (!Blind) pline(Hallucination() ? "I want my mummy!" :
+            if (!Blind()) pline(Hallucination() ? "I want my mummy!" :
                     "You've disturbed a tomb!");
             (void) makemon(mkclass(S_MUMMY,0), u.ux, u.uy, NO_MM_FLAGS);
             break;
@@ -1223,21 +1223,21 @@ void zap_dig(void) {
                         }
                         room->typ = ROOM;
                         unblock_point(zx,zy); /* vision */
-                    } else if (!Blind)
+                    } else if (!Blind())
                         pline_The("wall glows then fades.");
                     break;
                 } else if (IS_TREE(room->typ)) { /* check trees before stone */
                     if (!(room->wall_info & W_NONDIGGABLE)) {
                         room->typ = ROOM;
                         unblock_point(zx,zy); /* vision */
-                    } else if (!Blind)
+                    } else if (!Blind())
                         pline_The("tree shudders but is unharmed.");
                     break;
                 } else if (room->typ == STONE || room->typ == SCORR) {
                     if (!(room->wall_info & W_NONDIGGABLE)) {
                         room->typ = CORR;
                         unblock_point(zx,zy); /* vision */
-                    } else if (!Blind)
+                    } else if (!Blind())
                         pline_The("rock glows then fades.");
                     break;
                 }

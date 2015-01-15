@@ -518,7 +518,7 @@ static int kick_object(signed char x, signed char y) {
         if (IS_ROCK(levl[x][y].typ) || closed_door(x, y)) {
             if ((!martial() && rn2(20) > ACURR(A_DEX)) ||
                     IS_ROCK(levl[u.ux][u.uy].typ) || closed_door(u.ux, u.uy)) {
-                if (Blind) {
+                if (Blind()) {
                     pline("It doesn't come loose.");
                 } else {
                     char do_tense[BUFSZ];
@@ -527,7 +527,7 @@ static int kick_object(signed char x, signed char y) {
                 }
                 return (!rn2(3) || martial());
             }
-            if (Blind) {
+            if (Blind()) {
                 pline("It comes loose.");
             } else {
                 char come_tense[BUFSZ];
@@ -588,7 +588,7 @@ static int kick_object(signed char x, signed char y) {
 
         if (kickobj->quan > 1L && !isgold) kickobj = splitobj(kickobj, 1L);
 
-        if (slide && !Blind) {
+        if (slide && !Blind()) {
             char slide_tense[BUFSZ];
             otense(slide_tense, BUFSZ, kickobj, "slide");
             pline("Whee!  %s %s across the %s.", Doname2(kickobj), slide_tense, surface(x,y));
@@ -871,7 +871,7 @@ dokick (void)
                         } else if (maploc->doormask != D_NODOOR &&
                                    !(maploc->doormask & D_LOCKED))
                             maploc->doormask = D_ISOPEN;
-                        if (Blind)
+                        if (Blind())
                             feel_location(x,y); /* we know it's gone */
                         else
                             newsym(x,y);
@@ -886,7 +886,7 @@ dokick (void)
                         pline("Crash!  You kick open a secret passage!");
                         exercise(A_DEX, true);
                         maploc->typ = CORR;
-                        if (Blind)
+                        if (Blind())
                             feel_location(x,y); /* we know it's gone */
                         else
                             newsym(x,y);
@@ -901,7 +901,7 @@ dokick (void)
                         maploc->typ = ROOM;
                         maploc->doormask = 0; /* don't leave loose ends.. */
                         (void) mkgold((long)rnd(200), x, y);
-                        if (Blind)
+                        if (Blind())
                             pline("CRASH!  You destroy it.");
                         else {
                             pline("CRASH!  You destroy the throne.");
@@ -916,7 +916,7 @@ dokick (void)
                         while(i--)
                             (void) mksobj_at(rnd_class(DILITHIUM_CRYSTAL,
                                         LUCKSTONE-1), x, y, false, true);
-                        if (Blind)
+                        if (Blind())
                             You("kick %s loose!", something);
                         else {
                             You("kick loose some ornamental coins and gems!");
@@ -935,7 +935,7 @@ dokick (void)
                 }
                 if(IS_ALTAR(maploc->typ)) {
                     if(Levitation) goto dumb;
-                    You("kick %s.",(Blind ? something : "the altar"));
+                    You("kick %s.",(Blind() ? something : "the altar"));
                     if(!rn2(3)) goto ouch;
                     altar_wrath(x, y);
                     exercise(A_DEX, true);
@@ -943,7 +943,7 @@ dokick (void)
                 }
                 if(IS_FOUNTAIN(maploc->typ)) {
                     if(Levitation) goto dumb;
-                    You("kick %s.",(Blind ? something : "the fountain"));
+                    You("kick %s.",(Blind() ? something : "the fountain"));
                     if(!rn2(3)) goto ouch;
                     /* make metal boots rust */
                     if(uarmf && rn2(3)) {
@@ -1023,7 +1023,7 @@ dokick (void)
                         return(1);
                     } else if(!(maploc->looted & S_LPUDDING) && !rn2(3) &&
                           !(mvitals[PM_BLACK_PUDDING].mvflags & G_GONE)) {
-                        if (Blind)
+                        if (Blind())
                             You_hear("a gushing sound.");
                         else
                             pline("A %s ooze gushes up from the drain!",
@@ -1037,7 +1037,7 @@ dokick (void)
                     } else if(!(maploc->looted & S_LDWASHER) && !rn2(3) &&
                               !(mvitals[washerndx].mvflags & G_GONE)) {
                         /* can't resist... */
-                        pline("%s returns!", (Blind ? Something :
+                        pline("%s returns!", (Blind() ? Something :
                                                         "The dish washer"));
                         if (makemon(&mons[washerndx], x, y, NO_MM_FLAGS))
                             newsym(x,y);
@@ -1045,11 +1045,11 @@ dokick (void)
                         exercise(A_DEX, true);
                         return(1);
                     } else if(!rn2(3)) {
-                        pline("Flupp!  %s.", (Blind ?
+                        pline("Flupp!  %s.", (Blind() ?
                                       "You hear a sloshing sound" :
                                       "Muddy waste pops up from the drain"));
                         if(!(maploc->looted & S_LRING)) { /* once per sink */
-                            if (!Blind)
+                            if (!Blind())
                                 You("see a ring shining in its midst.");
                             (void) mkobj_at(RING_CLASS, x, y, true);
                             newsym(x, y);
@@ -1069,7 +1069,7 @@ ouch:
                     pline("Ouch!  That hurts!");
                     exercise(A_DEX, false);
                     exercise(A_STR, false);
-                    if (Blind) feel_location(x,y); /* we know we hit it */
+                    if (Blind()) feel_location(x,y); /* we know we hit it */
                     if (is_drawbridge_wall(x,y) >= 0) {
                         pline_The("drawbridge is unaffected.");
                         /* update maploc to refer to the drawbridge */
@@ -1093,7 +1093,7 @@ dumb:
                 exercise(A_DEX, false);
                 if (martial() || ACURR(A_DEX) >= 16 || rn2(3)) {
                         You("kick at empty space.");
-                        if (Blind) feel_location(x,y);
+                        if (Blind()) feel_location(x,y);
                 } else {
                         pline("Dumb move!  You strain a muscle.");
                         exercise(A_STR, false);
@@ -1128,7 +1128,7 @@ dumb:
                     exercise(A_STR, true);
                     maploc->doormask = D_BROKEN;
                 }
-                if (Blind)
+                if (Blind())
                     feel_location(x,y);         /* we know we broke it */
                 else
                     newsym(x,y);
@@ -1157,7 +1157,7 @@ dumb:
                     }
                   }
         } else {
-            if (Blind) feel_location(x,y);      /* we know we hit it */
+            if (Blind()) feel_location(x,y);      /* we know we hit it */
             exercise(A_STR, true);
             pline("WHAMMM!!!");
             if (in_town(x, y))

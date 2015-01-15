@@ -671,7 +671,7 @@ void u_entered_shop (char *enterstring) {
                 while ((mattock = mattock->nobj) != 0)
                     if (mattock->otyp == DWARVISH_MATTOCK) ++cnt;
                 /* [ALI] Shopkeeper identifies mattock(s) */
-                if (!Blind) makeknown(DWARVISH_MATTOCK);
+                if (!Blind()) makeknown(DWARVISH_MATTOCK);
             }
             verbalize(NOTANGRY(shkp) ?
                     "Will you please leave your %s%s outside?" :
@@ -1213,7 +1213,7 @@ int dopay (void) {
         goto proceed;
     }
 
-    if ((!sk && (!Blind || Blind_telepat)) || (!Blind && !seensk)) {
+    if ((!sk && (!Blind() || Blind_telepat)) || (!Blind() && !seensk)) {
         There("appears to be no shopkeeper here to receive your payment.");
         return(0);
     }

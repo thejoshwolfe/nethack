@@ -373,7 +373,7 @@ void rndcurse (void) {
             unbless(otmp);
         else
             curse(otmp);
-        if (!Blind) {
+        if (!Blind()) {
             if (Hallucination()) {
                 message_monster_object_int(MSG_M_O_GLOWS_COLOR, u.usteed, otmp, halluc_color_int());
             } else if (otmp->cursed) {
@@ -406,7 +406,7 @@ void attrcurse (void) {
                  }
         case 4 : if (HTelepat & INTRINSIC) {
                      HTelepat &= ~INTRINSIC;
-                     if (Blind && !Blind_telepat)
+                     if (Blind() && !Blind_telepat)
                          see_monsters();     /* Can't sense mons anymore! */
                      Your("senses fail!");
                      break;

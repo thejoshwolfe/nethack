@@ -166,7 +166,7 @@ outrumor (
             /* deal with various things that prevent reading */
             if (is_fainted() && mechanism == BY_COOKIE)
                 return;
-            else if (Blind) {
+            else if (Blind()) {
                 if (mechanism == BY_COOKIE)
                         plines(fortune_msg);
                 pline("What a pity that you cannot read it!");

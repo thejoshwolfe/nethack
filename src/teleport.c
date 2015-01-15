@@ -820,7 +820,7 @@ void level_tele_trap (struct trap *trap) {
             You_feel("a wrenching sensation.");
             return;
         }
-        if (!Blind)
+        if (!Blind())
             You("are momentarily blinded by a flash of light.");
         else
             You("are momentarily disoriented.");

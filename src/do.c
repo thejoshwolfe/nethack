@@ -149,14 +149,14 @@ bool boulder_hits_pool(struct obj *otmp, int rx, int ry, bool pushing) {
                 newsym(rx,ry);
                 if (pushing) {
                     You("push %s into the %s.", the(xname(otmp)), what);
-                    if (flags.verbose && !Blind)
+                    if (flags.verbose && !Blind())
                         pline("Now you can cross it!");
                     /* no splashing in this case */
                 }
             }
             if (!fills_up || !pushing) {        /* splashing occurs */
                 if (!u.uinwater) {
-                    if (pushing ? !Blind : cansee(rx,ry)) {
+                    if (pushing ? !Blind() : cansee(rx,ry)) {
                         There("is a large splash as %s %s the %s.",
                               the(xname(otmp)), fills_up? "fills":"falls into",
                               what);
@@ -174,7 +174,7 @@ bool boulder_hits_pool(struct obj *otmp, int rx, int ry, bool pushing) {
                     You("are hit by molten lava%c", Fire_resistance() ? '.' : '!');
                     burn_away_slime();
                     losehp(d((Fire_resistance() ? 1 : 3), 6), killed_by_const(KM_MOLTEN_LAVA));
-                } else if (!fills_up && flags.verbose && (pushing ? !Blind : cansee(rx,ry))) {
+                } else if (!fills_up && flags.verbose && (pushing ? !Blind() : cansee(rx,ry))) {
                     pline("It sinks without a trace!");
                 }
             }
@@ -229,7 +229,7 @@ bool flooreffects (struct obj *obj, int x, int y, const char *verb) {
                     }
                 }
                 if (*verb) {
-                        if (Blind) {
+                        if (Blind()) {
                                 if ((x == u.ux) && (y == u.uy))
                                         You_hear("a CRASH! beneath you.");
                                 else
@@ -253,7 +253,7 @@ bool flooreffects (struct obj *obj, int x, int y, const char *verb) {
                 /* Reasonably bulky objects (arbitrary) splash when dropped.
                  * If you're floating above the water even small things make noise.
                  * Stuff dropped near fountains always misses */
-                if ((Blind || (Levitation || Flying)) && flags.soundok &&
+                if ((Blind() || (Levitation || Flying)) && flags.soundok &&
                     ((x == u.ux) && (y == u.uy))) {
                     if (!Underwater) {
                         if (weight(obj) > 9) {
@@ -273,7 +273,7 @@ bool flooreffects (struct obj *obj, int x, int y, const char *verb) {
                 /* you escaped a pit and are standing on the precipice */
                 char tumble_tense[BUFSZ];
                 otense(tumble_tense, BUFSZ, obj, "tumble");
-                if (Blind && flags.soundok) {
+                if (Blind() && flags.soundok) {
                     You_hear("%s %s downwards.", The(xname(obj)), tumble_tense);
                 } else {
                     pline("%s %s into %s pit.", The(xname(obj)), tumble_tense, the_your[t->madeby_u]);
@@ -284,7 +284,7 @@ bool flooreffects (struct obj *obj, int x, int y, const char *verb) {
 
 /* obj is an object dropped on an altar */
 void doaltarobj (struct obj *obj) {
-    if (Blind)
+    if (Blind())
         return;
 
     /* KMH, conduct */
@@ -370,7 +370,7 @@ giveback:
             for(otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp2) {
                 otmp2 = otmp->nexthere;
                 if (otmp != uball && otmp != uchain && !obj_resists(otmp, 1, 99)) {
-                    if (!Blind) {
+                    if (!Blind()) {
                         char vanish_tense[BUFSZ];
                         otense(vanish_tense, BUFSZ, otmp, "vanish");
                         pline("Suddenly, %s %s from the sink!", doname(otmp), vanish_tense);
@@ -388,7 +388,7 @@ giveback:
             ideed = false;
             break;
     }
-    if(!Blind && !ideed && obj->otyp != RIN_HUNGER) {
+    if(!Blind() && !ideed && obj->otyp != RIN_HUNGER) {
         ideed = true;
         switch(obj->otyp) {         /* effects that need eyes */
             case RIN_ADORNMENT:
@@ -601,7 +601,7 @@ dropy (struct obj *obj)
             else
                 sellobj(obj, u.ux, u.uy);
             stackobj(obj);
-            if(Blind && Levitation)
+            if(Blind() && Levitation)
                 map_object(obj, 0);
             newsym(u.ux,u.uy);  /* remap location under self */
         }
@@ -1245,7 +1245,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
             else
                 mesg = fam_msgs[which];
             if (mesg && index(mesg, '%')) {
-                sprintf(buf, mesg, !Blind ? "looks" : "seems");
+                sprintf(buf, mesg, !Blind() ? "looks" : "seems");
                 mesg = buf;
             }
             if (mesg) plines(mesg);
@@ -1322,7 +1322,7 @@ static void final_level (void) {
             if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])) {
                 if ((mtmp = mk_roamer(&mons[PM_ANGEL], u.ualign.type,
                                       mm.x, mm.y, true)) != 0) {
-                    if (!Blind)
+                    if (!Blind())
                         pline("An angel appears near you.");
                     else
                         You_feel("the presence of a friendly angel near you.");
@@ -1480,7 +1480,7 @@ bool revive_corpse(struct obj *corpse) {
                         char sackname[BUFSZ];
                         nh_strlcpy(sackname, an(xname(container)), BUFSZ);
                         const char *subject;
-                        if (Blind) {
+                        if (Blind()) {
                             subject = Something;
                         } else {
                             char name[BUFSZ];

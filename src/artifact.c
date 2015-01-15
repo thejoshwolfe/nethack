@@ -877,7 +877,7 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
     bool youdefend = (mdef == &youmonst);
     bool vis = (!youattack && magr && cansee(magr->mx, magr->my))
         || (!youdefend && cansee(mdef->mx, mdef->my))
-        || (youattack && u.uswallow && mdef == u.ustuck && !Blind);
+        || (youattack && u.uswallow && mdef == u.ustuck && !Blind());
     bool realizes_damage;
     const char *wepdesc;
     char hittee[BUFSZ];
@@ -1100,7 +1100,7 @@ bool artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
         } else { /* youdefend */
             int oldhpmax = u.uhpmax;
 
-            if (Blind)
+            if (Blind())
                 You_feel("an %s drain your life!", otmp->oartifact == ART_STORMBRINGER ?
                         "unholy blade" : "object");
             else if (otmp->oartifact == ART_STORMBRINGER)
@@ -1263,7 +1263,7 @@ static int arti_invoke (struct obj *obj) {
                                          newlev.dnum == u.uz.dnum) {
                                      You_feel("very disoriented for a moment.");
                                  } else {
-                                     if(!Blind) You("are surrounded by a shimmering sphere!");
+                                     if(!Blind()) You("are surrounded by a shimmering sphere!");
                                      else You_feel("weightless for a moment.");
                                      goto_level(&newlev, false, false, false);
                                  }
@@ -1331,7 +1331,7 @@ nothing_special:
                 } else (void) float_down(I_SPECIAL|TIMEOUT, W_ARTI);
                 break;
             case INVIS:
-                if (BInvis || Blind) goto nothing_special;
+                if (BInvis || Blind()) goto nothing_special;
                 newsym(u.ux, u.uy);
                 if (on)
                     Your("body takes on a %s transparency...",

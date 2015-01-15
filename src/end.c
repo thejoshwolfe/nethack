@@ -488,7 +488,7 @@ void done (int how) {
         pline("But wait...");
         makeknown(AMULET_OF_LIFE_SAVING);
         Your("medallion %s!",
-                !Blind ? "begins to glow" : "feels warm");
+                !Blind() ? "begins to glow" : "feels warm");
         if (how == CHOKING) You("vomit ...");
         You_feel("much better!");
         pline_The("medallion crumbles to dust!");

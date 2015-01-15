@@ -253,7 +253,7 @@ static int Cloak_on (void) {
             break;
         case MUMMY_WRAPPING:
             /* Note: it's already being worn, so we have to cheat here. */
-            if ((HInvis || EInvis || pm_invisible(youmonst.data)) && !Blind) {
+            if ((HInvis || EInvis || pm_invisible(youmonst.data)) && !Blind()) {
                 newsym(u.ux,u.uy);
                 You("can %s!",
                         See_invisible() ? "no longer see through yourself"
@@ -263,7 +263,7 @@ static int Cloak_on (void) {
         case CLOAK_OF_INVISIBILITY:
             /* since cloak of invisibility was worn, we know mummy wrapping
                wasn't, so no need to check `oldprop' against blocked */
-            if (!oldprop && !HInvis && !Blind) {
+            if (!oldprop && !HInvis && !Blind()) {
                 makeknown(uarmc->otyp);
                 newsym(u.ux,u.uy);
                 pline("Suddenly you can%s yourself.",
@@ -305,7 +305,7 @@ int Cloak_off (void) {
         case LEATHER_CLOAK:
                 break;
         case MUMMY_WRAPPING:
-                if (Invis && !Blind) {
+                if (Invis && !Blind()) {
                     newsym(u.ux,u.uy);
                     You("can %s.",
                         See_invisible() ? "see through yourself"
@@ -313,7 +313,7 @@ int Cloak_off (void) {
                 }
                 break;
         case CLOAK_OF_INVISIBILITY:
-                if (!oldprop && !HInvis && !Blind) {
+                if (!oldprop && !HInvis && !Blind()) {
                     makeknown(CLOAK_OF_INVISIBILITY);
                     newsym(u.ux,u.uy);
                     pline("Suddenly you can %s.",
@@ -360,7 +360,7 @@ static int Helmet_on (void) {
                 /*FALLTHRU*/
         case DUNCE_CAP:
                 if (!uarmh->cursed) {
-                    if (Blind) {
+                    if (Blind()) {
                         char vibrate_clause[BUFSZ];
                         Tobjnam(vibrate_clause, BUFSZ, uarmh, "vibrate");
                         pline("%s for a moment.", vibrate_clause);
@@ -684,14 +684,14 @@ void Ring_on (struct obj *obj) {
                 see_monsters();
 
                 if (Invis && !oldprop && !get_HSee_invisible() &&
-                                !perceives(youmonst.data) && !Blind) {
+                                !perceives(youmonst.data) && !Blind()) {
                     newsym(u.ux,u.uy);
                     pline("Suddenly you are transparent, but there!");
                     makeknown(RIN_SEE_INVISIBLE);
                 }
                 break;
         case RIN_INVISIBILITY:
-                if (!oldprop && !HInvis && !BInvis && !Blind) {
+                if (!oldprop && !HInvis && !BInvis && !Blind()) {
                     makeknown(RIN_INVISIBILITY);
                     newsym(u.ux,u.uy);
                     self_invis_message();
@@ -780,14 +780,14 @@ static void Ring_off_or_gone(struct obj *obj, bool gone) {
                     see_monsters();
                 }
 
-                if (Invisible && !Blind) {
+                if (Invisible && !Blind()) {
                     newsym(u.ux,u.uy);
                     pline("Suddenly you cannot see yourself.");
                     makeknown(RIN_SEE_INVISIBLE);
                 }
                 break;
         case RIN_INVISIBILITY:
-                if (!Invis && !BInvis && !Blind) {
+                if (!Invis && !BInvis && !Blind()) {
                     newsym(u.ux,u.uy);
                     Your("body seems to unfade%s.",
                          See_invisible() ? " completely" : "..");
@@ -844,7 +844,7 @@ void Ring_gone (struct obj *obj) {
 }
 
 void Blindf_on (struct obj *otmp) {
-    bool already_blind = Blind, changed = false;
+    bool already_blind = Blind(), changed = false;
 
     if (otmp == uwep)
         setuwep((struct obj *) 0);
@@ -855,12 +855,12 @@ void Blindf_on (struct obj *otmp) {
     setworn(otmp, W_TOOL);
     on_msg(otmp);
 
-    if (Blind && !already_blind) {
+    if (Blind() && !already_blind) {
         changed = true;
         if (flags.verbose) You_cant("see any more.");
         /* set ball&chain variables before the hero goes blind */
         if (Punished) set_bc(0);
-    } else if (already_blind && !Blind) {
+    } else if (already_blind && !Blind()) {
         changed = true;
         /* "You are now wearing the Eyes of the Overworld." */
         You("can see!");
@@ -873,13 +873,13 @@ void Blindf_on (struct obj *otmp) {
 }
 
 void Blindf_off (struct obj *otmp) {
-    bool was_blind = Blind, changed = false;
+    bool was_blind = Blind(), changed = false;
 
     takeoff_mask &= ~W_TOOL;
     setworn((struct obj *)0, otmp->owornmask);
     off_msg(otmp);
 
-    if (Blind) {
+    if (Blind()) {
         if (was_blind) {
             /* "still cannot see" makes no sense when removing lenses
                since they can't have been the cause of your blindness */
@@ -893,7 +893,7 @@ void Blindf_off (struct obj *otmp) {
             if (Punished) set_bc(0);
         }
     } else if (was_blind) {
-        changed = true;     /* !Blind */
+        changed = true;     /* !Blind() */
         You("can see again.");
     }
     if (changed) {

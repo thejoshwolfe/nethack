@@ -90,7 +90,7 @@ polyman (const char *fmt, const char *arg)
         bool sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
                 was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
         bool could_pass_walls = Passes_walls;
-        bool was_blind = !!Blind;
+        bool was_blind = !!Blind();
 
         if (Upolyd) {
                 u.acurr = u.macurr;     /* restore old attribs */
@@ -138,7 +138,7 @@ polyman (const char *fmt, const char *arg)
                 u.utrap = rn1(6,2);
             }
         }
-        if (was_blind && !Blind) {      /* reverting from eyeless */
+        if (was_blind && !Blind()) {      /* reverting from eyeless */
             Blinded = 1L;
             make_blinded(0L, true);     /* remove blindness */
         }
@@ -370,7 +370,7 @@ polymon (       /* returns 1 if polymorph successful */
 )
 {
         bool sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
-                was_blind = !!Blind, dochange = false;
+                was_blind = !!Blind(), dochange = false;
         bool could_pass_walls = Passes_walls;
         int mlvl;
 
@@ -500,7 +500,7 @@ polymon (       /* returns 1 if polymorph successful */
                 u.utrap = 0;
             }
         }
-        if (was_blind && !Blind) {      /* previous form was eyeless */
+        if (was_blind && !Blind()) {      /* previous form was eyeless */
             Blinded = 1L;
             make_blinded(0L, true);     /* remove blindness */
         }
@@ -943,7 +943,7 @@ int dogaze(void) {
         }
 
 
-        if (Blind) {
+        if (Blind()) {
             You_cant("see anything to gaze at.");
             return 0;
         }

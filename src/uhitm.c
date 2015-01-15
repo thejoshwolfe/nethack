@@ -175,7 +175,7 @@ bool attack_checks(struct monst *mtmp, struct obj *wep) {
      * happening two turns in a row.  The latter shows a glyph on
      * the screen, so you know something is there.
      */
-    if (!canspotmon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.delta.x, u.uy + u.delta.y)) && !glyph_is_invisible(levl[u.ux+u.delta.x][u.uy+u.delta.y].glyph) && !(!Blind && mtmp->mundetected && hides_under(mtmp->data))) {
+    if (!canspotmon(mtmp) && !glyph_is_warning(glyph_at(u.ux + u.delta.x, u.uy + u.delta.y)) && !glyph_is_invisible(levl[u.ux+u.delta.x][u.uy+u.delta.y].glyph) && !(!Blind() && mtmp->mundetected && hides_under(mtmp->data))) {
         pline("Wait!  There's %s there you can't see!", something);
         map_invisible(u.ux + u.delta.x, u.uy + u.delta.y);
         /* if it was an invisible mimic, treat it as if we stumbled
@@ -209,10 +209,10 @@ bool attack_checks(struct monst *mtmp, struct obj *wep) {
             seemimic(mtmp);
             return (false);
         }
-        if (!(Blind ? Blind_telepat : Unblind_telepat)) {
+        if (!(Blind() ? Blind_telepat : Unblind_telepat)) {
             struct obj *obj;
 
-            if (Blind || (is_pool(mtmp->mx, mtmp->my) && !Underwater))
+            if (Blind() || (is_pool(mtmp->mx, mtmp->my) && !Underwater))
                 pline("Wait!  There's a hidden monster there!");
             else if ((obj = level.objects[mtmp->mx][mtmp->my]) != 0)
                 message_monster_object(MSG_MONSTER_HIDING_UNDER_OBJECT, mtmp, obj);
@@ -952,12 +952,12 @@ static void nohandglow(struct monst *mon) {
     if (!u.umconf || mon->mconf)
         return;
     if (u.umconf == 1) {
-        if (Blind)
+        if (Blind())
             Your("%s stop tingling.", hands);
         else
             Your("%s stop glowing %s.", hands, hcolor(NH_RED));
     } else {
-        if (Blind)
+        if (Blind())
             pline_The("tingling in your %s lessens.", hands);
         else
             Your("%s no longer glow so brightly %s.", hands, hcolor(NH_RED));
@@ -1240,7 +1240,7 @@ static bool hmon_hitmon(struct monst *mon, struct obj *obj, int thrown) {
                     case BLINDING_VENOM:
                         mon->msleeping = 0;
                         if (can_blnd(&youmonst, mon, (unsigned char)(obj->otyp == BLINDING_VENOM ? AT_SPIT : AT_WEAP), obj)) {
-                            if (Blind) {
+                            if (Blind()) {
                                 pline(obj->otyp == CREAM_PIE ? "Splat!" : "Splash!");
                             } else if (obj->otyp == BLINDING_VENOM) {
                                 char name[BUFSZ];
@@ -1676,7 +1676,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
     }
     switch (mattk->adtyp) {
         case AD_STUN:
-            if (!Blind)
+            if (!Blind())
                 message_monster(MSG_M_STAGGERS_FOR_A_MOMENT, mdef);
             mdef->mstun = 1;
             goto physical;
@@ -1709,10 +1709,10 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 tmp = 0;
                 break;
             }
-            if (!Blind)
+            if (!Blind())
                 message_monster_string(MSG_M_IS_ON_FIRE, mdef, on_fire(mdef->data, mattk));
             if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
-                if (!Blind)
+                if (!Blind())
                     message_monster(MSG_M_BURNS_COMPLETELY, mdef);
                 xkilled(mdef, 2);
                 tmp = 0;
@@ -1722,7 +1722,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             tmp += destroy_mitem(mdef, SCROLL_CLASS, AD_FIRE);
             tmp += destroy_mitem(mdef, SPBOOK_CLASS, AD_FIRE);
             if (resists_fire(mdef)) {
-                if (!Blind)
+                if (!Blind())
                     message_monster(MSG_THE_FIRE_DOESNT_HEAT_M, mdef);
                 golemeffects(mdef, AD_FIRE, tmp);
                 shieldeff(mdef->mx, mdef->my);
@@ -1736,11 +1736,11 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 tmp = 0;
                 break;
             }
-            if (!Blind)
+            if (!Blind())
                 message_monster(MSG_M_IS_COVERED_IN_FROST, mdef);
             if (resists_cold(mdef)) {
                 shieldeff(mdef->mx, mdef->my);
-                if (!Blind)
+                if (!Blind())
                     message_monster(MSG_THE_FROST_DOESNT_CHILL_M, mdef);
                 golemeffects(mdef, AD_COLD, tmp);
                 tmp = 0;
@@ -1752,11 +1752,11 @@ int damageum(struct monst *mdef, struct attack *mattk) {
                 tmp = 0;
                 break;
             }
-            if (!Blind)
+            if (!Blind())
                 message_monster(MSG_M_IS_ZAPPED, mdef);
             tmp += destroy_mitem(mdef, WAND_CLASS, AD_ELEC);
             if (resists_elec(mdef)) {
-                if (!Blind)
+                if (!Blind())
                     message_monster(MSG_THE_ZAP_DOESNT_SHOCK_M, mdef);
                 golemeffects(mdef, AD_ELEC, tmp);
                 shieldeff(mdef->mx, mdef->my);
@@ -1803,7 +1803,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             break;
         case AD_BLND:
             if (can_blnd(&youmonst, mdef, mattk->aatyp, (struct obj*)0)) {
-                if (!Blind && mdef->mcansee)
+                if (!Blind() && mdef->mcansee)
                     message_monster(MSG_M_IS_BLINDED, mdef);
                 mdef->mcansee = 0;
                 tmp += mdef->mblinded;
@@ -1816,7 +1816,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
         case AD_CURS:
             if (night() && !rn2(10) && !mdef->mcan) {
                 if (mdef->data == &mons[PM_CLAY_GOLEM]) {
-                    if (!Blind)
+                    if (!Blind())
                         message_monster(MSG_WRITING_VANISHES_FROM_M_HEAD, mdef);
                     xkilled(mdef, 0);
                     /* Don't return yet; keep hp<1 and tmp=0 for pet msg */
@@ -1951,7 +1951,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
             break;
         case AD_PLYS:
             if (!negated && mdef->mcanmove && !rn2(3) && tmp < mdef->mhp) {
-                if (!Blind) {
+                if (!Blind()) {
                     message_monster(MSG_M_IS_FROZEN_BY_YOU, mdef);
                 }
                 mdef->mcanmove = 0;
@@ -1961,7 +1961,7 @@ int damageum(struct monst *mdef, struct attack *mattk) {
         case AD_SLEE:
             if (!negated && !mdef->msleeping &&
                     sleep_monst(mdef, rnd(10), -1)) {
-                if (!Blind) {
+                if (!Blind()) {
                     message_monster(MSG_M_IS_PUT_TO_SLEEP_BY_YOU, mdef);
                 }
                 slept_monst(mdef);
@@ -2054,7 +2054,7 @@ int passive(struct monst *mon, bool mhit, int malive, unsigned char aatyp) {
     switch (ptr->mattk[i].adtyp) {
         case AD_ACID:
             if (mhit && rn2(2)) {
-                if (Blind || !flags.verbose) {
+                if (Blind() || !flags.verbose) {
                     You("are splashed!");
                 } else {
                     message_monster(MSG_YOU_ARE_SPLASHED_BY_M_ACID, mon);
@@ -2288,7 +2288,7 @@ void stumble_onto_mimic(struct monst *mtmp) {
     if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
         u.ustuck = mtmp;
 
-    if (Blind) {
+    if (Blind()) {
         if (!Blind_telepat)
             what = generic; /* with default fmt */
         else if (mtmp->m_ap_type == M_AP_MONSTER)

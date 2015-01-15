@@ -320,14 +320,14 @@ static int use_stethoscope (struct obj *obj) {
         case SDOOR:
             message_const(MSG_FOUND_SECRET_DOOR);
             cvt_sdoor_to_door(lev);         /* ->typ = DOOR */
-            if (Blind) feel_location(rx,ry);
+            if (Blind()) feel_location(rx,ry);
             else newsym(rx,ry);
             return res;
         case SCORR:
             message_const(MSG_FOUND_SECRET_PASSAGE);
             lev->typ = CORR;
             unblock_point(rx,ry);
-            if (Blind) feel_location(rx,ry);
+            if (Blind()) feel_location(rx,ry);
             else newsym(rx,ry);
             return res;
     }
@@ -587,13 +587,13 @@ static int use_mirror (struct obj *obj) {
 
     if(!getdir((char *)0)) return 0;
     if(obj->cursed && !rn2(2)) {
-        if (!Blind) {
+        if (!Blind()) {
             message_const(MSG_MIRROR_FOGS_UP);
         }
         return 1;
     }
     if (!u.delta.x && !u.delta.y && !u.delta.z) {
-        if(!Blind && !Invisible) {
+        if(!Blind() && !Invisible) {
             if (u.umonnum == PM_FLOATING_EYE) {
                 if (!Free_action) {
                     message_const(MSG_MIRROR_STARES_BACK);
@@ -621,7 +621,7 @@ static int use_mirror (struct obj *obj) {
         return 1;
     }
     if (u.uswallow) {
-        if (!Blind)
+        if (!Blind())
             message_monster(MSG_YOU_REFLECT_M_STOMACH, u.ustuck);
         return 1;
     }
@@ -630,7 +630,7 @@ static int use_mirror (struct obj *obj) {
         return 1;
     }
     if (u.delta.z) {
-        if (!Blind) {
+        if (!Blind()) {
             message_string(MSG_YOU_REFLECT_THE_DUNGEON,
                     (u.delta.z > 0) ? surface(u.ux,u.uy) : ceiling(u.ux,u.uy));
         }
@@ -702,7 +702,7 @@ static int use_mirror (struct obj *obj) {
             pline("%s is frightened by its reflection.", name);
         }
         monflee(mtmp, d(2,4), false, false);
-    } else if (!Blind) {
+    } else if (!Blind()) {
         if (mtmp->minvis && !See_invisible()) {
             // nothing
         } else if ((mtmp->minvis && !perceives(mtmp->data)) || !haseyes(mtmp->data)) {
@@ -848,7 +848,7 @@ static void use_candelabrum (struct obj *obj) {
         return;
     }
     if (u.uswallow || obj->cursed) {
-        if (!Blind) {
+        if (!Blind()) {
             char flicker[BUFSZ];
             vtense(flicker, BUFSZ, s, "flicker");
             char die[BUFSZ];
@@ -861,13 +861,13 @@ static void use_candelabrum (struct obj *obj) {
         char are[BUFSZ];
         vtense(are, BUFSZ, s, "are");
         There("%s only %d %s in %s.", are, obj->spe, s, the(xname(obj)));
-        if (!Blind) {
+        if (!Blind()) {
             char clause[BUFSZ];
             Tobjnam(clause, BUFSZ, obj, "shine");
             pline("%s lit.  %s dimly.", obj->spe == 1 ? "It is" : "They are", clause);
         }
     } else {
-        pline("%s's %s burn%s", The(xname(obj)), s, (Blind ? "." : " brightly!"));
+        pline("%s's %s burn%s", The(xname(obj)), s, (Blind() ? "." : " brightly!"));
     }
     if (!invocation_pos(u.ux, u.uy)) {
         char are[BUFSZ];
@@ -876,7 +876,7 @@ static void use_candelabrum (struct obj *obj) {
         obj->age /= 2;
     } else {
         if(obj->spe == 7) {
-            if (Blind) {
+            if (Blind()) {
                 char radiate_clause[BUFSZ];
                 Tobjnam(radiate_clause, BUFSZ, obj, "radiate");
                 pline("%s a strange warmth!", radiate_clause);
@@ -932,7 +932,7 @@ static void use_lamp (struct obj *obj) {
             otense(otense_buf, BUFSZ, obj, "burn");
             pline("%s%s flame%s %s%s", name, possessive_suffix(name),
                     plur(obj->quan), otense_buf,
-                    Blind ? "." : " brightly!");
+                    Blind() ? "." : " brightly!");
             if (obj->unpaid && costly_spot(u.ux, u.uy) &&
                     obj->age == 20L * (long)objects[obj->otyp].oc_cost) {
                 const char *ithem = obj->quan > 1L ? "them" : "it";
@@ -1019,7 +1019,7 @@ bool snuff_candle(struct obj *otmp) {
         bool many = candle ? otmp->quan > 1L : otmp->spe > 1;
 
         (void) get_obj_location(otmp, &x, &y, 0);
-        if (otmp->where == OBJ_MINVENT ? cansee(x,y) : !Blind)
+        if (otmp->where == OBJ_MINVENT ? cansee(x,y) : !Blind())
             pline("%s %scandle%s flame%s extinguished.",
                     Shk_Your(buf, otmp),
                     (candle ? "" : "candelabrum's "),
@@ -1041,7 +1041,7 @@ bool snuff_lit(struct obj *obj) {
                 obj->otyp == BRASS_LANTERN || obj->otyp == POT_OIL)
         {
             get_obj_location(obj, &x, &y, 0);
-            if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind) {
+            if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind()) {
                 char otense_buf[BUFSZ];
                 otense(otense_buf, BUFSZ, obj, "go");
                 pline("%s %s out!", Yname2(obj), otense_buf);
@@ -1073,7 +1073,7 @@ bool catch_lit(struct obj *obj) {
         if ((obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP ||
                     obj->otyp == BRASS_LANTERN) && obj->cursed && !rn2(2))
             return false;
-        if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind) {
+        if (obj->where == OBJ_MINVENT ? cansee(x,y) : !Blind()) {
             char otense_buf[BUFSZ];
             otense(otense_buf, BUFSZ, obj, "catch");
             pline("%s %s light!", Yname2(obj), otense_buf);
@@ -1119,7 +1119,7 @@ static void light_cocktail (struct obj *obj) {
     }
 
     You("light %s potion.%s", shk_your(buf, obj),
-            Blind ? "" : "  It gives off a dim light.");
+            Blind() ? "" : "  It gives off a dim light.");
     if (obj->unpaid && costly_spot(u.ux, u.uy)) {
         /* Normally, we shouldn't both partially and fully charge
          * for an item, but (Yendorian Fuel) Taxes are inevitable...
@@ -1154,7 +1154,7 @@ static void use_stone (struct obj *tstone) {
     struct obj goldobj;
 
     /* in case it was acquired while blinded */
-    if (!Blind) tstone->dknown = 1;
+    if (!Blind()) tstone->dknown = 1;
     /* when the touchstone is fully known, don't bother listing extra
        junk as likely candidates for rubbing */
     choices = (tstone->otyp == TOUCHSTONE && tstone->dknown &&
@@ -1177,7 +1177,7 @@ static void use_stone (struct obj *tstone) {
     if (tstone->otyp == TOUCHSTONE && tstone->cursed &&
             obj->oclass == GEM_CLASS && !is_graystone(obj) &&
             !obj_resists(obj, 80, 100)) {
-        if (Blind)
+        if (Blind())
             pline("You feel something shatter.");
         else if (Hallucination())
             pline("Oh, wow, look at the pretty shards.");
@@ -1188,7 +1188,7 @@ static void use_stone (struct obj *tstone) {
         return;
     }
 
-    if (Blind) {
+    if (Blind()) {
         plines(scritch);
         return;
     } else if (Hallucination()) {
@@ -1306,7 +1306,7 @@ int dorub (void) {
             uwep->spe = 0; /* for safety */
             uwep->age = rn1(500,1000);
             if (uwep->lamplit) begin_burn(uwep, true);
-        } else if (rn2(2) && !Blind) {
+        } else if (rn2(2) && !Blind()) {
             You("see a puff of smoke.");
         } else {
             message_const(MSG_NOTHING_HAPPENS);
@@ -1748,7 +1748,7 @@ void fig_transform (void *arg, long timeout) {
         sprintf(monnambuf, "%s",an(name));
         switch (figurine->where) {
             case OBJ_INVENT:
-                if (Blind)
+                if (Blind())
                     You_feel("%s %s from your pack!", something,
                             locomotion(mtmp->data,"drop"));
                 else
@@ -1981,7 +1981,7 @@ static void use_trap (struct obj *otmp) {
     tmp = ACURR(A_DEX);
     trapinfo.time_needed = (tmp > 17) ? 2 : (tmp > 12) ? 3 :
         (tmp > 7) ? 4 : 5;
-    if (Blind) trapinfo.time_needed *= 2;
+    if (Blind()) trapinfo.time_needed *= 2;
     tmp = ACURR(A_STR);
     if (ttyp == BEAR_TRAP && tmp < 18)
         trapinfo.time_needed += (tmp > 12) ? 1 : (tmp > 7) ? 2 : 4;
@@ -2318,7 +2318,7 @@ static int use_pole (struct obj *obj) {
 }
 
 static int use_cream_pie (struct obj *obj) {
-    bool wasblind = Blind;
+    bool wasblind = Blind();
     bool wascreamed = u.ucreamed;
     bool several = false;
 
@@ -2336,11 +2336,11 @@ static int use_cream_pie (struct obj *obj) {
         int blindinc = rnd(25);
         u.ucreamed += blindinc;
         make_blinded(Blinded + (long)blindinc, false);
-        if (!Blind || (Blind && wasblind))
+        if (!Blind() || (Blind() && wasblind))
             pline("There's %ssticky goop all over your %s.",
                     wascreamed ? "more " : "",
                     body_part(FACE));
-        else /* Blind  && !wasblind */
+        else /* Blind()  && !wasblind */
             You_cant("see through all the sticky goop on your %s.",
                     body_part(FACE));
     }
@@ -2731,7 +2731,7 @@ int doapply (void) {
                 use_magic_whistle(obj);
                 /* sometimes the blessing will be worn off */
                 if (!rn2(49)) {
-                    if (!Blind) {
+                    if (!Blind()) {
                         char buf[BUFSZ];
 
                         pline("%s %s %s.", Shk_Your(buf, obj),

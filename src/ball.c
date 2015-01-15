@@ -150,13 +150,13 @@ void unplacebc (void) {
 
     if (!carried(uball)) {
         obj_extract_self(uball);
-        if (Blind && (u.bc_felt & BC_BALL))             /* drop glyph */
+        if (Blind() && (u.bc_felt & BC_BALL))             /* drop glyph */
             levl[uball->ox][uball->oy].glyph = u.bglyph;
 
         newsym(uball->ox,uball->oy);
     }
     obj_extract_self(uchain);
-    if (Blind && (u.bc_felt & BC_CHAIN))                /* drop glyph */
+    if (Blind() && (u.bc_felt & BC_CHAIN))                /* drop glyph */
         levl[uchain->ox][uchain->oy].glyph = u.cglyph;
 
     newsym(uchain->ox,uchain->oy);
@@ -252,7 +252,7 @@ void move_bc (
     signed char chainy  /* only matter !before */
 )
 {
-    if (Blind) {
+    if (Blind()) {
         /*
          *  The hero is blind.  Time to work hard.  The ball and chain that
          *  are attached to the hero are very special.  The hero knows that
@@ -653,7 +653,7 @@ drag:
  *  Should not be called while swallowed.
  */
 void drop_ball (signed char x, signed char y) {
-    if (Blind) {
+    if (Blind()) {
         u.bc_order = bc_order();                        /* get the order */
                                                         /* pick up glyph */
         u.bglyph = (u.bc_order) ? u.cglyph : levl[x][y].glyph;
@@ -706,7 +706,7 @@ void drop_ball (signed char x, signed char y) {
         }
         vision_full_recalc = 1; /* hero has moved, recalculate vision later */
 
-        if (Blind) {
+        if (Blind()) {
             /* drop glyph under the chain */
             if (u.bc_felt & BC_CHAIN)
                 levl[uchain->ox][uchain->oy].glyph = u.cglyph;
@@ -715,7 +715,7 @@ void drop_ball (signed char x, signed char y) {
             u.cglyph = (u.bc_order) ? u.bglyph : levl[u.ux][u.uy].glyph;
         }
         movobj(uchain,u.ux,u.uy);       /* has a newsym */
-        if (Blind) {
+        if (Blind()) {
             u.bc_order = bc_order();
         }
         newsym(u.ux0,u.uy0);            /* clean up old position */

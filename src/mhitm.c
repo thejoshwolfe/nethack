@@ -1390,7 +1390,7 @@ static void mrustm (struct monst *magr, struct monst *mdef, struct obj *obj) {
 }
 
 static void mswingsm (struct monst *magr, struct monst *mdef, struct obj *otemp) {
-    if (!flags.verbose || Blind || !mon_visible(magr)) return;
+    if (!flags.verbose || Blind() || !mon_visible(magr)) return;
     char defender[BUFSZ];
     mon_nam(defender, BUFSZ, mdef);
     char attacker[BUFSZ];

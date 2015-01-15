@@ -114,7 +114,7 @@ static void hitmsg (struct monst *mtmp, struct attack *mattk) {
             && !mtmp->mcan && !mtmp->mspec_used)
     {
         pline("%s %s you %s.", name,
-                Blind ? "talks to" : "smiles at",
+                Blind() ? "talks to" : "smiles at",
                 compat == 2 ? "engagingly" : "seductively");
     } else {
         switch (mattk->aatyp) {
@@ -167,7 +167,7 @@ static void missmu (struct monst *mtmp, bool nearmiss, struct attack *mattk) {
 
 /* monster swings obj */
 static void mswings ( struct monst *mtmp, struct obj *otemp) {
-    if (!flags.verbose || Blind || !mon_visible(mtmp))
+    if (!flags.verbose || Blind() || !mon_visible(mtmp))
         return;
     char name[BUFSZ];
     Monnam(name, BUFSZ, mtmp);
@@ -911,12 +911,12 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
      */
     if(mtmp->mundetected && (hides_under(mdat) || mdat->mlet == S_EEL)) {
         mtmp->mundetected = 0;
-        if (!(Blind ? Blind_telepat : Unblind_telepat)) {
+        if (!(Blind() ? Blind_telepat : Unblind_telepat)) {
             struct obj *obj;
             const char *what;
 
             if ((obj = level.objects[mtmp->mx][mtmp->my]) != 0) {
-                if (Blind && !obj->dknown)
+                if (Blind() && !obj->dknown)
                     what = something;
                 else if (is_pool(mtmp->mx, mtmp->my) && !Underwater)
                     what = "the water";
@@ -1064,7 +1064,7 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
             if (uncancelled && multi >= 0 && !rn2(5)) {
                 if (Sleep_resistance()) break;
                 fall_asleep(-rnd(10), true);
-                if (Blind) {
+                if (Blind()) {
                     You("are put to sleep!");
                 } else {
                     char name[BUFSZ];
@@ -1075,13 +1075,13 @@ static int hitmu (struct monst *mtmp, struct attack *mattk) {
             break;
         case AD_BLND:
             if (can_blnd(mtmp, &youmonst, mattk->aatyp, (struct obj*)0)) {
-                if (!Blind) {
+                if (!Blind()) {
                     char name[BUFSZ];
                     Monnam(name, BUFSZ, mtmp);
                     pline("%s blinds you!", name);
                 }
                 make_blinded(Blinded+(long)dmg,false);
-                if (!Blind) Your("%s", vision_clears);
+                if (!Blind()) Your("%s", vision_clears);
             }
             dmg = 0;
             break;
@@ -1165,7 +1165,7 @@ dopois:
                 if (Free_action) {
                     You("momentarily stiffen.");
                 } else {
-                    if (Blind) {
+                    if (Blind()) {
                         You("are frozen!");
                     } else {
                         char name[BUFSZ];
@@ -1336,7 +1336,7 @@ do_stone:
                     rloc(mtmp, false);
                 return 3;
             } else if (mtmp->mcan) {
-                if (!Blind) {
+                if (!Blind()) {
                     char name[BUFSZ];
                     Adjmonnam(name, BUFSZ, mtmp, "plain");
                     pline("%s tries to %s you, but you seem %s.",
@@ -1479,7 +1479,7 @@ do_stone:
             if(!night() && mdat == &mons[PM_GREMLIN]) break;
             if(!mtmp->mcan && !rn2(10)) {
                 if (flags.soundok) {
-                    if (Blind) {
+                    if (Blind()) {
                         You_hear("laughter.");
                     } else {
                         char name[BUFSZ];
@@ -1802,10 +1802,10 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
             break;
         case AD_BLND:
             if (can_blnd(mtmp, &youmonst, mattk->aatyp, (struct obj*)0)) {
-                if(!Blind) {
+                if(!Blind()) {
                     You_cant("see in here!");
                     make_blinded((long)tmp,false);
-                    if (!Blind) Your("%s", vision_clears);
+                    if (!Blind()) Your("%s", vision_clears);
                 } else
                     /* keep him blind until disgorged */
                     make_blinded(Blinded+1,false);
@@ -1925,14 +1925,14 @@ common:
                     if (mon_visible(mtmp) || (rnd(tmp /= 2) > u.ulevel)) {
                         You("are blinded by a blast of light!");
                         make_blinded((long)tmp, false);
-                        if (!Blind) Your("%s", vision_clears);
+                        if (!Blind()) Your("%s", vision_clears);
                     } else if (flags.verbose)
                         You("get the impression it was not terribly bright.");
                 }
                 break;
 
             case AD_HALU:
-                not_affected |= Blind ||
+                not_affected |= Blind() ||
                     (u.umonnum == PM_BLACK_LIGHT ||
                      u.umonnum == PM_VIOLET_FUNGUS ||
                      dmgtype(youmonst.data, AD_STUN));
@@ -2066,7 +2066,7 @@ int gazemu ( struct monst *mtmp, struct attack *mattk) {
                 /* not blind at this point implies you're wearing
                    the Eyes of the Overworld; make them block this
                    particular stun attack too */
-                if (!Blind) Your("%s", vision_clears);
+                if (!Blind()) Your("%s", vision_clears);
                 else make_stunned((long)d(1,3),true);
             }
             break;
@@ -2212,7 +2212,7 @@ int doseduce (struct monst *mon) {
         return 0;
     }
 
-    if (Blind) {
+    if (Blind()) {
         pline("It caresses you...");
     } else {
         char name[BUFSZ];
@@ -2232,7 +2232,7 @@ int doseduce (struct monst *mon) {
                 if (yn(qbuf) == 'n') continue;
             } else {
                 pline("%s decides she'd like your %s, and takes it.",
-                    Blind ? "She" : foocubus_name_cap, xname(ring));
+                        Blind() ? "She" : foocubus_name_cap, xname(ring));
             }
             makeknown(RIN_ADORNMENT);
             if (ring==uleft || ring==uright) Ring_gone(ring);
@@ -2257,28 +2257,28 @@ int doseduce (struct monst *mon) {
                 if (yn(qbuf) == 'n') continue;
             } else {
                 pline("%s decides you'd look prettier wearing your %s,",
-                        Blind ? "He" : foocubus_name_cap, xname(ring));
+                        Blind() ? "He" : foocubus_name_cap, xname(ring));
                 pline("and puts it on your finger.");
             }
             makeknown(RIN_ADORNMENT);
             if (!uright) {
                 pline("%s puts %s on your right %s.",
-                        Blind ? "He" : foocubus_name_cap, the(xname(ring)), body_part(HAND));
+                        Blind() ? "He" : foocubus_name_cap, the(xname(ring)), body_part(HAND));
                 setworn(ring, RIGHT_RING);
             } else if (!uleft) {
                 pline("%s puts %s on your left %s.",
-                        Blind ? "He" : foocubus_name_cap, the(xname(ring)), body_part(HAND));
+                        Blind() ? "He" : foocubus_name_cap, the(xname(ring)), body_part(HAND));
                 setworn(ring, LEFT_RING);
             } else if (uright && uright->otyp != RIN_ADORNMENT) {
                 strcpy(buf, xname(uright));
                 pline("%s replaces your %s with your %s.",
-                        Blind ? "He" : foocubus_name_cap, buf, xname(ring));
+                        Blind() ? "He" : foocubus_name_cap, buf, xname(ring));
                 Ring_gone(uright);
                 setworn(ring, RIGHT_RING);
             } else if (uleft && uleft->otyp != RIN_ADORNMENT) {
                 strcpy(buf, xname(uleft));
                 pline("%s replaces your %s with your %s.",
-                        Blind ? "He" : foocubus_name_cap, buf, xname(ring));
+                        Blind() ? "He" : foocubus_name_cap, buf, xname(ring));
                 Ring_gone(uleft);
                 setworn(ring, LEFT_RING);
             } else {
@@ -2291,10 +2291,10 @@ int doseduce (struct monst *mon) {
 
     if (!uarmc && !uarmf && !uarmg && !uarms && !uarmh && !uarmu)
         pline("%s murmurs sweet nothings into your ear.",
-                Blind ? (fem ? "She" : "He") : foocubus_name_cap);
+                Blind() ? (fem ? "She" : "He") : foocubus_name_cap);
     else
         pline("%s murmurs in your ear, while helping you undress.",
-                Blind ? (fem ? "She" : "He") : foocubus_name_cap);
+                Blind() ? (fem ? "She" : "He") : foocubus_name_cap);
     mayberem(uarmc, cloak_simple_name(uarmc));
     if(!uarmc)
         mayberem(uarm, "suit");
@@ -2391,7 +2391,7 @@ int doseduce (struct monst *mon) {
         /* don't charge */
     } else if (rn2(20) < ACURR(A_CHA)) {
         pline("%s demands that you pay %s, but you refuse...", noit_name_cap,
-                Blind ? (fem ? "her" : "him") : mhim(mon));
+                Blind() ? (fem ? "her" : "him") : mhim(mon));
     } else if (u.umonnum == PM_LEPRECHAUN) {
         pline("%s tries to take your money, but fails...", noit_name_cap);
     } else {
@@ -2530,7 +2530,7 @@ static int passiveum (struct permonst *olduasmon, struct monst *mtmp, struct att
                 if (mtmp->mcansee && haseyes(mtmp->data) && rn2(3) &&
                         (perceives(mtmp->data) || !Invis))
                 {
-                    if (Blind) {
+                    if (Blind()) {
                         pline("As a blind %s, you cannot defend yourself.",
                                 youmonst.data->mname);
                     } else {

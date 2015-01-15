@@ -359,7 +359,7 @@ int bhitm(struct monst *mtmp, struct obj *otmp) {
             reveal_invis = true;
             if (sleep_monst(mtmp, d(1 + otmp->spe, 12), WAND_CLASS))
                 slept_monst(mtmp);
-            if (!Blind)
+            if (!Blind())
                 makeknown(WAN_SLEEP);
             break;
         case SPE_STONE_TO_FLESH:
@@ -1691,14 +1691,14 @@ void zapnodir(struct obj *obj) {
         case WAN_LIGHT:
         case SPE_LIGHT:
             litroom(true, obj);
-            if (!Blind)
+            if (!Blind())
                 known = true;
             break;
         case WAN_SECRET_DOOR_DETECTION:
         case SPE_DETECT_UNSEEN:
             if (!findit())
                 return;
-            if (!Blind)
+            if (!Blind())
                 known = true;
             break;
         case WAN_CREATE_MONSTER:
@@ -1755,7 +1755,7 @@ int dozap(void) {
         exercise(A_STR, false);
         return (1);
     } else if (!(objects[obj->otyp].oc_dir == NODIR) && !getdir((char *)0)) {
-        if (!Blind)
+        if (!Blind())
             pline("%s glows and fades.", The(xname(obj)));
         /* make him pay for knowing !NODIR */
     } else if (!u.delta.x && !u.delta.y && !u.delta.z && !(objects[obj->otyp].oc_dir == NODIR)) {
@@ -1823,7 +1823,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
             if (!resists_blnd(&youmonst)) {
                 You(are_blinded_by_the_flash);
                 make_blinded((long)rnd(100), false);
-                if (!Blind)
+                if (!Blind())
                     message_const(MSG_VISION_QUICKLY_CLEARS);
             }
             break;
@@ -1902,7 +1902,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
             /* have to test before changing HInvis but must change
              * HInvis before doing newsym().
              */
-            int msg = !Invis && !Blind && !BInvis;
+            int msg = !Invis && !Blind() && !BInvis;
 
             if (BInvis && uarmc->otyp == MUMMY_WRAPPING) {
                 /* A mummy wrapping absorbs it and protects you */
@@ -2001,7 +2001,7 @@ int zapyourself(struct obj *obj, bool ordinary) {
                 You(are_blinded_by_the_flash);
                 make_blinded((long)damage, false);
                 makeknown(obj->otyp);
-                if (!Blind) message_const(MSG_VISION_QUICKLY_CLEARS);
+                if (!Blind()) message_const(MSG_VISION_QUICKLY_CLEARS);
             }
             damage = 0; /* reset */
             break;
@@ -2143,7 +2143,7 @@ bool cancel_monst(struct monst *mdef, struct obj *obj, bool youattack, bool allo
     /* now handle special cases */
     if (youdefend) {
         if (Upolyd) {
-            if ((u.umonnum == PM_CLAY_GOLEM) && !Blind)
+            if ((u.umonnum == PM_CLAY_GOLEM) && !Blind())
                 pline("Some writing vanishes from %s head!", your);
 
             if (Unchanging)
@@ -2241,7 +2241,7 @@ static bool zap_updown(struct obj *obj /* wand or spell */
                 }
                 newsym(x, y);
             } else if (!striking && ttmp && ttmp->ttyp == TRAPDOOR && u.delta.z > 0) {
-                if (!Blind) {
+                if (!Blind()) {
                     if (ttmp->tseen) {
                         pline("A trap door beneath you closes up then vanishes.");
                         disclose = true;
@@ -3264,7 +3264,7 @@ void buzz(int type, int nd, signed char sx, signed char sy, int dx, int dy) {
                 range -= 2;
                 pline("%s hits you!", The(fltxt));
                 if (Reflecting) {
-                    if (!Blind) {
+                    if (!Blind()) {
                         (void)ureflects("But %s reflects from your %s!", "it");
                     } else
                         pline("For some reason you are not affected.");
@@ -3280,7 +3280,7 @@ void buzz(int type, int nd, signed char sx, signed char sy, int dx, int dy) {
             if (abstype == ZT_LIGHTNING && !resists_blnd(&youmonst)) {
                 You(are_blinded_by_the_flash);
                 make_blinded((long)d(nd, 50), false);
-                if (!Blind)
+                if (!Blind())
                     message_const(MSG_VISION_QUICKLY_CLEARS);
             }
             stop_occupation();
@@ -3539,7 +3539,7 @@ int zap_over_floor(signed char x, signed char y, int type, bool *shopdamage) {
     if (OBJ_AT(x, y) && abstype == ZT_FIRE) {
         if (burn_floor_paper(x, y, false, type > 0) && couldsee(x, y)) {
             newsym(x, y);
-            You("%s of smoke.", !Blind ? "see a puff" : "smell a whiff");
+            You("%s of smoke.", !Blind() ? "see a puff" : "smell a whiff");
         }
     }
     if ((mon = m_at(x, y)) != 0) {
@@ -3648,7 +3648,7 @@ void destroy_item(int osym, int dmgtyp) {
                     skip++;
                 if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
                     skip++;
-                    if (!Blind)
+                    if (!Blind())
                         pline("%s glows a strange %s, but remains intact.", The(xname(obj)), hcolor("dark red"));
                 }
                 quan = obj->quan;

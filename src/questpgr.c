@@ -247,7 +247,7 @@ convert_arg (char c)
                         break;
             case 'L':   str = "lawful";
                         break;
-            case 'x':   str = Blind ? "sense" : "see";
+            case 'x':   str = Blind() ? "sense" : "see";
                         break;
             case 'Z':   str = dungeons[0].dname;
                         break;

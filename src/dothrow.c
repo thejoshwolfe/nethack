@@ -732,7 +732,7 @@ static bool toss_up(struct obj *obj, bool hitsroof) {
     if (hitsroof) {
         if (breaktest(obj)) {
                 pline("%s hits the %s.", Doname2(obj), ceiling(u.ux, u.uy));
-                breakmsg(obj, !Blind);
+                breakmsg(obj, !Blind());
                 breakobj(obj, u.ux, u.uy, true, true);
                 return false;
         }
@@ -756,7 +756,7 @@ static bool toss_up(struct obj *obj, bool hitsroof) {
                    /* AT_WEAP is ok here even if attack type was AT_SPIT */
                    can_blnd(&youmonst, &youmonst, AT_WEAP, obj) ? rnd(25) : 0;
 
-        breakmsg(obj, !Blind);
+        breakmsg(obj, !Blind());
         breakobj(obj, u.ux, u.uy, true, true);
         obj = 0;        /* it's now gone */
         switch (otyp) {
@@ -769,11 +769,11 @@ static bool toss_up(struct obj *obj, bool hitsroof) {
         case BLINDING_VENOM:
                 pline("You've got it all over your %s!", body_part(FACE));
                 if (blindinc) {
-                    if (otyp == BLINDING_VENOM && !Blind)
+                    if (otyp == BLINDING_VENOM && !Blind())
                         pline("It blinds you!");
                     u.ucreamed += blindinc;
                     make_blinded(Blinded + (long)blindinc, false);
-                    if (!Blind) Your("%s", vision_clears);
+                    if (!Blind()) Your("%s", vision_clears);
                 }
                 break;
         default:
@@ -858,7 +858,7 @@ static void sho_obj_return_to_u (struct obj *obj) {
 void throwit(struct obj *obj, long wep_mask, bool twoweap) {
     struct monst *mon;
     int range, urange;
-    bool impaired = (Confusion() || Stunned() || Blind ||
+    bool impaired = (Confusion() || Stunned() || Blind() ||
             Hallucination() || Fumbling());
 
     if ((obj->cursed || obj->greased) && (u.delta.x || u.delta.y) && !rn2(7)) {
@@ -1036,16 +1036,16 @@ void throwit(struct obj *obj, long wep_mask, bool twoweap) {
                 if (!dmg) {
                     char return_clause[BUFSZ];
                     Tobjnam(return_clause, BUFSZ, obj, "return");
-                    pline(Blind ? "%s lands %s your %s." :
+                    pline(Blind() ? "%s lands %s your %s." :
                             "%s back to you, landing %s your %s.",
-                            Blind ? Something : return_clause,
+                            Blind() ? Something : return_clause,
                             Levitation ? "beneath" : "at",
                             makeplural(body_part(FOOT)));
                 } else {
                     dmg += rnd(3);
                     char verb_clause[BUFSZ];
-                    Tobjnam(verb_clause, BUFSZ, obj, Blind ? "hit" : "fly");
-                    pline(Blind ? "%s your %s!" :
+                    Tobjnam(verb_clause, BUFSZ, obj, Blind() ? "hit" : "fly");
+                    pline(Blind() ? "%s your %s!" :
                             "%s back toward you, hitting your %s!", verb_clause, body_part(ARM));
                     artifact_hit(NULL, &youmonst, obj, &dmg, 0);
                     losehp(dmg, killed_by_object(KM_O, obj));
@@ -1470,7 +1470,7 @@ static int gem_accept (struct monst *mon, struct obj *obj) {
     ret = 1;
 
 nopick:
-    if(!Blind) pline("%s", buf);
+    if(!Blind()) pline("%s", buf);
     if (!tele_restrict(mon)) (void) rloc(mon, false);
     return(ret);
 }
@@ -1510,7 +1510,7 @@ nopick:
 // signed char x, y;               /* object location (ox, oy may not be right) */
 // bool from_invent;    /* thrown or dropped by player; maybe on shop bill */
 int hero_breaks(struct obj *obj, signed char x, signed char y, bool from_invent) {
-    bool in_view = !Blind;
+    bool in_view = !Blind();
     if (!breaktest(obj)) return 0;
     breakmsg(obj, in_view);
     breakobj(obj, x, y, true, from_invent);
@@ -1524,7 +1524,7 @@ int hero_breaks(struct obj *obj, signed char x, signed char y, bool from_invent)
  */
 // signed char y               /* object location (ox, oy may not be right) */
 int breaks ( struct obj *obj, signed char x, signed char y) {
-    bool in_view = Blind ? false : cansee(x, y);
+    bool in_view = Blind() ? false : cansee(x, y);
 
     if (!breaktest(obj)) return 0;
     breakmsg(obj, in_view);

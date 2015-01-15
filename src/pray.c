@@ -451,7 +451,7 @@ decurse:
                 return;
             }
             uncurse(otmp);
-            if (!Blind) {
+            if (!Blind()) {
                 Your("%s %s.", what ? what :
                         (const char *)aobjnam(otmp, "softly glow"),
                         hcolor(NH_AMBER));
@@ -498,7 +498,7 @@ decurse:
         case TROUBLE_SADDLE:
             otmp = which_armor(u.usteed, W_SADDLE);
             uncurse(otmp);
-            if (!Blind) {
+            if (!Blind()) {
                 if (Hallucination()) {
                     message_monster_object_int(MSG_M_O_SOFTLY_GLOWS_COLOR, u.usteed, otmp,
                             halluc_color_int());
@@ -535,7 +535,7 @@ static void god_zaps_you (aligntyp resp_god) {
         pline("Suddenly, a bolt of lightning strikes you!");
         if (Reflecting) {
             shieldeff(u.ux, u.uy);
-            if (Blind)
+            if (Blind())
                 pline("For some reason you're unaffected.");
             else
                 (void) ureflects("%s reflects from your %s.", "It");
@@ -637,7 +637,7 @@ angrygods (aligntyp resp_god)
                         } /* else fall thru */
             case 4:
             case 5:     gods_angry(resp_god);
-                        if (!Blind && !Antimagic())
+                        if (!Blind() && !Antimagic())
                             pline("%s glow surrounds you.",
                                   An(hcolor(NH_BLACK)));
                         rndcurse();
@@ -665,14 +665,14 @@ angrygods (aligntyp resp_god)
 static void
 at_your_feet (const char *str)
 {
-        if (Blind) str = Something;
+        if (Blind()) str = Something;
         if (u.uswallow) {
             /* barrier between you and the floor */
             pline("%s %s into %s %s.", str, "TODO: vtense(str, \"drop\")",
                   "TODO: s_suffix(mon_nam(u.ustuck))", mbodypart(u.ustuck, STOMACH));
         } else {
             pline("%s %s %s your %s!", str,
-                  Blind ? "lands" : "TODO: vtense(str, \"appear\")",
+                    Blind() ? "lands" : "TODO: vtense(str, \"appear\")",
                   Levitation ? "beneath" : "at",
                   makeplural(body_part(FOOT)));
         }
@@ -752,7 +752,7 @@ gcrownu (void)
         if (class_gift != STRANGE_OBJECT) {
             ;           /* already got bonus above */
         } else if (obj && obj->otyp == LONG_SWORD && !obj->oartifact) {
-            if (!Blind) Your("sword shines brightly for a moment.");
+            if (!Blind()) Your("sword shines brightly for a moment.");
             obj = oname(obj, artiname(ART_EXCALIBUR));
             if (obj && obj->oartifact == ART_EXCALIBUR) u.ugifts++;
         }
@@ -902,7 +902,7 @@ pleased (aligntyp g_align)
                 if (uwep->cursed) {
                     uncurse(uwep);
                     uwep->bknown = true;
-                    if (!Blind)
+                    if (!Blind())
                         Your("%s %s%s.", aobjnam(uwep, "softly glow"),
                              hcolor(NH_AMBER), repair_buf);
                     else You_feel("the power of %s over your %s.",
@@ -911,7 +911,7 @@ pleased (aligntyp g_align)
                 } else if (!uwep->blessed) {
                     bless(uwep);
                     uwep->bknown = true;
-                    if (!Blind)
+                    if (!Blind())
                         Your("%s with %s aura%s.",
                              aobjnam(uwep, "softly glow"),
                              an(hcolor(NH_LIGHT_BLUE)), repair_buf);
@@ -928,7 +928,7 @@ pleased (aligntyp g_align)
                        or uncurse (which has already given a message) */
                     if (*repair_buf)
                         Your("%s as good as new!",
-                             aobjnam(uwep, Blind ? "feel" : "look"));
+                             aobjnam(uwep, Blind() ? "feel" : "look"));
                 }
             }
             break;
@@ -952,7 +952,7 @@ pleased (aligntyp g_align)
             }
             /* Otherwise, falls into next case */
         case 2:
-            if (!Blind)
+            if (!Blind())
                 You("are surrounded by %s glow.", an(hcolor(NH_GOLDEN)));
             /* if any levels have been lost (and not yet regained),
                treat this effect like blessed full healing */
@@ -974,14 +974,14 @@ pleased (aligntyp g_align)
             struct obj *otmp;
             int any = 0;
 
-            if (Blind)
+            if (Blind())
                 You_feel("the power of %s.", u_gname());
             else You("are surrounded by %s aura.",
                      an(hcolor(NH_LIGHT_BLUE)));
             for(otmp=invent; otmp; otmp=otmp->nobj) {
                 if (otmp->cursed) {
                     uncurse(otmp);
-                    if (!Blind) {
+                    if (!Blind()) {
                         Your("%s %s.", aobjnam(otmp, "softly glow"),
                              hcolor(NH_AMBER));
                         otmp->bknown = true;
@@ -997,7 +997,7 @@ pleased (aligntyp g_align)
             if (!(HTelepat & INTRINSIC))  {
                 HTelepat |= FROMOUTSIDE;
                 pline(msg, "Telepathy");
-                if (Blind) see_monsters();
+                if (Blind()) see_monsters();
             } else if (!(HFast & INTRINSIC))  {
                 HFast |= FROMOUTSIDE;
                 pline(msg, "Speed");
@@ -1066,7 +1066,7 @@ water_prayer (bool bless_water)
 {
     struct obj* otmp;
     long changed = 0;
-    bool other = false, bc_known = !(Blind || Hallucination());
+    bool other = false, bc_known = !(Blind() || Hallucination());
 
     for(otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp->nexthere) {
         /* turn water into (un)holy water */
@@ -1079,7 +1079,7 @@ water_prayer (bool bless_water)
         } else if(otmp->oclass == POTION_CLASS)
             other = true;
     }
-    if(!Blind && changed) {
+    if(!Blind() && changed) {
         pline("%s potion%s on the altar glow%s %s for a moment.",
               ((other && changed > 1L) ? "Some of the" :
                                         (other ? "One of the" : "The")),
@@ -1134,7 +1134,7 @@ consume_offering (struct obj *otmp)
                 Your("sacrifice collapses into a cloud of dancing particles and fades away!");
                 break;
         }
-    else if (Blind && u.ualign.type == A_LAWFUL)
+    else if (Blind() && u.ualign.type == A_LAWFUL)
         Your("sacrifice disappears!");
     else Your("sacrifice is consumed in a %s!",
               u.ualign.type == A_LAWFUL ? "flash of light" : "burst of flame");
@@ -1414,7 +1414,7 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
                     /* the following accommodates stupid compilers */
                     levl[u.ux][u.uy].altarmask =
                         levl[u.ux][u.uy].altarmask | (Align2amask(u.ualign.type));
-                    if (!Blind)
+                    if (!Blind())
                         pline_The("altar glows %s.",
                               hcolor(
                               u.ualign.type == A_LAWFUL ? NH_WHITE :
@@ -1515,7 +1515,7 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
             change_luck((value * LUCKMAX) / (MAXVALUE * 2));
             if ((int)u.uluck < 0) u.uluck = 0;
             if (u.uluck != saved_luck) {
-                if (Blind)
+                if (Blind())
                     You("think %s brushed your %s.",something, body_part(FOOT));
                 else You(Hallucination() ?
                     "see crabgrass at your %s.  A funny thing in a dungeon." :
@@ -1611,7 +1611,7 @@ dopray (void)
 
     if(p_type == 3 && !Inhell) {
         /* if you've been true to your god you can't die while you pray */
-        if (!Blind)
+        if (!Blind())
             You("are surrounded by a shimmering light.");
         u.uinvulnerable = true;
     }

@@ -100,11 +100,11 @@ thitu (
         is_acid = (obj && obj->otyp == ACID_VENOM);
 
         if(u.uac + tlev <= rnd(20)) {
-                if(Blind || !flags.verbose) pline("It misses.");
+                if(Blind() || !flags.verbose) pline("It misses.");
                 else You("are almost hit by %s.", onm);
                 return(0);
         } else {
-                if(Blind || !flags.verbose) You("are hit!");
+                if(Blind() || !flags.verbose) You("are hit!");
                 else You("are hit by %s%s", onm, exclam(dam));
 
                 if (obj && objects[obj->otyp].oc_material == SILVER
@@ -415,7 +415,7 @@ m_throw (
                         break;
                     }
                     if (singleobj->oclass == POTION_CLASS) {
-                        if (!Blind) singleobj->dknown = 1;
+                        if (!Blind()) singleobj->dknown = 1;
                         potionhit(&youmonst, singleobj, false);
                         break;
                     }
@@ -462,14 +462,14 @@ m_throw (
                                         AT_SPIT : AT_WEAP), singleobj)) {
                         blindinc = rnd(25);
                         if(singleobj->otyp == CREAM_PIE) {
-                            if(!Blind) pline("Yecch!  You've been creamed.");
+                            if(!Blind()) pline("Yecch!  You've been creamed.");
                             else pline("There's %s sticky all over your %s.",
                                        something,
                                        body_part(FACE));
                         } else if(singleobj->otyp == BLINDING_VENOM) {
                             int num_eyes = eyecount(youmonst.data);
                             /* venom in the eyes */
-                            if(!Blind) pline_The("venom blinds you.");
+                            if(!Blind()) pline_The("venom blinds you.");
                             else Your("%s sting%s.",
                                       (num_eyes == 1) ? body_part(EYE) :
                                                 makeplural(body_part(EYE)),
@@ -515,7 +515,7 @@ m_throw (
         if (blindinc) {
                 u.ucreamed += blindinc;
                 make_blinded(Blinded + (long)blindinc, false);
-                if (!Blind) Your("%s", vision_clears);
+                if (!Blind()) Your("%s", vision_clears);
         }
 }
 

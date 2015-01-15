@@ -449,7 +449,7 @@ struct obj * hold_another_object (struct obj *obj, const char *drop_fmt,
 {
         char buf[BUFSZ];
 
-        if (!Blind) obj->dknown = 1;    /* maximize mergibility */
+        if (!Blind()) obj->dknown = 1;    /* maximize mergibility */
         if (obj->oartifact) {
             /* place_object may change these */
             bool crysknife = (obj->otyp == CRYSKNIFE);
@@ -1982,7 +1982,7 @@ const char * dfeature_at (int x, int y, char *buf) {
 int look_here(int obj_cnt, bool picked_some) {
     struct obj *otmp;
     struct trap *trap;
-    const char *verb = Blind ? "feel" : "see";
+    const char *verb = Blind() ? "feel" : "see";
     const char *dfeature = (char *)0;
     char fbuf[BUFSZ], fbuf2[BUFSZ];
     winid tmpwin;
@@ -1995,7 +1995,7 @@ int look_here(int obj_cnt, bool picked_some) {
         sprintf(fbuf, "Contents of %s%s %s", name, possessive_suffix(name), mbodypart(mtmp, STOMACH));
         /* Skip "Contents of " by using fbuf index 12 */
         You("%s to %s what is lying in %s.",
-        Blind ? "try" : "look around", verb, &fbuf[12]);
+                Blind() ? "try" : "look around", verb, &fbuf[12]);
         otmp = mtmp->minvent;
         if (otmp) {
             for (; otmp; otmp = otmp->nobj) {
@@ -2003,14 +2003,14 @@ int look_here(int obj_cnt, bool picked_some) {
                 if (otmp->otyp == CORPSE)
                     feel_cockatrice(otmp, false);
             }
-            if (Blind)
+            if (Blind())
                 strcpy(fbuf, "You feel");
             strcat(fbuf, ":");
             (void)display_minventory(mtmp, MINV_ALL, fbuf);
         } else {
             You("%s no objects here.", verb);
         }
-        return (!!Blind);
+        return (!!Blind());
     }
     if (!skip_objects && (trap = t_at(u.ux, u.uy)) && trap->tseen)
         There("is %s here.", an(defsyms[trap_to_defsym(trap->ttyp)].explanation));
@@ -2020,7 +2020,7 @@ int look_here(int obj_cnt, bool picked_some) {
     if (dfeature && !strcmp(dfeature, "pool of water") && Underwater)
         dfeature = 0;
 
-    if (Blind) {
+    if (Blind()) {
         bool drift = Is_airlevel(&u.uz) || Is_waterlevel(&u.uz);
         if (dfeature && !strncmp(dfeature, "altar ", 6)) {
             /* don't say "altar" twice, dfeature has more info */
@@ -2043,9 +2043,9 @@ int look_here(int obj_cnt, bool picked_some) {
         if (dfeature)
             plines(fbuf);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
-        if (!skip_objects && (Blind || !dfeature))
+        if (!skip_objects && (Blind() || !dfeature))
             You("%s no objects here.", verb);
-        return (!!Blind);
+        return (!!Blind());
     }
     /* we know there is something here */
 
@@ -2069,7 +2069,7 @@ int look_here(int obj_cnt, bool picked_some) {
             putstr(tmpwin, 0, fbuf);
             putstr(tmpwin, 0, "");
         }
-        putstr(tmpwin, 0, Blind ? "Things that you feel here:" : "Things that are here:");
+        putstr(tmpwin, 0, Blind() ? "Things that you feel here:" : "Things that are here:");
         for (; otmp; otmp = otmp->nexthere) {
             if (otmp->otyp == CORPSE && will_feel_cockatrice(otmp, false)) {
                 char buf[BUFSZ];
@@ -2087,7 +2087,7 @@ int look_here(int obj_cnt, bool picked_some) {
             feel_cockatrice(otmp, false);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
     }
-    return (!!Blind);
+    return (!!Blind());
 }
 
 /* explicilty look at what is here, including all objects */
@@ -2096,7 +2096,7 @@ int dolook (void) {
 }
 
 bool will_feel_cockatrice (struct obj *otmp, bool force_touch) {
-        if ((Blind || force_touch) && !uarmg && !Stone_resistance() &&
+        if ((Blind() || force_touch) && !uarmg && !Stone_resistance() &&
                 (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])))
                         return true;
         return false;
@@ -2559,7 +2559,7 @@ int dopickup(void) {
                 You("pick up %s%s tongue.", name, possessive_suffix(name));
                 pline("But it's kind of slimy, so you drop it.");
             } else {
-                You("don't %s anything in here to pick up.", Blind ? "feel" : "see");
+                You("don't %s anything in here to pick up.", Blind() ? "feel" : "see");
             }
             return 1;
         } else {

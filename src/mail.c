@@ -109,7 +109,7 @@ md_start (coord *startp)
      * If blind and not telepathic, then it doesn't matter what we pick ---
      * the hero is not going to see it anyway.  So pick a nearby position.
      */
-    if (Blind && !Blind_telepat) {
+    if (Blind() && !Blind_telepat) {
         if (!enexto(startp, u.ux, u.uy, (struct permonst *) 0))
             return false;       /* no good posiitons */
         return true;

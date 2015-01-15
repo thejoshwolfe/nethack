@@ -400,10 +400,10 @@ pick_lock ( /* pick a lock with a given object */
             if(!IS_DOOR(door->typ)) {
                 if (is_drawbridge_wall(cc.x,cc.y) >= 0)
                     You("%s no lock on the drawbridge.",
-                                Blind ? "feel" : "see");
+                            Blind() ? "feel" : "see");
                 else
                     You("%s no door there.",
-                                Blind ? "feel" : "see");
+                            Blind() ? "feel" : "see");
                 return(0);
             }
             switch (door->doormask) {
@@ -553,7 +553,7 @@ doopen (void)                /* try to open a door */
                     return(0);
                 }
                 You("%s no door there.",
-                                Blind ? "feel" : "see");
+                        Blind() ? "feel" : "see");
                 return(0);
         }
 
@@ -567,7 +567,7 @@ doopen (void)                /* try to open a door */
             default:       mesg = " is locked"; break;
             }
             pline("This door%s.", mesg);
-            if (Blind) feel_location(cc.x,cc.y);
+            if (Blind()) feel_location(cc.x,cc.y);
             return(0);
         }
 
@@ -585,7 +585,7 @@ doopen (void)                /* try to open a door */
                 if (*in_rooms(cc.x, cc.y, SHOPBASE)) add_damage(cc.x, cc.y, 0L);
             } else
                 door->doormask = D_ISOPEN;
-            if (Blind)
+            if (Blind())
                 feel_location(cc.x,cc.y);       /* the hero knows she opened it  */
             else
                 newsym(cc.x,cc.y);
@@ -659,7 +659,7 @@ int doclose (void) {
                     There("is no obvious way to close the drawbridge.");
                 else
                     You("%s no door there.",
-                                Blind ? "feel" : "see");
+                            Blind() ? "feel" : "see");
                 return(0);
         }
 
@@ -692,7 +692,7 @@ int doclose (void) {
                 rn2(25) < (ACURRSTR+ACURR(A_DEX)+ACURR(A_CON))/3) {
                 pline_The("door closes.");
                 door->doormask = D_CLOSED;
-                if (Blind)
+                if (Blind())
                     feel_location(x,y); /* the hero knows she closed it */
                 else
                     newsym(x,y);
@@ -880,7 +880,7 @@ chest_shatter_msg (struct obj *otmp)
         long save_Blinded;
 
         if (otmp->oclass == POTION_CLASS) {
-                You("%s %s shatter!", Blind ? "hear" : "see", an(bottlename()));
+                You("%s %s shatter!", Blind() ? "hear" : "see", an(bottlename()));
                 if (!breathless(youmonst.data) || haseyes(youmonst.data))
                         potionbreathe(otmp);
                 return;

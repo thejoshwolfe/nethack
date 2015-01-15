@@ -162,7 +162,7 @@ static void slime_dialogue(void) {
 
         if (index(str, '%')) {
             if (i == 4L) { /* "you are turning green" */
-                if (!Blind) /* [what if you're already green?] */
+                if (!Blind()) /* [what if you're already green?] */
                     pline(str, hcolor(NH_GREEN));
             } else {
                 pline(str, an(Hallucination() ? rndmonnam() : "green slime"));
@@ -208,7 +208,7 @@ static void slip_or_trip(void) {
          anonymous "something" if there aren't any rocks.
          */
         pronoun = otmp->quan == 1L ? "it" : Hallucination() ? "they" : "them";
-        what = !otmp->nexthere ? pronoun : (otmp->dknown || !Blind) ? doname(otmp) : ((otmp = sobj_at(ROCK, u.ux, u.uy)) == 0 ? something : (otmp->quan == 1L ? "a rock" : "some rocks"));
+        what = !otmp->nexthere ? pronoun : (otmp->dknown || !Blind()) ? doname(otmp) : ((otmp = sobj_at(ROCK, u.ux, u.uy)) == 0 ? something : (otmp->quan == 1L ? "a rock" : "some rocks"));
         if (Hallucination()) {
             what = strcpy(buf, what);
             buf[0] = highc(buf[0]);
@@ -304,7 +304,7 @@ void nh_timeout(void) {
             u.usptime = u.uspmtime;
             u.uspellprot--;
             find_ac();
-            if (!Blind)
+            if (!Blind())
                 Norep("The %s haze around you %s.", hcolor(NH_GOLDEN), u.uspellprot ? "becomes less dense" : "disappears");
         }
     }
@@ -380,7 +380,7 @@ void nh_timeout(void) {
                     break;
                 case INVIS:
                     newsym(u.ux,u.uy);
-                    if (!Invis && !BInvis && !Blind) {
+                    if (!Invis && !BInvis && !Blind()) {
                         You(!See_invisible() ?
                                 "are no longer invisible." :
                                 "can no longer see through yourself.");
@@ -720,7 +720,7 @@ void burn_object(void *arg, long timeout) {
 
     /* only interested in INVENT, FLOOR, and MINVENT */
     if (get_obj_location(obj, &x, &y, 0)) {
-        canseeit = !Blind && cansee(x, y);
+        canseeit = !Blind() && cansee(x, y);
         /* set up `whose[]' to be "Your" or "Fred's" or "The goblin's" */
         (void)Shk_Your(whose, obj);
     } else {
@@ -879,7 +879,7 @@ void burn_object(void *arg, long timeout) {
 
                             /* post message */
                             pline(Hallucination() ? (many ? "They shriek!" : "It shrieks!") :
-                            Blind ? "" : (many ? "Their flames die." : "Its flame dies."));
+                                    Blind() ? "" : (many ? "Their flames die." : "Its flame dies."));
                         }
                     }
                     end_burn(obj, false);

@@ -260,7 +260,7 @@ bool mount_steed ( struct monst *mtmp, bool force) {
     }
 
     /* Can the player reach and see the monster? */
-    if (!mtmp || (!force && ((Blind && !Blind_telepat) ||
+    if (!mtmp || (!force && ((Blind() && !Blind_telepat) ||
                     mtmp->mundetected ||
                     mtmp->m_ap_type == M_AP_FURNITURE ||
                     mtmp->m_ap_type == M_AP_OBJECT))) {

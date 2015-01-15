@@ -34,7 +34,7 @@ static bool tp_sensemon(const struct monst * mon) {
     if (mindless(mon->data))
         return false;
     /* 2a. hero is blind and telepathic OR      */
-    if (Blind && Blind_telepat)
+    if (Blind() && Blind_telepat)
         return true;
     /* 2b. hero is using a telepathy inducing   */
     /*       object and in range                */
@@ -85,7 +85,7 @@ static bool mon_visible(const struct monst * mon) {
  * canseemon() or canspotmon() which already check that.
  */
 static bool see_with_infrared(const struct monst * mon) {
-    return (!Blind && Infravision && infravisible(mon->data) && couldsee(mon->mx, mon->my));
+    return (!Blind() && Infravision && infravisible(mon->data) && couldsee(mon->mx, mon->my));
 }
 
 
@@ -124,7 +124,7 @@ static bool canspotmon(const struct monst * mon) {
  * invisible to infravision.
  */
 static bool knowninvisible(const struct monst * mon) {
-    return (mon->minvis && ((cansee(mon->mx, mon->my) && (See_invisible() || Detect_monsters)) || (!Blind && (HTelepat& ~INTRINSIC) && distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))));
+    return (mon->minvis && ((cansee(mon->mx, mon->my) && (See_invisible() || Detect_monsters)) || (!Blind() && (HTelepat& ~INTRINSIC) && distu(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))));
 }
 
 /*
@@ -148,7 +148,7 @@ static bool is_safepet(const struct monst * mon) {
  * invisible.  If not, then we don't need the check.
  */
 static bool canseeself(void) {
-    return (Blind || u.uswallow || (!Invisible && !u.uundetected));
+    return (Blind() || u.uswallow || (!Invisible && !u.uundetected));
 }
 static bool senseself(void) {
     return (canseeself() || Unblind_telepat || Detect_monsters);

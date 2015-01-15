@@ -69,7 +69,7 @@ static void dowatersnakes (void) {
     struct monst *mtmp;
 
     if (!(mvitals[PM_WATER_MOCCASIN].mvflags & G_GONE)) {
-        if (!Blind)
+        if (!Blind())
             pline("An endless stream of %s pours forth!",
                     Hallucination() ? makeplural(rndmonnam()) : "snakes");
         else
@@ -89,7 +89,7 @@ static void dowaterdemon (void) {
 
     if (!(mvitals[PM_WATER_DEMON].mvflags & G_GONE)) {
         if ((mtmp = makemon(&mons[PM_WATER_DEMON],u.ux,u.uy, NO_MM_FLAGS))) {
-            if (!Blind) {
+            if (!Blind()) {
                 char name[BUFSZ];
                 a_monnam(name, BUFSZ, mtmp);
                 You("unleash %s!", name);
@@ -118,7 +118,7 @@ static void dowaternymph (void) {
     if (!(mvitals[PM_WATER_NYMPH].mvflags & G_GONE) &&
             (mtmp = makemon(&mons[PM_WATER_NYMPH],u.ux,u.uy, NO_MM_FLAGS)))
     {
-        if (!Blind) {
+        if (!Blind()) {
             char name[BUFSZ];
             a_monnam(name, BUFSZ, mtmp);
             You("attract %s!", name);
@@ -129,7 +129,7 @@ static void dowaternymph (void) {
         if (t_at(mtmp->mx, mtmp->my))
             (void) mintrap(mtmp);
     } else {
-        if (!Blind)
+        if (!Blind())
             pline("A large bubble rises to the surface and pops.");
         else
             You_hear("a loud pop.");
@@ -180,7 +180,7 @@ static void gush (int x, int y, void *poolcnt) {
 static void
 dofindgem (void) /* Find a gem in the sparkling waters. */
 {
-        if (!Blind) You("spot a gem in the sparkling waters!");
+        if (!Blind()) You("spot a gem in the sparkling waters!");
         else You_feel("a gem here!");
         (void) mksobj_at(rnd_class(DILITHIUM_CRYSTAL, LUCKSTONE-1),
                          u.ux, u.uy, false, false);
@@ -328,7 +328,7 @@ drinkfountain (void)
 
                 case 25: /* See invisible */
 
-                        if (Blind) {
+                        if (Blind()) {
                             if (Invisible) {
                                 You("feel transparent.");
                             } else {
@@ -446,7 +446,7 @@ dipfountain (struct obj *obj)
                 case 19:
                 case 20: /* Uncurse the item */
                         if(obj->cursed) {
-                            if (!Blind)
+                            if (!Blind())
                                 pline_The("water glows for a moment.");
                             uncurse(obj);
                         } else {
@@ -497,7 +497,7 @@ dipfountain (struct obj *obj)
                     (void) mkgold((long)
                         (rnd((dunlevs_in_dungeon(&u.uz)-dunlev(&u.uz)+1)*2)+5),
                         u.ux, u.uy);
-                    if (!Blind)
+                    if (!Blind())
                 pline("Far below you, you see coins glistening in the water.");
                     exercise(A_WIS, true);
                     newsym(u.ux,u.uy);
@@ -544,7 +544,7 @@ void drinksink (void) {
                     if (mtmp) {
                         char name[BUFSZ];
                         a_monnam(name, BUFSZ, mtmp);
-                        pline("Eek!  There's %s in the sink!", (Blind || !canspotmon(mtmp)) ?
+                        pline("Eek!  There's %s in the sink!", (Blind() || !canspotmon(mtmp)) ?
                             "something squirmy" : name);
                     }
                 }
@@ -558,9 +558,9 @@ void drinksink (void) {
                 } while(!otmp);
                 otmp->cursed = otmp->blessed = 0;
                 pline("Some %s liquid flows from the faucet.",
-                        Blind ? "odd" :
+                        Blind() ? "odd" :
                         hcolor(OBJ_DESCR(objects[otmp->otyp])));
-                otmp->dknown = !(Blind || Hallucination());
+                otmp->dknown = !(Blind() || Hallucination());
                 otmp->quan++; /* Avoid panic upon useup() */
                 otmp->fromsink = 1; /* kludge for docall() */
                 (void) dopotion(otmp);

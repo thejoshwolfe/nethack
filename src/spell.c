@@ -188,7 +188,7 @@ cursed_book (struct obj *bp)
                         }
                     } else
                         Your("gloves %s completely corroded.",
-                             Blind ? "feel" : "look");
+                                Blind() ? "feel" : "look");
                     break;
                 }
                 /* temp disable in_use; death should not destroy the book */
@@ -849,7 +849,7 @@ cast_protection (void)
         gain = loglev - (int)u.uspellprot / (4 - min(3,(10 - natac)/10));
 
         if (gain > 0) {
-            if (!Blind) {
+            if (!Blind()) {
                 const char *hgolden = hcolor(NH_GOLDEN);
 
                 if (u.uspellprot)

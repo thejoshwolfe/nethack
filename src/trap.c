@@ -214,7 +214,7 @@ bool rust_dmg(struct obj *otmp, const char *ostr, int type, bool print, struct m
     } else {
         if (flags.verbose) {
             if (victim == &youmonst)
-                Your("%s %s completely %s.", ostr, "TODO:vtense(ostr, Blind ? \"feel\" : \"look\")",
+                Your("%s %s completely %s.", ostr, "TODO:vtense(ostr, Blind() ? \"feel\" : \"look\")",
                         msg[type]);
             else if (vismon)
                 pline("%s's %s %s completely %s.", "TODO:Monnam(victim)", ostr,
@@ -420,7 +420,7 @@ bool td) {
     int newlevel = dunlev(&u.uz);
 
     /* KMH -- You can't escape the Sokoban level traps */
-    if (Blind && Levitation && !In_sokoban(&u.uz))
+    if (Blind() && Levitation && !In_sokoban(&u.uz))
         return;
 
     do {
@@ -631,7 +631,7 @@ activate_statue_trap(struct trap *trap, signed char x, signed char y, bool shatt
                 break;
     }
 
-    if (Blind)
+    if (Blind())
         feel_location(x, y);
     else
         newsym(x, y);
@@ -730,7 +730,7 @@ static int steedintrap(struct trap *trap, struct obj *otmp) {
     mtmp->mx = u.ux;
     mtmp->my = u.uy;
 
-    in_sight = !Blind;
+    in_sight = !Blind();
     switch (tt) {
         case ARROW_TRAP:
             if (!otmp) {
@@ -800,7 +800,7 @@ static int steedintrap(struct trap *trap, struct obj *otmp) {
 
 /* box: null for floor trap */
 static void dofiretrap(struct obj *box) {
-    bool see_it = !Blind;
+    bool see_it = !Blind();
     int num, alt;
 
     /* Bug: for box case, the equivalent of burn_floor_paper() ought
@@ -876,9 +876,9 @@ static void domagictrap(void) {
         if (!resists_blnd(&youmonst)) {
             You("are momentarily blinded by a flash of light!");
             make_blinded((long)rn1(5, 10), false);
-            if (!Blind)
+            if (!Blind())
                 Your("%s", vision_clears);
-        } else if (!Blind) {
+        } else if (!Blind()) {
             You("see a flash of light!");
         } else
             You_hear("a deafening roar!");
@@ -1010,7 +1010,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 obfree(otmp, (struct obj *)0);
             } else {
                 place_object(otmp, u.ux, u.uy);
-                if (!Blind)
+                if (!Blind())
                     otmp->dknown = 1;
                 stackobj(otmp);
                 newsym(u.ux, u.uy);
@@ -1039,7 +1039,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                 obfree(otmp, (struct obj *)0);
             } else {
                 place_object(otmp, u.ux, u.uy);
-                if (!Blind)
+                if (!Blind())
                     otmp->dknown = 1;
                 stackobj(otmp);
                 newsym(u.ux, u.uy);
@@ -1071,7 +1071,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
                     }
                 }
 
-                if (!Blind)
+                if (!Blind())
                     otmp->dknown = 1;
                 stackobj(otmp);
                 newsym(u.ux, u.uy); /* map the rock */
@@ -1083,7 +1083,7 @@ void dotrap(struct trap *trap, unsigned trflags) {
 
         case SQKY_BOARD: /* stepped on a squeaky board */
             if (Levitation || Flying) {
-                if (!Blind) {
+                if (!Blind()) {
                     seetrap(trap);
                     if (Hallucination())
                         You("notice a crease in the linoleum.");
@@ -2453,7 +2453,7 @@ int fire_damage(struct obj *chain, bool force, bool here, signed char x, signed 
     int chance;
     struct obj *obj, *otmp, *nobj, *ncobj;
     int retval = 0;
-    int in_sight = !Blind && couldsee(x, y); /* Don't care if it's lit */
+    int in_sight = !Blind() && couldsee(x, y); /* Don't care if it's lit */
     int dindx;
 
     for (obj = chain; obj; obj = nobj) {
@@ -2833,7 +2833,7 @@ static int untrap_prob(struct trap *ttmp) {
     if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
         chance = 30;
     if (Confusion() || Hallucination()) chance++;
-    if (Blind)
+    if (Blind())
         chance++;
     if (Stunned())
         chance += 2;
@@ -3325,7 +3325,7 @@ int untrap(bool force) {
 
     switch (levl[x][y].doormask) {
         case D_NODOOR:
-            You("%s no door there.", Blind ? "feel" : "see");
+            You("%s no door there.", Blind() ? "feel" : "see");
             return (0);
         case D_ISOPEN:
             pline("This door is safely open.");
@@ -3519,12 +3519,12 @@ bool chest_trap(struct obj *obj, int bodypart, bool disarm) {
                 case 1:
                 case 0:
                 pline("A cloud of %s gas billows from %s.",
-                        Blind ? blindgas[rn2(SIZE(blindgas))] :
+                        Blind() ? blindgas[rn2(SIZE(blindgas))] :
                         rndcolor(), the(xname(obj)));
                 if(!Stunned()) {
                     if (Hallucination())
                     pline("What a groovy feeling!");
-                    else if (Blind)
+                    else if (Blind())
                     You("%s and get dizzy...",
                             stagger(youmonst.data, "stagger"));
                     else

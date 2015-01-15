@@ -105,7 +105,7 @@ int doread (void) {
         if(flags.verbose)
             You("break up the cookie and throw away the pieces.");
         outrumor(bcsign(scroll), BY_COOKIE);
-        if (!Blind) u.uconduct.literate++;
+        if (!Blind()) u.uconduct.literate++;
         useup(scroll);
         return(1);
     } else if (scroll->otyp == T_SHIRT) {
@@ -130,7 +130,7 @@ int doread (void) {
         char buf[BUFSZ];
         int erosion;
 
-        if (Blind) {
+        if (Blind()) {
             You_cant("feel any Braille writing.");
             return 0;
         }
@@ -149,7 +149,7 @@ int doread (void) {
             && scroll->oclass != SPBOOK_CLASS) {
         pline(silly_thing_to, "read");
         return(0);
-    } else if (Blind) {
+    } else if (Blind()) {
         const char *what = 0;
         if (scroll->oclass == SPBOOK_CLASS)
             what = "mystic runes";
@@ -174,7 +174,7 @@ int doread (void) {
     }
     scroll->in_use = true;  /* scroll, not spellbook, now being read */
     if(scroll->otyp != SCR_BLANK_PAPER) {
-        if(Blind)
+        if(Blind())
             pline("As you %s the formula on it, the scroll disappears.",
                     is_silent(youmonst.data) ? "cogitate" : "pronounce");
         else
@@ -218,11 +218,11 @@ static void stripspe (struct obj *obj) {
 }
 
 static void p_glow1 (struct obj *otmp) {
-    message_object(Blind ? MSG_YOUR_O_VIBRATES_BRIEFLY : MSG_YOUR_O_GLOWS_BRIEFLY, otmp);
+    message_object(Blind() ? MSG_YOUR_O_VIBRATES_BRIEFLY : MSG_YOUR_O_GLOWS_BRIEFLY, otmp);
 }
 
 static void p_glow2 (struct obj *otmp, const char *color) {
-    if (Blind) {
+    if (Blind()) {
         message_object(MSG_YOUR_O_VIBRATES_FOR_MOMENT, otmp);
     } else {
         fprintf(stderr, "TODO: your object glows color for a moment\n");
@@ -397,7 +397,7 @@ void recharge (struct obj *obj, int curse_bless) {
                 if (is_cursed) {
                     stripspe(obj);
                     if (obj->lamplit) {
-                        if (!Blind) {
+                        if (!Blind()) {
                             message_object(MSG_O_GOES_OUT, obj);
                         }
                         end_burn(obj, true);
@@ -837,7 +837,7 @@ int seffects (struct obj *sobj) {
                 otmp = some_armor(&youmonst);
                 if(!otmp) {
                     strange_feeling(sobj,
-                            !Blind ? "Your skin glows then fades." :
+                            !Blind() ? "Your skin glows then fades." :
                             "Your skin feels warm for a moment.");
                     exercise(A_CON, !sobj->cursed);
                     exercise(A_STR, !sobj->cursed);
@@ -845,7 +845,7 @@ int seffects (struct obj *sobj) {
                 }
                 if(confused) {
                     otmp->oerodeproof = !(sobj->cursed);
-                    if(Blind) {
+                    if(Blind()) {
                         otmp->rknown = false;
                         message_object(MSG_YOUR_O_FEEL_WARM_MOMENT, otmp);
                     } else {
@@ -871,7 +871,7 @@ int seffects (struct obj *sobj) {
                         (otmp->otyp == SILVER_DRAGON_SCALE_MAIL ||
                          otmp->otyp == SILVER_DRAGON_SCALES ||
                          otmp->otyp == SHIELD_OF_REFLECTION);
-                if (Blind) same_color = false;
+                if (Blind()) same_color = false;
 
                 /* KMH -- catch underflow */
                 s = sobj->cursed ? -otmp->spe : otmp->spe;
@@ -880,9 +880,9 @@ int seffects (struct obj *sobj) {
                     /*
                     Your("%s violently %s%s%s for a while, then %s.",
                             xname(otmp),
-                            otense(otmp, Blind ? "vibrate" : "glow"),
-                            (!Blind && !same_color) ? " " : nul,
-                            (Blind || same_color) ? nul :
+                            otense(otmp, Blind() ? "vibrate" : "glow"),
+                            (!Blind() && !same_color) ? " " : nul,
+                            (Blind() || same_color) ? nul :
                             hcolor(sobj->cursed ? NH_BLACK : NH_SILVER),
                             otense(otmp, "evaporate"));
                             */
@@ -920,9 +920,9 @@ int seffects (struct obj *sobj) {
                 Your("%s %s%s%s%s for a %s.",
                         xname(otmp),
                         s == 0 ? "violently " : nul,
-                        otense(otmp, Blind ? "vibrate" : "glow"),
-                        (!Blind && !same_color) ? " " : nul,
-                        (Blind || same_color) ? nul : hcolor(sobj->cursed ? NH_BLACK : NH_SILVER),
+                        otense(otmp, Blind() ? "vibrate" : "glow"),
+                        (!Blind() && !same_color) ? " " : nul,
+                        (Blind() || same_color) ? nul : hcolor(sobj->cursed ? NH_BLACK : NH_SILVER),
                         (s*s>1) ? "while" : "moment");
                         */
                 otmp->cursed = sobj->cursed;
@@ -976,13 +976,13 @@ int seffects (struct obj *sobj) {
                 if(!sobj->blessed) {
                     Your("%s begin to %s%s.",
                             makeplural(body_part(HAND)),
-                            Blind ? "tingle" : "glow ",
-                            Blind ? nul : hcolor(NH_PURPLE));
+                            Blind() ? "tingle" : "glow ",
+                                    Blind() ? nul : hcolor(NH_PURPLE));
                     make_confused(get_HConfusion() + rnd(100),false);
                 } else {
                     pline("A %s%s surrounds your %s.",
-                            Blind ? nul : hcolor(NH_RED),
-                            Blind ? "faint buzz" : " glow",
+                            Blind() ? nul : hcolor(NH_RED),
+                                    Blind() ? "faint buzz" : " glow",
                             body_part(HEAD));
                     make_confused(0L,true);
                 }
@@ -990,12 +990,12 @@ int seffects (struct obj *sobj) {
                 if (!sobj->blessed) {
                     Your("%s%s %s%s.",
                             makeplural(body_part(HAND)),
-                            Blind ? "" : " begin to glow",
-                            Blind ? (const char *)"tingle" : hcolor(NH_RED),
+                            Blind() ? "" : " begin to glow",
+                                    Blind() ? (const char *)"tingle" : hcolor(NH_RED),
                             u.umconf ? " even more" : "");
                     u.umconf++;
                 } else {
-                    if (Blind)
+                    if (Blind())
                         Your("%s tingle %s sharply.",
                                 makeplural(body_part(HAND)),
                                 u.umconf ? "even more" : "very");
@@ -1040,7 +1040,7 @@ int seffects (struct obj *sobj) {
                 break;
             }
         case SCR_BLANK_PAPER:
-            if (Blind)
+            if (Blind())
                 You("don't remember there being any magic words on this scroll.");
             else
                 pline("This scroll seems to be blank.");
@@ -1115,7 +1115,7 @@ int seffects (struct obj *sobj) {
                     && confused) {
                 /* oclass check added 10/25/86 GAN */
                 uwep->oerodeproof = !(sobj->cursed);
-                if (Blind) {
+                if (Blind()) {
                     uwep->rknown = false;
                     Your("weapon feels warm for a moment.");
                 } else {
@@ -1129,7 +1129,7 @@ int seffects (struct obj *sobj) {
                 if (uwep->oerodeproof && (uwep->oeroded || uwep->oeroded2)) {
                     uwep->oeroded = uwep->oeroded2 = 0;
                     Your("%s as good as new!",
-                            aobjnam(uwep, Blind ? "feel" : "look"));
+                            aobjnam(uwep, Blind() ? "feel" : "look"));
                 }
             } else return !chwepon(sobj,
                     sobj->cursed ? -1 :
@@ -1159,7 +1159,7 @@ int seffects (struct obj *sobj) {
             else do_genocide(!sobj->cursed | (2 * !!Confusion()));
             break;
         case SCR_LIGHT:
-            if(!Blind) known = true;
+            if(!Blind()) known = true;
             litroom(!confused && !sobj->cursed, sobj);
             break;
         case SCR_TELEPORTATION:
@@ -1282,7 +1282,7 @@ id:
             if(confused) {
                 if(Fire_resistance()) {
                     shieldeff(u.ux, u.uy);
-                    if(!Blind)
+                    if(!Blind())
                         pline("Oh, look, what a pretty fire in your %s.",
                                 makeplural(body_part(HAND)));
                     else You_feel("a pleasant warmth in your %s.",
@@ -1472,7 +1472,7 @@ void litroom (bool on, struct obj *obj) {
     if(!on) {
         struct obj *otmp;
 
-        if (!Blind) {
+        if (!Blind()) {
             if(u.uswallow) {
                 pline("It seems even darker in here than before.");
                 return;
@@ -1488,9 +1488,9 @@ void litroom (bool on, struct obj *obj) {
         for(otmp = invent; otmp; otmp = otmp->nobj)
             if (otmp->lamplit)
                 (void) snuff_lit(otmp);
-        if (Blind) goto do_it;
+        if (Blind()) goto do_it;
     } else {
-        if (Blind) goto do_it;
+        if (Blind()) goto do_it;
         if(u.uswallow){
             if (is_animal(u.ustuck->data)) {
                 message_monster(MSG_M_STOMACH_IS_LIT, u.ustuck);
@@ -1514,7 +1514,7 @@ do_it:
      *  blind, then we have to pick up and replace the ball and chain so
      *  that we don't remember them if they are out of sight.
      */
-    if (Punished && !on && !Blind)
+    if (Punished && !on && !Blind())
         move_bc(1, 0, uball->ox, uball->oy, uchain->ox, uchain->oy);
 
     do_clear_area(u.ux,u.uy,
@@ -1527,7 +1527,7 @@ do_it:
      *  correctly update all previously seen positions *and* correctly
      *  set the waslit bit [could be messed up from above].
      */
-    if (!Blind) {
+    if (!Blind()) {
         vision_recalc(2);
 
         /* replace ball&chain */
@@ -1709,7 +1709,7 @@ punish (struct obj *sobj)
          */
         if (!u.uswallow) {
             placebc();
-            if (Blind) set_bc(1);       /* set up ball and chain variables */
+            if (Blind()) set_bc(1);       /* set up ball and chain variables */
             newsym(u.ux,u.uy);          /* see ball&chain if can't see self */
         }
 }

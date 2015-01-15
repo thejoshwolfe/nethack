@@ -100,8 +100,8 @@ bool resists_blnd(const struct monst * mon) {
     const struct obj *o;
 
     if (is_you) {
-        if (Blind || u.usleep)
-            return Blind;
+        if (Blind() || u.usleep)
+            return Blind();
     } else {
         if (mon->mblinded || !mon->mcansee || !haseyes(ptr) ||
                 /* BUG: temporary sleep sets mfrozen, but since

@@ -520,7 +520,7 @@ static void givit (int type, struct permonst *ptr) {
                             "a strange mental acuity.");
                         HTelepat |= FROMOUTSIDE;
                         /* If blind, make sure monsters show up. */
-                        if (Blind) see_monsters();
+                        if (Blind()) see_monsters();
                 }
                 break;
             default:
@@ -574,7 +574,7 @@ static void cpostfx(int pm) {
             case PM_STALKER:
                 if(!Invis) {
                         set_itimeout(&HInvis, (long)rn1(100, 50));
-                        if (!Blind && !BInvis) self_invis_message();
+                        if (!Blind() && !BInvis) self_invis_message();
                 } else {
                         if (!(HInvis & INTRINSIC)) You_feel("hidden!");
                         HInvis |= FROMOUTSIDE;
@@ -733,7 +733,7 @@ static void fpostfx (struct obj *otmp) {
                 break;
             case FORTUNE_COOKIE:
                 outrumor(bcsign(otmp), BY_COOKIE);
-                if (!Blind) u.uconduct.literate++;
+                if (!Blind()) u.uconduct.literate++;
                 break;
             case LUMP_OF_ROYAL_JELLY:
                 /* This stuff seems to be VERY healthy! */
@@ -1011,7 +1011,7 @@ static int opentin (void) {
         } else {
             if (tin.tin->cursed)
                 pline("It contains some decaying%s%s substance.",
-                        Blind ? "" : " ", Blind ? "" : hcolor(NH_GREEN));
+                        Blind() ? "" : " ", Blind() ? "" : hcolor(NH_GREEN));
             else
                 pline("It contains spinach.");
 
@@ -1111,13 +1111,13 @@ static int rottenfood (struct obj *obj) {
                 if (Hallucination()) You_feel("rather trippy.");
                 else You_feel("rather %s.", body_part(LIGHT_HEADED));
                 make_confused(get_HConfusion() + d(2,4),false);
-        } else if(!rn2(4) && !Blind) {
+        } else if(!rn2(4) && !Blind()) {
                 pline("Everything suddenly goes dark.");
                 make_blinded((long)d(2,10),false);
-                if (!Blind) Your("%s", vision_clears);
+                if (!Blind()) Your("%s", vision_clears);
         } else if(!rn2(3)) {
                 const char *what, *where;
-                if (!Blind)
+                if (!Blind())
                     what = "goes",  where = "dark";
                 else if (Levitation || Is_airlevel(&u.uz) ||
                          Is_waterlevel(&u.uz))
@@ -1373,7 +1373,7 @@ static void eataccessory (struct obj *otmp) {
                     set_mimic_blocking();
                     see_monsters();
                     if (Invis && !oldprop && !ESee_invisible() &&
-                                !perceives(youmonst.data) && !Blind) {
+                                !perceives(youmonst.data) && !Blind()) {
                         newsym(u.ux,u.uy);
                         pline("Suddenly you can see yourself.");
                         makeknown(typ);
@@ -1381,7 +1381,7 @@ static void eataccessory (struct obj *otmp) {
                     break;
                   case RIN_INVISIBILITY:
                     if (!oldprop && !EInvis && !BInvis &&
-                                        !See_invisible() && !Blind) {
+                                        !See_invisible() && !Blind()) {
                         newsym(u.ux,u.uy);
                         Your("body takes on a %s transparency...",
                                 Hallucination() ? "normal" : "strange");

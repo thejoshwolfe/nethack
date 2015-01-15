@@ -355,7 +355,7 @@ default_1:
      *  The code in hitmu() substitutes the word "something"
      *  if the corpses obj->dknown is 0.
      */
-    if (Blind && !sensemon(mtmp)) obj->dknown = 0;
+    if (Blind() && !sensemon(mtmp)) obj->dknown = 0;
 
     stackobj(obj);
     newsym(x, y);
@@ -1721,7 +1721,7 @@ cleanup:
         HTelepat &= ~INTRINSIC;
         change_luck(-2);
         You("murderer!");
-        if (Blind && !Blind_telepat)
+        if (Blind() && !Blind_telepat)
             see_monsters(); /* Can't sense monsters any more. */
     }
     if((mtmp->mpeaceful && !rn2(2)) || mtmp->mtame) change_luck(-1);
@@ -2520,7 +2520,7 @@ bool angry_guards (bool silent) {
             if(nct || sct) {
                 if(nct) pline_The("guard%s get%s angry!",
                         nct == 1 ? "" : "s", nct == 1 ? "s" : "");
-                else if(!Blind)
+                else if(!Blind())
                     You("see %sangry guard%s approaching!",
                             sct == 1 ? "an " : "", sct > 1 ? "s" : "");
             } else if(flags.soundok)

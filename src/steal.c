@@ -187,7 +187,7 @@ int steal (struct monst *mtmp, char *objnambuf) {
     if (!invent || (inv_cnt() == 1 && uskin)) {
 nothing_to_steal:
         /* Not even a thousand men in armor can strip a naked man. */
-        if (Blind) {
+        if (Blind()) {
             pline("Somebody tries to rob you, but finds nothing to steal.");
         } else {
             message_monster(MSG_M_TRIES_TO_ROB_BUT_YOURE_NAKED, mtmp);
@@ -369,7 +369,7 @@ int mpickobj (struct monst *mtmp, struct obj *otmp) {
                 obj_sheds_light(otmp) &&
                 attacktype(mtmp->data, AT_ENGL)) {
             /* this is probably a burning object that you dropped or threw */
-            if (u.uswallow && mtmp == u.ustuck && !Blind) {
+            if (u.uswallow && mtmp == u.ustuck && !Blind()) {
                 message_object(MSG_O_GO_OUT, otmp);
             }
             snuff_otmp = true;

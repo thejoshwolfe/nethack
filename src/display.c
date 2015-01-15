@@ -951,7 +951,7 @@ void under_water (int mode) {
     for (x = u.ux-1; x <= u.ux+1; x++)
         for (y = u.uy-1; y <= u.uy+1; y++)
             if (isok(x,y) && is_pool(x,y)) {
-                if (Blind && !(x == u.ux && y == u.uy))
+                if (Blind() && !(x == u.ux && y == u.uy))
                     show_glyph(x,y,cmap_to_glyph(S_stone));
                 else
                     newsym(x,y);

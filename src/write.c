@@ -103,7 +103,7 @@ int dowrite(struct obj *pen) {
     if (!paper)
         return 0;
     typeword = (paper->oclass == SPBOOK_CLASS) ? "spellbook" : "scroll";
-    if (Blind && !paper->dknown) {
+    if (Blind() && !paper->dknown) {
         message_string(MSG_YOU_DONT_KNOW_THAT_IS_BLANK, typeword);
         return 1;
     }

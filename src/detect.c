@@ -756,7 +756,7 @@ void use_crystal_ball (struct obj *obj) {
     char ch;
     int oops;
 
-    if (Blind) {
+    if (Blind()) {
         pline("Too bad you can't see %s.", the(xname(obj)));
         return;
     }
@@ -784,7 +784,7 @@ void use_crystal_ball (struct obj *obj) {
                     Tobjnam(damage_clause, BUFSZ, obj, "damage");
                     pline("%s your vision!", damage_clause);
                     make_blinded(Blinded + rnd(100),false);
-                    if (!Blind) Your("%s", vision_clears);
+                    if (!Blind()) Your("%s", vision_clears);
                 } else {
                     char assault_clause[BUFSZ];
                     Tobjnam(assault_clause, BUFSZ, obj, "assault");
@@ -1075,7 +1075,7 @@ int openit (void) {
 
     if(u.uswallow) {
         if (is_animal(u.ustuck->data)) {
-            if (Blind) {
+            if (Blind()) {
                 pline("Its mouth opens!");
             } else {
                 char subject[BUFSZ];
@@ -1097,7 +1097,7 @@ void find_trap (struct trap *trap) {
 
     trap->tseen = 1;
     exercise(A_WIS, true);
-    if (Blind)
+    if (Blind())
         feel_location(trap->tx, trap->ty);
     else
         newsym(trap->tx, trap->ty);
@@ -1130,20 +1130,20 @@ int dosearch0 (int aflag) {
         int fund = (uwep && uwep->oartifact &&
                 spec_ability(uwep, SPFX_SEARCH)) ?
             uwep->spe : 0;
-        if (ublindf && ublindf->otyp == LENSES && !Blind)
+        if (ublindf && ublindf->otyp == LENSES && !Blind())
             fund += 2; /* JDS: lenses help searching */
         if (fund > 5) fund = 5;
         for(x = u.ux-1; x < u.ux+2; x++)
             for(y = u.uy-1; y < u.uy+2; y++) {
                 if(!isok(x,y)) continue;
                 if(x != u.ux || y != u.uy) {
-                    if (Blind && !aflag) feel_location(x,y);
+                    if (Blind() && !aflag) feel_location(x,y);
                     if(levl[x][y].typ == SDOOR) {
                         if(rnl(7-fund)) continue;
                         cvt_sdoor_to_door(&levl[x][y]); /* .typ = DOOR */
                         exercise(A_WIS, true);
                         nomul(0);
-                        if (Blind && !aflag)
+                        if (Blind() && !aflag)
                             feel_location(x,y); /* make sure it shows up */
                         else
                             newsym(x,y);
@@ -1193,7 +1193,7 @@ find:                           exercise(A_WIS, true);
                         /* see if an invisible monster has moved--if Blind,
                          * feel_location() already did it
                          */
-                        if (!aflag && !mtmp && !Blind &&
+                        if (!aflag && !mtmp && !Blind() &&
                                 glyph_is_invisible(levl[x][y].glyph)) {
                             unmap_object(x,y);
                             newsym(x,y);

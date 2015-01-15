@@ -563,7 +563,7 @@ size_t x_monnam(char *out_buf, int buf_size, const struct monst *mtmp, int artic
         invisible = "invisible ";
         has_adjectives = true;
     }
-    if (do_saddle && (mtmp->misc_worn_check & W_SADDLE) && !Blind && !Hallucination()) {
+    if (do_saddle && (mtmp->misc_worn_check & W_SADDLE) && !Blind() && !Hallucination()) {
         saddled = "saddled ";
         has_adjectives = true;
     }

@@ -1022,7 +1022,7 @@ int pickup_object ( struct obj *obj, long count, bool telekinesis) {
 
     /* In case of auto-pickup, where we haven't had a chance
        to look at it yet; affects docall(SCR_SCARE_MONSTER). */
-    if (!Blind)
+    if (!Blind())
         obj->dknown = 1;
 
     if (obj == uchain) {    /* do not pick up attached chain */
@@ -1693,7 +1693,7 @@ static long mbag_item_gone (int held, struct obj *item) {
         otense(have_tense, BUFSZ, item, "have");
         pline("%s %s vanished!", Doname2(item), have_tense);
     } else {
-        You("%s %s disappear!", Blind ? "notice" : "see", doname(item));
+        You("%s %s disappear!", Blind() ? "notice" : "see", doname(item));
     }
 
     if (*u.ushops && (shkp = shop_keeper(*u.ushops)) != 0) {

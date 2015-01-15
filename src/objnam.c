@@ -340,7 +340,7 @@ static char * xname2 (const struct obj *obj, bool ignore_oquan) {
      */
     struct obj *wtf_hax_it_should_have_been_const = (struct obj *) (void *)obj;
     if (!nn && ocl->oc_uses_known && ocl->oc_unique) wtf_hax_it_should_have_been_const->known = 0;
-    if (!Blind) wtf_hax_it_should_have_been_const->dknown = true;
+    if (!Blind()) wtf_hax_it_should_have_been_const->dknown = true;
     if (Role_if(PM_PRIEST)) wtf_hax_it_should_have_been_const->bknown = true;
 
     if (obj_is_pname(obj))

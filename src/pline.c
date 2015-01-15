@@ -306,7 +306,7 @@ ustatusline (void)
         if (Strangled)          strcat(info, ", being strangled");
         if (Vomiting)           strcat(info, ", nauseated"); /* !"nauseous" */
         if (Confusion())          strcat(info, ", confused");
-        if (Blind) {
+        if (Blind()) {
             strcat(info, ", blind");
             if (u.ucreamed) {
                 if ((long)u.ucreamed < Blinded || Blindfolded

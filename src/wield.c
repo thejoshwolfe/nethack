@@ -126,7 +126,7 @@ void setuwep(struct obj *obj) {
     setworn(obj, W_WEP);
     if (uwep == obj && artifact_light(olduwep) && olduwep->lamplit) {
         end_burn(olduwep, false);
-        if (!Blind)
+        if (!Blind())
             message_object(MSG_OBJECT_STOPS_GLOWING, olduwep);
     }
     /* Note: Explicitly wielding a pick-axe will not give a "bashing"
@@ -190,7 +190,7 @@ static int ready_weapon(struct obj *wep) {
 
         if (artifact_light(wep) && !wep->lamplit) {
             begin_burn(wep, false);
-            if (!Blind)
+            if (!Blind())
                 message_object(MSG_OBJECT_GLOWS_BRILLIANTLY, wep);
         }
 
@@ -512,7 +512,7 @@ void uwepgone(void) {
     if (uwep) {
         if (artifact_light(uwep) && uwep->lamplit) {
             end_burn(uwep, false);
-            if (!Blind)
+            if (!Blind())
                 message_object(MSG_OBJECT_STOPS_GLOWING, uwep);
         }
         setworn((struct obj *)0, W_WEP);
@@ -564,7 +564,7 @@ bool fade_scrolls) {
         grease_protect(target, (char *)0, victim);
     } else if (target->oclass == SCROLL_CLASS) {
         if (fade_scrolls && target->otyp != SCR_BLANK_PAPER && target->otyp != SCR_MAIL) {
-            if (!Blind) {
+            if (!Blind()) {
                 if (victim == &youmonst)
                     Your("%s.", aobjnam(target, "fade"));
                 else if (vismon)
@@ -599,7 +599,7 @@ bool fade_scrolls) {
     } else {
         if (flags.verbose) {
             if (victim == &youmonst)
-                Your("%s completely %s.", aobjnam(target, Blind ? "feel" : "look"), acid_dmg ? "corroded" : "rusty");
+                Your("%s completely %s.", aobjnam(target, Blind() ? "feel" : "look"), acid_dmg ? "corroded" : "rusty");
             else if (vismon)
                 pline("%s's %s completely %s.", victim_name, aobjnam(target, "look"), acid_dmg ? "corroded" : "rusty");
             else if (visobj)
@@ -645,13 +645,13 @@ int chwepon(struct obj *otmp, int amount) {
     }
 
     if (amount < 0 && uwep->oartifact && restrict_name(uwep, ONAME(uwep))) {
-        if (!Blind)
+        if (!Blind())
             Your("%s %s.", aobjnam(uwep, "faintly glow"), color);
         return (1);
     }
     /* there is a (soft) upper and lower limit to uwep->spe */
     if (((uwep->spe > 5 && amount >= 0) || (uwep->spe < -5 && amount < 0)) && rn2(3)) {
-        if (!Blind) {
+        if (!Blind()) {
             char it_evaporates[BUFSZ];
             otense(it_evaporates, BUFSZ, uwep, "evaporate");
             Your("%s %s for a while and then %s.", aobjnam(uwep, "violently glow"), color, it_evaporates);
@@ -662,7 +662,7 @@ int chwepon(struct obj *otmp, int amount) {
         useupall(uwep); /* let all of them disappear */
         return (1);
     }
-    if (!Blind) {
+    if (!Blind()) {
         xtime = (amount * amount == 1) ? "moment" : "while";
         Your("%s %s for a %s.", aobjnam(uwep, amount == 0 ? "violently glow" : "glow"), color, xtime);
         if (otyp != STRANGE_OBJECT && uwep->known && (amount > 0 || (amount < 0 && otmp->bknown)))

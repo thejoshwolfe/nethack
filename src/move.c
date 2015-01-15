@@ -153,7 +153,7 @@ void domove(void) {
             nomul(0);
             return;
         }
-        if (((trap = t_at(x, y)) && trap->tseen) || (Blind && !Levitation && !Flying && !is_clinger(youmonst.data) && (is_pool(x, y) || is_lava(x, y)) && levl[x][y].seenv)) {
+        if (((trap = t_at(x, y)) && trap->tseen) || (Blind() && !Levitation && !Flying && !is_clinger(youmonst.data) && (is_pool(x, y) || is_lava(x, y)) && levl[x][y].seenv)) {
             nomul(0);
         }
 
@@ -587,7 +587,7 @@ void invocation_message(void) {
 
         struct obj * otmp = carrying(CANDELABRUM_OF_INVOCATION);
         if (otmp && otmp->spe == 7 && otmp->lamplit)
-            pline("%s %s!", The(xname(otmp)), Blind ? "throbs palpably" : "glows with a strange light");
+            pline("%s %s!", The(xname(otmp)), Blind() ? "throbs palpably" : "glows with a strange light");
     }
 }
 
@@ -723,14 +723,14 @@ static int move_boulder(void) {
         ry = u.uy + 2 * u.delta.y;
         nomul(0);
         if (Levitation || Is_airlevel(&u.uz)) {
-            if (Blind)
+            if (Blind())
                 feel_location(sx, sy);
             You("don't have enough leverage to push %s.", the(xname(otmp)));
             /* Give them a chance to climb over it? */
             return -1;
         }
         if (verysmall(youmonst.data) && !u.usteed) {
-            if (Blind)
+            if (Blind())
                 feel_location(sx, sy);
             pline("You're too small to push that %s.", xname(otmp));
             goto cannot_push;
@@ -741,7 +741,7 @@ static int move_boulder(void) {
 
             /* KMH -- Sokoban doesn't let you push boulders diagonally */
             if (In_sokoban(&u.uz) && u.delta.x && u.delta.y) {
-                if (Blind)
+                if (Blind())
                     feel_location(sx, sy);
                 pline("%s won't roll diagonally on this %s.", The(xname(otmp)), surface(sx, sy));
                 goto cannot_push;
@@ -751,7 +751,7 @@ static int move_boulder(void) {
                 return (-1);
 
             if (mtmp && !noncorporeal(mtmp->data) && (!mtmp->mtrapped || !(ttmp && ((ttmp->ttyp == PIT) || (ttmp->ttyp == SPIKED_PIT))))) {
-                if (Blind)
+                if (Blind())
                     feel_location(sx, sy);
                 if (canspotmon(mtmp)) {
                     char name[BUFSZ];
@@ -800,17 +800,17 @@ static int move_boulder(void) {
                         /* vision kludge to get messages right;
                          the pit will temporarily be seen even
                          if this is one among multiple boulders */
-                        if (!Blind)
+                        if (!Blind())
                             viz_array[ry][rx] |= IN_SIGHT;
                         if (!flooreffects(otmp, rx, ry, "fall")) {
                             place_object(otmp, rx, ry);
                         }
-                        if (mtmp && !Blind)
+                        if (mtmp && !Blind())
                             newsym(rx, ry);
                         continue;
                     case HOLE:
                     case TRAPDOOR:
-                        if (Blind) {
+                        if (Blind()) {
                             pline("Kerplunk!  You no longer feel %s.", the(xname(otmp)));
                         } else {
                             char plug_tense[BUFSZ];
@@ -884,7 +884,7 @@ static int move_boulder(void) {
             if (glyph_is_invisible(levl[rx][ry].glyph))
                 unmap_object(rx, ry);
             movobj(otmp, rx, ry); /* does newsym(rx,ry) */
-            if (Blind) {
+            if (Blind()) {
                 feel_location(rx, ry);
                 feel_location(sx, sy);
             } else {
@@ -898,7 +898,7 @@ static int move_boulder(void) {
             } else {
                 You("try to move %s, but in vain.", the(xname(otmp)));
             }
-            if (Blind)
+            if (Blind())
                 feel_location(sx, sy);
             cannot_push: if (throws_rocks(youmonst.data)) {
                 if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
@@ -940,7 +940,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
      *  Check for physical obstacles.  First, the place we are going.
      */
     if (IS_ROCK(tmpr->typ) || tmpr->typ == IRONBARS) {
-        if (Blind && mode == DO_MOVE)
+        if (Blind() && mode == DO_MOVE)
             feel_location(x, y);
         if (Passes_walls && may_passwall(x, y)) {
             ; /* do nothing */
@@ -967,7 +967,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
         }
     } else if (IS_DOOR(tmpr->typ)) {
         if (closed_door(x, y)) {
-            if (Blind && mode == DO_MOVE)
+            if (Blind() && mode == DO_MOVE)
                 feel_location(x, y);
             if (Passes_walls) {
                 /* do nothing */
@@ -983,7 +983,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
                     if (amorphous(youmonst.data))
                         You("try to ooze under the door, but can't squeeze your possessions through.");
                     else if (x == ux || y == uy) {
-                        if (Blind || Stunned() || ACURR(A_DEX) < 10 || Fumbling()) {
+                        if (Blind() || Stunned() || ACURR(A_DEX) < 10 || Fumbling()) {
                             if (u.usteed) {
                                 char name[BUFSZ];
                                 y_monnam(name, BUFSZ, u.usteed);
@@ -1002,7 +1002,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
         } else {
             testdiag: if (dx && dy && !Passes_walls && ((tmpr->doormask & ~D_BROKEN) || block_door(x, y))) {
                 /* Diagonal moves into a door are not allowed. */
-                if (Blind && mode == DO_MOVE)
+                if (Blind() && mode == DO_MOVE)
                     feel_location(x, y);
                 return false;
             }
@@ -1212,7 +1212,7 @@ void spoteffects(bool pick) {
                 } else if (mtmp->mpeaceful) {
                     char name[BUFSZ];
                     a_monnam(name, BUFSZ, mtmp);
-                    You("surprise %s!", Blind && !sensemon(mtmp) ? something : name);
+                    You("surprise %s!", Blind() && !sensemon(mtmp) ? something : name);
                     mtmp->mpeaceful = 0;
                 } else {
                     char name[BUFSZ];
@@ -1297,7 +1297,7 @@ void check_special_room(bool newlev) {
                 pline("Welcome to David's treasure zoo!");
                 break;
             case SWAMP:
-                pline("It %s rather %s down here.", Blind ? "feels" : "looks", Blind ? "humid" : "muddy");
+                pline("It %s rather %s down here.", Blind() ? "feels" : "looks", Blind() ? "humid" : "muddy");
                 break;
             case COURT:
                 You("enter an opulent throne room!");
