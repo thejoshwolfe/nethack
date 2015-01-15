@@ -1365,7 +1365,7 @@ int ggetobj ( const char *word, int (*fn)(struct obj *), int mx, bool combo,
 
     if (m_seen) {
         return (allflag || (!oletct && ckfn != ckunpaid)) ? -2 : -3;
-    } else if (flags.menu_style != MENU_TRADITIONAL && combo && !allflag) {
+    } else if (combo && !allflag) {
         return 0;
     } else if (allowgold == 2 && !oletct) {
         return 1;   /* you dropped gold (or at least tried to) */
@@ -1553,11 +1553,6 @@ void identify_pack (int id_limit) {
     } else {
         /* identify up to `id_limit' items */
         n = 0;
-        if (flags.menu_style == MENU_TRADITIONAL)
-            do {
-                n = ggetobj("identify", identify, id_limit, false, (unsigned *)0);
-                if (n < 0) break; /* quit or no eligible items */
-            } while ((id_limit -= n) > 0);
         if (n == 0 || n < -1)
             menu_identify(id_limit);
     }
@@ -1840,18 +1835,13 @@ int dotypeinv (void) {
             return 0;
         }
         unpaid_count = count_unpaid(invent);
-        if (flags.menu_style != MENU_TRADITIONAL) {
-            if (flags.menu_style == MENU_FULL ||
-                                flags.menu_style == MENU_PARTIAL) {
-                traditional = false;
-                i = UNPAID_TYPES;
-                if (billx) i |= BILLED_TYPES;
-                n = query_category(prompt, invent, i, &pick_list, PICK_ONE);
-                if (!n) return 0;
-                this_type = c = pick_list[0].item.a_int;
-                free((void *) pick_list);
-            }
-        }
+        traditional = false;
+        i = UNPAID_TYPES;
+        if (billx) i |= BILLED_TYPES;
+        n = query_category(prompt, invent, i, &pick_list, PICK_ONE);
+        if (!n) return 0;
+        this_type = c = pick_list[0].item.a_int;
+        free((void *) pick_list);
         if (traditional) {
             /* collect a list of classes of objects carried, for use as a prompt */
             types[0] = 0;

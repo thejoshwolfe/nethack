@@ -424,124 +424,31 @@ int pickup ( int what) {
         goto menu_pickup;
     }
 
-    if (flags.menu_style != MENU_TRADITIONAL || iflags.menu_requested) {
-
-        /* use menus exclusively */
-        if (count) {        /* looking for N of something */
-            char buf[QBUFSZ];
-            sprintf(buf, "Pick %d of what?", count);
-            val_for_n_or_more = count;      /* set up callback selector */
-            n = query_objlist(buf, objchain,
-                    traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT,
-                    &pick_list, PICK_ONE, n_or_more);
-            /* correct counts, if any given */
-            for (i = 0; i < n; i++)
-                pick_list[i].count = count;
-        } else {
-            n = query_objlist("Pick up what?", objchain,
-                    traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT|FEEL_COCKATRICE,
-                    &pick_list, PICK_ANY, all_but_uchain);
-        }
-menu_pickup:
-        n_tried = n;
-        for (n_picked = i = 0 ; i < n; i++) {
-            res = pickup_object(pick_list[i].item.a_obj,pick_list[i].count,
-                    false);
-            if (res < 0) break;     /* can't continue */
-            n_picked += res;
-        }
-        if (pick_list) free((void *)pick_list);
-
+    /* use menus exclusively */
+    if (count) {        /* looking for N of something */
+        char buf[QBUFSZ];
+        sprintf(buf, "Pick %d of what?", count);
+        val_for_n_or_more = count;      /* set up callback selector */
+        n = query_objlist(buf, objchain,
+                traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT,
+                &pick_list, PICK_ONE, n_or_more);
+        /* correct counts, if any given */
+        for (i = 0; i < n; i++)
+            pick_list[i].count = count;
     } else {
-        /* old style interface */
-        int ct = 0;
-        long lcount;
-        bool all_of_a_type, selective;
-        char oclasses[MAXOCLASSES];
-        struct obj *obj, *obj2;
-
-        oclasses[0] = '\0';         /* types to consider (empty for all) */
-        all_of_a_type = true;       /* take all of considered types */
-        selective = false;          /* ask for each item */
-
-        /* check for more than one object */
-        for (obj = objchain;
-                obj; obj = (traverse_how == BY_NEXTHERE) ? obj->nexthere : obj->nobj)
-            ct++;
-
-        if (ct == 1 && count) {
-            /* if only one thing, then pick it */
-            obj = objchain;
-            lcount = min(obj->quan, (long)count);
-            n_tried++;
-            if (pickup_object(obj, lcount, false) > 0)
-                n_picked++; /* picked something */
-            goto end_query;
-
-        } else if (ct >= 2) {
-            int via_menu = 0;
-
-            There("are %s objects here.",
-                    (ct <= 10) ? "several" : "many");
-            if (!query_classes(oclasses, &selective, &all_of_a_type,
-                        "pick up", objchain,
-                        traverse_how == BY_NEXTHERE,
-                        false,
-                        &via_menu)) {
-                if (!via_menu) return (0);
-                n = query_objlist("Pick up what?",
-                        objchain,
-                        traverse_how|(selective ? 0 : INVORDER_SORT),
-                        &pick_list, PICK_ANY,
-                        via_menu == -2 ? allow_all : allow_category);
-                goto menu_pickup;
-            }
-        }
-
-        for (obj = objchain; obj; obj = obj2) {
-            if (traverse_how == BY_NEXTHERE)
-                obj2 = obj->nexthere;   /* perhaps obj will be picked up */
-            else
-                obj2 = obj->nobj;
-            lcount = -1L;
-
-            if (!selective && oclasses[0] && !index(oclasses,obj->oclass))
-                continue;
-
-            if (!all_of_a_type) {
-                char qbuf[BUFSZ];
-                sprintf(qbuf, "Pick up %s?",
-                        safe_qbuf("", sizeof("Pick up ?"), doname(obj),
-                            an(simple_typename(obj->otyp)), "something"));
-                switch ((obj->quan < 2L) ? ynaq(qbuf) : ynNaq(qbuf)) {
-                    case 'q': goto end_query;   /* out 2 levels */
-                    case 'n': continue;
-                    case 'a':
-                              all_of_a_type = true;
-                              if (selective) {
-                                  selective = false;
-                                  oclasses[0] = obj->oclass;
-                                  oclasses[1] = '\0';
-                              }
-                              break;
-                    case '#':   /* count was entered */
-                              if (!yn_number) continue; /* 0 count => No */
-                              lcount = (long) yn_number;
-                              if (lcount > obj->quan) lcount = obj->quan;
-                              /* fall thru */
-                    default:    /* 'y' */
-                              break;
-                }
-            }
-            if (lcount == -1L) lcount = obj->quan;
-
-            n_tried++;
-            if ((res = pickup_object(obj, lcount, false)) < 0) break;
-            n_picked += res;
-        }
-end_query:
-        ;   /* semicolon needed by brain-damaged compilers */
+        n = query_objlist("Pick up what?", objchain,
+                traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT|FEEL_COCKATRICE,
+                &pick_list, PICK_ANY, all_but_uchain);
     }
+menu_pickup:
+    n_tried = n;
+    for (n_picked = i = 0 ; i < n; i++) {
+        res = pickup_object(pick_list[i].item.a_obj,pick_list[i].count,
+                false);
+        if (res < 0) break;     /* can't continue */
+        n_picked += res;
+    }
+    if (pick_list) free((void *)pick_list);
 
     if (!u.uswallow) {
         if (!OBJ_AT(u.ux,u.uy)) u.uundetected = 0;
@@ -1889,7 +1796,7 @@ static int menu_loot (int retry, struct obj *container, bool put_in) {
 
     if (retry) {
         all_categories = (retry == -2);
-    } else if (flags.menu_style == MENU_FULL) {
+    } else {
         all_categories = false;
         sprintf(buf,"%s what type of objects?", put_in ? putin : takeout);
         mflags = put_in ? ALL_TYPES | BUC_ALLBKNOWN | BUC_UNKNOWN :
@@ -2007,103 +1914,34 @@ int use_container (struct obj *obj, int held) {
         sprintf(emptymsg, "%s is %sempty.", Yname2(obj),
                 quantum_cat ? "now " : "");
 
-    if (cnt || flags.menu_style == MENU_FULL) {
-        strcpy(qbuf, "Do you want to take something out of ");
-        sprintf(eos(qbuf), "%s?",
-                safe_qbuf(qbuf, 1, yname(obj), ysimple_name(obj), "it"));
-        if (flags.menu_style != MENU_TRADITIONAL) {
-            if (flags.menu_style == MENU_FULL) {
-                int t;
-                char menuprompt[BUFSZ];
-                bool outokay = (cnt != 0);
-                bool inokay = (invent != 0) || (u.ugold != 0);
-                if (!outokay && !inokay) {
-                    pline("%s", emptymsg);
-                    You("don't have anything to put in.");
-                    return used;
-                }
-                menuprompt[0] = '\0';
-                if (!cnt) sprintf(menuprompt, "%s ", emptymsg);
-                strcat(menuprompt, "Do what?");
-                t = in_or_out_menu(menuprompt, current_container, outokay, inokay);
-                if (t <= 0) return 0;
-                loot_out = (t & 0x01) != 0;
-                loot_in  = (t & 0x02) != 0;
-            } else {        /* MENU_COMBINATION or MENU_PARTIAL */
-                loot_out = (yn_function(qbuf, "ynq", 'n') == 'y');
-            }
-            if (loot_out) {
-                add_valid_menu_class(0);    /* reset */
-                used |= menu_loot(0, current_container, false) > 0;
-            }
-        } else {
-            /* traditional code */
-ask_again2:
-            menu_on_request = 0;
-            add_valid_menu_class(0);        /* reset */
-            strcpy(pbuf, ":ynq");
-            if (cnt) strcat(pbuf, "m");
-            switch (yn_function(qbuf, pbuf, 'n')) {
-                case ':':
-                    container_contents(current_container, false, false);
-                    goto ask_again2;
-                case 'y':
-                    if (query_classes(select, &one_by_one, &allflag,
-                                "take out", current_container->cobj,
-                                false,
-                                false,
-                                &menu_on_request)) {
-                        if (askchain((struct obj **)&current_container->cobj,
-                                    (one_by_one ? NULL : select),
-                                    allflag, out_container,
-                                    NULL,
-                                    0, "nodot"))
-                            used = 1;
-                    } else if (menu_on_request < 0) {
-                        used |= menu_loot(menu_on_request,
-                                current_container, false) > 0;
-                    }
-                    /*FALLTHRU*/
-                case 'n':
-                    break;
-                case 'm':
-                    menu_on_request = -2; /* triggers ALL_CLASSES */
-                    used |= menu_loot(menu_on_request, current_container, false) > 0;
-                    break;
-                case 'q':
-                default:
-                    return used;
-            }
-        }
-    } else {
-        pline("%s", emptymsg);              /* <whatever> is empty. */
+    strcpy(qbuf, "Do you want to take something out of ");
+    sprintf(eos(qbuf), "%s?",
+            safe_qbuf(qbuf, 1, yname(obj), ysimple_name(obj), "it"));
+    int t;
+    char menuprompt[BUFSZ];
+    bool outokay = (cnt != 0);
+    bool inokay = (invent != 0) || (u.ugold != 0);
+    if (!outokay && !inokay) {
+        pline("%s", emptymsg);
+        You("don't have anything to put in.");
+        return used;
+    }
+    menuprompt[0] = '\0';
+    if (!cnt) sprintf(menuprompt, "%s ", emptymsg);
+    strcat(menuprompt, "Do what?");
+    t = in_or_out_menu(menuprompt, current_container, outokay, inokay);
+    if (t <= 0) return 0;
+    loot_out = (t & 0x01) != 0;
+    loot_in  = (t & 0x02) != 0;
+    if (loot_out) {
+        add_valid_menu_class(0);    /* reset */
+        used |= menu_loot(0, current_container, false) > 0;
     }
 
     if (!invent && u.ugold == 0) {
         /* nothing to put in, but some feedback is necessary */
         You("don't have anything to put in.");
         return used;
-    }
-    if (flags.menu_style != MENU_FULL) {
-        sprintf(qbuf, "Do you wish to put %s in?", something);
-        strcpy(pbuf, ynqchars);
-        if (flags.menu_style == MENU_TRADITIONAL && invent && inv_cnt() > 0)
-            strcat(pbuf, "m");
-        switch (yn_function(qbuf, pbuf, 'n')) {
-            case 'y':
-                loot_in = true;
-                break;
-            case 'n':
-                break;
-            case 'm':
-                add_valid_menu_class(0);      /* reset */
-                menu_on_request = -2; /* triggers ALL_CLASSES */
-                used |= menu_loot(menu_on_request, current_container, true) > 0;
-                break;
-            case 'q':
-            default:
-                return used;
-        }
     }
     /*
      * Gone: being nice about only selecting food if we know we are
@@ -2123,23 +1961,7 @@ ask_again2:
             invent = u_gold;
         }
         add_valid_menu_class(0);      /* reset */
-        if (flags.menu_style != MENU_TRADITIONAL) {
-            used |= menu_loot(0, current_container, true) > 0;
-        } else {
-            /* traditional code */
-            menu_on_request = 0;
-            if (query_classes(select, &one_by_one, &allflag, "put in",
-                        invent, false, (u.ugold != 0L), &menu_on_request))
-            {
-                askchain((struct obj **)&invent,
-                        (one_by_one ? NULL : select), allflag,
-                        in_container, ck_bag, 0, "nodot");
-                used = 1;
-            } else if (menu_on_request < 0) {
-                used |= menu_loot(menu_on_request,
-                        current_container, true) > 0;
-            }
-        }
+        used |= menu_loot(0, current_container, true) > 0;
     }
 
     if (u_gold && invent && invent->oclass == COIN_CLASS) {

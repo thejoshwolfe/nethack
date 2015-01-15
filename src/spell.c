@@ -790,33 +790,6 @@ getspell (int *spell_no)
             You("don't know any spells right now.");
             return false;
         }
-        if (flags.menu_style == MENU_TRADITIONAL) {
-            /* we know there is at least 1 known spell */
-            for (nspells = 1; nspells < MAXSPELL
-                            && spellid(nspells) != NO_SPELL; nspells++)
-                continue;
-
-            if (nspells == 1)  strcpy(lets, "a");
-            else if (nspells < 27)  sprintf(lets, "a-%c", 'a' + nspells - 1);
-            else if (nspells == 27)  sprintf(lets, "a-zA");
-            else sprintf(lets, "a-zA-%c", 'A' + nspells - 27);
-
-            for(;;)  {
-                sprintf(qbuf, "Cast which spell? [%s ?]", lets);
-                if ((ilet = yn_function(qbuf, (char *)0, '\0')) == '?')
-                    break;
-
-                if (index(quitchars, ilet))
-                    return false;
-
-                idx = spell_let_to_idx(ilet);
-                if (idx >= 0 && idx < nspells) {
-                    *spell_no = idx;
-                    return true;
-                } else
-                    You("don't know that spell.");
-            }
-        }
         return dospellmenu("Choose which spell to cast",
                            SPELLMENU_CAST, spell_no);
 }

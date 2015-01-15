@@ -635,13 +635,9 @@ obj_no_longer_held (struct obj *obj)
 int
 doddrop (void)
 {
-        int result = 0;
-
         add_valid_menu_class(0); /* clear any classes already there */
         if (*u.ushops) sellobj_state(SELL_DELIBERATE);
-        if (flags.menu_style != MENU_TRADITIONAL ||
-                (result = ggetobj("drop", drop, 0, false, (unsigned *)0)) < -1)
-            result = menu_drop(result);
+        int result = menu_drop(0);
         if (*u.ushops) sellobj_state(SELL_NORMAL);
         reset_occupations();
 
@@ -672,7 +668,7 @@ menu_drop (int retry)
     }
     if (retry) {
         all_categories = (retry == -2);
-    } else if (flags.menu_style == MENU_FULL) {
+    } else {
         all_categories = false;
         n = query_category("Drop what type of items?",
                         invent,
@@ -689,16 +685,6 @@ menu_drop (int retry)
                 add_valid_menu_class(pick_list[i].item.a_int);
         }
         free((void *) pick_list);
-    } else if (flags.menu_style == MENU_COMBINATION) {
-        unsigned ggoresults = 0;
-        all_categories = false;
-        /* Gather valid classes via traditional NetHack method */
-        i = ggetobj("drop", drop, 0, true, &ggoresults);
-        if (i == -2) all_categories = true;
-        if (ggoresults & ALL_FINISHED) {
-                n_dropped = i;
-                goto drop_done;
-        }
     }
 
     if (drop_everything) {

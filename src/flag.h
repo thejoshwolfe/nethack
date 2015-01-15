@@ -73,8 +73,6 @@ struct flag {
 #define DISCLOSE_NO_WITHOUT_PROMPT      '-'
         char     end_disclose[NUM_DISCLOSURE_OPTIONS + 1];  /* disclose various info
                                                                 upon exit */
-        char     menu_style;    /* Always MENU_FULL */
-
         /* KMH, role patch -- Variables used during startup.
          *
          * If the user wishes to select a role, race, gender, and/or alignment

@@ -1841,7 +1841,6 @@ void reset_remarm (void) {
 
 /* the 'A' command -- remove multiple worn items */
 int doddoremarm (void) {
-    int result = 0;
 
     if (taking_off || takeoff_mask) {
         You("continue %s.", disrobing);
@@ -1854,9 +1853,7 @@ int doddoremarm (void) {
     }
 
     add_valid_menu_class(0); /* reset */
-    if (flags.menu_style != MENU_TRADITIONAL ||
-            (result = ggetobj("take off", select_off, 0, false, (unsigned *)0)) < -1)
-        result = menu_remarm(result);
+    menu_remarm(0);
 
     if (takeoff_mask) {
         /* default activity for armor and/or accessories,
@@ -1881,7 +1878,7 @@ static int menu_remarm (int retry) {
 
     if (retry) {
         all_worn_categories = (retry == -2);
-    } else if (flags.menu_style == MENU_FULL) {
+    } else {
         all_worn_categories = false;
         n = query_category("What type of things do you want to take off?",
                 invent, WORN_TYPES|ALL_TYPES, &pick_list, PICK_ANY);
@@ -1893,10 +1890,6 @@ static int menu_remarm (int retry) {
                 add_valid_menu_class(pick_list[i].item.a_int);
         }
         free((void *) pick_list);
-    } else if (flags.menu_style == MENU_COMBINATION) {
-        all_worn_categories = false;
-        if (ggetobj("take off", select_off, 0, true, (unsigned *)0) == -2)
-            all_worn_categories = true;
     }
 
     n = query_objlist("What do you want to take off?", invent,
@@ -1907,7 +1900,7 @@ static int menu_remarm (int retry) {
         for (i = 0; i < n; i++)
             (void) select_off(pick_list[i].item.a_obj);
         free((void *) pick_list);
-    } else if (n < 0 && flags.menu_style != MENU_COMBINATION) {
+    } else if (n < 0) {
         There("is nothing else you can remove or unwield.");
     }
     return 0;

@@ -191,8 +191,6 @@ void initoptions(void) {
     for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++)
         flags.end_disclose[i] = DISCLOSE_PROMPT_DEFAULT_NO;
 
-    flags.menu_style = MENU_FULL;
-
     /* since this is done before init_objects(), do partial init here */
     objects[SLIME_MOLD].oc_name_idx = SLIME_MOLD;
     nmcpy(pl_fruit, OBJ_NAME(objects[SLIME_MOLD]), PL_FSIZ);
