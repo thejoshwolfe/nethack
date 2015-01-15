@@ -100,7 +100,8 @@ static const char * const bogusmons[] = {
         "shadow", "hologram", "jester", "attorney", "sleazoid",
         "killer tomato", "amazon", "robot", "battlemech",
         "rhinovirus", "harpy", "lion-dog", "rat-ant", "Y2K bug",
-        "feminist",
+        "feminist", "possessed toaster", "redneck",
+        "heart-shaped balloon with an angry face",
                                                 /* misc. */
         "grue", "Christmas-tree monster", "luck sucker", "paskald",
         "brogmoid", "dornbeast",                /* Quendor (Zork, &c.) */
