@@ -53,7 +53,7 @@ NORMAL_ASS_O_FILES = build/main.o build/apply.o build/artifact.o build/attrib.o 
   build/mkmaze.o build/mkobj.o build/mkroom.o build/mon.o build/mondata.o build/monmove.o build/monstr.o \
   build/mplayer.o build/mthrowu.o build/muse.o build/music.o build/o_init.o build/objnam.o build/options.o \
   build/pager.o build/pickup.o build/pline.o build/polyself.o build/potion.o build/pray.o build/priest.o \
-  build/quest.o build/questpgr.o build/read.o build/rect.o build/region.o build/restore.o build/rip.o build/rnd.o \
+  build/quest.o build/questpgr.o build/read.o build/rect.o build/region.o build/restore.o build/rnd.o \
   build/role.o build/rumors.o build/save.o build/shk.o build/shknam.o build/sit.o build/sounds.o build/sp_lev.o build/spell.o \
   build/steal.o build/steed.o build/teleport.o build/timeout.o build/track.o build/trap.o build/u_init.o \
   build/uhitm.o build/vault.o build/vision.o build/weapon.o build/were.o build/wield.o \

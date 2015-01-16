@@ -10,7 +10,7 @@ void add_valid_menu_class(int);
 bool allow_all(const struct obj *);
 bool allow_category(const struct obj *);
 bool is_worn_by_type(const struct obj *);
-int notice_stuff_here(void);
+void notice_stuff_here(void);
 int pickup(void);
 int pickup_object(struct obj *, long, bool);
 struct obj *pick_obj(struct obj *);

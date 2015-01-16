@@ -80,50 +80,12 @@ static const char moderateloadmsg[] = "You have a little trouble lifting";
 static const char nearloadmsg[] = "You have much trouble lifting";
 static const char overloadmsg[] = "You have extreme difficulty lifting";
 
-/* Value set by query_objlist() for n_or_more(). */
-static long val_for_n_or_more;
-
 /* List of valid menu classes for query_objlist() and allow_category callback */
 static char valid_menu_classes[MAXOCLASSES + 2];
 
 /* A variable set in use_container(), to be used by the callback routines   */
 /* in_container(), and out_container() from askchain() and use_container(). */
 static struct obj *current_container;
-
-/* query_objlist callback: return true if obj's count is >= reference value */
-static bool n_or_more (const struct obj *obj) {
-    if (obj == uchain) return false;
-    return (obj->quan >= val_for_n_or_more);
-}
-
-/* BUG: this lets you look at cockatrice corpses while blind without
-   touching them */
-/* much simpler version of the look-here code; used by query_classes() */
-static void 
-simple_look (
-    struct obj *otmp,       /* list of objects */
-    bool here           /* flag for type of obj list linkage */
-)
-{
-        /* Neither of the first two cases is expected to happen, since
-         * we're only called after multiple classes of objects have been
-         * detected, hence multiple objects must be present.
-         */
-        if (!otmp) {
-            impossible("simple_look(null)");
-        } else if (!(here ? otmp->nexthere : otmp->nobj)) {
-            pline("%s", doname(otmp));
-        } else {
-            winid tmpwin = create_nhwindow(NHW_MENU);
-            putstr(tmpwin, 0, "");
-            do {
-                putstr(tmpwin, 0, doname(otmp));
-                otmp = here ? otmp->nexthere : otmp->nobj;
-            } while (otmp);
-            display_nhwindow(tmpwin, true);
-            destroy_nhwindow(tmpwin);
-        }
-}
 
 int collect_obj_classes (char ilets[], struct obj *otmp, bool here,
         bool incl_gold, bool (*filter)(const struct obj *), int *itemcount)
@@ -144,130 +106,6 @@ int collect_obj_classes (char ilets[], struct obj *otmp, bool here,
         }
 
         return iletct;
-}
-
-/*
- * Suppose some '?' and '!' objects are present, but '/' objects aren't:
- *      "a" picks all items without further prompting;
- *      "A" steps through all items, asking one by one;
- *      "?" steps through '?' items, asking, and ignores '!' ones;
- *      "/" becomes 'A', since no '/' present;
- *      "?a" or "a?" picks all '?' without further prompting;
- *      "/a" or "a/" becomes 'A' since there aren't any '/'
- *          (bug fix:  3.1.0 thru 3.1.3 treated it as "a");
- *      "?/a" or "a?/" or "/a?",&c picks all '?' even though no '/'
- *          (ie, treated as if it had just been "?a").
- */
-static bool query_classes (char oclasses[], bool *one_at_a_time,
-        bool *everything, const char *action, struct obj *objs, bool here,
-        bool incl_gold, int *menu_on_demand)
-{
-    char ilets[20], inbuf[BUFSZ];
-    int iletct, oclassct;
-    bool not_everything;
-    char qbuf[QBUFSZ];
-    bool m_seen;
-    int itemcount;
-
-    oclasses[oclassct = 0] = '\0';
-    *one_at_a_time = *everything = m_seen = false;
-    iletct = collect_obj_classes(ilets, objs, here, incl_gold, NULL, &itemcount);
-    if (iletct == 0) {
-        return false;
-    } else if (iletct == 1) {
-        oclasses[0] = def_char_to_objclass(ilets[0]);
-        oclasses[1] = '\0';
-        if (itemcount && menu_on_demand) {
-            ilets[iletct++] = 'm';
-            *menu_on_demand = 0;
-            ilets[iletct] = '\0';
-        }
-    } else  {       /* more than one choice available */
-        const char *where = 0;
-        char sym, oc_of_sym, *p;
-        /* additional choices */
-        ilets[iletct++] = ' ';
-        ilets[iletct++] = 'a';
-        ilets[iletct++] = 'A';
-        ilets[iletct++] = (objs == invent ? 'i' : ':');
-        if (menu_on_demand) {
-            ilets[iletct++] = 'm';
-            *menu_on_demand = 0;
-        }
-        ilets[iletct] = '\0';
-ask_again:
-        oclasses[oclassct = 0] = '\0';
-        *one_at_a_time = *everything = false;
-        not_everything = false;
-        sprintf(qbuf,"What kinds of thing do you want to %s? [%s]",
-                action, ilets);
-        getlin(qbuf,inbuf);
-        if (*inbuf == '\033') return false;
-
-        for (p = inbuf; (sym = *p++); ) {
-            /* new A function (selective all) added by GAN 01/09/87 */
-            if (sym == ' ') continue;
-            else if (sym == 'A') *one_at_a_time = true;
-            else if (sym == 'a') *everything = true;
-            else if (sym == ':') {
-                simple_look(objs, here);  /* dumb if objs==invent */
-                goto ask_again;
-            } else if (sym == 'i') {
-                (void) display_inventory((char *)0, true);
-                goto ask_again;
-            } else if (sym == 'm') {
-                m_seen = true;
-            } else {
-                oc_of_sym = def_char_to_objclass(sym);
-                if (index(ilets,sym)) {
-                    add_valid_menu_class(oc_of_sym);
-                    oclasses[oclassct++] = oc_of_sym;
-                    oclasses[oclassct] = '\0';
-                } else {
-                    if (!where)
-                        where = !strcmp(action,"pick up")  ? "here" :
-                            !strcmp(action,"take out") ?
-                            "inside" : "";
-                    if (*where)
-                        There("are no %c's %s.", sym, where);
-                    else
-                        You("have no %c's.", sym);
-                    not_everything = true;
-                }
-            }
-        }
-        if (m_seen && menu_on_demand) {
-            *menu_on_demand = (*everything || !oclassct) ? -2 : -3;
-            return false;
-        }
-        if (!oclassct && (!*everything || not_everything)) {
-            /* didn't pick anything,
-               or tried to pick something that's not present */
-            *one_at_a_time = true;      /* force 'A' */
-            *everything = false;        /* inhibit 'a' */
-        }
-    }
-    return true;
-}
-
-/* look at the objects at our location, unless there are too many of them */
-static void check_here(bool picked_some) {
-    struct obj *obj;
-    int ct = 0;
-
-    /* count the objects here */
-    for (obj = level.objects[u.ux][u.uy]; obj; obj = obj->nexthere) {
-        if (obj != uchain)
-            ct++;
-    }
-
-    /* If there are objects here, take a look. */
-    if (ct) {
-        flush_screen(1);
-        look_here(ct, picked_some);
-    } else {
-        read_engr_at(u.ux, u.uy);
-    }
 }
 
 void add_valid_menu_class (int c) {
@@ -320,56 +158,17 @@ bool is_worn_by_type (const struct obj *otmp) {
                 && (index(valid_menu_classes, otmp->oclass) != (char *)0));
 }
 
-static bool should_notice_items_here(void) {
-    struct trap * ttmp = t_at(u.ux, u.uy);
-    /* no auto-pick if no-pick move, nothing there, or in a pool */
-    if (flags.nopick || !OBJ_AT(u.ux, u.uy) || (is_pool(u.ux, u.uy) && !Underwater) || is_lava(u.ux, u.uy)) {
-        return false;
-    }
-
-    /* no pickup if levitating & not on air or water level */
-    if (!can_reach_floor()) {
-        return false;
-    }
-    if (ttmp && ttmp->tseen) {
-        /* Allow pickup from holes and trap doors that you escaped
-         * from because that stuff is teetering on the edge just
-         * like you, but not pits, because there is an elevation
-         * discrepancy with stuff in pits.
-         */
-        if ((ttmp->ttyp == PIT || ttmp->ttyp == SPIKED_PIT) && (!u.utrap || (u.utrap && u.utraptype != TT_PIT))) {
-            return false;
-        }
-    }
-    return true;
-}
-
-int notice_stuff_here(void) {
-    if (u.uswallow)
-        return 0;
-
-    if (should_notice_items_here()) {
-        check_here(false);
-    } else {
-        // skip to the part after the item list
-        read_engr_at(u.ux, u.uy);
-    }
-    return 0;
+void notice_stuff_here(void) {
+    // sent to client elsewhere
 }
 
 /*
  * Have the hero pick things from the ground
  * or a monster's inventory if swallowed.
  *
- * Arg what:
- *      >0  autopickup
- *      =0  interactive
- *      <0  pickup count of something
- *
  * Returns 1 if tried to pick something up, whether
  * or not it succeeded.
  */
-// int what            /* should be a long */
 int pickup(void) {
     int i, n, res, n_tried = 0, n_picked = 0;
     bool autopickup = false;
@@ -518,7 +317,7 @@ int query_objlist(const char *qstr, struct obj *olist, int qflags,
                 if ((qflags & FEEL_COCKATRICE) && curr->otyp == CORPSE &&
                      will_feel_cockatrice(curr, false)) {
                         destroy_nhwindow(win);  /* stop the menu and revert */
-                        look_here(0, false);
+                        look_here(0);
                         return 0;
                 }
                 if ((!(qflags & INVORDER_SORT) || curr->oclass == *pack)
@@ -1556,10 +1355,6 @@ static int in_container (struct obj *obj) {
     }
 
     return(current_container ? 1 : -1);
-}
-
-static int ck_bag (const struct obj *obj) {
-    return current_container && obj != current_container;
 }
 
 /* Returns: -1 to stop, 1 item was removed, 0 item was not removed. */

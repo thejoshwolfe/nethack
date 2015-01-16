@@ -34,15 +34,10 @@ char lock[PL_NSIZ+14] = "run/1lock"; /* long enough for uid+name+.99 */
 
 char SAVEF[SAVESIZE];   /* holds relative path of save file from playground */
 
-#define WIZKIT_MAX 128
-static char wizkit[WIZKIT_MAX];
-static FILE *fopen_wizkit_file(void);
-
 extern int n_dgns;              /* from dungeon.c */
 
 static char *set_bonesfile_name(char *,d_level*);
 static char *set_bonestemp_name(void);
-static int get_uchars(FILE *,char *,char *,unsigned char *,bool,int,const char *);
 
 
 /*

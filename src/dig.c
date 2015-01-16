@@ -579,7 +579,7 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
                 } else
                     u.utrap = 0;
                 if (oldobjs != newobjs) /* something unearthed */
-                        (void) notice_stuff_here();       /* detects pit */
+                        notice_stuff_here();       /* detects pit */
             } else if(mtmp) {
                 if(is_flyer(mtmp->data) || is_floater(mtmp->data)) {
                     if(canseemon(mtmp)) {
@@ -617,7 +617,7 @@ digactualhole (int x, int y, struct monst *madeby, int ttyp)
                     if (newobjs)
                         impact_drop((struct obj *)0, x, y, 0);
                     if (oldobjs != newobjs)
-                        (void) notice_stuff_here();
+                        notice_stuff_here();
                     if (shopdoor && madeby_u) pay_for_damage("ruin", false);
 
                 } else {

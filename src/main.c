@@ -585,7 +585,7 @@ int main(int argc, char *argv[]) {
 
         flags.move = 0;
         set_wear();
-        (void)notice_stuff_here();
+        notice_stuff_here();
     }
 
     moveloop();

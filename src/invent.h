@@ -45,7 +45,7 @@ struct obj *display_cinventory(struct obj *);
 struct obj *display_minventory(struct monst *,int,char *);
 int dotypeinv(void);
 const char *dfeature_at(int,int,char *);
-int look_here(int,bool);
+int look_here(int);
 int dolook(void);
 bool will_feel_cockatrice(struct obj *,bool);
 void feel_cockatrice(struct obj *,bool);

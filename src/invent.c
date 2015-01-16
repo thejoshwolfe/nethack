@@ -1979,7 +1979,7 @@ const char * dfeature_at (int x, int y, char *buf) {
 /* look at what is here; if there are many objects (5 or more),
    don't show them unless obj_cnt is 0 */
 // int obj_cnt,    /* obj_cnt > 0 implies that autopickup is in progess */
-int look_here(int obj_cnt, bool picked_some) {
+int look_here(int obj_cnt) {
     struct obj *otmp;
     struct trap *trap;
     const char *verb = Blind() ? "feel" : "see";
@@ -2032,7 +2032,7 @@ int look_here(int obj_cnt, bool picked_some) {
             dfeature = 0; /* ice already identifed */
         if (!can_reach_floor()) {
             pline("But you can't reach it!");
-            return (0);
+            return 0;
         }
     }
 
@@ -2045,7 +2045,7 @@ int look_here(int obj_cnt, bool picked_some) {
         read_engr_at(u.ux, u.uy); /* Eric Backus */
         if (!skip_objects && (Blind() || !dfeature))
             You("%s no objects here.", verb);
-        return (!!Blind());
+        return Blind();
     }
     /* we know there is something here */
 
@@ -2053,7 +2053,7 @@ int look_here(int obj_cnt, bool picked_some) {
         if (dfeature)
             plines(fbuf);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
-        There("are %s%s objects here.", (obj_cnt <= 10) ? "several" : "many", picked_some ? " more" : "");
+        There("are %s objects here.", (obj_cnt <= 10) ? "several" : "many");
     } else if (!otmp->nexthere) {
         /* only one object */
         if (dfeature)
@@ -2087,12 +2087,12 @@ int look_here(int obj_cnt, bool picked_some) {
             feel_cockatrice(otmp, false);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
     }
-    return (!!Blind());
+    return Blind();
 }
 
 /* explicilty look at what is here, including all objects */
 int dolook(void) {
-    return look_here(0, false);
+    return look_here(0);
 }
 
 bool will_feel_cockatrice (struct obj *otmp, bool force_touch) {
