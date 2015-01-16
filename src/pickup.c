@@ -169,7 +169,7 @@ void notice_stuff_here(void) {
  * Returns 1 if tried to pick something up, whether
  * or not it succeeded.
  */
-int pickup(void) {
+static int pickup(void) {
     int i, n, res, n_tried = 0, n_picked = 0;
     bool autopickup = false;
     struct obj *objchain;
@@ -220,6 +220,73 @@ int pickup(void) {
     }
     return n_tried > 0;
 }
+
+int dopickup(void) {
+    struct trap *traphere = t_at(u.ux, u.uy);
+    if (u.uswallow) {
+        if (!u.ustuck->minvent) {
+            if (is_animal(u.ustuck->data)) {
+                char name[BUFSZ];
+                mon_nam(name, BUFSZ, u.ustuck);
+                You("pick up %s%s tongue.", name, possessive_suffix(name));
+                pline("But it's kind of slimy, so you drop it.");
+            } else {
+                You("don't %s anything in here to pick up.", Blind() ? "feel" : "see");
+            }
+            return 1;
+        } else {
+            /* 3.4.0 introduced the ability to pick things up from within swallower's stomach */
+            return pickup();
+        }
+    }
+    if (is_pool(u.ux, u.uy)) {
+        if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data) || (Flying && !Breathless)) {
+            You("cannot dive into the water to pick things up.");
+            return (0);
+        } else if (!Underwater) {
+            You_cant("even see the bottom, let alone pick up %s.", something);
+            return (0);
+        }
+    }
+    if (is_lava(u.ux, u.uy)) {
+        if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data) || (Flying && !Breathless)) {
+            You_cant("reach the bottom to pick things up.");
+            return (0);
+        } else if (!likes_lava(youmonst.data)) {
+            You("would burn to a crisp trying to pick things up.");
+            return (0);
+        }
+    }
+    if (!OBJ_AT(u.ux, u.uy)) {
+        There("is nothing here to pick up.");
+        return (0);
+    }
+    if (!can_reach_floor()) {
+        if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
+            char name[BUFSZ];
+            y_monnam(name, BUFSZ, u.usteed);
+            You("aren't skilled enough to reach from %s.", name);
+        } else {
+            You("cannot reach the %s.", surface(u.ux, u.uy));
+        }
+        return 0;
+    }
+
+    if (traphere && traphere->tseen) {
+        /* Allow pickup from holes and trap doors that you escaped from
+         * because that stuff is teetering on the edge just like you, but
+         * not pits, because there is an elevation discrepancy with stuff
+         * in pits.
+         */
+        if ((traphere->ttyp == PIT || traphere->ttyp == SPIKED_PIT) && (!u.utrap || (u.utrap && u.utraptype != TT_PIT))) {
+            You("cannot reach the bottom of the pit.");
+            return (0);
+        }
+    }
+
+    return pickup();
+}
+
 
 /*
  * Put up a menu using the given object list.  Only those objects on the
@@ -1005,6 +1072,45 @@ static bool mon_beside(int x, int y) {
     return false;
 }
 
+/* loot_mon() returns amount of time passed.
+ */
+static int loot_mon(struct monst *mtmp) {
+    int c = -1;
+    int timepassed = 0;
+    struct obj *otmp;
+    char qbuf[QBUFSZ];
+
+    /* 3.3.1 introduced the ability to remove saddle from a steed             */
+    /*  *passed_info is set to true if a loot query was given.               */
+    /*  *prev_loot is set to true if something was actually acquired in here. */
+    if (mtmp && mtmp != u.usteed && (otmp = which_armor(mtmp, W_SADDLE))) {
+        long unwornmask;
+        sprintf(qbuf, "Do you want to remove the saddle from %s?", "TODO: x_monnam");
+        if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
+            if (nolimbs(youmonst.data)) {
+                You_cant("do that without limbs."); /* not body_part(HAND) */
+                return 0;
+            }
+            if (otmp->cursed) {
+                You("can't. The saddle seems to be stuck to %s.", "TODO: x_monnam");
+                /* the attempt costs you time */
+                return 1;
+            }
+            obj_extract_self(otmp);
+            if ((unwornmask = otmp->owornmask) != 0L) {
+                mtmp->misc_worn_check &= ~unwornmask;
+                otmp->owornmask = 0L;
+                update_mon_intrinsics(mtmp, otmp, false, false);
+            }
+            otmp = hold_another_object(otmp, "You drop %s!", doname(otmp), (const char *)0);
+            timepassed = rnd(3);
+        } else if (c == 'q') {
+            return 0;
+        }
+    }
+    return timepassed;
+}
+
 /* loot a container on the floor or loot saddle from mon. */
 int doloot(void) {
     struct obj *cobj, *nobj;
@@ -1148,45 +1254,6 @@ int doloot(void) {
         }
     } else if (c != 'y' && c != 'n') {
         You("%s %s to loot.", dont_find_anything, underfoot ? "here" : "there");
-    }
-    return timepassed;
-}
-
-/* loot_mon() returns amount of time passed.
- */
-int loot_mon(struct monst *mtmp) {
-    int c = -1;
-    int timepassed = 0;
-    struct obj *otmp;
-    char qbuf[QBUFSZ];
-
-    /* 3.3.1 introduced the ability to remove saddle from a steed             */
-    /*  *passed_info is set to true if a loot query was given.               */
-    /*  *prev_loot is set to true if something was actually acquired in here. */
-    if (mtmp && mtmp != u.usteed && (otmp = which_armor(mtmp, W_SADDLE))) {
-        long unwornmask;
-        sprintf(qbuf, "Do you want to remove the saddle from %s?", "TODO: x_monnam");
-        if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
-            if (nolimbs(youmonst.data)) {
-                You_cant("do that without limbs."); /* not body_part(HAND) */
-                return 0;
-            }
-            if (otmp->cursed) {
-                You("can't. The saddle seems to be stuck to %s.", "TODO: x_monnam");
-                /* the attempt costs you time */
-                return 1;
-            }
-            obj_extract_self(otmp);
-            if ((unwornmask = otmp->owornmask) != 0L) {
-                mtmp->misc_worn_check &= ~unwornmask;
-                otmp->owornmask = 0L;
-                update_mon_intrinsics(mtmp, otmp, false, false);
-            }
-            otmp = hold_another_object(otmp, "You drop %s!", doname(otmp), (const char *)0);
-            timepassed = rnd(3);
-        } else if (c == 'q') {
-            return 0;
-        }
     }
     return timepassed;
 }
