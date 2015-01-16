@@ -50,11 +50,6 @@
 #include "youprop.h"
 
 
-/* Monsters that might be ridden */
-static const char steeds[] = {
-        S_QUADRUPED, S_UNICORN, S_ANGEL, S_CENTAUR, S_DRAGON, S_JABBERWOCK, '\0'
-};
-
 /* caller has decided that hero can't reach something while mounted */
 void rider_cant_reach (void) {
     message_monster(MSG_YOU_ARE_NOT_SKILLED_ENOUGH_TO_REACH_FROM_M, u.usteed);
@@ -63,25 +58,39 @@ void rider_cant_reach (void) {
 /*** Putting the saddle on ***/
 
 /* Can this monster wear a saddle? */
-bool can_saddle (struct monst *mtmp) {
+bool can_saddle(struct monst *mtmp) {
     struct permonst *ptr = mtmp->data;
 
-    return (index(steeds, ptr->mlet) && (ptr->msize >= MZ_MEDIUM) &&
-            (!humanoid(ptr) || ptr->mlet == S_CENTAUR) &&
-            !amorphous(ptr) && !noncorporeal(ptr) &&
-            !is_whirly(ptr) && !unsolid(ptr));
+    switch (ptr->mlet) {
+        case S_QUADRUPED:
+        case S_UNICORN:
+        case S_ANGEL:
+        case S_CENTAUR:
+        case S_DRAGON:
+        case S_JABBERWOCK:
+            /* Monsters that might be ridden */
+            break;
+        default:
+            return false;
+    }
+    if (ptr->msize < MZ_MEDIUM)
+        return false; // too small
+    if (humanoid(ptr) && ptr->mlet != S_CENTAUR)
+        return false; // can't ride humanoids (except centaurs)
+    if (amorphous(ptr) || noncorporeal(ptr) || is_whirly(ptr) || unsolid(ptr))
+        return false;
+    return true;
 }
 
-int use_saddle (struct obj *otmp) {
+int use_saddle(struct obj *otmp) {
     struct monst *mtmp;
     struct permonst *ptr;
     int chance;
     const char *s;
 
-
     /* Can you use it? */
     if (nohands(youmonst.data)) {
-        You("have no hands!");  /* not `body_part(HAND)' */
+        You("have no hands!"); /* not `body_part(HAND)' */
         return 0;
     } else if (!freehand()) {
         You("have no free %s.", body_part(HAND));
@@ -97,9 +106,7 @@ int use_saddle (struct obj *otmp) {
         pline("Saddle yourself?  Very funny...");
         return 0;
     }
-    if (!isok(u.ux+u.delta.x, u.uy+u.delta.y) ||
-            !(mtmp = m_at(u.ux+u.delta.x, u.uy+u.delta.y)) ||
-            !canspotmon(mtmp)) {
+    if (!isok(u.ux + u.delta.x, u.uy + u.delta.y) || !(mtmp = m_at(u.ux + u.delta.x, u.uy + u.delta.y)) || !canspotmon(mtmp)) {
         pline("I see nobody there.");
         return 1;
     }
@@ -134,46 +141,52 @@ int use_saddle (struct obj *otmp) {
     }
 
     /* Calculate your chance */
-    chance = ACURR(A_DEX) + ACURR(A_CHA)/2 + 2*mtmp->mtame;
+    chance = ACURR(A_DEX) + ACURR(A_CHA) / 2 + 2 * mtmp->mtame;
     chance += u.ulevel * (mtmp->mtame ? 20 : 5);
-    if (!mtmp->mtame) chance -= 10*mtmp->m_lev;
+    if (!mtmp->mtame)
+        chance -= 10 * mtmp->m_lev;
     if (Role_if(PM_KNIGHT))
         chance += 20;
     switch (P_SKILL(P_RIDING)) {
         case P_ISRESTRICTED:
         case P_UNSKILLED:
         default:
-            chance -= 20;       break;
+            chance -= 20;
+            break;
         case P_BASIC:
             break;
         case P_SKILLED:
-            chance += 15;       break;
+            chance += 15;
+            break;
         case P_EXPERT:
-            chance += 30;       break;
+            chance += 30;
+            break;
     }
-    if (Confusion() || Fumbling() || Glib)
+    if (Confusion() || Fumbling() || Glib) {
         chance -= 20;
-    else if (uarmg &&
+    } else if (uarmg &&
             (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *)0 &&
-            !strncmp(s, "riding ", 7))
+            !strncmp(s, "riding ", 7)) {
         /* Bonus for wearing "riding" (but not fumbling) gloves */
         chance += 10;
-    else if (uarmf &&
+    } else if (uarmf &&
             (s = OBJ_DESCR(objects[uarmf->otyp])) != (char *)0 &&
-            !strncmp(s, "riding ", 7))
+            !strncmp(s, "riding ", 7)) {
         /* ... or for "riding boots" */
         chance += 10;
+    }
     if (otmp->cursed)
         chance -= 50;
 
     /* Make the attempt */
     if (rn2(100) < chance) {
         message_monster(MSG_YOU_PUT_SADDLE_ON_M, mtmp);
-        if (otmp->owornmask) remove_worn_item(otmp, false);
+        if (otmp->owornmask)
+            remove_worn_item(otmp, false);
         freeinv(otmp);
         /* mpickobj may free otmp it if merges, but we have already
-           checked for a saddle above, so no merger should happen */
-        (void) mpickobj(mtmp, otmp);
+         checked for a saddle above, so no merger should happen */
+        (void)mpickobj(mtmp, otmp);
         mtmp->misc_worn_check |= W_SADDLE;
         otmp->owornmask = W_SADDLE;
         otmp->leashmon = mtmp->m_id;

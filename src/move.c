@@ -1174,7 +1174,7 @@ void spoteffects(bool pick) {
         if (trap && pit)
             dotrap(trap, 0); /* fall into pit */
         if (pick)
-            pickup(1);
+            notice_stuff_here();
         if (trap && !pit)
             dotrap(trap, 0); /* fall into arrow trap, etc. */
     }

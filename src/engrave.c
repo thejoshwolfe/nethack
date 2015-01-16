@@ -203,12 +203,16 @@ void wipeout_text ( char *engr, int cnt, unsigned seed) {
         while (lth && engr[lth-1] == ' ') engr[--lth] = 0;
 }
 
-bool can_reach_floor (void) {
-        return (bool)(!u.uswallow &&
-                        /* Restricted/unskilled riders can't reach the floor */
-                        !(u.usteed && P_SKILL(P_RIDING) < P_BASIC) &&
-                         (!Levitation ||
-                          Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)));
+bool can_reach_floor(void) {
+    if (u.uswallow)
+        return false;
+    /* Restricted/unskilled riders can't reach the floor */
+    if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
+        return false;
+    // levitation means you can't reach the floor, unless the ground is floating too.
+    if (Levitation && !Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz))
+        return false;
+    return true;
 }
 
 const char * surface (int x, int y) {

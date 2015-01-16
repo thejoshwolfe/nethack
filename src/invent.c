@@ -2010,7 +2010,7 @@ int look_here(int obj_cnt, bool picked_some) {
         } else {
             You("%s no objects here.", verb);
         }
-        return (!!Blind());
+        return Blind();
     }
     if (!skip_objects && (trap = t_at(u.ux, u.uy)) && trap->tseen)
         There("is %s here.", an(defsyms[trap_to_defsym(trap->ttyp)].explanation));
@@ -2091,8 +2091,8 @@ int look_here(int obj_cnt, bool picked_some) {
 }
 
 /* explicilty look at what is here, including all objects */
-int dolook (void) {
-        return look_here(0, false);
+int dolook(void) {
+    return look_here(0, false);
 }
 
 bool will_feel_cockatrice (struct obj *otmp, bool force_touch) {
@@ -2546,11 +2546,7 @@ int display_binventory (int x, int y, bool as_if_seen) {
 }
 
 int dopickup(void) {
-    int count;
     struct trap *traphere = t_at(u.ux, u.uy);
-    /* awful kludge to work around parse()'s pre-decrement */
-    count = multi ? multi + 1 : 0;
-    multi = 0; /* always reset */
     if (u.uswallow) {
         if (!u.ustuck->minvent) {
             if (is_animal(u.ustuck->data)) {
@@ -2563,8 +2559,8 @@ int dopickup(void) {
             }
             return 1;
         } else {
-            int tmpcount = -count;
-            return loot_mon(u.ustuck, &tmpcount, (bool *)0);
+            /* 3.4.0 introduced the ability to pick things up from within swallower's stomach */
+            return pickup();
         }
     }
     if (is_pool(u.ux, u.uy)) {
@@ -2612,6 +2608,6 @@ int dopickup(void) {
         }
     }
 
-    return pickup(-count);
+    return pickup();
 }
 

@@ -1287,7 +1287,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
 
         /* assume this will always return true when changing level */
         (void) in_out_region(u.ux, u.uy);
-        (void) pickup(1);
+        (void) notice_stuff_here();
 }
 
 static void final_level (void) {

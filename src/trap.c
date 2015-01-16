@@ -2439,7 +2439,7 @@ int float_down(long hmask, long emask) {
     /* falling through trap door calls goto_level,
      and goto_level does its own pickup() call */
     on_level(&u.uz, &current_dungeon_level))
-        (void)pickup(1);
+        (void)notice_stuff_here();
     return 1;
 }
 

@@ -251,25 +251,23 @@ ask_again:
 }
 
 /* look at the objects at our location, unless there are too many of them */
-static void 
-check_here (bool picked_some)
-{
-        struct obj *obj;
-        int ct = 0;
+static void check_here(bool picked_some) {
+    struct obj *obj;
+    int ct = 0;
 
-        /* count the objects here */
-        for (obj = level.objects[u.ux][u.uy]; obj; obj = obj->nexthere) {
-            if (obj != uchain)
-                ct++;
-        }
+    /* count the objects here */
+    for (obj = level.objects[u.ux][u.uy]; obj; obj = obj->nexthere) {
+        if (obj != uchain)
+            ct++;
+    }
 
-        /* If there are objects here, take a look. */
-        if (ct) {
-            flush_screen(1);
-            (void) look_here(ct, picked_some);
-        } else {
-            read_engr_at(u.ux,u.uy);
-        }
+    /* If there are objects here, take a look. */
+    if (ct) {
+        flush_screen(1);
+        look_here(ct, picked_some);
+    } else {
+        read_engr_at(u.ux, u.uy);
+    }
 }
 
 void add_valid_menu_class (int c) {
@@ -322,18 +320,42 @@ bool is_worn_by_type (const struct obj *otmp) {
                 && (index(valid_menu_classes, otmp->oclass) != (char *)0));
 }
 
-/*
- * Pick from the given list using flags.pickup_types.  Return the number
- * of items picked (not counts).  Create an array that returns pointers
- * and counts of the items to be picked up.  If the number of items
- * picked is zero, the pickup list is left alone.  The caller of this
- * function must free the pickup list.
- */
-static int autopick(struct obj *olist, int follow, menu_item **pick_list) {
-    return 0;
+static bool should_notice_items_here(void) {
+    struct trap * ttmp = t_at(u.ux, u.uy);
+    /* no auto-pick if no-pick move, nothing there, or in a pool */
+    if (flags.nopick || !OBJ_AT(u.ux, u.uy) || (is_pool(u.ux, u.uy) && !Underwater) || is_lava(u.ux, u.uy)) {
+        return false;
+    }
+
+    /* no pickup if levitating & not on air or water level */
+    if (!can_reach_floor()) {
+        return false;
+    }
+    if (ttmp && ttmp->tseen) {
+        /* Allow pickup from holes and trap doors that you escaped
+         * from because that stuff is teetering on the edge just
+         * like you, but not pits, because there is an elevation
+         * discrepancy with stuff in pits.
+         */
+        if ((ttmp->ttyp == PIT || ttmp->ttyp == SPIKED_PIT) && (!u.utrap || (u.utrap && u.utraptype != TT_PIT))) {
+            return false;
+        }
+    }
+    return true;
 }
 
+int notice_stuff_here(void) {
+    if (u.uswallow)
+        return 0;
 
+    if (should_notice_items_here()) {
+        check_here(false);
+    } else {
+        // skip to the part after the item list
+        read_engr_at(u.ux, u.uy);
+    }
+    return 0;
+}
 
 /*
  * Have the hero pick things from the ground
@@ -348,70 +370,26 @@ static int autopick(struct obj *olist, int follow, menu_item **pick_list) {
  * or not it succeeded.
  */
 // int what            /* should be a long */
-int pickup ( int what) {
-    int i, n, res, count, n_tried = 0, n_picked = 0;
-    menu_item *pick_list = NULL;
-    bool autopickup = what > 0;
+int pickup(void) {
+    int i, n, res, n_tried = 0, n_picked = 0;
+    bool autopickup = false;
     struct obj *objchain;
     int traverse_how;
 
-    if (what < 0)           /* pick N of something */
-        count = -what;
-    else                    /* pick anything */
-        count = 0;
-
     if (!u.uswallow) {
-        struct trap *ttmp = t_at(u.ux, u.uy);
-        /* no auto-pick if no-pick move, nothing there, or in a pool */
-        if (autopickup && (flags.nopick || !OBJ_AT(u.ux, u.uy) ||
-                    (is_pool(u.ux, u.uy) && !Underwater) || is_lava(u.ux, u.uy)))
-        {
-            read_engr_at(u.ux, u.uy);
-            return (0);
-        }
-
-        /* no pickup if levitating & not on air or water level */
-        if (!can_reach_floor()) {
-            if (multi || autopickup)
-                read_engr_at(u.ux, u.uy);
-            return (0);
-        }
-        if (ttmp && ttmp->tseen) {
-            /* Allow pickup from holes and trap doors that you escaped
-             * from because that stuff is teetering on the edge just
-             * like you, but not pits, because there is an elevation
-             * discrepancy with stuff in pits.
-             */
-            if ((ttmp->ttyp == PIT || ttmp->ttyp == SPIKED_PIT) &&
-                    (!u.utrap || (u.utrap && u.utraptype != TT_PIT))) {
-                read_engr_at(u.ux, u.uy);
-                return(0);
-            }
-        }
-        /* multi && !flags.run means they are in the middle of some other
-         * action, or possibly paralyzed, sleeping, etc.... and they just
-         * teleported onto the object.  They shouldn't pick it up.
-         */
-        if (multi || autopickup) {
-            check_here(false);
-            return (0);
-        }
         if (notake(youmonst.data)) {
-            if (!autopickup)
-                You("are physically incapable of picking anything up.");
-            else
-                check_here(false);
-            return (0);
+            You("are physically incapable of picking anything up.");
+            return 0;
         }
     }
 
-    add_valid_menu_class(0);        /* reset */
+    add_valid_menu_class(0); /* reset */
     if (!u.uswallow) {
         objchain = level.objects[u.ux][u.uy];
         traverse_how = BY_NEXTHERE;
     } else {
         objchain = u.ustuck->minvent;
-        traverse_how = 0;       /* nobj */
+        traverse_how = 0; /* nobj */
     }
     /*
      * Start the actual pickup process.  This is split into two main
@@ -419,47 +397,29 @@ int pickup ( int what) {
      * Automatic pickup has been split into its own menu-style routine
      * to make things less confusing.
      */
-    if (autopickup) {
-        n = autopick(objchain, traverse_how, &pick_list);
-        goto menu_pickup;
-    }
-
+    menu_item * pick_list = NULL;
     /* use menus exclusively */
-    if (count) {        /* looking for N of something */
-        char buf[QBUFSZ];
-        sprintf(buf, "Pick %d of what?", count);
-        val_for_n_or_more = count;      /* set up callback selector */
-        n = query_objlist(buf, objchain,
-                traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT,
-                &pick_list, PICK_ONE, n_or_more);
-        /* correct counts, if any given */
-        for (i = 0; i < n; i++)
-            pick_list[i].count = count;
-    } else {
-        n = query_objlist("Pick up what?", objchain,
-                traverse_how|AUTOSELECT_SINGLE|INVORDER_SORT|FEEL_COCKATRICE,
-                &pick_list, PICK_ANY, all_but_uchain);
-    }
-menu_pickup:
+    int qflags = traverse_how | AUTOSELECT_SINGLE | INVORDER_SORT | FEEL_COCKATRICE;
+    n = query_objlist("Pick up what?", objchain, qflags, &pick_list, PICK_ANY, all_but_uchain);
     n_tried = n;
-    for (n_picked = i = 0 ; i < n; i++) {
-        res = pickup_object(pick_list[i].item.a_obj,pick_list[i].count,
-                false);
-        if (res < 0) break;     /* can't continue */
+    for (n_picked = i = 0; i < n; i++) {
+        res = pickup_object(pick_list[i].item.a_obj, pick_list[i].count, false);
+        if (res < 0)
+            break; /* can't continue */
         n_picked += res;
     }
-    if (pick_list) free((void *)pick_list);
+    if (pick_list)
+        free(pick_list);
 
     if (!u.uswallow) {
-        if (!OBJ_AT(u.ux,u.uy)) u.uundetected = 0;
+        if (!OBJ_AT(u.ux, u.uy))
+            u.uundetected = 0;
 
         /* position may need updating (invisible hero) */
-        if (n_picked) newsym(u.ux,u.uy);
-
-        /* see whether there's anything else here, after auto-pickup is done */
-        if (autopickup) check_here(n_picked > 0);
+        if (n_picked)
+            newsym(u.ux, u.uy);
     }
-    return (n_tried > 0);
+    return n_tried > 0;
 }
 
 /*
@@ -558,7 +518,7 @@ int query_objlist(const char *qstr, struct obj *olist, int qflags,
                 if ((qflags & FEEL_COCKATRICE) && curr->otyp == CORPSE &&
                      will_feel_cockatrice(curr, false)) {
                         destroy_nhwindow(win);  /* stop the menu and revert */
-                        (void) look_here(0, false);
+                        look_here(0, false);
                         return 0;
                 }
                 if ((!(qflags & INVORDER_SORT) || curr->oclass == *pack)
@@ -1234,20 +1194,20 @@ static bool able_to_loot (int x, int y) {
     return true;
 }
 
-static bool mon_beside (int x, int y) {
-    int i,j,nx,ny;
-    for(i = -1; i <= 1; i++)
-        for(j = -1; j <= 1; j++) {
-            nx = x + i;
-            ny = y + j;
-            if(isok(nx, ny) && MON_AT(nx, ny))
+static bool mon_beside(int x, int y) {
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            int nx = x + i;
+            int ny = y + j;
+            if (isok(nx, ny) && MON_AT(nx, ny))
                 return true;
         }
+    }
     return false;
 }
 
 /* loot a container on the floor or loot saddle from mon. */
-int doloot (void) {
+int doloot(void) {
     struct obj *cobj, *nobj;
     int c = -1;
     int timepassed = 0;
@@ -1256,36 +1216,35 @@ int doloot (void) {
     const char *dont_find_anything = "don't find anything";
     struct monst *mtmp;
     char qbuf[BUFSZ];
-    int prev_inquiry = 0;
-    bool prev_loot = false;
 
     if (check_capacity((char *)0)) {
         /* "Can't do that while carrying so much stuff." */
         return 0;
     }
     if (nohands(youmonst.data)) {
-        You("have no hands!");  /* not `body_part(HAND)' */
+        You("have no hands!"); /* not `body_part(HAND)' */
         return 0;
     }
-    cc.x = u.ux; cc.y = u.uy;
+    cc.x = u.ux;
+    cc.y = u.uy;
 
-lootcont:
+    lootcont:
 
     if (container_at(cc.x, cc.y, false)) {
         bool any = false;
 
-        if (!able_to_loot(cc.x, cc.y)) return 0;
+        if (!able_to_loot(cc.x, cc.y))
+            return 0;
         for (cobj = level.objects[cc.x][cc.y]; cobj; cobj = nobj) {
             nobj = cobj->nexthere;
 
             if (Is_container(cobj)) {
-                sprintf(qbuf, "There is %s here, loot it?",
-                        safe_qbuf("", sizeof("There is  here, loot it?"),
-                            doname(cobj), an(simple_typename(cobj->otyp)),
-                            "a container"));
+                sprintf(qbuf, "There is %s here, loot it?", safe_qbuf("", sizeof("There is  here, loot it?"), doname(cobj), an(simple_typename(cobj->otyp)), "a container"));
                 c = ynq(qbuf);
-                if (c == 'q') return (timepassed);
-                if (c == 'n') continue;
+                if (c == 'q')
+                    return timepassed;
+                if (c == 'n')
+                    continue;
                 any = true;
 
                 if (cobj->olocked) {
@@ -1297,7 +1256,8 @@ lootcont:
                     You("carefully open the bag...");
                     pline("It develops a huge set of teeth and bites you!");
                     tmp = rnd(10);
-                    if (Half_physical_damage) tmp = (tmp+1) / 2;
+                    if (Half_physical_damage)
+                        tmp = (tmp + 1) / 2;
                     losehp(tmp, killed_by_const(KM_CARNIVOROUS_BAG));
                     makeknown(BAG_OF_TRICKS);
                     timepassed = 1;
@@ -1306,15 +1266,17 @@ lootcont:
 
                 You("carefully open %s...", the(xname(cobj)));
                 timepassed |= use_container(cobj, 0);
-                if (multi < 0) return 1;                /* chest trap */
+                if (multi < 0)
+                    return 1; /* chest trap */
             }
         }
-        if (any) c = 'y';
+        if (any)
+            c = 'y';
     } else if (Confusion()) {
-        if (u.ugold){
-            long contribution = rnd((int)min(LARGEST_INT,u.ugold));
+        if (u.ugold) {
+            long contribution = rnd((int)min(LARGEST_INT, u.ugold));
             struct obj *goldob = mkgoldobj(contribution);
-            if (IS_THRONE(levl[u.ux][u.uy].typ)){
+            if (IS_THRONE(levl[u.ux][u.uy].typ)) {
                 struct obj *coffers;
                 int pass;
                 /* find the original coffers chest, or any chest */
@@ -1322,14 +1284,14 @@ lootcont:
                     for (coffers = fobj; coffers; coffers = coffers->nobj)
                         if (coffers->otyp == CHEST && coffers->spe == pass)
                             goto gotit; /* two level break */
-gotit:
+                gotit:
+
                 if (coffers) {
                     verbalize("Thank you for your contribution to reduce the debt.");
-                    (void) add_to_container(coffers, goldob);
+                    (void)add_to_container(coffers, goldob);
                     coffers->owt = weight(coffers);
                 } else {
-                    struct monst *mon = makemon(courtmon(),
-                            u.ux, u.uy, NO_MM_FLAGS);
+                    struct monst *mon = makemon(courtmon(), u.ux, u.uy, NO_MM_FLAGS);
                     if (mon) {
                         mon->mgold += goldob->quan;
                         delobj(goldob);
@@ -1350,22 +1312,23 @@ gotit:
      * 3.3.1 introduced directional looting for some things.
      */
     if (c != 'y' && mon_beside(u.ux, u.uy)) {
-        if (!get_adjacent_loc("Loot in what direction?", "Invalid loot location",
-                    u.ux, u.uy, &cc)) return 0;
+        if (!get_adjacent_loc("Loot in what direction?", "Invalid loot location", u.ux, u.uy, &cc))
+            return 0;
         if (cc.x == u.ux && cc.y == u.uy) {
             underfoot = true;
             if (container_at(cc.x, cc.y, false))
                 goto lootcont;
-        } else
+        } else {
             underfoot = false;
+        }
         if (u.delta.z < 0) {
-            You("%s to loot on the %s.", dont_find_anything,
-                    ceiling(cc.x, cc.y));
+            You("%s to loot on the %s.", dont_find_anything, ceiling(cc.x, cc.y));
             timepassed = 1;
             return timepassed;
         }
         mtmp = m_at(cc.x, cc.y);
-        if (mtmp) timepassed = loot_mon(mtmp, &prev_inquiry, &prev_loot);
+        if (mtmp)
+            timepassed = loot_mon(mtmp);
 
         /* Preserve pre-3.3.1 behaviour for containers.
          * Adjust this if-block to allow container looting
@@ -1380,21 +1343,19 @@ gotit:
                     You("have to be at a container to loot it.");
                 }
             } else {
-                You("%s %sthere to loot.", dont_find_anything,
-                        (prev_inquiry || prev_loot) ? "else " : "");
+                //You("%s %sthere to loot.", dont_find_anything, (prev_inquiry || prev_loot) ? "else " : "");
                 return timepassed;
             }
         }
     } else if (c != 'y' && c != 'n') {
-        You("%s %s to loot.", dont_find_anything,
-                underfoot ? "here" : "there");
+        You("%s %s to loot.", dont_find_anything, underfoot ? "here" : "there");
     }
-    return (timepassed);
+    return timepassed;
 }
 
 /* loot_mon() returns amount of time passed.
  */
-int loot_mon (struct monst *mtmp, int *passed_info, bool *prev_loot) {
+int loot_mon(struct monst *mtmp) {
     int c = -1;
     int timepassed = 0;
     struct obj *otmp;
@@ -1405,16 +1366,14 @@ int loot_mon (struct monst *mtmp, int *passed_info, bool *prev_loot) {
     /*  *prev_loot is set to true if something was actually acquired in here. */
     if (mtmp && mtmp != u.usteed && (otmp = which_armor(mtmp, W_SADDLE))) {
         long unwornmask;
-        if (passed_info) *passed_info = 1;
         sprintf(qbuf, "Do you want to remove the saddle from %s?", "TODO: x_monnam");
         if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
             if (nolimbs(youmonst.data)) {
                 You_cant("do that without limbs."); /* not body_part(HAND) */
-                return (0);
+                return 0;
             }
             if (otmp->cursed) {
                 You("can't. The saddle seems to be stuck to %s.", "TODO: x_monnam");
-
                 /* the attempt costs you time */
                 return 1;
             }
@@ -1424,18 +1383,11 @@ int loot_mon (struct monst *mtmp, int *passed_info, bool *prev_loot) {
                 otmp->owornmask = 0L;
                 update_mon_intrinsics(mtmp, otmp, false, false);
             }
-            otmp = hold_another_object(otmp, "You drop %s!", doname(otmp),
-                    (const char *)0);
+            otmp = hold_another_object(otmp, "You drop %s!", doname(otmp), (const char *)0);
             timepassed = rnd(3);
-            if (prev_loot) *prev_loot = true;
         } else if (c == 'q') {
-            return (0);
+            return 0;
         }
-    }
-    /* 3.4.0 introduced the ability to pick things up from within swallower's stomach */
-    if (u.uswallow) {
-        int count = passed_info ? *passed_info : 0;
-        timepassed = pickup(count);
     }
     return timepassed;
 }
