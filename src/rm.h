@@ -476,7 +476,7 @@ struct levelflags {
     unsigned noteleport:1;
     unsigned hardfloor:1;
     unsigned nommap:1;
-    unsigned hero_memory:1;        /* hero has memory */
+    unsigned hero_memory:1;        /* true for everything but the water level */
     unsigned shortsighted:1;       /* monsters are shortsighted */
     unsigned graveyard:1;          /* has_morgue, but remains set */
     unsigned is_maze_lev:1;

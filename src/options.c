@@ -179,7 +179,6 @@ void initoptions(void) {
     for (i = 0; i < WARNCOUNT; i++)
         warnsyms[i] = def_warnsyms[i].sym;
     iflags.bouldersym = 0;
-    flags.warnlevel = 1;
     flags.warntype = 0L;
 
     /* assert( sizeof flags.inv_order == sizeof def_inv_order ); */

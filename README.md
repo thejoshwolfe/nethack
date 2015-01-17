@@ -138,7 +138,6 @@ And to make this project more approachable for developers:
  * Major code clean up.
    * Aesthetic changes: no Pascal-style argument declarations, no hard tabs, clearer identifier names.
    * Don't use the preprocessor for programming: no `#undef`, no `#include`ing yourself, no macro functions.
-   * Refactoring: minimize/eliminate global variables. Turn the game into a library with a clean interface.
-   * String manipulation: NUL-terminated `char*`s are awful. Write our own string library if we have to.
+   * General obvious stuff, like renaming things and deleting unsed things.
 
 Needless to say, we're abandoning all hope of cleanly merging changes for the standard game into this fork.

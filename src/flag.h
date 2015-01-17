@@ -62,7 +62,6 @@ struct flag {
 #define FULL_MOON       4
         unsigned no_of_wizards; /* 0, 1 or 2 (wizard and his shadow) */
         unsigned long warntype; /* warn_of_mon monster type M2 */
-        int      warnlevel;
         int      djinni_count, ghost_count;     /* potion effect tuning */
         int      pickup_burden;         /* maximum burden before prompt */
         char     inv_order[MAXOCLASSES];

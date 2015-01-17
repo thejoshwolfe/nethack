@@ -58,7 +58,7 @@ static bool sensemon(const struct monst * mon) {
  * vicinity, and a glyph representing the warning level is displayed.
  */
 static bool mon_warning(const struct monst * mon) {
-    return (Warning && !(mon)->mpeaceful && (distu((mon)->mx, (mon)->my) < 100) && (((int)((mon)->m_lev / 4)) >= flags.warnlevel));
+    return Warning && !mon->mpeaceful && (distu(mon->mx, mon->my) < 100) && ((int)mon->m_lev / 4 < 0);
 }
 
 /*

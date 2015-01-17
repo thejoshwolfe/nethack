@@ -286,24 +286,17 @@ void unmap_object (int x, int y) {
  *
  * Make whatever at this location show up.  This is only for non-living
  * things.  This will not handle feeling invisible objects correctly.
- *
- * Internal to display.c, this is a #define for speed.
  */
-#define _map_location(x,y,show)                                         \
-{                                                                       \
-    struct obj   *obj;                                          \
-    struct trap  *trap;                                 \
-                                                                        \
-    if ((obj = vobj_at(x,y)) && !covers_objects(x,y))                   \
-        map_object(obj,show);                                           \
-    else if ((trap = t_at(x,y)) && trap->tseen && !covers_traps(x,y))   \
-        map_trap(trap,show);                                            \
-    else                                                                \
-        map_background(x,y,show);                                       \
-}
+void map_location(int x, int y, int show) {
+    struct obj *obj;
+    struct trap *trap;
 
-void map_location (int x, int y, int show) {
-    _map_location(x,y,show);
+    if ((obj = vobj_at(x, y)) && !covers_objects(x, y))
+        map_object(obj, show);
+    else if ((trap = t_at(x, y)) && trap->tseen && !covers_traps(x, y))
+        map_trap(trap, show);
+    else
+        map_background(x, y, show);
 }
 
 #define DETECTED        2
@@ -420,7 +413,7 @@ static void display_monster (
  *
  * Do not call for worm tails.
  */
-static void display_warning (struct monst *mon) {
+static void display_warning (struct monst * mon) {
     int x = mon->mx, y = mon->my;
     int wl = (int) (mon->m_lev / 4);
     int glyph;
@@ -543,7 +536,7 @@ void feel_location (signed char x, signed char y) {
                 show_glyph(x, y, lev->glyph = cmap_to_glyph(S_corr));
         }
     } else {
-        _map_location(x, y, 1);
+        map_location(x, y, 1);
 
         if (Punished) {
             /*
@@ -618,7 +611,7 @@ void newsym(int x, int y) {
 
     /* Can physically see the location. */
     if (cansee(x, y)) {
-        NhRegion* reg = visible_region_at(x, y);
+        NhRegion * reg = visible_region_at(x, y);
 
         lev->waslit = (lev->lit != 0); /* remember lit condition */
 
@@ -628,11 +621,11 @@ void newsym(int x, int y) {
         }
         if (x == u.ux && y == u.uy) {
             if (senseself()) {
-                _map_location(x, y, 0); /* map *under* self */
+                map_location(x, y, 0); /* map *under* self */
                 display_self();
             } else {
                 /* we can see what is there */
-                _map_location(x, y, 1);
+                map_location(x, y, 1);
             }
             return;
         }
@@ -649,7 +642,7 @@ void newsym(int x, int y) {
                     trap->tseen = true;
                 }
             }
-            _map_location(x, y, 0); /* map under the monster */
+            map_location(x, y, 0); /* map under the monster */
             /* also gets rid of any invisibility glyph */
             display_monster(x, y, mon, see_it ? PHYSICALLY_SEEN : DETECTED, worm_tail);
             return;
@@ -662,7 +655,7 @@ void newsym(int x, int y) {
             map_invisible(x, y);
             return;
         }
-        _map_location(x, y, 1); /* map the location */
+        map_location(x, y, 1); /* map the location */
     } else {
         /* Can't see the location. */
         struct monst * mon;
@@ -671,13 +664,19 @@ void newsym(int x, int y) {
 
             if (senseself())
                 display_self();
-        } else if ((mon = m_at(x, y)) && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon) || (see_with_infrared(mon) && mon_visible(mon)))) || Detect_monsters()) && !is_worm_tail(mon, x, y)) {
+            return;
+        }
+        if ((mon = m_at(x, y)) && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon) || (see_with_infrared(mon) && mon_visible(mon)))) || Detect_monsters()) && !is_worm_tail(mon, x, y)) {
             /* Monsters are printed every time. */
             /* This also gets rid of any invisibility glyph */
             display_monster(x, y, mon, see_it ? 0 : DETECTED, 0);
-        } else if ((mon = m_at(x, y)) && mon_warning(mon) && !is_worm_tail(mon, x, y)) {
+            return;
+        }
+        if ((mon = m_at(x, y)) && mon_warning(mon) && !is_worm_tail(mon, x, y)) {
             display_warning(mon);
-        } else if (!lev->waslit) {
+            return;
+        }
+        if (!lev->waslit) {
             /*
              * If the location is remembered as being both dark (waslit is false)
              * and lit (glyph is a lit room or lit corridor) then it was either:
@@ -700,15 +699,16 @@ void newsym(int x, int y) {
              * These checks and changes must be here and not in back_to_glyph().
              * They are dependent on the position being out of sight.
              */
-            if (lev->glyph == cmap_to_glyph(S_litcorr) && lev->typ == CORR)
+            if (lev->glyph == cmap_to_glyph(S_litcorr) && lev->typ == CORR) {
                 show_glyph(x, y, lev->glyph = cmap_to_glyph(S_corr));
-            else if (lev->glyph == cmap_to_glyph(S_room) && lev->typ == ROOM)
+                return;
+            }
+            if (lev->glyph == cmap_to_glyph(S_room) && lev->typ == ROOM) {
                 show_glyph(x, y, lev->glyph = cmap_to_glyph(S_stone));
-            else
-                goto show_mem;
-        } else {
-            show_mem: show_glyph(x, y, lev->glyph);
+                return;
+            }
         }
+        show_glyph(x, y, lev->glyph);
     }
 }
 

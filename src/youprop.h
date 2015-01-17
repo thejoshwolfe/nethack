@@ -249,7 +249,7 @@ static long EHunger(void) {
     return u.uprops[HUNGER].extrinsic;
 }
 static bool Hunger(void) {
-    return (HHunger() || EHunger());
+    return HHunger() || EHunger();
 }
 
 
@@ -264,8 +264,7 @@ static long ESee_invisible(void) {
     return u.uprops[SEE_INVIS].extrinsic;
 }
 static bool See_invisible(void) {
-    return (get_HSee_invisible() || ESee_invisible()
-            || perceives(youmonst.data));
+    return get_HSee_invisible() || ESee_invisible() || perceives(youmonst.data);
 }
 
 #define HTelepat                u.uprops[TELEPAT].intrinsic
@@ -304,7 +303,8 @@ static bool See_invisible(void) {
 #define HDetect_monsters        u.uprops[DETECT_MONSTERS].intrinsic
 #define EDetect_monsters        u.uprops[DETECT_MONSTERS].extrinsic
 static bool Detect_monsters(void) {
-    return (HDetect_monsters|| EDetect_monsters);}
+    return HDetect_monsters|| EDetect_monsters;
+}
 
 
 /*** Appearance and behavior ***/
