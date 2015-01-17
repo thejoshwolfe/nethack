@@ -1,6 +1,9 @@
+#ifndef DISPLAY_UTIL_H
+#define DISPLAY_UTIL_H
 
 #include "display.h"
 
+#include "vision_util.h"
 #include "dbridge.h"
 #include "decl.h"
 #include "flag.h"
@@ -16,7 +19,6 @@
 #include "worm.h"
 #include "you.h"
 #include "youprop.h"
-
 
 static struct obj * vobj_at(signed char x, signed char y) {
     return level.objects[x][y];
@@ -351,3 +353,4 @@ static void display_self(void) {
         /* else M_AP_MONSTER */ monnum_to_glyph(youmonst.mappearance));
 }
 
+#endif /* DISPLAY_UTIL_H */

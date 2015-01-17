@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "vision_util.h"
 #include "light.h"
 #include "artifact.h"
 #include "decl.h"
@@ -68,11 +69,6 @@ static light_source *light_base = 0;
 
 static void write_ls(int, light_source *);
 static int maybe_write_ls(int, int, bool);
-
-/* imported from vision.c, for small circles */
-extern char circle_data[];
-extern char circle_start[];
-
 
 /* Create a new light source.  */
 void

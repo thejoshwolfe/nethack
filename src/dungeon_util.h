@@ -1,3 +1,6 @@
+#ifndef DUNGEON_UTIL_H
+#define DUNGEON_UTIL_H
+
 #include "decl.h"
 
 /* macros for accesing the dungeon levels by their old names */
@@ -84,3 +87,4 @@
 
 #define IS_SHOP(x)      (rooms[x].rtype >= SHOPBASE)
 
+#endif /* DUNGEON_UTIL_H */

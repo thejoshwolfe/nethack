@@ -408,7 +408,7 @@ static int dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist
                     } else if(gtyp == UNDEF && in_masters_sight &&
                               !dog_has_minvent &&
                               (!levl[omx][omy].lit || levl[u.ux][u.uy].lit) &&
-                              (otyp == MANFOOD || m_cansee(mtmp, nx, ny)) &&
+                              (otyp == MANFOOD || clear_path(mtmp->mx,mtmp->my,nx,ny)) &&
                               edog->apport > rn2(8) &&
                               can_carry(mtmp,obj)) {
                         gx = nx;

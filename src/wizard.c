@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "vision_util.h"
 #include "dungeon_util.h"
 #include "coord.h"
 #include "decl.h"

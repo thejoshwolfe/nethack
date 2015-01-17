@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+#include "vision_util.h"
 #include "dungeon_util.h"
 #include "cmd.h"
 #include "dbridge.h"
