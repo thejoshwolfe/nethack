@@ -165,9 +165,9 @@ static void set_HStun(long hStun) {
     u.uprops[STUNNED].intrinsic = hStun;
 }
 static bool Stunned(void) {
+    /* Note: birds will also be stunned */
     return (get_HStun() || u.umonnum == PM_STALKER || youmonst.data->mlet == S_BAT);
 }
-                /* Note: birds will also be stunned */
 
 static long get_HConfusion(void) {
     return u.uprops[CONFUSION].intrinsic;
@@ -303,7 +303,8 @@ static bool See_invisible(void) {
 
 #define HDetect_monsters        u.uprops[DETECT_MONSTERS].intrinsic
 #define EDetect_monsters        u.uprops[DETECT_MONSTERS].extrinsic
-#define Detect_monsters         (HDetect_monsters || EDetect_monsters)
+static bool Detect_monsters(void) {
+    return (HDetect_monsters|| EDetect_monsters);}
 
 
 /*** Appearance and behavior ***/

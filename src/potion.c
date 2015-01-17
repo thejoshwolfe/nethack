@@ -624,7 +624,7 @@ int peffects (struct obj *otmp) {
             if (otmp->blessed) {
                 int x, y;
 
-                if (Detect_monsters) nothing++;
+                if (Detect_monsters()) nothing++;
                 unkn++;
                 /* after a while, repeated uses become less effective */
                 if (HDetect_monsters >= 300L)

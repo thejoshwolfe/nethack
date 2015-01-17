@@ -482,7 +482,7 @@ void dump_enlightenment (int final) {
     if (Searching) dump(youhad, "automatic searching");
     if (Clairvoyant) dump(youwere, "clairvoyant");
     if (Infravision) dump(youhad, "infravision");
-    if (Detect_monsters)
+    if (Detect_monsters())
         dump(youwere, "sensing the presence of monsters");
     if (u.umconf) dump(youwere, "going to confuse monsters");
 

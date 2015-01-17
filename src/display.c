@@ -587,13 +587,13 @@ void feel_location (signed char x, signed char y) {
  *
  * Possibly put a new glyph at the given location.
  */
-void newsym (int x, int y) {
-    struct monst *mon;
-    struct rm *lev = &(levl[x][y]);
+void newsym(int x, int y) {
+    struct rm * lev = &levl[x][y];
     int see_it;
     signed char worm_tail;
 
-    if (in_mklev) return;
+    if (in_mklev)
+        return;
 
     /* only permit updating the hero when swallowed */
     if (u.uswallow) {
@@ -604,115 +604,102 @@ void newsym (int x, int y) {
     if (Underwater && !Is_waterlevel(&u.uz)) {
         /* don't do anything unless (x,y) is an adjacent underwater position */
         int dx, dy;
-        if (!is_pool(x,y)) return;
-        dx = x - u.ux;  if (dx < 0) dx = -dx;
-        dy = y - u.uy;  if (dy < 0) dy = -dy;
-        if (dx > 1 || dy > 1) return;
+        if (!is_pool(x, y))
+            return;
+        dx = x - u.ux;
+        if (dx < 0)
+            dx = -dx;
+        dy = y - u.uy;
+        if (dy < 0)
+            dy = -dy;
+        if (dx > 1 || dy > 1)
+            return;
     }
 
     /* Can physically see the location. */
-    if (cansee(x,y)) {
-        NhRegion* reg = visible_region_at(x,y);
-        /*
-         * Don't use templit here:  E.g.
-         *
-         *      lev->waslit = !!(lev->lit || templit(x,y));
-         *
-         * Otherwise we have the "light pool" problem, where non-permanently
-         * lit areas just out of sight stay remembered as lit.  They should
-         * re-darken.
-         *
-         * Perhaps ALL areas should revert to their "unlit" look when
-         * out of sight.
-         */
-        lev->waslit = (lev->lit!=0);    /* remember lit condition */
+    if (cansee(x, y)) {
+        NhRegion* reg = visible_region_at(x, y);
+
+        lev->waslit = (lev->lit != 0); /* remember lit condition */
 
         if (reg != NULL && ACCESSIBLE(lev->typ)) {
-            show_region(reg,x,y);
+            show_region(reg, x, y);
             return;
         }
         if (x == u.ux && y == u.uy) {
             if (senseself()) {
-                _map_location(x,y,0);   /* map *under* self */
+                _map_location(x, y, 0); /* map *under* self */
                 display_self();
-            } else
+            } else {
                 /* we can see what is there */
-                _map_location(x,y,1);
-        }
-        else {
-            mon = m_at(x,y);
-            worm_tail = is_worm_tail(mon, x, y);
-            see_it = mon && (worm_tail
-                    ? (!mon->minvis || See_invisible())
-                    : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
-            if (mon && (see_it || (!worm_tail && Detect_monsters))) {
-                if (mon->mtrapped) {
-                    struct trap *trap = t_at(x, y);
-                    int tt = trap ? trap->ttyp : NO_TRAP;
-
-                    /* if monster is in a physical trap, you see the trap too */
-                    if (tt == BEAR_TRAP || tt == PIT ||
-                            tt == SPIKED_PIT ||tt == WEB) {
-                        trap->tseen = true;
-                    }
-                }
-                _map_location(x,y,0);   /* map under the monster */
-                /* also gets rid of any invisibility glyph */
-                display_monster(x, y, mon, see_it ? PHYSICALLY_SEEN : DETECTED, worm_tail);
+                _map_location(x, y, 1);
             }
-            else if (mon && mon_warning(mon) && !is_worm_tail(mon, x, y))
-                display_warning(mon);
-            else if (glyph_is_invisible(levl[x][y].glyph))
-                map_invisible(x, y);
-            else
-                _map_location(x,y,1);   /* map the location */
+            return;
         }
-    }
+        struct monst * mon = m_at(x, y);
+        worm_tail = is_worm_tail(mon, x, y);
+        see_it = mon && (worm_tail ? (!mon->minvis || See_invisible()) : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
+        if (mon && (see_it || (!worm_tail && Detect_monsters()))) {
+            if (mon->mtrapped) {
+                struct trap *trap = t_at(x, y);
+                int tt = trap ? trap->ttyp : NO_TRAP;
 
-    /* Can't see the location. */
-    else {
+                /* if monster is in a physical trap, you see the trap too */
+                if (tt == BEAR_TRAP || tt == PIT || tt == SPIKED_PIT || tt == WEB) {
+                    trap->tseen = true;
+                }
+            }
+            _map_location(x, y, 0); /* map under the monster */
+            /* also gets rid of any invisibility glyph */
+            display_monster(x, y, mon, see_it ? PHYSICALLY_SEEN : DETECTED, worm_tail);
+            return;
+        }
+        if (mon && mon_warning(mon) && !is_worm_tail(mon, x, y)) {
+            display_warning(mon);
+            return;
+        }
+        if (glyph_is_invisible(levl[x][y].glyph)) {
+            map_invisible(x, y);
+            return;
+        }
+        _map_location(x, y, 1); /* map the location */
+    } else {
+        /* Can't see the location. */
+        struct monst * mon;
         if (x == u.ux && y == u.uy) {
-            feel_location(u.ux, u.uy);          /* forces an update */
+            feel_location(u.ux, u.uy); /* forces an update */
 
-            if (senseself()) display_self();
-        }
-        else if ((mon = m_at(x,y))
-                && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon)
-                            || (see_with_infrared(mon) && mon_visible(mon))))
-                    || Detect_monsters)
-                && !is_worm_tail(mon, x, y)) {
+            if (senseself())
+                display_self();
+        } else if ((mon = m_at(x, y)) && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon) || (see_with_infrared(mon) && mon_visible(mon)))) || Detect_monsters()) && !is_worm_tail(mon, x, y)) {
             /* Monsters are printed every time. */
             /* This also gets rid of any invisibility glyph */
             display_monster(x, y, mon, see_it ? 0 : DETECTED, 0);
-        }
-        else if ((mon = m_at(x,y)) && mon_warning(mon) &&
-                !is_worm_tail(mon, x, y)) {
+        } else if ((mon = m_at(x, y)) && mon_warning(mon) && !is_worm_tail(mon, x, y)) {
             display_warning(mon);
-        }
-
-        /*
-         * If the location is remembered as being both dark (waslit is false)
-         * and lit (glyph is a lit room or lit corridor) then it was either:
-         *
-         *      (1) A dark location that the hero could see through night
-         *          vision.
-         *
-         *      (2) Darkened while out of the hero's sight.  This can happen
-         *          when cursed scroll of light is read.
-         *
-         * In either case, we have to manually correct the hero's memory to
-         * match waslit.  Deciding when to change waslit is non-trivial.
-         *
-         *  Note:  If flags.lit_corridor is set, then corridors act like room
-         *         squares.  That is, they light up if in night vision range.
-         *         If flags.lit_corridor is not set, then corridors will
-         *         remain dark unless lit by a light spell and may darken
-         *         again, as discussed above.
-         *
-         * These checks and changes must be here and not in back_to_glyph().
-         * They are dependent on the position being out of sight.
-         */
-        else if (!lev->waslit) {
+        } else if (!lev->waslit) {
+            /*
+             * If the location is remembered as being both dark (waslit is false)
+             * and lit (glyph is a lit room or lit corridor) then it was either:
+             *
+             *      (1) A dark location that the hero could see through night
+             *          vision.
+             *
+             *      (2) Darkened while out of the hero's sight.  This can happen
+             *          when cursed scroll of light is read.
+             *
+             * In either case, we have to manually correct the hero's memory to
+             * match waslit.  Deciding when to change waslit is non-trivial.
+             *
+             *  Note:  If flags.lit_corridor is set, then corridors act like room
+             *         squares.  That is, they light up if in night vision range.
+             *         If flags.lit_corridor is not set, then corridors will
+             *         remain dark unless lit by a light spell and may darken
+             *         again, as discussed above.
+             *
+             * These checks and changes must be here and not in back_to_glyph().
+             * They are dependent on the position being out of sight.
+             */
             if (lev->glyph == cmap_to_glyph(S_litcorr) && lev->typ == CORR)
                 show_glyph(x, y, lev->glyph = cmap_to_glyph(S_corr));
             else if (lev->glyph == cmap_to_glyph(S_room) && lev->typ == ROOM)
@@ -720,8 +707,7 @@ void newsym (int x, int y) {
             else
                 goto show_mem;
         } else {
-show_mem:
-            show_glyph(x, y, lev->glyph);
+            show_mem: show_glyph(x, y, lev->glyph);
         }
     }
 }

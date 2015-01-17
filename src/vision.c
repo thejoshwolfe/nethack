@@ -942,16 +942,6 @@ static void * varg;
  * Elements for Computer Graphics_, by David F. Rogers.  McGraw-Hill, 1985.
  */
 
-static int _q1_path(int,int,int,int);
-static int _q2_path(int,int,int,int);
-static int _q3_path(int,int,int,int);
-static int _q4_path(int,int,int,int);
-
-#define q1_path(sy,sx,y,x,dummy) result = _q1_path(sy,sx,y,x)
-#define q2_path(sy,sx,y,x,dummy) result = _q2_path(sy,sx,y,x)
-#define q3_path(sy,sx,y,x,dummy) result = _q3_path(sy,sx,y,x)
-#define q4_path(sy,sx,y,x,dummy) result = _q4_path(sy,sx,y,x)
-
 /*
  * Quadrant I (step < 0).
  */
@@ -1132,40 +1122,28 @@ _q3_path (int srow, int scol, int y2, int x2)
  *              m_canseeu()
  *              do_light_sources()
  */
-bool 
-clear_path (int col1, int row1, int col2, int row2)
-{
-    int result;
-
-    if(col1 < col2) {
-        if(row1 > row2) {
-            q1_path(row1,col1,row2,col2,cleardone);
+bool clear_path(int col1, int row1, int col2, int row2) {
+    if (col1 < col2) {
+        if (row1 > row2) {
+            return _q1_path(row1, col1, row2, col2);
         } else {
-            q4_path(row1,col1,row2,col2,cleardone);
+            return _q4_path(row1, col1, row2, col2);
         }
     } else {
-        if(row1 > row2) {
-            q2_path(row1,col1,row2,col2,cleardone);
-        } else if(row1 == row2 && col1 == col2) {
-            result = 1;
+        if (row1 > row2) {
+            return _q2_path(row1, col1, row2, col2);
+        } else if (row1 == row2 && col1 == col2) {
+            return 1;
         } else {
-            q3_path(row1,col1,row2,col2,cleardone);
+            return _q3_path(row1, col1, row2, col2);
         }
     }
-    return((bool)result);
 }
 
 /*===========================================================================*\
                             GENERAL LINE OF SIGHT
                                 Algorithm C
 \*===========================================================================*/
-
-/*
- * Defines local to Algorithm C.
- */
-static void right_side(int,int,int,char*);
-static void left_side(int,int,int,char*);
-
 
 /*
  * Mark positions as visible on one quadrant of the right side.  The
@@ -1252,9 +1230,9 @@ right_side (
              */
             for (; left <= right_edge; left++) {
                 if (step < 0) {
-                    q1_path(start_row,start_col,row,left,rside1);
+                    result = _q1_path(start_row,start_col,row,left);
                 } else {
-                    q4_path(start_row,start_col,row,left,rside1);
+                    result = _q4_path(start_row,start_col,row,left);
                 }
 rside1:                                 /* used if q?_path() is a macro */
                 if (result) break;
@@ -1303,9 +1281,9 @@ rside1:                                 /* used if q?_path() is a macro */
         if (right_mark < right_edge) {
             for (right = right_mark; right <= right_edge; right++) {
                 if (step < 0) {
-                    q1_path(start_row,start_col,row,right,rside2);
+                    result = _q1_path(start_row,start_col,row,right);
                 } else {
-                    q4_path(start_row,start_col,row,right,rside2);
+                    result = _q4_path(start_row,start_col,row,right);
                 }
 rside2:                                 /* used if q?_path() is a macro */
                 if (!result) break;
@@ -1400,9 +1378,9 @@ left_side (int row, int left_mark, int right, char *limits)
             /* Find the right side. */
             for (; right >= left_edge; right--) {
                 if (step < 0) {
-                    q2_path(start_row,start_col,row,right,lside1);
+                    result = _q2_path(start_row,start_col,row,right);
                 } else {
-                    q3_path(start_row,start_col,row,right,lside1);
+                    result = _q3_path(start_row,start_col,row,right);
                 }
 lside1:                                 /* used if q?_path() is a macro */
                 if (result) break;
@@ -1429,9 +1407,9 @@ lside1:                                 /* used if q?_path() is a macro */
         if (left_mark > left_edge) {
             for (left = left_mark; left >= left_edge; --left) {
                 if (step < 0) {
-                    q2_path(start_row,start_col,row,left,lside2);
+                    result = _q2_path(start_row,start_col,row,left);
                 } else {
-                    q3_path(start_row,start_col,row,left,lside2);
+                    result = _q3_path(start_row,start_col,row,left);
                 }
 lside2:                                 /* used if q?_path() is a macro */
                 if (!result) break;

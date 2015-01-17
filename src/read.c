@@ -1453,15 +1453,13 @@ id:
 /*
  * Low-level lit-field update routine.
  */
-static void
-set_lit (int x, int y, void *val)
-{
-        if (val)
-            levl[x][y].lit = 1;
-        else {
-            levl[x][y].lit = 0;
-            snuff_light_source(x, y);
-        }
+static void set_lit(int x, int y, void *val) {
+    if (val)
+        levl[x][y].lit = 1;
+    else {
+        levl[x][y].lit = 0;
+        snuff_light_source(x, y);
+    }
 }
 
 void litroom (bool on, struct obj *obj) {
