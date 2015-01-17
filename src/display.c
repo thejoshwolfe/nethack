@@ -136,7 +136,6 @@
 #include "util.h"
 #include "worm.h"
 
-static void display_monster(signed char,signed char,struct monst *,int,signed char);
 static int swallow_to_glyph(int, int);
 static void display_warning(struct monst *);
 
@@ -322,7 +321,7 @@ static void display_monster (
     signed char y,      /* display position */
     struct monst *mon,  /* monster to display */
     int sightflags,             /* 1 if the monster is physically seen */
-    signed char worm_tail       /* mon is actually a worm tail */
+    bool worm_tail       /* mon is actually a worm tail */
 )
 {
     bool mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
@@ -582,8 +581,6 @@ void feel_location (signed char x, signed char y) {
  */
 void newsym(int x, int y) {
     struct rm * lev = &levl[x][y];
-    int see_it;
-    signed char worm_tail;
 
     if (in_mklev)
         return;
@@ -630,8 +627,8 @@ void newsym(int x, int y) {
             return;
         }
         struct monst * mon = m_at(x, y);
-        worm_tail = is_worm_tail(mon, x, y);
-        see_it = mon && (worm_tail ? (!mon->minvis || See_invisible()) : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
+        bool worm_tail = is_worm_tail(mon, x, y);
+        int see_it = mon && (worm_tail ? (!mon->minvis || See_invisible()) : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
         if (mon && (see_it || (!worm_tail && Detect_monsters()))) {
             if (mon->mtrapped) {
                 struct trap *trap = t_at(x, y);
@@ -658,7 +655,6 @@ void newsym(int x, int y) {
         map_location(x, y, 1); /* map the location */
     } else {
         /* Can't see the location. */
-        struct monst * mon;
         if (x == u.ux && y == u.uy) {
             feel_location(u.ux, u.uy); /* forces an update */
 
@@ -666,6 +662,8 @@ void newsym(int x, int y) {
                 display_self();
             return;
         }
+        struct monst * mon;
+        int see_it;
         if ((mon = m_at(x, y)) && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon) || (see_with_infrared(mon) && mon_visible(mon)))) || Detect_monsters()) && !is_worm_tail(mon, x, y)) {
             /* Monsters are printed every time. */
             /* This also gets rid of any invisibility glyph */
