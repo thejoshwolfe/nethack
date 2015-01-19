@@ -413,9 +413,6 @@ enum {
     SVALL = 0xFF,
 };
 
-
-#define disturbed       horizontal  /* a grave that has been disturbed */
-
 struct damage {
     struct damage *next;
     long when, cost;

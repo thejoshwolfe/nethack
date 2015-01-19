@@ -549,9 +549,9 @@ int doengrave (void) {
             You("would only make a small smudge on the %s.",
                     surface(u.ux, u.uy));
             return(0);
-        } else if (!levl[u.ux][u.uy].disturbed) {
+        } else if (!levl[u.ux][u.uy].horizontal) {
             You("disturb the undead!");
-            levl[u.ux][u.uy].disturbed = 1;
+            levl[u.ux][u.uy].horizontal = 1;
             (void) makemon(&mons[PM_GHOUL], u.ux, u.uy, NO_MM_FLAGS);
             exercise(A_WIS, false);
             return(1);
