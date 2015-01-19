@@ -364,6 +364,12 @@ void move_bc (
     }
 }
 
+static bool CHAIN_IN_MIDDLE(signed char x, signed char y, signed char chx, signed char chy) {
+    return distmin(x, y, chx, chy) <= 1 && distmin(chx, chy, uball->ox, uball->oy) <= 1;
+}
+static bool IS_CHAIN_ROCK(signed char x, signed char y) {
+    return IS_ROCK(levl[x][y].typ) || (IS_DOOR(levl[x][y].typ) && (levl[x][y].flags & (D_CLOSED | D_LOCKED)));
+}
 /* return true if the caller needs to place the ball and chain down again
  *
  *  Should not be called while swallowed.  Should be called before movement,
@@ -410,11 +416,6 @@ bool drag_ball(signed char x, signed char y,
                 }
                 return true;
             }
-#define CHAIN_IN_MIDDLE(chx, chy) \
-(distmin(x, y, chx, chy) <= 1 && distmin(chx, chy, uball->ox, uball->oy) <= 1)
-#define IS_CHAIN_ROCK(x,y) \
-(IS_ROCK(levl[x][y].typ) || (IS_DOOR(levl[x][y].typ) && \
-      (levl[x][y].flags & (D_CLOSED|D_LOCKED))))
 /* Don't ever move the chain into solid rock.  If we have to, then instead
  * undo the move_bc() and jump to the drag ball code.  Note that this also
  * means the "cannot carry and drag" message will not appear, since unless we
@@ -515,7 +516,7 @@ bool drag_ball(signed char x, signed char y,
                 /* ball is two spaces horizontal or vertical from player; move*/
                 /* chain inbetween *unless* current chain position is OK */
                 case 4:
-                    if (CHAIN_IN_MIDDLE(uchain->ox, uchain->oy))
+                    if (CHAIN_IN_MIDDLE(x, y, uchain->ox, uchain->oy))
                         break;
                     *chainx = (x + uball->ox)/2;
                     *chainy = (y + uball->oy)/2;
@@ -546,10 +547,10 @@ bool drag_ball(signed char x, signed char y,
                 case 1:
                 case 0:
                     /* do nothing if possible */
-                    if (CHAIN_IN_MIDDLE(uchain->ox, uchain->oy))
+                    if (CHAIN_IN_MIDDLE(x, y, uchain->ox, uchain->oy))
                         break;
                     /* otherwise try to drag chain to player's old position */
-                    if (CHAIN_IN_MIDDLE(u.ux, u.uy)) {
+                    if (CHAIN_IN_MIDDLE(x, y, u.ux, u.uy)) {
                         *chainx = u.ux;
                         *chainy = u.uy;
                         break;
