@@ -246,11 +246,11 @@ enum {
  */
 #define F_LOOTED        1
 #define F_WARNED        2
-#define FOUNTAIN_IS_WARNED(x,y)         (levl[x][y].looted & F_WARNED)
-#define FOUNTAIN_IS_LOOTED(x,y)         (levl[x][y].looted & F_LOOTED)
-#define SET_FOUNTAIN_WARNED(x,y)        levl[x][y].looted |= F_WARNED;
-#define SET_FOUNTAIN_LOOTED(x,y)        levl[x][y].looted |= F_LOOTED;
-#define CLEAR_FOUNTAIN_LOOTED(x,y)      levl[x][y].looted &= ~F_LOOTED;
+#define FOUNTAIN_IS_WARNED(x,y)         (levl[x][y].flags & F_WARNED)
+#define FOUNTAIN_IS_LOOTED(x,y)         (levl[x][y].flags & F_LOOTED)
+#define SET_FOUNTAIN_WARNED(x,y)        levl[x][y].flags |= F_WARNED;
+#define SET_FOUNTAIN_LOOTED(x,y)        levl[x][y].flags |= F_LOOTED;
+#define CLEAR_FOUNTAIN_LOOTED(x,y)      levl[x][y].flags &= ~F_LOOTED;
 
 /*
  * Doors are even worse :-) The special warning has a side effect
@@ -414,7 +414,6 @@ enum {
 };
 
 
-#define looted          flags
 #define icedpool        flags
 
 #define blessedftn      horizontal  /* a fountain that grants attribs */

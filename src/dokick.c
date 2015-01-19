@@ -910,7 +910,7 @@ dokick (void)
                         }
                         exercise(A_DEX, true);
                         return(1);
-                    } else if(Luck > 0 && !rn2(3) && !maploc->looted) {
+                    } else if(Luck > 0 && !rn2(3) && !maploc->flags) {
                         (void) mkgold((long) rn1(201, 300), x, y);
                         i = Luck + 1;
                         if(i > 6) i = 6;
@@ -924,7 +924,7 @@ dokick (void)
                             newsym(x, y);
                         }
                         /* prevent endless milking */
-                        maploc->looted = T_LOOTED;
+                        maploc->flags = T_LOOTED;
                         return(1);
                     } else if (!rn2(4)) {
                         if(dunlev(&u.uz) < dunlevs_in_dungeon(&u.uz)) {
@@ -966,7 +966,7 @@ dokick (void)
                             You_hear("a low buzzing."); /* a warning */
                         goto ouch;
                     }
-                    if (rn2(15) && !(maploc->looted & TREE_LOOTED) &&
+                    if (rn2(15) && !(maploc->flags & TREE_LOOTED) &&
                           (treefruit = rnd_treefruit_at(x, y))) {
                         long nfruit = 8L-rnl(7), nfall;
                         short frtype = treefruit->otyp;
@@ -988,9 +988,9 @@ dokick (void)
                         exercise(A_DEX, true);
                         exercise(A_WIS, true);  /* discovered a new food source! */
                         newsym(x, y);
-                        maploc->looted |= TREE_LOOTED;
+                        maploc->flags |= TREE_LOOTED;
                         return(1);
-                    } else if (!(maploc->looted & TREE_SWARM)) {
+                    } else if (!(maploc->flags & TREE_SWARM)) {
                         int cnt = rnl(4) + 2;
                         int made = 0;
                         coord mm;
@@ -1005,7 +1005,7 @@ dokick (void)
                             pline("You've attracted the tree's former occupants!");
                         else
                             You("smell stale honey.");
-                        maploc->looted |= TREE_SWARM;
+                        maploc->flags |= TREE_SWARM;
                         return(1);
                     }
                     goto ouch;
@@ -1022,7 +1022,7 @@ dokick (void)
                         else pline("Klunk!");
                         exercise(A_DEX, true);
                         return(1);
-                    } else if(!(maploc->looted & S_LPUDDING) && !rn2(3) &&
+                    } else if(!(maploc->flags & S_LPUDDING) && !rn2(3) &&
                           !(mvitals[PM_BLACK_PUDDING].mvflags & G_GONE)) {
                         if (Blind())
                             You_hear("a gushing sound.");
@@ -1033,30 +1033,30 @@ dokick (void)
                                          x, y, NO_MM_FLAGS);
                         exercise(A_DEX, true);
                         newsym(x,y);
-                        maploc->looted |= S_LPUDDING;
+                        maploc->flags |= S_LPUDDING;
                         return(1);
-                    } else if(!(maploc->looted & S_LDWASHER) && !rn2(3) &&
+                    } else if(!(maploc->flags & S_LDWASHER) && !rn2(3) &&
                               !(mvitals[washerndx].mvflags & G_GONE)) {
                         /* can't resist... */
                         pline("%s returns!", (Blind() ? Something :
                                                         "The dish washer"));
                         if (makemon(&mons[washerndx], x, y, NO_MM_FLAGS))
                             newsym(x,y);
-                        maploc->looted |= S_LDWASHER;
+                        maploc->flags |= S_LDWASHER;
                         exercise(A_DEX, true);
                         return(1);
                     } else if(!rn2(3)) {
                         pline("Flupp!  %s.", (Blind() ?
                                       "You hear a sloshing sound" :
                                       "Muddy waste pops up from the drain"));
-                        if(!(maploc->looted & S_LRING)) { /* once per sink */
+                        if(!(maploc->flags & S_LRING)) { /* once per sink */
                             if (!Blind())
                                 You("see a ring shining in its midst.");
                             (void) mkobj_at(RING_CLASS, x, y, true);
                             newsym(x, y);
                             exercise(A_DEX, true);
                             exercise(A_WIS, true);      /* a discovery! */
-                            maploc->looted |= S_LRING;
+                            maploc->flags |= S_LRING;
                         }
                         return(1);
                     }
@@ -1174,12 +1174,12 @@ dumb:
                         } else {
                             You_hear("someone yell:");
                         }
-                        if(levl[x][y].looted & D_WARNED) {
+                        if(levl[x][y].flags & D_WARNED) {
                             verbalize("Halt, vandal!  You're under arrest!");
                             angry_guards(false);
                         } else {
                             verbalize("Hey, stop damaging that door!");
-                            levl[x][y].looted |= D_WARNED;
+                            levl[x][y].flags |= D_WARNED;
                         }
                         break;
                     }

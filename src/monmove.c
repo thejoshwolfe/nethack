@@ -120,12 +120,12 @@ static void watch_on_duty (struct monst *mtmp) {
                 char name[BUFSZ];
                 Amonnam(name, BUFSZ, mtmp);
                 pline("%s yells:", name);
-                if(levl[x][y].looted & D_WARNED) {
+                if(levl[x][y].flags & D_WARNED) {
                     verbalize("Halt, thief!  You're under arrest!");
                     (void) angry_guards(!(flags.soundok));
                 } else {
                     verbalize("Hey, stop picking that lock!");
-                    levl[x][y].looted |=  D_WARNED;
+                    levl[x][y].flags |=  D_WARNED;
                 }
                 stop_occupation();
             }

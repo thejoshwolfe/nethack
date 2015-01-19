@@ -221,7 +221,7 @@ void dryup (signed char x, signed char y, bool isyou) {
         }
         /* replace the fountain with ordinary floor */
         levl[x][y].typ = ROOM;
-        levl[x][y].looted = 0;
+        levl[x][y].flags = 0;
         levl[x][y].blessedftn = 0;
         if (cansee(x,y)) pline_The("fountain dries up!");
         /* The location is seen if the hero/monster is invisible */
@@ -423,7 +423,7 @@ dipfountain (struct obj *obj)
                         exercise(A_WIS, true);
                 }
                 levl[u.ux][u.uy].typ = ROOM;
-                levl[u.ux][u.uy].looted = 0;
+                levl[u.ux][u.uy].flags = 0;
                 newsym(u.ux, u.uy);
                 level.flags.nfountains--;
                 if(in_town(u.ux, u.uy))
@@ -567,10 +567,10 @@ void drinksink (void) {
                 (void) dopotion(otmp);
                 obfree(otmp, (struct obj *)0);
                 break;
-        case 5: if (!(levl[u.ux][u.uy].looted & S_LRING)) {
+        case 5: if (!(levl[u.ux][u.uy].flags & S_LRING)) {
                     You("find a ring in the sink!");
                     (void) mkobj_at(RING_CLASS, u.ux, u.uy, true);
-                    levl[u.ux][u.uy].looted |= S_LRING;
+                    levl[u.ux][u.uy].flags |= S_LRING;
                     exercise(A_WIS, true);
                     newsym(u.ux,u.uy);
                 } else pline("Some dirty water backs up in the drain.");
