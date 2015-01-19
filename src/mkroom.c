@@ -462,9 +462,9 @@ mktemple (void)
         shrine_spot = shrine_pos((sroom - rooms) + ROOMOFFSET);
         lev = &levl[shrine_spot->x][shrine_spot->y];
         lev->typ = ALTAR;
-        lev->altarmask = induced_align(80);
+        lev->flags = induced_align(80);
         priestini(&u.uz, sroom, shrine_spot->x, shrine_spot->y, false);
-        lev->altarmask |= AM_SHRINE;
+        lev->flags |= AM_SHRINE;
         level.flags.has_temple = 1;
 }
 

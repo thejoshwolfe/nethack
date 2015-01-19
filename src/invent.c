@@ -1949,7 +1949,7 @@ const char * dfeature_at (int x, int y, char *buf) {
             cmap = S_sink;                              /* "sink" */
         else if (IS_ALTAR(ltyp)) {
             sprintf(altbuf, "altar to %s (%s)", a_gname(),
-                    align_str(Amask2align(lev->altarmask & ~AM_SHRINE)));
+                    align_str(Amask2align(lev->flags & ~AM_SHRINE)));
             dfeature = altbuf;
         } else if ((x == xupstair && y == yupstair) ||
                  (x == sstairs.sx && y == sstairs.sy && sstairs.up))

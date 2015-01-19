@@ -219,7 +219,7 @@ void priestini ( d_level *lvl, struct mkroom *sroom, int sx, int sy, bool sanctu
                          sx + 1, sy, NO_MM_FLAGS);
         if (priest) {
                 EPRI(priest)->shroom = (sroom - rooms) + ROOMOFFSET;
-                EPRI(priest)->shralign = Amask2align(levl[sx][sy].altarmask);
+                EPRI(priest)->shralign = Amask2align(levl[sx][sy].flags);
                 EPRI(priest)->shrpos.x = sx;
                 EPRI(priest)->shrpos.y = sy;
                 assign_level(&(EPRI(priest)->shrlevel), lvl);
@@ -325,9 +325,9 @@ static bool has_shrine (struct monst *pri) {
         if(!pri)
                 return(false);
         lev = &levl[EPRI(pri)->shrpos.x][EPRI(pri)->shrpos.y];
-        if (!IS_ALTAR(lev->typ) || !(lev->altarmask & AM_SHRINE))
+        if (!IS_ALTAR(lev->typ) || !(lev->flags & AM_SHRINE))
                 return(false);
-        return((bool)(EPRI(pri)->shralign == Amask2align(lev->altarmask & ~AM_SHRINE)));
+        return((bool)(EPRI(pri)->shralign == Amask2align(lev->flags & ~AM_SHRINE)));
 }
 
 struct monst *
@@ -677,7 +677,7 @@ angry_priest (void)
              */
             lev = &levl[EPRI(priest)->shrpos.x][EPRI(priest)->shrpos.y];
             if (!IS_ALTAR(lev->typ) ||
-                ((aligntyp)Amask2align(lev->altarmask & AM_MASK) !=
+                ((aligntyp)Amask2align(lev->flags & AM_MASK) !=
                         EPRI(priest)->shralign)) {
                 priest->ispriest = 0;           /* now a roamer */
                 priest->isminion = 1;           /* but still aligned */

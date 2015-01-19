@@ -1081,7 +1081,7 @@ create_altar (altar *a, struct mkroom *croom)
                 (a->align < 0 ? ralign[-a->align-1] : a->align);
 
         levl[x][y].typ = ALTAR;
-        levl[x][y].altarmask = amask;
+        levl[x][y].flags = amask;
 
         if (a->shrine < 0) a->shrine = rn2(2);  /* handle random case */
 
@@ -1094,7 +1094,7 @@ create_altar (altar *a, struct mkroom *croom)
 
         if (a->shrine) {        /* Is it a shrine  or sanctum? */
             priestini(&u.uz, croom, x, y, (a->shrine > 1));
-            levl[x][y].altarmask |= AM_SHRINE;
+            levl[x][y].flags |= AM_SHRINE;
             level.flags.has_temple = true;
         }
 }

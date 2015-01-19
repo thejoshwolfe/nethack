@@ -177,8 +177,8 @@ but that's really hard.
 
 #define ugod_is_angry() (u.ualign.record < 0)
 #define on_altar()      IS_ALTAR(levl[u.ux][u.uy].typ)
-#define on_shrine()     ((levl[u.ux][u.uy].altarmask & AM_SHRINE) != 0)
-#define a_align(x,y)    ((aligntyp)Amask2align(levl[x][y].altarmask & AM_MASK))
+#define on_shrine()     ((levl[u.ux][u.uy].flags & AM_SHRINE) != 0)
+#define a_align(x,y)    ((aligntyp)Amask2align(levl[x][y].flags & AM_MASK))
 
 static int
 in_trouble (void)
@@ -1206,7 +1206,7 @@ dosacrifice (void)
                 /* curse the lawful/neutral altar */
                 pline_The("altar is stained with %s blood.", urace.adj);
                 if(!Is_astralevel(&u.uz))
-                    levl[u.ux][u.uy].altarmask = AM_CHAOTIC;
+                    levl[u.ux][u.uy].flags = AM_CHAOTIC;
                 angry_priest();
             } else {
                 struct monst *dmon;
@@ -1219,7 +1219,7 @@ dosacrifice (void)
                      "The blood floods the altar, which vanishes in %s cloud!",
                           an(hcolor(NH_BLACK)));
                     levl[u.ux][u.uy].typ = ROOM;
-                    levl[u.ux][u.uy].altarmask = 0;
+                    levl[u.ux][u.uy].flags = 0;
                     newsym(u.ux, u.uy);
                     angry_priest();
                     demonless_msg = "cloud dissipates";
@@ -1412,10 +1412,10 @@ verbalize("In return for thy service, I grant thee the gift of Immortality!");
                     exercise(A_WIS, true);
                     change_luck(1);
                     /* Yes, this is supposed to be &=, not |= */
-                    levl[u.ux][u.uy].altarmask &= AM_SHRINE;
+                    levl[u.ux][u.uy].flags &= AM_SHRINE;
                     /* the following accommodates stupid compilers */
-                    levl[u.ux][u.uy].altarmask =
-                        levl[u.ux][u.uy].altarmask | (Align2amask(u.ualign.type));
+                    levl[u.ux][u.uy].flags =
+                        levl[u.ux][u.uy].flags | (Align2amask(u.ualign.type));
                     if (!Blind())
                         pline_The("altar glows %s.",
                               hcolor(

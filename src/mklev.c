@@ -1232,7 +1232,7 @@ static void mkaltar(struct mkroom *croom) {
 
     /* -1 - A_CHAOTIC, 0 - A_NEUTRAL, 1 - A_LAWFUL */
     al = rn2((int)A_LAWFUL + 2) - 1;
-    levl[m.x][m.y].altarmask = Align2amask(al);
+    levl[m.x][m.y].flags = Align2amask(al);
 }
 
 static void mkgrave(struct mkroom *croom) {

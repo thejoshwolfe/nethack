@@ -381,7 +381,7 @@ maketrap(int x, int y, int typ) {
             if (*in_rooms(x, y, SHOPBASE) && ((typ == HOLE || typ == TRAPDOOR) || IS_DOOR(lev->typ) || IS_WALL(lev->typ)))
                 add_damage(x, y, /* schedule repair */
                 ((IS_DOOR(lev->typ) || IS_WALL(lev->typ)) && !flags.mon_moving) ? 200L : 0L);
-            lev->doormask = 0; /* subsumes altarmask, icedpool... */
+            lev->doormask = 0; /* subsumes flags, icedpool... */
             if (IS_ROOM(lev->typ)) /* && !IS_AIR(lev->typ) */
                 lev->typ = ROOM;
 
