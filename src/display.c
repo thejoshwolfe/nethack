@@ -1181,7 +1181,7 @@ void flush_screen (int cursor_on_u) {
  * the screen symbol had the horizontal/vertical information set at
  * level generation time.
  *
- * I used the 'ladder' field (really flags) for deciding if stairwells
+ * I used the 'flags' field (really flags) for deciding if stairwells
  * were up or down.  I didn't want to check the upstairs and dnstairs
  * variables.
  */
@@ -1228,10 +1228,10 @@ int back_to_glyph (signed char x, signed char y) {
         case POOL:
         case MOAT:              idx = S_pool;     break;
         case STAIRS:
-            idx = (ptr->ladder & LA_DOWN) ? S_dnstair : S_upstair;
+            idx = (ptr->flags & LA_DOWN) ? S_dnstair : S_upstair;
             break;
         case LADDER:
-            idx = (ptr->ladder & LA_DOWN) ? S_dnladder : S_upladder;
+            idx = (ptr->flags & LA_DOWN) ? S_dnladder : S_upladder;
             break;
         case FOUNTAIN:          idx = S_fountain; break;
         case SINK:              idx = S_sink;     break;

@@ -994,7 +994,7 @@ void place_branch(branch *br, signed char x, signed char y) {
         assign_level(&sstairs.tolev, dest);
         sstairs_room = br_room;
 
-        levl[x][y].ladder = sstairs.up ? LA_UP : LA_DOWN;
+        levl[x][y].flags = sstairs.up ? LA_UP : LA_DOWN;
         levl[x][y].typ = STAIRS;
     }
     /*
@@ -1169,7 +1169,7 @@ void mkstairs(signed char x, signed char y, char up, struct mkroom *croom) {
     }
 
     levl[x][y].typ = STAIRS;
-    levl[x][y].ladder = up ? LA_UP : LA_DOWN;
+    levl[x][y].flags = up ? LA_UP : LA_DOWN;
 }
 
 static void mkfount(int mazeflag, struct mkroom *croom) {

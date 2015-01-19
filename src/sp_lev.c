@@ -2339,10 +2339,10 @@ load_maze (dlb *fd)
                 levl[x][y].typ = LADDER;
                 if (tmplad.up == 1) {
                         xupladder = x;  yupladder = y;
-                        levl[x][y].ladder = LA_UP;
+                        levl[x][y].flags = LA_UP;
                 } else {
                         xdnladder = x;  ydnladder = y;
-                        levl[x][y].ladder = LA_DOWN;
+                        levl[x][y].flags = LA_DOWN;
                 }
         }
 

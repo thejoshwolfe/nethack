@@ -1064,7 +1064,7 @@ dokick (void)
                 }
                 if (maploc->typ == STAIRS || maploc->typ == LADDER ||
                                                     IS_STWALL(maploc->typ)) {
-                    if(!IS_STWALL(maploc->typ) && maploc->ladder == LA_DOWN)
+                    if(!IS_STWALL(maploc->typ) && maploc->flags == LA_DOWN)
                         goto dumb;
 ouch:
                     pline("Ouch!  That hurts!");
