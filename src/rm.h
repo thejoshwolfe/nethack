@@ -414,7 +414,6 @@ enum {
 };
 
 
-#define blessedftn      horizontal  /* a fountain that grants attribs */
 #define disturbed       horizontal  /* a grave that has been disturbed */
 
 struct damage {

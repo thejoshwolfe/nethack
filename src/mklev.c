@@ -1189,7 +1189,7 @@ static void mkfount(int mazeflag, struct mkroom *croom) {
     levl[m.x][m.y].typ = FOUNTAIN;
     /* Is it a "blessed" fountain? (affects drinking from fountain) */
     if (!rn2(7))
-        levl[m.x][m.y].blessedftn = 1;
+        levl[m.x][m.y].horizontal = 1;
 
     level.flags.nfountains++;
 }

@@ -222,7 +222,7 @@ void dryup (signed char x, signed char y, bool isyou) {
         /* replace the fountain with ordinary floor */
         levl[x][y].typ = ROOM;
         levl[x][y].flags = 0;
-        levl[x][y].blessedftn = 0;
+        levl[x][y].horizontal = 0;
         if (cansee(x,y)) pline_The("fountain dries up!");
         /* The location is seen if the hero/monster is invisible */
         /* or felt if the hero is blind.                         */
@@ -237,7 +237,7 @@ void
 drinkfountain (void)
 {
         /* What happens when you drink from a fountain? */
-        bool mgkftn = (levl[u.ux][u.uy].blessedftn == 1);
+        bool mgkftn = (levl[u.ux][u.uy].horizontal == 1);
         int fate = rnd(30);
 
         if (Levitation) {
@@ -264,7 +264,7 @@ drinkfountain (void)
                 display_nhwindow(WIN_MESSAGE, false);
                 pline("A wisp of vapor escapes the fountain...");
                 exercise(A_WIS, true);
-                levl[u.ux][u.uy].blessedftn = 0;
+                levl[u.ux][u.uy].horizontal = 0;
                 return;
         }
 
