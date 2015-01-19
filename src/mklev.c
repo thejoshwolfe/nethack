@@ -817,7 +817,7 @@ static void mineralize(void) {
                 y += 2; /* next two spots aren't eligible either */
             } else if (levl[x][y].typ != STONE) { /* this spot not eligible */
                 y += 1; /* next spot isn't eligible either */
-            } else if (!(levl[x][y].wall_info & W_NONDIGGABLE) &&
+            } else if (!(levl[x][y].flags & W_NONDIGGABLE) &&
                     levl[x][y - 1].typ == STONE &&
                     levl[x + 1][y - 1].typ == STONE && levl[x - 1][y - 1].typ == STONE &&
                     levl[x + 1][y].typ == STONE && levl[x - 1][y].typ == STONE &&

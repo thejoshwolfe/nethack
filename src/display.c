@@ -1489,7 +1489,7 @@ void set_wall_state (void) {
             }
 
         if (wmode >= 0)
-            lev->wall_info = (lev->wall_info & ~WM_MASK) | wmode;
+            lev->flags = (lev->flags & ~WM_MASK) | wmode;
         }
 
 }
@@ -1582,7 +1582,7 @@ static void t_warn (struct rm *lev) {
     else if (lev->typ == TRWALL) wname = "trwall";
     else if (lev->typ == TDWALL) wname = "tdwall";
     else wname = "unknown";
-    impossible(warn_str, wname, lev->wall_info & WM_MASK,
+    impossible(warn_str, wname, lev->flags & WM_MASK,
         (unsigned int) lev->seenv);
 }
 
@@ -1621,7 +1621,7 @@ static int wall_angle (struct rm *lev) {
         case TDWALL:
                 row = wall_matrix[T_d];
 do_twall:
-                switch (lev->wall_info & WM_MASK) {
+                switch (lev->flags & WM_MASK) {
                     case 0:
                         if (seenv == SV4) {
                             col = T_tlcorn;
@@ -1677,7 +1677,7 @@ do_twall:
                         break;
                     default:
                         impossible("wall_angle: unknown T wall mode %d",
-                                lev->wall_info & WM_MASK);
+                                lev->flags & WM_MASK);
                         col = T_stone;
                         break;
                 }
@@ -1688,7 +1688,7 @@ do_twall:
                 if (lev->horizontal) goto horiz;
                 /* fall through */
         case VWALL:
-                switch (lev->wall_info & WM_MASK) {
+                switch (lev->flags & WM_MASK) {
                     case 0: idx = seenv ? S_vwall : S_stone; break;
                     case 1: idx = seenv & (SV1|SV2|SV3|SV4|SV5) ? S_vwall :
                                                                   S_stone;
@@ -1698,7 +1698,7 @@ do_twall:
                             break;
                     default:
                         impossible("wall_angle: unknown vwall mode %d",
-                                lev->wall_info & WM_MASK);
+                                lev->flags & WM_MASK);
                         idx = S_stone;
                         break;
                 }
@@ -1706,7 +1706,7 @@ do_twall:
 
         case HWALL:
 horiz:
-                switch (lev->wall_info & WM_MASK) {
+                switch (lev->flags & WM_MASK) {
                     case 0: idx = seenv ? S_hwall : S_stone; break;
                     case 1: idx = seenv & (SV3|SV4|SV5|SV6|SV7) ? S_hwall :
                                                                   S_stone;
@@ -1716,20 +1716,20 @@ horiz:
                             break;
                     default:
                         impossible("wall_angle: unknown hwall mode %d",
-                                lev->wall_info & WM_MASK);
+                                lev->flags & WM_MASK);
                         idx = S_stone;
                         break;
                 }
                 break;
 
 #define set_corner(idx, lev, which, outer, inner, name) \
-    switch ((lev)->wall_info & WM_MASK) {                                   \
+    switch ((lev)->flags & WM_MASK) {                                   \
         case 0:          idx = which; break;                                \
         case WM_C_OUTER: idx = seenv &  (outer) ? which : S_stone; break;   \
         case WM_C_INNER: idx = seenv & ~(inner) ? which : S_stone; break;   \
         default:                                                            \
             impossible("wall_angle: unknown %s mode %d", name,              \
-                (lev)->wall_info & WM_MASK);                                \
+                (lev)->flags & WM_MASK);                                \
             idx = S_stone;                                                  \
             break;                                                          \
     }
@@ -1749,7 +1749,7 @@ horiz:
 
 
         case CROSSWALL:
-                switch (lev->wall_info & WM_MASK) {
+                switch (lev->flags & WM_MASK) {
                     case 0:
                         if (seenv == SV0)
                             idx = S_brcorn;

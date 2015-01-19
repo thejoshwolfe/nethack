@@ -1312,11 +1312,11 @@ signed char print_dungeon(bool bymenu, signed char *rlev, signed char *rdgn) {
 
 /* intended to be called only on ROCKs */
 bool may_dig(signed char x, signed char y) {
-    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].wall_info & W_NONDIGGABLE)));
+    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].flags & W_NONDIGGABLE)));
 }
 
 bool may_passwall(signed char x, signed char y) {
-    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].wall_info & W_NONPASSWALL)));
+    return (bool)(!(IS_STWALL(levl[x][y].typ) && (levl[x][y].flags & W_NONPASSWALL)));
 }
 
 bool bad_rock(struct permonst *mdat, signed char x, signed char y) {

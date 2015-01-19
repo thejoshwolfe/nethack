@@ -215,7 +215,7 @@ bool dig_check(struct monst *madeby, bool verbose, int x, int y) {
             if(verbose) pline_The("water splashes and subsides.");
             return(false);
         } else if ((IS_ROCK(levl[x][y].typ) && levl[x][y].typ != SDOOR &&
-                      (levl[x][y].wall_info & W_NONDIGGABLE) != 0)
+                      (levl[x][y].flags & W_NONDIGGABLE) != 0)
                 || (ttmp &&
                       (ttmp->ttyp == MAGIC_PORTAL || !Can_dig_down(&u.uz)))) {
             if(verbose) pline_The("%s here is too hard to %s.",
@@ -730,7 +730,7 @@ bool dighole(bool pit_only) {
 
         if ((ttmp && (ttmp->ttyp == MAGIC_PORTAL || nohole)) ||
            (IS_ROCK(lev->typ) && lev->typ != SDOOR &&
-            (lev->wall_info & W_NONDIGGABLE) != 0)) {
+            (lev->flags & W_NONDIGGABLE) != 0)) {
                 pline_The("%s here is too hard to dig in.", surface(u.ux,u.uy));
 
         } else if (is_pool(u.ux, u.uy) || is_lava(u.ux, u.uy)) {
@@ -1093,7 +1093,7 @@ mdig_tunnel (struct monst *mtmp)
             return false;
 
         /* Only rock, trees, and walls fall through to this point. */
-        if ((here->wall_info & W_NONDIGGABLE) != 0) {
+        if ((here->flags & W_NONDIGGABLE) != 0) {
             impossible("mdig_tunnel:  %s at (%d,%d) is undiggable",
                        (IS_WALL(here->typ) ? "wall" : "stone"),
                        (int) mtmp->mx, (int) mtmp->my);
@@ -1217,7 +1217,7 @@ void zap_dig(void) {
                 if (maze_dig) break;
             } else if (maze_dig) {
                 if (IS_WALL(room->typ)) {
-                    if (!(room->wall_info & W_NONDIGGABLE)) {
+                    if (!(room->flags & W_NONDIGGABLE)) {
                         if (*in_rooms(zx,zy,SHOPBASE)) {
                             add_damage(zx, zy, 200L);
                             shopwall = true;
@@ -1228,14 +1228,14 @@ void zap_dig(void) {
                         pline_The("wall glows then fades.");
                     break;
                 } else if (IS_TREE(room->typ)) { /* check trees before stone */
-                    if (!(room->wall_info & W_NONDIGGABLE)) {
+                    if (!(room->flags & W_NONDIGGABLE)) {
                         room->typ = ROOM;
                         unblock_point(zx,zy); /* vision */
                     } else if (!Blind())
                         pline_The("tree shudders but is unharmed.");
                     break;
                 } else if (room->typ == STONE || room->typ == SCORR) {
-                    if (!(room->wall_info & W_NONDIGGABLE)) {
+                    if (!(room->flags & W_NONDIGGABLE)) {
                         room->typ = CORR;
                         unblock_point(zx,zy); /* vision */
                     } else if (!Blind())

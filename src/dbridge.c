@@ -208,7 +208,7 @@ bool create_drawbridge(int x,int y,int dir,bool flag) {
                 levl[x][y].typ = DRAWBRIDGE_UP;
                 levl[x2][y2].typ = DBWALL;
                 /* Drawbridges are non-diggable. */
-                levl[x2][y2].wall_info = W_NONDIGGABLE;
+                levl[x2][y2].flags = W_NONDIGGABLE;
         }
         levl[x][y].horizontal = !horiz;
         levl[x2][y2].horizontal = horiz;
@@ -640,7 +640,7 @@ void close_drawbridge (int x, int y) {
                         lev2->horizontal = false;
                         break;
         }
-        lev2->wall_info = W_NONDIGGABLE;
+        lev2->flags = W_NONDIGGABLE;
         set_entity(x, y, &(occupants[0]));
         set_entity(x2, y2, &(occupants[1]));
         do_entity(&(occupants[0]));             /* Do set_entity after first */

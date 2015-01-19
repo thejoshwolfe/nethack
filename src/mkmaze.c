@@ -771,7 +771,7 @@ bound_digging (void)
         for (x = 0; x < COLNO; x++)
           for (y = 0; y < ROWNO; y++)
             if (y <= ymin || y >= ymax || x <= xmin || x >= xmax) {
-                levl[x][y].wall_info |= W_NONDIGGABLE;
+                levl[x][y].flags |= W_NONDIGGABLE;
             }
 }
 

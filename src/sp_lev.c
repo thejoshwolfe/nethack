@@ -121,7 +121,7 @@ static void set_wall_property(signed char x1, signed char y1, signed char x2, si
     for (y = y1; y <= y2; y++)
         for (x = x1; x <= x2; x++)
             if (IS_STWALL(levl[x][y].typ))
-                levl[x][y].wall_info |= prop;
+                levl[x][y].flags |= prop;
 }
 
 /*
