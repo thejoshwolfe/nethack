@@ -665,18 +665,18 @@ static int still_chewing(signed char x, signed char y) {
             lev->typ = CORR;
         } else {
             lev->typ = DOOR;
-            lev->doormask = D_NODOOR;
+            lev->flags = D_NODOOR;
         }
     } else if (IS_TREE(lev->typ)) {
         digtxt = "chew through the tree.";
         lev->typ = ROOM;
     } else if (lev->typ == SDOOR) {
-        if (lev->doormask & D_TRAPPED) {
-            lev->doormask = D_NODOOR;
+        if (lev->flags & D_TRAPPED) {
+            lev->flags = D_NODOOR;
             b_trapped("secret door", 0);
         } else {
             digtxt = "chew through the secret door.";
-            lev->doormask = D_BROKEN;
+            lev->flags = D_BROKEN;
         }
         lev->typ = DOOR;
 
@@ -685,12 +685,12 @@ static int still_chewing(signed char x, signed char y) {
             add_damage(x, y, 400L);
             dmgtxt = "break";
         }
-        if (lev->doormask & D_TRAPPED) {
-            lev->doormask = D_NODOOR;
+        if (lev->flags & D_TRAPPED) {
+            lev->flags = D_NODOOR;
             b_trapped("door", 0);
         } else {
             digtxt = "chew through the door.";
-            lev->doormask = D_BROKEN;
+            lev->flags = D_BROKEN;
         }
 
     } else { /* STONE or SCORR */
@@ -736,7 +736,7 @@ static int move_boulder(void) {
             pline("You're too small to push that %s.", xname(otmp));
             goto cannot_push;
         }
-        if (isok(rx, ry) && !IS_ROCK(levl[rx][ry].typ) && levl[rx][ry].typ != IRONBARS && (!IS_DOOR(levl[rx][ry].typ) || !(u.delta.x && u.delta.y) || ((levl[rx][ry].doormask & ~D_BROKEN) == D_NODOOR)) && !sobj_at(BOULDER, rx, ry)) {
+        if (isok(rx, ry) && !IS_ROCK(levl[rx][ry].typ) && levl[rx][ry].typ != IRONBARS && (!IS_DOOR(levl[rx][ry].typ) || !(u.delta.x && u.delta.y) || ((levl[rx][ry].flags & ~D_BROKEN) == D_NODOOR)) && !sobj_at(BOULDER, rx, ry)) {
             ttmp = t_at(rx, ry);
             mtmp = m_at(rx, ry);
 
@@ -1001,7 +1001,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
                 return false;
             }
         } else {
-            testdiag: if (dx && dy && !Passes_walls && ((tmpr->doormask & ~D_BROKEN) || block_door(x, y))) {
+            testdiag: if (dx && dy && !Passes_walls && ((tmpr->flags & ~D_BROKEN) || block_door(x, y))) {
                 /* Diagonal moves into a door are not allowed. */
                 if (Blind() && mode == DO_MOVE)
                     feel_location(x, y);
@@ -1031,7 +1031,7 @@ bool test_move(int ux, int uy, int dx, int dy, int mode) {
     ust = &levl[ux][uy];
 
     /* Now see if other things block our way . . */
-    if (dx && dy && !Passes_walls && (IS_DOOR(ust->typ) && ((ust->doormask & ~D_BROKEN) || block_entry(x, y)))) {
+    if (dx && dy && !Passes_walls && (IS_DOOR(ust->typ) && ((ust->flags & ~D_BROKEN) || block_entry(x, y)))) {
         /* Can't move at a diagonal out of a doorway with door. */
         return false;
     }

@@ -159,7 +159,7 @@ does_block (int x, int y, struct rm *lev)
 
     /* Features that block . . */
     if (IS_ROCK(lev->typ) || lev->typ == TREE || (IS_DOOR(lev->typ) &&
-                            (lev->doormask & (D_CLOSED|D_LOCKED|D_TRAPPED) )))
+                            (lev->flags & (D_CLOSED|D_LOCKED|D_TRAPPED) )))
         return 1;
 
     if (lev->typ == CLOUD || lev->typ == WATER ||

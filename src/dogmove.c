@@ -842,7 +842,7 @@ static bool can_reach_location(struct monst *mon,
                                     (!may_dig(i,j) || !tunnels(mon->data)))
                 continue;
             if (IS_DOOR(levl[i][j].typ) &&
-                                (levl[i][j].doormask & (D_CLOSED | D_LOCKED)))
+                                (levl[i][j].flags & (D_CLOSED | D_LOCKED)))
                 continue;
             if (!could_reach_item(mon, i, j))
                 continue;

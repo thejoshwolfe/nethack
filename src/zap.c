@@ -2621,7 +2621,7 @@ struct monst * bhit(int ddx, int ddy, int range, int weapon, int (*fhitm)(struct
                     if (doorlock(obj, bhitpos.x, bhitpos.y)) {
                         if (cansee(bhitpos.x, bhitpos.y) || (obj->otyp == WAN_STRIKING))
                             makeknown(obj->otyp);
-                        if (levl[bhitpos.x][bhitpos.y].doormask == D_BROKEN && *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE)) {
+                        if (levl[bhitpos.x][bhitpos.y].flags == D_BROKEN && *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE)) {
                             shopdoor = true;
                             add_damage(bhitpos.x, bhitpos.y, 400L);
                         }
@@ -3519,7 +3519,7 @@ int zap_over_floor(signed char x, signed char y, int type, bool *shopdamage) {
                     /* caused by monster */
                     add_damage(x, y, 0L);
             }
-            lev->doormask = new_doormask;
+            lev->flags = new_doormask;
             unblock_point(x, y); /* vision */
             if (cansee(x, y)) {
                 plines(see_txt);

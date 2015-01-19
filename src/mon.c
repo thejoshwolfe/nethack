@@ -1006,12 +1006,12 @@ nexttry:        /* eels prefer the water, but if there is no water nearby,
             /* KMH -- Added iron bars */
             if (ntyp == IRONBARS && !(flag & ALLOW_BARS)) continue;
             if(IS_DOOR(ntyp) && !amorphous(mdat) &&
-                    (((levl[nx][ny].doormask & D_CLOSED) && !(flag & OPENDOOR)) ||
-                     ((levl[nx][ny].doormask & D_LOCKED) && !(flag & UNLOCKDOOR))) &&
+                    (((levl[nx][ny].flags & D_CLOSED) && !(flag & OPENDOOR)) ||
+                     ((levl[nx][ny].flags & D_LOCKED) && !(flag & UNLOCKDOOR))) &&
                     !thrudoor) continue;
             if(nx != x && ny != y && (nodiag ||
-                        ((IS_DOOR(nowtyp) && (levl[x][y].doormask & ~D_BROKEN)) ||
-                         (IS_DOOR(ntyp) && (levl[nx][ny].doormask & ~D_BROKEN)))
+                        ((IS_DOOR(nowtyp) && (levl[x][y].flags & ~D_BROKEN)) ||
+                         (IS_DOOR(ntyp) && (levl[nx][ny].flags & ~D_BROKEN)))
                         ))
                 continue;
             if((is_pool(nx,ny) == wantpool || poolok) &&

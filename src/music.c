@@ -289,7 +289,7 @@ do_pit:             chasm = maketrap(x,y,PIT);
                     if (!chasm) break;  /* no pit if portal at that location */
                     chasm->tseen = 1;
 
-                    levl[x][y].doormask = 0;
+                    levl[x][y].flags = 0;
 
                     mtmp = m_at(x,y);
 
@@ -351,12 +351,12 @@ do_pit:             chasm = maketrap(x,y,PIT);
                     } else newsym(x,y);
                     break;
             case DOOR : /* Make the door collapse */
-                    if (levl[x][y].doormask == D_NODOOR) goto do_pit;
+                    if (levl[x][y].flags == D_NODOOR) goto do_pit;
                     if (cansee(x,y))
                         pline_The("door collapses.");
                     if (*in_rooms(x, y, SHOPBASE))
                         add_damage(x, y, 0L);
-                    levl[x][y].doormask = D_NODOOR;
+                    levl[x][y].flags = D_NODOOR;
                     unblock_point(x,y);
                     newsym(x,y);
                     break;

@@ -64,7 +64,7 @@ static const char * lock_action(void) {
     };
 
     /* if the target is currently unlocked, we're trying to lock it now */
-    if (xlock.door && !(xlock.door->doormask & D_LOCKED))
+    if (xlock.door && !(xlock.door->flags & D_LOCKED))
         return actions[0]+2;    /* "locking the door" */
     else if (xlock.box && !xlock.box->olocked)
         return xlock.box->otyp == CHEST ? actions[1]+2 : actions[2]+2;
@@ -90,7 +90,7 @@ static int picklock(void) {
         if (xlock.door != &(levl[u.ux + u.delta.x][u.uy + u.delta.y])) {
             return ((xlock.usedtime = 0)); /* you moved */
         }
-        switch (xlock.door->doormask) {
+        switch (xlock.door->flags) {
             case D_NODOOR:
                 pline("This doorway has no door.");
                 return ((xlock.usedtime = 0));
@@ -114,17 +114,17 @@ static int picklock(void) {
 
     You("succeed in %s.", lock_action());
     if (xlock.door) {
-        if (xlock.door->doormask & D_TRAPPED) {
+        if (xlock.door->flags & D_TRAPPED) {
             b_trapped("door", FINGER);
-            xlock.door->doormask = D_NODOOR;
+            xlock.door->flags = D_NODOOR;
             unblock_point(u.ux + u.delta.x, u.uy + u.delta.y);
             if (*in_rooms(u.ux + u.delta.x, u.uy + u.delta.y, SHOPBASE))
                 add_damage(u.ux + u.delta.x, u.uy + u.delta.y, 0L);
             newsym(u.ux + u.delta.x, u.uy + u.delta.y);
-        } else if (xlock.door->doormask & D_LOCKED)
-            xlock.door->doormask = D_CLOSED;
+        } else if (xlock.door->flags & D_LOCKED)
+            xlock.door->flags = D_CLOSED;
         else
-            xlock.door->doormask = D_LOCKED;
+            xlock.door->flags = D_LOCKED;
     } else {
         xlock.box->olocked = !xlock.box->olocked;
         if (xlock.box->otrapped)
@@ -427,7 +427,7 @@ int pick_lock(struct obj *pick) {
                 You("%s no door there.", Blind() ? "feel" : "see");
             return (0);
         }
-        switch (door->doormask) {
+        switch (door->flags) {
             case D_NODOOR:
                 pline("This doorway has no door.");
                 return (0);
@@ -439,12 +439,12 @@ int pick_lock(struct obj *pick) {
                 return (0);
             default:
                 /* credit cards are only good for unlocking */
-                if (picktyp == CREDIT_CARD && !(door->doormask & D_LOCKED)) {
+                if (picktyp == CREDIT_CARD && !(door->flags & D_LOCKED)) {
                     You_cant("lock a door with a credit card.");
                     return (0);
                 }
 
-                sprintf(qbuf, "%sock it?", (door->doormask & D_LOCKED) ? "Unl" : "L");
+                sprintf(qbuf, "%sock it?", (door->flags & D_LOCKED) ? "Unl" : "L");
 
                 c = yn(qbuf);
                 if (c == 'n')
@@ -567,10 +567,10 @@ int doopen(void) {
         return (0);
     }
 
-    if (!(door->doormask & D_CLOSED)) {
+    if (!(door->flags & D_CLOSED)) {
         const char *mesg;
 
-        switch (door->doormask) {
+        switch (door->flags) {
             case D_BROKEN:
                 mesg = " is broken";
                 break;
@@ -598,13 +598,13 @@ int doopen(void) {
     /* door is known to be CLOSED */
     if (rnl(20) < (ACURRSTR + ACURR(A_DEX) + ACURR(A_CON)) / 3) {
         pline_The("door opens.");
-        if (door->doormask & D_TRAPPED) {
+        if (door->flags & D_TRAPPED) {
             b_trapped("door", FINGER);
-            door->doormask = D_NODOOR;
+            door->flags = D_NODOOR;
             if (*in_rooms(cc.x, cc.y, SHOPBASE))
                 add_damage(cc.x, cc.y, 0L);
         } else
-            door->doormask = D_ISOPEN;
+            door->flags = D_ISOPEN;
         if (Blind())
             feel_location(cc.x, cc.y); /* the hero knows she opened it  */
         else
@@ -680,7 +680,7 @@ int doclose(void) {
         return (0);
     }
 
-    if (door->doormask == D_NODOOR) {
+    if (door->flags == D_NODOOR) {
         pline("This doorway has no door.");
         return (0);
     }
@@ -688,24 +688,24 @@ int doclose(void) {
     if (obstructed(x, y))
         return (0);
 
-    if (door->doormask == D_BROKEN) {
+    if (door->flags == D_BROKEN) {
         pline("This door is broken.");
         return (0);
     }
 
-    if (door->doormask & (D_CLOSED | D_LOCKED)) {
+    if (door->flags & (D_CLOSED | D_LOCKED)) {
         pline("This door is already closed.");
         return (0);
     }
 
-    if (door->doormask == D_ISOPEN) {
+    if (door->flags == D_ISOPEN) {
         if (verysmall(youmonst.data) && !u.usteed) {
             pline("You're too small to push the door closed.");
             return (0);
         }
         if (u.usteed || rn2(25) < (ACURRSTR + ACURR(A_DEX) + ACURR(A_CON)) / 3) {
             pline_The("door closes.");
-            door->doormask = D_CLOSED;
+            door->flags = D_CLOSED;
             if (Blind())
                 feel_location(x, y); /* the hero knows she closed it */
             else
@@ -772,7 +772,7 @@ bool doorlock(struct obj *otmp, int x, int y) {
             case WAN_STRIKING:
             case SPE_FORCE_BOLT:
                 door->typ = DOOR;
-                door->doormask = D_CLOSED | (door->doormask & D_TRAPPED);
+                door->flags = D_CLOSED | (door->flags & D_TRAPPED);
                 newsym(x, y);
                 if (cansee(x, y))
                     pline("A door appears in the wall!");
@@ -794,12 +794,12 @@ bool doorlock(struct obj *otmp, int x, int y) {
             /* Don't allow doors to close over traps.  This is for pits */
             /* & trap doors, but is it ever OK for anything else? */
             if (t_at(x, y)) {
-                /* maketrap() clears doormask, so it should be NODOOR */
+                /* maketrap() clears flags, so it should be NODOOR */
                 pline("%s springs up in the doorway, but %s.", dustcloud, quickly_dissipates);
                 return false;
             }
 
-            switch (door->doormask & ~D_TRAPPED) {
+            switch (door->flags & ~D_TRAPPED) {
                 case D_CLOSED:
                     msg = "The door locks!";
                     break;
@@ -817,21 +817,21 @@ bool doorlock(struct obj *otmp, int x, int y) {
                     break;
             }
             block_point(x, y);
-            door->doormask = D_LOCKED | (door->doormask & D_TRAPPED);
+            door->flags = D_LOCKED | (door->flags & D_TRAPPED);
             newsym(x, y);
             break;
         case WAN_OPENING:
         case SPE_KNOCK:
-            if (door->doormask & D_LOCKED) {
+            if (door->flags & D_LOCKED) {
                 msg = "The door unlocks!";
-                door->doormask = D_CLOSED | (door->doormask & D_TRAPPED);
+                door->flags = D_CLOSED | (door->flags & D_TRAPPED);
             } else
                 res = false;
             break;
         case WAN_STRIKING:
         case SPE_FORCE_BOLT:
-            if (door->doormask & (D_LOCKED | D_CLOSED)) {
-                if (door->doormask & D_TRAPPED) {
+            if (door->flags & (D_LOCKED | D_CLOSED)) {
+                if (door->flags & D_TRAPPED) {
                     if (MON_AT(x, y))
                         (void)mb_trapped(m_at(x, y));
                     else if (flags.verbose) {
@@ -840,13 +840,13 @@ bool doorlock(struct obj *otmp, int x, int y) {
                         else if (flags.soundok)
                             You_hear("a distant explosion.");
                     }
-                    door->doormask = D_NODOOR;
+                    door->flags = D_NODOOR;
                     unblock_point(x, y);
                     newsym(x, y);
                     loudness = 40;
                     break;
                 }
-                door->doormask = D_BROKEN;
+                door->flags = D_BROKEN;
                 if (flags.verbose) {
                     if (cansee(x, y))
                         pline_The("door crashes open!");

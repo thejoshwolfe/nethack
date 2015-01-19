@@ -414,7 +414,6 @@ enum {
 };
 
 
-#define doormask        flags
 #define wall_info       flags
 #define ladder          flags
 #define drawbridgemask  flags

@@ -480,7 +480,7 @@ void feel_location (signed char x, signed char y) {
          *      + Everything else (hallways!)
          */
         if (IS_ROCK(lev->typ) || (IS_DOOR(lev->typ) &&
-                                (lev->doormask & (D_LOCKED | D_CLOSED)))) {
+                                (lev->flags & (D_LOCKED | D_CLOSED)))) {
             map_background(x, y, 1);
         } else if ((boulder = sobj_at(BOULDER,x,y)) != 0) {
             map_object(boulder, 1);
@@ -1181,7 +1181,7 @@ void flush_screen (int cursor_on_u) {
  * the screen symbol had the horizontal/vertical information set at
  * level generation time.
  *
- * I used the 'ladder' field (really doormask) for deciding if stairwells
+ * I used the 'ladder' field (really flags) for deciding if stairwells
  * were up or down.  I didn't want to check the upstairs and dnstairs
  * variables.
  */
@@ -1213,10 +1213,10 @@ int back_to_glyph (signed char x, signed char y) {
             idx = ptr->seenv ? wall_angle(ptr) : S_stone;
             break;
         case DOOR:
-            if (ptr->doormask) {
-                if (ptr->doormask & D_BROKEN)
+            if (ptr->flags) {
+                if (ptr->flags & D_BROKEN)
                     idx = S_ndoor;
-                else if (ptr->doormask & D_ISOPEN)
+                else if (ptr->flags & D_ISOPEN)
                     idx = (ptr->horizontal) ? S_hodoor : S_vodoor;
                 else                    /* else is closed */
                     idx = (ptr->horizontal) ? S_hcdoor : S_vcdoor;

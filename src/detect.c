@@ -681,7 +681,7 @@ int trap_detect (struct obj *sobj) {
     }
     for (door = 0; door < doorindex; door++) {
         cc = doors[door];
-        if (levl[cc.x][cc.y].doormask & D_TRAPPED) {
+        if (levl[cc.x][cc.y].flags & D_TRAPPED) {
             if (cc.x != u.ux || cc.y != u.uy)
                 goto outtrapmap;
             else found = true;
@@ -709,7 +709,7 @@ outtrapmap:
 
     for (door = 0; door < doorindex; door++) {
         cc = doors[door];
-        if (levl[cc.x][cc.y].doormask & D_TRAPPED)
+        if (levl[cc.x][cc.y].flags & D_TRAPPED)
             sense_trap((struct trap *)0, cc.x, cc.y, sobj && sobj->cursed);
     }
 
@@ -960,13 +960,13 @@ void do_vicinity_map (void) {
 
 /* convert a secret door into a normal door */
 void cvt_sdoor_to_door (struct rm *lev) {
-    int newmask = lev->doormask & ~WM_MASK;
+    int newmask = lev->flags & ~WM_MASK;
 
     /* newly exposed door is closed */
     if (!(newmask & D_LOCKED)) newmask |= D_CLOSED;
 
     lev->typ = DOOR;
-    lev->doormask = newmask;
+    lev->flags = newmask;
 }
 
 static void findone (int zx, int zy, void *num) {
@@ -1026,19 +1026,19 @@ static void openone (int zx, int zy, void *num) {
         /* let it fall to the next cases. could be on trap. */
     }
     if(levl[zx][zy].typ == SDOOR || (levl[zx][zy].typ == DOOR &&
-                (levl[zx][zy].doormask & (D_CLOSED|D_LOCKED)))) {
+                (levl[zx][zy].flags & (D_CLOSED|D_LOCKED)))) {
         if(levl[zx][zy].typ == SDOOR)
             cvt_sdoor_to_door(&levl[zx][zy]);   /* .typ = DOOR */
-        if(levl[zx][zy].doormask & D_TRAPPED) {
+        if(levl[zx][zy].flags & D_TRAPPED) {
             if(distu(zx, zy) < 3) b_trapped("door", 0);
             else Norep("You %s an explosion!",
                     cansee(zx, zy) ? "see" :
                     (flags.soundok ? "hear" :
                      "feel the shock of"));
             wake_nearto(zx, zy, 11*11);
-            levl[zx][zy].doormask = D_NODOOR;
+            levl[zx][zy].flags = D_NODOOR;
         } else
-            levl[zx][zy].doormask = D_ISOPEN;
+            levl[zx][zy].flags = D_ISOPEN;
         unblock_point(zx, zy);
         newsym(zx, zy);
         (*(int*)num)++;

@@ -119,7 +119,7 @@ static void mkcavepos(signed char x, signed char y, int dist, bool waslit, bool 
 
     /* fake out saved state */
     lev->seenv = 0;
-    lev->doormask = 0;
+    lev->flags = 0;
     if(dist < 3) lev->lit = (rockit ? false : true);
     if(waslit) lev->waslit = (rockit ? false : true);
     lev->horizontal = false;
@@ -381,22 +381,22 @@ static int dig (void) {
                 lev->typ = CORR;
             } else {
                 lev->typ = DOOR;
-                lev->doormask = D_NODOOR;
+                lev->flags = D_NODOOR;
             }
             digtxt = "You make an opening in the wall.";
         } else if(lev->typ == SDOOR) {
             cvt_sdoor_to_door(lev); /* ->typ = DOOR */
             digtxt = "You break through a secret door!";
-            if(!(lev->doormask & D_TRAPPED))
-                lev->doormask = D_BROKEN;
+            if(!(lev->flags & D_TRAPPED))
+                lev->flags = D_BROKEN;
         } else if(closed_door(dpx, dpy)) {
             digtxt = "You break through the door.";
             if(shopedge) {
                 add_damage(dpx, dpy, 400L);
                 dmgtxt = "break";
             }
-            if(!(lev->doormask & D_TRAPPED))
-                lev->doormask = D_BROKEN;
+            if(!(lev->flags & D_TRAPPED))
+                lev->flags = D_BROKEN;
         } else return(0); /* statue or boulder got taken */
 
         if(!does_block(dpx,dpy,&levl[dpx][dpy]))
@@ -424,8 +424,8 @@ static int dig (void) {
             }
             if(mtmp) pline_The("debris from your digging comes to life!");
         }
-        if(IS_DOOR(lev->typ) && (lev->doormask & D_TRAPPED)) {
-            lev->doormask = D_NODOOR;
+        if(IS_DOOR(lev->typ) && (lev->flags & D_TRAPPED)) {
+            lev->flags = D_NODOOR;
             b_trapped("door", 0);
             newsym(dpx, dpy);
         }
@@ -1076,8 +1076,8 @@ mdig_tunnel (struct monst *mtmp)
             if (*in_rooms(mtmp->mx, mtmp->my, SHOPBASE))
                 add_damage(mtmp->mx, mtmp->my, 0L);
             unblock_point(mtmp->mx, mtmp->my);  /* vision */
-            if (here->doormask & D_TRAPPED) {
-                here->doormask = D_NODOOR;
+            if (here->flags & D_TRAPPED) {
+                here->flags = D_NODOOR;
                 if (mb_trapped(mtmp)) { /* mtmp is killed */
                     newsym(mtmp->mx, mtmp->my);
                     return true;
@@ -1085,7 +1085,7 @@ mdig_tunnel (struct monst *mtmp)
             } else {
                 if (!rn2(3) && flags.verbose)   /* not too often.. */
                     You_feel("an unexpected draft.");
-                here->doormask = D_BROKEN;
+                here->flags = D_BROKEN;
             }
             newsym(mtmp->mx, mtmp->my);
             return false;
@@ -1113,7 +1113,7 @@ mdig_tunnel (struct monst *mtmp)
                 here->typ = CORR;
             } else {
                 here->typ = DOOR;
-                here->doormask = D_NODOOR;
+                here->flags = D_NODOOR;
             }
         } else if (IS_TREE(here->typ)) {
             here->typ = ROOM;
@@ -1211,7 +1211,7 @@ void zap_dig(void) {
                 else if (cansee(zx, zy))
                     pline_The("door is razed!");
                 watch_dig((struct monst *)0, zx, zy, true);
-                room->doormask = D_NODOOR;
+                room->flags = D_NODOOR;
                 unblock_point(zx,zy); /* vision */
                 digdepth -= 2;
                 if (maze_dig) break;
@@ -1254,7 +1254,7 @@ void zap_dig(void) {
                         room->typ = CORR;
                     } else {
                         room->typ = DOOR;
-                        room->doormask = D_NODOOR;
+                        room->flags = D_NODOOR;
                     }
                     digdepth -= 2;
                 } else if (IS_TREE(room->typ)) {

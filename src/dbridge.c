@@ -203,7 +203,7 @@ bool create_drawbridge(int x,int y,int dir,bool flag) {
         if (flag) {             /* We want the bridge open */
                 levl[x][y].typ = DRAWBRIDGE_DOWN;
                 levl[x2][y2].typ = DOOR;
-                levl[x2][y2].doormask = D_NODOOR;
+                levl[x2][y2].flags = D_NODOOR;
         } else {
                 levl[x][y].typ = DRAWBRIDGE_UP;
                 levl[x2][y2].typ = DBWALL;
@@ -678,7 +678,7 @@ void open_drawbridge (int x, int y) {
         lev1->typ = DRAWBRIDGE_DOWN;
         lev2 = &levl[x2][y2];
         lev2->typ = DOOR;
-        lev2->doormask = D_NODOOR;
+        lev2->flags = D_NODOOR;
         set_entity(x, y, &(occupants[0]));
         set_entity(x2, y2, &(occupants[1]));
         do_entity(&(occupants[0]));             /* do set_entity after first */
@@ -746,7 +746,7 @@ void destroy_drawbridge (int x, int y) {
     }
     wake_nearto(x, y, 500);
     lev2->typ = DOOR;
-    lev2->doormask = D_NODOOR;
+    lev2->flags = D_NODOOR;
     if ((t = t_at(x, y)) != 0) deltrap(t);
     if ((t = t_at(x2, y2)) != 0) deltrap(t);
     newsym(x,y);

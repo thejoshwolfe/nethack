@@ -366,18 +366,18 @@ static void dosdoor(signed char x,signed char y,struct mkroom *aroom,int type) {
         if(type == DOOR) {
             if(!rn2(3)) {      /* is it a locked door, closed, or a doorway? */
                 if(!rn2(5))
-                    levl[x][y].doormask = D_ISOPEN;
+                    levl[x][y].flags = D_ISOPEN;
                 else if(!rn2(6))
-                    levl[x][y].doormask = D_LOCKED;
+                    levl[x][y].flags = D_LOCKED;
                 else
-                    levl[x][y].doormask = D_CLOSED;
+                    levl[x][y].flags = D_CLOSED;
 
-                if (levl[x][y].doormask != D_ISOPEN && !shdoor &&
+                if (levl[x][y].flags != D_ISOPEN && !shdoor &&
                     level_difficulty() >= 5 && !rn2(25))
-                    levl[x][y].doormask |= D_TRAPPED;
+                    levl[x][y].flags |= D_TRAPPED;
             } else
-                levl[x][y].doormask = (shdoor ? D_ISOPEN : D_NODOOR);
-            if(levl[x][y].doormask & D_TRAPPED) {
+                levl[x][y].flags = (shdoor ? D_ISOPEN : D_NODOOR);
+            if(levl[x][y].flags & D_TRAPPED) {
                 struct monst *mtmp;
 
                 if (level_difficulty() >= 9 && !rn2(5) &&
@@ -385,7 +385,7 @@ static void dosdoor(signed char x,signed char y,struct mkroom *aroom,int type) {
                      (mvitals[PM_LARGE_MIMIC].mvflags & G_GONE) &&
                      (mvitals[PM_GIANT_MIMIC].mvflags & G_GONE))) {
                     /* make a mimic instead */
-                    levl[x][y].doormask = D_NODOOR;
+                    levl[x][y].flags = D_NODOOR;
                     mtmp = makemon(mkclass(S_MIMIC,0), x, y, NO_MM_FLAGS);
                     if (mtmp)
                         set_mimic_sym(mtmp);
@@ -393,11 +393,11 @@ static void dosdoor(signed char x,signed char y,struct mkroom *aroom,int type) {
             }
             /* newsym(x,y); */
         } else { /* SDOOR */
-                if(shdoor || !rn2(5))   levl[x][y].doormask = D_LOCKED;
-                else                    levl[x][y].doormask = D_CLOSED;
+                if(shdoor || !rn2(5))   levl[x][y].flags = D_LOCKED;
+                else                    levl[x][y].flags = D_CLOSED;
 
                 if(!shdoor && level_difficulty() >= 4 && !rn2(20))
-                    levl[x][y].doormask |= D_TRAPPED;
+                    levl[x][y].flags |= D_TRAPPED;
         }
 
         add_door(x,y,aroom);
@@ -1361,7 +1361,7 @@ static void mkinvpos(signed char x, signed char y, int dist) {
 
     /* fake out saved state */
     lev->seenv = 0;
-    lev->doormask = 0;
+    lev->flags = 0;
     if (dist < 6)
         lev->lit = true;
     lev->waslit = true;

@@ -114,7 +114,7 @@ static void watch_on_duty (struct monst *mtmp) {
             mtmp->mcansee && m_canseeu(mtmp) && !rn2(3)) {
 
         if(picking_lock(&x, &y) && IS_DOOR(levl[x][y].typ) &&
-                (levl[x][y].doormask & D_LOCKED)) {
+                (levl[x][y].flags & D_LOCKED)) {
 
             if(couldsee(mtmp->mx, mtmp->my)) {
                 char name[BUFSZ];
@@ -1024,9 +1024,9 @@ postmov:
                     && !can_tunnel /* taken care of below */
               ) {
                 struct rm *here = &levl[mtmp->mx][mtmp->my];
-                bool btrapped = (here->doormask & D_TRAPPED);
+                bool btrapped = (here->flags & D_TRAPPED);
 
-                if((here->doormask & (D_LOCKED|D_CLOSED)) && amorphous(ptr)) {
+                if((here->flags & (D_LOCKED|D_CLOSED)) && amorphous(ptr)) {
                     if (flags.verbose && canseemon(mtmp)) {
                         char name[BUFSZ];
                         Monnam(name, BUFSZ, mtmp);
@@ -1035,9 +1035,9 @@ postmov:
                                  ptr == &mons[PM_YELLOW_LIGHT])
                                 ? "flows" : "oozes");
                     }
-                } else if((here->doormask & D_LOCKED) && can_unlock) {
+                } else if((here->flags & D_LOCKED) && can_unlock) {
                     if(btrapped) {
-                        here->doormask = D_NODOOR;
+                        here->flags = D_NODOOR;
                         newsym(mtmp->mx, mtmp->my);
                         unblock_point(mtmp->mx,mtmp->my); /* vision */
                         if(mb_trapped(mtmp)) return(2);
@@ -1048,13 +1048,13 @@ postmov:
                             else if (flags.soundok)
                                 You_hear("a door unlock and open.");
                         }
-                        here->doormask = D_ISOPEN;
+                        here->flags = D_ISOPEN;
                         /* newsym(mtmp->mx, mtmp->my); */
                         unblock_point(mtmp->mx,mtmp->my); /* vision */
                     }
-                } else if (here->doormask == D_CLOSED && can_open) {
+                } else if (here->flags == D_CLOSED && can_open) {
                     if(btrapped) {
-                        here->doormask = D_NODOOR;
+                        here->flags = D_NODOOR;
                         newsym(mtmp->mx, mtmp->my);
                         unblock_point(mtmp->mx,mtmp->my); /* vision */
                         if(mb_trapped(mtmp)) return(2);
@@ -1065,14 +1065,14 @@ postmov:
                             else if (flags.soundok)
                                 You_hear("a door open.");
                         }
-                        here->doormask = D_ISOPEN;
+                        here->flags = D_ISOPEN;
                         /* newsym(mtmp->mx, mtmp->my); */  /* done below */
                         unblock_point(mtmp->mx,mtmp->my); /* vision */
                     }
-                } else if (here->doormask & (D_LOCKED|D_CLOSED)) {
+                } else if (here->flags & (D_LOCKED|D_CLOSED)) {
                     /* mfndpos guarantees this must be a doorbuster */
                     if(btrapped) {
-                        here->doormask = D_NODOOR;
+                        here->flags = D_NODOOR;
                         newsym(mtmp->mx, mtmp->my);
                         unblock_point(mtmp->mx,mtmp->my); /* vision */
                         if(mb_trapped(mtmp)) return(2);
@@ -1083,9 +1083,9 @@ postmov:
                             else if (flags.soundok)
                                 You_hear("a door crash open.");
                         }
-                        if ((here->doormask & D_LOCKED) && !rn2(2))
-                            here->doormask = D_NODOOR;
-                        else here->doormask = D_BROKEN;
+                        if ((here->flags & D_LOCKED) && !rn2(2))
+                            here->flags = D_NODOOR;
+                        else here->flags = D_BROKEN;
                         /* newsym(mtmp->mx, mtmp->my); */ /* done below */
                         unblock_point(mtmp->mx,mtmp->my); /* vision */
                     }
@@ -1188,7 +1188,7 @@ postmov:
 
 bool closed_door (int x, int y) {
     return((bool)(IS_DOOR(levl[x][y].typ) &&
-                (levl[x][y].doormask & (D_LOCKED | D_CLOSED))));
+                (levl[x][y].flags & (D_LOCKED | D_CLOSED))));
 }
 
 bool accessible (int x, int y) {

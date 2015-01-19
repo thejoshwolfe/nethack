@@ -636,7 +636,7 @@ static void create_door(room_door *dd, struct mkroom *broom) {
     }
     add_door(x, y, broom);
     levl[x][y].typ = (dd->secret ? SDOOR : DOOR);
-    levl[x][y].doormask = dd->mask;
+    levl[x][y].flags = dd->mask;
 }
 
 /*
@@ -676,7 +676,7 @@ void create_secret_door(struct mkroom *croom, signed char walls) {
 
         if (okdoor(sx, sy)) {
             levl[sx][sy].typ = SDOOR;
-            levl[sx][sy].doormask = D_CLOSED;
+            levl[sx][sy].flags = D_CLOSED;
             add_door(sx, sy, croom);
             return;
         }
@@ -2095,7 +2095,7 @@ load_maze (dlb *fd)
                      */
                     if (levl[x][y].typ == SDOOR || IS_DOOR(levl[x][y].typ)) {
                         if(levl[x][y].typ == SDOOR)
-                            levl[x][y].doormask = D_CLOSED;
+                            levl[x][y].flags = D_CLOSED;
                         /*
                          *  If there is a wall to the left that connects to a
                          *  (secret) door, then it is horizontal.  This does
@@ -2255,7 +2255,7 @@ load_maze (dlb *fd)
                         if(typ < D_CLOSED)
                             typ = D_CLOSED; /* force it to be closed */
                 }
-                levl[x][y].doormask = typ;
+                levl[x][y].flags = typ;
 
                 /* Now the complicated part, list it with each subroom */
                 /* The dog move and mail daemon routines use this */

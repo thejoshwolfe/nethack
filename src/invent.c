@@ -1926,7 +1926,7 @@ const char * dfeature_at (int x, int y, char *buf) {
         static char altbuf[BUFSZ];
 
         if (IS_DOOR(ltyp)) {
-            switch (lev->doormask) {
+            switch (lev->flags) {
             case D_NODOOR:      cmap = S_ndoor; break;  /* "doorway" */
             case D_ISOPEN:      cmap = S_vodoor; break; /* "open door" */
             case D_BROKEN:      dfeature = "broken door"; break;

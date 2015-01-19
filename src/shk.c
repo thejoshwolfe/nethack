@@ -2654,7 +2654,7 @@ int repair_damage(struct monst *shkp, struct damage *tmp_dam, bool catchup) {
         }
         deltrap(ttmp);
         if(IS_DOOR(tmp_dam->typ)) {
-            levl[x][y].doormask = D_CLOSED; /* arbitrary */
+            levl[x][y].flags = D_CLOSED; /* arbitrary */
             block_point(x, y);
         } else if (IS_WALL(tmp_dam->typ)) {
             levl[x][y].typ = tmp_dam->typ;
@@ -2668,7 +2668,7 @@ int repair_damage(struct monst *shkp, struct damage *tmp_dam, bool catchup) {
         return(1);
     }
     if ((tmp_dam->typ == levl[x][y].typ) &&
-            (!IS_DOOR(tmp_dam->typ) || (levl[x][y].doormask > D_BROKEN)))
+            (!IS_DOOR(tmp_dam->typ) || (levl[x][y].flags > D_BROKEN)))
         /* No messages if player already replaced shop door */
         return(1);
     levl[x][y].typ = tmp_dam->typ;
@@ -2711,10 +2711,10 @@ int repair_damage(struct monst *shkp, struct damage *tmp_dam, bool catchup) {
 
     block_point(x, y);
     if(IS_DOOR(tmp_dam->typ)) {
-        levl[x][y].doormask = D_CLOSED; /* arbitrary */
+        levl[x][y].flags = D_CLOSED; /* arbitrary */
         newsym(x, y);
     } else {
-        /* don't set doormask  - it is (hopefully) the same as it was */
+        /* don't set flags  - it is (hopefully) the same as it was */
         /* if not, perhaps save it with the damage array...  */
 
         if (IS_WALL(tmp_dam->typ) && cansee(x, y)) {
@@ -3374,7 +3374,7 @@ bool block_entry(signed char x,signed char y) {
     struct monst *shkp;
 
     if(!(IS_DOOR(levl[u.ux][u.uy].typ) &&
-                levl[u.ux][u.uy].doormask == D_BROKEN)) return(false);
+                levl[u.ux][u.uy].flags == D_BROKEN)) return(false);
 
     roomno = *in_rooms(x, y, SHOPBASE);
     if(roomno < 0 || !IS_SHOP(roomno)) return(false);

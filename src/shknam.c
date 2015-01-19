@@ -383,18 +383,18 @@ void stock_room (int shp_indx, struct mkroom *sroom) {
     sx = doors[sroom->fdoor].x;
     sy = doors[sroom->fdoor].y;
 
-    if(levl[sx][sy].doormask == D_NODOOR) {
-        levl[sx][sy].doormask = D_ISOPEN;
+    if(levl[sx][sy].flags == D_NODOOR) {
+        levl[sx][sy].flags = D_ISOPEN;
         newsym(sx,sy);
     }
     if(levl[sx][sy].typ == SDOOR) {
         cvt_sdoor_to_door(&levl[sx][sy]);   /* .typ = DOOR */
         newsym(sx,sy);
     }
-    if(levl[sx][sy].doormask & D_TRAPPED)
-        levl[sx][sy].doormask = D_LOCKED;
+    if(levl[sx][sy].flags & D_TRAPPED)
+        levl[sx][sy].flags = D_LOCKED;
 
-    if(levl[sx][sy].doormask == D_LOCKED) {
+    if(levl[sx][sy].flags == D_LOCKED) {
         int m = sx, n = sy;
 
         if(inside_shop(sx+1,sy)) m--;

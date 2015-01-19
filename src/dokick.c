@@ -863,21 +863,21 @@ dokick (void)
                         pline("Crash!  %s a secret door!",
                               /* don't "kick open" when it's locked
                                  unless it also happens to be trapped */
-                        (maploc->doormask & (D_LOCKED|D_TRAPPED)) == D_LOCKED ?
+                        (maploc->flags & (D_LOCKED|D_TRAPPED)) == D_LOCKED ?
                               "Your kick uncovers" : "You kick open");
                         exercise(A_DEX, true);
-                        if(maploc->doormask & D_TRAPPED) {
-                            maploc->doormask = D_NODOOR;
+                        if(maploc->flags & D_TRAPPED) {
+                            maploc->flags = D_NODOOR;
                             b_trapped("door", FOOT);
-                        } else if (maploc->doormask != D_NODOOR &&
-                                   !(maploc->doormask & D_LOCKED))
-                            maploc->doormask = D_ISOPEN;
+                        } else if (maploc->flags != D_NODOOR &&
+                                   !(maploc->flags & D_LOCKED))
+                            maploc->flags = D_ISOPEN;
                         if (Blind())
                             feel_location(x,y); /* we know it's gone */
                         else
                             newsym(x,y);
-                        if (maploc->doormask == D_ISOPEN ||
-                            maploc->doormask == D_NODOOR)
+                        if (maploc->flags == D_ISOPEN ||
+                            maploc->flags == D_NODOOR)
                             unblock_point(x,y); /* vision */
                         return(1);
                     } else goto ouch;
@@ -898,9 +898,9 @@ dokick (void)
                 if(IS_THRONE(maploc->typ)) {
                     int i;
                     if(Levitation) goto dumb;
-                    if((Luck < 0 || maploc->doormask) && !rn2(3)) {
+                    if((Luck < 0 || maploc->flags) && !rn2(3)) {
                         maploc->typ = ROOM;
-                        maploc->doormask = 0; /* don't leave loose ends.. */
+                        maploc->flags = 0; /* don't leave loose ends.. */
                         (void) mkgold((long)rnd(200), x, y);
                         if (Blind())
                             pline("CRASH!  You destroy it.");
@@ -1087,9 +1087,9 @@ ouch:
                 goto dumb;
         }
 
-        if(maploc->doormask == D_ISOPEN ||
-           maploc->doormask == D_BROKEN ||
-           maploc->doormask == D_NODOOR) {
+        if(maploc->flags == D_ISOPEN ||
+           maploc->flags == D_BROKEN ||
+           maploc->flags == D_NODOOR) {
 dumb:
                 exercise(A_DEX, false);
                 if (martial() || ACURR(A_DEX) >= 16 || rn2(3)) {
@@ -1115,19 +1115,19 @@ dumb:
         if(rnl(35) < avrg_attrib + (!martial() ? 0 : ACURR(A_DEX))) {
                 bool shopdoor = *in_rooms(x, y, SHOPBASE) ? true : false;
                 /* break the door */
-                if(maploc->doormask & D_TRAPPED) {
+                if(maploc->flags & D_TRAPPED) {
                     if (flags.verbose) You("kick the door.");
                     exercise(A_STR, false);
-                    maploc->doormask = D_NODOOR;
+                    maploc->flags = D_NODOOR;
                     b_trapped("door", FOOT);
                 } else if(ACURR(A_STR) > 18 && !rn2(5) && !shopdoor) {
                     pline("As you kick the door, it shatters to pieces!");
                     exercise(A_STR, true);
-                    maploc->doormask = D_NODOOR;
+                    maploc->flags = D_NODOOR;
                 } else {
                     pline("As you kick the door, it crashes open!");
                     exercise(A_STR, true);
-                    maploc->doormask = D_BROKEN;
+                    maploc->flags = D_BROKEN;
                 }
                 if (Blind())
                     feel_location(x,y);         /* we know we broke it */

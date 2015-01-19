@@ -349,7 +349,7 @@ void invault(void) {
                 EGD(guard)->fakecorr[0].ftyp = VWALL;
         }
         levl[x][y].typ = DOOR;
-        levl[x][y].doormask = D_NODOOR;
+        levl[x][y].flags = D_NODOOR;
         unblock_point(x, y); /* doesn't block light */
         EGD(guard)->fcend = 1;
         EGD(guard)->warncnt = 1;
@@ -405,7 +405,7 @@ static void wallify_vault(struct monst *grd) {
                     /* not left or right side, must be top or bottom */
                     typ = HWALL;
                 levl[x][y].typ = typ;
-                levl[x][y].doormask = 0;
+                levl[x][y].flags = 0;
                 /*
                  * hack: player knows walls are restored because of the
                  * message, below, so show this on the screen.
@@ -625,7 +625,7 @@ int gd_move(struct monst *grd) {
                         goto newpos;
                     crm->typ = (typ == SCORR) ? CORR : DOOR;
                     if (crm->typ == DOOR)
-                        crm->doormask = D_NODOOR;
+                        crm->flags = D_NODOOR;
                     goto proceed;
                 }
             }
@@ -648,7 +648,7 @@ int gd_move(struct monst *grd) {
         /* must be a wall here */
         if (isok(nx + nx - x, ny + ny - y) && !IS_POOL(typ) && IS_ROOM(levl[nx+nx-x][ny+ny-y].typ)) {
             crm->typ = DOOR;
-            crm->doormask = D_NODOOR;
+            crm->flags = D_NODOOR;
             goto proceed;
         }
         if (dy && nx != x) {
@@ -665,7 +665,7 @@ int gd_move(struct monst *grd) {
         /* I don't like this, but ... */
         if (IS_ROOM(typ)) {
             crm->typ = DOOR;
-            crm->doormask = D_NODOOR;
+            crm->flags = D_NODOOR;
             goto proceed;
         }
         break;
