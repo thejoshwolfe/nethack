@@ -134,19 +134,6 @@ static struct obj *book;        /* last/current book being xscribed */
 /* since the spellbook itself doesn't blow up, don't say just "explodes" */
 static const char explodes[] = "radiates explosive energy";
 
-/* convert a letter into a number in the range 0..51, or -1 if not a letter */
-static int
-spell_let_to_idx (char ilet)
-{
-    int indx;
-
-    indx = ilet - 'a';
-    if (indx >= 0 && indx < 26) return indx;
-    indx = ilet - 'A';
-    if (indx >= 0 && indx < 26) return indx + 26;
-    return -1;
-}
-
 /* true: book should be destroyed by caller */
 static bool 
 cursed_book (struct obj *bp)

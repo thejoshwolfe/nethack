@@ -330,9 +330,7 @@ get_unused_cs (char ***rows, char **rmin, char **rmax)
  *      + Right after the hero is swallowed. [gulpmu()]
  *      + Just before bubbles are moved. [movebubbles()]
  */
-void
-vision_recalc (int control)
-{
+void vision_recalc(int control) {
     char **temp_array;  /* points to the old vision array */
     char **next_array;  /* points to the new vision array */
     char *next_row;     /* row pointer for the new array */
@@ -401,8 +399,7 @@ vision_recalc (int control)
 
         /* skip the normal update loop */
         goto skip;
-    }
-    else {
+    } else {
         int has_night_vision = 1;       /* hero has night vision */
 
         if (Underwater && !Is_waterlevel(&u.uz)) {
@@ -552,10 +549,7 @@ vision_recalc (int control)
                 /* Update pos if previously not in sight or new angle. */
                 if ( !(old_row[col] & IN_SIGHT) || oldseenv != lev->seenv)
                     newsym(col,row);
-            }
-
-            else if ((next_row[col] & COULD_SEE)
-                                && (lev->lit || (next_row[col] & TEMP_LIT))) {
+            } else if ((next_row[col] & COULD_SEE) && (lev->lit || (next_row[col] & TEMP_LIT))) {
                 /*
                  * We see this position because it is lit.
                  */
@@ -601,28 +595,24 @@ vision_recalc (int control)
                  */
                 lev->waslit = 0; /* remember lit condition */
                 newsym(col,row);
-            }
-            /*
-             * At this point we know that the row position is *not* in normal
-             * sight.  That is, the position is could be seen, but is dark
-             * or LOS is just plain blocked.
-             *
-             * Update the position if:
-             * o If the old one *was* in sight.  We may need to clean up
-             *   the glyph -- E.g. darken room spot, etc.
-             * o If we now could see the location (yet the location is not
-             *   lit), but previously we couldn't see the location, or vice
-             *   versa.  Update the spot because there there may be an infared
-             *   monster there.
-             */
-            else {
+            } else {
+                /*
+                 * At this point we know that the row position is *not* in normal
+                 * sight.  That is, the position is could be seen, but is dark
+                 * or LOS is just plain blocked.
+                 *
+                 * Update the position if:
+                 * o If the old one *was* in sight.  We may need to clean up
+                 *   the glyph -- E.g. darken room spot, etc.
+                 * o If we now could see the location (yet the location is not
+                 *   lit), but previously we couldn't see the location, or vice
+                 *   versa.  Update the spot because there there may be an infared
+                 *   monster there.
+                 */
 not_in_sight:
-                if ((old_row[col] & IN_SIGHT)
-                        || ((next_row[col] & COULD_SEE)
-                                ^ (old_row[col] & COULD_SEE)))
+                if ((old_row[col] & IN_SIGHT) || ((next_row[col] & COULD_SEE) ^ (old_row[col] & COULD_SEE)))
                     newsym(col,row);
             }
-
         } /* end for col . . */
     }   /* end for row . .  */
     colbump[u.ux] = colbump[u.ux+1] = 0;
