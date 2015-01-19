@@ -3340,8 +3340,8 @@ void melt_ice(signed char x, signed char y) {
     if (lev->typ == DRAWBRIDGE_UP)
         lev->flags &= ~DB_ICE; /* revert to DB_MOAT */
     else { /* lev->typ == ICE */
-        lev->typ = (lev->icedpool == ICED_POOL ? POOL : MOAT);
-        lev->icedpool = 0;
+        lev->typ = (lev->flags == ICED_POOL ? POOL : MOAT);
+        lev->flags = 0;
     }
     obj_ice_effects(x, y, false);
     unearth_objs(x, y);
@@ -3432,7 +3432,7 @@ int zap_over_floor(signed char x, signed char y, int type, bool *shopdamage) {
                 lev->flags |= (lava ? DB_FLOOR : DB_ICE);
             } else {
                 if (!lava)
-                    lev->icedpool = (lev->typ == POOL ? ICED_POOL : ICED_MOAT);
+                    lev->flags = (lev->typ == POOL ? ICED_POOL : ICED_MOAT);
                 lev->typ = (lava ? ROOM : ICE);
             }
             bury_objs(x, y);

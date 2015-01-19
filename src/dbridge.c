@@ -741,7 +741,7 @@ void destroy_drawbridge (int x, int y) {
             You_hear("a loud *CRASH*!");
         lev1->typ =
             ((lev1->flags & DB_ICE) ? ICE : ROOM);
-        lev1->icedpool =
+        lev1->flags =
             ((lev1->flags & DB_ICE) ? ICED_MOAT : 0);
     }
     wake_nearto(x, y, 500);
