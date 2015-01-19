@@ -28,7 +28,7 @@
  */
 
 /* Level location types */
-enum {
+typedef enum {
     STONE           = 0,
     VWALL           = 1,
     HWALL           = 2,
@@ -68,33 +68,7 @@ enum {
 
     MAX_TYPE        = 36,
     INVALID_TYPE    = 127,
-};
-
-/*
- * Avoid using the level types in inequalities:
- * these types are subject to change.
- * Instead, use one of the macros below.
- */
-#define IS_WALL(typ)    ((typ) && (typ) <= DBWALL)
-#define IS_STWALL(typ)  ((typ) <= DBWALL)       /* STONE <= (typ) <= DBWALL */
-#define IS_ROCK(typ)    ((typ) < POOL)          /* absolutely nonaccessible */
-#define IS_DOOR(typ)    ((typ) == DOOR)
-#define IS_TREE(typ)    ((typ) == TREE || \
-                        (level.flags.arboreal && (typ) == STONE))
-#define ACCESSIBLE(typ) ((typ) >= DOOR)         /* good position */
-#define IS_ROOM(typ)    ((typ) >= ROOM)         /* ROOM, STAIRS, furniture.. */
-#define ZAP_POS(typ)    ((typ) >= POOL)
-#define SPACE_POS(typ)  ((typ) > DOOR)
-#define IS_POOL(typ)    ((typ) >= POOL && (typ) <= DRAWBRIDGE_UP)
-#define IS_THRONE(typ)  ((typ) == THRONE)
-#define IS_FOUNTAIN(typ) ((typ) == FOUNTAIN)
-#define IS_SINK(typ)    ((typ) == SINK)
-#define IS_GRAVE(typ)   ((typ) == GRAVE)
-#define IS_ALTAR(typ)   ((typ) == ALTAR)
-#define IS_DRAWBRIDGE(typ) ((typ) == DRAWBRIDGE_UP || (typ) == DRAWBRIDGE_DOWN)
-#define IS_FURNITURE(typ) ((typ) >= STAIRS && (typ) <= ALTAR)
-#define IS_AIR(typ)     ((typ) == AIR || (typ) == CLOUD)
-#define IS_SOFT(typ)    ((typ) == AIR || (typ) == CLOUD || IS_POOL(typ))
+} DundeonFeature;
 
 /*
  * The screen symbols may be the default or defined at game startup time.
@@ -276,7 +250,6 @@ enum {
 #define FOUNTAIN_IS_LOOTED(x,y)         (levl[x][y].looted & F_LOOTED)
 #define SET_FOUNTAIN_WARNED(x,y)        levl[x][y].looted |= F_WARNED;
 #define SET_FOUNTAIN_LOOTED(x,y)        levl[x][y].looted |= F_LOOTED;
-#define CLEAR_FOUNTAIN_WARNED(x,y)      levl[x][y].looted &= ~F_WARNED;
 #define CLEAR_FOUNTAIN_LOOTED(x,y)      levl[x][y].looted &= ~F_LOOTED;
 
 /*
@@ -346,15 +319,15 @@ enum {
  * the size of temporary files and save files.
  */
 struct rm {
-        int glyph;              /* what the hero thinks is there */
-        signed char typ;                /* what is really there */
-        unsigned char seenv;            /* seen vector */
-        unsigned flags:5;      /* extra information for typ */
-        unsigned horizontal:1; /* wall/door/etc is horiz. (more typ info) */
-        unsigned lit:1;        /* speed hack for lit rooms */
-        unsigned waslit:1;     /* remember if a location was lit */
-        unsigned roomno:6;     /* room # for special rooms */
-        unsigned edge:1;       /* marks boundaries for special rooms*/
+    int glyph;             /* what the hero thinks is there */
+    signed char typ;       /* what is really there */
+    unsigned char seenv;   /* seen vector */
+    unsigned flags:5;      /* extra information for typ */
+    unsigned horizontal:1; /* wall/door/etc is horiz. (more typ info) */
+    unsigned lit:1;        /* speed hack for lit rooms */
+    unsigned waslit:1;     /* remember if a location was lit */
+    unsigned roomno:6;     /* room # for special rooms */
+    unsigned edge:1;       /* marks boundaries for special rooms*/
 };
 
 /*

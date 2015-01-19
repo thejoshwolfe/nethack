@@ -13,6 +13,7 @@
 
 #include "mkroom.h"
 
+#include "rm_util.h"
 #include "dungeon_util.h"
 #include "align.h"
 #include "cmd.h"

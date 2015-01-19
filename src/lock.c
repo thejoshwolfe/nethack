@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 
+#include "rm_util.h"
 #include "display_util.h"
 #include "attrib.h"
 #include "cmd.h"

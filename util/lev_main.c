@@ -3,9 +3,8 @@
  * This file contains the main function for the parser
  * and some useful functions needed by yacc
  */
-#define SPEC_LEV        /* for MPW */
-/* although, why don't we move those special defines here.. and in dgn_main? */
 
+#include "rm_util.h"
 #include "hack.h"
 #include "date.h"
 #include "sp_lev.h"

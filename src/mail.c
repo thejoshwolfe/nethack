@@ -1,5 +1,6 @@
 /* See LICENSE in the root of this project for change info */
 
+#include "rm_util.h"
 #include "vision_util.h"
 #include "cmd.h"
 #include "coord.h"

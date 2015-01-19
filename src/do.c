@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "rm_util.h"
 #include "display_util.h"
 #include "move.h"
 #include "dungeon_util.h"

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "rm_util.h"
 #include "display_util.h"
 #include "move.h"
 #include "apply.h"

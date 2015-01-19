@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "rm_util.h"
 #include "mkroom.h"
 #include "onames.h"
 #include "invent.h"

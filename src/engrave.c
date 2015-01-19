@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "rm_util.h"
 #include "dungeon_util.h"
 #include "attrib.h"
 #include "cmd.h"

@@ -15,6 +15,7 @@
  * and AIX will still see the directive.
  */
 
+#include "rm_util.h"
 #include "hack.h"
 #include "sp_lev.h"
 #include "rm.h"

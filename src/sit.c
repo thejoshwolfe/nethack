@@ -4,6 +4,7 @@
 
 #include <stdbool.h>
 
+#include "rm_util.h"
 #include "dungeon_util.h"
 #include "artifact.h"
 #include "artifact_names.h"

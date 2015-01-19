@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "rm_util.h"
 #include "display_util.h"
 #include "align.h"
 #include "apply.h"

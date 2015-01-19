@@ -29,6 +29,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "rm_util.h"
 #include "display_util.h"
 #include "dungeon_util.h"
 #include "attrib.h"
