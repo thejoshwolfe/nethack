@@ -1247,14 +1247,14 @@ int back_to_glyph (signed char x, signed char y) {
             idx = (ptr->horizontal) ? S_hcdbridge : S_vcdbridge;
             break;
         case DRAWBRIDGE_UP:
-            switch(ptr->drawbridgemask & DB_UNDER) {
+            switch(ptr->flags & DB_UNDER) {
             case DB_MOAT:  idx = S_pool; break;
             case DB_LAVA:  idx = S_lava; break;
             case DB_ICE:   idx = S_ice;  break;
             case DB_FLOOR: idx = S_room; break;
             default:
                 impossible("Strange db-under: %d",
-                           ptr->drawbridgemask & DB_UNDER);
+                           ptr->flags & DB_UNDER);
                 idx = S_room; /* something is better than nothing */
                 break;
             }

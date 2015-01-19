@@ -1026,11 +1026,11 @@ const char * waterbody_name (signed char x, signed char y) {
                 return "lava";
         else if (ltyp == ICE ||
                  (ltyp == DRAWBRIDGE_UP &&
-                  (levl[x][y].drawbridgemask & DB_UNDER) == DB_ICE))
+                  (levl[x][y].flags & DB_UNDER) == DB_ICE))
                 return "ice";
         else if (((ltyp != POOL) && (ltyp != WATER) &&
           !Is_medusa_level(&u.uz) && !Is_waterlevel(&u.uz) && !Is_juiblex_level(&u.uz)) ||
-           (ltyp == DRAWBRIDGE_UP && (levl[x][y].drawbridgemask & DB_UNDER) == DB_MOAT))
+           (ltyp == DRAWBRIDGE_UP && (levl[x][y].flags & DB_UNDER) == DB_MOAT))
                 return "moat";
         else if ((ltyp != POOL) && (ltyp != WATER) && Is_juiblex_level(&u.uz))
                 return "swamp";

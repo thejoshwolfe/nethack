@@ -139,8 +139,8 @@ bool boulder_hits_pool(struct obj *otmp, int rx, int ry, bool pushing) {
                 struct trap *ttmp = t_at(rx, ry);
 
                 if (ltyp == DRAWBRIDGE_UP) {
-                    levl[rx][ry].drawbridgemask &= ~DB_UNDER; /* clear lava */
-                    levl[rx][ry].drawbridgemask |= DB_FLOOR;
+                    levl[rx][ry].flags &= ~DB_UNDER; /* clear lava */
+                    levl[rx][ry].flags |= DB_FLOOR;
                 } else
                     levl[rx][ry].typ = ROOM;
 

@@ -3338,7 +3338,7 @@ void melt_ice(signed char x, signed char y) {
     struct obj *otmp;
 
     if (lev->typ == DRAWBRIDGE_UP)
-        lev->drawbridgemask &= ~DB_ICE; /* revert to DB_MOAT */
+        lev->flags &= ~DB_ICE; /* revert to DB_MOAT */
     else { /* lev->typ == ICE */
         lev->typ = (lev->icedpool == ICED_POOL ? POOL : MOAT);
         lev->icedpool = 0;
@@ -3428,8 +3428,8 @@ int zap_over_floor(signed char x, signed char y, int type, bool *shopdamage) {
         } else {
             rangemod -= 3;
             if (lev->typ == DRAWBRIDGE_UP) {
-                lev->drawbridgemask &= ~DB_UNDER; /* clear lava */
-                lev->drawbridgemask |= (lava ? DB_FLOOR : DB_ICE);
+                lev->flags &= ~DB_UNDER; /* clear lava */
+                lev->flags |= (lava ? DB_FLOOR : DB_ICE);
             } else {
                 if (!lava)
                     lev->icedpool = (lev->typ == POOL ? ICED_POOL : ICED_MOAT);

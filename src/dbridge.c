@@ -66,7 +66,7 @@ bool is_pool (int x, int y) {
     ltyp = levl[x][y].typ;
     if (ltyp == POOL || ltyp == MOAT || ltyp == WATER) return true;
     if (ltyp == DRAWBRIDGE_UP &&
-        (levl[x][y].drawbridgemask & DB_UNDER) == DB_MOAT) return true;
+        (levl[x][y].flags & DB_UNDER) == DB_MOAT) return true;
     return false;
 }
 
@@ -77,7 +77,7 @@ bool is_lava (int x, int y) {
     ltyp = levl[x][y].typ;
     if (ltyp == LAVAPOOL
         || (ltyp == DRAWBRIDGE_UP
-            && (levl[x][y].drawbridgemask & DB_UNDER) == DB_LAVA)) return true;
+            && (levl[x][y].flags & DB_UNDER) == DB_LAVA)) return true;
     return false;
 }
 
@@ -88,7 +88,7 @@ bool is_ice (int x, int y) {
     ltyp = levl[x][y].typ;
     if (ltyp == ICE
         || (ltyp == DRAWBRIDGE_UP
-            && (levl[x][y].drawbridgemask & DB_UNDER) == DB_ICE)) return true;
+            && (levl[x][y].flags & DB_UNDER) == DB_ICE)) return true;
     return false;
 }
 
@@ -107,16 +107,16 @@ int is_drawbridge_wall (int x, int y) {
                 return (-1);
 
         if (IS_DRAWBRIDGE(levl[x+1][y].typ) &&
-            (levl[x+1][y].drawbridgemask & DB_DIR) == DB_WEST)
+            (levl[x+1][y].flags & DB_DIR) == DB_WEST)
                 return (DB_WEST);
         if (IS_DRAWBRIDGE(levl[x-1][y].typ) &&
-            (levl[x-1][y].drawbridgemask & DB_DIR) == DB_EAST)
+            (levl[x-1][y].flags & DB_DIR) == DB_EAST)
                 return (DB_EAST);
         if (IS_DRAWBRIDGE(levl[x][y-1].typ) &&
-            (levl[x][y-1].drawbridgemask & DB_DIR) == DB_SOUTH)
+            (levl[x][y-1].flags & DB_DIR) == DB_SOUTH)
                 return (DB_SOUTH);
         if (IS_DRAWBRIDGE(levl[x][y+1].typ) &&
-            (levl[x][y+1].drawbridgemask & DB_DIR) == DB_NORTH)
+            (levl[x][y+1].flags & DB_DIR) == DB_NORTH)
                 return (DB_NORTH);
 
         return (-1);
@@ -157,7 +157,7 @@ bool find_drawbridge (int *x, int *y) {
  * Find the drawbridge wall associated with a drawbridge.
  */
 static void get_wall_for_db (int *x, int *y) {
-        switch (levl[*x][*y].drawbridgemask & DB_DIR) {
+        switch (levl[*x][*y].flags & DB_DIR) {
                 case DB_NORTH: (*y)--; break;
                 case DB_SOUTH: (*y)++; break;
                 case DB_EAST:  (*x)++; break;
@@ -212,8 +212,8 @@ bool create_drawbridge(int x,int y,int dir,bool flag) {
         }
         levl[x][y].horizontal = !horiz;
         levl[x2][y2].horizontal = horiz;
-        levl[x][y].drawbridgemask = dir;
-        if(lava) levl[x][y].drawbridgemask |= DB_LAVA;
+        levl[x][y].flags = dir;
+        if(lava) levl[x][y].flags |= DB_LAVA;
         return(true);
 }
 
@@ -630,7 +630,7 @@ void close_drawbridge (int x, int y) {
         lev1->typ = DRAWBRIDGE_UP;
         lev2 = &levl[x2][y2];
         lev2->typ = DBWALL;
-        switch (lev1->drawbridgemask & DB_DIR) {
+        switch (lev1->flags & DB_DIR) {
                 case DB_NORTH:
                 case DB_SOUTH:
                         lev2->horizontal = true;
@@ -711,10 +711,10 @@ void destroy_drawbridge (int x, int y) {
     x2 = x; y2 = y;
     get_wall_for_db(&x2,&y2);
     lev2 = &levl[x2][y2];
-    if ((lev1->drawbridgemask & DB_UNDER) == DB_MOAT ||
-            (lev1->drawbridgemask & DB_UNDER) == DB_LAVA) {
+    if ((lev1->flags & DB_UNDER) == DB_MOAT ||
+            (lev1->flags & DB_UNDER) == DB_LAVA) {
         struct obj *otmp;
-        bool lava = (lev1->drawbridgemask & DB_UNDER) == DB_LAVA;
+        bool lava = (lev1->flags & DB_UNDER) == DB_LAVA;
         if (lev1->typ == DRAWBRIDGE_UP) {
             if (cansee(x2,y2))
                 pline_The("portcullis of the drawbridge falls into the %s!",
@@ -729,7 +729,7 @@ void destroy_drawbridge (int x, int y) {
                 You_hear("a loud *SPLASH*!");
         }
         lev1->typ = lava ? LAVAPOOL : MOAT;
-        lev1->drawbridgemask = 0;
+        lev1->flags = 0;
         if ((otmp = sobj_at(BOULDER,x,y)) != 0) {
             obj_extract_self(otmp);
             (void) flooreffects(otmp,x,y,"fall");
@@ -740,9 +740,9 @@ void destroy_drawbridge (int x, int y) {
         else
             You_hear("a loud *CRASH*!");
         lev1->typ =
-            ((lev1->drawbridgemask & DB_ICE) ? ICE : ROOM);
+            ((lev1->flags & DB_ICE) ? ICE : ROOM);
         lev1->icedpool =
-            ((lev1->drawbridgemask & DB_ICE) ? ICED_MOAT : 0);
+            ((lev1->flags & DB_ICE) ? ICED_MOAT : 0);
     }
     wake_nearto(x, y, 500);
     lev2->typ = DOOR;

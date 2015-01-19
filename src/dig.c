@@ -484,11 +484,11 @@ static signed char fillholetyp(int x,int y) {
                 pool_cnt++;
             else if (levl[x1][y1].typ == MOAT ||
                     (levl[x1][y1].typ == DRAWBRIDGE_UP &&
-                        (levl[x1][y1].drawbridgemask & DB_UNDER) == DB_MOAT))
+                        (levl[x1][y1].flags & DB_UNDER) == DB_MOAT))
                 moat_cnt++;
             else if (levl[x1][y1].typ == LAVAPOOL ||
                     (levl[x1][y1].typ == DRAWBRIDGE_UP &&
-                        (levl[x1][y1].drawbridgemask & DB_UNDER) == DB_LAVA))
+                        (levl[x1][y1].flags & DB_UNDER) == DB_LAVA))
                 lava_cnt++;
     pool_cnt /= 3;              /* not as much liquid as the others */
 
@@ -789,8 +789,8 @@ bool dighole(bool pit_only) {
                         return false;
                 }
 
-                lev->drawbridgemask &= ~DB_UNDER;
-                lev->drawbridgemask |= (typ == LAVAPOOL) ? DB_LAVA : DB_MOAT;
+                lev->flags &= ~DB_UNDER;
+                lev->flags |= (typ == LAVAPOOL) ? DB_LAVA : DB_MOAT;
 
  liquid_flow:
                 if (ttmp) (void) delfloortrap(ttmp);

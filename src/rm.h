@@ -414,7 +414,6 @@ enum {
 };
 
 
-#define drawbridgemask  flags
 #define looted          flags
 #define icedpool        flags
 
