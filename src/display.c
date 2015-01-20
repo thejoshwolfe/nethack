@@ -629,7 +629,13 @@ void newsym(int x, int y) {
         }
         struct monst * mon = m_at(x, y);
         bool worm_tail = is_worm_tail(mon, x, y);
-        int see_it = mon && (worm_tail ? (!mon->minvis || See_invisible()) : (mon_visible(mon)) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon));
+        bool see_it = false;
+        if (mon) {
+            if (worm_tail)
+                see_it = !mon->minvis || See_invisible();
+            else
+                see_it = mon_visible(mon) || tp_sensemon(mon) || MATCH_WARN_OF_MON(mon);
+        }
         if (mon && (see_it || (!worm_tail && Detect_monsters()))) {
             if (mon->mtrapped) {
                 struct trap *trap = t_at(x, y);

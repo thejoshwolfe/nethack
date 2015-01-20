@@ -11,29 +11,27 @@
 #include "dungeon.h"
 #include "monst.h"
 
-union vlaunchinfo {
-        short v_launch_otyp;    /* type of object to be triggered */
-        coord v_launch2;        /* secondary launch point (for boulders) */
-};
-
 struct trap {
-        struct trap *ntrap;
-        signed char tx,ty;
-        d_level dst;    /* destination for portals */
-        coord launch;
-        unsigned ttyp:5;
-        unsigned tseen:1;
-        unsigned once:1;
-        unsigned madeby_u:1; /* So monsters may take offence when you trap
-                                 them.  Recognizing who made the trap isn't
-                                 completely unreasonable, everybody has
-                                 their own style.  This flag is also needed
-                                 when you untrap a monster.  It would be too
-                                 easy to make a monster peaceful if you could
-                                 set a trap for it and then untrap it. */
-        union vlaunchinfo vl;
-#define launch_otyp     vl.v_launch_otyp
-#define launch2         vl.v_launch2
+    struct trap *ntrap;
+    signed char tx,ty;
+    /* destination for portals */
+    d_level dst;
+    coord launch;
+    unsigned ttyp:5;
+    unsigned tseen:1;
+    unsigned once:1;
+    /* So monsters may take offence when you trap
+     * them.  Recognizing who made the trap isn't
+     * completely unreasonable, everybody has
+     * their own style.  This flag is also needed
+     * when you untrap a monster.  It would be too
+     * easy to make a monster peaceful if you could
+     * set a trap for it and then untrap it. */
+    unsigned madeby_u:1;
+    union {
+        short launch_otyp;    /* type of object to be triggered */
+        coord launch2;        /* secondary launch point (for boulders) */
+    };
 };
 
 extern struct trap *ftrap;

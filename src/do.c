@@ -734,9 +734,8 @@ menu_drop (int retry)
 
 int dodown (void) {
     struct trap *trap = 0;
-    bool stairs_down = ((u.ux == xdnstair && u.uy == ydnstair) ||
-            (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up)),
-         ladder_down = (u.ux == xdnladder && u.uy == ydnladder);
+    bool stairs_down = (u.ux == xdnstair && u.uy == ydnstair) || (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up);
+    bool ladder_down = u.ux == xdnladder && u.uy == ydnladder;
 
     if (u.usteed && !u.usteed->mcanmove) {
         char name[BUFSZ];
