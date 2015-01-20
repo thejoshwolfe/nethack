@@ -9,7 +9,7 @@ SIZE_X = 80;
 SIZE_Y = 21;
 
 struct Location {
-  level_id as int;
+  level_id as u256;
   coord as Coord;
 }
 // {-1, -1} means unknown or none.
@@ -32,7 +32,7 @@ enum BucStatus {
 }
 
 levels as dict {
-  level_id as int => level as struct Level {
+  level_id as u256 => level as struct Level {
     depth as int; // aka Dlvl. determines difficulty of spawned monsters, etc.
     branch_id as BranchId; // DUNGEONS_OF_DOOM, SOKOBAN, etc.
     map as struct Map {
@@ -56,19 +56,19 @@ levels as dict {
   },
 };
 traps as dict {
-  trap_id as int => trap as struct Trap {
+  trap_id as u256 => trap as struct Trap {
     trap_type as TrapType;
     location as Location;
   },
 };
 engravings as dict {
-  engraving_id as int => engraving as struct Engraving {
+  engraving_id as u256 => engraving as struct Engraving {
     text as String;
     location as Location;
   },
 };
 monsters as dict {
-  monster_id as int => monster as struct Monster {
+  monster_id as u256 => monster as struct Monster {
     species_id as SpeciesType; // VAMPIRE_LORD, JUIBLEX, etc.
     custom_name as String;
     location as Location;
@@ -76,21 +76,21 @@ monsters as dict {
   },
 };
 item_piles as dict {
-  item_pile_id as int => item_pile as struct ItemPile {
+  item_pile_id as u256 => item_pile as struct ItemPile {
     location as Location;
     seen_how as VisionTypes;
     // this will be accurate if seen_how is not blank; otherwise, it's your memory.
     // if you're looking closely here, this field is the same as item_ids[0].
-    top_item_id as int;
+    top_item_id as u256;
     // true means there's at least 1 more item under the top item.
     is_pile as bool;
     // this will be empty until you look closely at it.
     // after you walk away, it will be what you remember.
-    item_ids as list of int;
+    item_ids as list of u256;
   },
 };
 items as dict {
-  item_id as int => item as struct Item {
+  item_id as u256 => item as struct Item {
     description as ItemDescription; // MAGENTA_POTION, etc.
     count as int; // -1 means an unspecified amount more than 1.
     custom_name as String; // by naming an individual item.
