@@ -859,13 +859,13 @@ void tmp_at (int x, int y) {
  * directly.  This method works because both vision and display check for
  * being swallowed.
  */
-void swallowed (int first) {
+void swallowed (bool first) {
     static signed char lastx, lasty;    /* last swallowed position */
     int swallower, left_ok, rght_ok;
 
-    if (first)
+    if (first) {
         cls();
-    else {
+    } else {
         int x, y;
 
         /* Clear old location */
@@ -1072,7 +1072,7 @@ void docrt (void) {
     if (!u.ux) return; /* display isn't ready yet */
 
     if (u.uswallow) {
-        swallowed(1);
+        swallowed(true);
         return;
     }
     if (Underwater && !Is_waterlevel(&u.uz)) {

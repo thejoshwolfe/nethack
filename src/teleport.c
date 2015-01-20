@@ -329,7 +329,7 @@ void teleds (int nux, int nuy, bool allow_drag) {
             if (!ball_still_in_range && !allow_drag)
                 placebc();
         }
-        initrack(); /* teleports mess up tracking monsters without this */
+        clear_footprints(); /* teleports mess up tracking monsters without this */
         update_player_regions();
         /* Move your steed, too */
         if (u.usteed) {

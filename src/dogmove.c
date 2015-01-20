@@ -454,7 +454,7 @@ static int dog_goal (struct monst *mtmp, struct edog *edog, int after, int udist
         if (gx == u.ux && gy == u.uy && !in_masters_sight) {
             coord *cp;
 
-            cp = gettrack(omx,omy);
+            cp = get_footprint_near(omx,omy);
             if (cp) {
                 gx = cp->x;
                 gy = cp->y;

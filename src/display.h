@@ -20,7 +20,7 @@ void feel_location(signed char,signed char);
 void newsym(int,int);
 void shieldeff(signed char,signed char);
 void tmp_at(int,int);
-void swallowed(int);
+void swallowed(bool);
 void under_ground(int);
 void under_water(int);
 void see_monsters(void);

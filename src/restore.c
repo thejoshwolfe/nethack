@@ -74,15 +74,13 @@ struct bucket {
 };
 
 static int n_ids_mapped = 0;
-static struct bucket *id_map = 0;
+static struct bucket * id_map = NULL;
 
 #include "quest.h"
 
 bool restoring = false;
-static struct fruit *oldfruit;
+static struct fruit * oldfruit;
 static long omoves;
-
-#define Is_IceBox(o) ((o)->otyp == ICE_BOX ? true : false)
 
 /* Recalculate level.objects[x][y], since this info was not saved. */
 static void find_lev_obj(void) {
@@ -260,7 +258,7 @@ static struct obj * restobjchn(int fd, bool ghostly, bool frozen) {
         /* get contents of a container or statue */
         if (Has_contents(otmp)) {
             struct obj *otmp3;
-            otmp->cobj = restobjchn(fd, ghostly, Is_IceBox(otmp));
+            otmp->cobj = restobjchn(fd, ghostly, otmp->otyp == ICE_BOX);
             /* restore container back pointers */
             for (otmp3 = otmp->cobj; otmp3; otmp3 = otmp3->nobj)
                 otmp3->ocontainer = otmp;

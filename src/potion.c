@@ -306,7 +306,7 @@ bool make_hallucinated ( long xtime, bool talk, long mask) {
 
     if (changed) {
         if (u.uswallow) {
-            swallowed(0);   /* redraw swallow display */
+            swallowed(false);   /* redraw swallow display */
         } else {
             /* The see_* routines should be called *before* the pline. */
             see_monsters();

@@ -69,32 +69,15 @@
 #include "you.h"
 #include "youprop.h"
 
-void moveloop(void) {
-    int moveamt = 0, wtcap = 0, change = 0;
-    bool monscanmove = false;
-
-    flags.moonphase = phase_of_the_moon();
-    if (flags.moonphase == FULL_MOON) {
-        You("are lucky!  Full moon tonight.");
-        change_luck(1);
-    } else if (flags.moonphase == NEW_MOON) {
-        pline("Be careful!  New moon tonight.");
-    }
-    flags.friday13 = friday_13th();
-    if (flags.friday13) {
-        pline("Watch out!  Bad things can happen on Friday the 13th.");
-        change_luck(-1);
-    }
-
-    initrack();
-
-    if (flags.debug)
-        add_debug_extended_commands();
+static void main_loop(void) {
+    clear_footprints();
 
     u.uz0.dlevel = u.uz.dlevel;
     youmonst.movement = NORMAL_SPEED; /* give the hero some movement points */
 
-    for (;;) {
+    int moveamt = 0, wtcap = 0, change = 0;
+    bool monscanmove = false;
+    while (true) {
         bool didmove = flags.move;
         if (didmove) {
             /* actual time passed */
@@ -166,7 +149,7 @@ void moveloop(void) {
                     youmonst.movement += moveamt;
                     if (youmonst.movement < 0)
                         youmonst.movement = 0;
-                    settrack();
+                    add_footprint();
 
                     monstermoves++;
                     moves++;
@@ -340,7 +323,7 @@ void moveloop(void) {
             see_objects();
             see_traps();
             if (u.uswallow)
-                swallowed(0);
+                swallowed(false);
         } else if (Unblind_telepat) {
             see_monsters();
         } else if (Warning || Warn_of_mon) {
@@ -588,7 +571,23 @@ int main(int argc, char *argv[]) {
         notice_stuff_here();
     }
 
-    moveloop();
+    flags.moonphase = phase_of_the_moon();
+    if (flags.moonphase == FULL_MOON) {
+        You("are lucky!  Full moon tonight.");
+        change_luck(1);
+    } else if (flags.moonphase == NEW_MOON) {
+        pline("Be careful!  New moon tonight.");
+    }
+    flags.friday13 = friday_13th();
+    if (flags.friday13) {
+        pline("Watch out!  Bad things can happen on Friday the 13th.");
+        change_luck(-1);
+    }
+
+    if (flags.debug)
+        add_debug_extended_commands();
+
+    main_loop();
     exit(EXIT_SUCCESS);
     /*NOTREACHED*/
     return 0;

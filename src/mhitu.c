@@ -1746,7 +1746,7 @@ static int gulpmu ( struct monst *mtmp, struct attack *mattk) {
         else if (tim_tmp < 0) tim_tmp = -(rnd(-tim_tmp) / 2);
         tim_tmp += -u.uac + 10;
         u.uswldtim = (unsigned)((tim_tmp < 2) ? 2 : tim_tmp);
-        swallowed(1);
+        swallowed(true);
         for (otmp2 = invent; otmp2; otmp2 = otmp2->nobj)
             (void) snuff_lit(otmp2);
     }

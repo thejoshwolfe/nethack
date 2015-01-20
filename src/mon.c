@@ -2299,7 +2299,7 @@ int newcham ( struct monst *mtmp, struct permonst *mdat, bool polyspot, bool msg
                 expels(mtmp, olddata, false);
             } else {
                 /* update swallow glyphs for new monster */
-                swallowed(0);
+                swallowed(false);
             }
         } else if (!sticks(mdat) && !sticks(youmonst.data))
             unstuck(mtmp);

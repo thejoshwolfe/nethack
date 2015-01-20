@@ -718,7 +718,7 @@ not_special:
         if (!should_see && can_track(ptr)) {
             coord *cp;
 
-            cp = gettrack(omx,omy);
+            cp = get_footprint_near(omx,omy);
             if (cp) {
                 gx = cp->x;
                 gy = cp->y;
@@ -1116,7 +1116,7 @@ postmov:
                 u.uy0 = u.uy;
                 u.ux = mtmp->mx;
                 u.uy = mtmp->my;
-                swallowed(0);
+                swallowed(false);
             } else
                 newsym(mtmp->mx,mtmp->my);
         }

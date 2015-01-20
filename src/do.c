@@ -1166,7 +1166,7 @@ void goto_level(d_level *newlevel, bool at_stairs, bool falling, bool portal) {
          */
         run_timers();
 
-        initrack();
+        clear_footprints();
 
         if ((mtmp = m_at(u.ux, u.uy)) != 0
                 && mtmp != u.usteed

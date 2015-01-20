@@ -10,12 +10,11 @@
 static int utcnt, utpnt;
 static coord utrack[UTSZ];
 
-void initrack(void) {
+void clear_footprints(void) {
     utcnt = utpnt = 0;
 }
 
-/* add to track */
-void settrack(void) {
+void add_footprint(void) {
     if (utcnt < UTSZ)
         utcnt++;
     if (utpnt == UTSZ)
@@ -25,7 +24,7 @@ void settrack(void) {
     utpnt++;
 }
 
-coord * gettrack(int x, int y) {
+coord * get_footprint_near(int x, int y) {
     int cnt, ndist;
     coord *tc;
     cnt = utcnt;
@@ -49,5 +48,5 @@ coord * gettrack(int x, int y) {
         } else if (ndist <= 1)
             return (ndist ? tc : 0);
     }
-    return (coord *)0;
+    return NULL;
 }
