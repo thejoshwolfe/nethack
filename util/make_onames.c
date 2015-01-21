@@ -27,7 +27,15 @@ static char * limit (char *name, int pref) {
 }
 
 int main(int argc, char *argv[]) {
-    int i, sum = 0;
+    int i;
+    for (i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++) {
+        for (int j = i + 1; !j || objects[j].oc_class != ILLOBJ_CLASS; j++) {
+            if (objects[i].oc_descr != NULL && objects[i].oc_descr == objects[j].oc_descr)
+                printf("%s\n", objects[i].oc_descr);
+        }
+    }
+
+    int sum = 0;
     char *c, *objnam;
     int nspell = 0;
     int prefix = 0;
@@ -46,7 +54,7 @@ int main(int argc, char *argv[]) {
 
     fprintf(f, "enum {\n");
 
-    for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++) {
+    for(int i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++) {
         objects[i].oc_name_idx = objects[i].oc_descr_idx = i;   /* init */
         if (!(objnam = tmpdup(OBJ_NAME(objects[i])))) continue;
 
