@@ -65,7 +65,7 @@ The goal of this fork is to make the game more approachable for new players.
      * Fixes the [artifact naming exploit](http://nethackwiki.com/wiki/Naming_artifacts).
      * Claiming that you're Creosus is more fair to users on a server.
      * No need for special logic for Elbereth on tombstones.
-   * See the [wiki page](https://github.com/thejoshwolfe/nethack/wiki/Balance-Changes) which covers all the balance changes.
+   * See the [wiki page](https://github.com/thejoshwolfe/nethack/wiki/Changes) which covers all the balance changes.
  * Improve the information conveyance.
    * Uncursed fortune cookies should unlock a random tidbit from the encyclopedia.
      Blessed fortune cookies should do the same, but select from a set of relevant tidbits,
@@ -114,7 +114,7 @@ The goal of this fork is to make the game more approachable for new players.
    The unlocks should be pretty easy; we don't want to withhold gameplay, just make recommendations.
    Thus, more advanced roles should probably be harder to unlock.
    * Roles should be unlocked as you find items or perform actions associated with them.
-     See [this wiki page](https://github.com/thejoshwolfe/nethack/wiki/Challenge-Modes) for the ideas.
+     See [this wiki page](https://github.com/thejoshwolfe/nethack/wiki/Additions) for the ideas.
    * Races should be unlocked when you eat their corpses.
    * Gender and Alignment should start fully unlocked.
 
@@ -128,7 +128,7 @@ Additional fun stuff maybe someday:
  * Achievements
  * Seed input, and other [TAS](http://en.wikipedia.org/wiki/Tool-assisted_speedrun) support features
  * (The web api for the client would already be appropriate for AI projects.)
- * See the [wiki page](https://github.com/thejoshwolfe/nethack/wiki/Challenge-Modes) for more ideas.
+ * See the [wiki page](https://github.com/thejoshwolfe/nethack/wiki/Additions) for more ideas.
 
 And to make this project more approachable for developers:
 
