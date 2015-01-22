@@ -26,10 +26,6 @@
 #define CLR_WHITE               15
 #define CLR_MAX                 16
 
-/* The "half-way" point for tty based color systems.  This is used in */
-/* the tty color setup code.  (IMHO, it should be removed - dean).    */
-#define BRIGHT          8
-
 /* these can be configured */
 #define HI_OBJ          CLR_MAGENTA
 #define HI_METAL        CLR_CYAN

@@ -5,6 +5,17 @@
 The server assumes the client is keeping the following data model which can be updated by messages from the protocol.
 
 ```cs
+
+// these enums are defined in nethack.h
+extern enum BranchId;
+extern enum DungeonFeature;
+extern enum TrapType;
+extern enum SpeciesType;
+extern enum VisionTypes;
+extern enum ItemDescription;
+extern enum ItemType;
+extern enum BucStatus;
+
 SIZE_X = 80;
 SIZE_Y = 21;
 
@@ -16,19 +27,6 @@ struct Location {
 struct Coord {
   x as int;
   y as int;
-}
-extern enum BranchId;
-extern enum DungeonFeature;
-extern enum TrapType;
-extern enum SpeciesType;
-extern enum VisionTypes;
-extern enum ItemDescription;
-extern enum ItemType;
-enum BucStatus {
-  BLESSED,
-  UNCURSED,
-  CURSED,
-  UNKNOWN,
 }
 
 levels as dict {
@@ -73,6 +71,9 @@ monsters as dict {
     custom_name as String;
     location as Location;
     seen_how as VisionTypes; // if none, then location is last-known location
+    // this list is complete when you can see the monster well enough to see their equipment.
+    // changes with "The gnome wields a bow.", etc.
+    equipped_item_ids as list of u256;
   },
 };
 item_piles as dict {
@@ -105,5 +106,13 @@ item_group_names as dict {
   description as ItemDescription => item_grou_name as String,
 };
 
-// TODO: your properties: HP, XP, intrinsics, etc.
+time as int;
+
+you as struct You {
+  // player characters are two species, and they are both genocidable.
+  role as SpeciesType; // MONK, CAVEMAN, etc.
+  race as SpeciesType; // HUMAN, ELF, etc.
+  location as Location;
+  // TODO...
+};
 ```

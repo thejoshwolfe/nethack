@@ -60,8 +60,10 @@ struct version_info {
  */
 
 /* size of terminal screen is (at least) (ROWNO+3) by COLNO */
-#define COLNO   80
-#define ROWNO   21
+enum {
+    COLNO = 80,
+    ROWNO = 21,
+};
 
 #define MAXNROFROOMS    40      /* max number of rooms per level */
 #define MAX_SUBROOMS    24      /* max # of subrooms in a given room */

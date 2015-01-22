@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "stdout_msg.h"
 #include "dungeon_util.h"
 #include "move.h"
 #include "apply.h"
@@ -75,8 +76,9 @@ static void main_loop(void) {
     u.uz0.dlevel = u.uz.dlevel;
     youmonst.movement = NORMAL_SPEED; /* give the hero some movement points */
 
-    int moveamt = 0, wtcap = 0, change = 0;
-    bool monscanmove = false;
+    int moveamt = 0;
+    int wtcap = 0;
+    int change = 0;
     while (true) {
         bool didmove = flags.move;
         if (didmove) {
@@ -87,6 +89,7 @@ static void main_loop(void) {
                 wtcap = encumber_msg();
 
                 flags.mon_moving = true;
+                bool monscanmove;
                 do {
                     monscanmove = movemon();
                     if (youmonst.movement > NORMAL_SPEED)
@@ -370,6 +373,7 @@ static void main_loop(void) {
 
         if (multi == 0) {
             ckmailstatus();
+            output_everything();
             read_inputs();
         }
         if (u.utotype) {

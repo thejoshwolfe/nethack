@@ -28,7 +28,7 @@
  */
 
 /* Level location types */
-typedef enum {
+enum {
     STONE           = 0,
     VWALL           = 1,
     HWALL           = 2,
@@ -68,7 +68,7 @@ typedef enum {
 
     MAX_TYPE        = 36,
     INVALID_TYPE    = 127,
-} DundeonFeature;
+};
 
 /*
  * The screen symbols may be the default or defined at game startup time.

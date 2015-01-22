@@ -133,7 +133,6 @@
 #include "objclass.h"
 #include "pline.h"
 #include "region.h"
-#include "stdout_msg.h"
 #include "util.h"
 #include "worm.h"
 
@@ -1134,7 +1133,6 @@ void show_glyph(int x, int y, int glyph) {
 
     if (gbuf[y][x] != glyph) {
         gbuf[y][x] = glyph;
-        stdout_msg_glyph(x, y, glyph);
     }
 }
 
@@ -1153,7 +1151,6 @@ void clear_glyph_buffer (void) {
             *gptr++ = nul_glyph;
         }
     }
-    stdout_msg_const(OUT_MSG_SET_ALL_ROCK);
 }
 
 /*
