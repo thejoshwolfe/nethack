@@ -3,6 +3,7 @@ var resource_loader = require('./resource_loader');
 
 var caseCorrectUsername;
 var currentMap;
+var traps = [];
 var tileWidth;
 var tileHeight;
 var tilesImageTileXCount;
@@ -19,6 +20,7 @@ var tilesImageSwallowOffset = 904;
 var tilesImageZapOffset = 975;
 var tilesImageExplodeOffset = 912;
 var tilesImageMapOffset = 829;
+var tilesImageTrapOffset = 870;
 var tilesImageObjectOffset = 394;
 var tilesImageMonsterOffset = 0;
 
@@ -28,6 +30,7 @@ var NETHACK_MSG_TYPE_SET_ALL_ROCK = NETHACK_MSG_TYPE_COUNT++;
 
 var binaryMessageHandlers = [
   handleMap,
+  handleTraps,
 ];
 
 var constants = require('../../build/constants');
@@ -92,6 +95,7 @@ socket.on('disconnect', function() {
 function resetState() {
   caseCorrectUsername = null;
   currentMap = null;
+  traps = [];
   tileWidth = null;
   tileHeight = null;
   tilesImageTileXCount = null;
@@ -333,27 +337,33 @@ function dungeonFeatureToTileIndex(dungeonFeature) {
   throw new Error("error code 333d543c6c6a9977:", dungeonFeature);
 }
 
+function trapTypeToTileIndex(trapType) {
+  return tilesImageTrapOffset + trapType;
+}
+
 function renderEverything() {
   for (var y = 0; y < constants.ROWNO; y += 1) {
     for (var x = 0; x < constants.COLNO; x += 1) {
       var dungeonFeature = currentMap[y][x];
-
-      // not sure where this magic number comes from
-      var tileIndex = dungeonFeatureToTileIndex(dungeonFeature);
-      tileIndex += shiftAllTiles;
-
-      var tileRow = Math.floor(tileIndex / tilesImageTileXCount);
-      var tileCol = tileIndex % tilesImageTileXCount;
-
-      context.fillStyle = '#000000';
-      context.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
-
-      context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
-          tilesImageTileWidth, tilesImageTileHeight,
-          x * tileWidth, y * tileHeight,
-          tileWidth, tileHeight);
+      renderTile(x, y, dungeonFeatureToTileIndex(dungeonFeature) + shiftAllTiles);
     }
   }
+  traps.forEach(function(trap) {
+    var coord = trap.location.coord;
+    renderTile(coord.x, coord.y, trapTypeToTileIndex(trap.trapType) + shiftAllTiles);
+  });
+}
+function renderTile(x, y, tileIndex) {
+  var tileRow = Math.floor(tileIndex / tilesImageTileXCount);
+  var tileCol = tileIndex % tilesImageTileXCount;
+
+  context.fillStyle = '#000000';
+  context.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+
+  context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
+      tilesImageTileWidth, tilesImageTileHeight,
+      x * tileWidth, y * tileHeight,
+      tileWidth, tileHeight);
 }
 
 function handleMap(dv) {
@@ -369,6 +379,46 @@ function handleMap(dv) {
     }
   }
   renderEverything();
+}
+function handleTraps(dv) {
+  traps = [];
+  var cursor = 0;
+  var trap_count = readInt32();
+  for (var i = 0; i < trap_count; i++) {
+    traps.push(readTrap());
+  }
+  renderEverything();
+
+  function readTrap() {
+    return {
+      location: readLocation(),
+      trapType: readInt32(),
+    };
+  }
+  function readLocation() {
+    return {
+      levelId: readInt256(),
+      coord: readCoord(),
+    };
+  }
+  function readInt256() {
+    var result = "";
+    for (var i = 0; i < 8; i++) {
+      result += readInt32().toString(16);
+    }
+    return result;
+  }
+  function readCoord() {
+    return {
+      x: readInt32(),
+      y: readInt32(),
+    }
+  }
+  function readInt32() {
+    var value = dv.getInt32(cursor, true);
+    cursor += 4;
+    return value;
+  }
 }
 
 var keyDownHandlers = {

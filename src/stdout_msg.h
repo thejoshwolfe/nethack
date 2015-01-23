@@ -3,6 +3,7 @@
 
 enum StdoutMsgId {
     OUT_MSG_MAP,
+    OUT_MSG_TRAPS,
 };
 
 void output_everything(void);

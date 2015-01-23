@@ -81,8 +81,28 @@ typedef enum {
 } DungeonFeature;
 
 typedef enum {
-    TrapType_PIT,
-    // TODO...
+    TrapType_ARROW = 0,
+    TrapType_DART = 1,
+    TrapType_FALLING_ROCK = 2,
+    TrapType_SQUEAKY_BOARD = 3,
+    TrapType_BEAR_TRAP = 4,
+    TrapType_LANDMINE = 5,
+    TrapType_ROLLING_BOULDER = 6,
+    TrapType_SLEEPING_GAS = 7,
+    TrapType_RUST = 8,
+    TrapType_FIRE = 9,
+    TrapType_PIT = 10,
+    TrapType_SPIKED_PIT = 11,
+    TrapType_HOLE = 12,
+    TrapType_TRAPDOOR = 13,
+    TrapType_TELEPORT = 14,
+    TrapType_LEVEL_TELEPORT = 15,
+    TrapType_MAGIC_PORTAL = 16,
+    TrapType_WEB = 17,
+    TrapType_STATUE = 18,
+    TrapType_MAGIC = 19,
+    TrapType_ANTI_MAGIC = 20,
+    TrapType_POLYMORPH = 21,
 } TrapType;
 
 typedef enum {

@@ -99,7 +99,7 @@ items as dict {
     metadata as int; // different meaning for different types of items.
   },
 };
-identities as dict {
+item_identities as dict {
   description as ItemDescription => item_type as ItemType,
 };
 item_group_names as dict {

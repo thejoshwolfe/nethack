@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <limits.h>
 
+#include "util_list.h"
 #include "dungeon_util.h"
 #include "nethack.h"
 #include "rm.h"
@@ -11,11 +12,31 @@
 #include "pline.h"
 
 typedef struct {
+    uint32_t data[8];
+} uint256_t;
+
+typedef struct {
     DungeonFeature dungeon_feature;
     bool permanent_light;
     bool temporary_light;
     VisionTypes seen_how;
 } Tile;
+
+typedef struct {
+    int32_t x;
+    int32_t y;
+} Coord;
+
+typedef struct {
+    uint256_t level_id;
+    Coord coord;
+} Location;
+
+typedef struct {
+    Location location;
+    uint32_t trap_type;
+} Trap;
+
 
 static DungeonFeature get_apparent_wall_dungeon_feature(struct rm * wall) {
     // TODO
@@ -116,7 +137,17 @@ static DungeonFeature get_apparent_dungeon_feature(struct rm * ptr) {
     }
 }
 
-void output_everything(void) {
+static uint256_t current_level_id(void) {
+    // uh... i think 256 bits might be a little too many.
+    uint256_t level_id = { 0x6b592506, 0xe706b4d6, 0x36da5ab2, 0xb9deace7, 0xdc86f140, 0x39bb63, 0x60d5ce87, 0xd3b07c2f };
+    return level_id;
+}
+
+static TrapType get_trap_type(int ttype) {
+    return ttype - 1;
+}
+
+static void output_map(void) {
     uint32_t id = OUT_MSG_MAP;
     uint32_t size = COLNO * ROWNO * sizeof(uint32_t);
     fwrite(&id, sizeof(uint32_t), 1, stdout);
@@ -127,7 +158,54 @@ void output_everything(void) {
             uint32_t dungeon_feature = get_apparent_dungeon_feature(hrrm);
             Tile tile = { dungeon_feature, false, false, 0 };
             fwrite(&dungeon_feature, sizeof(uint32_t), 1, stdout);
+            // TODO: write it for realz
         }
     }
     fflush(stdout);
+}
+
+static void output_traps(void) {
+    List * trap_list = List_new();
+    for (struct trap * trap = ftrap; trap != NULL; trap = trap->ntrap) {
+        // TODO: conditional logic here for it you know about it.
+        List_add(trap_list, trap);
+    }
+    uint32_t id = OUT_MSG_TRAPS;
+    uint32_t trap_count = trap_list->size;
+    uint32_t msg_size = sizeof(trap_count) + trap_count * sizeof(Trap);
+    fwrite(&id, sizeof(uint32_t), 1, stdout);
+    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
+    fwrite(&trap_count, sizeof(uint32_t), 1, stdout);
+    for (size_t i = 0; i < trap_list->size; i++) {
+        struct trap * trap = trap_list->items[i];
+        Location location = { current_level_id(), { trap->tx, trap->ty } };
+        TrapType trap_type = get_trap_type(trap->ttyp);
+        Trap output_trap = { location, trap_type };
+        fwrite(&output_trap, sizeof(Trap), 1, stdout);
+    }
+    fflush(stdout);
+    List_delete(trap_list);
+}
+static void output_engravings(void) {
+}
+static void output_items(void) {
+}
+static void output_item_piles(void) {
+}
+static void output_item_identities(void) {
+}
+static void output_item_group_names(void) {
+}
+static void output_monsters(void) {
+}
+
+void output_everything(void) {
+    output_map();
+    output_traps();
+    output_engravings();
+    output_items();
+    output_item_piles();
+    output_item_identities();
+    output_item_group_names();
+    output_monsters();
 }

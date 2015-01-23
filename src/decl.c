@@ -119,7 +119,7 @@ struct mkroom* subrooms = &rooms[MAXNROFROOMS+1];
 struct mkroom *upstairs_room, *dnstairs_room, *sstairs_room;
 
 dlevel_t level;         /* level map */
-struct trap *ftrap = (struct trap *)0;
+struct trap *ftrap = NULL;
 struct monst youmonst = DUMMY;
 struct flag flags = DUMMY;
 struct instance_flags iflags = DUMMY;

@@ -684,7 +684,7 @@ void getlev(int fd, int pid, signed char lev, bool ghostly) {
 
     rest_worm(fd); /* restore worm information */
     ftrap = 0;
-    while (trap = newtrap(), mread(fd, (void *)trap, sizeof(struct trap)), trap->tx != 0) { /* need "!= 0" to work around DICE 3.0 bug */
+    while (trap = newtrap(), mread(fd, (void *)trap, sizeof(struct trap)), trap->tx != 0) {
         trap->ntrap = ftrap;
         ftrap = trap;
     }
