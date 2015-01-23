@@ -146,7 +146,7 @@ static int set_corn(int,int, int,int, int,int, int,int);
 static int set_crosswall(int, int);
 static void set_seenv(struct rm *, int, int, int, int);
 static void t_warn(struct rm *);
-static int wall_angle(struct rm *);
+static int wall_angle (struct rm *lev);
 
 /*
  * magic_map_background()
@@ -1506,16 +1506,9 @@ unsigned char seenv_matrix[3][3] = { {SV2,   SV1, SV0},
 #define sign(z) ((z) < 0 ? -1 : ((z) > 0 ? 1 : 0))
 
 /* Set the seen vector of lev as if seen from (x0,y0) to (x,y). */
-static void set_seenv (
-    struct rm *lev,
-    int x0,
-    int y0,
-    int x,
-    int y       /* from, to */
-)
-{
-    int dx = x-x0, dy = y0-y;
-    lev->seenv |= seenv_matrix[sign(dy)+1][sign(dx)+1];
+static void set_seenv(struct rm *lev, int x0, int y0, int x, int y) {
+    int dx = x - x0, dy = y0 - y;
+    lev->seenv |= seenv_matrix[sign(dy) + 1][sign(dx) + 1];
 }
 
 /* ------------------------------------------------------------------------- */

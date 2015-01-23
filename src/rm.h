@@ -43,8 +43,8 @@ enum {
     TRWALL          = 11,
     DBWALL          = 12,
     TREE            = 13,      /* KMH */
-    SDOOR           = 14,
-    SCORR           = 15,
+    SDOOR           = 14, // secret door
+    SCORR           = 15, // secret corridor
     POOL            = 16,
     MOAT            = 17,      /* pool that doesn't boil, adjust messages */
     WATER           = 18,

@@ -63,7 +63,7 @@ NORMAL_ASS_O_FILES = build/main.o build/apply.o build/artifact.o build/attrib.o 
 NETHACK_OBJS = $(MAKEDEFS_NEEDS_THESE) $(NORMAL_ASS_O_FILES)
 BUILD_DIR_CHILDREN += $(NETHACK_OBJS)
 
-all: build/nethack build/recover build/nhdat build/constants.js
+all: build/nethack build/recover build/nhdat build/constants.js build/nethack_h.js
 
 # make is incapable of tracking the explosion of .lev files from lev_comp,
 # so bundle the entire operation here atomicly culminating in the complete archive.
@@ -169,6 +169,9 @@ build/pm.h: build/make_pm
 
 build/constants.js: build/js_constants
 	./build/js_constants $@
+
+build/nethack_h.js: src/nethack.h util/js_enums.py
+	./util/js_enums.py src/nethack.h -o $@
 
 $(NORMAL_ASS_O_FILES): $(HACK_H)
 

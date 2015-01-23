@@ -24,12 +24,12 @@ var NETHACK_MSG_TYPE_GLYPH = NETHACK_MSG_TYPE_COUNT++;
 var NETHACK_MSG_TYPE_SET_ALL_ROCK = NETHACK_MSG_TYPE_COUNT++;
 
 var binaryMessageHandlers = [
-  handleGlyph,
-  handleSetAllRock,
+  handleMap,
 ];
 
 var constants = require('../../build/constants');
 var GLYPH_STONE = constants.GLYPH_CMAP_OFF + 0;
+var nethack_h = require('../../build/nethack_h');
 
 var loadingDiv = document.getElementById('loading');
 var loginDiv = document.getElementById('login');
@@ -257,8 +257,6 @@ function playNetHack() {
     tilesImageTileXCount = Math.floor(tilesImage.width / tilesImageTileWidth);
     tilesImageTileYCount = Math.floor(tilesImage.height / tilesImageTileHeight);
 
-    handleSetAllRock();
-
     canvas.focus();
   });
 }
@@ -282,13 +280,6 @@ function onBinaryMessage(buffer) {
   var handler = binaryMessageHandlers[id];
   if (!handler) throw new Error("no handler for id " + id);
   handler(new DataView(buffer, 8));
-}
-
-function handleGlyph(dv) {
-  var x = dv.getInt32(0, true);
-  var y = dv.getInt32(4, true);
-  var glyph = dv.getInt32(8, true);
-  setGlyph(x, y, glyph);
 }
 
 function glyphTileIndex(glyph) {
@@ -351,13 +342,16 @@ function setGlyph(x, y, glyph) {
       tileWidth, tileHeight);
 }
 
-function handleSetAllRock() {
+function handleMap(dv) {
   currentLevel = new Array(constants.ROWNO);
+  var i = 0;
   for (var y = 0; y < constants.ROWNO; y += 1) {
     var col = new Array(constants.COLNO);
     currentLevel[y] = col;
     for (var x = 0; x < constants.COLNO; x += 1) {
-      setGlyph(x, y, GLYPH_STONE);
+      var dungeon_feature = dv.getInt32(i, true);
+      setGlyph(x, y, dungeon_feature);
+      i += 4;
     }
   }
 }
