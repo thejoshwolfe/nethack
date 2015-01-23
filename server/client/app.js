@@ -2,11 +2,14 @@ var Socket = require('./socket');
 var resource_loader = require('./resource_loader');
 
 var caseCorrectUsername;
-var currentLevel;
+var currentMap;
 var tileWidth;
 var tileHeight;
 var tilesImageTileXCount;
 var tilesImageTileYCount;
+
+// use arrows to adjust the tileset
+var shiftAllTiles = 0;
 
 var tilesImage = resource_loader.fetchImage("tiles.png");
 var tilesImageTileWidth = 32;
@@ -28,7 +31,6 @@ var binaryMessageHandlers = [
 ];
 
 var constants = require('../../build/constants');
-var GLYPH_STONE = constants.GLYPH_CMAP_OFF + 0;
 var nethack_h = require('../../build/nethack_h');
 
 var loadingDiv = document.getElementById('loading');
@@ -89,7 +91,7 @@ socket.on('disconnect', function() {
 
 function resetState() {
   caseCorrectUsername = null;
-  currentLevel = null;
+  currentMap = null;
   tileWidth = null;
   tileHeight = null;
   tilesImageTileXCount = null;
@@ -282,78 +284,91 @@ function onBinaryMessage(buffer) {
   handler(new DataView(buffer, 8));
 }
 
-function glyphTileIndex(glyph) {
-  var offset;
-
-  if ((offset = (glyph - constants.GLYPH_WARNING_OFF)) >= 0) {
-    return tilesImageWarningOffset + offset;
+function dungeonFeatureToTileIndex(dungeonFeature) {
+  switch (dungeonFeature) {
+    case nethack_h.DungeonFeature.UNKNOWN:                   return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.STONE_WALL:                return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_LT:              return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_TR:              return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_RB:              return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_LB:              return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_LR:              return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_TB:              return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_LTR:             return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_TRB:             return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_LRB:             return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_LTB:             return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.ROOM_WALL_LTRB:            return tilesImageMapOffset + 0;
+    case nethack_h.DungeonFeature.DOOR_CLOSED_H:             return tilesImageMapOffset + 15;
+    case nethack_h.DungeonFeature.DOOR_CLOSED_V:             return tilesImageMapOffset + 15;
+    case nethack_h.DungeonFeature.DOOR_OPEN_H:               return tilesImageMapOffset + 14;
+    case nethack_h.DungeonFeature.DOOR_OPEN_V:               return tilesImageMapOffset + 14;
+    case nethack_h.DungeonFeature.DOOR_BROKEN:               return tilesImageMapOffset + 13;
+    case nethack_h.DungeonFeature.DOORWAY:                   return tilesImageMapOffset + 19;
+    case nethack_h.DungeonFeature.ROOM_FLOOR:                return tilesImageMapOffset + 19;
+    case nethack_h.DungeonFeature.CORRIDOR:                  return tilesImageMapOffset + 20;
+    case nethack_h.DungeonFeature.STAIRS_UP:                 return tilesImageMapOffset + 22;
+    case nethack_h.DungeonFeature.STAIRS_DOWN:               return tilesImageMapOffset + 23;
+    case nethack_h.DungeonFeature.LADDER_UP:                 return tilesImageMapOffset + 24;
+    case nethack_h.DungeonFeature.LADDER_DOWN:               return tilesImageMapOffset + 25;
+    case nethack_h.DungeonFeature.ALTER:                     return tilesImageMapOffset + 26;
+    case nethack_h.DungeonFeature.GRAVE:                     return tilesImageMapOffset + 27;
+    case nethack_h.DungeonFeature.THRONE:                    return tilesImageMapOffset + 28;
+    case nethack_h.DungeonFeature.SINK:                      return tilesImageMapOffset + 29;
+    case nethack_h.DungeonFeature.FOUNTAIN:                  return tilesImageMapOffset + 30;
+    case nethack_h.DungeonFeature.POOL:                      return tilesImageMapOffset + 31;
+    case nethack_h.DungeonFeature.MOAT:                      return tilesImageMapOffset + 31;
+    case nethack_h.DungeonFeature.ICE:                       return tilesImageMapOffset + 32;
+    case nethack_h.DungeonFeature.LAVA:                      return tilesImageMapOffset + 33;
+    case nethack_h.DungeonFeature.IRON_BARS:                 return tilesImageMapOffset + 17;
+    case nethack_h.DungeonFeature.TREE:                      return tilesImageMapOffset + 18;
+    case nethack_h.DungeonFeature.DRAWBRIDGE_RAISED:         return tilesImageMapOffset + 37;
+    case nethack_h.DungeonFeature.DRAWBRIDGE_LOWERED:        return tilesImageMapOffset + 35;
+    case nethack_h.DungeonFeature.PORTCULLIS_OPEN:           return tilesImageMapOffset + 19;
+    case nethack_h.DungeonFeature.PLANE_OF_AIR:              return tilesImageMapOffset + 38;
+    case nethack_h.DungeonFeature.PLANE_OF_AIR_CLOUD:        return tilesImageMapOffset + 39;
+    case nethack_h.DungeonFeature.PLANE_OF_WATER:            return tilesImageMapOffset + 40;
+    case nethack_h.DungeonFeature.PLANE_OF_WATER_AIR_BUBBLE: return tilesImageMapOffset + 38;
   }
-  if ((offset = (glyph - constants.GLYPH_SWALLOW_OFF)) >= 0) {
-    return tilesImageSwallowOffset + (offset & 0x7);
-  }
-  if ((offset = (glyph - constants.GLYPH_ZAP_OFF)) >= 0) {
-    return tilesImageZapOffset + (offset & 0x3);
-  }
-  if ((offset = (glyph - constants.GLYPH_EXPLODE_OFF)) >= 0) {
-    return tilesImageExplodeOffset + (offset % 9);
-  }
-  if ((offset = (glyph - constants.GLYPH_CMAP_OFF)) >= 0) {
-    return tilesImageMapOffset + offset;
-  }
-  if ((offset = (glyph - constants.GLYPH_OBJ_OFF)) >= 0) {
-    return tilesImageObjectOffset + offset;
-  }
-  if ((offset = (glyph - constants.GLYPH_RIDDEN_OFF)) >= 0) {
-    return tilesImageMonsterOffset + offset;
-  }
-  if ((offset = (glyph - constants.GLYPH_BODY_OFF)) >= 0) {
-    // corpse. if we figure out how to do a special corpse per monster we could do that here
-    return 640;
-  }
-  if ((offset = (glyph - constants.GLYPH_DETECT_OFF)) >= 0) {
-    return tilesImageMonsterOffset + offset;
-  }
-  if ((offset = (glyph - constants.GLYPH_INVIS_OFF)) >= 0) {
-    // invisible monster
-    return 393;
-  }
-  if ((offset = (glyph - constants.GLYPH_PET_OFF)) >= 0) {
-    return tilesImageMonsterOffset + offset;
-  }
-
-  return tilesImageMonsterOffset + glyph;
+  throw new Error("error code 333d543c6c6a9977:", dungeonFeature);
 }
 
-function setGlyph(x, y, glyph) {
-  currentLevel[y][x] = glyph;
+function renderEverything() {
+  for (var y = 0; y < constants.ROWNO; y += 1) {
+    for (var x = 0; x < constants.COLNO; x += 1) {
+      var dungeonFeature = currentMap[y][x];
 
-  // not sure where this magic number comes from
-  var tileIndex = glyphTileIndex(glyph);
+      // not sure where this magic number comes from
+      var tileIndex = dungeonFeatureToTileIndex(dungeonFeature);
+      tileIndex += shiftAllTiles;
 
-  var tileRow = Math.floor(tileIndex / tilesImageTileXCount);
-  var tileCol = tileIndex % tilesImageTileXCount;
+      var tileRow = Math.floor(tileIndex / tilesImageTileXCount);
+      var tileCol = tileIndex % tilesImageTileXCount;
 
-  context.fillStyle = '#000000';
-  context.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+      context.fillStyle = '#000000';
+      context.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 
-  context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
-      tilesImageTileWidth, tilesImageTileHeight,
-      x * tileWidth, y * tileHeight,
-      tileWidth, tileHeight);
+      context.drawImage(tilesImage, tileCol * tilesImageTileWidth, tileRow * tilesImageTileHeight,
+          tilesImageTileWidth, tilesImageTileHeight,
+          x * tileWidth, y * tileHeight,
+          tileWidth, tileHeight);
+    }
+  }
 }
 
 function handleMap(dv) {
-  currentLevel = new Array(constants.ROWNO);
+  currentMap = new Array(constants.ROWNO);
   var i = 0;
   for (var y = 0; y < constants.ROWNO; y += 1) {
     var col = new Array(constants.COLNO);
-    currentLevel[y] = col;
+    currentMap[y] = col;
     for (var x = 0; x < constants.COLNO; x += 1) {
-      var dungeon_feature = dv.getInt32(i, true);
-      setGlyph(x, y, dungeon_feature);
+      var dungeonFeature = dv.getInt32(i, true);
+      currentMap[y][x] = dungeonFeature;
       i += 4;
     }
   }
+  renderEverything();
 }
 
 var keyDownHandlers = {
@@ -393,22 +408,50 @@ var keyDownHandlers = {
   105: function() {
     moveDir(1, -1);
   },
+  // testing:
+  // left
+  37: function() {
+    adjustTileShift(-1);
+  },
+  // up
+  38: function() {
+    adjustTileShift(-tilesImageTileXCount);
+  },
+  // right
+  39: function() {
+    adjustTileShift(1);
+  },
+  // down
+  40: function() {
+    adjustTileShift(tilesImageTileXCount);
+  },
 };
+function adjustTileShift(delta) {
+  shiftAllTiles += delta;
+  console.log("shiftAllTiles:", shiftAllTiles);
+  renderEverything();
+}
 
 function onKeyDown(ev) {
+  if (ev.ctrlKey || ev.altKey) return;
+  // allow F1-F12
+  if (112 <= ev.which && ev.which < 124) return;
+  ev.preventDefault();
+  ev.stopPropagation();
+
   var fn = keyDownHandlers[ev.which];
   if (fn) {
     fn(ev);
-    ev.preventDefault();
-    ev.stopPropagation();
+  } else {
+    console.log("onKeyDown(" + ev.which + ", shift=" + ev.shiftKey + ")");
   }
 }
 
 function onCanvasMouseDown(ev) {
   var tileX = Math.floor(ev.clientX / tileWidth);
   var tileY = Math.floor(ev.clientY / tileHeight);
-  var glyph = currentLevel[tileY][tileX];
-  console.log("x", tileX, "y", tileY, glyph);
+  var dungeonFeature = currentMap[tileY][tileX];
+  console.log("x", tileX, "y", tileY, dungeonFeature);
 }
 
 function moveDir(x, y) {
