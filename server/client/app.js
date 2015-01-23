@@ -4,6 +4,7 @@ var resource_loader = require('./resource_loader');
 var caseCorrectUsername;
 var currentMap;
 var traps = [];
+var engravings = [];
 var tileWidth;
 var tileHeight;
 var tilesImageTileXCount;
@@ -31,6 +32,7 @@ var NETHACK_MSG_TYPE_SET_ALL_ROCK = NETHACK_MSG_TYPE_COUNT++;
 var binaryMessageHandlers = [
   handleMap,
   handleTraps,
+  handleEngravings,
 ];
 
 var constants = require('../../build/constants');
@@ -96,6 +98,7 @@ function resetState() {
   caseCorrectUsername = null;
   currentMap = null;
   traps = [];
+  engravings = [];
   tileWidth = null;
   tileHeight = null;
   tilesImageTileXCount = null;
@@ -352,6 +355,7 @@ function renderEverything() {
     var coord = trap.location.coord;
     renderTile(coord.x, coord.y, trapTypeToTileIndex(trap.trapType) + shiftAllTiles);
   });
+  // TODO: engravings?
 }
 function renderTile(x, y, tileIndex) {
   var tileRow = Math.floor(tileIndex / tilesImageTileXCount);
@@ -367,58 +371,35 @@ function renderTile(x, y, tileIndex) {
 }
 
 function handleMap(dv) {
+  var reader = new DataViewReader(dv);
   currentMap = new Array(constants.ROWNO);
-  var i = 0;
   for (var y = 0; y < constants.ROWNO; y += 1) {
     var col = new Array(constants.COLNO);
     currentMap[y] = col;
     for (var x = 0; x < constants.COLNO; x += 1) {
-      var dungeonFeature = dv.getInt32(i, true);
+      var dungeonFeature = reader.readUint32();
       currentMap[y][x] = dungeonFeature;
-      i += 4;
     }
   }
   renderEverything();
 }
 function handleTraps(dv) {
+  var reader = new DataViewReader(dv);
   traps = [];
-  var cursor = 0;
-  var trap_count = readInt32();
+  var trap_count = reader.readUint32();
   for (var i = 0; i < trap_count; i++) {
-    traps.push(readTrap());
+    traps.push(reader.readTrap());
   }
   renderEverything();
-
-  function readTrap() {
-    return {
-      location: readLocation(),
-      trapType: readInt32(),
-    };
+}
+function handleEngravings(dv) {
+  var reader = new DataViewReader(dv);
+  engravings = [];
+  var count = reader.readUint32();
+  for (var i = 0; i < count; i++) {
+    engravings.push(reader.readEngraving());
   }
-  function readLocation() {
-    return {
-      levelId: readInt256(),
-      coord: readCoord(),
-    };
-  }
-  function readInt256() {
-    var result = "";
-    for (var i = 0; i < 8; i++) {
-      result += readInt32().toString(16);
-    }
-    return result;
-  }
-  function readCoord() {
-    return {
-      x: readInt32(),
-      y: readInt32(),
-    }
-  }
-  function readInt32() {
-    var value = dv.getInt32(cursor, true);
-    cursor += 4;
-    return value;
-  }
+  // render?
 }
 
 var keyDownHandlers = {
@@ -507,3 +488,58 @@ function onCanvasMouseDown(ev) {
 function moveDir(x, y) {
   socket.send('move', {x: x, y: y});
 }
+
+function DataViewReader(dv) {
+  this.dv = dv;
+  this.cursor = 0;
+}
+DataViewReader.prototype.readEngraving = function () {
+  return {
+    location: this.readLocation(),
+    engravingType: this.readUint32(),
+    text: this.readString(),
+  };
+};
+DataViewReader.prototype.readTrap = function() {
+  return {
+    location: this.readLocation(),
+    trapType: this.readUint32(),
+  };
+};
+DataViewReader.prototype.readLocation = function() {
+  return {
+    levelId: this.readUint526(),
+    coord: this.readCoord(),
+  };
+};
+DataViewReader.prototype.readUint526 = function() {
+  var result = "";
+  for (var i = 0; i < 8; i++) {
+    result += this.readUint32().toString(16);
+  }
+  return result;
+};
+DataViewReader.prototype.readCoord = function() {
+  return {
+    x: this.readInt32(),
+    y: this.readInt32(),
+  };
+};
+DataViewReader.prototype.readInt32 = function() {
+  var value = this.dv.getInt32(this.cursor, true);
+  this.cursor += 4;
+  return value;
+};
+DataViewReader.prototype.readUint32 = function() {
+  var value = this.dv.getUint32(this.cursor, true);
+  this.cursor += 4;
+  return value;
+};
+DataViewReader.prototype.readString = function() {
+  var byte_count = this.readUint32();
+  var slice = new DataView(this.dv.buffer, this.dv.byteOffset + this.cursor, byte_count);
+  var textDecoder = new TextDecoder("utf8", {fatal:true});
+  var text = textDecoder.decode(slice);
+  this.cursor += byte_count;
+  return text;
+};

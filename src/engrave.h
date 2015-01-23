@@ -22,6 +22,8 @@ struct engr {
 #define N_ENGRAVE  6
 };
 
+extern struct engr *head_engr;
+
 #define newengr(lth) (struct engr *)malloc((unsigned)(lth) + sizeof(struct engr))
 #define dealloc_engr(engr) free((void *) (engr))
 

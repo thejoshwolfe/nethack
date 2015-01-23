@@ -10,6 +10,7 @@ The server assumes the client is keeping the following data model which can be u
 extern enum BranchId;
 extern enum DungeonFeature;
 extern enum TrapType;
+extern enum EngravingType;
 extern enum SpeciesType;
 extern enum VisionTypes;
 extern enum ItemDescription;
@@ -61,8 +62,9 @@ traps as dict {
 };
 engravings as dict {
   engraving_id as u256 => engraving as struct Engraving {
-    text as String;
     location as Location;
+    engraving_type as EngravingType;
+    text as String;
   },
 };
 monsters as dict {

@@ -106,6 +106,15 @@ typedef enum {
 } TrapType;
 
 typedef enum {
+    EngravingType_DUST = 0,
+    EngravingType_ENGRAVE = 1,
+    EngravingType_BURN = 2,
+    EngravingType_MARK = 3,
+    EngravingType_ENGR_BLOOD = 4,
+    EngravingType_HEADSTONE = 5,
+} EngravingType;
+
+typedef enum {
     SpeciesType_GIANT_ANT,
     // TODO...
 } SpeciesType;

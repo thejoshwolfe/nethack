@@ -52,7 +52,7 @@
 #include "youprop.h"
 #include "zap.h"
 
-static struct engr *head_engr;
+struct engr *head_engr;
 
 /* random engravings */
 static const char *random_mesg[] = {

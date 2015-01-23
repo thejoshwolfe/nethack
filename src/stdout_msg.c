@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <limits.h>
 
+#include "engrave.h"
 #include "util_list.h"
 #include "dungeon_util.h"
 #include "nethack.h"
@@ -36,6 +37,12 @@ typedef struct {
     Location location;
     uint32_t trap_type;
 } Trap;
+
+typedef struct {
+    Location location;
+    uint32_t engraving_type;
+    uint32_t text_length;
+} Engraving;
 
 
 static DungeonFeature get_apparent_wall_dungeon_feature(struct rm * wall) {
@@ -143,10 +150,6 @@ static uint256_t current_level_id(void) {
     return level_id;
 }
 
-static TrapType get_trap_type(int ttype) {
-    return ttype - 1;
-}
-
 static void output_map(void) {
     uint32_t id = OUT_MSG_MAP;
     uint32_t size = COLNO * ROWNO * sizeof(uint32_t);
@@ -162,6 +165,10 @@ static void output_map(void) {
         }
     }
     fflush(stdout);
+}
+
+static TrapType get_trap_type(int ttype) {
+    return ttype - 1;
 }
 
 static void output_traps(void) {
@@ -186,8 +193,38 @@ static void output_traps(void) {
     fflush(stdout);
     List_delete(trap_list);
 }
-static void output_engravings(void) {
+
+static EngravingType get_engraving_type(signed char engr_type) {
+    return engr_type - 1;
 }
+
+static void output_engravings(void) {
+    List * list = List_new();
+    uint32_t string_data_size = 0;
+    for (struct engr * engraving = head_engr; engraving != NULL; engraving = engraving->nxt_engr) {
+        // TODO: conditional logic here for it you know about it.
+        List_add(list, engraving);
+        string_data_size += strlen(engraving->engr_txt);
+    }
+    uint32_t id = OUT_MSG_ENGRAVINGS;
+    uint32_t count = list->size;
+    uint32_t msg_size = sizeof(count) + count * sizeof(Engraving) + string_data_size;
+    fwrite(&id, sizeof(uint32_t), 1, stdout);
+    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
+    fwrite(&count, sizeof(uint32_t), 1, stdout);
+    for (size_t i = 0; i < list->size; i++) {
+        struct engr * engraving = list->items[i];
+        Location location = { current_level_id(), { engraving->engr_x, engraving->engr_y } };
+        EngravingType engraving_type = get_engraving_type(engraving->engr_type);
+        uint32_t text_length = strlen(engraving->engr_txt);
+        Engraving output_trap = { location, engraving_type, text_length };
+        fwrite(&output_trap, sizeof(Engraving), 1, stdout);
+        fwrite(engraving->engr_txt, sizeof(char), text_length, stdout);
+    }
+    fflush(stdout);
+    List_delete(list);
+}
+
 static void output_items(void) {
 }
 static void output_item_piles(void) {
