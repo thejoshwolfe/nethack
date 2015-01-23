@@ -121,8 +121,8 @@ void output_everything(void) {
     uint32_t size = COLNO * ROWNO * sizeof(uint32_t);
     fwrite(&id, sizeof(uint32_t), 1, stdout);
     fwrite(&size, sizeof(uint32_t), 1, stdout);
-    for (int x = 0; x < COLNO; x++) {
-        for (int y = 0; y < ROWNO; y++) {
+    for (int y = 0; y < ROWNO; y++) {
+        for (int x = 0; x < COLNO; x++) {
             struct rm * hrrm = &level.locations[x][y];
             uint32_t dungeon_feature = get_apparent_dungeon_feature(hrrm);
             Tile tile = { dungeon_feature, false, false, 0 };
