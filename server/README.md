@@ -69,9 +69,9 @@ engravings as dict {
 };
 monsters as dict {
   monster_id as u256 => monster as struct Monster {
+    location as Location;
     species_id as SpeciesType; // VAMPIRE_LORD, JUIBLEX, etc.
     custom_name as String;
-    location as Location;
     seen_how as VisionTypes; // if none, then location is last-known location
     // this list is complete when you can see the monster well enough to see their equipment.
     // changes with "The gnome wields a bow.", etc.

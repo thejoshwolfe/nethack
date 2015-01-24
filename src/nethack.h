@@ -15,10 +15,10 @@ typedef enum {
 } BranchId;
 
 typedef enum {
-    BucStatus_BLESSED,
-    BucStatus_UNCURSED,
-    BucStatus_CURSED,
-    BucStatus_UNKNOWN,
+    BucStatus_UNKNOWN = 0,
+    BucStatus_CURSED = 1,
+    BucStatus_UNCURSED = 2,
+    BucStatus_BLESSED = 3,
 } BucStatus;
 
 typedef enum {
@@ -114,16 +114,3 @@ typedef enum {
     EngravingType_HEADSTONE = 5,
 } EngravingType;
 
-typedef enum {
-    SpeciesType_GIANT_ANT,
-    // TODO...
-} SpeciesType;
-typedef enum {
-    ItemDescription_MAGENTA_POTION,
-    // TODO...
-} ItemDescription;
-
-typedef enum {
-    ItemType_POTION_OF_GAIN_LEVEL,
-    // TODO...
-} ItemType;

@@ -5,6 +5,7 @@ enum StdoutMsgId {
     OUT_MSG_MAP,
     OUT_MSG_TRAPS,
     OUT_MSG_ENGRAVINGS,
+    OUT_MSG_MONSTERS,
 };
 
 void output_everything(void);

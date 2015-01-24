@@ -146,7 +146,7 @@ static DungeonFeature get_apparent_dungeon_feature(struct rm * ptr) {
 
 static uint256_t current_level_id(void) {
     // uh... i think 256 bits might be a little too many.
-    uint256_t level_id = { 0x6b592506, 0xe706b4d6, 0x36da5ab2, 0xb9deace7, 0xdc86f140, 0x39bb63, 0x60d5ce87, 0xd3b07c2f };
+    uint256_t level_id = { 0x6b592506, 0xe706b4d6, 0x36da5ab2, 0xb9deace7, 0xdc86f140, 0x0039bb63, 0x60d5ce87, 0xd3b07c2f };
     return level_id;
 }
 
@@ -241,7 +241,27 @@ static void output_item_identities(void) {
 }
 static void output_item_group_names(void) {
 }
+
 static void output_monsters(void) {
+    List * list = List_new();
+    for (struct monst * monster = level.monlist; monster != NULL; monster = monster->nmon) {
+        // TODO: can you see it?
+        List_add(list, monster);
+    }
+    ByteBuffer * buffer = ByteBuffer_new();
+    uint32_t count = list->size;
+    ByteBuffer_write(buffer, &count, sizeof(uint32_t));
+
+    // TODO: ...
+
+    uint32_t id = OUT_MSG_MONSTERS;
+    fwrite(&id, sizeof(uint32_t), 1, stdout);
+    uint32_t msg_size = buffer->size;
+    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
+    fwrite(buffer->buffer, 1, buffer->size, stdout);
+    fflush(stdout);
+    ByteBuffer_delete(buffer);
+    List_delete(list);
 }
 
 void output_everything(void) {
