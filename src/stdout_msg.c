@@ -151,20 +151,23 @@ static uint256_t current_level_id(void) {
 }
 
 static void output_map(void) {
-    uint32_t id = OUT_MSG_MAP;
-    uint32_t size = COLNO * ROWNO * sizeof(uint32_t);
-    fwrite(&id, sizeof(uint32_t), 1, stdout);
-    fwrite(&size, sizeof(uint32_t), 1, stdout);
+    ByteBuffer * buffer = ByteBuffer_new();
     for (int y = 0; y < ROWNO; y++) {
         for (int x = 0; x < COLNO; x++) {
             struct rm * hrrm = &level.locations[x][y];
             uint32_t dungeon_feature = get_apparent_dungeon_feature(hrrm);
             Tile tile = { dungeon_feature, false, false, 0 };
-            fwrite(&dungeon_feature, sizeof(uint32_t), 1, stdout);
+            ByteBuffer_write(buffer, &dungeon_feature, sizeof(uint32_t));
             // TODO: write it for realz
         }
     }
+    uint32_t id = OUT_MSG_MAP;
+    uint32_t msg_size = buffer->size;
+    fwrite(&id, sizeof(uint32_t), 1, stdout);
+    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
+    fwrite(buffer->buffer, 1, buffer->size, stdout);
     fflush(stdout);
+    ByteBuffer_delete(buffer);
 }
 
 static TrapType get_trap_type(int ttype) {
@@ -172,26 +175,29 @@ static TrapType get_trap_type(int ttype) {
 }
 
 static void output_traps(void) {
-    List * trap_list = List_new();
+    List * list = List_new();
     for (struct trap * trap = ftrap; trap != NULL; trap = trap->ntrap) {
         // TODO: conditional logic here for it you know about it.
-        List_add(trap_list, trap);
+        List_add(list, trap);
     }
-    uint32_t id = OUT_MSG_TRAPS;
-    uint32_t trap_count = trap_list->size;
-    uint32_t msg_size = sizeof(trap_count) + trap_count * sizeof(Trap);
-    fwrite(&id, sizeof(uint32_t), 1, stdout);
-    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
-    fwrite(&trap_count, sizeof(uint32_t), 1, stdout);
-    for (size_t i = 0; i < trap_list->size; i++) {
-        struct trap * trap = trap_list->items[i];
+    ByteBuffer * buffer = ByteBuffer_new();
+    uint32_t count = list->size;
+    ByteBuffer_write(buffer, &count, sizeof(uint32_t));
+    for (size_t i = 0; i < list->size; i++) {
+        struct trap * trap = list->items[i];
         Location location = { current_level_id(), { trap->tx, trap->ty } };
         TrapType trap_type = get_trap_type(trap->ttyp);
         Trap output_trap = { location, trap_type };
-        fwrite(&output_trap, sizeof(Trap), 1, stdout);
+        ByteBuffer_write(buffer, &output_trap, sizeof(Trap));
     }
+    uint32_t id = OUT_MSG_TRAPS;
+    uint32_t msg_size = buffer->size;
+    fwrite(&id, sizeof(uint32_t), 1, stdout);
+    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
+    fwrite(buffer->buffer, 1, buffer->size, stdout);
     fflush(stdout);
-    List_delete(trap_list);
+    List_delete(list);
+    ByteBuffer_delete(buffer);
 }
 
 static EngravingType get_engraving_type(signed char engr_type) {
@@ -200,29 +206,31 @@ static EngravingType get_engraving_type(signed char engr_type) {
 
 static void output_engravings(void) {
     List * list = List_new();
-    uint32_t string_data_size = 0;
     for (struct engr * engraving = head_engr; engraving != NULL; engraving = engraving->nxt_engr) {
         // TODO: conditional logic here for it you know about it.
         List_add(list, engraving);
-        string_data_size += strlen(engraving->engr_txt);
     }
-    uint32_t id = OUT_MSG_ENGRAVINGS;
+    ByteBuffer * buffer = ByteBuffer_new();
     uint32_t count = list->size;
-    uint32_t msg_size = sizeof(count) + count * sizeof(Engraving) + string_data_size;
-    fwrite(&id, sizeof(uint32_t), 1, stdout);
-    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
-    fwrite(&count, sizeof(uint32_t), 1, stdout);
+    ByteBuffer_write(buffer, &count, sizeof(uint32_t));
     for (size_t i = 0; i < list->size; i++) {
         struct engr * engraving = list->items[i];
         Location location = { current_level_id(), { engraving->engr_x, engraving->engr_y } };
         EngravingType engraving_type = get_engraving_type(engraving->engr_type);
         uint32_t text_length = strlen(engraving->engr_txt);
         Engraving output_trap = { location, engraving_type, text_length };
-        fwrite(&output_trap, sizeof(Engraving), 1, stdout);
-        fwrite(engraving->engr_txt, sizeof(char), text_length, stdout);
+        ByteBuffer_write(buffer, &output_trap, sizeof(Engraving));
+        ByteBuffer_write(buffer, engraving->engr_txt, text_length);
     }
+
+    uint32_t id = OUT_MSG_ENGRAVINGS;
+    fwrite(&id, sizeof(uint32_t), 1, stdout);
+    uint32_t msg_size = buffer->size;
+    fwrite(&msg_size, sizeof(uint32_t), 1, stdout);
+    fwrite(buffer->buffer, 1, buffer->size, stdout);
     fflush(stdout);
     List_delete(list);
+    ByteBuffer_delete(buffer);
 }
 
 static void output_items(void) {
