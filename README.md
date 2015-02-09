@@ -4,7 +4,19 @@ A fork of [nethack 3.4.3](http://www.nethack.org/v343/download-src.html).
 
 ## Status
 
-Not cool yet.
+Abandoned.
+
+I lost my enthusiasm when I saw that [Nethack 4](http://nethack4.org/) did most of refactoring I was trying to do,
+such as a client/server architecture with a protocol that properly exposes and hides information.
+Furthermore, I became disillusioned with nethack's design decisions when I found out that
+polymorphing and other game mechanics were not fair and abstract as I had once hoped,
+but were actually programmed separately for each special case.
+(For example, the fact that mind flayers turn to stone when attacking a cockatrice is programmed in uhitm.c, mhitu.c, and mhitm.c).
+
+Nethack has numerous game design flaws that are unresolvable without changing the game significantly.
+Gehenom is tedious, the Plane of Water makes no sense, Sokoban doesn't belong in a dungeon crawler, etc.
+
+All things considered, I've decided to start [my own game from scratch](https://github.com/thejoshwolfe/legend-of-swarkland).
 
 ## How do I shot game?
 
